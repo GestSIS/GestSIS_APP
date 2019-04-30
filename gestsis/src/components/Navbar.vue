@@ -1,5 +1,7 @@
 <template>
-  <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+  <nav
+    class="main-header navbar navbar-expand bg-white navbar-light border-bottom"
+  >
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -23,7 +25,7 @@
           type="search"
           placeholder="Search"
           aria-label="Search"
-        >
+        />
         <div class="input-group-append">
           <button class="btn btn-navbar" type="submit">
             <i class="fa fa-search"></i>
@@ -48,7 +50,7 @@
                 src="dist/img/user1-128x128.jpg"
                 alt="User Avatar"
                 class="img-size-50 mr-3 img-circle"
-              >
+              />
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Brad Diesel
@@ -72,7 +74,7 @@
                 src="dist/img/user8-128x128.jpg"
                 alt="User Avatar"
                 class="img-size-50 img-circle mr-3"
-              >
+              />
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   John Pierce
@@ -96,7 +98,7 @@
                 src="dist/img/user3-128x128.jpg"
                 alt="User Avatar"
                 class="img-size-50 img-circle mr-3"
-              >
+              />
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Nora Silvester
@@ -140,11 +142,18 @@
             <span class="float-right text-muted text-sm">2 days</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="#" class="dropdown-item dropdown-footer"
+            >See All Notifications</a
+          >
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
+        <a
+          class="nav-link"
+          data-widget="control-sidebar"
+          data-slide="true"
+          href="#"
+        >
           <i class="fa fa-th-large"></i>
         </a>
       </li>
@@ -154,6 +163,6 @@
 
 <script>
 export default {
-  name: "Navbar",
-};
+  name: 'Navbar'
+}
 </script>

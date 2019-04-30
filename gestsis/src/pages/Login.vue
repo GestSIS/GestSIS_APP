@@ -7,27 +7,38 @@
           <p class="subtitle has-text-grey">Please login to proceed.</p>
           <div class="box">
             <figure class="avatar">
-              <img src="https://placehold.it/128x128">
+              <img src="https://placehold.it/128x128" />
             </figure>
             <form>
               <div class="field">
                 <div class="control">
-                  <input class="input is-large" type="email" placeholder="Your Email" autofocus>
+                  <input
+                    class="input is-large"
+                    type="email"
+                    placeholder="Your Email"
+                    autofocus
+                  />
                 </div>
               </div>
 
               <div class="field">
                 <div class="control">
-                  <input class="input is-large" type="password" placeholder="Your Password">
+                  <input
+                    class="input is-large"
+                    type="password"
+                    placeholder="Your Password"
+                  />
                 </div>
               </div>
               <div class="field">
                 <label class="checkbox">
-                  <input type="checkbox">
+                  <input type="checkbox" />
                   Remember me
                 </label>
               </div>
-              <button class="button is-block is-info is-large is-fullwidth">Login</button>
+              <button class="button is-block is-info is-large is-fullwidth">
+                Login
+              </button>
             </form>
           </div>
           <p class="has-text-grey">

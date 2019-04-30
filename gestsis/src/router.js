@@ -1,35 +1,34 @@
-import Vue from "vue";
-import Router from "vue-router";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Vue from 'vue'
+import Router from 'vue-router'
+import Home from './pages/Home'
+import Login from './pages/Login'
 
-
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/login",
-      name: "login",
-      meta: { layout: "no-sidebar"},
+      path: '/login',
+      name: 'login',
+      meta: { layout: 'no-sidebar' },
       component: Login
     },
     {
-      path: "/",
-      name: "home",
-      meta: { layout: "no-sidebar"},
+      path: '/',
+      name: 'home',
+      meta: { layout: 'no-sidebar' },
       component: Home
     },
     {
-      path: "/sapeurs",
-      name: "sapeurs",
+      path: '/sapeurs',
+      name: 'sapeurs',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./pages/Sapeurs.vue")
+        import(/* webpackChunkName: "about" */ './pages/Sapeurs.vue')
     }
   ]
-});
+})

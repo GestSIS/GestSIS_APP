@@ -32,7 +32,7 @@
         <p class="menu-label">Settings</p>
         <ul class="menu-list">
           <li>
-            <a>Logs</a>  
+            <a>Logs</a>
           </li>
           <li>
             <a class>Divers</a>

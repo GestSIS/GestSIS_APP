@@ -8,7 +8,7 @@
             alt="Bulma: a modern CSS framework based on Flexbox"
             width="112"
             height="28"
-          >
+          />
         </a>
 
         <a
@@ -21,7 +21,11 @@
           </span>
         </a>
 
-        <a class="navbar-item is-hidden-desktop" href="https://twitter.com/jgthms" target="_blank">
+        <a
+          class="navbar-item is-hidden-desktop"
+          href="https://twitter.com/jgthms"
+          target="_blank"
+        >
           <span class="icon" style="color: #55acee;">
             <i class="fa fa-twitter"></i>
           </span>
@@ -37,24 +41,48 @@
       <div id="navMenubd-example" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link is-active" href="/documentation/overview/start/">Docs</a>
+            <a
+              class="navbar-link is-active"
+              href="/documentation/overview/start/"
+              >Docs</a
+            >
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="/documentation/overview/start/">Overview</a>
+              <a class="navbar-item" href="/documentation/overview/start/"
+                >Overview</a
+              >
               <a
                 class="navbar-item"
                 href="http://bulma.io/documentation/modifiers/syntax/"
-              >Modifiers</a>
-              <a class="navbar-item" href="http://bulma.io/documentation/columns/basics/">Columns</a>
-              <a class="navbar-item" href="http://bulma.io/documentation/layout/container/">Layout</a>
-              <a class="navbar-item" href="http://bulma.io/documentation/form/general/">Form</a>
-              <a class="navbar-item" href="http://bulma.io/documentation/elements/box/">Elements</a>
+                >Modifiers</a
+              >
+              <a
+                class="navbar-item"
+                href="http://bulma.io/documentation/columns/basics/"
+                >Columns</a
+              >
+              <a
+                class="navbar-item"
+                href="http://bulma.io/documentation/layout/container/"
+                >Layout</a
+              >
+              <a
+                class="navbar-item"
+                href="http://bulma.io/documentation/form/general/"
+                >Form</a
+              >
+              <a
+                class="navbar-item"
+                href="http://bulma.io/documentation/elements/box/"
+                >Elements</a
+              >
 
               <a
                 class="navbar-item is-active"
                 href="http://bulma.io/documentation/components/breadcrumb/"
-              >Components</a>
+                >Components</a
+              >
 
-              <hr class="navbar-divider">
+              <hr class="navbar-divider" />
               <div class="navbar-item">
                 <div>
                   <p class="is-size-6-desktop">
@@ -62,7 +90,9 @@
                   </p>
 
                   <small>
-                    <a class="bd-view-all-versions" href="/versions">View all versions</a>
+                    <a class="bd-view-all-versions" href="/versions"
+                      >View all versions</a
+                    >
                   </small>
                 </div>
               </div>
@@ -70,7 +100,11 @@
           </div>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="http://bulma.io/blog/">Blog</a>
-            <div id="blogDropdown" class="navbar-dropdown" data-style="width: 18rem;">
+            <div
+              id="blogDropdown"
+              class="navbar-dropdown"
+              data-style="width: 18rem;"
+            >
               <a class="navbar-item" href="/2017/08/03/list-of-tags/">
                 <div class="navbar-content">
                   <p>
@@ -80,7 +114,10 @@
                 </div>
               </a>
 
-              <a class="navbar-item" href="/2017/08/01/bulma-bootstrap-comparison/">
+              <a
+                class="navbar-item"
+                href="/2017/08/01/bulma-bootstrap-comparison/"
+              >
                 <div class="navbar-content">
                   <p>
                     <small class="has-text-info">01 Aug 2017</small>
@@ -89,7 +126,10 @@
                 </div>
               </a>
 
-              <a class="navbar-item" href="/2017/07/24/access-previous-bulma-versions/">
+              <a
+                class="navbar-item"
+                href="/2017/07/24/access-previous-bulma-versions/"
+              >
                 <div class="navbar-content">
                   <p>
                     <small class="has-text-info">24 Jul 2017</small>
@@ -99,7 +139,7 @@
               </a>
 
               <a class="navbar-item" href="http://bulma.io/blog/">More posts</a>
-              <hr class="navbar-divider">
+              <hr class="navbar-divider" />
               <div class="navbar-item">
                 <div class="navbar-content">
                   <div class="level is-mobile">
@@ -110,7 +150,10 @@
                     </div>
                     <div class="level-right">
                       <div class="level-item">
-                        <a class="button bd-is-rss is-small" href="http://bulma.io/atom.xml">
+                        <a
+                          class="button bd-is-rss is-small"
+                          href="http://bulma.io/atom.xml"
+                        >
                           <span class="icon is-small">
                             <i class="fa fa-rss"></i>
                           </span>
@@ -132,7 +175,7 @@
                     <div class="level-item">
                       <p>
                         <strong>Extensions</strong>
-                        <br>
+                        <br />
                         <small>Side projects to enhance Bulma</small>
                       </p>
                     </div>
@@ -213,10 +256,9 @@
   </header>
 </template>
 
-
-
-
-    <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+<nav
+  class="main-header navbar navbar-expand bg-white navbar-light border-bottom"
+>
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Navbar -->
-    <navbar/>
+    <navbar />
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
@@ -9,8 +9,8 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" id="main-content">
       <div class="container-fluid">
-        <main-sidebar/>
-        <slot/>
+        <main-sidebar />
+        <slot />
       </div>
     </div>
     <!-- /.content-wrapper -->
@@ -20,7 +20,7 @@
     <!-- /.control-sidebar -->
 
     <!-- Main Footer -->
-    <footer/>
+    <footer />
   </div>
   <!-- ./wrapper -->
   <!-- @else
@@ -33,11 +33,10 @@
   @endif-->
 </template>
 
-
 <script>
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import MainSidebar from "@/components/MainSidebar";
+import Navbar from '@/components/Navbar'
+// import Footer from '@/components/Footer'
+import MainSidebar from '@/components/MainSidebar'
 
 export default {
   components: {
@@ -45,5 +44,5 @@ export default {
     //Footer,
     MainSidebar
   }
-};
+}
 </script>
