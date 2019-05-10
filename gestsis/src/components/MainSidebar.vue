@@ -122,6 +122,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
 /* Shrinking the sidebar from 250px to 80px and center aligining its content*/
 #sidebar.active {
   min-width: 80px;
@@ -139,6 +142,7 @@ svg {
 
 .sidebar-header {
   padding: 1rem;
+  font-size: 1.6em;
 }
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 .sidebar-header strong {
@@ -151,11 +155,7 @@ svg {
   display: block;
 }
 
-ul li a {
-  text-align: left;
-}
-
-#sidebar.active ul li a {
+/*#sidebar.active ul li a {
   padding: 20px 10px;
   text-align: center;
   font-size: 0.85em;
@@ -168,10 +168,10 @@ ul li a {
   margin-bottom: 5px;
 }
 
-/* Same dropdown links padding*/
+!* Same dropdown links padding*!
 #sidebar.active ul ul a {
   padding: 10px !important;
-}
+}*/
 
 /* Changing the arrow position to bottom center position,
        translateX(50%) works with right: 50%
@@ -185,19 +185,13 @@ ul li a {
   transform: translateX(50%);
 }
 
-p {
-  font-size: 1.1em;
-  font-weight: 300;
-  line-height: 1.7em;
-  color: #999;
-}
-
 a,
 a:hover,
 a:focus {
   color: inherit;
   text-decoration: none;
   transition: all 0.3s;
+  outline: none;
 }
 
 #sidebar {
@@ -206,34 +200,15 @@ a:focus {
   transition: all 0.3s;
 }
 
-ul.components {
-  padding: 20px 0;
-  border-bottom: 1px solid #47748b;
-}
-
-ul p {
-  color: #fff;
-  padding: 10px;
-}
-
-ul li a {
-  padding: 10px;
-  font-size: 1.1em;
-  display: block;
-}
 ul li a:hover {
-  color: #7386d5;
+  color: $primary;
   background: #fff;
 }
 
 .router-link-active,
 a[aria-expanded='true'] {
   color: #fff;
-  background: #6d7fcc;
+  background: $primary;
 }
-ul ul a {
-  font-size: 0.9em !important;
-  padding-left: 30px !important;
-  background: #6d7fcc;
-}
+
 </style>
