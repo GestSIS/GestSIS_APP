@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="main-header navbar navbar-expand bg-white navbar-light border-bottom"
+    class="navbar navbar-expand bg-light navbar-light border-bottom border-left"
   >
     <!-- Left navbar links -->
     <ul class="navbar-nav">

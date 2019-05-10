@@ -1,36 +1,29 @@
 <template>
-  <div>
-    <!-- Navbar -->
-    <navbar />
-    <!-- /.navbar -->
+  <div class="wrapper">
+    <div class="wrapper">
+      <!-- Main Sidebar Container -->
+      <main-sidebar />
 
-    <!-- Main Sidebar Container -->
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" id="main-content">
-      <div class="container-fluid">
-        <main-sidebar />
+      <div class="content">
+        <navbar />
         <slot />
       </div>
     </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-    <!-- @include('control-sidebar') -->
-    <!-- /.control-sidebar -->
-
-    <!-- Main Footer -->
     <footer />
   </div>
-  <!-- ./wrapper -->
+
+  <!-- Control Sidebar -->
+  <!-- @include('control-sidebar') -->
+  <!-- /.control-sidebar -->
+
   <!-- @else
-        <div id="main-content">
-          <div class="container-fluid">
-            @include('common')
-            @yield('content')
+          <div id="main-content">
+            <div class="container-fluid">
+              @include('common')
+              @yield('content')
+            </div>
           </div>
-        </div>
-  @endif-->
+    @endif-->
 </template>
 
 <script>
@@ -46,3 +39,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  height: 100%;
+}
+
+.content {
+  flex-grow: 1;
+}
+</style>
