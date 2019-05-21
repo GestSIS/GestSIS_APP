@@ -322,9 +322,9 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'SapeurTabGeneral',
-  mounted(){
+  mounted() {
     console.log(this.listCivilites.length)
-    if(this.listCivilites.length <= 0){
+    if (this.listCivilites.length <= 0) {
       this.$store.dispatch('fetchCivilites')
     }
   },

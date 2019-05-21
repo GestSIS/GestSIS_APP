@@ -16,13 +16,14 @@
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active">
         <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
+        <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
+        <SapeurTabCours v-if="activeTab === tabList.COURS" />
+        <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
+        <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
+        <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
         <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
-        <div v-if="activeTab === tabList.EXERCICES">
-          Exercice
-        </div>
-        <div v-if="activeTab === tabList.BANQUE">
-          Banque
-        </div>
+        <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
+        <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
       </div>
     </div>
   </div>
@@ -43,11 +44,18 @@ const tabList = {
 }
 
 import SapeurTabGeneral from '@/components/SapeurTabGeneral'
+import SapeurTabFonction from '@/components/SapeurTabFonction'
+import SapeurTabCours from '@/components/SapeurTabCours'
+import SapeurTabPromotion from '@/components/SapeurTabPromotion'
+import SapeurTabMateriel from '@/components/SapeurTabMateriel'
+import SapeurTabOrganisation from '@/components/SapeurTabOrganisation'
 import SapeurTabPermis from '@/components/SapeurTabPermis'
+import SapeurTabBanque from '@/components/SapeurTabBanque'
+import SapeurTabExercice from '@/components/SapeurTabExercice'
 
 export default {
   name: 'SapeurDetails',
-  components: { SapeurTabGeneral, SapeurTabPermis },
+  components: { SapeurTabGeneral, SapeurTabFonction, SapeurTabCours, SapeurTabPromotion, SapeurTabMateriel, SapeurTabOrganisation, SapeurTabPermis, SapeurTabBanque, SapeurTabExercice },
   data() {
     return {
       activeTab: tabList.GENERAL,

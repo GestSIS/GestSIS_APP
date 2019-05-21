@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="col-9">
-        <SapeurDetails v-if="activeSapeurId > 0"/>
+        <SapeurDetails v-if="activeSapeurId > 0" />
       </div>
     </div>
   </div>
@@ -29,15 +29,13 @@ import { mapGetters, mapState } from 'vuex'
 import SapeurDetails from '@/components/SapeurDetails'
 
 export default {
-  components:{
+  components: {
     SapeurDetails
   },
   mounted() {
     this.$store.dispatch('fetchListSapeur').then(() => {
-      console.log(this.activeSapeurId)
       if (this.activeSapeurId === 0 && this.listSapeur.length > 0) {
-        console.log('Select first sapeur')
-        this.$store.dispatch('fetchSapeur', this.listSapeur[0].id)
+        this.selectSapeur(this.listSapeur[0].id)
       }
     })
   },
@@ -59,6 +57,7 @@ export default {
   methods: {
     selectSapeur(sapeurId) {
       this.$store.dispatch('fetchSapeur', sapeurId)
+      this.$store.dispatch('fetchSapeurPermis', sapeurId)
     }
   }
 }

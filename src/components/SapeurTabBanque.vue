@@ -1,4 +1,4 @@
-<template <!-- TODO think about data needed for iso20022 generation -->
+<template>
   <div class="row">
     <div class="col-12">
       <!-- general form elements -->
@@ -32,7 +32,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'SapeurTabGeneral',
+  name: 'SapeurTabBanque',
   computed: {
     ...mapGetters(['activeSapeur'])
   }

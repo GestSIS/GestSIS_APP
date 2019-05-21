@@ -14,10 +14,11 @@ Vue.component('no-sidebar-layout', NoSidebar)
 Vue.config.productionTip = false
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser, faFireExtinguisher, faCalendarAlt, faSitemap, faCalculator, faHandHoldingUsd, faEnvelope, faToolbox, faFileMedicalAlt, faSlidersH, faGlobeEurope } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faFireExtinguisher, faCalendarAlt, faCalendar, faSitemap, faCalculator, faHandHoldingUsd, faEnvelope, faToolbox, faFileMedicalAlt, faSlidersH, faGlobeEurope } from '@fortawesome/free-solid-svg-icons'
+import { faGripfire } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUser, faFireExtinguisher, faCalendarAlt, faSitemap, faCalculator, faHandHoldingUsd, faEnvelope, faToolbox, faFileMedicalAlt, faSlidersH, faGlobeEurope)
+library.add(faGripfire, faUser, faFireExtinguisher, faCalendarAlt, faCalendar, faSitemap, faCalculator, faHandHoldingUsd, faEnvelope, faToolbox, faFileMedicalAlt, faSlidersH, faGlobeEurope)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -24,7 +24,7 @@ export default {
   },
   actions: {
     fetchPermisType({ commit }) {
-      return PermisService.getPermis()
+      return BaseDataService.getPermisType()
         .then(res => {
           if (res.data.error !== undefined) {
             throw new Error(res.data.error)
