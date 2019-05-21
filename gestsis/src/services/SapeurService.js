@@ -6,5 +6,11 @@ export default {
   },
   getSapeur(sapeurId) {
     return Api().get('/sapeurs/' + sapeurId)
+  },
+  getPermis(sapeurId) {
+    return Api().get('/sapeurs/' + sapeurId + "/permis")
+  },
+  getTelephones(sapeurId) {
+    return Api().get('/sapeurs/' + sapeurId + "/permis")
   }
 }
