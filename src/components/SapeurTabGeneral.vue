@@ -2,9 +2,9 @@
   <!-- form start -->
   <form role="form">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12 col-lg-6">
         <!-- general form elements -->
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Données personnelles</h3>
           </div>
@@ -143,8 +143,8 @@
                 rows="3"
                 id="f-sap-remarques"
                 name="remarques"
-                >{{ activeSapeur.remarques }}</textarea
-              >
+                v-model="activeSapeur.remarques"
+              ></textarea>
             </div>
           </div>
           <!-- /.card-body -->
@@ -152,7 +152,7 @@
         <!-- /.card -->
 
         <!-- Form Element sizes -->
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Contact</h3>
           </div>
@@ -208,7 +208,7 @@
 
       <div class="col-sm-6">
         <!-- general form elements -->
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Références professionnelles</h3>
           </div>
@@ -252,7 +252,7 @@
         </div>
         <!-- /.card -->
 
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Incorporation / Sortie</h3>
             <button class="btn btn-primary">Modifier</button>
@@ -284,7 +284,7 @@
         </div>
         <!-- /.card -->
 
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Informations</h3>
           </div>
@@ -306,7 +306,7 @@
         </div>
         <!-- /.card -->
 
-        <div class="card card-primary">
+        <div class="card card-primary mb-3">
           <div class="card-footer text-right">
             <button type="submit" class="btn btn-primary">Enregistrer</button>
           </div>

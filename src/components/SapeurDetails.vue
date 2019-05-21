@@ -1,7 +1,6 @@
 <template>
   <div>
-    <nav>
-      <div class="nav nav-tabs" id="nav-tab">
+    <nav class="nav nav-tabs mb-3">
         <a
           v-for="tab in Object.keys(tabList)"
           :key="tab"
@@ -11,7 +10,6 @@
           @click="selectTab(tabList[tab])"
           >{{ tabList[tab] }}</a
         >
-      </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active">

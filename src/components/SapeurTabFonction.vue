@@ -1,9 +1,9 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <h1>Work in Progress</h1>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <h2>Coming soon!</h2>
     </div>
+  </div>
 </template>
 
 <script>
