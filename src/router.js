@@ -24,11 +24,15 @@ export default new Router({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Sapeurs.vue')
+        import('@/pages/Sapeurs.vue')
+    },
+    {
+      path: '/sapeurs/:id',
+      name: 'sapeurs-details',
+      props: true,
+      component: () =>
+        import('@/pages/Sapeurs.vue')
     }
   ]
 })

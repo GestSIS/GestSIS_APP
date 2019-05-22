@@ -95,6 +95,14 @@ export default {
         .then(data => {
           return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
         })
+    },
+    saveActiveSapeur({ state }) {
+      return SapeurService.saveSapeur(state.currentSapeur.data.id, state.currentSapeur.data).then(res => {
+        if (res.data.error !== undefined) {
+          throw new Error(res.data.error)
+        }
+        return res.data.data
+      })
     }
   }
 }

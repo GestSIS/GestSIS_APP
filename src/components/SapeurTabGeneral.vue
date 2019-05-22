@@ -16,10 +16,10 @@
                 class="form-control"
                 id="f-sap-civilite"
                 name="civilite_id"
+                v-model="activeSapeur.civilite_id"
               >
                 <option
                   v-for="civilite in listCivilites"
-                  :selected="civilite.id === activeSapeur.civilite_id"
                   :value="civilite.id"
                   :key="civilite.id"
                   >{{ civilite.designation }}</option
@@ -34,7 +34,7 @@
                 class="form-control"
                 id="f-sap-nom"
                 name="nom"
-                :value="activeSapeur.nom"
+                v-model="activeSapeur.nom"
               />
             </div>
             <!-- PRENOM -->
@@ -45,7 +45,7 @@
                 class="form-control"
                 id="f-sap-prenom"
                 name="prenom"
-                :value="activeSapeur.prenom"
+                v-model="activeSapeur.prenom"
               />
             </div>
             <!-- RUE -->
@@ -58,7 +58,7 @@
                     class="form-control"
                     id="f-sap-rue"
                     name="rue"
-                    :value="activeSapeur.rue"
+                    v-model="activeSapeur.rue"
                   />
                 </div>
               </div>
@@ -70,7 +70,7 @@
                     class="form-control"
                     id="f-sap-no-rue"
                     name="no_rue"
-                    :value="activeSapeur.no_rue"
+                    v-model="activeSapeur.no_rue"
                   />
                 </div>
               </div>
@@ -83,8 +83,14 @@
                 id="f-sap-localite"
                 name="localite_id"
                 style="width: 100%"
+                v-model="activeSapeur.localite_id"
               >
-                <!--<option value="{{ $sap_details['sapeur']['localite_id'] }}">{{ $sap_details['sapeur']['npa'].' '.$sap_details['sapeur']['localite'] }}</option>-->
+                <option
+                  v-for="localite in listLocalitesSis"
+                  :key="localite.id"
+                  :value="localite.id"
+                  >{{ localite.npa + ' ' + localite.designation }}</option
+                >
               </select>
             </div>
             <!-- N° AVS -->
@@ -95,7 +101,7 @@
                 class="form-control"
                 id="f-sap-avs"
                 name="no_avs"
-                :value="activeSapeur.no_avs"
+                v-model="activeSapeur.no_avs"
               />
             </div>
             <!-- DATE NAISSANCE + SUFFIXE -->
@@ -114,7 +120,7 @@
                       type="date"
                       id="f-sap-date-naissance"
                       name="date_naissance"
-                      :value="activeSapeur.date_naissance"
+                      v-model="activeSapeur.date_naissance"
                     />
                   </div>
                 </div>
@@ -127,7 +133,7 @@
                     class="form-control"
                     id="f-sap-suffixe"
                     name="suffixe"
-                    :value="activeSapeur.suffixe"
+                    v-model="activeSapeur.suffixe"
                   />
                 </div>
               </div>
@@ -143,7 +149,7 @@
                 rows="3"
                 id="f-sap-remarques"
                 name="remarques"
-                v-model="activeSapeur.remarques"
+                v-model="activeSapeur.remarque"
               ></textarea>
             </div>
           </div>
@@ -170,7 +176,7 @@
                   type="email"
                   id="f-sap-email"
                   name="email"
-                  :value="activeSapeur.email"
+                  v-model="activeSapeur.email"
                 />
               </div>
             </div>
@@ -223,7 +229,7 @@
                   class="form-control"
                   id="f-sap-profession"
                   name="profession"
-                  :value="activeSapeur.profession"
+                  v-model="activeSapeur.profession"
                 />
               </div>
               <div class="form-group">
@@ -233,7 +239,7 @@
                   class="form-control"
                   id="f-sap-employeur"
                   name="employeur"
-                  :value="activeSapeur.employeur"
+                  v-model="activeSapeur.employeur"
                 />
               </div>
               <div class="form-group">
@@ -243,7 +249,7 @@
                   class="form-control"
                   id="f-sap-lieu-travail"
                   name="lieu_travail"
-                  :value="activeSapeur.lieu_travail"
+                  v-model="activeSapeur.lieu_de_travail"
                 />
               </div>
               <!-- TODO Add image -->
@@ -308,7 +314,9 @@
 
         <div class="card card-primary mb-3">
           <div class="card-footer text-right">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <button @click.prevent="saveSapeur" class="btn btn-primary">
+              Enregistrer
+            </button>
           </div>
         </div>
       </div>
@@ -327,9 +335,26 @@ export default {
     if (this.listCivilites.length <= 0) {
       this.$store.dispatch('fetchCivilites')
     }
+
+    if (this.listLocalitesSis.length <= 0) {
+      this.$store.dispatch('fetchLocalites')
+    }
   },
   computed: {
-    ...mapGetters(['activeSapeur', 'listCivilites'])
+    ...mapGetters(['activeSapeur', 'listCivilites', 'listLocalitesSis'])
+  },
+  methods: {
+    saveSapeur() {
+      this.$store
+        .dispatch('saveActiveSapeur')
+        .then(() => {
+          console.log('Save sapeur Success')
+        })
+        .catch(err => {
+          console.log('Save sapeur Error')
+          console.log(err)
+        })
+    }
   }
 }
 </script>

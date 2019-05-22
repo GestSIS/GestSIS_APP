@@ -52,22 +52,23 @@
             </div>
           </div>
           <ul class="list-group list-group-flush">
-            <li
+            <router-link
               v-for="sapeur in listSapeur"
+              tag="li"
+              :to="`/sapeurs/${sapeur.id}`"
               :key="sapeur.id"
               class="list-group-item list-group-item-action"
               :class="{
-                active: activeSapeurId === sapeur.id
+                active: parseInt(id) === sapeur.id
               }"
-              @click="selectSapeur(sapeur.id)"
             >
               {{ sapeur.nom }} {{ sapeur.prenom }}
-            </li>
+            </router-link>
           </ul>
         </div>
       </div>
-      <div class="col-9">
-        <SapeurDetails v-if="activeSapeurId > 0" />
+      <div class="col-md-9">
+        <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
       </div>
     </div>
   </div>
@@ -97,6 +98,9 @@ export default {
     propName: {
       type: Number,
       default: 0
+    },
+    id: {
+      type: String
     }
   },
   computed: {

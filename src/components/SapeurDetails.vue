@@ -1,6 +1,7 @@
 <template>
   <div>
-    <nav class="nav nav-tabs mb-3">
+    <div v-if="(id || 0) !== 0">
+      <nav class="nav nav-tabs mb-3">
         <a
           v-for="tab in Object.keys(tabList)"
           :key="tab"
@@ -10,24 +11,30 @@
           @click="selectTab(tabList[tab])"
           >{{ tabList[tab] }}</a
         >
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active">
-        <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
-        <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
-        <SapeurTabCours v-if="activeTab === tabList.COURS" />
-        <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
-        <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
-        <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
-        <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
-        <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
-        <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active">
+          <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
+          <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
+          <SapeurTabCours v-if="activeTab === tabList.COURS" />
+          <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
+          <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
+          <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
+          <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
+          <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
+          <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
+        </div>
       </div>
+    </div>
+    <div v-if="(id || 0) === 0">
+      Selectionnez un sapeur
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 //TODO Add Mat
 const tabList = {
   GENERAL: 'General',
@@ -53,16 +60,49 @@ import SapeurTabExercice from '@/components/SapeurTabExercice'
 
 export default {
   name: 'SapeurDetails',
-  components: { SapeurTabGeneral, SapeurTabFonction, SapeurTabCours, SapeurTabPromotion, SapeurTabMateriel, SapeurTabOrganisation, SapeurTabPermis, SapeurTabBanque, SapeurTabExercice },
+  components: {
+    SapeurTabGeneral,
+    SapeurTabFonction,
+    SapeurTabCours,
+    SapeurTabPromotion,
+    SapeurTabMateriel,
+    SapeurTabOrganisation,
+    SapeurTabPermis,
+    SapeurTabBanque,
+    SapeurTabExercice
+  },
   data() {
     return {
       activeTab: tabList.GENERAL,
       tabList: tabList
     }
   },
+  props: {
+    id: {
+      type: Number,
+      default: 0
+    }
+  },
+  mounted() {
+    if(this.id || 0){
+      this.loadDetails()
+    }
+  },
+  computed:{
+    ...mapGetters(['activeSapeurId']),
+  },
   methods: {
     selectTab(tab) {
       this.activeTab = tab
+    },
+    loadDetails(id) {
+      this.$store.dispatch('fetchSapeur', this.id)
+      this.$store.dispatch('fetchSapeurPermis', this.id)
+    }
+  },
+  watch: {
+    id() {
+      this.loadDetails()
     }
   }
 }

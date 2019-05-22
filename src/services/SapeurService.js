@@ -15,5 +15,8 @@ export default {
   },
   getGroupes(sapeurId) {
     return Api().get('/sapeurs/' + sapeurId + "/groupes")
+  },
+  saveSapeur(sapeurId, sapeurData) {
+    return Api().put('/sapeurs/' + sapeurId, sapeurData, {headers: {"Content-Type": "application/json"}})
   }
 }
