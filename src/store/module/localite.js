@@ -3,12 +3,12 @@ import LocaliteService from '../../services/LocaliteService'
 
 export default {
   state: {
-    localites: [],
+    localites: []
   },
   mutations: {
     [types.UPDATE_LOCALITE_LIST](state, payload) {
       state.localites = payload
-    },
+    }
   },
   getters: {
     listLocalites: state => {

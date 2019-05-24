@@ -24,15 +24,13 @@ export default new Router({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      component: () =>
-        import('@/pages/Sapeurs.vue')
+      component: () => import('@/pages/Sapeurs.vue')
     },
     {
       path: '/sapeurs/:id',
       name: 'sapeurs-details',
       props: true,
-      component: () =>
-        import('@/pages/Sapeurs.vue')
+      component: () => import('@/pages/Sapeurs.vue')
     }
   ]
 })

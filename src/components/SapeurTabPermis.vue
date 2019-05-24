@@ -2,10 +2,19 @@
   <div class="row">
     <div class="col-12">
       <div class="card card-primary card-outline">
+        <div class="card-header d-flex flex-row">
+          <h3 class="card-title">Permis de conduire</h3>
+          <button
+            @click.prevent="savePermis"
+            class="btn btn-primary flex-shrink-1"
+          >
+            Enregistrer
+          </button>
+        </div>
         <div class="card-body">
           <table class="table">
             <tbody>
-              <tr v-for="permis in listPermisType">
+              <tr v-for="permis in permisData" :key="permis.permis_type_id">
                 <td class="text-right">
                   <font-awesome-icon
                     class="text-danger"
@@ -23,22 +32,14 @@
                 <td>
                   <div class="input-group">
                     <div class="input-group-prepend">
-                      <div class="" class="input-group-text">
+                      <div class="input-group-text">
                         <font-awesome-icon icon="calendar" />
                       </div>
                     </div>
                     <input
                       type="date"
                       class="form-control"
-                      :value="
-                        activeSapeurPermis
-                          .map(p => p.permis_type_id)
-                          .includes(permis.id)
-                          ? activeSapeurPermis.filter(
-                              p => p.permis_type_id === permis.id
-                            )[0].date
-                          : ''
-                      "
+                      v-model="permis.date"
                     />
                   </div>
                 </td>
@@ -58,7 +59,8 @@ export default {
   name: 'SapeurTabPermis',
   data() {
     return {
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.BASE_URL,
+      permisData: {}
     }
   },
   computed: {
@@ -66,7 +68,66 @@ export default {
   },
   mounted() {
     if (this.listPermisType.length === 0) {
-      this.$store.dispatch('fetchPermisType')
+      this.$store.dispatch('fetchPermisType').then(() => {
+        this.initPermisData()
+      })
+    } else {
+      this.initPermisData()
+    }
+  },
+  watch: {
+    activeSapeurPermis() {
+      this.initPermisData()
+    }
+  },
+  methods: {
+    initPermisData() {
+      this.permisData = {}
+
+      this.listPermisType.forEach(p => {
+        this.permisData[p.id] = {
+          permis_type_id: p.id,
+          type: p.type,
+          date: null,
+          id: null
+        }
+      })
+      this.activeSapeurPermis.forEach(p => {
+        this.permisData[p.permis_type_id] = {
+          ...this.permisData[p.permis_type_id],
+          date: p.date,
+          id: p.id
+        }
+        this.permisData[p.permis_type_id].date = p.date
+      })
+    },
+    savePermis() {
+      Object.values(this.permisData).forEach(p => {
+        //New one
+        if (p.id === null && p.date !== null) {
+          console.log({
+            id: p.id,
+            permis_type_id: p.permis_type_id,
+            date: p.date
+          })
+          this.$store.dispatch('addPermis', {
+            permis_type_id: p.permis_type_id,
+            date: p.date
+          })
+        }
+        //Removed
+        else if (p.id !== null && (p.date === null || p.date === '')) {
+          this.$store.dispatch('removePermis', p.id)
+        }
+        //Edited
+        else if (
+          p.id !== null &&
+          p.date !==
+            this.activeSapeurPermis.filter(permis => permis.id === p.id)[0].date
+        ) {
+          this.$store.dispatch('editPermis', { permis_id: p.id, date: p.date })
+        }
+      })
     }
   }
 }

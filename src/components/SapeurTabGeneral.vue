@@ -79,7 +79,7 @@
             <div class="form-group">
               <label for="f-sap-localite">NPA Localité</label>
               <select
-                class="required"
+                class="form-control required"
                 id="f-sap-localite"
                 name="localite_id"
                 style="width: 100%"
@@ -111,9 +111,9 @@
                   <label for="f-sap-date-naissance">Date de naissance</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"
-                        ><i class="fa fa-calendar"></i
-                      ></span>
+                      <div class="input-group-text">
+                        <font-awesome-icon icon="calendar" />
+                      </div>
                     </div>
                     <input
                       class="form-control"
@@ -167,9 +167,9 @@
               <label for="f-sap-email">Email</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"
-                    ><i class="fa fa-envelope"></i
-                  ></span>
+                  <div class="input-group-text">
+                    <font-awesome-icon icon="envelope" />
+                  </div>
                 </div>
                 <input
                   class="form-control"
@@ -212,12 +212,13 @@
       </div>
       <!-- /.col -->
 
-      <div class="col-sm-6">
+      <div class="col-sm-12 col-lg-6">
         <!-- general form elements -->
         <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Références professionnelles</h3>
           </div>
+          <!-- /.card-header -->
           <!-- /.card-header -->
           <!-- form start -->
           <form role="form">

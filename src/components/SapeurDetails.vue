@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 
 //TODO Add Mat
 const tabList = {
@@ -84,18 +84,18 @@ export default {
     }
   },
   mounted() {
-    if(this.id || 0){
+    if (this.id || 0) {
       this.loadDetails()
     }
   },
-  computed:{
-    ...mapGetters(['activeSapeurId']),
+  computed: {
+    ...mapGetters(['activeSapeurId'])
   },
   methods: {
     selectTab(tab) {
       this.activeTab = tab
     },
-    loadDetails(id) {
+    loadDetails() {
       this.$store.dispatch('fetchSapeur', this.id)
       this.$store.dispatch('fetchSapeurPermis', this.id)
     }
