@@ -20,16 +20,9 @@ export default {
   },
   actions: {
     fetchLocalites({ commit }) {
-      return LocaliteService.getLocalites()
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_LOCALITE_LIST, data)
-        })
+      return LocaliteService.getLocalites().then(data => {
+        return commit(types.UPDATE_LOCALITE_LIST, data)
+      })
     }
   }
 }

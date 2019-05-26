@@ -24,28 +24,14 @@ export default {
   },
   actions: {
     fetchPermisType({ commit }) {
-      return BaseDataService.getPermisType()
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_PERMIS_LIST, data)
-        })
+      return BaseDataService.getPermisType().then(data => {
+        return commit(types.UPDATE_PERMIS_LIST, data)
+      })
     },
     fetchCivilites({ commit }) {
-      return BaseDataService.getCivilites()
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_CIVILITE_LIST, data)
-        })
+      return BaseDataService.getCivilites().then(data => {
+        return commit(types.UPDATE_CIVILITE_LIST, data)
+      })
     }
   }
 }

@@ -40,6 +40,9 @@
                       type="date"
                       class="form-control"
                       v-model="permis.date"
+                      :class="{
+                        'is-invalid': isInvalid(permis.permis_type_id)
+                      }"
                     />
                   </div>
                 </td>
@@ -60,7 +63,8 @@ export default {
   data() {
     return {
       publicPath: process.env.BASE_URL,
-      permisData: {}
+      permisData: {},
+      errors: {}
     }
   },
   computed: {
@@ -83,6 +87,7 @@ export default {
   methods: {
     initPermisData() {
       this.permisData = {}
+      this.errors = {}
 
       this.listPermisType.forEach(p => {
         this.permisData[p.id] = {
@@ -101,23 +106,36 @@ export default {
         this.permisData[p.permis_type_id].date = p.date
       })
     },
+    saveSuccessfull(permis_type_id) {
+      this.errors = {
+        ...this.errors,
+        [permis_type_id]: undefined
+      }
+    },
+    saveError(permis_type_id, error) {
+      this.errors = {
+        ...this.errors,
+        [permis_type_id]: error
+      }
+    },
     savePermis() {
       Object.values(this.permisData).forEach(p => {
         //New one
         if (p.id === null && p.date !== null) {
-          console.log({
-            id: p.id,
-            permis_type_id: p.permis_type_id,
-            date: p.date
-          })
-          this.$store.dispatch('addPermis', {
-            permis_type_id: p.permis_type_id,
-            date: p.date
-          })
+          this.$store
+            .dispatch('addPermis', {
+              permis_type_id: p.permis_type_id,
+              date: p.date
+            })
+            .then(() => this.saveSuccessfull(p.permis_type_id))
+            .catch(err => this.saveError(p.permis_type_id, err))
         }
         //Removed
         else if (p.id !== null && (p.date === null || p.date === '')) {
-          this.$store.dispatch('removePermis', p.id)
+          this.$store
+            .dispatch('removePermis', p.id)
+            .then(() => this.saveSuccessfull(p.permis_type_id))
+            .catch(err => this.saveError(p.permis_type_id, err))
         }
         //Edited
         else if (
@@ -125,9 +143,18 @@ export default {
           p.date !==
             this.activeSapeurPermis.filter(permis => permis.id === p.id)[0].date
         ) {
-          this.$store.dispatch('editPermis', { permis_id: p.id, date: p.date })
+          this.$store
+            .dispatch('editPermis', { permis_id: p.id, date: p.date })
+            .then(() => this.saveSuccessfull(p.permis_type_id))
+            .catch(err => this.saveError(p.permis_type_id, err))
+        } else {
+          //Remove potential error messages
+          this.saveSuccessfull(p.permis_type_id)
         }
       })
+    },
+    isInvalid(key) {
+      return this.errors[key] !== undefined
     }
   }
 }

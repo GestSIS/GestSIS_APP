@@ -41,7 +41,7 @@ export default {
       state.currentSapeur.permis = payload
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
-      state.currentSapeur.permis = [state.currentSapeur.permis, payload]
+      state.currentSapeur.permis = [...state.currentSapeur.permis, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = state.currentSapeur.permis.filter(
@@ -57,64 +57,29 @@ export default {
   },
   actions: {
     fetchListSapeur({ commit }) {
-      return SapeurService.getSapeurs()
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_SAPEURS_LIST, data)
-        })
+      return SapeurService.getSapeurs().then(data => {
+        return commit(types.UPDATE_SAPEURS_LIST, data)
+      })
     },
     fetchSapeur({ commit }, payload) {
-      SapeurService.getData(payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_CURRENT_SAPEUR, data)
-        })
+      SapeurService.getData(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR, data)
+      })
     },
     fetchSapeurPermis({ commit }, payload) {
-      SapeurService.getPermis(payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
-        })
+      SapeurService.getPermis(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
+      })
     },
     fetchSapeurTelephone({ commit }, payload) {
-      SapeurService.getPermis(payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
-        })
+      SapeurService.getPermis(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
+      })
     },
     fetchSapeurGroupe({ commit }, payload) {
-      SapeurService.getPermis(payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
-        })
+      SapeurService.getPermis(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
+      })
     },
     saveActiveSapeur({ state }) {
       return SapeurService.saveSapeur(
@@ -128,43 +93,30 @@ export default {
       })
     },
     addPermis({ state, commit }, payload) {
-      return SapeurService.addPermis(state.currentSapeur.data.id, payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          commit(types.ADD_CURRENT_SAPEUR_PERMIS, data)
+      return SapeurService.addPermis(state.currentSapeur.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_PERMIS, data)
           return data
-        })
+        }
+      )
     },
     editPermis({ state, commit }, payload) {
-      return SapeurService.editPermis(state.currentSapeur.data.id, payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
-          return data
-        })
+      return SapeurService.editPermis(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
+        return data
+      })
     },
     removePermis({ state, commit }, payload) {
-      return SapeurService.removePermis(state.currentSapeur.data.id, payload)
-        .then(res => {
-          if (res.data.error !== undefined) {
-            throw new Error(res.data.error)
-          }
-          return res.data.data
-        })
-        .then(data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
-          return data
-        })
+      return SapeurService.removePermis(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
+        return data
+      })
     }
   }
 }
