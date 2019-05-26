@@ -5,9 +5,13 @@ export default {
   state: {
     sapeurs: [],
     currentSapeur: {
+      id: 0,
       permis: [],
       data: {},
-      telephones: []
+      telephones: [],
+      groupes: [],
+      grades: [],
+      fonctions: []
     }
   },
   getters: {
@@ -22,15 +26,33 @@ export default {
     activeSapeurPermis: state => {
       return state.currentSapeur.permis
     },
+    activeSapeurTelephones: state => {
+      return state.currentSapeur.telephones
+    },
+    activeSapeurGrades: state => {
+      return state.currentSapeur.grades
+    },
+    activeSapeurCours: state => {
+      return state.currentSapeur.cours
+    },
+    activeSapeurFonctions: state => {
+      return state.currentSapeur.fonctions
+    },
+    activeSapeurGroupes: state => {
+      return state.currentSapeur.groupes
+    },
     activeSapeurId: state => {
-      return state.currentSapeur.data.id || 0
+      return state.currentSapeur.id || 0
     }
   },
   mutations: {
     [types.UPDATE_SAPEURS_LIST](state, payload) {
       state.sapeurs = payload
     },
-    [types.UPDATE_CURRENT_SAPEUR](state, payload) {
+    [types.SELECT_CURRENT_SAPEUR](state, payload) {
+      state.currentSapeur.id = payload
+    },
+    [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.currentSapeur.data = payload
       state.sapeurs = [
         ...state.sapeurs.filter(s => s.id !== payload.id),
@@ -39,6 +61,18 @@ export default {
     },
     [types.UPDATE_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = payload
+    },
+    [types.UPDATE_CURRENT_SAPEUR_GRADES](state, payload) {
+      state.currentSapeur.grades = payload
+    },
+    [types.UPDATE_CURRENT_SAPEUR_GROUPES](state, payload) {
+      state.currentSapeur.groupes = payload
+    },
+    [types.UPDATE_CURRENT_SAPEUR_COURS](state, payload) {
+      state.currentSapeur.cours = payload
+    },
+    [types.UPDATE_CURRENT_SAPEUR_FONCTIONS](state, payload) {
+      state.currentSapeur.fonctions = payload
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = [...state.currentSapeur.permis, payload]
@@ -56,6 +90,9 @@ export default {
     }
   },
   actions: {
+    selectSapeur({ commit }, payload){
+      return commit(types.SELECT_CURRENT_SAPEUR, payload)
+    },
     fetchListSapeur({ commit }) {
       return SapeurService.getSapeurs().then(data => {
         return commit(types.UPDATE_SAPEURS_LIST, data)
@@ -63,7 +100,7 @@ export default {
     },
     fetchSapeur({ commit }, payload) {
       SapeurService.getData(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_SAPEUR, data)
+        return commit(types.UPDATE_CURRENT_SAPEUR_DATA, data)
       })
     },
     fetchSapeurPermis({ commit }, payload) {
@@ -72,13 +109,28 @@ export default {
       })
     },
     fetchSapeurTelephone({ commit }, payload) {
-      SapeurService.getPermis(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
+      SapeurService.getTelephones(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
+      })
+    },
+    fetchSapeurGrade({ commit }, payload) {
+      SapeurService.getGrades(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
+      })
+    },
+    fetchSapeurFonction({ commit }, payload) {
+      SapeurService.getFonctions(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
+      })
+    },
+    fetchSapeurCours({ commit }, payload) {
+      SapeurService.getCours(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
       })
     },
     fetchSapeurGroupe({ commit }, payload) {
-      SapeurService.getPermis(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
+      SapeurService.getGroupes(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
       })
     },
     saveActiveSapeur({ state }) {

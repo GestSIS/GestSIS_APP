@@ -339,9 +339,16 @@ export default {
     if (this.listLocalitesSis.length <= 0) {
       this.$store.dispatch('fetchLocalites')
     }
+
+    this.$store.dispatch('fetchSapeur', this.activeSapeurId)
   },
   computed: {
-    ...mapGetters(['activeSapeur', 'listCivilites', 'listLocalitesSis'])
+    ...mapGetters(['activeSapeur', 'activeSapeurId', 'listCivilites', 'listLocalitesSis'])
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeur', id)
+    }
   },
   methods: {
     saveSapeur() {

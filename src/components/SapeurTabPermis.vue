@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['listPermisType', 'activeSapeurPermis'])
+    ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId'])
   },
   mounted() {
     if (this.listPermisType.length === 0) {
@@ -82,6 +82,11 @@ export default {
   watch: {
     activeSapeurPermis() {
       this.initPermisData()
+    },
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurPermis', id).then(() => {
+        this.initPermisData()
+      })
     }
   },
   methods: {

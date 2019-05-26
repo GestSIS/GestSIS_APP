@@ -96,8 +96,7 @@ export default {
       this.activeTab = tab
     },
     loadDetails() {
-      this.$store.dispatch('fetchSapeur', this.id)
-      this.$store.dispatch('fetchSapeurPermis', this.id)
+      this.$store.dispatch('selectSapeur', this.id)
     }
   },
   watch: {

@@ -109,8 +109,7 @@ export default {
   },
   methods: {
     selectSapeur(sapeurId) {
-      this.$store.dispatch('fetchSapeur', sapeurId)
-      this.$store.dispatch('fetchSapeurPermis', sapeurId)
+      this.$store.dispatch('selectSapeur', sapeurId)
     }
   }
 }

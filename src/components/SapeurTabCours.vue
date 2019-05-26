@@ -2,29 +2,147 @@
   <div class="row">
     <div class="col-12">
       <h2>Coming soon!</h2>
-      <!--      &lt;!&ndash; general form elements &ndash;&gt;-->
-      <!--      <div class="card card-primary card-outline">-->
-      <!--        &lt;!&ndash; /.card-header &ndash;&gt;-->
-      <!--        <div class="card-body">-->
-      <!--          <table id="sap-groupe" class="table" cellspacing="0" width="100%">-->
-      <!--            <thead>-->
-      <!--              <tr>-->
-      <!--                <th data-field="groupe">Groupe</th>-->
-      <!--                <th data-field="designation">Désignation</th>-->
-      <!--              </tr>-->
-      <!--            </thead>-->
-      <!--            <tbody>-->
-      <!--              @foreach($sap_details['groupes'] as $groupe)-->
-      <!--              <tr id="row_{{ $groupe['id'] }}">-->
-      <!--                <td>{{ $groupe['no'] != 0 ? $groupe['no'] : '' }}</td>-->
-      <!--                <td>{{ $groupe['nom'] }}</td>-->
-      <!--              </tr>-->
-      <!--              @endforeach-->
-      <!--            </tbody>-->
-      <!--          </table>-->
-      <!--          &lt;!&ndash; TODO Fetch data &ndash;&gt;-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <div class="card">
+        <div class="card-header">
+          <h3>Paramètres pour la saisie d'un cours</h3>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="cours-name">Cours</label>
+            <select
+              id="cours-name"
+              v-model="selectedCours"
+              class="form-control"
+            >
+              <option
+                v-for="_cours in coursData"
+                :key="_cours.id"
+                :value="_cours.id"
+                >{{ _cours.nom }}</option
+              >
+              <!-- TODO limiter le nombre de cours -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cours-date">Date du cours</label>
+            <input type="date" class="form-control" id="cours-date" />
+          </div>
+          <div class="form-group">
+            <label for="cours-localite">Cours</label>
+            <select id="cours-localite" class="form-control">
+              <option>Saulcy</option>
+              <option>Glovelier</option>
+              <option>Bassecourt</option>
+              <option>Courfaivre</option>
+              <option>Boécourt</option>
+              <!-- TODO Lister les localités -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cours-precedent">Cours précédent</label>
+            <select
+              id="cours-precedent"
+              v-model="cou_pre_id"
+              class="form-control"
+            >
+              <option
+                v-for="_cours in coursData"
+                :key="_cours.id"
+                :value="_cours.id"
+                >{{ _cours.nom }}</option
+              >
+              <!-- Limiter le nombre de cours -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Grade</label>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <select
+                  v-model="gra_id"
+                  class="form-control select"
+                  data-placeholder="Select a State"
+                  tabindex="-1"
+                >
+                  <option
+                    v-for="_grade in gradeData"
+                    :key="_grade.id"
+                    :value="_grade.id"
+                    >{{ _grade.nom }}</option
+                  >
+                </select>
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <input type="date" class="form-control" />
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+
+          <div class="form-group">
+            <label>Fonction</label>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <select v-model="fon_id" class="form-control select" disabled>
+                  <option
+                    v-for="_fonction in fonctionData"
+                    :key="_fonction.id"
+                    :value="_fonction.id"
+                    >{{ _fonction.nom }}</option
+                  >
+                </select>
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <input type="date" class="form-control" />
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <div class="form-group">
+            <label>Fonction remplacé</label>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <!-- TODO Add v-model with the current grade of the sapeur -->
+                <select class="form-control" disabled>
+                  <option
+                    v-for="_fonction in fonctionData"
+                    :key="_fonction.id"
+                    :value="_fonction.id"
+                    >{{ _fonction.nom }}</option
+                  >
+                </select>
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary">Sauvegarder</button>
+          <button type="submit" class="btn btn-secondary">Annuler</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +153,12 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabCours',
   computed: {
-    ...mapGetters(['activeSapeur'])
+    ...mapGetters(['activeSapeurCours', 'activeSapeurId'])
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurCours', id)
+    }
   }
 }
 </script>
