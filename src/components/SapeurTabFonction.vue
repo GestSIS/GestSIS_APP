@@ -17,7 +17,7 @@
                 <th>Fin</th>
                 <th>Fonction</th>
                 <th>Remarques</th>
-                <th>Actions</th>
+                <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>

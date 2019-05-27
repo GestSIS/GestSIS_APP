@@ -9,26 +9,28 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="cours-date">Date de la promotion</label>
-        <input type="date" class="form-control" id="cours-date" />
+        <input type="date" v-model="activeGrade.date" class="form-control" id="cours-date" />
       </div>
       <div class="form-group">
         <label for="grade">Grade</label>
-        <select id="grade" v-model="grade_id" class="form-control select">
+        <select id="grade" v-model="activeGrade.grade_id" class="form-control select">
           <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
             g.designation
-            }}</option>
+          }}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="remarque">Remarque</label>
-        <input type="text" class="form-control" id="remarque" />
+        <input type="text" v-model="activeGrade.remarque" class="form-control" id="remarque" />
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Close
+        Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">Add</button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -38,33 +40,10 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalCours',
-  data: function() {
-    return {
-      date: Date.now(),
-      cours_id: 1,
-      grade_id: 0,
-      fonction_id: 0,
-      precedent_id: 0,
-      remplace_id: 0
-    }
-  },
   computed: {
-    ...mapGetters([
-      'activeSapeurId',
-      'listCours',
-      'listFonctions',
-      'listGrades',
-      'getCours',
-      'listLocalites'
-    ])
+    ...mapGetters(['activeSapeurId', 'listGrades', 'activeGrade'])
   },
   mounted() {
-    if (this.listCours.length === 0) {
-      this.$store.dispatch('fetchCours')
-    }
-    if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
-    }
     if (this.listGrades.length === 0) {
       this.$store.dispatch('fetchGrades')
     }
@@ -72,29 +51,14 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      //TODO SAVE
-    }
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id)
-    },
-    selectedCours: function(newOne) {
-      this.cours = this.coursData.filter(elt => {
-        return elt.id == newOne
-      })[0]
-      let id_fon = (this.fon_id = this.cours.id_fon)
-      let id_gra = (this.gra_id = this.cours.id_gra)
-      this.cou_pre_id = this.cours.prec
-      if (id_gra > 0) {
-        this.grade = this.gradeData.filter(elt => {
-          return elt.id == id_gra
-        })[0]
-      }
-      if (id_fon > 0) {
-        this.fonction = this.fonctionData.filter(elt => {
-          return elt.id == id_fon
-        })[0]
+      if ((this.activeGrade.id || 0) === 0) {
+        this.$store.dispatch('addGrade', this.activeGrade).then(() => {
+          this.HIDE_MODAL()
+        })
+      } else {
+        this.$store.dispatch('editGrade', this.activeGrade).then(() => {
+          this.HIDE_MODAL()
+        })
       }
     }
   }

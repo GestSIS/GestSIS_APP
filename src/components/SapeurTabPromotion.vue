@@ -9,7 +9,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            @click="SHOW_MODAL('ModalPromotion')"
+            @click="newGrade"
           >
             Ajouter une promotion
           </button>
@@ -18,18 +18,35 @@
           <table id="sap-promotions" class="table" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th data-field="date">Date</th>
-                <th data-field="Abr">Abr</th>
-                <th data-field="designation">Désignation</th>
-                <th data-field="remarques">Remarques</th>
+                <th>Date</th>
+                <th>Désignation</th>
+                <th>Remarques</th>
+                <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="g in activeSapeurGrades" :key="g.id">
                 <td>{{ g.date }}</td>
-                <td>{{ getGrade(g.grade_id).abreviation }}</td>
                 <td>{{ getGrade(g.grade_id).designation }}</td>
                 <td>{{ g.remarque }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary border-0"
+                      @click="editGrade(g.id)"
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      @click="supprimerGrade(g.id)"
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -66,7 +83,21 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL'])
+    ...mapMutations(['SHOW_MODAL']),
+    newGrade() {
+      this.$store.dispatch('resetActiveGrade')
+      this.SHOW_MODAL('ModalPromotion')
+    },
+    editGrade(grade_id) {
+      this.$store.dispatch(
+        'updateActiveGrade',
+        this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
+      )
+      this.SHOW_MODAL('ModalPromotion')
+    },
+    supprimerGrade(grade_id) {
+      this.$store.dispatch('removeGrade', grade_id)
+    }
   }
 }
 </script>

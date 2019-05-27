@@ -3,11 +3,20 @@ import GradeService from '../../services/GradeService'
 
 export default {
   state: {
-    grades: []
+    grades: [],
+    currentGrade: {
+      id: 0,
+      grade_id: 0,
+      date: null,
+      remarque: ''
+    }
   },
   mutations: {
     [types.UPDATE_GRADE_LIST](state, payload) {
       state.grades = payload
+    },
+    [types.UPDATE_CURRENT_GRADE](state, payload) {
+      state.currentGrade = payload
     }
   },
   getters: {
@@ -16,12 +25,26 @@ export default {
     },
     getGrade: state => grade_id => {
       return state.grades.filter(g => g.id === grade_id)[0]
+    },
+    activeGrade: state => {
+      return state.currentGrade
     }
   },
   actions: {
     fetchGrades({ commit }) {
       return GradeService.getGrades().then(data => {
         return commit(types.UPDATE_GRADE_LIST, data)
+      })
+    },
+    updateActiveGrade({ commit }, payload) {
+      return commit(types.UPDATE_CURRENT_GRADE, payload)
+    },
+    resetActiveGrade({ commit }) {
+      return commit(types.UPDATE_CURRENT_GRADE, {
+        id: 0,
+        grade_id: 0,
+        date: null,
+        remarque: ''
       })
     }
   }
