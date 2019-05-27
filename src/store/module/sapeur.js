@@ -60,6 +60,9 @@ export default {
         payload
       ]
     },
+    [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
+      state.currentSapeur.telephones = payload
+    },
     [types.UPDATE_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = payload
     },

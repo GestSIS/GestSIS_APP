@@ -1,16 +1,15 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <h2>Coming soon!</h2>
       <!-- general form elements -->
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Promotions</h3>
           <button
             type="button"
             class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#modal-promotion"
+            @click="SHOW_MODAL('ModalPromotion')"
           >
             Ajouter une promotion
           </button>
@@ -41,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'SapeurTabPromotion',
@@ -65,6 +64,9 @@ export default {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurGrades', id)
     }
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL'])
   }
 }
 </script>

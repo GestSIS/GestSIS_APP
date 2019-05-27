@@ -8,6 +8,7 @@
         <navbar />
         <slot />
       </div>
+      <app-modal />
     </div>
     <footer />
   </div>
@@ -28,14 +29,14 @@
 
 <script>
 import Navbar from '@/components/Navbar'
-// import Footer from '@/components/Footer'
+import AppModal from '@/components/AppModal'
 import MainSidebar from '@/components/MainSidebar'
 
 export default {
   components: {
     Navbar,
-    //Footer,
-    MainSidebar
+    MainSidebar,
+    AppModal
   }
 }
 </script>

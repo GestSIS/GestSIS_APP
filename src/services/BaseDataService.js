@@ -7,4 +7,7 @@ export default {
   getCivilites() {
     return Api().get('/civilites/')
   },
+  getTelephones() {
+    return Api().get('/telephone-types/')
+  }
 }

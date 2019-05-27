@@ -4,7 +4,8 @@ import BaseDataService from '../../services/BaseDataService'
 export default {
   state: {
     permisTypes: [],
-    civilites: []
+    civilites: [],
+    telephoneTypes: []
   },
   mutations: {
     [types.UPDATE_PERMIS_LIST](state, payload) {
@@ -12,6 +13,9 @@ export default {
     },
     [types.UPDATE_CIVILITE_LIST](state, payload) {
       state.civilites = payload
+    },
+    [types.UPDATE_TELEPHONE_LIST](state, payload) {
+      state.telephoneTypes = payload
     }
   },
   getters: {
@@ -20,6 +24,12 @@ export default {
     },
     listCivilites: state => {
       return state.civilites
+    },
+    listTelephoneTypes: state => {
+      return state.telephoneTypes
+    },
+    getTelephone: state => id => {
+      return state.telephoneTypes.filter(t => t.id === id)[0]
     }
   },
   actions: {
@@ -31,6 +41,11 @@ export default {
     fetchCivilites({ commit }) {
       return BaseDataService.getCivilites().then(data => {
         return commit(types.UPDATE_CIVILITE_LIST, data)
+      })
+    },
+    fetchTelephones({ commit }) {
+      return BaseDataService.getTelephones().then(data => {
+        return commit(types.UPDATE_TELEPHONE_LIST, data)
       })
     }
   }

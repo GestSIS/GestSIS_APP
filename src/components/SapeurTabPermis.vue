@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <div class="card card-primary card-outline">
-        <div class="card-header d-flex flex-row">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Permis de conduire</h3>
           <button
             @click.prevent="savePermis"

@@ -1,74 +1,82 @@
 <template>
-  <div class="container-fluid">
-    <h1>Sapeurs</h1>
-    <div class="row">
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline">
-          <div class="card-header">
-            <h3 class="card-title">Filtres</h3>
-            <div class="card-body px-0">
-              <form id="f-sapeur-filters" action="/" method="GET">
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutActif"
-                    name="actif"
-                    class="custom-control-input"
-                    value="1"
-                    checked
-                  />
-                  <label class="custom-control-label" for="statutActif"
-                    >Actif</label
+  <div>
+    <div class="container-fluid">
+      <h1>Sapeurs</h1>
+      <div class="row">
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline">
+            <div class="card-header">
+              <h3 class="card-title">Filtres</h3>
+              <div class="card-body px-0">
+                <form id="f-sapeur-filters" action="/" method="GET">
+                  <div
+                    class="custom-control custom-radio custom-control-inline"
                   >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutInactif"
-                    name="actif"
-                    class="custom-control-input"
-                    value="0"
-                    checked
-                  />
-                  <label class="custom-control-label" for="statutInactif"
-                    >Inactif</label
+                    <input
+                      type="radio"
+                      id="statutActif"
+                      name="actif"
+                      class="custom-control-input"
+                      value="1"
+                      checked
+                    />
+                    <label class="custom-control-label" for="statutActif"
+                      >Actif</label
+                    >
+                  </div>
+                  <div
+                    class="custom-control custom-radio custom-control-inline"
                   >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutTous"
-                    name="actif"
-                    class="custom-control-input"
-                    value=""
-                    checked
-                  />
-                  <label class="custom-control-label" for="statutTous"
-                    >Tous</label
+                    <input
+                      type="radio"
+                      id="statutInactif"
+                      name="actif"
+                      class="custom-control-input"
+                      value="0"
+                      checked
+                    />
+                    <label class="custom-control-label" for="statutInactif"
+                      >Inactif</label
+                    >
+                  </div>
+                  <div
+                    class="custom-control custom-radio custom-control-inline"
                   >
-                </div>
-              </form>
+                    <input
+                      type="radio"
+                      id="statutTous"
+                      name="actif"
+                      class="custom-control-input"
+                      value=""
+                      checked
+                    />
+                    <label class="custom-control-label" for="statutTous"
+                      >Tous</label
+                    >
+                  </div>
+                </form>
+              </div>
             </div>
+            <ul class="list-group list-group-flush">
+              <router-link
+                v-for="sapeur in listSapeur"
+                tag="li"
+                :to="`/sapeurs/${sapeur.id}`"
+                :key="sapeur.id"
+                class="list-group-item list-group-item-action"
+                :class="{
+                  active: parseInt(id) === sapeur.id
+                }"
+              >
+                {{ sapeur.nom }} {{ sapeur.prenom }}
+              </router-link>
+            </ul>
           </div>
-          <ul class="list-group list-group-flush">
-            <router-link
-              v-for="sapeur in listSapeur"
-              tag="li"
-              :to="`/sapeurs/${sapeur.id}`"
-              :key="sapeur.id"
-              class="list-group-item list-group-item-action"
-              :class="{
-                active: parseInt(id) === sapeur.id
-              }"
-            >
-              {{ sapeur.nom }} {{ sapeur.prenom }}
-            </router-link>
-          </ul>
         </div>
-      </div>
-      <div class="col-md-9">
-        <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
+        <div class="col-md-9">
+          <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
+        </div>
       </div>
     </div>
   </div>
