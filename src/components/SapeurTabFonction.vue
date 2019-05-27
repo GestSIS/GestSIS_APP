@@ -21,8 +21,8 @@
                 <td>{{ f.debut }}</td>
                 <td>{{ fonction(f.fonction_id).abreviation }}</td>
                 <td>{{ fonction(f.fonction_id).nom }}</td>
-                <td>{{ fonction(f.fonction_id).fin }}</td>
-                <td>{{ fonction(f.fonction_id).remarque }}</td>
+                <td>{{ f.fin }}</td>
+                <td>{{ f.remarque }}</td>
               </tr>
             </tbody>
           </table>
