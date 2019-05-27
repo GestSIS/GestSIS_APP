@@ -16,6 +16,9 @@ export default {
     },
     listLocalitesSis: state => {
       return state.localites
+    },
+    getLocalite: state => localite_id => {
+      return state.localites.filter(l => l.id === localite_id)[0]
     }
   },
   actions: {

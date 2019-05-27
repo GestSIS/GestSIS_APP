@@ -13,6 +13,9 @@ export default {
   getters: {
     listCours: state => {
       return state.cours
+    },
+    getCours: state => cours_id => {
+      return state.cours.filter(c => c.id === cours_id)[0]
     }
   },
   actions: {

@@ -2,6 +2,42 @@
   <div class="row">
     <div class="col-12">
       <h2>Coming soon!</h2>
+      <!-- general form elements -->
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#modal-cours"
+          >
+            Ajouter un cours
+          </button>
+        </div>
+        <div class="card-body">
+          <table id="sap-cours" class="table" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th data-field="date">Date</th>
+                <th data-field="Abr">Abr</th>
+                <th data-field="designation">Désignation</th>
+                <th data-field="lieu">Lieu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="c in activeSapeurCours" :key="c.id">
+                <td>{{ c.date }}</td>
+                <td>{{ getCours(c.cours_id).abreviation }}</td>
+                <td>{{ getCours(c.cours_id).designation }}</td>
+                <td>{{ getLocalite(c.localite_id).designation }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- TODO Fetch data -->
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <h3>Paramètres pour la saisie d'un cours</h3>
@@ -67,10 +103,10 @@
                   tabindex="-1"
                 >
                   <option
-                    v-for="_grade in gradeData"
-                    :key="_grade.id"
-                    :value="_grade.id"
-                    >{{ _grade.nom }}</option
+                    v-for="_cours in coursData"
+                    :key="_cours.id"
+                    :value="_cours.id"
+                    >{{ _cours.nom }}</option
                   >
                 </select>
               </div>
@@ -120,7 +156,7 @@
           <div class="row">
             <div class="col-md-8">
               <div class="form-group">
-                <!-- TODO Add v-model with the current grade of the sapeur -->
+                <!-- TODO Add v-model with the current cours of the sapeur -->
                 <select class="form-control" disabled>
                   <option
                     v-for="_fonction in fonctionData"
@@ -153,7 +189,21 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabCours',
   computed: {
-    ...mapGetters(['activeSapeurCours', 'activeSapeurId'])
+    ...mapGetters([
+      'activeSapeurCours',
+      'activeSapeurId',
+      'listCours',
+      'getCours',
+      'getLocalite'
+    ])
+  },
+  mounted() {
+    if (this.listCours.length === 0) {
+      this.$store.dispatch('fetchCours')
+    }
+    if (this.activeSapeurCours.length === 0) {
+      this.$store.dispatch('fetchSapeurCours', this.activeSapeurId)
+    }
   },
   watch: {
     activeSapeurId(id) {

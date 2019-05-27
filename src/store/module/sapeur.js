@@ -11,7 +11,8 @@ export default {
       telephones: [],
       groupes: [],
       grades: [],
-      fonctions: []
+      fonctions: [],
+      cours: []
     }
   },
   getters: {

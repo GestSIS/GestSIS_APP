@@ -26,13 +26,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="g in activeSapeurGrades"
-                :key="g.id"
-              >
+              <tr v-for="g in activeSapeurGrades" :key="g.id">
                 <td>{{ g.date }}</td>
-                <td>{{ grade(g.grade_id).abreviation}}</td>
-                <td>{{ grade(g.grade_id).grade }}</td>
+                <td>{{ getGrade(g.grade_id).abreviation }}</td>
+                <td>{{ getGrade(g.grade_id).designation }}</td>
                 <td>{{ g.remarque }}</td>
               </tr>
             </tbody>
@@ -49,7 +46,12 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabPromotion',
   computed: {
-    ...mapGetters(['activeSapeurGrades', 'activeSapeurId', 'listGrades'])
+    ...mapGetters([
+      'activeSapeurGrades',
+      'activeSapeurId',
+      'listGrades',
+      'getGrade'
+    ])
   },
   mounted() {
     if (this.listGrades.length === 0) {
@@ -62,11 +64,6 @@ export default {
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurGrades', id)
-    }
-  },
-  methods: {
-    grade(grade_id) {
-      return this.listGrades.filter(g => g.id === grade_id)[0]
     }
   }
 }

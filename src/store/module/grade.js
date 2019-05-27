@@ -14,6 +14,9 @@ export default {
     listGrades: state => {
       return state.grades
     },
+    getGrade: state => grade_id => {
+      return state.grades.filter(g => g.id === grade_id)[0]
+    }
   },
   actions: {
     fetchGrades({ commit }) {
