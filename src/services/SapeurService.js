@@ -51,6 +51,7 @@ export default {
   removeTelephone(sapeurId, telephoneId) {
     return Api().delete('/sapeurs/' + sapeurId + '/telephones/' + telephoneId)
   },
+
   addPermis(sapeurId, permisData) {
     return Api().post('/sapeurs/' + sapeurId + '/permis/', permisData, {
       headers: { 'Content-Type': 'application/json' }
@@ -67,5 +68,41 @@ export default {
   },
   removePermis(sapeurId, permisId) {
     return Api().delete('/sapeurs/' + sapeurId + '/permis/' + permisId)
+  },
+
+  addFonction(sapeurId, fonctionData) {
+    return Api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+  },
+  editFonction(sapeurId, fonctionData) {
+    return Api().put(
+      '/sapeurs/' + sapeurId + '/fonctions/' + fonctionData.id,
+      fonctionData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeFonction(sapeurId, fonctionId) {
+    return Api().delete('/sapeurs/' + sapeurId + '/fonctions/' + fonctionId)
+  },
+
+  addGrade(sapeurId, gradeData) {
+    return Api().post('/sapeurs/' + sapeurId + '/grades/', gradeData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+  },
+  editGrade(sapeurId, gradeData) {
+    return Api().put(
+      '/sapeurs/' + sapeurId + '/grades/' + gradeData.id,
+      gradeData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeGrade(sapeurId, gradeId) {
+    return Api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId)
   }
 }

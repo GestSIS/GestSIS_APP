@@ -103,6 +103,24 @@
               v-model="activeSapeur.no_avs"
             />
           </div>
+          <!-- Email -->
+          <div class="form-group">
+            <label for="f-sap-email">Email</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <font-awesome-icon icon="envelope" />
+                </div>
+              </div>
+              <input
+                class="form-control"
+                type="email"
+                id="f-sap-email"
+                name="email"
+                v-model="activeSapeur.email"
+              />
+            </div>
+          </div>
           <!-- DATE NAISSANCE + SUFFIXE -->
           <div class="row">
             <div class="col-6">
@@ -152,37 +170,17 @@
             ></textarea>
           </div>
         </div>
-        <!-- /.card-body -->
       </div>
-      <!-- /.card -->
 
-      <!-- Form Element sizes -->
+      <!-- Téléphones -->
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Contact</h3>
+          <h3 class="card-title">Téléphones</h3>
           <button @click.prevent="saveTelephones" class="btn btn-primary">
             Enregistrer
           </button>
         </div>
         <div class="card-body table-responsive">
-          <div class="form-group">
-            <label for="f-sap-email">Email</label>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon icon="envelope" />
-                </div>
-              </div>
-              <input
-                class="form-control"
-                type="email"
-                id="f-sap-email"
-                name="email"
-                v-model="activeSapeur.email"
-              />
-            </div>
-          </div>
-          <label>Téléphones</label>
           <table class="table">
             <thead>
               <tr>
@@ -366,7 +364,7 @@ export default {
     draggable
   },
   data() {
-    return { telephonesData: [], email: '' }
+    return { telephonesData: [] }
   },
   mounted() {
     if (this.listCivilites.length === 0) {

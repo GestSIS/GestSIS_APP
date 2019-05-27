@@ -31,7 +31,11 @@
       </div>
       <div class="form-group">
         <label for="cours-precedent">Cours précédent</label>
-        <select id="cours-precedent" v-model="precedent_id" class="form-control">
+        <select
+          id="cours-precedent"
+          v-model="precedent_id"
+          class="form-control"
+        >
           <option v-for="c in listCours" :key="c.id" :value="c.id">{{
             c.designation
           }}</option>

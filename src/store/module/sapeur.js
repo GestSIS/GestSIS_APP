@@ -115,6 +115,40 @@ export default {
         ...state.currentSapeur.telephones.filter(p => p.id !== payload.id),
         payload
       ]
+    },
+
+    [types.ADD_CURRENT_SAPEUR_FONCTION](state, payload) {
+      state.currentSapeur.fonctions = [
+        ...state.currentSapeur.fonctions,
+        payload
+      ]
+    },
+    [types.REMOVE_CURRENT_SAPEUR_FONCTION](state, payload) {
+      state.currentSapeur.fonctions = state.currentSapeur.fonctions.filter(
+        p => p.id !== payload
+      )
+    },
+    [types.EDIT_CURRENT_SAPEUR_FONCTION](state, payload) {
+      state.currentSapeur.fonctions = [
+        ...state.currentSapeur.fonctions.filter(p => p.id !== payload.id),
+        payload
+      ]
+      console.log(state.currentSapeur.fonctions)
+    },
+
+    [types.ADD_CURRENT_SAPEUR_GRADE](state, payload) {
+      state.currentSapeur.grades = [...state.currentSapeur.grades, payload]
+    },
+    [types.REMOVE_CURRENT_SAPEUR_GRADE](state, payload) {
+      state.currentSapeur.grades = state.currentSapeur.grades.filter(
+        p => p.id !== payload
+      )
+    },
+    [types.EDIT_CURRENT_SAPEUR_GRADE](state, payload) {
+      state.currentSapeur.grades = [
+        ...state.currentSapeur.grades.filter(p => p.id !== payload.id),
+        payload
+      ]
     }
   },
   actions: {
@@ -186,6 +220,7 @@ export default {
         return data
       })
     },
+
     editTelephone({ state, commit }, payload) {
       return SapeurService.editTelephone(
         state.currentSapeur.data.id,
@@ -204,6 +239,7 @@ export default {
         return data
       })
     },
+
     addPermis({ state, commit }, payload) {
       return SapeurService.addPermis(state.currentSapeur.data.id, payload).then(
         async data => {
@@ -227,6 +263,60 @@ export default {
         payload
       ).then(async data => {
         await commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
+        return data
+      })
+    },
+
+    addFonction({ state, commit }, payload) {
+      return SapeurService.addFonction(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
+        return data
+      })
+    },
+    editFonction({ state, commit }, payload) {
+      return SapeurService.editFonction(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
+        return data
+      })
+    },
+    removeFonction({ state, commit }, payload) {
+      return SapeurService.removeFonction(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload)
+        return data
+      })
+    },
+
+    addGrade({ state, commit }, payload) {
+      return SapeurService.addGrade(state.currentSapeur.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_GRADE, data)
+          return data
+        }
+      )
+    },
+    editGrade({ state, commit }, payload) {
+      return SapeurService.editGrade(state.currentSapeur.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_GRADE, data)
+          return data
+        }
+      )
+    },
+    removeGrade({ state, commit }, payload) {
+      return SapeurService.removeGrade(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload)
         return data
       })
     }
