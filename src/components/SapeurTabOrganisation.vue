@@ -36,12 +36,12 @@ export default {
   },
   mounted() {
     if (this.activeSapeurGroupes.length === 0) {
-      this.$store.dispatch('fetchSapeurGroupe', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId)
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGroupe', id)
+      this.$store.dispatch('fetchSapeurGroupes', id)
     }
   }
 }

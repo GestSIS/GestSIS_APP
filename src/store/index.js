@@ -4,6 +4,9 @@ import Vuex from 'vuex'
 import sapeurModule from './module/sapeur'
 import baseDataModule from './module/baseData'
 import localiteModule from './module/localite'
+import gradeModule from './module/grade'
+import fonctionModule from './module/fonction'
+import coursModule from './module/cours'
 
 Vue.use(Vuex)
 
@@ -14,6 +17,9 @@ export default new Vuex.Store({
   modules: {
     sapeur: sapeurModule,
     baseData: baseDataModule,
-    localites: localiteModule
+    localites: localiteModule,
+    grade: gradeModule,
+    fonction: fonctionModule,
+    cours: coursModule
   }
 })

@@ -90,7 +90,7 @@ export default {
     }
   },
   actions: {
-    selectSapeur({ commit }, payload){
+    selectSapeur({ commit }, payload) {
       return commit(types.SELECT_CURRENT_SAPEUR, payload)
     },
     fetchListSapeur({ commit }) {
@@ -108,17 +108,17 @@ export default {
         return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       })
     },
-    fetchSapeurTelephone({ commit }, payload) {
+    fetchSapeurTelephones({ commit }, payload) {
       SapeurService.getTelephones(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
       })
     },
-    fetchSapeurGrade({ commit }, payload) {
+    fetchSapeurGrades({ commit }, payload) {
       SapeurService.getGrades(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
       })
     },
-    fetchSapeurFonction({ commit }, payload) {
+    fetchSapeurFonctions({ commit }, payload) {
       SapeurService.getFonctions(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
       })
@@ -128,7 +128,7 @@ export default {
         return commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
       })
     },
-    fetchSapeurGroupe({ commit }, payload) {
+    fetchSapeurGroupes({ commit }, payload) {
       SapeurService.getGroupes(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
       })

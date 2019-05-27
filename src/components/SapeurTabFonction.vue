@@ -17,12 +17,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="fonction in activeSapeurFonctions" :key="fonction.id">
-                <td>{{ fonction.debut }}</td>
-                <td>{{ fonction.nom_abr }}</td>
-                <td>{{ fonction.nom }}</td>
-                <td>{{ fonction.fin }}</td>
-                <td>{{ fonction.remarque }}</td>
+              <tr v-for="f in activeSapeurFonctions" :key="f.id">
+                <td>{{ f.debut }}</td>
+                <td>{{ fonction(f.fonction_id).abreviation }}</td>
+                <td>{{ fonction(f.fonction_id).nom }}</td>
+                <td>{{ fonction(f.fonction_id).fin }}</td>
+                <td>{{ fonction(f.fonction_id).remarque }}</td>
               </tr>
             </tbody>
           </table>
@@ -38,16 +38,24 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabFonction',
   computed: {
-    ...mapGetters(['activeSapeurFonctions', 'activeSapeurId'])
+    ...mapGetters(['activeSapeurFonctions', 'activeSapeurId', 'listFonctions'])
   },
   mounted() {
+    if (this.listFonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions')
+    }
     if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonction', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurFonction', id)
+      this.$store.dispatch('fetchSapeurFonctions', id)
+    }
+  },
+  methods: {
+    fonction(fonction_id) {
+      return this.listFonctions.filter(f => f.id === fonction_id)[0]
     }
   }
 }

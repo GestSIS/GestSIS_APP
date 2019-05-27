@@ -53,7 +53,7 @@ export default {
   },
   mounted() {
     if (this.activeSapeurGrades.length === 0) {
-      this.$store.dispatch('fetchSapeurGrade', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
     }
   },
   watch: {

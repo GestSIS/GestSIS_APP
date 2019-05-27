@@ -343,7 +343,12 @@ export default {
     this.$store.dispatch('fetchSapeur', this.activeSapeurId)
   },
   computed: {
-    ...mapGetters(['activeSapeur', 'activeSapeurId', 'listCivilites', 'listLocalitesSis'])
+    ...mapGetters([
+      'activeSapeur',
+      'activeSapeurId',
+      'listCivilites',
+      'listLocalitesSis'
+    ])
   },
   watch: {
     activeSapeurId(id) {
