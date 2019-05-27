@@ -26,7 +26,8 @@ import {
   faToolbox,
   faFileMedicalAlt,
   faSlidersH,
-  faGlobeEurope
+  faGlobeEurope,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
@@ -47,7 +48,8 @@ library.add(
   faSlidersH,
   faGlobeEurope,
   faEdit,
-  faTrashAlt
+  faTrashAlt,
+  faPlus
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

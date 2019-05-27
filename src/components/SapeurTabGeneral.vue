@@ -158,8 +158,11 @@
 
       <!-- Form Element sizes -->
       <div class="card card-primary card-outline mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Contact</h3>
+          <button @click.prevent="saveTelephones" class="btn btn-primary">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body table-responsive">
           <div class="form-group">
@@ -190,24 +193,38 @@
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <draggable
-              tag="tbody"
-              v-model="activeSapeurTelephones"
-              group="people"
-              @start="drag = true"
-              @end="drag = false"
-            >
-              <tr v-for="t in activeSapeurTelephones" :key="t.id">
-                <td scope="row">{{ t.priorite }}</td>
-                <td>{{ t.numero }}</td>
-                <td>{{ getTelephone(t.telephone_type_id).type }}</td>
-                <td><input type="checkbox" v-model="t.rta" disabled></td>
+            <draggable tag="tbody" v-model="telephones">
+              <tr v-for="t in telephones" :key="t.id">
+                <td class="text-center">{{ t.priorite }}</td>
+                <td>
+                  <input
+                    class="form-control"
+                    type="text"
+                    v-model="t.numero"
+                    placeholder="..."
+                  />
+                </td>
+                <td>
+                  <select class="form-control" v-model="t.telephone_type_id">
+                    <option
+                      v-for="t in listTelephoneTypes"
+                      :value="t.id"
+                      :key="t.id"
+                      >{{ t.type }}</option
+                    >
+                  </select>
+                </td>
+                <td class="align-middle text-center">
+                  <input type="checkbox" v-model="t.rta" />
+                </td>
                 <td>
                   <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-outline-primary border-0">
-                      <font-awesome-icon :icon="['far', 'edit']" />
-                    </button>
-                    <button type="button" class="btn btn-outline-danger border-0">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      @click="removeTelephone(t.priorite)"
+                      required
+                    >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />
                     </button>
                   </div>
@@ -215,22 +232,23 @@
               </tr>
             </draggable>
           </table>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            @click="addTelephone()"
+            :disabled="this.telephonesData.length >= 3"
+          >
+            <font-awesome-icon class="mr-1" :icon="['fas', 'plus']" />
+            Ajouter un numéro
+          </button>
         </div>
       </div>
-
-      <!-- /.card -->
     </div>
-    <!-- /.col -->
-
     <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
         <div class="card-header">
           <h3 class="card-title">Références professionnelles</h3>
         </div>
-        <!-- /.card-header -->
-        <!-- /.card-header -->
-        <!-- form start -->
         <form role="form">
           <div class="card-body">
             <div class="form-group">
@@ -278,34 +296,48 @@
         <!-- form start -->
         <form role="form">
           <div class="card-body">
-            <table
-              data-toggle="table"
-              data-url="http://bootstrap-table.wenzhixin.net.cn/examples/gh/get/response.json/wenzhixin/bootstrap-table/tree/master/docs/data/data1/"
-              data-search="true"
-              data-show-refresh="true"
-              data-show-toggle="true"
-              data-show-columns="true"
-            >
+            <table class="table">
               <thead>
                 <tr>
-                  <th data-field="date">Date</th>
-                  <th data-field="Abr">Abr</th>
-                  <th data-field="designation">Désignation</th>
-                  <th data-field="remarques">Remarques</th>
+                  <th>Incorporation</th>
+                  <th>Sortie</th>
+                  <th>Motif</th>
+                  <th>Localité</th>
+                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
+              <tbody>
+                <tr v-for="m in activeSapeurMutations" :key="m.id">
+                  <td>{{ m.incorporation }}</td>
+                  <td>{{ m.sortie }}</td>
+                  <td>{{ m.motif }}</td>
+                  <td>{{ getLocalite(m.localite_id).designation }}</td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0"
+                      >
+                        <font-awesome-icon :icon="['far', 'edit']" />
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </form>
       </div>
-      <!-- /.card -->
-
       <div class="card card-primary card-outline mb-3">
         <div class="card-header">
           <h3 class="card-title">Informations</h3>
         </div>
-        <!-- /.card-header -->
-        <!-- form start -->
         <form role="form">
           <div class="card-body">
             <div class="form-group">
@@ -333,21 +365,30 @@ export default {
   components: {
     draggable
   },
+  data() {
+    return { telephonesData: [], email: '' }
+  },
   mounted() {
     if (this.listCivilites.length === 0) {
       this.$store.dispatch('fetchCivilites')
     }
-
     if (this.listLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites')
     }
-
     if (this.listTelephoneTypes.length === 0) {
       this.$store.dispatch('fetchTelephones')
     }
-
     if (this.activeSapeurTelephones.length === 0) {
-      this.$store.dispatch('fetchSapeurTelephones', this.activeSapeurId)
+      this.$store
+        .dispatch('fetchSapeurTelephones', this.activeSapeurId)
+        .then(() => {
+          this.telephonesData = [
+            ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
+          ]
+        })
+    }
+    if (this.activeSapeurMutations.length === 0) {
+      this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId)
     }
     this.$store.dispatch('fetchSapeur', this.activeSapeurId)
   },
@@ -355,27 +396,36 @@ export default {
     ...mapGetters([
       'activeSapeur',
       'activeSapeurId',
+      'activeSapeurMutations',
+      'activeSapeurTelephones',
       'listCivilites',
       'listLocalitesSis',
       'listTelephoneTypes',
+      'getLocalite',
       'getTelephone'
     ]),
-    activeSapeurTelephones: {
-      get() {
-        return this.$store.state.sapeur.currentSapeur.telephones
-          .slice(0)
-          .sort((t1, t2) => t1.priorite - t2.priorite)
+    telephones: {
+      get: function() {
+        return this.telephonesData
       },
-      set(value) {
-        value.forEach((g, i) => (g.priorite = i + 1))
-        this.$store.commit('UPDATE_CURRENT_SAPEUR_TELEPHONES', value)
+      set(telephones) {
+        telephones.forEach((t, i) => (t.priorite = i + 1))
+
+        this.telephonesData = telephones.sort(
+          (t1, t2) => t1.priorite - t2.priorite
+        )
       }
     }
   },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeur', id)
-      this.$store.dispatch('fetchSapeurTelephones', id)
+      this.$store.dispatch('fetchSapeurTelephones', id).then(() => {
+        this.telephonesData = [
+          ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
+        ]
+      })
+      this.$store.dispatch('fetchSapeurMutations', id)
     }
   },
   methods: {
@@ -389,6 +439,43 @@ export default {
           console.log('Save sapeur Error')
           console.log(err)
         })
+    },
+    saveTelephones() {
+      //TODO Validation de toutes les données
+
+      this.activeSapeurTelephones.forEach(t => {
+        //Suppression des numéros supprimé
+        if (this.telephones.filter(t2 => t2.id === t.id).length === 0) {
+          this.$store.dispatch('removeTelephone', t.id)
+        }
+      })
+
+      this.telephones.forEach(t => {
+        //numéros modifiés
+        if (t.id !== null) {
+          this.$store.dispatch('editTelephone', t)
+        }
+        //Nouveaux numéros
+        else {
+          this.$store.dispatch('addTelephone', t)
+        }
+      })
+    },
+    addTelephone() {
+      if (this.telephonesData.length < 3) {
+        this.telephones = [
+          ...this.telephones,
+          {
+            id: null,
+            telephone_type_id: 0, //this.listTelephoneTypes[0].id, //TODO Choisir si select de base
+            rta: 0,
+            priorite: this.telephones.length + 1
+          }
+        ]
+      }
+    },
+    removeTelephone(priorite) {
+      this.telephones = this.telephones.filter(t => t.priorite !== priorite)
     }
   }
 }

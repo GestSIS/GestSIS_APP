@@ -12,6 +12,7 @@ export default {
       groupes: [],
       grades: [],
       fonctions: [],
+      mutations: [],
       cours: []
     }
   },
@@ -38,6 +39,9 @@ export default {
     },
     activeSapeurFonctions: state => {
       return state.currentSapeur.fonctions
+    },
+    activeSapeurMutations: state => {
+      return state.currentSapeur.mutations
     },
     activeSapeurGroupes: state => {
       return state.currentSapeur.groupes
@@ -78,6 +82,9 @@ export default {
     [types.UPDATE_CURRENT_SAPEUR_FONCTIONS](state, payload) {
       state.currentSapeur.fonctions = payload
     },
+    [types.UPDATE_CURRENT_SAPEUR_MUTATIONS](state, payload) {
+      state.currentSapeur.mutations = payload
+    },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = [...state.currentSapeur.permis, payload]
     },
@@ -89,6 +96,23 @@ export default {
     [types.EDIT_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.currentSapeur.permis = [
         ...state.currentSapeur.permis.filter(p => p.id !== payload.id),
+        payload
+      ]
+    },
+    [types.ADD_CURRENT_SAPEUR_TELEPHONE](state, payload) {
+      state.currentSapeur.telephones = [
+        ...state.currentSapeur.telephones,
+        payload
+      ]
+    },
+    [types.REMOVE_CURRENT_SAPEUR_TELEPHONE](state, payload) {
+      state.currentSapeur.telephones = state.currentSapeur.telephones.filter(
+        p => p.id !== payload
+      )
+    },
+    [types.EDIT_CURRENT_SAPEUR_TELEPHONE](state, payload) {
+      state.currentSapeur.telephones = [
+        ...state.currentSapeur.telephones.filter(p => p.id !== payload.id),
         payload
       ]
     }
@@ -103,37 +127,42 @@ export default {
       })
     },
     fetchSapeur({ commit }, payload) {
-      SapeurService.getData(payload).then(data => {
+      return SapeurService.getData(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_DATA, data)
       })
     },
     fetchSapeurPermis({ commit }, payload) {
-      SapeurService.getPermis(payload).then(data => {
+      return SapeurService.getPermis(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       })
     },
     fetchSapeurTelephones({ commit }, payload) {
-      SapeurService.getTelephones(payload).then(data => {
+      return SapeurService.getTelephones(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
       })
     },
     fetchSapeurGrades({ commit }, payload) {
-      SapeurService.getGrades(payload).then(data => {
+      return SapeurService.getGrades(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
       })
     },
     fetchSapeurFonctions({ commit }, payload) {
-      SapeurService.getFonctions(payload).then(data => {
+      return SapeurService.getFonctions(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
       })
     },
     fetchSapeurCours({ commit }, payload) {
-      SapeurService.getCours(payload).then(data => {
+      return SapeurService.getCours(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
       })
     },
+    fetchSapeurMutations({ commit }, payload) {
+      return SapeurService.getMutations(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_SAPEUR_MUTATIONS, data)
+      })
+    },
     fetchSapeurGroupes({ commit }, payload) {
-      SapeurService.getGroupes(payload).then(data => {
+      return SapeurService.getGroupes(payload).then(data => {
         return commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
       })
     },
@@ -146,6 +175,33 @@ export default {
           throw new Error(res.data.error)
         }
         return res.data.data
+      })
+    },
+    addTelephone({ state, commit }, payload) {
+      return SapeurService.addTelephone(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
+        return data
+      })
+    },
+    editTelephone({ state, commit }, payload) {
+      return SapeurService.editTelephone(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data)
+        return data
+      })
+    },
+    removeTelephone({ state, commit }, payload) {
+      return SapeurService.removeTelephone(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload)
+        return data
       })
     },
     addPermis({ state, commit }, payload) {

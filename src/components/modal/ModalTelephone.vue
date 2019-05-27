@@ -13,10 +13,14 @@
       </div>
       <div class="form-group">
         <label for="telephone">Type de numéro</label>
-        <select id="telephone" v-model="fonction_id" class="form-control select">
-          <option v-for="t in listTelephones" :key="t.id" :value="t.id">{{
-            t.designation
-            }}</option>
+        <select
+          id="telephone"
+          v-model="fonction_id"
+          class="form-control select"
+        >
+          <option v-for="t in listTelephones" :key="t.id" :value="t.id">
+            {{ t.designation }}
+          </option>
         </select>
       </div>
       <div class="form-group">
@@ -34,71 +38,73 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
-  export default {
-    name: 'ModalCours',
-    data: function() {
-      return {
-        date: Date.now(),
-        cours_id: 1,
-        grade_id: 0,
-        fonction_id: 0,
-        precedent_id: 0,
-        remplace_id: 0
-      }
+export default {
+  name: 'ModalCours',
+  data: function() {
+    return {
+      date: Date.now(),
+      cours_id: 1,
+      grade_id: 0,
+      fonction_id: 0,
+      precedent_id: 0,
+      remplace_id: 0
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'activeSapeurId',
+      'listCours',
+      'listFonctions',
+      'listGrades',
+      'getCours',
+      'listLocalites'
+    ])
+  },
+  mounted() {
+    if (this.listCours.length === 0) {
+      this.$store.dispatch('fetchCours')
+    }
+    if (this.listFonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions')
+    }
+    if (this.listGrades.length === 0) {
+      this.$store.dispatch('fetchGrades')
+    }
+  },
+  methods: {
+    ...mapMutations(['HIDE_MODAL']),
+    save() {
+      //TODO Check validity
+
+      //TODO SAVE
+    }
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurCours', id)
     },
-    computed: {
-      ...mapGetters([
-        'activeSapeurId',
-        'listCours',
-        'listFonctions',
-        'listGrades',
-        'getCours',
-        'listLocalites'
-      ])
-    },
-    mounted() {
-      if (this.listCours.length === 0) {
-        this.$store.dispatch('fetchCours')
-      }
-      if (this.listFonctions.length === 0) {
-        this.$store.dispatch('fetchFonctions')
-      }
-      if (this.listGrades.length === 0) {
-        this.$store.dispatch('fetchGrades')
-      }
-    },
-    methods: {
-      ...mapMutations(['HIDE_MODAL']),
-      save() {
-        //TODO SAVE
-      }
-    },
-    watch: {
-      activeSapeurId(id) {
-        this.$store.dispatch('fetchSapeurCours', id)
-      },
-      selectedCours: function(newOne) {
-        this.cours = this.coursData.filter(elt => {
-          return elt.id == newOne
+    selectedCours: function(newOne) {
+      this.cours = this.coursData.filter(elt => {
+        return elt.id == newOne
+      })[0]
+      let id_fon = (this.fon_id = this.cours.id_fon)
+      let id_gra = (this.gra_id = this.cours.id_gra)
+      this.cou_pre_id = this.cours.prec
+      if (id_gra > 0) {
+        this.grade = this.gradeData.filter(elt => {
+          return elt.id == id_gra
         })[0]
-        let id_fon = (this.fon_id = this.cours.id_fon)
-        let id_gra = (this.gra_id = this.cours.id_gra)
-        this.cou_pre_id = this.cours.prec
-        if (id_gra > 0) {
-          this.grade = this.gradeData.filter(elt => {
-            return elt.id == id_gra
-          })[0]
-        }
-        if (id_fon > 0) {
-          this.fonction = this.fonctionData.filter(elt => {
-            return elt.id == id_fon
-          })[0]
-        }
+      }
+      if (id_fon > 0) {
+        this.fonction = this.fonctionData.filter(elt => {
+          return elt.id == id_fon
+        })[0]
       }
     }
   }
+}
 </script>
 
 <style scoped></style>
