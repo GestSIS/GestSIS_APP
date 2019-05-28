@@ -133,7 +133,6 @@ export default {
         ...state.currentSapeur.fonctions.filter(p => p.id !== payload.id),
         payload
       ]
-      console.log(state.currentSapeur.fonctions)
     },
 
     [types.ADD_CURRENT_SAPEUR_GRADE](state, payload) {
@@ -147,6 +146,21 @@ export default {
     [types.EDIT_CURRENT_SAPEUR_GRADE](state, payload) {
       state.currentSapeur.grades = [
         ...state.currentSapeur.grades.filter(p => p.id !== payload.id),
+        payload
+      ]
+    },
+
+    [types.ADD_CURRENT_SAPEUR_COURS](state, payload) {
+      state.currentSapeur.cours = [...state.currentSapeur.cours, payload]
+    },
+    [types.REMOVE_CURRENT_SAPEUR_COURS](state, payload) {
+      state.currentSapeur.cours = state.currentSapeur.cours.filter(
+        c => c.id !== payload
+      )
+    },
+    [types.EDIT_CURRENT_SAPEUR_COURS](state, payload) {
+      state.currentSapeur.cours = [
+        ...state.currentSapeur.cours.filter(c => c.id !== payload.id),
         payload
       ]
     }
@@ -317,6 +331,32 @@ export default {
         payload
       ).then(async data => {
         await commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload)
+        return data
+      })
+    },
+
+    addCours({ state, commit }, payload) {
+      return SapeurService.addCours(state.currentSapeur.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_COURS, data)
+          return data
+        }
+      )
+    },
+    editCours({ state, commit }, payload) {
+      return SapeurService.editCours(state.currentSapeur.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_COURS, data)
+          return data
+        }
+      )
+    },
+    removeCours({ state, commit }, payload) {
+      return SapeurService.removeCours(
+        state.currentSapeur.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload)
         return data
       })
     }

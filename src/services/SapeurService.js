@@ -104,5 +104,23 @@ export default {
   },
   removeGrade(sapeurId, gradeId) {
     return Api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId)
+  },
+
+  addCours(sapeurId, coursData) {
+    return Api().post('/sapeurs/' + sapeurId + '/cours/', coursData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+  },
+  editCours(sapeurId, coursData) {
+    return Api().put(
+      '/sapeurs/' + sapeurId + '/cours/' + coursData.id,
+      coursData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeCours(sapeurId, coursId) {
+    return Api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId)
   }
 }

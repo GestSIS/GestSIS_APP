@@ -88,7 +88,10 @@ export default {
     editFonction(fonction_id) {
       this.$store.dispatch(
         'updateActiveFonction',
-        this.activeSapeurFonctions.filter(f => f.id === fonction_id)[0]
+        Object.assign(
+          {},
+          this.activeSapeurFonctions.filter(f => f.id === fonction_id)[0]
+        )
       )
       this.SHOW_MODAL('ModalFonction')
     },

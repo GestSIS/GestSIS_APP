@@ -376,19 +376,16 @@ export default {
     if (this.listTelephoneTypes.length === 0) {
       this.$store.dispatch('fetchTelephones')
     }
-    if (this.activeSapeurTelephones.length === 0) {
-      this.$store
-        .dispatch('fetchSapeurTelephones', this.activeSapeurId)
-        .then(() => {
-          this.telephonesData = [
-            ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
-          ]
-        })
-    }
-    if (this.activeSapeurMutations.length === 0) {
-      this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId)
-    }
+
     this.$store.dispatch('fetchSapeur', this.activeSapeurId)
+    this.$store
+      .dispatch('fetchSapeurTelephones', this.activeSapeurId)
+      .then(() => {
+        this.telephonesData = [
+          ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
+        ]
+      })
+    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId)
   },
   computed: {
     ...mapGetters([

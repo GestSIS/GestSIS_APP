@@ -6,11 +6,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Promotions</h3>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="newGrade"
-          >
+          <button type="button" class="btn btn-primary" @click="newGrade">
             Ajouter une promotion
           </button>
         </div>
@@ -91,7 +87,10 @@ export default {
     editGrade(grade_id) {
       this.$store.dispatch(
         'updateActiveGrade',
-        this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
+        Object.assign(
+          {},
+          this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
+        )
       )
       this.SHOW_MODAL('ModalPromotion')
     },

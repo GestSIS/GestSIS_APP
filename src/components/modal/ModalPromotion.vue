@@ -9,11 +9,20 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="cours-date">Date de la promotion</label>
-        <input type="date" v-model="activeGrade.date" class="form-control" id="cours-date" />
+        <input
+          type="date"
+          v-model="activeGrade.date"
+          class="form-control"
+          id="cours-date"
+        />
       </div>
       <div class="form-group">
         <label for="grade">Grade</label>
-        <select id="grade" v-model="activeGrade.grade_id" class="form-control select">
+        <select
+          id="grade"
+          v-model="activeGrade.grade_id"
+          class="form-control select"
+        >
           <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
             g.designation
           }}</option>
@@ -21,7 +30,12 @@
       </div>
       <div class="form-group">
         <label for="remarque">Remarque</label>
-        <input type="text" v-model="activeGrade.remarque" class="form-control" id="remarque" />
+        <input
+          type="text"
+          v-model="activeGrade.remarque"
+          class="form-control"
+          id="remarque"
+        />
       </div>
     </div>
     <div class="modal-footer">
