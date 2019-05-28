@@ -156,6 +156,9 @@ export default {
     },
     activeCoursId() {
       return this.activeCours.cours_id
+    },
+    activesFonctions() {
+      return this.activeSapeurFonctions.filter(f => f.fin === null)
     }
   },
   mounted() {
@@ -176,13 +179,21 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
+      let saveData = Object.assign({}, this.activeCours)
+      Object.keys(saveData).map(key => {
+        saveData[key] = saveData[key] === 0 ? null : saveData[key];
+      });
+
       if (this.addMode) {
-        this.$store.dispatch('addCours', this.activeCours).then(() => {
+        this.$store.dispatch('addCours', saveData).then(() => {
           this.HIDE_MODAL()
+          this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
+          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
         })
       } else {
-        this.$store.dispatch('editCours', this.activeCours).then(() => {
+        this.$store.dispatch('editCours', saveData).then(() => {
           this.HIDE_MODAL()
+          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
         })
       }
     }
@@ -192,7 +203,7 @@ export default {
       this.$store.dispatch('fetchSapeurCours', id)
     },
     activeCoursId: function(cours_id) {
-      console.log("Event change")
+      console.log('Event change')
       let cours = this.listCours.filter(c => c.id === cours_id)[0]
       this.activeCours.fonction_id = cours.fonction_id || 0
       this.activeCours.grade_id = cours.grade_id || 0
@@ -203,7 +214,7 @@ export default {
         let fonction = this.getFonction(this.activeCours.fonction_id)
         console.log(fonction)
         if (fonction.cumulable === 0) {
-          let fonctions = this.activeSapeurFonctions.filter(
+          let fonctions = this.activesFonctions.filter(
             f => this.getFonction(f.fonction_id).cumulable === 0
           )
           console.log(fonctions)

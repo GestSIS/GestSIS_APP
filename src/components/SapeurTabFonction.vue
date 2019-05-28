@@ -70,9 +70,7 @@ export default {
     if (this.listFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions')
     }
-    if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
-    }
+    this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
   },
   watch: {
     activeSapeurId(id) {
