@@ -33,7 +33,7 @@
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">
-                        <font-awesome-icon :icon="['far','calendar-alt']" />
+                        <font-awesome-icon :icon="['far', 'calendar-alt']" />
                       </div>
                     </div>
                     <input
@@ -73,10 +73,18 @@ export default {
   mounted() {
     if (this.listPermisType.length === 0) {
       this.$store.dispatch('fetchPermisType').then(() => {
-        this.initPermisData()
+        this.$store
+          .dispatch('fetchSapeurPermis', this.activeSapeurId)
+          .then(() => {
+            this.initPermisData()
+          })
       })
     } else {
-      this.initPermisData()
+      this.$store
+        .dispatch('fetchSapeurPermis', this.activeSapeurId)
+        .then(() => {
+          this.initPermisData()
+        })
     }
   },
   watch: {
