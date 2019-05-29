@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="wrapper">
       <!-- Main Sidebar Container -->
-      <main-sidebar />
+      <main-sidebar class="sidebar" />
 
       <div class="content">
         <navbar />
@@ -47,9 +47,17 @@ export default {
   width: 100%;
   align-items: stretch;
   height: 100%;
+  overflow: hidden;
 }
 
 .content {
-  flex-grow: 1;
+  flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;  /*adds scroll to this container*/
+}
+
+.sidebar {
+  flex-shrink: 0;
+  flex-grow: 0;
+  padding: 0;
 }
 </style>

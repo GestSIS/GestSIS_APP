@@ -30,7 +30,7 @@
     </div>
     <hr class="bg-secondary" />
     <!-- Sidebar Menu -->
-    <nav class="mt-2">
+    <nav class="menu-options mt-2">
       <ul
         class="nav nav-pills nav-sidebar flex-column"
         data-widget="treeview"
@@ -51,7 +51,7 @@
         </li>
         <li class="nav-item">
           <router-link to="/exercices" class="nav-link internal-link">
-            <font-awesome-icon :icon="['fas','calendar-alt']" />
+            <font-awesome-icon :icon="['fas', 'calendar-alt']" />
             <span>Exercices & Séances</span>
           </router-link>
         </li>
@@ -125,6 +125,11 @@ export default {
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
+.menu-otpions {
+  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto; /*adds scroll to this container*/
+}
+
 /* Shrinking the sidebar from 250px to 80px and center aligining its content*/
 #sidebar.active {
   min-width: 80px;
@@ -134,8 +139,14 @@ export default {
 
 .sidebar {
   padding: 1rem;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 }
-
+.sidebar {
+  flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;  /*adds scroll to this container*/
+}
 svg {
   margin-right: 0.8rem;
 }
@@ -210,5 +221,4 @@ a[aria-expanded='true'] {
   color: #fff;
   background: $primary;
 }
-
 </style>
