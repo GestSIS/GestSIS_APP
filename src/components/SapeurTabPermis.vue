@@ -44,6 +44,16 @@
                         'is-invalid': isInvalid(permis.permis_type_id)
                       }"
                     />
+                    <div class="input-group-append">
+                      <button
+                        v-if="(permis.date || '') !== ''"
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="supprimerPermis(permis.permis_type_id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -129,6 +139,15 @@ export default {
       this.errors = {
         ...this.errors,
         [permis_type_id]: error
+      }
+    },
+    supprimerPermis(permis_type_id) {
+      this.permisData = {
+        ...this.permisData,
+        [permis_type_id]: {
+          ...this.permisData[permis_type_id],
+          date: ''
+        }
       }
     },
     savePermis() {

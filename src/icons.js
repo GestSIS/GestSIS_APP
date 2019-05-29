@@ -11,7 +11,8 @@ import {
   faFileMedicalAlt,
   faSlidersH,
   faGlobeEurope,
-  faPlus
+  faPlus,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
@@ -39,5 +40,6 @@ library.add(
   faEdit,
   faTrashAlt,
   faPlus,
-  faQuestionCircle
+  faQuestionCircle,
+  faTimes
 )

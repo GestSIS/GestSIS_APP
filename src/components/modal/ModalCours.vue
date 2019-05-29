@@ -181,7 +181,8 @@ export default {
     save() {
       let saveData = Object.assign({}, this.activeCours)
       Object.keys(saveData).map(key => {
-        saveData[key] = saveData[key] === 0 ? null : saveData[key]
+        saveData[key] =
+          saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key]
       })
 
       if (this.addMode) {
