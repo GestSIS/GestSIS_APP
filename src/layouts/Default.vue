@@ -51,8 +51,8 @@ export default {
 }
 
 .content {
-  flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto;  /*adds scroll to this container*/
+  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto; /*adds scroll to this container*/
 }
 
 .sidebar {

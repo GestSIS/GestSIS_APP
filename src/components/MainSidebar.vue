@@ -144,8 +144,8 @@ export default {
   flex-direction: column;
 }
 .sidebar {
-  flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto;  /*adds scroll to this container*/
+  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto; /*adds scroll to this container*/
 }
 svg {
   margin-right: 0.8rem;

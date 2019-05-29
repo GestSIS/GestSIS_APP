@@ -14,8 +14,8 @@ export default {
     listGroupes: state => {
       return state.groupes
     },
-    getGroupe: state => grade_id => {
-      return state.groupes.filter(g => g.id === grade_id)[0]
+    getGroupe: state => groupe_id => {
+      return state.groupes.filter(g => g.id === groupe_id)[0]
     }
   },
   actions: {
