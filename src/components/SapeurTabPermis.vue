@@ -33,7 +33,7 @@
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">
-                        <font-awesome-icon icon="calendar" />
+                        <font-awesome-icon :icon="['far','calendar-alt']" />
                       </div>
                     </div>
                     <input

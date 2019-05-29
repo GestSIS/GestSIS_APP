@@ -14,9 +14,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="groupe in activeSapeurGroupes" :key="groupe.id">
-                <td>{{ groupe.no !== 0 ? $groupe.no : '' }}</td>
-                <td>{{ groupe.nom }}</td>
+              <tr v-for="g in activeSapeurGroupes" :key="g.id">
+                <td>
+                  {{
+                    (getGroupe(g.groupe_id).no || 0) !== 0
+                      ? getGroupe(g.groupe_id).no
+                      : ''
+                  }}
+                </td>
+                <td>{{ getGroupe(g.groupe_id).designation }}</td>
               </tr>
             </tbody>
           </table>
@@ -32,10 +38,19 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabOrganisation',
   computed: {
-    ...mapGetters(['activeSapeurGroupes', 'activeSapeurId'])
+    ...mapGetters([
+      'activeSapeurId',
+      'activeSapeurGroupes',
+      'listGroupes',
+      'getGroupe'
+    ])
   },
   mounted() {
-    if (this.activeSapeurGroupes.length === 0) {
+    if (this.listGroupes.length === 0) {
+      this.$store.dispatch('fetchGroupes').then(() => {
+        this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId)
+      })
+    } else {
       this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId)
     }
   },

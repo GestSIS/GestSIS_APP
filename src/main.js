@@ -13,44 +13,9 @@ Vue.component('no-sidebar-layout', NoSidebar)
 
 Vue.config.productionTip = false
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import {
-  faUser,
-  faFireExtinguisher,
-  faCalendarAlt,
-  faCalendar,
-  faSitemap,
-  faCalculator,
-  faHandHoldingUsd,
-  faEnvelope,
-  faToolbox,
-  faFileMedicalAlt,
-  faSlidersH,
-  faGlobeEurope,
-  faPlus
-} from '@fortawesome/free-solid-svg-icons'
-import { faGripfire } from '@fortawesome/free-brands-svg-icons'
-import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+require('./icons')
 
-library.add(
-  faGripfire,
-  faUser,
-  faFireExtinguisher,
-  faCalendarAlt,
-  faCalendar,
-  faSitemap,
-  faCalculator,
-  faHandHoldingUsd,
-  faEnvelope,
-  faToolbox,
-  faFileMedicalAlt,
-  faSlidersH,
-  faGlobeEurope,
-  faEdit,
-  faTrashAlt,
-  faPlus
-)
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

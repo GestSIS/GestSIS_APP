@@ -51,7 +51,7 @@
         </li>
         <li class="nav-item">
           <router-link to="/exercices" class="nav-link internal-link">
-            <font-awesome-icon icon="calendar-alt" />
+            <font-awesome-icon :icon="['fas','calendar-alt']" />
             <span>Exercices & Séances</span>
           </router-link>
         </li>

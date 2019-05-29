@@ -181,8 +181,8 @@ export default {
     save() {
       let saveData = Object.assign({}, this.activeCours)
       Object.keys(saveData).map(key => {
-        saveData[key] = saveData[key] === 0 ? null : saveData[key];
-      });
+        saveData[key] = saveData[key] === 0 ? null : saveData[key]
+      })
 
       if (this.addMode) {
         this.$store.dispatch('addCours', saveData).then(() => {
@@ -203,21 +203,18 @@ export default {
       this.$store.dispatch('fetchSapeurCours', id)
     },
     activeCoursId: function(cours_id) {
-      console.log('Event change')
       let cours = this.listCours.filter(c => c.id === cours_id)[0]
       this.activeCours.fonction_id = cours.fonction_id || 0
       this.activeCours.grade_id = cours.grade_id || 0
       this.activeCours.precedent_id = cours.precedent_id || 0
       this.activeCours.fonction_sapeur_id = 0
+
       if (this.activeCours.fonction_id !== 0) {
-        console.log(this.activeCours.fonction_id)
         let fonction = this.getFonction(this.activeCours.fonction_id)
-        console.log(fonction)
         if (fonction.cumulable === 0) {
           let fonctions = this.activesFonctions.filter(
             f => this.getFonction(f.fonction_id).cumulable === 0
           )
-          console.log(fonctions)
           if (fonctions.length > 0) {
             this.activeCours.fonction_sapeur_id = fonctions[0].id || 0
           }

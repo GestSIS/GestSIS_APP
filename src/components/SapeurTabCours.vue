@@ -89,7 +89,7 @@ export default {
       this.$store.dispatch(
         'updateActiveCours',
         Object.assign(
-          {precedent_id: 0},
+          { precedent_id: 0 },
           this.activeSapeurCours.filter(c => c.id === cours_id)[0]
         )
       )
