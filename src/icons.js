@@ -18,7 +18,8 @@ import { faGripfire } from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faCalendarAlt,
-  faTrashAlt
+  faTrashAlt,
+  faQuestionCircle
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
@@ -37,5 +38,6 @@ library.add(
   faGlobeEurope,
   faEdit,
   faTrashAlt,
-  faPlus
+  faPlus,
+  faQuestionCircle
 )

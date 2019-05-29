@@ -129,7 +129,7 @@
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <div class="input-group-text">
-                      <font-awesome-icon :icon="['far','calendar-alt']" />
+                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                   </div>
                   <input
@@ -145,6 +145,13 @@
             <div class="col-6">
               <div class="form-group">
                 <label for="f-sap-suffixe">Suffixe</label>
+                <font-awesome-icon
+                  class="ml-1"
+                  v-tooltip.bottom="
+                    'Permet de différencier deux personnes ayant le même nom et prénom.'
+                  "
+                  :icon="['far', 'question-circle']"
+                />
                 <input
                   type="text"
                   class="form-control"
@@ -155,9 +162,7 @@
               </div>
             </div>
           </div>
-          <p>
-            Permet de différencier deux personnes ayant le même nom et prénom.
-          </p>
+          <p></p>
           <!-- REMARQUE -->
           <div class="form-group">
             <label for="f-sap-remarques">Remarques</label>
@@ -187,7 +192,16 @@
                 <th>Priorité</th>
                 <th>Numéro</th>
                 <th>Type</th>
-                <th>RTA</th>
+                <th>
+                  RTA
+                  <font-awesome-icon
+                    class="ml-1"
+                    v-tooltip.bottom="
+                      'Cocher pour transmettre à la centrale d\'alarme RTA'
+                    "
+                    :icon="['far', 'question-circle']"
+                  />
+                </th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
