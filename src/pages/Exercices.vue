@@ -1,81 +1,72 @@
 <template>
   <div>
     <div class="container-fluid">
-      <h1>Sapeurs</h1>
+      <h1>Exercices</h1>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-12">
           <!-- /.card-header -->
           <div class="card card-primary card-outline">
             <div class="card-header">
-              <h3 class="card-title">Filtres</h3>
-              <div class="card-body px-0">
-                <form id="f-sapeur-filters" action="/" method="GET">
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
-                  >
-                    <input
-                      type="radio"
-                      id="statutActif"
-                      name="actif"
-                      class="custom-control-input"
-                      value="1"
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutActif"
-                      >Actif</label
-                    >
-                  </div>
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
-                  >
-                    <input
-                      type="radio"
-                      id="statutInactif"
-                      name="actif"
-                      class="custom-control-input"
-                      value="0"
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutInactif"
-                      >Inactif</label
-                    >
-                  </div>
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
-                  >
-                    <input
-                      type="radio"
-                      id="statutTous"
-                      name="actif"
-                      class="custom-control-input"
-                      value=""
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutTous"
-                      >Tous</label
-                    >
-                  </div>
-                </form>
-              </div>
+              <h3 class="card-title">Exercices</h3>
+              <div class="card-body px-0"></div>
             </div>
-            <ul class="list-group list-group-flush">
-              <router-link
-                v-for="sapeur in listSapeur"
-                tag="li"
-                :to="`/sapeurs/${sapeur.id}`"
-                :key="sapeur.id"
-                class="list-group-item list-group-item-action"
-                :class="{
-                  active: parseInt(id) === sapeur.id
-                }"
-              >
-                {{ sapeur.nom }} {{ sapeur.prenom }}
-              </router-link>
-            </ul>
+            <table class="table">
+              <tr v-for="exercice in listExercices" :key="exercice.id">
+                <td>{{ exercice.date }}</td>
+                <td>{{ exercice.communication }}</td>
+                <td>
+                  {{
+                    getExerciceCategorie(exercice.exercice_categorie_id)
+                      .designation
+                  }}
+                </td>
+                <td>
+                  <router-link
+                    tag="li"
+                    :to="`/exercices/${exercice.id}`"
+                    class="list-group-item list-group-item-action"
+                    :class="{
+                      active: parseInt(id) === exercice.id
+                    }"
+                  >
+                    {{ edit }}
+                  </router-link>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
-        <div class="col-md-9">
-          <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
+        <div class="col-md-12">
+          <div id="app">
+            <ejs-grid
+              :dataSource="listExercices"
+              :allowSorting="true"
+              :detailTemplate="detailTemplate"
+            >
+              <e-columns>
+                <e-column field="date" headerText="Date"></e-column>
+                <e-column
+                  field="communication"
+                  headerText="Name"
+                  width="200"
+                ></e-column>
+                <e-column
+                  field="exercice_categorie_id"
+                  headerText="Categorie"
+                  width="170"
+                  :valueAccessor="categorieAccessor"
+                ></e-column>
+                <e-column
+                  field="Freight"
+                  headerText="Hire Date"
+                  width="135"
+                  textAlign="Right"
+                  format="yMd"
+                ></e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+          <ExerciceDetails v-if="true" :id="parseInt(id)" />
         </div>
       </div>
     </div>
@@ -83,23 +74,33 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
-import SapeurDetails from '@/components/SapeurDetails'
+import { mapGetters } from 'vuex'
+
+import Vue from 'vue'
+import { GridPlugin, DetailRow, Sort } from '@syncfusion/ej2-vue-grids'
+import ExerciceDetails from '@/components/ExerciceDetails'
+
+Vue.use(GridPlugin)
 
 export default {
   components: {
-    SapeurDetails
+    ExerciceDetails
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur').then(() => {
-      if (this.activeSapeurId === 0 && this.listSapeur.length > 0) {
-        this.selectSapeur(this.listSapeur[0].id)
+    this.$store.dispatch('fetchExerciceCategories')
+    this.$store.dispatch('fetchListExercice').then(() => {
+      if (this.activeExerciceId === 0 && this.listExercices.length > 0) {
+        this.selectExercice(this.listExercices[0].id)
       }
     })
   },
   data() {
     return {
-      key: 12
+      detailTemplate: function() {
+        return {
+          template: ExerciceDetails
+        }
+      }
     }
   },
   props: {
@@ -112,13 +113,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['listSapeur', 'activeSapeurId']),
-    ...mapState(['activeSapeur'])
+    ...mapGetters(['listExercices', 'activeExerciceId', 'getExerciceCategorie'])
   },
   methods: {
-    selectSapeur(sapeurId) {
-      this.$store.dispatch('selectSapeur', sapeurId)
+    categorieAccessor(field, data) {
+      return this.getExerciceCategorie(data.exercice_categorie_id).designation
     }
+  },
+  provide: {
+    grid: [DetailRow, Sort]
   }
 }
 </script>

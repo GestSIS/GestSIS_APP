@@ -8,6 +8,9 @@ import gradeModule from './module/grade'
 import fonctionModule from './module/fonction'
 import coursModule from './module/cours'
 import groupeModule from './module/groupe'
+import exerciceModule from './module/exercice'
+import exerciceCategorieModule from './module/exerciceCategorie'
+import excuseTypeModule from './module/excuseType'
 import modalModule from './module/modal'
 
 Vue.use(Vuex)
@@ -24,6 +27,9 @@ export default new Vuex.Store({
     fonction: fonctionModule,
     cours: coursModule,
     modal: modalModule,
-    groupe: groupeModule
+    groupe: groupeModule,
+    exercice: exerciceModule,
+    exerciceCategorie: exerciceCategorieModule,
+    excuseType: excuseTypeModule
   }
 })

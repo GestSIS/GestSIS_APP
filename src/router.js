@@ -31,6 +31,17 @@ export default new Router({
       name: 'sapeurs-details',
       props: true,
       component: () => import('@/pages/Sapeurs.vue')
+    },
+    {
+      path: '/exercices',
+      name: 'exercices',
+      component: () => import('@/pages/Exercices.vue')
+    },
+    {
+      path: '/exercices/:id',
+      name: 'execices-details',
+      props: true,
+      component: () => import('@/pages/Exercices.vue')
     }
   ]
 })
