@@ -9,58 +9,50 @@
             <div class="card-header">
               <h3 class="card-title">Filtres</h3>
               <div class="card-body px-0">
-                <form id="f-sapeur-filters" action="/" method="GET">
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    id="statutActif"
+                    name="actif"
+                    class="custom-control-input"
+                    value="actif"
+                    v-model="filter"
+                  />
+                  <label class="custom-control-label" for="statutActif"
+                    >Actif</label
                   >
-                    <input
-                      type="radio"
-                      id="statutActif"
-                      name="actif"
-                      class="custom-control-input"
-                      value="1"
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutActif"
-                      >Actif</label
-                    >
-                  </div>
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    id="statutInactif"
+                    name="actif"
+                    class="custom-control-input"
+                    value="inactif"
+                    v-model="filter"
+                  />
+                  <label class="custom-control-label" for="statutInactif"
+                    >Inactif</label
                   >
-                    <input
-                      type="radio"
-                      id="statutInactif"
-                      name="actif"
-                      class="custom-control-input"
-                      value="0"
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutInactif"
-                      >Inactif</label
-                    >
-                  </div>
-                  <div
-                    class="custom-control custom-radio custom-control-inline"
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    id="statutTous"
+                    name="actif"
+                    class="custom-control-input"
+                    value="all"
+                    v-model="filter"
+                  />
+                  <label class="custom-control-label" for="statutTous"
+                    >Tous</label
                   >
-                    <input
-                      type="radio"
-                      id="statutTous"
-                      name="actif"
-                      class="custom-control-input"
-                      value=""
-                      checked
-                    />
-                    <label class="custom-control-label" for="statutTous"
-                      >Tous</label
-                    >
-                  </div>
-                </form>
+                </div>
               </div>
             </div>
             <ul class="list-group list-group-flush">
               <router-link
-                v-for="sapeur in listSapeur"
+                v-for="sapeur in filteredSapeurs"
                 tag="li"
                 :to="`/sapeurs/${sapeur.id}`"
                 :key="sapeur.id"
@@ -71,6 +63,9 @@
               >
                 {{ sapeur.nom }} {{ sapeur.prenom }}
               </router-link>
+              <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+                Aucun sapeur
+              </li>
             </ul>
           </div>
         </div>
@@ -99,7 +94,12 @@ export default {
   },
   data() {
     return {
-      key: 12
+      filter: 'actif',
+      filters: {
+        actif: () => true,
+        inactif: s => s.actif === 0,
+        all: s => s.actif === 1
+      }
     }
   },
   props: {
@@ -113,7 +113,10 @@ export default {
   },
   computed: {
     ...mapGetters(['listSapeur', 'activeSapeurId']),
-    ...mapState(['activeSapeur'])
+    ...mapState(['activeSapeur']),
+    filteredSapeurs() {
+      return this.listSapeur.filter(this.filters[this.filter])
+    }
   },
   methods: {
     selectSapeur(sapeurId) {
