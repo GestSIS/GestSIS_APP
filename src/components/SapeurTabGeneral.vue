@@ -10,10 +10,10 @@
         </div>
         <div class="card-body">
           <div class="form-group">
-            <label for="f-sap-civilite">Civilité</label>
+            <label for="m-sap-civilite">Civilité</label>
             <select
               class="form-control"
-              id="f-sap-civilite"
+              id="m-sap-civilite"
               name="civilite_id"
               v-model="activeSapeur.civilite_id"
             >
@@ -27,22 +27,22 @@
           </div>
           <!-- NOM -->
           <div class="form-group">
-            <label for="f-sap-nom">Nom</label>
+            <label for="m-sap-nom">Nom</label>
             <input
               type="text"
               class="form-control"
-              id="f-sap-nom"
+              id="m-sap-nom"
               name="nom"
               v-model="activeSapeur.nom"
             />
           </div>
           <!-- PRENOM -->
           <div class="form-group">
-            <label for="f-sap-prenom">Prénom</label>
+            <label for="m-sap-prenom">Prénom</label>
             <input
               type="text"
               class="form-control"
-              id="f-sap-prenom"
+              id="m-sap-prenom"
               name="prenom"
               v-model="activeSapeur.prenom"
             />
@@ -51,11 +51,11 @@
           <div class="row">
             <div class="col-8">
               <div class="form-group">
-                <label for="f-sap-rue">Rue</label>
+                <label for="m-sap-rue">Rue</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="f-sap-rue"
+                  id="m-sap-rue"
                   name="rue"
                   v-model="activeSapeur.rue"
                 />
@@ -63,11 +63,11 @@
             </div>
             <div class="col-4">
               <div class="form-group">
-                <label for="f-sap-no-rue">N°</label>
+                <label for="m-sap-no-rue">N°</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="f-sap-no-rue"
+                  id="m-sap-no-rue"
                   name="no_rue"
                   v-model="activeSapeur.no_rue"
                 />
@@ -76,10 +76,10 @@
           </div>
           <!-- NPA + LOCALITE -->
           <div class="form-group">
-            <label for="f-sap-localite">NPA Localité</label>
+            <label for="m-sap-localite">NPA Localité</label>
             <select
               class="form-control required"
-              id="f-sap-localite"
+              id="m-sap-localite"
               name="localite_id"
               style="width: 100%"
               v-model="activeSapeur.localite_id"
@@ -94,18 +94,18 @@
           </div>
           <!-- N° AVS -->
           <div class="form-group">
-            <label for="f-sap-avs">N° AVS</label>
+            <label for="m-sap-avs">N° AVS</label>
             <input
               type="text"
               class="form-control"
-              id="f-sap-avs"
+              id="m-sap-avs"
               name="no_avs"
               v-model="activeSapeur.no_avs"
             />
           </div>
           <!-- Email -->
           <div class="form-group">
-            <label for="f-sap-email">Email</label>
+            <label for="m-sap-email">Email</label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">
@@ -115,7 +115,7 @@
               <input
                 class="form-control"
                 type="email"
-                id="f-sap-email"
+                id="m-sap-email"
                 name="email"
                 v-model="activeSapeur.email"
               />
@@ -125,7 +125,7 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="f-sap-date-naissance">Date de naissance</label>
+                <label for="m-sap-date-naissance">Date de naissance</label>
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <div class="input-group-text">
@@ -135,7 +135,7 @@
                   <input
                     class="form-control"
                     type="date"
-                    id="f-sap-date-naissance"
+                    id="m-sap-date-naissance"
                     name="date_naissance"
                     v-model="activeSapeur.date_naissance"
                   />
@@ -144,7 +144,7 @@
             </div>
             <div class="col-6">
               <div class="form-group">
-                <label for="f-sap-suffixe">Suffixe</label>
+                <label for="m-sap-suffixe">Suffixe</label>
                 <font-awesome-icon
                   class="ml-1"
                   v-tooltip.bottom="
@@ -155,7 +155,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="f-sap-suffixe"
+                  id="m-sap-suffixe"
                   name="suffixe"
                   v-model="activeSapeur.suffixe"
                 />
@@ -165,11 +165,11 @@
           <p></p>
           <!-- REMARQUE -->
           <div class="form-group">
-            <label for="f-sap-remarques">Remarques</label>
+            <label for="m-sap-remarques">Remarques</label>
             <textarea
               class="form-control"
               rows="3"
-              id="f-sap-remarques"
+              id="m-sap-remarques"
               name="remarques"
               v-model="activeSapeur.remarque"
             ></textarea>
@@ -264,31 +264,31 @@
         <form role="form">
           <div class="card-body">
             <div class="form-group">
-              <label for="f-sap-profession">Profession</label>
+              <label for="m-sap-profession">Profession</label>
               <input
                 type="text"
                 class="form-control"
-                id="f-sap-profession"
+                id="m-sap-profession"
                 name="profession"
                 v-model="activeSapeur.profession"
               />
             </div>
             <div class="form-group">
-              <label for="f-sap-employeur">Employeur</label>
+              <label for="m-sap-employeur">Employeur</label>
               <input
                 type="text"
                 class="form-control"
-                id="f-sap-employeur"
+                id="m-sap-employeur"
                 name="employeur"
                 v-model="activeSapeur.employeur"
               />
             </div>
             <div class="form-group">
-              <label for="f-sap-lieu-travail">Lieu de travail</label>
+              <label for="m-sap-lieu-travail">Lieu de travail</label>
               <input
                 type="text"
                 class="form-control"
-                id="f-sap-lieu-travail"
+                id="m-sap-lieu-travail"
                 name="lieu_travail"
                 v-model="activeSapeur.lieu_de_travail"
               />
@@ -302,7 +302,6 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Incorporation / Sortie</h3>
-          <button class="btn btn-primary">Modifier</button>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -329,12 +328,14 @@
                       <button
                         type="button"
                         class="btn btn-outline-primary border-0"
+                        @click="editMutation(m.id)"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />
                       </button>
                       <button
                         type="button"
                         class="btn btn-outline-danger border-0"
+                        @click="removeMutation(m.id)"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
@@ -343,6 +344,15 @@
                 </tr>
               </tbody>
             </table>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              @click="finService"
+              v-if="finServiceBoutton"
+            >
+              <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />
+              Fin de service
+            </button>
           </div>
         </form>
       </div>
@@ -369,7 +379,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -424,6 +434,17 @@ export default {
           (t1, t2) => t1.priorite - t2.priorite
         )
       }
+    },
+    finServiceBoutton() {
+      if (this.activeSapeurMutations.length > 0) {
+        console.log(this.activeSapeurMutations[0].sortie || '')
+        console.log(this.activeSapeurMutations[0].sortie)
+      }
+
+      return (
+        this.activeSapeurMutations.length > 0 &&
+        (this.activeSapeurMutations[0].sortie || '') === ''
+      )
     }
   },
   watch: {
@@ -438,17 +459,7 @@ export default {
     }
   },
   methods: {
-    saveSapeur() {
-      this.$store
-        .dispatch('saveActiveSapeur')
-        .then(() => {
-          console.log('Save sapeur Success')
-        })
-        .catch(err => {
-          console.log('Save sapeur Error')
-          console.log(err)
-        })
-    },
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     saveTelephones() {
       //TODO Validation de toutes les données
 
@@ -485,6 +496,36 @@ export default {
     },
     removeTelephone(priorite) {
       this.telephones = this.telephones.filter(t => t.priorite !== priorite)
+    },
+    saveSapeur() {
+      this.$store
+        .dispatch('saveActiveSapeur')
+        .then(() => {
+          console.log('Save sapeur Success')
+        })
+        .catch(() => {
+          console.log('Save sapeur Error')
+        })
+    },
+    newMutation() {
+      this.$store.dispatch('resetActiveMutation')
+      this.SHOW_MODAL('ModalMutation')
+    },
+    removeMutation(mutationId) {
+      this.$store.dispatch('removeMutation', mutationId)
+    },
+    editMutation(mutation_id) {
+      this.$store.dispatch(
+        'updateActiveMutation',
+        Object.assign(
+          {},
+          this.activeSapeurMutations.filter(m => m.id === mutation_id)[0]
+        )
+      )
+      this.SHOW_MODAL('ModalMutation')
+    },
+    finService() {
+      //TODO
     }
   }
 }

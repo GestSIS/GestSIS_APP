@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <p>Hello World !!!</p>
+    <p>Hello World !!! {{ id }}, {{ data }}</p>
   </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   name: 'ExerciceDetails',
   computed: {
     ...mapGetters(['listExercices'])
+  },
+  data() {
+    return {
+      data: {}
+    }
   },
   provide: {
     grid: [Sort, DetailRow]

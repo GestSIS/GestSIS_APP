@@ -12,7 +12,9 @@ export default {
       grade_id: 0,
       localite_id: 0,
       precedent_id: 0,
-      date: null
+      date: null,
+      date_fonction: null,
+      date_grade: null
     }
   },
   mutations: {
@@ -52,7 +54,9 @@ export default {
         grade_id: 0,
         localite_id: 0,
         precedent_id: 0,
-        date: null
+        date: null,
+        date_fonction: null,
+        date_grade: null
       })
     }
   }

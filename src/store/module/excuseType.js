@@ -1,13 +1,12 @@
 import types from '../mutationTypes'
-import GroupeService from '../../services/GroupeService'
-import ExcuseTypeService from "../../services/ExcuseTypeService";
+import ExcuseTypeService from '../../services/ExcuseTypeService'
 
 export default {
   state: {
     excuses: []
   },
   mutations: {
-    [types.UPDATE_EXERCICE_LIST](state, payload) {
+    [types.UPDATE_EXCUSE_TYPE_LIST](state, payload) {
       state.excuses = payload
     }
   },

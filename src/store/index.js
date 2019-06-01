@@ -11,6 +11,7 @@ import groupeModule from './module/groupe'
 import exerciceModule from './module/exercice'
 import exerciceCategorieModule from './module/exerciceCategorie'
 import excuseTypeModule from './module/excuseType'
+import mutationModule from './module/mutation'
 import modalModule from './module/modal'
 
 Vue.use(Vuex)
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     groupe: groupeModule,
     exercice: exerciceModule,
     exerciceCategorie: exerciceCategorieModule,
-    excuseType: excuseTypeModule
+    excuseType: excuseTypeModule,
+    mutation: mutationModule
   }
 })

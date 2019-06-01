@@ -14,6 +14,7 @@
           v-model="activeCours.date"
           class="form-control"
           id="cours-date"
+          @change="dateChange"
         />
       </div>
       <div class="form-group">
@@ -73,7 +74,11 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <input type="date" class="form-control" />
+            <input
+              type="date"
+              class="form-control"
+              v-model="activeCours.date_grade"
+            />
           </div>
         </div>
       </div>
@@ -97,7 +102,11 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <input type="date" class="form-control" />
+            <input
+              type="date"
+              class="form-control"
+              v-model="activeCours.date_fonction"
+            />
           </div>
         </div>
       </div>
@@ -197,6 +206,10 @@ export default {
           this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
         })
       }
+    },
+    dateChange() {
+      this.activeCours.date_grade = this.activeCours.date
+      this.activeCours.date_fonction = this.activeCours.date
     }
   },
   watch: {

@@ -15,7 +15,11 @@
       </div>
     </div>
     <!-- Overlay -->
-    <div id="modal-overlay" class="modal-backdrop fade show" v-if="visible"></div>
+    <div
+      id="modal-overlay"
+      class="modal-backdrop fade show"
+      v-if="visible"
+    ></div>
   </div>
 </template>
 
@@ -27,7 +31,8 @@ export default {
   components: {
     ModalCours: () => import(`@/components/modal/ModalCours`),
     ModalFonction: () => import(`@/components/modal/ModalFonction`),
-    ModalPromotion: () => import(`@/components/modal/ModalPromotion`)
+    ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
+    ModalMutation: () => import(`@/components/modal/ModalMutation`)
   },
   data() {
     return {

@@ -39,7 +39,6 @@ export default {
     })
   },
   editTelephone(sapeurId, telephoneData) {
-    console.log(telephoneData)
     return Api().put(
       '/sapeurs/' + sapeurId + '/telephones/' + telephoneData.id,
       telephoneData,
@@ -122,5 +121,23 @@ export default {
   },
   removeCours(sapeurId, coursId) {
     return Api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId)
+  },
+
+  addMutation(sapeurId, mutationData) {
+    return Api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+  },
+  editMutation(sapeurId, mutationData) {
+    return Api().put(
+      '/sapeurs/' + sapeurId + '/mutations/' + mutationData.id,
+      mutationData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeMutation(sapeurId, mutationId) {
+    return Api().delete('/sapeurs/' + sapeurId + '/mutations/' + mutationId)
   }
 }

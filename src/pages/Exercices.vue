@@ -10,63 +10,65 @@
               <h3 class="card-title">Exercices</h3>
               <div class="card-body px-0"></div>
             </div>
-            <table class="table">
-              <tr v-for="exercice in listExercices" :key="exercice.id">
-                <td>{{ exercice.date }}</td>
-                <td>{{ exercice.communication }}</td>
-                <td>
-                  {{
-                    getExerciceCategorie(exercice.exercice_categorie_id)
-                      .designation
-                  }}
-                </td>
-                <td>
-                  <router-link
-                    tag="li"
-                    :to="`/exercices/${exercice.id}`"
-                    class="list-group-item list-group-item-action"
-                    :class="{
-                      active: parseInt(id) === exercice.id
-                    }"
-                  >
-                    {{ edit }}
-                  </router-link>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div id="app">
             <ejs-grid
               :dataSource="listExercices"
               :allowSorting="true"
               :detailTemplate="detailTemplate"
             >
               <e-columns>
-                <e-column field="date" headerText="Date"></e-column>
-                <e-column
-                  field="communication"
-                  headerText="Name"
-                  width="200"
-                ></e-column>
+                <e-column field="date" headerText="Date" width="100"></e-column>
                 <e-column
                   field="exercice_categorie_id"
                   headerText="Categorie"
-                  width="170"
                   :valueAccessor="categorieAccessor"
                 ></e-column>
                 <e-column
-                  field="Freight"
-                  headerText="Hire Date"
-                  width="135"
-                  textAlign="Right"
-                  format="yMd"
+                  field="heure"
+                  headerText="Heure"
+                  width="80"
+                ></e-column>
+                <e-column
+                  field="duree"
+                  headerText="Durée"
+                  width="80"
+                ></e-column>
+                <e-column field="lieu" headerText="Lieu"></e-column>
+                <e-column
+                  field="localite_id"
+                  headerText="Localite"
+                  :valueAccessor="localiteAccessor"
+                ></e-column>
+                <e-column
+                  field="communication"
+                  headerText="Communication"
                 ></e-column>
               </e-columns>
             </ejs-grid>
+            <!--            <table class="table">-->
+            <!--              <tr v-for="exercice in listExercices" :key="exercice.id">-->
+            <!--                <td>{{ exercice.date }}</td>-->
+            <!--                <td>{{ exercice.communication }}</td>-->
+            <!--                <td>-->
+            <!--                  {{-->
+            <!--                    getExerciceCategorie(exercice.exercice_categorie_id)-->
+            <!--                      .designation-->
+            <!--                  }}-->
+            <!--                </td>-->
+            <!--                <td>-->
+            <!--                  <router-link-->
+            <!--                    tag="li"-->
+            <!--                    :to="`/exercices/${exercice.id}`"-->
+            <!--                    class="list-group-item list-group-item-action"-->
+            <!--                    :class="{-->
+            <!--                      active: parseInt(id) === exercice.id-->
+            <!--                    }"-->
+            <!--                  >-->
+            <!--                    {{ edit }}-->
+            <!--                  </router-link>-->
+            <!--                </td>-->
+            <!--              </tr>-->
+            <!--            </table>-->
           </div>
-          <ExerciceDetails v-if="true" :id="parseInt(id)" />
         </div>
       </div>
     </div>
@@ -83,10 +85,8 @@ import ExerciceDetails from '@/components/ExerciceDetails'
 Vue.use(GridPlugin)
 
 export default {
-  components: {
-    ExerciceDetails
-  },
   mounted() {
+    this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
     this.$store.dispatch('fetchListExercice').then(() => {
       if (this.activeExerciceId === 0 && this.listExercices.length > 0) {
@@ -113,11 +113,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['listExercices', 'activeExerciceId', 'getExerciceCategorie'])
+    ...mapGetters([
+      'listExercices',
+      'activeExerciceId',
+      'getExerciceCategorie',
+      'getLocalite'
+    ])
   },
   methods: {
     categorieAccessor(field, data) {
       return this.getExerciceCategorie(data.exercice_categorie_id).designation
+    },
+    localiteAccessor(field, data) {
+      return this.getLocalite(data.localite_id).designation
     }
   },
   provide: {

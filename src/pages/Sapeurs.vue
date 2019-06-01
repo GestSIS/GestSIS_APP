@@ -96,9 +96,9 @@ export default {
     return {
       filter: 'actif',
       filters: {
-        actif: () => true,
+        actif: s => s.actif === 1,
         inactif: s => s.actif === 0,
-        all: s => s.actif === 1
+        all: () => true
       }
     }
   },
