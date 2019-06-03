@@ -22,6 +22,9 @@ export default {
         (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
       )
     },
+    getSapeur: state => id => {
+      return state.sapeurs.filter(s => s.id === id)[0]
+    },
     activeSapeur: state => {
       return state.currentSapeur.data
     },

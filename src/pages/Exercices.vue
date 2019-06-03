@@ -1,14 +1,15 @@
 <template>
   <div>
     <div class="container-fluid">
-      <h1>Exercices</h1>
       <div class="row">
         <div class="col-md-12">
           <!-- /.card-header -->
-          <div class="card card-primary card-outline">
-            <div class="card-header">
-              <h3 class="card-title">Exercices</h3>
-              <div class="card-body px-0"></div>
+          <div class="card card-primary card-outline mt-3">
+            <div class="card-header d-flex justify-content-between">
+              <h3>Liste des exercices</h3>
+              <button class="btn btn-outline-primary">
+                Ajouter un exercice
+              </button>
             </div>
             <ejs-grid
               :dataSource="listExercices"
@@ -21,27 +22,33 @@
                   field="exercice_categorie_id"
                   headerText="Categorie"
                   :valueAccessor="categorieAccessor"
+                  width="150"
                 ></e-column>
                 <e-column
                   field="heure"
                   headerText="Heure"
                   width="80"
+                  :valueAccessor="timeAccessor"
                 ></e-column>
                 <e-column
                   field="duree"
                   headerText="Durée"
                   width="80"
                 ></e-column>
-                <e-column field="lieu" headerText="Lieu"></e-column>
+                <e-column field="lieu" headerText="Lieu" width="150"></e-column>
                 <e-column
                   field="localite_id"
                   headerText="Localite"
                   :valueAccessor="localiteAccessor"
+                  width="120"
                 ></e-column>
                 <e-column
                   field="communication"
                   headerText="Communication"
                 ></e-column>
+                <e-column>
+                  <button>Modifier</button>
+                </e-column>
               </e-columns>
             </ejs-grid>
             <!--            <table class="table">-->
@@ -85,6 +92,7 @@ import ExerciceDetails from '@/components/ExerciceDetails'
 Vue.use(GridPlugin)
 
 export default {
+  name: 'exercices',
   mounted() {
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
@@ -126,6 +134,9 @@ export default {
     },
     localiteAccessor(field, data) {
       return this.getLocalite(data.localite_id).designation
+    },
+    timeAccessor(field, data) {
+      return data.heure.slice(0, 5)
     }
   },
   provide: {

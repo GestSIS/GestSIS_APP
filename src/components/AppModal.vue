@@ -10,7 +10,7 @@
     >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <component :is="component"></component>
+          <component :is="component" :callback="modalCallback"></component>
         </div>
       </div>
     </div>
@@ -32,7 +32,8 @@ export default {
     ModalCours: () => import(`@/components/modal/ModalCours`),
     ModalFonction: () => import(`@/components/modal/ModalFonction`),
     ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
-    ModalMutation: () => import(`@/components/modal/ModalMutation`)
+    ModalMutation: () => import(`@/components/modal/ModalMutation`),
+    ModalExcuse: () => import(`@/components/modal/ModalExcuse`)
   },
   data() {
     return {
@@ -42,12 +43,14 @@ export default {
   computed: {
     ...mapState({
       visible: state => state.modal.modalVisible,
-      modalComponent: state => state.modal.modalComponent
+      modalComponent: state => state.modal.modalComponent,
+      modalCallback: state => state.modal.modalCallback
     })
   },
   created() {
     const escapeHandler = e => {
       if (e.key === 'Escape' && this.visible) {
+        this.modalCallback()
         this.HIDE_MODAL()
       }
     }
