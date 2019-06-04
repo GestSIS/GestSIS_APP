@@ -16,75 +16,30 @@
                 <span class="sr-only">Loading...</span>
               </div>
             </div>
-            <ejs-grid
-              v-if="!loading"
-              :dataSource="listExercices"
-              :allowSorting="true"
-              :detailTemplate="detailTemplate"
+            <vuetable
+              ref="vuetable"
+              :api-mode="false"
+              :fields="fields"
+              :detail-row-component="detailRow"
             >
-              <e-columns>
-                <e-column field="date" headerText="Date" width="100"></e-column>
-                <e-column
-                  field="exercice_categorie_id"
-                  headerText="Categorie"
-                  :valueAccessor="categorieAccessor"
-                  width="150"
-                ></e-column>
-                <e-column
-                  field="heure"
-                  headerText="Heure"
-                  width="80"
-                  :valueAccessor="timeAccessor"
-                ></e-column>
-                <e-column
-                  field="duree"
-                  headerText="Durée"
-                  width="80"
-                ></e-column>
-                <e-column field="lieu" headerText="Lieu" width="150"></e-column>
-                <e-column
-                  field="localite_id"
-                  headerText="Localite"
-                  :valueAccessor="localiteAccessor"
-                  width="120"
-                ></e-column>
-                <e-column
-                  field="communication"
-                  headerText="Communication"
-                ></e-column>
-                <e-column
-                  headerText="Actions"
-                  textAlign="center"
-                  class="text-center"
-                  :template="actionTemplate"
+              <div slot="details" slot-scope="props">
+                <button
+                  class="btn btn-link border-0"
+                  @click="toggleDetails(props.rowData.id)"
                 >
-                </e-column>
-              </e-columns>
-            </ejs-grid>
-            <!--            <table class="table">-->
-            <!--              <tr v-for="exercice in listExercices" :key="exercice.id">-->
-            <!--                <td>{{ exercice.date }}</td>-->
-            <!--                <td>{{ exercice.communication }}</td>-->
-            <!--                <td>-->
-            <!--                  {{-->
-            <!--                    getExerciceCategorie(exercice.exercice_categorie_id)-->
-            <!--                      .designation-->
-            <!--                  }}-->
-            <!--                </td>-->
-            <!--                <td>-->
-            <!--                  <router-link-->
-            <!--                    tag="li"-->
-            <!--                    :to="`/exercices/${exercice.id}`"-->
-            <!--                    class="list-group-item list-group-item-action"-->
-            <!--                    :class="{-->
-            <!--                      active: parseInt(id) === exercice.id-->
-            <!--                    }"-->
-            <!--                  >-->
-            <!--                    {{ edit }}-->
-            <!--                  </router-link>-->
-            <!--                </td>-->
-            <!--              </tr>-->
-            <!--            </table>-->
+                  <font-awesome-icon :icon="['fas', 'angle-right']" />
+                </button>
+              </div>
+              <div slot="actions" slot-scope="props">
+                <router-link
+                  tag="button"
+                  :to="'/exercices/' + props.rowData.id"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+              </div>
+            </vuetable>
           </div>
         </div>
       </div>
@@ -95,36 +50,64 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import { DetailRow, Sort } from '@syncfusion/ej2-vue-grids'
 import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceActions from '@/components/ExerciceActions'
 
+import Vuetable from 'vuetable-2'
+
 export default {
   name: 'exercices',
+  components: {
+    Vuetable
+  },
   mounted() {
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
     if (this.listExercices.length === 0) {
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
+        this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
       })
     } else {
       this.loading = false
+      this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
     }
   },
   data() {
+    const self = this
     return {
+      fields: [
+        'details',
+        'date',
+        {
+          title: 'Categorie',
+          name: 'exercice_categorie_id',
+          formatter(value) {
+            return self.getExerciceCategorie(value).designation
+          }
+        },
+        {
+          title: 'Heure',
+          name: 'heure',
+          formatter(value) {
+            return value.slice(0,5)
+          }
+        },
+        'duree',
+        {
+          title: 'Localité',
+          name: 'localite_id',
+          formatter(value) {
+            return self.getLocalite(value).designation
+          }
+        },
+        'lieu',
+        'communication',
+        'actions'
+      ],
       loading: true,
-      detailTemplate: () => {
-        return {
-          template: ExerciceDetails
-        }
-      },
-      actionTemplate: () => {
-        return {
-          template: ExerciceActions
-        }
-      }
+      detailRow: ExerciceDetails,
+      actionTemplate: ExerciceActions
     }
   },
   props: {
@@ -145,18 +128,9 @@ export default {
     ])
   },
   methods: {
-    categorieAccessor(field, data) {
-      return this.getExerciceCategorie(data.exercice_categorie_id).designation
-    },
-    localiteAccessor(field, data) {
-      return this.getLocalite(data.localite_id).designation
-    },
-    timeAccessor(field, data) {
-      return data.heure.slice(0, 5)
+    toggleDetails(id) {
+      this.$refs.vuetable.toggleDetailRow(id)
     }
-  },
-  provide: {
-    grid: [DetailRow, Sort]
   }
 }
 </script>

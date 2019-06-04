@@ -12,7 +12,9 @@ export default {
   },
   getters: {
     listExerciceCategories: state => {
-      return state.categories.slice(0).sort((c1,c2) => c1.designation > c2.designation)
+      return state.categories
+        .slice(0)
+        .sort((c1, c2) => c1.designation > c2.designation)
     },
     getExerciceCategorie: state => categorie_id => {
       return state.categories.filter(c => c.id === categorie_id)[0]

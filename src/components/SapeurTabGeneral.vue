@@ -229,14 +229,14 @@
                 <td class="align-middle text-center">
                   <div class="custom-control custom-checkbox text-center">
                     <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            :id="t.priorite"
-                            v-model="t.rta"
+                      type="checkbox"
+                      class="custom-control-input"
+                      :id="t.priorite"
+                      v-model="t.rta"
                     />
                     <label
-                            class="custom-control-label"
-                            :for="t.priorite"
+                      class="custom-control-label"
+                      :for="t.priorite"
                     ></label>
                   </div>
                 </td>

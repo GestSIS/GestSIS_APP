@@ -8,19 +8,19 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a
                 class="nav-item nav-link"
-                :class="{ active: tabPresence }"
-                role="tab"
-                href="#"
-                @click.prevent="tabPresence = true"
-                >Présences</a
-              >
-              <a
-                class="nav-item nav-link"
                 :class="{ active: !tabPresence }"
                 role="tab"
                 href="#"
                 @click.prevent="tabPresence = false"
                 >Informations</a
+              >
+              <a
+                class="nav-item nav-link"
+                :class="{ active: tabPresence }"
+                role="tab"
+                href="#"
+                @click.prevent="tabPresence = true"
+                >Présences</a
               >
             </div>
           </nav>

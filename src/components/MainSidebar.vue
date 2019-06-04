@@ -68,7 +68,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/organisation" class="nav-link internal-link">
+          <router-link to="/amendes" class="nav-link internal-link">
             <font-awesome-icon icon="hand-holding-usd" />
             <span>Amendes</span>
           </router-link>

@@ -1,6 +1,5 @@
 import types from '../mutationTypes'
 import ExerciceService from '../../services/ExerciceService'
-import SapeurService from '../../services/SapeurService'
 
 export default {
   state: {

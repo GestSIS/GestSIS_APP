@@ -13,7 +13,9 @@ import {
   faGlobeEurope,
   faPlus,
   faTimes,
-  faDoorClosed
+  faDoorClosed,
+  faAngleRight,
+  faAngleDown
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
@@ -43,5 +45,7 @@ library.add(
   faTrashAlt,
   faPlus,
   faQuestionCircle,
-  faTimes
+  faTimes,
+  faAngleRight,
+  faAngleDown
 )
