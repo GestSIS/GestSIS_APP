@@ -125,7 +125,7 @@ export default {
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
-hr{
+hr {
   width: 100%;
 }
 .menu-otpions {

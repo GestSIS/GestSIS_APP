@@ -55,6 +55,7 @@ export default {
       return state.currentExercice.data
     },
     getExercice: state => exercice_id => {
+      console.log(state.exercices.filter(e => e.id === exercice_id).length)
       return state.exercices.filter(e => e.id === exercice_id)[0]
     }
   },

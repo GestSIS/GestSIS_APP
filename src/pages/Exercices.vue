@@ -3,6 +3,18 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white">
+              <li class="breadcrumb-item">
+                <router-link tag="a" to="/">
+                  Accueil
+                </router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Exercices
+              </li>
+            </ol>
+          </nav>
           <!-- /.card-header -->
           <div class="card card-primary card-outline mt-3 mb-5">
             <div class="card-header d-flex justify-content-between">
@@ -59,7 +71,6 @@
 import { mapGetters } from 'vuex'
 
 import ExerciceDetails from '@/components/ExerciceDetails'
-import ExerciceActions from '@/components/ExerciceActions'
 
 import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
@@ -144,8 +155,7 @@ export default {
         }
       ],
       loading: true,
-      detailRow: ExerciceDetails,
-      actionTemplate: ExerciceActions
+      detailRow: ExerciceDetails
     }
   },
   props: {

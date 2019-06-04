@@ -1,7 +1,16 @@
 <template>
   <div>
     <div class="container-fluid">
-      <h1>Sapeurs</h1>
+      <ol class="breadcrumb bg-white">
+        <li class="breadcrumb-item">
+          <router-link tag="a" to="/">
+            Accueil
+          </router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Sapeurs
+        </li>
+      </ol>
       <div class="row">
         <div class="col-md-3">
           <!-- /.card-header -->

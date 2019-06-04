@@ -1,7 +1,21 @@
 <template>
   <div>
     <div class="container-fluid">
-      <h1>Exercices</h1>
+      <ol class="breadcrumb bg-white">
+        <li class="breadcrumb-item">
+          <router-link tag="a" to="/">
+            Accueil
+          </router-link>
+        </li>
+        <li class="breadcrumb-item">
+          <router-link tag="a" to="/exercices">
+            Exercices
+          </router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{ getExercice(parseInt(id)).communication }}
+        </li>
+      </ol>
       <div class="row">
         <div class="col-md-12">
           <nav class="">
@@ -37,6 +51,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue'
 import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue'
 
@@ -55,6 +71,9 @@ export default {
     id: {
       type: String
     }
+  },
+  computed: {
+    ...mapGetters(['getExercice'])
   },
   mounted() {
     let id = parseInt(this.id)

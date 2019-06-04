@@ -27,7 +27,7 @@
 <script>
 export default {
   name: 'ExerciceDetails',
-  props:{
+  props: {
     rowData: {
       type: Object,
       required: true
@@ -36,7 +36,7 @@ export default {
       type: Number
     },
     options: {
-      type: Object,
+      type: Object
     }
   },
   data() {
@@ -51,8 +51,8 @@ export default {
 </script>
 
 <style scoped>
-  .detail-row{
-    padding-left:50px;
-    border-left:1px;
-  }
+.detail-row {
+  padding-left: 50px;
+  border-left: 1px;
+}
 </style>
