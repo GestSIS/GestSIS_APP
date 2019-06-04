@@ -34,28 +34,28 @@ export default {
     activeSapeurTelephones: state => {
       return state.currentSapeur.telephones
         .slice(0)
-        .sort((t1, t2) => new Date(t1.priorite) > new Date(t2.priorite))
+        .sort((t1, t2) => t1.priorite - t2.priorite)
     },
     activeSapeurGrades: state => {
       return state.currentSapeur.grades
         .slice(0)
-        .sort((g1, g2) => new Date(g1.date) < new Date(g2.date))
+        .sort((g1, g2) => new Date(g1.date) - new Date(g2.date))
     },
     activeSapeurCours: state => {
       return state.currentSapeur.cours
         .slice(0)
-        .sort((c1, c2) => new Date(c1.date) < new Date(c2.date))
+        .sort((c1, c2) => new Date(c1.date) - new Date(c2.date))
     },
     activeSapeurFonctions: state => {
       return state.currentSapeur.fonctions
         .slice(0)
-        .sort((f1, f2) => new Date(f1.debut) < new Date(f2.debut))
+        .sort((f1, f2) => new Date(f1.debut) - new Date(f2.debut))
     },
     activeSapeurMutations: state => {
       return state.currentSapeur.mutations
         .slice(0)
         .sort(
-          (m1, m2) => new Date(m1.incorporation) < new Date(m2.incorporation)
+          (m1, m2) => new Date(m1.incorporation) - new Date(m2.incorporation)
         )
     },
     activeSapeurGroupes: state => {

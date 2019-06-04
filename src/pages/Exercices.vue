@@ -11,7 +11,13 @@
                 Ajouter un exercice
               </button>
             </div>
+            <div class="card-body d-flex justify-content-center" v-if="loading">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
             <ejs-grid
+              v-if="!loading"
               :dataSource="listExercices"
               :allowSorting="true"
               :detailTemplate="detailTemplate"
@@ -46,8 +52,12 @@
                   field="communication"
                   headerText="Communication"
                 ></e-column>
-                <e-column>
-                  <button>Modifier</button>
+                <e-column
+                  headerText="Actions"
+                  textAlign="center"
+                  class="text-center"
+                  :template="actionTemplate"
+                >
                 </e-column>
               </e-columns>
             </ejs-grid>
@@ -85,28 +95,34 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import Vue from 'vue'
-import { GridPlugin, DetailRow, Sort } from '@syncfusion/ej2-vue-grids'
+import { DetailRow, Sort } from '@syncfusion/ej2-vue-grids'
 import ExerciceDetails from '@/components/ExerciceDetails'
-
-Vue.use(GridPlugin)
+import ExerciceActions from '@/components/ExerciceActions'
 
 export default {
   name: 'exercices',
   mounted() {
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
-    this.$store.dispatch('fetchListExercice').then(() => {
-      if (this.activeExerciceId === 0 && this.listExercices.length > 0) {
-        this.selectExercice(this.listExercices[0].id)
-      }
-    })
+    if (this.listExercices.length === 0) {
+      this.$store.dispatch('fetchListExercice').then(() => {
+        this.loading = false
+      })
+    } else {
+      this.loading = false
+    }
   },
   data() {
     return {
-      detailTemplate: function() {
+      loading: true,
+      detailTemplate: () => {
         return {
           template: ExerciceDetails
+        }
+      },
+      actionTemplate: () => {
+        return {
+          template: ExerciceActions
         }
       }
     }

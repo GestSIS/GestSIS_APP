@@ -227,7 +227,18 @@
                   </select>
                 </td>
                 <td class="align-middle text-center">
-                  <input type="checkbox" v-model="t.rta" />
+                  <div class="custom-control custom-checkbox text-center">
+                    <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            :id="t.priorite"
+                            v-model="t.rta"
+                    />
+                    <label
+                            class="custom-control-label"
+                            :for="t.priorite"
+                    ></label>
+                  </div>
                 </td>
                 <td>
                   <div class="d-flex justify-content-center">
