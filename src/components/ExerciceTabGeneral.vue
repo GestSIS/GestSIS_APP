@@ -3,7 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <span></span>
       <button class="btn btn-outline-primary" @click="save">
-        Sauvegarder
+        {{ newMode ? 'Ajouter' : 'Sauvegarder' }}
       </button>
     </div>
     <div class="card-body">
@@ -153,9 +153,27 @@ export default {
       'listExerciceCategories'
     ])
   },
+  props: {
+    newMode: Boolean
+  },
   methods: {
     save() {
-      this.$store.dispatch('saveActiveExercice', this.activeExerciceData)
+      if (
+        this.activeExerciceData.heure !== null &&
+        this.activeExerciceData.heure.length === 5
+      ) {
+        this.activeExerciceData.heure += ':00'
+      }
+
+      if (this.newMode) {
+        this.$store
+          .dispatch('createExercice', this.activeExerciceData)
+          .then(data => {
+            this.$router.push('/exercices/' + data.id)
+          })
+      } else {
+        this.$store.dispatch('saveActiveExercice', this.activeExerciceData)
+      }
     }
   }
 }

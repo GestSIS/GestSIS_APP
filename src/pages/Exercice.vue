@@ -13,12 +13,12 @@
           </router-link>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
-          {{ getExercice(parseInt(id)).communication }}
+          {{ breadcrumbFinal }}
         </li>
       </ol>
       <div class="row">
         <div class="col-md-12">
-          <nav class="">
+          <nav v-if="!newMode">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a
                 class="nav-item nav-link"
@@ -41,7 +41,10 @@
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" role="tabpanel">
               <ExerciceTabSapeurs v-if="tabPresence"></ExerciceTabSapeurs>
-              <ExerciceTabGeneral v-if="!tabPresence"></ExerciceTabGeneral>
+              <ExerciceTabGeneral
+                :newMode="newMode"
+                v-if="!tabPresence"
+              ></ExerciceTabGeneral>
             </div>
           </div>
         </div>
@@ -73,19 +76,32 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getExercice'])
+    ...mapGetters(['getExercice']),
+    newMode() {
+      return this.id === 'new'
+    },
+    breadcrumbFinal() {
+      return this.newMode
+        ? 'Nouveau'
+        : this.getExercice(parseInt(this.id)).communication
+    }
   },
   mounted() {
-    let id = parseInt(this.id)
-
     this.$store.dispatch('fetchListSapeur')
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
     this.$store.dispatch('fetchExcuseTypes')
 
-    this.$store.dispatch('selectExercice', id)
-    this.$store.dispatch('fetchExercice', id)
-    this.$store.dispatch('fetchExerciceSapeurs', id)
+    let id = parseInt(this.id)
+
+    if (this.newMode) {
+      this.$store.dispatch('resetActiveExercice')
+    } else {
+      this.$store.dispatch('selectExercice', id)
+      this.$store.dispatch('fetchExercice', id)
+      this.$store.dispatch('fetchExerciceSapeurs', id)
+    }
+    this.tabPresence = !this.newMode
   },
   watch: {
     activeExerciceId() {

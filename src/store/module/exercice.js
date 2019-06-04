@@ -14,6 +14,9 @@ export default {
     [types.UPDATE_EXERCICE_LIST](state, payload) {
       state.exercices = payload
     },
+    [types.ADD_EXERCICE](state, payload) {
+      state.exercices = [...state.exercices, payload]
+    },
     [types.SELECT_CURRENT_EXERCICE](state, payload) {
       state.currentExercice.id = payload
     },
@@ -77,6 +80,32 @@ export default {
     },
     selectExercice({ commit }, payload) {
       return commit(types.SELECT_CURRENT_EXERCICE, payload)
+    },
+    resetActiveExercice({ commit }) {
+      commit(types.SELECT_CURRENT_EXERCICE, null)
+      return commit(types.UPDATE_CURRENT_EXERCICE_DATA, {
+        id: null,
+        localite_id: null,
+        exercice_categorie_id: null,
+        exercice_comptable_id: 1,
+        date: null,
+        heure: null,
+        lieu: '',
+        communication: '',
+        designation: '',
+        duree: null,
+        status: 0
+      })
+    },
+    createExercice({ state, commit }) {
+      return ExerciceService.createExercice(state.currentExercice.data).then(
+        async data => {
+          await commit(types.ADD_EXERCICE, data)
+          await commit(types.SELECT_CURRENT_EXERCICE, data.id)
+          await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
+          return data
+        }
+      )
     },
     saveActiveExercice({ state, commit }) {
       return ExerciceService.saveExercice(

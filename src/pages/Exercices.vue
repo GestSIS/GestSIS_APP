@@ -19,9 +19,9 @@
           <div class="card card-primary card-outline mt-3 mb-5">
             <div class="card-header d-flex justify-content-between">
               <h3>Liste des exercices</h3>
-              <button class="btn btn-outline-primary">
+              <router-link tag="button" to="/exercices/new" class="btn btn-outline-primary">
                 Ajouter un exercice
-              </button>
+              </router-link>
             </div>
             <div class="card-body d-flex justify-content-center" v-if="loading">
               <div class="spinner-border" role="status">
