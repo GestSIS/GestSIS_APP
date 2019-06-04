@@ -4,31 +4,31 @@
       <span class="brand-text font-weight-light">GestSIS</span>
     </div>
 
-    <hr class="bg-secondary" />
+    <!--    <hr class="bg-secondary" />-->
+    <!--    &lt;!&ndash; Sidebar user panel (optional) &ndash;&gt;-->
+    <!--    <div class="sidebar-user">-->
+    <!--      <div class="image">-->
+    <!--        &lt;!&ndash; @if($user_details['photo'])-->
+    <!--        <img-->
+    <!--          src="{{ $user_details['photo'] }}"-->
+    <!--          class="img-circle elevation-2"-->
+    <!--        >-->
+    <!--        @endif&ndash;&gt;-->
+    <!--        Image-->
+    <!--      </div>-->
+    <!--      <div class="info">-->
+    <!--        <a href="#" class="d-block">-->
+    <!--          &lt;!&ndash; @if(!empty($user_details['nom']))-->
+    <!--          {{ $user_details['prenom'] }} {{ $user_details['nom'] }}-->
+    <!--          @else-->
+    <!--          {{ $user_details['nom_utilisateur'] }}-->
+    <!--          @endif&ndash;&gt;-->
+    <!--          John Doe-->
+    <!--        </a>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <hr class="bg-light" />
 
-    <!-- Sidebar user panel (optional) -->
-    <div class="sidebar-user">
-      <div class="image">
-        <!-- @if($user_details['photo'])
-        <img
-          src="{{ $user_details['photo'] }}"
-          class="img-circle elevation-2"
-        >
-        @endif-->
-        Image
-      </div>
-      <div class="info">
-        <a href="#" class="d-block">
-          <!-- @if(!empty($user_details['nom']))
-          {{ $user_details['prenom'] }} {{ $user_details['nom'] }}
-          @else
-          {{ $user_details['nom_utilisateur'] }}
-          @endif-->
-          John Doe
-        </a>
-      </div>
-    </div>
-    <hr class="bg-secondary" />
     <!-- Sidebar Menu -->
     <nav class="menu-options mt-2">
       <ul
@@ -125,6 +125,9 @@ export default {
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
+hr{
+  width: 100%;
+}
 .menu-otpions {
   flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
   overflow-y: auto; /*adds scroll to this container*/

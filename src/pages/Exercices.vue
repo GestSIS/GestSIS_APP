@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <!-- /.card-header -->
-          <div class="card card-primary card-outline mt-3">
+          <div class="card card-primary card-outline mt-3 mb-5">
             <div class="card-header d-flex justify-content-between">
               <h3>Liste des exercices</h3>
               <button class="btn btn-outline-primary">
@@ -21,13 +21,21 @@
               :api-mode="false"
               :fields="fields"
               :detail-row-component="detailRow"
+              :css="css.table"
             >
               <div slot="details" slot-scope="props">
                 <button
                   class="btn btn-link border-0"
                   @click="toggleDetails(props.rowData.id)"
                 >
-                  <font-awesome-icon :icon="['fas', 'angle-right']" />
+                  <font-awesome-icon
+                    v-if="toggles[props.rowData.id] || false"
+                    :icon="['fas', 'angle-down']"
+                  />
+                  <font-awesome-icon
+                    v-if="!(toggles[props.rowData.id] || false)"
+                    :icon="['fas', 'angle-right']"
+                  />
                 </button>
               </div>
               <div slot="actions" slot-scope="props">
@@ -54,6 +62,7 @@ import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceActions from '@/components/ExerciceActions'
 
 import Vuetable from 'vuetable-2'
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
 
 export default {
   name: 'exercices',
@@ -76,12 +85,23 @@ export default {
   data() {
     const self = this
     return {
+      css: CssForBootstrap4,
+      toggles: [],
       fields: [
-        'details',
-        'date',
+        {
+          title: '',
+          name: 'details',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Date',
+          name: 'date',
+          dataClass: 'align-middle'
+        },
         {
           title: 'Categorie',
           name: 'exercice_categorie_id',
+          dataClass: 'align-middle',
           formatter(value) {
             return self.getExerciceCategorie(value).designation
           }
@@ -89,21 +109,39 @@ export default {
         {
           title: 'Heure',
           name: 'heure',
+          dataClass: 'align-middle',
           formatter(value) {
-            return value.slice(0,5)
+            return value.slice(0, 5)
           }
         },
-        'duree',
+        {
+          title: 'Duree',
+          name: 'duree',
+          dataClass: 'align-middle'
+        },
         {
           title: 'Localité',
           name: 'localite_id',
+          dataClass: 'align-middle',
           formatter(value) {
             return self.getLocalite(value).designation
           }
         },
-        'lieu',
-        'communication',
-        'actions'
+        {
+          title: 'Lieu',
+          name: 'lieu',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Communication',
+          name: 'communication',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Actions',
+          name: 'actions',
+          dataClass: 'align-middle'
+        }
       ],
       loading: true,
       detailRow: ExerciceDetails,
@@ -129,6 +167,7 @@ export default {
   },
   methods: {
     toggleDetails(id) {
+      this.toggles[id] = !this.toggles[id]
       this.$refs.vuetable.toggleDetailRow(id)
     }
   }
