@@ -99,7 +99,7 @@
                 :id="sap.id + 'amende'"
                 checked=""
                 v-model="sap.amende"
-                :disabled="sap.remplace || sap.present"
+                :disabled="!!(sap.remplace || sap.present)"
               />
               <label
                 class="custom-control-label"
@@ -144,8 +144,8 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom
     },
     selectPresent(sapeur) {
-      sapeur.excuseType = 0
       sapeur.remplace = false
+      sapeur.amende = false
       sapeur.excuse_type_id = null
     },
     selectRemplace(sapeur) {

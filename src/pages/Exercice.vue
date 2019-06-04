@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
 import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue'
 import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue'
 
@@ -65,6 +64,7 @@ export default {
     this.$store.dispatch('fetchExerciceCategories')
     this.$store.dispatch('fetchExcuseTypes')
 
+    this.$store.dispatch('selectExercice', id)
     this.$store.dispatch('fetchExercice', id)
     this.$store.dispatch('fetchExerciceSapeurs', id)
   },
@@ -72,6 +72,7 @@ export default {
     activeExerciceId() {
       let id = parseInt(this.id)
 
+      this.$store.dispatch('selectExercice', id)
       this.$store.dispatch('fetchExercice', id)
       this.$store.dispatch('fetchExerciceSapeurs', id)
     }

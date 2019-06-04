@@ -75,9 +75,12 @@ export default {
         return commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
       })
     },
+    selectExercice({ commit }, payload) {
+      return commit(types.SELECT_CURRENT_EXERCICE, payload)
+    },
     saveActiveExercice({ state, commit }) {
       return ExerciceService.saveExercice(
-        state.currentExercice.data.id,
+        state.currentExercice.id,
         state.currentExercice.data
       ).then(async data => {
         await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
