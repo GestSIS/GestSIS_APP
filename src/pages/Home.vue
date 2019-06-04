@@ -8,13 +8,15 @@
         <router-link to="/sapeurs" class="is-active">Sapeurs</router-link>
       </li>
       <li>
-        <a>Exercices</a>
+        <router-link to="/exercices" class="is-active">Exercices</router-link>
       </li>
       <li>
-        <a>Interventions</a>
+        <router-link to="/interventions" class="is-active"
+          >Interventions</router-link
+        >
       </li>
       <li>
-        <a>Frais</a>
+        <router-link to="/frais" class="is-active">Frais</router-link>
       </li>
       <li>
         <a>Matériel</a>

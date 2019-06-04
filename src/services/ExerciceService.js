@@ -10,23 +10,18 @@ export default {
   getSapeurs(exercice_id) {
     return Api().get('/exercices/' + exercice_id + '/sapeurs')
   },
-  saveSapeur(sapeurId, sapeurData) {
-    return Api().put('/sapeurs/' + sapeurId, sapeurData, {
+  addSapeurs(exercieId, sapeursData) {
+    return Api().post('/exercices/' + exercieId + '/sapeurss/', sapeursData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  addSapeurs(sapeurId, sapeursData) {
-    return Api().post('/sapeurs/' + sapeurId + '/sapeurss/', sapeursData, {
+  editSapeurs(exercieId, sapeursData) {
+    return Api().put('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  editSapeurs(sapeurId, sapeursData) {
-    return Api().put('/sapeurs/' + sapeurId + '/sapeurs/', sapeursData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
-  },
-  removeSapeurs(sapeurId, sapeursIds) {
-    return Api().delete('/sapeurs/' + sapeurId + '/sapeurs/', sapeursIds, {
+  removeSapeurs(exercieId, sapeursIds) {
+    return Api().delete('/exercices/' + exercieId + '/sapeurs/', sapeursIds, {
       headers: { 'Content-Type': 'application/json' }
     })
   }

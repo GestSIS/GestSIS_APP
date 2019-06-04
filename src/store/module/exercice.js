@@ -66,7 +66,7 @@ export default {
     },
     fetchExercice({ commit }, payload) {
       return ExerciceService.getExercice(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
+        return commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
       })
     },
     fetchExerciceSapeurs({ commit }, payload) {
@@ -74,42 +74,27 @@ export default {
         return commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
       })
     },
-    saveActiveSapeur({ state }) {
-      return ExerciceService.saveSapeur(
-        state.currentExercice.data.id,
-        state.currentExercice.data
-      ).then(res => {
-        if (res.data.error !== undefined) {
-          throw new Error(res.data.error)
-        }
-        return res.data.data
-      })
-    },
 
     addSapeurs({ state, commit }, payload) {
-      return ExerciceService.addSapeurs(
-        state.currentExercice.data.id,
-        payload
-      ).then(async data => {
+      return ExerciceService.addSapeurs(state.currentExercice.data.id, {
+        sapeurs: payload
+      }).then(async data => {
         await commit(types.ADD_CURRENT_EXERCICE_SAPEURS, data)
         return data
       })
     },
-
     editSapeurs({ state, commit }, payload) {
-      return ExerciceService.editSapeurs(
-        state.currentExercice.data.id,
-        payload
-      ).then(async data => {
+      return ExerciceService.editSapeurs(state.currentExercice.data.id, {
+        sapeurs: payload
+      }).then(async data => {
         await commit(types.EDIT_CURRENT_EXERCICE_SAPEURS, data)
         return data
       })
     },
     removeSapeurs({ state, commit }, payload) {
-      return ExerciceService.removeSapeurs(
-        state.currentExercice.data.id,
-        payload
-      ).then(async data => {
+      return ExerciceService.removeSapeurs(state.currentExercice.data.id, {
+        sapeurs: payload
+      }).then(async data => {
         await commit(types.REMOVE_CURRENT_EXERCICE_SAPEURS, payload)
         return data
       })

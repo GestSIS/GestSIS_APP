@@ -56,22 +56,22 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/organisation" class="nav-link internal-link">
             <font-awesome-icon icon="sitemap" />
             <span>Organisation</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/frais" class="nav-link internal-link">
             <font-awesome-icon icon="calculator" />
             <span>Frais</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/organisation" class="nav-link internal-link">
             <font-awesome-icon icon="hand-holding-usd" />
             <span>Amendes</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link internal-link">
