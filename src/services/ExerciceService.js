@@ -4,11 +4,21 @@ export default {
   getExercices() {
     return Api().get('/exercices/')
   },
-  getExercice(exercice_id) {
-    return Api().get('/exercices/' + exercice_id)
+  getExercice(exerciceId) {
+    return Api().get('/exercices/' + exerciceId)
   },
-  getSapeurs(exercice_id) {
-    return Api().get('/exercices/' + exercice_id + '/sapeurs')
+  getSapeurs(exerciceId) {
+    return Api().get('/exercices/' + exerciceId + '/sapeurs')
+  },
+  createExercice(exerciceData) {
+    return Api().post('/exercices/', exerciceData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+  },
+  saveExercice(exerciceId, exerciceData) {
+    return Api().put('/exercices/' + exerciceId, exerciceData, {
+      headers: { 'Content-Type': 'application/json' }
+    })
   },
   addSapeurs(exercieId, sapeursData) {
     return Api().post('/exercices/' + exercieId + '/sapeurss/', sapeursData, {

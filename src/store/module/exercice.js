@@ -1,5 +1,6 @@
 import types from '../mutationTypes'
 import ExerciceService from '../../services/ExerciceService'
+import SapeurService from '../../services/SapeurService'
 
 export default {
   state: {
@@ -72,6 +73,15 @@ export default {
     fetchExerciceSapeurs({ commit }, payload) {
       return ExerciceService.getSapeurs(payload).then(data => {
         return commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
+      })
+    },
+    saveActiveExercice({ state, commit }) {
+      return ExerciceService.saveExercice(
+        state.currentExercice.data.id,
+        state.currentExercice.data
+      ).then(async data => {
+        await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
+        return data
       })
     },
 

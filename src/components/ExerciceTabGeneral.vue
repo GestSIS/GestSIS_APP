@@ -154,7 +154,9 @@ export default {
     ])
   },
   methods: {
-    save() {}
+    save() {
+      this.$store.dispatch('saveActiveExercice', this.activeExerciceData)
+    }
   }
 }
 </script>
