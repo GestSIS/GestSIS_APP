@@ -42,6 +42,17 @@ export default new Router({
       path: '/exercices',
       name: 'exercices',
       component: () => import('@/pages/Exercices.vue')
+    },
+    {
+      path: '/interventions/:id',
+      name: 'intervention',
+      props: true,
+      component: () => import('@/pages/Intervention.vue')
+    },
+    {
+      path: '/interventions',
+      name: 'interventions',
+      component: () => import('@/pages/Interventions.vue')
     }
   ]
 })

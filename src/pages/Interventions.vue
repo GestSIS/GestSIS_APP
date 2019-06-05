@@ -10,7 +10,7 @@
               </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-              Exercices
+              Interventions
             </li>
           </ol>
         </nav>
@@ -24,13 +24,13 @@
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>Liste des exercices</h3>
+            <h3>Liste des interventions</h3>
             <router-link
               tag="button"
               to="/exercices/new"
               class="btn btn-outline-primary"
             >
-              Ajouter un exercice
+              Ajouter une intervention
             </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
@@ -63,7 +63,7 @@
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
-                :to="'/exercices/' + props.rowData.id"
+                :to="'/interventions/' + props.rowData.id"
                 class="btn btn-outline-primary border-0"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
@@ -86,33 +86,19 @@ import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
 
 export default {
-  name: 'exercices',
+  name: 'interventions',
   components: {
     Vuetable,
     ExerciceComptable
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true
+  mounted() {
+    this.$store.dispatch('fetchLocalites')
+    this.$store.dispatch('fetchExerciceCategories')
+    if (this.listExercices.length === 0) {
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
         this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
       })
-    }
-  },
-  mounted() {
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchExerciceCategories')
-    if (this.listExerciceComptable.length === 0) {
-      console.log('Warning')
-    }
-    if (this.listExercices.length === 0) {
-      if (this.currentExerciceComptableId || 0 !== 0) {
-        this.$store.dispatch('fetchListExercice').then(() => {
-          this.loading = false
-          this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
-        })
-      }
     } else {
       this.loading = false
       this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
@@ -173,11 +159,11 @@ export default {
           name: 'communication',
           dataClass: 'align-middle'
         },
-        {
-          title: 'Actions',
-          name: 'actions',
-          dataClass: 'align-middle'
-        }
+        // {
+        //   title: 'Actions',
+        //   name: 'actions',
+        //   dataClass: 'align-middle'
+        // }
       ],
       loading: true,
       detailRow: ExerciceDetails
@@ -194,12 +180,10 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'listExercices',
-      'activeExerciceId',
-      'getExerciceCategorie',
-      'getLocalite',
-      'listExerciceComptable',
-      'currentExerciceComptableId'
+      'listInterventions',
+      'activeInterventionId',
+      'getTypeIntervention',
+      'getLocalite'
     ])
   },
   methods: {

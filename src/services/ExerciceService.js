@@ -1,8 +1,10 @@
 import Api from '@/services/Api'
 
 export default {
-  getExercices() {
-    return Api().get('/exercices/')
+  getExercices(exerciceComptableId) {
+    return Api().get('/exercices', {
+      params: { exercice_comptable_id: exerciceComptableId }
+    })
   },
   getExercice(exerciceId) {
     return Api().get('/exercices/' + exerciceId)
