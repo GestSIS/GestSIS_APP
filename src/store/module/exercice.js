@@ -46,7 +46,7 @@ export default {
   },
   getters: {
     listExercices: state => {
-      return state.exercices
+      return state.exercices.slice(0).sort((e1,e2)=>e2.date-e1.date)
     },
     activeExerciceId: state => {
       return state.currentExercice.id
