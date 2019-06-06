@@ -16,7 +16,7 @@ export default {
       }
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {
-      state.activeExcuseTypeId = payload
+      state.activeExerciceComptableId = payload
     }
   },
   getters: {

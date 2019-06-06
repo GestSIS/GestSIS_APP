@@ -40,6 +40,7 @@
           </div>
           <vuetable
             ref="vuetable"
+            :class="{'d-none': loading}"
             :api-mode="false"
             :fields="fields"
             :detail-row-component="detailRow"

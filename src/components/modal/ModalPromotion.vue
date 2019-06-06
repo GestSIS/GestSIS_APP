@@ -53,7 +53,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'ModalCours',
+  name: 'ModalPromotion',
   computed: {
     ...mapGetters(['activeSapeurId', 'listGrades', 'activeGrade'])
   },

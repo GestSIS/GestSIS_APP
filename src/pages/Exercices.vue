@@ -39,6 +39,7 @@
             </div>
           </div>
           <vuetable
+            :class="{'d-none': loading}"
             ref="vuetable"
             :api-mode="false"
             :fields="fields"

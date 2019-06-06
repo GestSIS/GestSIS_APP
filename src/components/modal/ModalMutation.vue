@@ -62,7 +62,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'ModalCours',
+  name: 'ModalMutation',
   computed: {
     ...mapGetters(['activeSapeurId', 'listLocalites', 'activeMutation'])
   },

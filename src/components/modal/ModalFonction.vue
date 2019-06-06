@@ -65,7 +65,7 @@ import { mapGetters, mapMutations } from 'vuex'
 //TODO: Empêcher fonctions à double
 
 export default {
-  name: 'ModalCours',
+  name: 'ModalFonction',
   computed: {
     ...mapGetters(['activeSapeurId', 'listFonctions', 'activeFonction'])
   },

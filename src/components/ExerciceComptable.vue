@@ -1,10 +1,33 @@
 <template>
   <div class="exercice-comptable" v-if="currentExerciceComptableId">
-    Exercice comptable
-    <button class="ml-1 btn btn-outline-primary" @click="details">
-      {{ getExerciceComptable(currentExerciceComptableId).annee }}
-      <font-awesome-icon class="ml-2" :icon="['fas', 'angle-down']" />
-    </button>
+    <div class="dropdown">
+      Exercice comptable
+      <button
+        class="ml-1 btn btn-outline-secondary dropdown-toggle"
+        type="button"
+        data-toggle="dropdown"
+        @click="dropdown = !dropdown"
+      >
+        {{ getExerciceComptable(currentExerciceComptableId).annee }}
+      </button>
+      <div
+        class="dropdown-menu"
+        :class="{ show: dropdown }"
+        aria-labelledby="dropdownMenu2"
+      >
+        <button
+          class="dropdown-item"
+          type="button"
+          v-for="e in listExerciceComptable"
+          :key="e.id"
+          @click="selectExercice(e.id)"
+        >
+          {{ e.annee }}
+        </button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" type="button">Paramètres</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,9 +36,6 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'ExerciceComptable',
-  methods: {
-    details() {}
-  },
   computed: {
     ...mapGetters([
       'listExerciceComptable',
@@ -23,9 +43,20 @@ export default {
       'getExerciceComptable'
     ])
   },
+  data() {
+    return {
+      dropdown: false
+    }
+  },
   mounted() {
     if (this.listExerciceComptable.length === 0) {
       this.$store.dispatch('fetchExercicesComptables')
+    }
+  },
+  methods: {
+    selectExercice(id) {
+      this.dropdown = false
+      this.$store.dispatch('selectExerciceComptable', id)
     }
   }
 }
