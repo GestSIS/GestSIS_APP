@@ -11,9 +11,9 @@ export default {
     }
   },
   mutations: {
-    // [types.UPDATE_INTERVENTION_LIST](state, payload) {
-    //   state.interventions = payload
-    // },
+    [types.UPDATE_INTERVENTION_LIST](state, payload) {
+      state.interventions = payload
+    },
     // [types.ADD_INTERVENTION](state, payload) {
     //   state.interventions = [...state.interventions, payload]
     // },
