@@ -105,7 +105,7 @@ export default {
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchExerciceCategories')
     if (this.listExerciceComptable.length === 0) {
-      console.log('Warning')
+      //console.log('Warning')
     }
     if (this.listExercices.length === 0) {
       if (this.currentExerciceComptableId || 0 !== 0) {

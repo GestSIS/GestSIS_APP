@@ -448,8 +448,8 @@ export default {
     },
     finServiceBoutton() {
       if (this.activeSapeurMutations.length > 0) {
-        console.log(this.activeSapeurMutations[0].sortie || '')
-        console.log(this.activeSapeurMutations[0].sortie)
+        // console.log(this.activeSapeurMutations[0].sortie || '')
+        // console.log(this.activeSapeurMutations[0].sortie)
       }
 
       return (
@@ -512,10 +512,10 @@ export default {
       this.$store
         .dispatch('saveActiveSapeur')
         .then(() => {
-          console.log('Save sapeur Success')
+          // console.log('Save sapeur Success')
         })
         .catch(() => {
-          console.log('Save sapeur Error')
+          // console.log('Save sapeur Error')
         })
     },
     newMutation() {
