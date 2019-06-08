@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - 8
+
+cache:
+  directories:
+    - node_modules
+
+addons:
+  ssh_known_hosts:
+    - $PRODUCTION_SERVER
+
+script:
+  - npm run build
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: rsync -r --delete-after --quiet ./dist/ ssh -$PRODUCTION_SERVER_USER@$PRODUCTION_SERVER:$FOLDER_DEPLOY
+    on:
+      branch: master

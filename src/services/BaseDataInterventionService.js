@@ -1,13 +1,7 @@
 import Api from '@/services/Api'
 
 export default {
-  getPermisType() {
-    return Api().get('/permis/')
+  getStatFederal() {
+    return Api().get('/stat-federal/')
   },
-  getCivilites() {
-    return Api().get('/civilites/')
-  },
-  getTelephones() {
-    return Api().get('/telephone-types/')
-  }
 }

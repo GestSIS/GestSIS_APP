@@ -40,7 +40,7 @@
           </div>
           <vuetable
             ref="vuetable"
-            :class="{'d-none': loading}"
+            :class="{ 'd-none': loading }"
             :api-mode="false"
             :fields="fields"
             :detail-row-component="detailRow"
@@ -92,17 +92,29 @@ export default {
     Vuetable,
     ExerciceComptable
   },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true
+      this.$store.dispatch('fetchListIntervention').then(() => {
+        this.loading = false
+        this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
+      })
+    }
+  },
   mounted() {
     this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchExerciceCategories')
-    if (this.listExercices.length === 0) {
-      this.$store.dispatch('fetchListExercice').then(() => {
+    this.$store.dispatch('fetchStatFederals')
+    this.$store.dispatch('fetchTypeInterventions')
+    this.$store.dispatch('fetchInterventionTraitements')
+
+    if (this.listInterventions.length === 0) {
+      this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
+        this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
       })
     } else {
       this.loading = false
-      this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
+      this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
     }
   },
   data() {
@@ -111,36 +123,30 @@ export default {
       css: CssForBootstrap4,
       toggles: [],
       fields: [
-        {
-          title: '',
-          name: 'details',
-          dataClass: 'align-middle'
-        },
+        // {
+        //   title: '',
+        //   name: 'details',
+        //   dataClass: 'align-middle'
+        // },
         {
           title: 'Date',
-          name: 'date',
+          name: 'date_debut',
           dataClass: 'align-middle'
-        },
-        {
-          title: 'Categorie',
-          name: 'exercice_categorie_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return self.getExerciceCategorie(value).designation
-          }
         },
         {
           title: 'Heure',
-          name: 'heure',
+          name: 'heure_debut',
           dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5)
           }
         },
         {
-          title: 'Duree',
-          name: 'duree',
-          dataClass: 'align-middle'
+          title: "Type d'intervention",
+          name: 'type_intervention_id',
+          formatter(value) {
+            return self.getTypeIntervention(value).designation
+          }
         },
         {
           title: 'Localité',
@@ -156,10 +162,30 @@ export default {
           dataClass: 'align-middle'
         },
         {
-          title: 'Communication',
-          name: 'communication',
-          dataClass: 'align-middle'
+          title: 'Stat fédéral',
+          name: 'stat_federal_id',
+          dataClass: 'align-middle',
+          formatter(value) {
+            return self.getStatFederal(value).designation
+          }
         },
+        {
+          title: 'Traitement',
+          name: 'intervention_traitement_id',
+          dataClass: 'align-middle',
+          formatter(value) {
+            return self.getInterventionTraitement(value).designation
+          }
+        },
+        {
+          title: 'Étendue',
+          name: 'degre',
+          dataClass: 'align-middle',
+          formatter(value) {
+            const degre = { 0: 'Petite', 1: 'Moyenne', 2: 'Grande' }
+            return degre[value]
+          }
+        }
         // {
         //   title: 'Actions',
         //   name: 'actions',
@@ -181,10 +207,13 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'currentExerciceComptableId',
       'listInterventions',
       'activeInterventionId',
       'getTypeIntervention',
-      'getLocalite'
+      'getLocalite',
+      'getStatFederal',
+      'getInterventionTraitement'
     ])
   },
   methods: {

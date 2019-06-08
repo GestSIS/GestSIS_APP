@@ -1,40 +1,52 @@
 import Api from '@/services/Api'
 
 export default {
-  getExercices(exerciceComptableId) {
-    return Api().get('/exercices', {
+  getInterventions(exerciceComptableId) {
+    return Api().get('/interventions', {
       params: { exercice_comptable_id: exerciceComptableId }
     })
   },
-  getExercice(exerciceId) {
-    return Api().get('/exercices/' + exerciceId)
+  getIntervention(exerciceId) {
+    return Api().get('/interventions/' + exerciceId)
   },
   getSapeurs(exerciceId) {
-    return Api().get('/exercices/' + exerciceId + '/sapeurs')
+    return Api().get('/interventions/' + exerciceId + '/sapeurs')
   },
-  createExercice(exerciceData) {
-    return Api().post('/exercices/', exerciceData, {
+  createIntervention(exerciceData) {
+    return Api().post('/interventions/', exerciceData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  saveExercice(exerciceId, exerciceData) {
-    return Api().put('/exercices/' + exerciceId, exerciceData, {
+  saveIntervention(exerciceId, exerciceData) {
+    return Api().put('/interventions/' + exerciceId, exerciceData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  addSapeurs(exercieId, sapeursData) {
-    return Api().post('/exercices/' + exercieId + '/sapeurss/', sapeursData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+  addSapeurs(interventionId, sapeursData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/sapeurss/',
+      sapeursData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
-  editSapeurs(exercieId, sapeursData) {
-    return Api().put('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+  editSapeurs(interventionId, sapeursData) {
+    return Api().put(
+      '/interventions/' + interventionId + '/sapeurs/',
+      sapeursData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
-  removeSapeurs(exercieId, sapeursIds) {
-    return Api().delete('/exercices/' + exercieId + '/sapeurs/', sapeursIds, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+  removeSapeurs(interventionId, sapeursIds) {
+    return Api().delete(
+      '/interventions/' + interventionId + '/sapeurs/',
+      sapeursIds,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   }
 }
