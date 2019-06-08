@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Ph0tonic/GestSIS_APP.svg?token=CpCE2t9dSFqCXfyBr7VR&branch=master)](https://travis-ci.com/Ph0tonic/GestSIS_APP)
+
 # gestsis
 
 ## Project setup
