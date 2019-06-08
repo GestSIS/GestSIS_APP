@@ -6,8 +6,8 @@ Error: File to import not found or unreadable: ~bootswatch/dist/cosmo/variables.
 2: @import '~bootstrap/scss/bootstrap';
 3: @import '~bootswatch/dist/cosmo/bootswatch';
 4: 
-5: @import '~@syncfusion/ej2-base/styles/bootstrap4.css';
-6: @import '~@syncfusion/ej2-vue-grids/styles/bootstrap4.css';
+5: html,
+6: body {
 
 Backtrace:
 main.scss:1
@@ -46,4 +46,4 @@ main.scss:1
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: ~bootswatch/dist/cosmo/variables.\A         on line 1 of main.scss\A \A 1: @import '~bootswatch/dist/cosmo/variables';\A 2: @import '~bootstrap/scss/bootstrap';\A 3: @import '~bootswatch/dist/cosmo/bootswatch';\A 4: \A 5: @import '~@syncfusion/ej2-base/styles/bootstrap4.css';\A 6: @import '~@syncfusion/ej2-vue-grids/styles/bootstrap4.css';"; }
+  content: "Error: File to import not found or unreadable: ~bootswatch/dist/cosmo/variables.\A         on line 1 of main.scss\A \A 1: @import '~bootswatch/dist/cosmo/variables';\A 2: @import '~bootstrap/scss/bootstrap';\A 3: @import '~bootswatch/dist/cosmo/bootswatch';\A 4: \A 5: html,\A 6: body {"; }
