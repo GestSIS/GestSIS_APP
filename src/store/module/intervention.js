@@ -13,7 +13,7 @@ export default {
   mutations: {
     [types.UPDATE_INTERVENTION_LIST](state, payload) {
       state.interventions = payload
-    },
+    }
     // [types.ADD_INTERVENTION](state, payload) {
     //   state.interventions = [...state.interventions, payload]
     // },
@@ -68,7 +68,7 @@ export default {
       ).then(data => {
         return commit(types.UPDATE_INTERVENTION_LIST, data)
       })
-    },
+    }
     // fetchIntervention({ commit }, payload) {
     //   return InterventionService.getIntervention(payload).then(data => {
     //     return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
