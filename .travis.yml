@@ -17,6 +17,6 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: rsync -r --delete-after --quiet ./dist/ ssh -$PRODUCTION_SERVER_USER@$PRODUCTION_SERVER:$FOLDER_DEPLOY
+    script: rsync -r --delete-after --quiet ./dist/ -$PRODUCTION_SERVER_USER@$PRODUCTION_SERVER:$FOLDER_DEPLOY
     on:
       branch: master
