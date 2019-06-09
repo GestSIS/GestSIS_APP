@@ -32,6 +32,7 @@
               <tr>
                 <th scope="col"></th>
                 <th scope="col">Designation</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -58,6 +59,14 @@
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-danger border-0"
+                    @click="removeSingleSapeur(item.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -110,6 +119,15 @@
                   </div>
                   {{ item.designation }}
                 </td>
+                <td>
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="addSingleSapeur(item.id)"
+                    v-if="item.leaf"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -144,6 +162,14 @@
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="addSingleSapeur(item.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -316,6 +342,12 @@ export default {
       } else {
         //TODO
       }
+    },
+    addSingleSapeur(id) {
+      this.chosenSapeurs = [...this.chosenSapeurs, id]
+    },
+    removeSingleSapeur(id) {
+      this.chosenSapeurs = this.chosenSapeurs.filter(item => item !== id)
     },
     computeId(item) {
       return item.leaf === true || item.leaf === undefined
