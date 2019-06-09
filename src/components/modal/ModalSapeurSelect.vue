@@ -41,7 +41,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="item in chosenSapeurs.map(getSapeur)"
+                v-for="item in chosenSapeurs.map(getSaqqpeur)"
                 :key="item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)]
@@ -333,9 +333,6 @@ export default {
     selectGroupe(id, state = undefined) {
       let selected = state || !this.selectedGroups.includes(id)
       let svm = this
-      console.log('STATE')
-      console.log(id)
-      console.log(selected)
 
       //Select groupe itself
       let recursiveSearch = item => {
@@ -364,7 +361,6 @@ export default {
         : this.selectedGroups.filter(i => i !== groupe.id)
 
       groupe.sapeurs.filter(this.filtreSapeur()).forEach(s => {
-        console.log('Select sap')
         svm.displaySelected = {
           ...svm.displaySelected,
           [svm.computeId({ leaf: true, id: s })]: state

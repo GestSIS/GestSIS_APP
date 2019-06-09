@@ -112,7 +112,7 @@
     </table>
     <div class="card-footer">
       <button class="btn btn-outline-primary" @click="manageSapeurs">
-        Ajouter des sapeurs
+        Gérer la liste des sapeurs
       </button>
     </div>
   </div>
@@ -144,9 +144,7 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom
     },
     manageSapeurs() {
-      let callback = () => {
-        console.log('Callback')
-      }
+      let callback = selectedSapeurs => {}
       //this.$store.dispatch('resetActiveFonction')
       this.SHOW_MODAL({ component: 'ModalSapeurSelect', size: 1, callback })
     },
