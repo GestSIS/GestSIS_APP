@@ -29,7 +29,7 @@ export default {
           .map(s => {
             return {
               ...s,
-              sapeurs:s.sapeurs.map(s => s.sapeur_id),
+              sapeurs: s.sapeurs.map(s => s.sapeur_id),
               groupes: insideGroupes(s.id)
             }
           })
