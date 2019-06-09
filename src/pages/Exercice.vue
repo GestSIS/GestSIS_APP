@@ -82,9 +82,7 @@ export default {
       return this.id === 'new'
     },
     breadcrumbFinal() {
-      return this.newMode
-        ? 'Nouveau'
-        : this.activeExerciceData.communication
+      return this.newMode ? 'Nouveau' : this.activeExerciceData.communication
     }
   },
   mounted() {
@@ -99,7 +97,7 @@ export default {
       this.$store.dispatch('resetActiveExercice')
     } else {
       this.$store.dispatch('selectExercice', id)
-      this.$store.dispatch('fetchExercice', id).then(()=>{
+      this.$store.dispatch('fetchExercice', id).then(() => {
         this.loading = false
       })
       this.$store.dispatch('fetchExerciceSapeurs', id)

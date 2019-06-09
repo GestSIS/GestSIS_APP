@@ -17,7 +17,7 @@ export default {
       } else {
         state.modalComponent = payload.component
         state.modalCallback = payload.callback || function() {}
-        state.modalCallback = payload.size || 0
+        state.modalSize = payload.size || 0
       }
     },
     [types.HIDE_MODAL](state) {
