@@ -8,9 +8,9 @@
       role="dialog"
       v-if="visible"
     >
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog" :class="computedSize" role="document">
         <div class="modal-content">
-          <component :is="component" :callback="modalCallback"></component>
+          <component :is="component" :callback="callback"></component>
         </div>
       </div>
     </div>
@@ -33,7 +33,8 @@ export default {
     ModalFonction: () => import(`@/components/modal/ModalFonction`),
     ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
     ModalMutation: () => import(`@/components/modal/ModalMutation`),
-    ModalExcuse: () => import(`@/components/modal/ModalExcuse`)
+    ModalExcuse: () => import(`@/components/modal/ModalExcuse`),
+    ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`)
   },
   data() {
     return {
@@ -44,13 +45,17 @@ export default {
     ...mapState({
       visible: state => state.modal.modalVisible,
       modalComponent: state => state.modal.modalComponent,
-      modalCallback: state => state.modal.modalCallback
-    })
+      callback: state => state.modal.modalCallback,
+      size: state => state.modal.modalSize
+    }),
+    computedSize() {
+      return this.size < 0 ? 'modal-sm' : this.size > 0 ? 'modal-lg' : ''
+    }
   },
   created() {
     const escapeHandler = e => {
       if (e.key === 'Escape' && this.visible) {
-        this.modalCallback()
+        this.callback()
         this.HIDE_MODAL()
       }
     }

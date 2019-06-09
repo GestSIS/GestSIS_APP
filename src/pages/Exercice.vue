@@ -67,7 +67,8 @@ export default {
   },
   data() {
     return {
-      tabPresence: true
+      tabPresence: true,
+      loading: true
     }
   },
   props: {
@@ -76,14 +77,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getExercice']),
+    ...mapGetters(['activeExerciceData']),
     newMode() {
       return this.id === 'new'
     },
     breadcrumbFinal() {
       return this.newMode
         ? 'Nouveau'
-        : this.getExercice(parseInt(this.id)).communication
+        : this.activeExerciceData.communication
     }
   },
   mounted() {
@@ -98,7 +99,9 @@ export default {
       this.$store.dispatch('resetActiveExercice')
     } else {
       this.$store.dispatch('selectExercice', id)
-      this.$store.dispatch('fetchExercice', id)
+      this.$store.dispatch('fetchExercice', id).then(()=>{
+        this.loading = false
+      })
       this.$store.dispatch('fetchExerciceSapeurs', id)
     }
     this.tabPresence = !this.newMode

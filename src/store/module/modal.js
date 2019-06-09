@@ -4,7 +4,8 @@ export default {
   state: {
     modalVisible: false,
     modalComponent: null,
-    modalCallback: null
+    modalCallback: null,
+    modalSize: 0
   },
   mutations: {
     [types.SHOW_MODAL](state, payload) {
@@ -12,9 +13,11 @@ export default {
       if (typeof payload === 'string') {
         state.modalComponent = payload
         state.modalCallback = () => {}
+        state.modalSize = 0
       } else {
         state.modalComponent = payload.component
-        state.modalCallback = payload.callback
+        state.modalCallback = payload.callback || function() {}
+        state.modalCallback = payload.size || 0
       }
     },
     [types.HIDE_MODAL](state) {

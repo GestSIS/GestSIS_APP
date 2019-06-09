@@ -111,7 +111,7 @@
       </tbody>
     </table>
     <div class="card-footer">
-      <button class="btn btn-outline-primary">
+      <button class="btn btn-outline-primary" @click="manageSapeurs">
         Ajouter des sapeurs
       </button>
     </div>
@@ -142,6 +142,13 @@ export default {
     sapeurNomPrenom(sapeur_id) {
       let sapeur = this.getSapeur(sapeur_id)
       return sapeur.nom + ' ' + sapeur.prenom
+    },
+    manageSapeurs() {
+      let callback = () => {
+        console.log('Callback')
+      }
+      //this.$store.dispatch('resetActiveFonction')
+      this.SHOW_MODAL({ component: 'ModalSapeurSelect', size: 1, callback })
     },
     selectPresent(sapeur) {
       sapeur.remplace = false
