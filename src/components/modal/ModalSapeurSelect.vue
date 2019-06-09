@@ -24,7 +24,11 @@
       <div class="row">
         <div class="col-6">
           <h6>Sapeur sélectionnés</h6>
-          <button class="btn btn-outline-danger" @click="removeSapeurs">
+          <button
+            class="btn btn-outline-danger"
+            @click="removeSapeurs"
+            :disabled="!removeSapeurState"
+          >
             Enlever ces sapeurs
           </button>
           <table class="table table-striped">
@@ -40,7 +44,7 @@
                 v-for="item in chosenSapeurs.map(getSapeur)"
                 :key="item.id"
                 :class="{
-                  'table-primary': displaySelectedSapeurs[computeId(item)]
+                  'table-primary': displaySelected[computeId(item)]
                 }"
               >
                 <td>
@@ -49,12 +53,12 @@
                       type="checkbox"
                       class="custom-control-input"
                       :id="item.id"
-                      v-model="displaySelectedSapeurs[computeId(item)]"
+                      v-model="displaySelected[computeId(item)]"
                     />
                     <label
                       class="custom-control-label"
                       :for="item.id"
-                      @click="selectSapeur(item.id)"
+                      @click="select(item.id)"
                     ></label>
                   </div>
                 </td>
@@ -73,7 +77,11 @@
         </div>
         <div class="col-6">
           <h6>Sapeur disponibles</h6>
-          <button class="btn btn-outline-primary" @click="addSapeurs">
+          <button
+            class="btn btn-outline-primary"
+            @click="addSapeurs"
+            :disabled="!addSapeurState"
+          >
             Ajouter ces sapeurs
           </button>
           <table class="table" v-if="groupBy === 'groupe'">
@@ -88,7 +96,7 @@
                 v-for="item in flattenedTree"
                 :key="item.parent_id + '-' + item.id"
                 :class="{
-                  'table-primary': displaySelectedSapeurs[computeId(item)]
+                  'table-primary': displaySelected[computeId(item)]
                 }"
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
@@ -109,12 +117,12 @@
                       type="checkbox"
                       class="custom-control-input"
                       :id="computeId(item)"
-                      v-model="displaySelectedSapeurs[computeId(item)]"
+                      v-model="displaySelected[computeId(item)]"
                     />
                     <label
                       class="custom-control-label"
                       :for="computeId(item)"
-                      @click="selectSapeur(item.id, item.leaf)"
+                      @click="select(item.id, item.leaf)"
                     ></label>
                   </div>
                   {{ item.designation }}
@@ -125,7 +133,7 @@
                     @click="addSingleSapeur(item.id)"
                     v-if="item.leaf"
                   >
-                    <font-awesome-icon :icon="['far', 'edit']" />
+                    <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
               </tr>
@@ -152,12 +160,12 @@
                       type="checkbox"
                       class="custom-control-input"
                       :id="item.id"
-                      v-model="displaySelectedSapeurs[item.id]"
+                      v-model="displaySelected[item.id]"
                     />
                     <label
                       class="custom-control-label"
                       :for="item.id"
-                      @click="selectSapeur(item.id)"
+                      @click="select(item.id)"
                     ></label>
                   </div>
                 </td>
@@ -167,7 +175,7 @@
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"
                   >
-                    <font-awesome-icon :icon="['far', 'edit']" />
+                    <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
               </tr>
@@ -192,17 +200,17 @@ export default {
     return {
       groupBy: 'groupe',
       chosenSapeurs: [],
-      availableSapeurs: [],
       selectedSapeurs: [],
       selectedGroups: [],
       expanded: {},
-      displaySelectedSapeurs: {}
+      displaySelected: {}
     }
   },
   mounted() {
+    //TODO five selected sapeurs
     this.chosenSapeurs = [1, 2]
+
     this.$store.dispatch('fetchGroupesSapeurs').then(() => {
-      this.availableSapeurs = this.treeGroupesSapeurs
       let svm = this
       let recursive = item => {
         svm.expanded = { ...svm.expanded, [item.id]: false }
@@ -263,6 +271,24 @@ export default {
         i => (flattened = [...flattened, ...recursive(i, 0)])
       )
       return flattened
+    },
+    availableSapeurs() {
+      return this.listSapeur
+        .slice(0)
+        .filter(s => !this.chosenSapeurs.includes(s.id))
+        .map(s => s.id)
+    },
+    addSapeurState() {
+      return (
+        this.selectedSapeurs.filter(x => !this.chosenSapeurs.includes(x))
+          .length > 0
+      )
+    },
+    removeSapeurState() {
+      return (
+        this.selectedSapeurs.filter(x => this.chosenSapeurs.includes(x))
+          .length > 0
+      )
     }
   },
   watch: {
@@ -270,10 +296,7 @@ export default {
       //TODO
       switch (value) {
         case 'none':
-          this.availableSapeurs = this.listSapeur
-            .slice(0)
-            .filter(s => !this.chosenSapeurs.includes(s.id))
-            .map(s => s.id)
+          //TODO
           break
         case 'fonction':
           //TODO
@@ -285,9 +308,6 @@ export default {
           //TODO
           break
         case 'groupe':
-          this.$store.dispatch('fetchGroupesSapeurs').then(() => {
-            this.availableSapeurs = this.treeGroupesSapeurs
-          })
           break
       }
     }
@@ -298,16 +318,64 @@ export default {
       this.callback(null)
       this.HIDE_MODAL()
     },
-    selectSapeur(id, leaf = true) {
+    select(id, leaf = true) {
       if (leaf) {
-        this.selectedSapeurs = this.selectedSapeurs.includes(id)
-          ? this.selectedSapeurs.filter(i => i !== id)
-          : [...this.selectedSapeurs, id]
+        this.selectSapeur(id)
       } else {
-        this.selectedGroups = this.selectedGroups.includes(id)
-          ? this.selectedGroups.filter(i => i !== id)
-          : [...this.selectedGroups, id]
+        this.selectGroupe(id)
       }
+    },
+    selectSapeur(id) {
+      this.selectedSapeurs = this.selectedSapeurs.includes(id)
+        ? this.selectedSapeurs.filter(i => i !== id)
+        : [...this.selectedSapeurs, id]
+    },
+    selectGroupe(id, state = undefined) {
+      let selected = state || !this.selectedGroups.includes(id)
+      let svm = this
+      console.log('STATE')
+      console.log(id)
+      console.log(selected)
+
+      //Select groupe itself
+      let recursiveSearch = item => {
+        let found = item.id === id
+        if (found) {
+          svm.selectGroupSingle(item, selected, true)
+        } else {
+          item.groupes.forEach(recursiveSearch)
+        }
+      }
+
+      // recursive search
+      this.treeGroupesSapeurs.forEach(recursiveSearch)
+    },
+    selectGroupSingle(groupe, state, first = false) {
+      let svm = this
+      if (!first) {
+        this.displaySelected = {
+          ...this.displaySelected,
+          [this.computeId({ leaf: false, id: groupe.id })]: state
+        }
+      }
+
+      this.selectedGroups = state
+        ? Array.from(new Set([...this.selectedGroups, groupe.id]))
+        : this.selectedGroups.filter(i => i !== groupe.id)
+
+      groupe.sapeurs.filter(this.filtreSapeur()).forEach(s => {
+        console.log('Select sap')
+        svm.displaySelected = {
+          ...svm.displaySelected,
+          [svm.computeId({ leaf: true, id: s })]: state
+        }
+        svm.selectedSapeurs = state
+          ? Array.from(new Set([...svm.selectedSapeurs, s]))
+          : svm.selectedSapeurs.filter(i => i !== s)
+      })
+      groupe.groupes.forEach(g => {
+        svm.selectGroupSingle(g, state)
+      })
     },
     filtreSapeur() {
       let svm = this
@@ -326,22 +394,14 @@ export default {
       }
     },
     addSapeurs() {
-      if (this.groupBy === 'groupe') {
-        this.chosenSapeurs = Array.from(
-          new Set([...this.chosenSapeurs, ...this.selectedSapeurs])
-        )
-      } else {
-        //TODO
-      }
+      this.chosenSapeurs = Array.from(
+        new Set([...this.chosenSapeurs, ...this.selectedSapeurs])
+      )
     },
     removeSapeurs() {
-      if (this.groupBy === 'groupe') {
-        this.chosenSapeurs = this.chosenSapeurs.filter(
-          item => !this.selectedSapeurs.includes(item)
-        )
-      } else {
-        //TODO
-      }
+      this.chosenSapeurs = this.chosenSapeurs.filter(
+        item => !this.selectedSapeurs.includes(item)
+      )
     },
     addSingleSapeur(id) {
       this.chosenSapeurs = [...this.chosenSapeurs, id]
