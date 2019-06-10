@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Gérer les sapeurs</h5>
+      <h5 class="modal-title">Gérer les sapeurs</h5>
       <button type="button" class="close" @click="close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="container-fluid">
-      <div class="row">
+      <div class="row mt-2">
         <div class="col-12">
-          <div class="form-group">
-            Afficher par
-            <select class="form-control" v-model="groupBy">
+          <div class="form-group d-flex align-items-center">
+            <label class="mb-0 mr-2" for="group-by">Afficher&nbsp;par</label>
+            <select class="custom-select" v-model="groupBy" id="group-by">
               <option value="none">Aucun</option>
               <option value="fonction">Fonction</option>
               <option value="grade">Grade</option>
@@ -21,9 +21,9 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6">
-          <h6>Sapeur sélectionnés</h6>
+      <div class="row mb-2">
+        <div class="col-6 d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Sapeur sélectionnés</h6>
           <button
             class="btn btn-outline-danger"
             @click="removeSapeurs"
@@ -31,6 +31,20 @@
           >
             Enlever ces sapeurs
           </button>
+        </div>
+        <div class="col-6 d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Sapeur disponibles</h6>
+          <button
+            class="btn btn-outline-primary"
+            @click="addSapeurs"
+            :disabled="!addSapeurState"
+          >
+            Ajouter ces sapeurs
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -41,7 +55,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="item in chosenSapeurs.map(getSaqqpeur)"
+                v-for="item in chosenSapeurs.map(getSapeur)"
                 :key="item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)]
@@ -76,14 +90,9 @@
           </table>
         </div>
         <div class="col-6">
-          <h6>Sapeur disponibles</h6>
-          <button
-            class="btn btn-outline-primary"
-            @click="addSapeurs"
-            :disabled="!addSapeurState"
-          >
-            Ajouter ces sapeurs
-          </button>
+          <p v-if="groupBy !== 'groupe' && groupBy !== 'none'">
+            Coming soon!
+          </p>
           <table class="table" v-if="groupBy === 'groupe'">
             <thead>
               <tr>
@@ -185,6 +194,9 @@
       </div>
     </div>
     <div class="modal-footer">
+      <button class="btn btn-outline-secondary" @click="save">
+        Enregistrer
+      </button>
       <button class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </div>
@@ -315,6 +327,10 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     close() {
+      this.callback(null)
+      this.HIDE_MODAL()
+    },
+    save() {
       this.callback(null)
       this.HIDE_MODAL()
     },

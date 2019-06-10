@@ -9,9 +9,11 @@
       v-if="visible"
     >
       <div class="modal-dialog" :class="computedSize" role="document">
-        <div class="modal-content">
-          <component :is="component" :callback="callback"></component>
-        </div>
+        <component
+          :is="component"
+          :callback="callback"
+          class="modal-content"
+        ></component>
       </div>
     </div>
     <!-- Overlay -->

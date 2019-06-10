@@ -144,7 +144,10 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom
     },
     manageSapeurs() {
-      let callback = selectedSapeurs => {}
+      let callback = selectedSapeurs => {
+        //TODO
+        selectedSapeurs
+      }
       //this.$store.dispatch('resetActiveFonction')
       this.SHOW_MODAL({ component: 'ModalSapeurSelect', size: 1, callback })
     },

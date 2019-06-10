@@ -185,12 +185,12 @@ export default {
             const degre = { 0: 'Petite', 1: 'Moyenne', 2: 'Grande' }
             return degre[value]
           }
+        },
+        {
+          title: 'Actions',
+          name: 'actions',
+          dataClass: 'align-middle'
         }
-        // {
-        //   title: 'Actions',
-        //   name: 'actions',
-        //   dataClass: 'align-middle'
-        // }
       ],
       loading: true,
       detailRow: ExerciceDetails
