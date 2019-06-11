@@ -336,14 +336,14 @@ export default {
       //Sapeurs supprimés
       let removedSap = this.data.filter(s => !this.chosenSapeurs.includes(s))
 
+      let svm = this
       this.callback(newSap, removedSap)
         .then(() => {
-          throw "Error"
           this.HIDE_MODAL()
         })
         .catch(errorMessage => {
           console.error(errorMessage)
-          this.$awn.error(errorMessage)
+          svm.$awn.warning(errorMessage)
         })
     },
     select(id, leaf = true) {

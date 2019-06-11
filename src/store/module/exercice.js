@@ -26,12 +26,6 @@ export default {
     [types.UPDATE_CURRENT_EXERCICE_SAPEURS](state, payload) {
       state.currentExercice.sapeurs = payload
     },
-    [types.EDIT_CURRENT_EXERCICE_SAPEURS](state, payload) {
-      state.currentExercice.sapeurs = [
-        ...state.currentExercice.sapeurs.filter(p => p.id !== payload.id),
-        payload
-      ]
-    },
     [types.REMOVE_CURRENT_EXERCICE_SAPEURS](state, payload) {
       state.currentExercice.sapeurs = state.currentExercice.sapeurs.filter(
         p => !payload.includes(p.id)
@@ -124,7 +118,7 @@ export default {
       return ExerciceService.editSapeurs(state.currentExercice.data.id, {
         sapeurs: payload
       }).then(async data => {
-        await commit(types.EDIT_CURRENT_EXERCICE_SAPEURS, data)
+        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
         return data
       })
     },

@@ -136,7 +136,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     save() {
-      //TODO
+      //TODO catch errors
       this.$store.dispatch('editSapeurs', this.activeExerciceSapeurs)
     },
     sapeurNomPrenom(sapeur_id) {
@@ -147,6 +147,10 @@ export default {
       let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0)
       let svm = this
       let callback = (newSap, removedSap) => {
+        if (newSap === null) {
+          return
+        }
+
         return new Promise((resolve, reject) => {
           let newSapeurs = newSap.map(s => {
             return {
