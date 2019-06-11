@@ -247,16 +247,11 @@ export default {
         return commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
       })
     },
-    saveActiveSapeur({ state }) {
+    saveActiveSapeur({ state }, payload) {
       return SapeurService.saveSapeur(
         state.currentSapeur.data.id,
-        state.currentSapeur.data
-      ).then(res => {
-        if (res.data.error !== undefined) {
-          throw new Error(res.data.error)
-        }
-        return res.data.data
-      })
+        payload || state.currentSapeur.data
+      )
     },
     addTelephone({ state, commit }, payload) {
       return SapeurService.addTelephone(

@@ -3,8 +3,11 @@
     <div class="col-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
+          <button @click.prevent="save" class="btn btn-primary">
+            Enregistrer
+          </button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -16,11 +19,8 @@
               class="form-control"
               id="f-sap-nom"
               name="nom"
-              :value="activeSapeur.iban"
+              v-model="activeSapeur.iban"
             />
-          </div>
-          <div class="form-group">
-            <!-- TODO Add a list when IBAN has been entered to present a list of the banks which are available -->
           </div>
         </div>
       </div>
@@ -34,7 +34,26 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SapeurTabBanque',
   computed: {
-    ...mapGetters(['activeSapeur'])
+    ...mapGetters(['activeSapeur', 'activeSapeurId'])
+  },
+  methods: {
+    save() {
+      this.$store
+        .dispatch('saveActiveSapeur', {
+          iban: this.activeSapeur.iban
+        })
+        .then(() => {
+          // console.log('Save sapeur Success')
+        })
+        .catch(() => {
+          // console.log('Save sapeur Error')
+        })
+    }
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeur', id)
+    }
   }
 }
 </script>

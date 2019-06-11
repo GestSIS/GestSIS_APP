@@ -2,15 +2,15 @@
   <div>
     <div v-if="(id || 0) !== 0">
       <nav class="nav nav-tabs mb-3">
-        <a
+        <button
           v-for="tab in Object.keys(tabList)"
           :key="tab"
-          class="nav-item nav-link"
+          class="btn btn-link nav-item nav-link"
           :class="{ active: activeTab === tabList[tab] }"
-          href="#nav-general"
           @click="selectTab(tabList[tab])"
-          >{{ tabList[tab] }}</a
         >
+          {{ tabList[tab] }}
+        </button>
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active">

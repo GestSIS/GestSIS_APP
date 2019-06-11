@@ -403,7 +403,9 @@ export default {
     },
     filtreSapeur() {
       let svm = this
-      return s => !svm.chosenSapeurs.includes(s.id || s)
+      return s =>
+        svm.getSapeur(s.sapeur_id || s).actif === 1 &&
+        !svm.chosenSapeurs.includes(s.sapeur_id || s)
     },
     sapeurFormatter(s) {
       return s.nom + ' ' + s.prenom

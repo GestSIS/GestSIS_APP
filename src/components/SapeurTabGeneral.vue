@@ -12,7 +12,7 @@
           <div class="form-group">
             <label for="m-sap-civilite">Civilité</label>
             <select
-              class="form-control"
+              class="custom-select"
               id="m-sap-civilite"
               name="civilite_id"
               v-model="activeSapeur.civilite_id"
@@ -78,7 +78,7 @@
           <div class="form-group">
             <label for="m-sap-localite">NPA Localité</label>
             <select
-              class="form-control required"
+              class="custom-select required"
               id="m-sap-localite"
               name="localite_id"
               style="width: 100%"
@@ -217,7 +217,7 @@
                   />
                 </td>
                 <td>
-                  <select class="form-control" v-model="t.telephone_type_id">
+                  <select class="custom-select" v-model="t.telephone_type_id">
                     <option
                       v-for="t in listTelephoneTypes"
                       :value="t.id"
@@ -269,8 +269,11 @@
     </div>
     <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
+          <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">
+            Enregistrer
+          </button>
         </div>
         <form role="form">
           <div class="card-body">
@@ -347,6 +350,7 @@
                         type="button"
                         class="btn btn-outline-danger border-0"
                         @click="removeMutation(m.id)"
+                        v-if="activeSapeurMutations.length > 1"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
@@ -374,12 +378,30 @@
         <form role="form">
           <div class="card-body">
             <div class="form-group">
-              <label for="fonctionInput">Fonction principale</label>
-              <input class="form-control" id="fonctionInput" type="text" />
+              <label for="mainFonction">Fonction principale</label>
+              <select
+                id="mainFonction"
+                v-model="activeSapeur.fonction_id"
+                class="custom-select"
+                disabled
+              >
+                <option v-for="f in listFonctions" :key="f.id" :value="f.id">
+                  {{ f.nom }}
+                </option>
+              </select>
             </div>
             <div class="form-group">
-              <label for="gradeInput">Grade actuel</label>
-              <input class="form-control" id="gradeInput" type="text" />
+              <label for="mainGrade">Grade actuel</label>
+              <select
+                id="mainGrade"
+                v-model="activeSapeur.grade_id"
+                class="custom-select"
+                disabled
+              >
+                <option v-for="g in listGrades" :key="g.id" :value="g.id">
+                  {{ g.designation }}
+                </option>
+              </select>
             </div>
             <!-- TODO Actif et Porteur checkbox -->
           </div>
@@ -411,6 +433,12 @@ export default {
     if (this.listTelephoneTypes.length === 0) {
       this.$store.dispatch('fetchTelephones')
     }
+    if (this.listGrades.length === 0) {
+      this.$store.dispatch('fetchGrades')
+    }
+    if (this.listFonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions')
+    }
 
     this.$store.dispatch('fetchSapeur', this.activeSapeurId)
     this.$store
@@ -431,6 +459,8 @@ export default {
       'listCivilites',
       'listLocalitesSis',
       'listTelephoneTypes',
+      'listFonctions',
+      'listGrades',
       'getLocalite',
       'getTelephone'
     ]),
@@ -509,8 +539,41 @@ export default {
       this.telephones = this.telephones.filter(t => t.priorite !== priorite)
     },
     saveSapeur() {
+      let fields = [
+        'civilite_id',
+        'nom',
+        'prenom',
+        'rue',
+        'no_rue',
+        'localite_id',
+        'no_av',
+        'email',
+        'date_naissance',
+        'suffixe',
+        'remarque'
+      ]
+      let saveSapeur = Object.assign({}, this.activeSapeur)
+      for (let key in Object.keys(saveSapeur)) {
+        if (!fields.includes(key)) {
+          delete saveSapeur[key]
+        }
+      }
       this.$store
-        .dispatch('saveActiveSapeur')
+        .dispatch('saveActiveSapeur', saveSapeur)
+        .then(() => {
+          // console.log('Save sapeur Success')
+        })
+        .catch(() => {
+          // console.log('Save sapeur Error')
+        })
+    },
+    saveSapeurRefPro() {
+      this.$store
+        .dispatch('saveActiveSapeur', {
+          profession: this.activeSapeur.profession,
+          employeur: this.activeSapeur.employeur,
+          lieu_de_travail: this.activeSapeur.lieu_de_travail
+        })
         .then(() => {
           // console.log('Save sapeur Success')
         })
