@@ -110,6 +110,7 @@
         </tr>
       </tbody>
     </table>
+    <p class="ml-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
     <div class="card-footer">
       <button class="btn btn-outline-primary" @click="manageSapeurs">
         Gérer la liste des sapeurs
@@ -136,7 +137,6 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     save() {
-      //TODO catch errors
       this.$store.dispatch('editSapeurs', this.activeExerciceSapeurs)
     },
     sapeurNomPrenom(sapeur_id) {

@@ -13,6 +13,7 @@
           type="date"
           v-model="activeFonction.debut"
           class="form-control"
+          :class="{ 'is-invalid': errors['debut'] }"
           id="debut"
         />
       </div>
@@ -22,6 +23,7 @@
           type="date"
           v-model="activeFonction.fin"
           class="form-control"
+          :class="{ 'is-invalid': errors['fin'] }"
           id="fin"
         />
       </div>
@@ -30,7 +32,8 @@
         <select
           id="fonction"
           v-model="activeFonction.fonction_id"
-          class="form-control select"
+          class="custom-select"
+          :class="{ 'is-invalid': errors['fonction_id'] }"
           :disabled="(activeFonction.id || 0) !== 0"
         >
           <option v-for="f in listFonctions" :key="f.id" :value="f.id">
@@ -44,6 +47,7 @@
           type="text"
           v-model="activeFonction.remarque"
           class="form-control"
+          :class="{ 'is-invalid': errors['remarque'] }"
           id="remarque"
         />
       </div>
@@ -66,6 +70,11 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalFonction',
+  data() {
+    return {
+      errors: {}
+    }
+  },
   computed: {
     ...mapGetters(['activeSapeurId', 'listFonctions', 'activeFonction'])
   },
@@ -78,13 +87,21 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     save() {
       if ((this.activeFonction.id || 0) === 0) {
-        this.$store.dispatch('addFonction', this.activeFonction).then(() => {
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('addFonction', this.activeFonction)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
       } else {
-        this.$store.dispatch('editFonction', this.activeFonction).then(() => {
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('editFonction', this.activeFonction)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
       }
     }
   }

@@ -13,6 +13,7 @@
         <input
           type="text"
           class="form-control"
+          :class="{ 'is-invalid': errors['communication'] }"
           id="m-exe-des"
           name="nom"
           v-model="activeExerciceData.communication"
@@ -22,7 +23,8 @@
       <div class="form-group">
         <label for="m-sap-cat">Categorie</label>
         <select
-          class="form-control required"
+          class="custom-select required"
+          :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
           id="m-sap-cat"
           style="width: 100%"
           v-model="activeExerciceData.exercice_categorie_id"
@@ -43,6 +45,7 @@
             <input
               type="date"
               class="form-control"
+              :class="{ 'is-invalid': errors['date'] }"
               id="m-exe-date"
               name="nom"
               v-model="activeExerciceData.date"
@@ -56,6 +59,7 @@
             <input
               type="time"
               class="form-control"
+              :class="{ 'is-invalid': errors['heure'] }"
               id="m-exe-heure"
               name="nom"
               v-model="activeExerciceData.heure"
@@ -68,13 +72,21 @@
           <!-- DUREE -->
           <div class="form-group">
             <label for="m-exe-duree">Durée</label>
-            <input
-              type="number"
-              class="form-control"
-              id="m-exe-duree"
-              name="nom"
-              v-model="activeExerciceData.duree"
-            />
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                :class="{ 'is-invalid': errors['duree'] }"
+                min="1"
+                max="780"
+                id="m-exe-duree"
+                name="nom"
+                v-model="activeExerciceData.duree"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">min</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +96,8 @@
           <div class="form-group">
             <label for="m-sap-localite">Localité</label>
             <select
-              class="form-control required"
+              class="custom-select required"
+              :class="{ 'is-invalid': errors['localite_id'] }"
               id="m-sap-localite"
               name="localite_id"
               style="width: 100%"
@@ -106,6 +119,7 @@
             <input
               type="text"
               class="form-control"
+              :class="{ 'is-invalid': errors['lieu'] }"
               id="m-exe-lieu"
               name="nom"
               v-model="activeExerciceData.lieu"
@@ -130,6 +144,7 @@
         <textarea
           type="text"
           class="form-control"
+          :class="{ 'is-invalid': errors['designation'] }"
           id="m-sap-communication"
           name="nom"
           v-model="activeExerciceData.designation"
@@ -156,6 +171,11 @@ export default {
   props: {
     newMode: Boolean
   },
+  data() {
+    return {
+      errors: {}
+    }
+  },
   methods: {
     save() {
       if (
@@ -170,9 +190,14 @@ export default {
           .dispatch('createExercice', this.activeExerciceData)
           .then(data => {
             this.$router.push('/exercices/' + data.id)
+            this.errors = {}
           })
+          .catch(errors => (this.errors = errors))
       } else {
-        this.$store.dispatch('saveActiveExercice', this.activeExerciceData)
+        this.$store
+          .dispatch('saveActiveExercice', this.activeExerciceData)
+          .then(() => (this.errors = {}))
+          .catch(errors => (this.errors = errors))
       }
     }
   }

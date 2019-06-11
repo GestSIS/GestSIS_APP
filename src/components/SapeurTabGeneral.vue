@@ -31,6 +31,7 @@
             <input
               type="text"
               class="form-control"
+              :class="{ 'is-invalid': errorsData['nom'] }"
               id="m-sap-nom"
               name="nom"
               v-model="activeSapeur.nom"
@@ -42,6 +43,7 @@
             <input
               type="text"
               class="form-control"
+              :class="{ 'is-invalid': errorsData['prenom'] }"
               id="m-sap-prenom"
               name="prenom"
               v-model="activeSapeur.prenom"
@@ -55,6 +57,7 @@
                 <input
                   type="text"
                   class="form-control"
+                  :class="{ 'is-invalid': errorsData['rue'] }"
                   id="m-sap-rue"
                   name="rue"
                   v-model="activeSapeur.rue"
@@ -67,6 +70,7 @@
                 <input
                   type="text"
                   class="form-control"
+                  :class="{ 'is-invalid': errorsData['no_rue'] }"
                   id="m-sap-no-rue"
                   name="no_rue"
                   v-model="activeSapeur.no_rue"
@@ -98,6 +102,7 @@
             <input
               type="text"
               class="form-control"
+              :class="{ 'is-invalid': errorsData['no_avs'] }"
               id="m-sap-avs"
               name="no_avs"
               v-model="activeSapeur.no_avs"
@@ -114,6 +119,7 @@
               </div>
               <input
                 class="form-control"
+                :class="{ 'is-invalid': errorsData['email'] }"
                 type="email"
                 id="m-sap-email"
                 name="email"
@@ -134,6 +140,7 @@
                   </div>
                   <input
                     class="form-control"
+                    :class="{ 'is-invalid': errorsData['date_naissance'] }"
                     type="date"
                     id="m-sap-date-naissance"
                     name="date_naissance"
@@ -155,6 +162,7 @@
                 <input
                   type="text"
                   class="form-control"
+                  :class="{ 'is-invalid': errorsData['suffixe'] }"
                   id="m-sap-suffixe"
                   name="suffixe"
                   v-model="activeSapeur.suffixe"
@@ -168,6 +176,7 @@
             <label for="m-sap-remarques">Remarques</label>
             <textarea
               class="form-control"
+              :class="{ 'is-invalid': errorsData['remarque'] }"
               rows="3"
               id="m-sap-remarques"
               name="remarques"
@@ -421,7 +430,7 @@ export default {
     draggable
   },
   data() {
-    return { telephonesData: [] }
+    return { telephonesData: [], errorsData: {}, errorsTel: {} }
   },
   mounted() {
     if (this.listCivilites.length === 0) {
@@ -490,6 +499,8 @@ export default {
   },
   watch: {
     activeSapeurId(id) {
+      this.errorsData = {}
+
       this.$store.dispatch('fetchSapeur', id)
       this.$store.dispatch('fetchSapeurTelephones', id).then(() => {
         this.telephonesData = [
@@ -561,10 +572,10 @@ export default {
       this.$store
         .dispatch('saveActiveSapeur', saveSapeur)
         .then(() => {
-          // console.log('Save sapeur Success')
+          this.errorsData = {}
         })
-        .catch(() => {
-          // console.log('Save sapeur Error')
+        .catch(err => {
+          this.errorsData = err
         })
     },
     saveSapeurRefPro() {

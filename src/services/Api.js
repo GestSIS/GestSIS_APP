@@ -15,7 +15,7 @@ export default () => {
   api.interceptors.response.use(
     function(response) {
       if (response.data.error !== undefined) {
-        throw new Error(response.data.error)
+        throw response.data.error
       }
       return response.data.data
     },

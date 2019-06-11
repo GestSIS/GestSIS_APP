@@ -13,6 +13,7 @@
           type="date"
           v-model="activeCours.date"
           class="form-control"
+          :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
           @change="dateChange"
         />
@@ -22,7 +23,8 @@
         <select
           id="cours-name"
           v-model="activeCours.cours_id"
-          class="form-control"
+          class="custom-select"
+          :class="{ 'is-invalid': errors['cours_id'] }"
           :disabled="!addMode"
         >
           <option v-for="c in listCours" :key="c.id" :value="c.id">{{
@@ -36,7 +38,8 @@
         <select
           id="cours-localite"
           v-model="activeCours.localite_id"
-          class="form-control"
+          class="custom-select"
+          :class="{ 'is-invalid': errors['localite_id'] }"
         >
           <option v-for="l in listLocalites" :key="l.id" :value="l.id">{{
             l.designation
@@ -48,7 +51,7 @@
         <select
           id="cours-precedent"
           v-model="activeCours.precedent_id"
-          class="form-control select"
+          class="custom-select"
           disabled
         >
           <option value="0">-</option>
@@ -64,7 +67,11 @@
       <div class="row" v-if="addMode">
         <div class="col-md-8">
           <div class="form-group">
-            <select v-model="activeCours.grade_id" class="form-control select">
+            <select
+              v-model="activeCours.grade_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['grade_id'] }"
+            >
               <option value="0">-</option>
               <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
                 g.designation
@@ -77,6 +84,7 @@
             <input
               type="date"
               class="form-control"
+              :class="{ 'is-invalid': errors['date_grade'] }"
               v-model="activeCours.date_grade"
             />
           </div>
@@ -91,7 +99,8 @@
           <div class="form-group">
             <select
               v-model="activeCours.fonction_id"
-              class="form-control select"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
               <option v-for="f in listFonctions" :key="f.id" :value="f.id">{{
@@ -105,6 +114,7 @@
             <input
               type="date"
               class="form-control"
+              :class="{ 'is-invalid': errors['date_fonction'] }"
               v-model="activeCours.date_fonction"
             />
           </div>
@@ -117,7 +127,8 @@
         <div class="col-md-8">
           <div class="form-group">
             <select
-              class="form-control"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
               v-model="activeCours.fonction_sapeur_id"
             >
               <option value="0">-</option>
@@ -148,6 +159,11 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalCours',
+  data() {
+    return {
+      errors: {}
+    }
+  },
   computed: {
     ...mapGetters([
       'activeSapeurId',
@@ -195,16 +211,24 @@ export default {
       })
 
       if (this.addMode) {
-        this.$store.dispatch('addCours', saveData).then(() => {
-          this.HIDE_MODAL()
-          this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
-          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
-        })
+        this.$store
+          .dispatch('addCours', saveData)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+            this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
+            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
+          })
+          .catch(errors => (this.errors = errors))
       } else {
-        this.$store.dispatch('editCours', saveData).then(() => {
-          this.HIDE_MODAL()
-          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
-        })
+        this.$store
+          .dispatch('editCours', saveData)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
+          })
+          .catch(errors => (this.errors = errors))
       }
     },
     dateChange() {

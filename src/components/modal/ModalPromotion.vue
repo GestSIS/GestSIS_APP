@@ -13,6 +13,7 @@
           type="date"
           v-model="activeGrade.date"
           class="form-control"
+          :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
         />
       </div>
@@ -21,7 +22,8 @@
         <select
           id="grade"
           v-model="activeGrade.grade_id"
-          class="form-control select"
+          class="custom-select"
+          :class="{ 'is-invalid': errors['grade_id'] }"
         >
           <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
             g.designation
@@ -34,6 +36,7 @@
           type="text"
           v-model="activeGrade.remarque"
           class="form-control"
+          :class="{ 'is-invalid': errors['remarque'] }"
           id="remarque"
         />
       </div>
@@ -54,6 +57,11 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalPromotion',
+  data() {
+    return {
+      errors: {}
+    }
+  },
   computed: {
     ...mapGetters(['activeSapeurId', 'listGrades', 'activeGrade'])
   },
@@ -66,13 +74,21 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     save() {
       if ((this.activeGrade.id || 0) === 0) {
-        this.$store.dispatch('addGrade', this.activeGrade).then(() => {
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('addGrade', this.activeGrade)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
       } else {
-        this.$store.dispatch('editGrade', this.activeGrade).then(() => {
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('editGrade', this.activeGrade)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
       }
     }
   }

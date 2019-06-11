@@ -120,7 +120,7 @@ export default {
     }
   },
   data() {
-    const self = this
+    const svm = this
     return {
       css: CssForBootstrap4,
       toggles: [],
@@ -140,7 +140,7 @@ export default {
           name: 'exercice_categorie_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return self.getExerciceCategorie(value).designation
+            return svm.getExerciceCategorie(value).designation
           }
         },
         {
@@ -161,7 +161,7 @@ export default {
           name: 'localite_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return self.getLocalite(value).designation
+            return svm.getLocalite(value).designation
           }
         },
         {

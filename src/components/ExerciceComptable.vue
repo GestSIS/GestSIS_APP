@@ -16,11 +16,12 @@
         aria-labelledby="dropdownMenu2"
       >
         <button
-          class="dropdown-item"
-          type="button"
           v-for="e in listExerciceComptable"
           :key="e.id"
           @click="selectExercice(e.id)"
+          class="dropdown-item"
+          :class="{ active: currentExerciceComptableId === e.id }"
+          type="button"
         >
           {{ e.annee }}
         </button>
