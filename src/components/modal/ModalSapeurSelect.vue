@@ -338,6 +338,7 @@ export default {
 
       this.callback(newSap, removedSap)
         .then(() => {
+          throw "Error"
           this.HIDE_MODAL()
         })
         .catch(errorMessage => {
