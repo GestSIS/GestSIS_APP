@@ -48,9 +48,9 @@
           <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">Designation</th>
-                <th scope="col">Action</th>
+                <th></th>
+                <th>Designation</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -105,7 +105,8 @@
                 v-for="item in flattenedTree"
                 :key="item.parent_id + '-' + item.id"
                 :class="{
-                  'table-primary': displaySelected[computeId(item)]
+                  'table-primary': displaySelected[computeId(item)],
+                  'text-muted': item.empty
                 }"
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
@@ -151,8 +152,9 @@
           <table class="table table-striped" v-if="groupBy === 'none'">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">Designation</th>
+                <th></th>
+                <th>Designation</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody v-if="groupBy === 'none'">
@@ -251,7 +253,10 @@ export default {
             level: level,
             leaf: false,
             id: groupe.id,
-            expanded: expanded
+            expanded: expanded,
+            empty:
+              !groupe.groupes.length &&
+              !groupe.sapeurs.filter(svm.filtreSapeur()).length
           }
         ]
         if (expanded) {

@@ -8,8 +8,8 @@
           </router-link>
         </li>
         <li class="breadcrumb-item">
-          <router-link tag="a" to="/exercices">
-            Exercices
+          <router-link tag="a" to="/interventions">
+            Interventions
           </router-link>
         </li>
         <li class="breadcrumb-item active" aria-current="page">

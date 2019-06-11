@@ -147,7 +147,7 @@ export default {
       let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0)
       let svm = this
       let callback = (newSap, removedSap) => {
-        if (newSap === null) {
+        if (newSap === null || newSap === undefined) {
           return
         }
 
