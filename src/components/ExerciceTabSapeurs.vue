@@ -144,12 +144,64 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom
     },
     manageSapeurs() {
-      let callback = selectedSapeurs => {
-        //TODO
-        selectedSapeurs
+      let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0)
+      let svm = this
+      let callback = (newSap, removedSap) => {
+        return new Promise((resolve, reject) => {
+          let newSapeurs = newSap.map(s => {
+            return {
+              convoque: false,
+              present: false,
+              remplace: false,
+              excuse_type_id: null,
+              sapeur_id: s,
+              amende: false
+            }
+          })
+
+          let removedSapeurs = removedSap.map(
+            id =>
+              svm.activeExerciceSapeurs.filter(s => s.sapeur_id === id)[0].id
+          )
+
+          //Sapeurs ajoutés
+          if (newSapeurs.length > 0) {
+            svm.$store
+              .dispatch('addSapeurs', newSapeurs)
+              .then(() => {
+                if (removedSapeurs.length <= 0) {
+                  resolve()
+                }
+              })
+              .catch(() => {
+                reject("Erreur lors de l'opération")
+              })
+          }
+
+          if (removedSapeurs.length > 0) {
+            svm.$store
+              .dispatch('removeSapeurs', removedSapeurs)
+              .then(resolve)
+              .catch(error => {
+                console.error('remove sap error')
+                console.error(error)
+                reject("Erreur lors de l'opération")
+              })
+          }
+
+          if (newSapeurs.length <= 0 && removedSapeurs.length <= 0) {
+            resolve('Solved')
+          }
+        })
       }
       //this.$store.dispatch('resetActiveFonction')
-      this.SHOW_MODAL({ component: 'ModalSapeurSelect', size: 1, callback })
+
+      this.SHOW_MODAL({
+        component: 'ModalSapeurSelect',
+        size: 1,
+        callback,
+        data
+      })
     },
     selectPresent(sapeur) {
       sapeur.remplace = false

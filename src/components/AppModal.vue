@@ -12,6 +12,7 @@
         <component
           :is="component"
           :callback="callback"
+          :data="data"
           class="modal-content"
         ></component>
       </div>
@@ -48,7 +49,8 @@ export default {
       visible: state => state.modal.modalVisible,
       modalComponent: state => state.modal.modalComponent,
       callback: state => state.modal.modalCallback,
-      size: state => state.modal.modalSize
+      size: state => state.modal.modalSize,
+      data: state => state.modal.modalData
     }),
     computedSize() {
       return this.size < 0 ? 'modal-sm' : this.size > 0 ? 'modal-lg' : ''

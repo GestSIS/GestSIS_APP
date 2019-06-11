@@ -23,7 +23,7 @@ export default {
     })
   },
   addSapeurs(exercieId, sapeursData) {
-    return Api().post('/exercices/' + exercieId + '/sapeurss/', sapeursData, {
+    return Api().post('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
@@ -33,8 +33,12 @@ export default {
     })
   },
   removeSapeurs(exercieId, sapeursIds) {
-    return Api().delete('/exercices/' + exercieId + '/sapeurs/', sapeursIds, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Api().delete(
+      '/exercices/' + exercieId + '/sapeurs/',
+      { data: sapeursIds },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   }
 }

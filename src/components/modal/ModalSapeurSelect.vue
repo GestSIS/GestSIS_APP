@@ -194,7 +194,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-secondary" @click="save">
+      <button class="btn btn-outline-primary" @click="save">
         Enregistrer
       </button>
       <button class="btn btn-outline-secondary" @click="close">Annuler</button>
@@ -207,7 +207,7 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalSapeurSelect',
-  props: ['callback'],
+  props: ['callback', 'data'],
   data() {
     return {
       groupBy: 'groupe',
@@ -219,8 +219,7 @@ export default {
     }
   },
   mounted() {
-    //TODO five selected sapeurs
-    this.chosenSapeurs = [1, 2]
+    this.chosenSapeurs = this.data.slice(0)
 
     this.$store.dispatch('fetchGroupesSapeurs').then(() => {
       let svm = this
@@ -331,8 +330,20 @@ export default {
       this.HIDE_MODAL()
     },
     save() {
-      this.callback(null)
-      this.HIDE_MODAL()
+      //Sapeurs ajoutés
+      let newSap = this.chosenSapeurs.filter(s => !this.data.includes(s))
+
+      //Sapeurs supprimés
+      let removedSap = this.data.filter(s => !this.chosenSapeurs.includes(s))
+
+      this.callback(newSap, removedSap)
+        .then(() => {
+          this.HIDE_MODAL()
+        })
+        .catch(errorMessage => {
+          console.error(errorMessage)
+          this.$awn.error(errorMessage)
+        })
     },
     select(id, leaf = true) {
       if (leaf) {
