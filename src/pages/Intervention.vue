@@ -22,29 +22,67 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a
                 class="nav-item nav-link"
-                :class="{ active: !tabPresence }"
+                :class="{ active: activeTab === 'general' }"
                 role="tab"
                 href="#"
-                @click.prevent="tabPresence = false"
+                @click.prevent="activeTab = 'general'"
                 >Informations</a
               >
               <a
                 class="nav-item nav-link"
-                :class="{ active: tabPresence }"
+                :class="{ active: activeTab === 'sapeurs' }"
                 role="tab"
                 href="#"
-                @click.prevent="tabPresence = true"
-                >Présences</a
+                @click.prevent="activeTab = 'sapeurs'"
+                >Sapeurs</a
+              >
+              <a
+                class="nav-item nav-link"
+                :class="{ active: activeTab === 'materiels' }"
+                role="tab"
+                href="#"
+                @click.prevent="activeTab = 'materiels'"
+                >Matériel</a
+              >
+              <a
+                class="nav-item nav-link"
+                :class="{ active: activeTab === 'vehicules' }"
+                role="tab"
+                href="#"
+                @click.prevent="activeTab = 'vehicules'"
+                >Vehicules</a
+              >
+              <a
+                class="nav-item nav-link"
+                :class="{ active: activeTab === 'missions' }"
+                role="tab"
+                href="#"
+                @click.prevent="activeTab = 'missions'"
+                >Missions</a
+              >
+              <a
+                class="nav-item nav-link"
+                :class="{ active: activeTab === 'appels' }"
+                role="tab"
+                href="#"
+                @click.prevent="activeTab = 'appels'"
+                >Appels</a
               >
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" role="tabpanel">
-              <ExerciceTabSapeurs v-if="tabPresence"></ExerciceTabSapeurs>
-              <ExerciceTabGeneral
+              <InterventionTabSapeurs
+                v-if="activeTab === 'sapeurs'"
+              ></InterventionTabSapeurs>
+              <InterventionTabGeneral
                 :newMode="newMode"
-                v-if="!tabPresence"
-              ></ExerciceTabGeneral>
+                v-if="activeTab === 'general'"
+              ></InterventionTabGeneral>
+              <div v-if="activeTab === 'missions'">Missions</div>
+              <div v-if="activeTab === 'appels'">Appels</div>
+              <div v-if="activeTab === 'vehicules'">Véhciules</div>
+              <div v-if="activeTab === 'materiels'">Materiels</div>
             </div>
           </div>
         </div>
@@ -56,18 +94,18 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue'
-import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue'
+import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
+import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
 
 export default {
   name: 'intervention',
   components: {
-    ExerciceTabSapeurs,
-    ExerciceTabGeneral
+    InterventionTabSapeurs,
+    InterventionTabGeneral
   },
   data() {
     return {
-      tabPresence: true
+      activeTab: 'general'
     }
   },
   props: {
@@ -76,40 +114,38 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getExercice']),
+    ...mapGetters(['activeInterventionData', 'activeInterventionId']),
     newMode() {
       return this.id === 'new'
     },
     breadcrumbFinal() {
       return this.newMode
         ? 'Nouveau'
-        : this.getExercice(parseInt(this.id)).communication
+        : this.activeInterventionData.communication
     }
   },
   mounted() {
     this.$store.dispatch('fetchListSapeur')
     this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchExerciceCategories')
-    this.$store.dispatch('fetchExcuseTypes')
+    this.$store.dispatch('fetchInterventionTraitements')
+    this.$store.dispatch('fetchStatFederals')
 
     let id = parseInt(this.id)
 
     if (this.newMode) {
-      this.$store.dispatch('resetActiveExercice')
+      this.$store.dispatch('resetActiveIntervention')
     } else {
-      this.$store.dispatch('selectExercice', id)
-      this.$store.dispatch('fetchExercice', id)
-      this.$store.dispatch('fetchExerciceSapeurs', id)
+      this.$store.dispatch('selectIntervention', id)
+      this.$store.dispatch('fetchIntervention', id)
     }
     this.tabPresence = !this.newMode
   },
   watch: {
-    activeExerciceId() {
+    activeInterventionId() {
       let id = parseInt(this.id)
 
-      this.$store.dispatch('selectExercice', id)
-      this.$store.dispatch('fetchExercice', id)
-      this.$store.dispatch('fetchExerciceSapeurs', id)
+      this.$store.dispatch('selectIntervention', id)
+      this.$store.dispatch('fetchIntervention', id)
     }
   }
 }

@@ -7,25 +7,30 @@ export default {
     currentIntervention: {
       id: 0,
       sapeurs: [],
-      data: {}
+      data: {},
+      missions: [],
+      appels: {},
+      quittances: [],
+      vehicules: [],
+      materiels: []
     }
   },
   mutations: {
     [types.UPDATE_INTERVENTION_LIST](state, payload) {
       state.interventions = payload
-    }
+    },
     // [types.ADD_INTERVENTION](state, payload) {
     //   state.interventions = [...state.interventions, payload]
     // },
-    // [types.SELECT_CURRENT_INTERVENTION](state, payload) {
-    //   state.currentIntervention.id = payload
-    // },
-    // [types.UPDATE_CURRENT_INTERVENTION_DATA](state, payload) {
-    //   state.currentIntervention.data = payload
-    // },
-    // [types.UPDATE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
-    //   state.currentIntervention.sapeurs = payload
-    // },
+    [types.SELECT_CURRENT_INTERVENTION](state, payload) {
+      state.currentIntervention.id = payload
+    },
+    [types.UPDATE_CURRENT_INTERVENTION_DATA](state, payload) {
+      state.currentIntervention.data = payload
+    },
+    [types.UPDATE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
+      state.currentIntervention.sapeurs = payload
+    }
     // [types.ADD_CURRENT_INTERVENTION_SAPEURS](state, payload) {
     //   state.currentIntervention.sapeurs = [
     //     ...state.currentIntervention.sapeurs,
@@ -50,16 +55,16 @@ export default {
     },
     activeInterventionId: state => {
       return state.currentIntervention.id
+    },
+    activeInterventionSapeurs: state => {
+      return state.currentIntervention.sapeurs
+    },
+    activeInterventionData: state => {
+      return state.currentIntervention.data
+    },
+    getIntervention: state => intervention_id => {
+      return state.interventions.filter(e => e.id === intervention_id)[0]
     }
-    // activeInterventionSapeurs: state => {
-    //   return state.currentIntervention.sapeurs
-    // },
-    // activeInterventionData: state => {
-    //   return state.currentIntervention.data
-    // },
-    // getIntervention: state => exercice_id => {
-    //   return state.interventions.filter(e => e.id === exercice_id)[0]
-    // }
   },
   actions: {
     fetchListIntervention({ getters, commit }) {
@@ -68,20 +73,20 @@ export default {
       ).then(data => {
         return commit(types.UPDATE_INTERVENTION_LIST, data)
       })
+    },
+    fetchIntervention({ commit }, payload) {
+      return InterventionService.getIntervention(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
+      })
+    },
+    fetchInterventionSapeurs({ commit }, payload) {
+      return InterventionService.getSapeurs(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+      })
+    },
+    selectIntervention({ commit }, payload) {
+      return commit(types.SELECT_CURRENT_INTERVENTION, payload)
     }
-    // fetchIntervention({ commit }, payload) {
-    //   return InterventionService.getIntervention(payload).then(data => {
-    //     return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
-    //   })
-    // },
-    // fetchInterventionSapeurs({ commit }, payload) {
-    //   return InterventionService.getSapeurs(payload).then(data => {
-    //     return commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
-    //   })
-    // },
-    // selectIntervention({ commit }, payload) {
-    //   return commit(types.SELECT_CURRENT_INTERVENTION, payload)
-    // },
     // resetActiveIntervention({ commit }) {
     //   commit(types.SELECT_CURRENT_INTERVENTION, null)
     //   return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, {
