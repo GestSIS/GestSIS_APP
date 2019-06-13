@@ -52,6 +52,8 @@ export default {
   getters: {
     listInterventions: state => {
       return state.interventions
+        .slice(0)
+        .sort((i1, i2) => new Date(i1.date_debut) - new Date(i2.date_debut))
     },
     activeInterventionId: state => {
       return state.currentIntervention.id
@@ -86,42 +88,55 @@ export default {
     },
     selectIntervention({ commit }, payload) {
       return commit(types.SELECT_CURRENT_INTERVENTION, payload)
+    },
+    resetActiveIntervention({ commit, getters }) {
+      commit(types.SELECT_CURRENT_INTERVENTION, null)
+      return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, {
+        id: null,
+        date_debut: null,
+        heure_debut: null,
+        lieu: '',
+        objet: '',
+        date_fin: null,
+        heure_fin: null,
+        rapport_police: 0,
+        degre: null,
+        sauve_personne: 0,
+        sauve_animaux: 0,
+        description: '',
+        proprietaire: '',
+        responsable: '',
+        stat_nb: 0,
+        imputer: 0,
+        exercice_comptable_id: getters.currentExerciceComptableId,
+        localite_id: null,
+        type_intervention_id: null,
+        sapeur_id: null,
+        stat_federal_id: null,
+        intervention_traitement_id: null
+      })
+    },
+    createIntervention({ state, commit, getters }) {
+      return InterventionService.createIntervention({
+        ...state.currentIntervention.data,
+        exercice_comptable_id: getters.currentExerciceComptableId
+      }).then(async data => {
+        await commit(types.ADD_INTERVENTION, data)
+        await commit(types.SELECT_CURRENT_INTERVENTION, data.id)
+        await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
+        return data
+      })
+    },
+    saveActiveIntervention({ state, commit }) {
+      return InterventionService.saveIntervention(
+        state.currentIntervention.id,
+        state.currentIntervention.data
+      ).then(async data => {
+        await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
+        return data
+      })
     }
-    // resetActiveIntervention({ commit }) {
-    //   commit(types.SELECT_CURRENT_INTERVENTION, null)
-    //   return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, {
-    //     id: null,
-    //     localite_id: null,
-    //     exercice_categorie_id: null,
-    //     exercice_comptable_id: 1,
-    //     date: null,
-    //     heure: null,
-    //     lieu: '',
-    //     communication: '',
-    //     designation: '',
-    //     duree: null,
-    //     status: 0
-    //   })
-    // },
-    // createIntervention({ state, commit }) {
-    //   return InterventionService.createIntervention(
-    //     state.currentIntervention.data
-    //   ).then(async data => {
-    //     await commit(types.ADD_INTERVENTION, data)
-    //     await commit(types.SELECT_CURRENT_INTERVENTION, data.id)
-    //     await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
-    //     return data
-    //   })
-    // },
-    // saveActiveIntervention({ state, commit }) {
-    //   return InterventionService.saveIntervention(
-    //     state.currentIntervention.id,
-    //     state.currentIntervention.data
-    //   ).then(async data => {
-    //     await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
-    //     return data
-    //   })
-    // },
+
     //
     // addSapeurs({ state, commit }, payload) {
     //   return InterventionService.addSapeurs(state.currentIntervention.data.id, {

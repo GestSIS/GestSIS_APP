@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mt-3">
+  <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <span></span>
       <button class="btn btn-outline-primary" @click="save">
@@ -42,28 +42,42 @@
           <!-- DATE -->
           <div class="form-group">
             <label for="m-exe-date">Date</label>
-            <input
-              type="date"
-              class="form-control"
-              :class="{ 'is-invalid': errors['date'] }"
-              id="m-exe-date"
-              name="nom"
-              v-model="activeExerciceData.date"
-            />
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
+                </div>
+              </div>
+              <input
+                type="date"
+                class="form-control"
+                :class="{ 'is-invalid': errors['date'] }"
+                id="m-exe-date"
+                name="nom"
+                v-model="activeExerciceData.date"
+              />
+            </div>
           </div>
         </div>
         <div class="col-6">
           <!-- HEURE -->
           <div class="form-group">
             <label for="m-exe-heure">Heure</label>
-            <input
-              type="time"
-              class="form-control"
-              :class="{ 'is-invalid': errors['heure'] }"
-              id="m-exe-heure"
-              name="nom"
-              v-model="activeExerciceData.heure"
-            />
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <font-awesome-icon :icon="['far', 'clock']" />
+                </div>
+              </div>
+              <input
+                type="time"
+                class="form-control"
+                :class="{ 'is-invalid': errors['heure'] }"
+                id="m-exe-heure"
+                name="nom"
+                v-model="activeExerciceData.heure"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -165,8 +179,13 @@ export default {
       'activeExerciceData',
       'activeExerciceSapeurs',
       'listLocalitesSis',
-      'listExerciceCategories'
-    ])
+      'listExerciceCategories',
+      'getExerciceCategorie',
+      'currentExerciceComptableId'
+    ]),
+    exerciceCategorie() {
+      return this.activeExerciceData.exercice_categorie_id
+    }
   },
   props: {
     newMode: Boolean
@@ -176,15 +195,15 @@ export default {
       errors: {}
     }
   },
+  watch: {
+    exerciceCategorie(value) {
+      this.activeExerciceData.duree =
+        this.activeExerciceData.duree ||
+        this.getExerciceCategorie(value).duree_base
+    }
+  },
   methods: {
     save() {
-      if (
-        this.activeExerciceData.heure !== null &&
-        this.activeExerciceData.heure.length === 5
-      ) {
-        this.activeExerciceData.heure += ':00'
-      }
-
       if (this.newMode) {
         this.$store
           .dispatch('createExercice', this.activeExerciceData)

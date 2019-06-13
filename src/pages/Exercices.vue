@@ -97,7 +97,7 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
+        this.$refs.vuetable.setData(this.listExercices)
       })
     }
   },
@@ -111,12 +111,12 @@ export default {
       if (this.currentExerciceComptableId || 0 !== 0) {
         this.$store.dispatch('fetchListExercice').then(() => {
           this.loading = false
-          this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
+          this.$refs.vuetable.setData(this.listExercices)
         })
       }
     } else {
       this.loading = false
-      this.$refs.vuetable.setData(this.listExercices.slice(0, 25))
+      this.$refs.vuetable.setData(this.listExercices)
     }
   },
   data() {

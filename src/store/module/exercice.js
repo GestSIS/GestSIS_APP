@@ -34,7 +34,9 @@ export default {
   },
   getters: {
     listExercices: state => {
-      return state.exercices.slice(0).sort((e1, e2) => e2.date - e1.date)
+      return state.exercices
+        .slice(0)
+        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date))
     },
     activeExerciceId: state => {
       return state.currentExercice.id
@@ -70,13 +72,13 @@ export default {
     selectExercice({ commit }, payload) {
       return commit(types.SELECT_CURRENT_EXERCICE, payload)
     },
-    resetActiveExercice({ commit }) {
+    resetActiveExercice({ commit, getters }) {
       commit(types.SELECT_CURRENT_EXERCICE, null)
       return commit(types.UPDATE_CURRENT_EXERCICE_DATA, {
         id: null,
         localite_id: null,
         exercice_categorie_id: null,
-        exercice_comptable_id: 1,
+        exercice_comptable_id: getters.currentExerciceComptableId,
         date: null,
         heure: null,
         lieu: '',
@@ -86,20 +88,21 @@ export default {
         status: 0
       })
     },
-    createExercice({ state, commit }) {
-      return ExerciceService.createExercice(state.currentExercice.data).then(
-        async data => {
-          await commit(types.ADD_EXERCICE, data)
-          await commit(types.SELECT_CURRENT_EXERCICE, data.id)
-          await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
-          return data
-        }
-      )
+    createExercice({ state, commit, getters }) {
+      return ExerciceService.createExercice({
+        ...state.currentExercice.data,
+        exercice_comptable_id: getters.currentExerciceComptableId
+      }).then(async data => {
+        await commit(types.ADD_EXERCICE, data)
+        await commit(types.SELECT_CURRENT_EXERCICE, data.id)
+        await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
+        return data
+      })
     },
     saveActiveExercice({ state, commit }) {
       return ExerciceService.saveExercice(
         state.currentExercice.id,
-        state.currentExercice.data
+        ...state.currentExercice.data
       ).then(async data => {
         await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
         return data

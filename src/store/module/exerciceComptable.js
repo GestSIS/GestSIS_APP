@@ -28,6 +28,16 @@ export default {
     },
     getExerciceComptable: state => id => {
       return state.exercicesComptables.filter(e => e.id === id)[0]
+    },
+    exerciceComptableDebut: state => id => {
+      // console.log(state.exercicesComptables)
+      // console.log(id)
+      return state.exercicesComptables.filter(e => e.id === id)[0].debut
+    },
+    exerciceComptableFin: state => id => {
+      // console.log(state.exercicesComptables)
+      // console.log(id)
+      return state.exercicesComptables.filter(e => e.id === id)[0].fin
     }
   },
   actions: {

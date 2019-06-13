@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mt-3">
+  <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3>
         {{ activeExerciceData.communication }} &ndash;

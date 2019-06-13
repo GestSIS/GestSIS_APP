@@ -27,7 +27,7 @@
             <h3>Liste des interventions</h3>
             <router-link
               tag="button"
-              to="/exercices/new"
+              to="/interventions/new"
               class="btn btn-outline-primary"
             >
               Ajouter une intervention
@@ -97,7 +97,7 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
+        this.$refs.vuetable.setData(this.listInterventions)
       })
     }
   },
@@ -110,11 +110,11 @@ export default {
     if (this.listInterventions.length === 0) {
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
+        this.$refs.vuetable.setData(this.listInterventions)
       })
     } else {
       this.loading = false
-      this.$refs.vuetable.setData(this.listInterventions.slice(0, 25))
+      this.$refs.vuetable.setData(this.listInterventions)
     }
   },
   data() {
@@ -182,7 +182,12 @@ export default {
           name: 'degre',
           dataClass: 'align-middle',
           formatter(value) {
-            const degre = { 0: 'Petite', 1: 'Moyenne', 2: 'Grande' }
+            const degre = {
+              1: 'Fausse-alarme',
+              3: 'Petite',
+              2: 'Moyenne',
+              0: 'Grande'
+            }
             return degre[value]
           }
         },

@@ -1,89 +1,101 @@
 <template>
-  <div>
-    <div class="container-fluid">
-      <ol class="breadcrumb bg-white">
-        <li class="breadcrumb-item">
-          <router-link tag="a" to="/">
-            Accueil
-          </router-link>
-        </li>
-        <li class="breadcrumb-item">
-          <router-link tag="a" to="/interventions">
-            Interventions
-          </router-link>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-          {{ breadcrumbFinal }}
-        </li>
-      </ol>
-      <div class="row">
-        <div class="col-md-12">
-          <nav v-if="!newMode">
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'general' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'general'"
-                >Informations</a
-              >
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'sapeurs' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'sapeurs'"
-                >Sapeurs</a
-              >
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'materiels' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'materiels'"
-                >Matériel</a
-              >
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'vehicules' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'vehicules'"
-                >Vehicules</a
-              >
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'missions' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'missions'"
-                >Missions</a
-              >
-              <a
-                class="nav-item nav-link"
-                :class="{ active: activeTab === 'appels' }"
-                role="tab"
-                href="#"
-                @click.prevent="activeTab = 'appels'"
-                >Appels</a
-              >
-            </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" role="tabpanel">
-              <InterventionTabSapeurs
-                v-if="activeTab === 'sapeurs'"
-              ></InterventionTabSapeurs>
-              <InterventionTabGeneral
-                :newMode="newMode"
-                v-if="activeTab === 'general'"
-              ></InterventionTabGeneral>
-              <div v-if="activeTab === 'missions'">Missions</div>
-              <div v-if="activeTab === 'appels'">Appels</div>
-              <div v-if="activeTab === 'vehicules'">Véhciules</div>
-              <div v-if="activeTab === 'materiels'">Materiels</div>
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <ol class="breadcrumb bg-white">
+          <li class="breadcrumb-item">
+            <router-link tag="a" to="/">
+              Accueil
+            </router-link>
+          </li>
+          <li class="breadcrumb-item">
+            <router-link tag="a" to="/interventions">
+              Interventions
+            </router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ breadcrumbFinal }}
+          </li>
+        </ol>
+      </div>
+      <div class="col-md-4 d-flex justify-content-end">
+        <exercice-comptable />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <nav v-if="!newMode">
+          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'general' }"
+              role="tab"
+              @click.prevent="activeTab = 'general'"
+            >
+              Informations
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'sapeurs' }"
+              role="tab"
+              @click.prevent="activeTab = 'sapeurs'"
+            >
+              Sapeurs
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'materiels' }"
+              role="tab"
+              @click.prevent="activeTab = 'materiels'"
+            >
+              Matériel
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'vehicules' }"
+              role="tab"
+              @click.prevent="activeTab = 'vehicules'"
+            >
+              Vehicules
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'missions' }"
+              role="tab"
+              @click.prevent="activeTab = 'missions'"
+            >
+              Missions
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'appels' }"
+              role="tab"
+              @click.prevent="activeTab = 'appels'"
+            >
+              Appels
+            </button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div
+            class="tab-pane fade show active"
+            role="tabpanel"
+            v-if="!loading"
+          >
+            <InterventionTabGeneral
+              :newMode="newMode"
+              v-if="activeTab === 'general'"
+            ></InterventionTabGeneral>
+            <InterventionTabSapeurs
+              v-if="activeTab === 'sapeurs'"
+            ></InterventionTabSapeurs>
+            <div v-if="activeTab === 'missions'">Missions</div>
+            <div v-if="activeTab === 'appels'">Appels</div>
+            <div v-if="activeTab === 'vehicules'">Véhciules</div>
+            <div v-if="activeTab === 'materiels'">Materiels</div>
+          </div>
+          <div v-else>
+            Loading
           </div>
         </div>
       </div>
@@ -96,16 +108,19 @@ import { mapGetters } from 'vuex'
 
 import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
 import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
+import ExerciceComptable from '@/components/ExerciceComptable'
 
 export default {
   name: 'intervention',
   components: {
     InterventionTabSapeurs,
-    InterventionTabGeneral
+    InterventionTabGeneral,
+    ExerciceComptable
   },
   data() {
     return {
-      activeTab: 'general'
+      activeTab: 'general',
+      loading: true
     }
   },
   props: {
@@ -119,33 +134,45 @@ export default {
       return this.id === 'new'
     },
     breadcrumbFinal() {
-      return this.newMode
-        ? 'Nouveau'
-        : this.activeInterventionData.communication
+      return this.newMode ? 'Nouveau' : this.activeInterventionData.objet
     }
   },
   mounted() {
     this.$store.dispatch('fetchListSapeur')
     this.$store.dispatch('fetchLocalites')
     this.$store.dispatch('fetchInterventionTraitements')
+    this.$store.dispatch('fetchExercicesComptables')
+    this.$store.dispatch('fetchTypeInterventions')
     this.$store.dispatch('fetchStatFederals')
 
     let id = parseInt(this.id)
-
+    let svm = this
     if (this.newMode) {
-      this.$store.dispatch('resetActiveIntervention')
+      this.$store
+        .dispatch('resetActiveIntervention')
+        .then(() => (svm.loading = false))
     } else {
       this.$store.dispatch('selectIntervention', id)
-      this.$store.dispatch('fetchIntervention', id)
+      this.$store
+        .dispatch('fetchIntervention', id)
+        .then(() => (svm.loading = false))
     }
-    this.tabPresence = !this.newMode
   },
   watch: {
     activeInterventionId() {
-      let id = parseInt(this.id)
+      let svm = this
+      if (!this.newMode) {
+        let id = parseInt(this.id)
 
-      this.$store.dispatch('selectIntervention', id)
-      this.$store.dispatch('fetchIntervention', id)
+        this.$store.dispatch('selectIntervention', id)
+        this.$store
+          .dispatch('fetchIntervention', id)
+          .then(() => (svm.loading = false))
+      } else {
+        this.$store
+          .dispatch('resetActiveIntervention')
+          .then(() => (svm.loading = false))
+      }
     }
   }
 }

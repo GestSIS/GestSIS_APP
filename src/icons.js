@@ -24,7 +24,8 @@ import {
   faCalendarAlt,
   faTrashAlt,
   faQuestionCircle,
-  faPlusSquare
+  faPlusSquare,
+  faClock
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
@@ -49,5 +50,6 @@ library.add(
   faTimes,
   faAngleRight,
   faAngleDown,
-  faPlusSquare
+  faPlusSquare,
+  faClock
 )
