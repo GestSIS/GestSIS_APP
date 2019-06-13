@@ -1,0 +1,83 @@
+<template>
+  <div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Ajouter du materiel</h5>
+      <button type="button" class="close" @click="HIDE_MODAL()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="materiel">Matériel</label>
+        <select
+          id="materiel"
+          v-model="activeMateriel.materiel_id"
+          class="custom-select"
+          :class="{ 'is-invalid': errors['materiel_id'] }"
+        >
+          <option v-for="m in listMateriels" :key="m.id" :value="m.id">{{
+            m.designation
+          }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="remarque">Quantité</label>
+        <input
+          type="number"
+          v-model="activeMateriel.quantite"
+          class="form-control"
+          :class="{ 'is-invalid': errors['quantite'] }"
+          id="remarque"
+        />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapGetters, mapMutations } from 'vuex'
+
+export default {
+  name: 'ModalMateriel',
+  data() {
+    return {
+      errors: {}
+    }
+  },
+  computed: {
+    ...mapGetters(['activeInterventionId', 'listMateriels', 'activeMateriel'])
+  },
+  methods: {
+    ...mapMutations(['HIDE_MODAL']),
+    save() {
+      if ((this.activeMateriel.id || 0) === 0) {
+        this.$store
+          .dispatch('addMateriel', this.activeMateriel)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
+      } else {
+        this.$store
+          .dispatch('editMateriel', this.activeMateriel)
+          .then(() => {
+            this.errors = {}
+            this.HIDE_MODAL()
+          })
+          .catch(errors => (this.errors = errors))
+      }
+    }
+  }
+}
+</script>
+
+<style scoped></style>

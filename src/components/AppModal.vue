@@ -37,7 +37,8 @@ export default {
     ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
     ModalMutation: () => import(`@/components/modal/ModalMutation`),
     ModalExcuse: () => import(`@/components/modal/ModalExcuse`),
-    ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`)
+    ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`),
+    ModalMateriel: () => import(`@/components/modal/ModalMateriel`)
   },
   data() {
     return {

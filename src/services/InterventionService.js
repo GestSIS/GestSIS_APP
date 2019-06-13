@@ -28,9 +28,36 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
   },
+
+  //Matériel
+  addMateriel(interventionId, materielData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/materiels/',
+      { materiels: [materielData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  editMateriel(interventionId, materielData) {
+    return Api().put(
+      '/interventions/' + interventionId + '/materiels/',
+      { materiels: [materielData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeMateriel(interventionId, materielId) {
+    return Api().delete('/interventions/' + interventionId + '/materiels/', {
+      data: { materiels: [materielId] }
+    })
+  },
+
+  //Sapeurs
   addSapeurs(interventionId, sapeursData) {
     return Api().post(
-      '/interventions/' + interventionId + '/sapeurss/',
+      '/interventions/' + interventionId + '/sapeurs/',
       sapeursData,
       {
         headers: { 'Content-Type': 'application/json' }

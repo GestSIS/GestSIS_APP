@@ -33,6 +33,8 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
   },
+
+  //Téléphones
   addTelephone(sapeurId, telephoneData) {
     return Api().post('/sapeurs/' + sapeurId + '/telephones/', telephoneData, {
       headers: { 'Content-Type': 'application/json' }
@@ -51,6 +53,7 @@ export default {
     return Api().delete('/sapeurs/' + sapeurId + '/telephones/' + telephoneId)
   },
 
+  //Permis
   addPermis(sapeurId, permisData) {
     return Api().post('/sapeurs/' + sapeurId + '/permis/', permisData, {
       headers: { 'Content-Type': 'application/json' }
@@ -69,6 +72,7 @@ export default {
     return Api().delete('/sapeurs/' + sapeurId + '/permis/' + permisId)
   },
 
+  //Fonctions
   addFonction(sapeurId, fonctionData) {
     return Api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData, {
       headers: { 'Content-Type': 'application/json' }
@@ -87,6 +91,7 @@ export default {
     return Api().delete('/sapeurs/' + sapeurId + '/fonctions/' + fonctionId)
   },
 
+  //Grades
   addGrade(sapeurId, gradeData) {
     return Api().post('/sapeurs/' + sapeurId + '/grades/', gradeData, {
       headers: { 'Content-Type': 'application/json' }
@@ -105,6 +110,7 @@ export default {
     return Api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId)
   },
 
+  //Cours
   addCours(sapeurId, coursData) {
     return Api().post('/sapeurs/' + sapeurId + '/cours/', coursData, {
       headers: { 'Content-Type': 'application/json' }
@@ -123,6 +129,7 @@ export default {
     return Api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId)
   },
 
+  //Mutations
   addMutation(sapeurId, mutationData) {
     return Api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData, {
       headers: { 'Content-Type': 'application/json' }

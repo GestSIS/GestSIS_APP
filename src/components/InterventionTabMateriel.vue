@@ -65,9 +65,13 @@ export default {
   },
   mounted() {
     if (this.listMateriels.length === 0) {
-      this.$store.dispatch('fetchMateriels')
-    }
-    if (this.activeInterventionMateriels.length === 0) {
+      this.$store.dispatch('fetchMateriels').then(() => {
+        this.$store.dispatch(
+          'fetchInterventionMateriels',
+          this.activeInterventionId
+        )
+      })
+    } else if (this.activeInterventionMateriels.length === 0) {
       this.$store.dispatch(
         'fetchInterventionMateriels',
         this.activeInterventionId
@@ -78,17 +82,17 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     newMateriel() {
       this.$store.dispatch('resetActiveMateriel')
-      this.SHOW_MODAL('ModalPromotion')
+      this.SHOW_MODAL('ModalMateriel')
     },
     editMateriel(grade_id) {
       this.$store.dispatch(
         'updateActiveMateriel',
         Object.assign(
           {},
-          this.activeSapeurMateriels.filter(f => f.id === grade_id)[0]
+          this.activeInterventionMateriels.filter(m => m.id === grade_id)[0]
         )
       )
-      this.SHOW_MODAL('ModalPromotion')
+      this.SHOW_MODAL('ModalMateriel')
     },
     supprimerMateriel(grade_id) {
       this.$store.dispatch('removeMateriel', grade_id)
