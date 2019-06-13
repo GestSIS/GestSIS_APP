@@ -12,6 +12,12 @@ export default {
   getSapeurs(exerciceId) {
     return Api().get('/interventions/' + exerciceId + '/sapeurs')
   },
+  getMateriels(exerciceId) {
+    return Api().get('/interventions/' + exerciceId + '/materiels')
+  },
+  getVehicules(exerciceId) {
+    return Api().get('/interventions/' + exerciceId + '/vehicules')
+  },
   createIntervention(exerciceData) {
     return Api().post('/interventions/', exerciceData, {
       headers: { 'Content-Type': 'application/json' }

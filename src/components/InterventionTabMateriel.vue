@@ -5,39 +5,37 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Promotions</h3>
-          <button type="button" class="btn btn-primary" @click="newGrade">
-            Ajouter une promotion
+          <h3 class="card-title">Matériel</h3>
+          <button type="button" class="btn btn-primary" @click="newMateriel">
+            Ajouter du matériel
           </button>
         </div>
         <div class="card-body">
           <table id="sap-promotions" class="table" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Désignation</th>
-                <th>Remarques</th>
+                <th>Matériel</th>
+                <th>Quantité</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="g in activeSapeurGrades" :key="g.id">
-                <td>{{ g.date }}</td>
-                <td>{{ getGrade(g.grade_id).designation }}</td>
-                <td>{{ g.remarque }}</td>
+              <tr v-for="m in activeInterventionMateriels" :key="m.id">
+                <td>{{ getMateriel(m.materiel_id).designation }}</td>
+                <td>{{ m.quantite }}</td>
                 <td>
                   <div class="d-flex justify-content-center">
                     <button
                       type="button"
                       class="btn btn-outline-primary border-0"
-                      @click="editGrade(g.id)"
+                      @click="editMateriel(m.id)"
                     >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                     <button
                       type="button"
                       class="btn btn-outline-danger border-0"
-                      @click="supprimerGrade(g.id)"
+                      @click="supprimerMateriel(m.id)"
                     >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />
                     </button>
@@ -56,46 +54,44 @@
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'SapeurTabPromotion',
+  name: 'InterventionTabMateriel',
   computed: {
     ...mapGetters([
-      'activeSapeurGrades',
-      'activeSapeurId',
-      'listGrades',
-      'getGrade'
+      'activeInterventionMateriels',
+      'activeInterventionId',
+      'listMateriels',
+      'getMateriel'
     ])
   },
   mounted() {
-    if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades')
+    if (this.listMateriels.length === 0) {
+      this.$store.dispatch('fetchMateriels')
     }
-    if (this.activeSapeurGrades.length === 0) {
-      this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
-    }
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGrades', id)
+    if (this.activeInterventionMateriels.length === 0) {
+      this.$store.dispatch(
+        'fetchInterventionMateriels',
+        this.activeInterventionId
+      )
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    newGrade() {
-      this.$store.dispatch('resetActiveGrade')
+    newMateriel() {
+      this.$store.dispatch('resetActiveMateriel')
       this.SHOW_MODAL('ModalPromotion')
     },
-    editGrade(grade_id) {
+    editMateriel(grade_id) {
       this.$store.dispatch(
-        'updateActiveGrade',
+        'updateActiveMateriel',
         Object.assign(
           {},
-          this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
+          this.activeSapeurMateriels.filter(f => f.id === grade_id)[0]
         )
       )
       this.SHOW_MODAL('ModalPromotion')
     },
-    supprimerGrade(grade_id) {
-      this.$store.dispatch('removeGrade', grade_id)
+    supprimerMateriel(grade_id) {
+      this.$store.dispatch('removeMateriel', grade_id)
     }
   }
 }

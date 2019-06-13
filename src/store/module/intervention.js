@@ -30,6 +30,12 @@ export default {
     },
     [types.UPDATE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
       state.currentIntervention.sapeurs = payload
+    },
+    [types.UPDATE_CURRENT_INTERVENTION_MATERIELS](state, payload) {
+      state.currentIntervention.materiels = payload
+    },
+    [types.UPDATE_CURRENT_INTERVENTION_VEHICULES](state, payload) {
+      state.currentIntervention.vehicules = payload
     }
     // [types.ADD_CURRENT_INTERVENTION_SAPEURS](state, payload) {
     //   state.currentIntervention.sapeurs = [
@@ -58,11 +64,14 @@ export default {
     activeInterventionId: state => {
       return state.currentIntervention.id
     },
+    activeInterventionData: state => {
+      return state.currentIntervention.data
+    },
     activeInterventionSapeurs: state => {
       return state.currentIntervention.sapeurs
     },
-    activeInterventionData: state => {
-      return state.currentIntervention.data
+    activeInterventionMateriels: state => {
+      return state.currentIntervention.materiels
     },
     getIntervention: state => intervention_id => {
       return state.interventions.filter(e => e.id === intervention_id)[0]
@@ -84,6 +93,16 @@ export default {
     fetchInterventionSapeurs({ commit }, payload) {
       return InterventionService.getSapeurs(payload).then(data => {
         return commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+      })
+    },
+    fetchInterventionMateriels({ commit }, payload) {
+      return InterventionService.getMateriels(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
+      })
+    },
+    fetchInterventionVehicules({ commit }, payload) {
+      return InterventionService.getMateriels(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
       })
     },
     selectIntervention({ commit }, payload) {

@@ -92,7 +92,9 @@
             <div v-if="activeTab === 'missions'">Missions</div>
             <div v-if="activeTab === 'appels'">Appels</div>
             <div v-if="activeTab === 'vehicules'">Véhciules</div>
-            <div v-if="activeTab === 'materiels'">Materiels</div>
+            <InterventionTabMateriel v-if="activeTab === 'materiels'"
+              >Materiels</InterventionTabMateriel
+            >
           </div>
           <div v-else>
             Loading
@@ -106,8 +108,9 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
 import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
+import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
+import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
 import ExerciceComptable from '@/components/ExerciceComptable'
 
 export default {
@@ -115,6 +118,7 @@ export default {
   components: {
     InterventionTabSapeurs,
     InterventionTabGeneral,
+    InterventionTabMateriel,
     ExerciceComptable
   },
   data() {
