@@ -14,6 +14,7 @@
           v-model="activeMateriel.materiel_id"
           class="custom-select"
           :class="{ 'is-invalid': errors['materiel_id'] }"
+          :disabled="activeMateriel.id"
         >
           <option v-for="m in listMateriels" :key="m.id" :value="m.id">{{
             m.designation
@@ -43,7 +44,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalMateriel',
@@ -53,7 +54,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeInterventionId', 'listMateriels', 'activeMateriel'])
+    ...mapState({
+      activeMateriel: state => state.materiel.active,
+      listMateriels: state => state.materiel.liste,
+      activeInterventionId: state => state.intervention.active.id
+    })
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

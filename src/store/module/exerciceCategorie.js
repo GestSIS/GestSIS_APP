@@ -3,21 +3,21 @@ import ExerciceCategorieService from '../../services/ExerciceCategorieService'
 
 export default {
   state: {
-    categories: []
+    liste: []
   },
   mutations: {
     [types.UPDATE_EXERCICE_CATEGORIE_LIST](state, payload) {
-      state.categories = payload
+      state.liste = payload
     }
   },
   getters: {
     listExerciceCategories: state => {
-      return state.categories
+      return state.liste
         .slice(0)
         .sort((c1, c2) => c1.designation > c2.designation)
     },
     getExerciceCategorie: state => categorie_id => {
-      return state.categories.filter(c => c.id === categorie_id)[0]
+      return state.liste.filter(c => c.id === categorie_id)[0]
     }
   },
   actions: {

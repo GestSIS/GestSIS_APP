@@ -3,7 +3,7 @@ import CoursService from '../../services/CoursService'
 
 export default {
   state: {
-    cours: [],
+    liste: [],
     currentCours: {
       id: 0,
       cours_id: 0,
@@ -19,7 +19,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_COURS_LIST](state, payload) {
-      state.cours = payload
+      state.liste = payload
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
       state.currentCours = payload
@@ -27,10 +27,10 @@ export default {
   },
   getters: {
     listCours: state => {
-      return state.cours
+      return state.liste
     },
     getCours: state => cours_id => {
-      return state.cours.filter(c => c.id === cours_id)[0]
+      return state.liste.filter(c => c.id === cours_id)[0]
     },
     activeCours: state => {
       return state.currentCours

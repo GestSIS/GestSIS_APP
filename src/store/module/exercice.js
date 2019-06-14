@@ -3,7 +3,7 @@ import ExerciceService from '../../services/ExerciceService'
 
 export default {
   state: {
-    exercices: [],
+    liste: [],
     currentExercice: {
       id: 0,
       sapeurs: [],
@@ -12,10 +12,10 @@ export default {
   },
   mutations: {
     [types.UPDATE_EXERCICE_LIST](state, payload) {
-      state.exercices = payload
+      state.liste = payload
     },
     [types.ADD_EXERCICE](state, payload) {
-      state.exercices = [...state.exercices, payload]
+      state.liste = [...state.liste, payload]
     },
     [types.SELECT_CURRENT_EXERCICE](state, payload) {
       state.currentExercice.id = payload
@@ -34,7 +34,7 @@ export default {
   },
   getters: {
     listExercices: state => {
-      return state.exercices
+      return state.liste
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date))
     },
@@ -48,7 +48,7 @@ export default {
       return state.currentExercice.data
     },
     getExercice: state => exercice_id => {
-      return state.exercices.filter(e => e.id === exercice_id)[0]
+      return state.liste.filter(e => e.id === exercice_id)[0]
     }
   },
   actions: {

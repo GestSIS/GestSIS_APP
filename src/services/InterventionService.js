@@ -54,6 +54,22 @@ export default {
     })
   },
 
+  //Vehicules
+  addVehicules(interventionId, vehiculesData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/vehicules/',
+      { vehicules: vehiculesData },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeVehicules(interventionId, vehiculesId) {
+    return Api().delete('/interventions/' + interventionId + '/vehicules/', {
+      data: { vehicules: vehiculesId }
+    })
+  },
+
   //Sapeurs
   addSapeurs(interventionId, sapeursData) {
     return Api().post(

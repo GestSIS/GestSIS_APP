@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-12">
+    <div class="col-xs-12 col-xl-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
@@ -11,7 +11,7 @@
           </button>
         </div>
         <div class="card-body">
-          <table id="sap-promotions" class="table" cellspacing="0" width="100%">
+          <table id="int-materiel" class="table" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th>Matériel</th>
@@ -19,8 +19,8 @@
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="m in activeInterventionMateriels" :key="m.id">
+            <tbody id="materiels">
+              <tr v-for="m in materiels" :key="m.id">
                 <td>{{ getMateriel(m.materiel_id).designation }}</td>
                 <td>{{ m.quantite }}</td>
                 <td>
@@ -51,17 +51,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'InterventionTabMateriel',
   computed: {
-    ...mapGetters([
-      'activeInterventionMateriels',
-      'activeInterventionId',
-      'listMateriels',
-      'getMateriel'
-    ])
+    ...mapGetters(['getMateriel']),
+    ...mapState({
+      listMateriels: state => state.materiel.liste,
+      materiels: state => state.intervention.active.materiels,
+      activeInterventionId: state => state.intervention.active.id
+    })
   },
   mounted() {
     if (this.listMateriels.length === 0) {
@@ -71,12 +71,13 @@ export default {
           this.activeInterventionId
         )
       })
-    } else if (this.activeInterventionMateriels.length === 0) {
+    } else if (this.materiels.length === 0) {
       this.$store.dispatch(
         'fetchInterventionMateriels',
         this.activeInterventionId
       )
     }
+    console.log(this.materiels)
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -87,10 +88,7 @@ export default {
     editMateriel(grade_id) {
       this.$store.dispatch(
         'updateActiveMateriel',
-        Object.assign(
-          {},
-          this.activeInterventionMateriels.filter(m => m.id === grade_id)[0]
-        )
+        Object.assign({}, this.materiels.filter(m => m.id === grade_id)[0])
       )
       this.SHOW_MODAL('ModalMateriel')
     },

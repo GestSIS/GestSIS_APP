@@ -3,30 +3,24 @@ import MaterielService from '../../services/MaterielService'
 
 export default {
   state: {
-    materiels: [],
-    currentMateriel: {
-      id: 0,
+    liste: [],
+    active: {
+      id: null,
       materiel_id: null,
       quantite: 0
     }
   },
   mutations: {
     [types.UPDATE_MATERIEL_LIST](state, payload) {
-      state.materiels = payload
+      state.liste = payload
     },
     [types.UPDATE_CURRENT_MATERIEL](state, payload) {
-      state.currentMateriel = payload
+      state.active = payload
     }
   },
   getters: {
-    listMateriels: state => {
-      return state.materiels
-    },
     getMateriel: state => materiel_id => {
-      return state.materiels.filter(m => m.id === materiel_id)[0]
-    },
-    activeMateriel: state => {
-      return state.currentMateriel
+      return state.liste.filter(m => m.id === materiel_id)[0]
     }
   },
   actions: {
@@ -40,7 +34,7 @@ export default {
     },
     resetActiveMateriel({ commit }) {
       return commit(types.UPDATE_CURRENT_MATERIEL, {
-        id: 0,
+        id: null,
         materiel_id: null,
         quantite: 0
       })

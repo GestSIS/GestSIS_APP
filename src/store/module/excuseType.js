@@ -3,12 +3,12 @@ import ExcuseTypeService from '../../services/ExcuseTypeService'
 
 export default {
   state: {
-    excuses: [],
+    liste: [],
     activeExcuseTypeId: null
   },
   mutations: {
     [types.UPDATE_EXCUSE_TYPE_LIST](state, payload) {
-      state.excuses = payload
+      state.liste = payload
     },
     [types.SELECT_EXCUSE_TYPE](state, payload) {
       state.activeExcuseTypeId = payload
@@ -16,10 +16,10 @@ export default {
   },
   getters: {
     listExcuseTypes: state => {
-      return state.excuses
+      return state.liste
     },
     getExcuseType: state => exercice_id => {
-      return state.excuses.filter(e => e.id === exercice_id)[0]
+      return state.liste.filter(e => e.id === exercice_id)[0]
     }
   },
   actions: {

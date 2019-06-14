@@ -87,12 +87,14 @@
               v-if="activeTab === 'general'"
             ></InterventionTabGeneral>
             <InterventionTabSapeurs
-              v-if="activeTab === 'sapeurs'"
+              v-else-if="activeTab === 'sapeurs'"
             ></InterventionTabSapeurs>
-            <div v-if="activeTab === 'missions'">Missions</div>
-            <div v-if="activeTab === 'appels'">Appels</div>
-            <div v-if="activeTab === 'vehicules'">Véhciules</div>
-            <InterventionTabMateriel v-if="activeTab === 'materiels'"
+            <div v-else-if="activeTab === 'missions'">Missions</div>
+            <div v-else-if="activeTab === 'appels'">Appels</div>
+            <InterventionTabVehicule v-else-if="activeTab === 'vehicules'"
+              >Véhicules</InterventionTabVehicule
+            >
+            <InterventionTabMateriel v-else-if="activeTab === 'materiels'"
               >Materiels</InterventionTabMateriel
             >
           </div>
@@ -111,6 +113,7 @@ import { mapGetters } from 'vuex'
 import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
 import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
 import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
+import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
 import ExerciceComptable from '@/components/ExerciceComptable'
 
 export default {
@@ -119,6 +122,7 @@ export default {
     InterventionTabSapeurs,
     InterventionTabGeneral,
     InterventionTabMateriel,
+    InterventionTabVehicule,
     ExerciceComptable
   },
   data() {

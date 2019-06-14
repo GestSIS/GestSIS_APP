@@ -3,23 +3,20 @@ import VehiculeService from '../../services/VehiculeService'
 
 export default {
   state: {
-    vehicules: []
+    liste: []
   },
   mutations: {
     [types.UPDATE_VEHICULE_LIST](state, payload) {
-      state.vehicules = payload
+      state.liste = payload
     }
   },
   getters: {
-    listVehicules: state => {
-      return state.vehicules
-    },
     getVehicule: state => vehicule_id => {
-      return state.vehicules.filter(m => m.id === vehicule_id)[0]
+      return state.liste.filter(m => m.id === vehicule_id)[0]
     }
   },
   actions: {
-    fetchVehicule({ commit }) {
+    fetchVehicules({ commit }) {
       return VehiculeService.getVehicules().then(data => {
         return commit(types.UPDATE_VEHICULE_LIST, data)
       })
