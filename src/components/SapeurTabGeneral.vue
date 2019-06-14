@@ -440,7 +440,7 @@ export default {
       this.$store.dispatch('fetchLocalites')
     }
     if (this.listTelephoneTypes.length === 0) {
-      this.$store.dispatch('fetchTelephones')
+      this.$store.dispatch('fetchTelephoneTypes')
     }
     if (this.listGrades.length === 0) {
       this.$store.dispatch('fetchGrades')

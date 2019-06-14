@@ -6,25 +6,31 @@ export default {
       params: { exercice_comptable_id: exerciceComptableId }
     })
   },
-  getIntervention(exerciceId) {
-    return Api().get('/interventions/' + exerciceId)
+  getIntervention(interventionId) {
+    return Api().get('/interventions/' + interventionId)
   },
-  getSapeurs(exerciceId) {
-    return Api().get('/interventions/' + exerciceId + '/sapeurs')
+  getSapeurs(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/sapeurs')
   },
-  getMateriels(exerciceId) {
-    return Api().get('/interventions/' + exerciceId + '/materiels')
+  getMateriels(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/materiels')
   },
-  getVehicules(exerciceId) {
-    return Api().get('/interventions/' + exerciceId + '/vehicules')
+  getVehicules(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/vehicules')
   },
-  createIntervention(exerciceData) {
-    return Api().post('/interventions/', exerciceData, {
+  getMissions(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/missions')
+  },
+  getAppels(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/appels')
+  },
+  createIntervention(interventionData) {
+    return Api().post('/interventions/', interventionData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  saveIntervention(exerciceId, exerciceData) {
-    return Api().put('/interventions/' + exerciceId, exerciceData, {
+  saveIntervention(interventionId, interventionData) {
+    return Api().put('/interventions/' + interventionId, interventionData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },

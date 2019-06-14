@@ -37,6 +37,12 @@ export default {
     [types.UPDATE_CURRENT_INTERVENTION_VEHICULES](state, payload) {
       state.active.vehicules = payload
     },
+    [types.UPDATE_CURRENT_INTERVENTION_MISSIONS](state, payload) {
+      state.active.missions = payload
+    },
+    [types.UPDATE_CURRENT_INTERVENTION_APPELS](state, payload) {
+      state.active.appels = payload
+    },
 
     //Materiel
     [types.REMOVE_CURRENT_INTERVENTION_MATERIEL](state, payload) {
@@ -50,6 +56,10 @@ export default {
         p => !payload.includes(p.id)
       )
     }
+
+    //Missions
+
+    //Appels
 
     //Sapeurs
     // [types.ADD_CURRENT_INTERVENTION_SAPEURS](state, payload) {
@@ -117,6 +127,16 @@ export default {
         return commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
       })
     },
+    fetchInterventionAppels({ commit }, payload) {
+      return InterventionService.getAppels(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+      })
+    },
+    fetchInterventionMissions({ commit }, payload) {
+      return InterventionService.getMissions(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+      })
+    },
     selectIntervention({ commit }, payload) {
       return commit(types.SELECT_CURRENT_INTERVENTION, payload)
     },
@@ -168,6 +188,7 @@ export default {
       })
     },
 
+    //Materiel
     addMateriel({ state, commit }, payload) {
       return InterventionService.addMateriel(
         state.active.data.id,
@@ -196,6 +217,7 @@ export default {
       })
     },
 
+    //Vehicules
     addVehicules({ state, commit }, payload) {
       return InterventionService.addVehicules(
         state.active.data.id,
@@ -211,6 +233,61 @@ export default {
         payload
       ).then(async data => {
         await commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload)
+        return data
+      })
+    },
+
+    //Missions
+    addMission({ state, commit }, payload) {
+      return InterventionService.addMission(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+          return data
+        }
+      )
+    },
+    editMission({ state, commit }, payload) {
+      return InterventionService.editMission(
+        state.active.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+        return data
+      })
+    },
+    removeMission({ state, commit }, payload) {
+      return InterventionService.removeMission(
+        state.active.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload)
+        return data
+      })
+    },
+
+    //Appels
+    addAppel({ state, commit }, payload) {
+      return InterventionService.addAppel(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+          return data
+        }
+      )
+    },
+    editAppel({ state, commit }, payload) {
+      return InterventionService.editAppel(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+          return data
+        }
+      )
+    },
+    removeAppel({ state, commit }, payload) {
+      return InterventionService.removeAppel(
+        state.active.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload)
         return data
       })
     }

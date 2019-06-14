@@ -1,49 +1,47 @@
 <template>
-  <div class="row">
-    <div class="col-xs-12 col-xl-12">
-      <!-- general form elements -->
-      <div class="card card-primary card-outline">
-        <!-- /.card-header -->
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Véhicules</h3>
-          <button type="button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
-        </div>
-        <div class="card-body">
-          <table id="int-vehicules" class="table">
-            <thead>
-              <tr>
-                <th>Véhicule</th>
-                <th>Présent</th>
-              </tr>
-            </thead>
-            <tbody id="vehicules">
-              <tr
-                v-for="v in listVehicules.filter(item => item.status === 1)"
-                :key="v.id"
-              >
-                <td>{{ v.designation }}</td>
-                <td>
-                  <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        :id="'v-' + v.id"
-                        v-model="vehicules[v.id]"
-                      />
-                      <label
-                        class="custom-control-label"
-                        :for="'v-' + v.id"
-                      ></label>
-                    </div>
+  <div class="col-xs-12 col-lg-6">
+    <!-- general form elements -->
+    <div class="card card-primary card-outline mb-3">
+      <!-- /.card-header -->
+      <div class="card-header d-flex justify-content-between">
+        <h3 class="card-title">Véhicules</h3>
+        <button type="button" class="btn btn-primary" @click="save">
+          Enregistrer
+        </button>
+      </div>
+      <div class="card-body">
+        <table id="int-vehicules" class="table">
+          <thead>
+            <tr>
+              <th>Véhicule</th>
+              <th>Présent</th>
+            </tr>
+          </thead>
+          <tbody id="vehicules">
+            <tr
+              v-for="v in listVehicules.filter(item => item.status === 1)"
+              :key="v.id"
+            >
+              <td>{{ v.designation }}</td>
+              <td>
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      :id="'v-' + v.id"
+                      v-model="vehicules[v.id]"
+                    />
+                    <label
+                      class="custom-control-label"
+                      :for="'v-' + v.id"
+                    ></label>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@ export default {
     [types.UPDATE_CIVILITE_LIST](state, payload) {
       state.civilites = payload
     },
-    [types.UPDATE_TELEPHONE_LIST](state, payload) {
+    [types.UPDATE_TELEPHONE_TYPE_LIST](state, payload) {
       state.telephoneTypes = payload
     }
   },
@@ -43,9 +43,9 @@ export default {
         return commit(types.UPDATE_CIVILITE_LIST, data)
       })
     },
-    fetchTelephones({ commit }) {
+    fetchTelephoneTypes({ commit }) {
       return BaseDataService.getTelephones().then(data => {
-        return commit(types.UPDATE_TELEPHONE_LIST, data)
+        return commit(types.UPDATE_TELEPHONE_TYPE_LIST, data)
       })
     }
   }

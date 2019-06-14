@@ -44,35 +44,19 @@
             </button>
             <button
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'materiels' }"
+              :class="{ active: activeTab === 'journal' }"
               role="tab"
-              @click.prevent="activeTab = 'materiels'"
+              @click.prevent="activeTab = 'journal'"
             >
-              Matériel
+              Journal
             </button>
             <button
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'vehicules' }"
+              :class="{ active: activeTab === 'mat-veh' }"
               role="tab"
-              @click.prevent="activeTab = 'vehicules'"
+              @click.prevent="activeTab = 'mat-veh'"
             >
-              Vehicules
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'missions' }"
-              role="tab"
-              @click.prevent="activeTab = 'missions'"
-            >
-              Missions
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'appels' }"
-              role="tab"
-              @click.prevent="activeTab = 'appels'"
-            >
-              Appels
+              Matériels & Véhicules
             </button>
           </div>
         </nav>
@@ -85,18 +69,20 @@
             <InterventionTabGeneral
               :newMode="newMode"
               v-if="activeTab === 'general'"
-            ></InterventionTabGeneral>
-            <InterventionTabSapeurs
-              v-else-if="activeTab === 'sapeurs'"
-            ></InterventionTabSapeurs>
-            <div v-else-if="activeTab === 'missions'">Missions</div>
-            <div v-else-if="activeTab === 'appels'">Appels</div>
-            <InterventionTabVehicule v-else-if="activeTab === 'vehicules'"
-              >Véhicules</InterventionTabVehicule
+              >General</InterventionTabGeneral
             >
-            <InterventionTabMateriel v-else-if="activeTab === 'materiels'"
-              >Materiels</InterventionTabMateriel
+            <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'"
+              >Sapeurs</InterventionTabSapeurs
             >
+            <InterventionTabJournal v-else-if="activeTab === 'journal'"
+              >Journal</InterventionTabJournal
+            >
+            <div class="container-fluid" v-else-if="activeTab === 'mat-veh'">
+              <div class="row">
+                <InterventionTabMateriel>Materiels</InterventionTabMateriel>
+                <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
+              </div>
+            </div>
           </div>
           <div v-else>
             Loading
@@ -114,6 +100,7 @@ import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
 import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
 import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
 import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
+import InterventionTabJournal from '@/components/InterventionTabJournal.vue'
 import ExerciceComptable from '@/components/ExerciceComptable'
 
 export default {
@@ -123,6 +110,7 @@ export default {
     InterventionTabGeneral,
     InterventionTabMateriel,
     InterventionTabVehicule,
+    InterventionTabJournal,
     ExerciceComptable
   },
   data() {
