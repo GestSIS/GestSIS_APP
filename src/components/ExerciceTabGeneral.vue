@@ -192,7 +192,8 @@ export default {
   },
   data() {
     return {
-      errors: {}
+      errors: {},
+      loading: true
     }
   },
   watch: {

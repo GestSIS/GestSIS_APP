@@ -39,8 +39,8 @@
             </div>
           </div>
           <vuetable
-            :class="{ 'd-none': loading }"
-            ref="vuetable"
+            v-show="!loading"
+            ref="vuetable_exercices"
             :api-mode="false"
             :fields="fields"
             :detail-row-component="detailRow"
@@ -97,7 +97,7 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listExercices)
+        this.$refs.vuetable_exercices.setData(this.listExercices)
       })
     }
   },
@@ -111,19 +111,19 @@ export default {
       if (this.currentExerciceComptableId || 0 !== 0) {
         this.$store.dispatch('fetchListExercice').then(() => {
           this.loading = false
-          this.$refs.vuetable.setData(this.listExercices)
+          this.$refs.vuetable_exercices.setData(this.listExercices)
         })
       }
     } else {
       this.loading = false
-      this.$refs.vuetable.setData(this.listExercices)
+      this.$refs.vuetable_exercices.setData(this.listExercices)
     }
   },
   data() {
     const svm = this
     return {
       css: CssForBootstrap4,
-      toggles: [],
+      toggles: {},
       fields: [
         {
           title: '',
@@ -206,7 +206,7 @@ export default {
   methods: {
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id]
-      this.$refs.vuetable.toggleDetailRow(id)
+      this.$refs.vuetable_exercices.toggleDetailRow(id)
     }
   }
 }
