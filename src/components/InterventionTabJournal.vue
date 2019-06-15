@@ -1,35 +1,479 @@
 <template>
   <div class="container-fluid">
-    <div class="col-sm-12 col-md-4 col-xl-4">
-      TODO
-    </div>
-    <div class="col-sm-12 col-md-8 col-xl-8">
-      <table>
-        <thead></thead>
-        <tbody></tbody>
-      </table>
+    <div class="row">
+      <div class="col-sm-12 col-md-4 col-xl-4 pl-0">
+        <!--        &lt;!&ndash; general form elements &ndash;&gt;-->
+        <!--        <div class="card card-primary card-outline mb-3">-->
+        <!--          &lt;!&ndash; /.card-header &ndash;&gt;-->
+        <!--          <div class="card-header d-flex justify-content-between">-->
+        <!--            <h3 class="card-title">Journal</h3>-->
+        <!--          </div>-->
+        <!--          <div class="card-body">-->
+        <!--            <div class="container">-->
+        <ul class="timeline">
+          <li v-for="e in events" :key="e.i" class="timeline-item">
+            <div class="timeline-badge" :class="e.colorClass">
+              <font-awesome-icon :icon="icon(e.type)" />
+              <i class="glyphicon glyphicon-edit"></i>
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4 class="timeline-title">{{ e.title }}</h4>
+                <div class="timeline-panel-controls">
+                  <div class="controls"></div>
+                  <div class="timestamp">
+                    <small class="text-muted">{{ e.date | time }}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-body">
+                <p>{{ e.description }}</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-12 col-md-8 col-xl-8">
+        <!-- general form elements -->
+        <div class="card card-primary card-outline mb-3">
+          <!-- /.card-header -->
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Appels</h3>
+            <button type="button" class="btn btn-primary" @click="newAppel">
+              Ajouter un appel
+            </button>
+          </div>
+          <div class="card-body">
+            <table id="int-appels" class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Numéro</th>
+                  <th>Nom</th>
+                  <th>Commentaire</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appels">
+                <tr v-for="a in appels" :key="a.id">
+                  <td>{{ a.date | time }}</td>
+                  <td>{{ a.numero }}</td>
+                  <td>{{ a.nom }}</td>
+                  <td>{{ a.commentaire }}</td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0"
+                        @click="editAppel(a.id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'edit']" />
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="supprimerAppel(a.id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- general form elements -->
+        <div class="card card-primary card-outline mb-3">
+          <!-- /.card-header -->
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Missions</h3>
+            <button type="button" class="btn btn-primary" @click="newMission">
+              Ajouter une mission
+            </button>
+          </div>
+          <div class="card-body">
+            <table id="int-materiel" class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Titre</th>
+                  <th>Responsable</th>
+                  <th>Quittance</th>
+                  <th>Résumé</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="materiels">
+                <tr v-for="m in missions" :key="m.id">
+                  <td>{{ m.debut | time }}</td>
+                  <td>{{ m.titre }}</td>
+                  <td>{{ getSapeur(m.sapeur_id) | sapeur }}</td>
+                  <td>{{ m.fin | time }}</td>
+                  <td>{{ m.resume }}</td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0"
+                        @click="editMission(m.id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'edit']" />
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="supprimerMission(m.id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'InterventionTabJournal',
   computed: {
+    ...mapGetters(['getSapeur']),
     ...mapState({
       id: state => state.intervention.active.id,
       data: state => state.intervention.active.data,
       missions: state => state.intervention.active.missions,
       appels: state => state.intervention.active.appels
-    })
+    }),
+    sortedAppels() {
+      return this.appels
+        .slice(0)
+        .sort((a1, a2) => new Date(a1.date) - new Date(a2.date))
+    },
+    events() {
+      let events = [
+        {
+          date: this.data.date_debut + ' ' + this.data.heure_debut,
+          title: "Debut de l'intervention",
+          description: '',
+          type: 'start',
+          colorClass: 'default'
+        },
+        {
+          date: this.data.date_fin + ' ' + this.data.heure_fin,
+          title: "Fin de l'intervention",
+          description: '',
+          type: 'end',
+          colorClass: 'default'
+        }
+      ]
+
+      this.missions.forEach(m => {
+        events.push({
+          date: m.debut,
+          title: 'debut ' + m.titre,
+          description: m.resume,
+          type: 'mission',
+          colorClass: m.fin ? 'mission-ended' : 'mission-running'
+        })
+
+        if (m.fin) {
+          events.push({
+            date: m.debut,
+            title: 'Fin ' + m.titre,
+            description: m.resume,
+            type: 'mission',
+            colorClass: 'mission-ended'
+          })
+        }
+
+        return events
+      })
+
+      let eventsAppels = this.appels.map(a => {
+        return {
+          date: a.date,
+          title: a.nom,
+          description: a.commentaire,
+          type: 'appel',
+          colorClass: 'appel'
+        }
+      })
+
+      return [...events, ...eventsAppels].sort(
+        (e1, e2) => new Date(e2.date) - new Date(e1.date)
+      )
+    }
   },
   mounted() {
     this.$store.dispatch('fetchInterventionMissions', this.id)
     this.$store.dispatch('fetchInterventionAppels', this.id)
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    supprimerAppel(id) {
+      this.$store.dispatch('removeAppel', id)
+    },
+    newAppel() {
+      let newAppel = {
+        id: null,
+        numero: '',
+        date: null,
+        nom: '',
+        commentaire: ''
+      }
+
+      let min = this.data.date_debut + ' ' + this.data.heure_debut
+      let max = this.data.date_fin + ' ' + this.data.heure_fin
+
+      this.SHOW_MODAL({
+        component: 'ModalAppel',
+        data: { appel: newAppel, min, max }
+      })
+    },
+    editAppel(id) {
+      let cloneAppel = {}
+      Object.assign(cloneAppel, this.appels.filter(a => a.id === id)[0])
+
+      let min = this.data.date_debut + ' ' + this.data.heure_debut
+      let max = this.data.date_fin + ' ' + this.data.heure_fin
+
+      this.SHOW_MODAL({
+        component: 'ModalAppel',
+        data: { appel: cloneAppel, min, max }
+      })
+    },
+
+    supprimerMission(id) {
+      this.$store.dispatch('removeMission', id)
+    },
+    newMission() {
+      let newMission = {
+        id: null,
+        titre: '',
+        debut: null,
+        fin: null,
+        sapeur_id: null,
+        resume: ''
+      }
+      let min = this.data.date_debut + ' ' + this.data.heure_debut
+      let max = this.data.date_fin + ' ' + this.data.heure_fin
+
+      this.SHOW_MODAL({
+        component: 'ModalMission',
+        data: { mission: newMission, min, max }
+      })
+    },
+    editMission(id) {
+      let cloneMission = {}
+      Object.assign(cloneMission, this.missions.filter(m => m.id === id)[0])
+
+      let min = this.data.date_debut + ' ' + this.data.heure_debut
+      let max = this.data.date_fin + ' ' + this.data.heure_fin
+
+      this.SHOW_MODAL({
+        component: 'ModalMission',
+        data: {
+          mission: cloneMission,
+          min,
+          max
+        }
+      })
+    },
+    icon(type) {
+      const icons = {
+        appel: ['fas', 'phone'],
+        mission: ['fas', 'child'],
+        start: ['fas', 'play'],
+        end: ['fas', 'stop']
+      }
+      return icons[type]
+    }
+  },
+  filters: {
+    time(value) {
+      let date = new Date(value)
+      return date.getHours() + ':' + date.getMinutes()
+    }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped, lang="scss">
+#timeline-header {
+  font-size: 26px;
+}
+
+.timeline {
+  list-style: none;
+  padding: 20px 0 20px;
+  position: relative;
+
+  &:before {
+    background-color: #eee;
+    bottom: 0;
+    content: ' ';
+    left: 50px;
+    margin-left: -1.5px;
+    position: absolute;
+    top: 0;
+    width: 3px;
+  }
+
+  > li {
+    margin-bottom: 20px;
+    position: relative;
+
+    &:before,
+    &:after {
+      content: ' ';
+      display: table;
+    }
+
+    &:after {
+      clear: both;
+    }
+
+    > .timeline-panel {
+      border-radius: 2px;
+      border: 1px solid #d4d4d4;
+      box-shadow: 0 1px 2px rgba(100, 100, 100, 0.2);
+      margin-left: 100px;
+      padding: 20px;
+      position: relative;
+
+      .timeline-heading {
+        .timeline-panel-controls {
+          position: absolute;
+          right: 8px;
+          top: 5px;
+
+          .timestamp {
+            display: inline-block;
+          }
+
+          .controls {
+            display: inline-block;
+            padding-right: 5px;
+            border-right: 1px solid #aaa;
+
+            a {
+              color: #999;
+              font-size: 11px;
+              padding: 0 5px;
+
+              &:hover {
+                color: #333;
+                text-decoration: none;
+                cursor: pointer;
+              }
+            }
+          }
+
+          .controls + .timestamp {
+            padding-left: 5px;
+          }
+        }
+      }
+    }
+
+    .timeline-badge {
+      background-color: #999;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.4em;
+      height: 50px;
+      left: 50px;
+      line-height: 52px;
+      margin-left: -25px;
+      position: absolute;
+      text-align: center;
+      top: 16px;
+      width: 50px;
+      z-index: 100;
+    }
+
+    .timeline-badge + .timeline-panel {
+      &:before {
+        border-bottom: 15px solid transparent;
+        border-left: 0 solid #ccc;
+        border-right: 15px solid #ccc;
+        border-top: 15px solid transparent;
+        content: ' ';
+        display: inline-block;
+        position: absolute;
+        left: -15px;
+        right: auto;
+        top: 26px;
+      }
+
+      &:after {
+        border-bottom: 14px solid transparent;
+        border-left: 0 solid #fff;
+        border-right: 14px solid #fff;
+        border-top: 14px solid transparent;
+        content: ' ';
+        display: inline-block;
+        position: absolute;
+        left: -14px;
+        right: auto;
+        top: 27px;
+      }
+    }
+  }
+}
+
+@import '~bootswatch/dist/cosmo/variables';
+
+.timeline-badge {
+  &.mission-ended {
+    background-color: $success !important;
+    opacity: 0.8;
+  }
+
+  &.mission-running {
+    background-color: $warning !important;
+    opacity: 0.8;
+  }
+
+  &.appel {
+    background-color: $primary !important;
+    opacity: 0.8;
+  }
+}
+
+.timeline-title {
+  margin-top: 0;
+  color: inherit;
+}
+
+.timeline-body {
+  > p,
+  > ul {
+    margin-bottom: 0;
+  }
+
+  > p + p {
+    margin-top: 5px;
+  }
+}
+
+.copy {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #aaa;
+  font-size: 11px;
+  > * {
+    color: #444;
+  }
+}
+</style>

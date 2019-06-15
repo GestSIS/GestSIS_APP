@@ -15,7 +15,11 @@ import {
   faTimes,
   faDoorClosed,
   faAngleRight,
-  faAngleDown
+  faAngleDown,
+  faPhone,
+  faChild,
+  faStop,
+  faPlay
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
@@ -51,5 +55,9 @@ library.add(
   faAngleRight,
   faAngleDown,
   faPlusSquare,
-  faClock
+  faClock,
+  faPhone,
+  faChild,
+  faStop,
+  faPlay
 )

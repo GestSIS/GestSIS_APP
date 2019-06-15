@@ -103,5 +103,55 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       }
     )
+  },
+
+  //Appel
+  addAppel(interventionId, appelData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/appels/',
+      { appels: [appelData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  editAppel(interventionId, appelData) {
+    return Api().put(
+      '/interventions/' + interventionId + '/appels/',
+      { appels: [appelData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeAppel(interventionId, appelId) {
+    return Api().delete('/interventions/' + interventionId + '/appels/', {
+      data: { appels: [appelId] }
+    })
+  },
+
+  //Mission
+  addMission(interventionId, missionData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/missions/',
+      { missions: [missionData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  editMission(interventionId, missionData) {
+    return Api().put(
+      '/interventions/' + interventionId + '/missions/',
+      { missions: [missionData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeMission(interventionId, missionId) {
+    return Api().delete('/interventions/' + interventionId + '/missions/', {
+      data: { missions: [missionId] }
+    })
   }
 }

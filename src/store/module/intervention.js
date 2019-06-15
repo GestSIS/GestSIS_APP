@@ -9,10 +9,11 @@ export default {
       sapeurs: [],
       data: {},
       missions: [],
-      appels: {},
+      appels: [],
       quittances: [],
       vehicules: [],
-      materiels: []
+      materiels: [],
+      phases: []
     }
   },
   mutations: {
@@ -55,11 +56,17 @@ export default {
       state.active.vehicules = state.active.vehicules.filter(
         p => !payload.includes(p.id)
       )
-    }
-
-    //Missions
+    },
 
     //Appels
+    [types.REMOVE_CURRENT_INTERVENTION_APPEL](state, payload) {
+      state.active.appels = state.active.appels.filter(p => p.id != payload)
+    },
+
+    //Missions
+    [types.REMOVE_CURRENT_INTERVENTION_MISSION](state, payload) {
+      state.active.missions = state.active.missions.filter(p => p.id != payload)
+    }
 
     //Sapeurs
     // [types.ADD_CURRENT_INTERVENTION_SAPEURS](state, payload) {

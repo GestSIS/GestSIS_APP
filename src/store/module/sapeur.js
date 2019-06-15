@@ -3,7 +3,7 @@ import SapeurService from '../../services/SapeurService'
 
 export default {
   state: {
-    sapeurs: [],
+    liste: [],
     currentSapeur: {
       id: 0,
       permis: [],
@@ -18,12 +18,12 @@ export default {
   },
   getters: {
     listSapeur: state => {
-      return state.sapeurs.sort((s1, s2) =>
+      return state.liste.sort((s1, s2) =>
         (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
       )
     },
     getSapeur: state => id => {
-      return state.sapeurs.filter(s => s.id === id)[0]
+      return state.liste.filter(s => s.id === id)[0]
     },
     activeSapeur: state => {
       return state.currentSapeur.data
@@ -67,17 +67,14 @@ export default {
   },
   mutations: {
     [types.UPDATE_SAPEURS_LIST](state, payload) {
-      state.sapeurs = payload
+      state.liste = payload
     },
     [types.SELECT_CURRENT_SAPEUR](state, payload) {
       state.currentSapeur.id = payload
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.currentSapeur.data = payload
-      state.sapeurs = [
-        ...state.sapeurs.filter(s => s.id !== payload.id),
-        payload
-      ]
+      state.liste = [...state.liste.filter(s => s.id !== payload.id), payload]
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
       state.currentSapeur.telephones = payload

@@ -32,6 +32,11 @@ Vue.use(Tooltip)
 Vue.use(Datetime)
 //Vue.use(VueTimepicker)
 
+Vue.filter('sapeur', function(sapeur) {
+  if (!sapeur) return ''
+  return sapeur.nom + ' ' + sapeur.prenom
+})
+
 new Vue({
   router,
   store,

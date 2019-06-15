@@ -307,236 +307,6 @@
           </div>
         </div>
       </div>
-      <!--      &lt;!&ndash; Téléphones &ndash;&gt;-->
-      <!--      <div class="card card-primary card-outline mb-3">-->
-      <!--        <div class="card-header d-flex justify-content-between">-->
-      <!--          <h3 class="card-title">Téléphones</h3>-->
-      <!--          <button @click.prevent="saveTelephones" class="btn btn-primary">-->
-      <!--            Enregistrer-->
-      <!--          </button>-->
-      <!--        </div>-->
-      <!--        <div class="card-body table-responsive">-->
-      <!--          <table class="table">-->
-      <!--            <thead>-->
-      <!--              <tr>-->
-      <!--                <th>Priorité</th>-->
-      <!--                <th>Numéro</th>-->
-      <!--                <th>Type</th>-->
-      <!--                <th>-->
-      <!--                  RTA-->
-      <!--                  <font-awesome-icon-->
-      <!--                    class="ml-1"-->
-      <!--                    v-tooltip.bottom="-->
-      <!--                      'Cocher pour transmettre à la centrale d\'alarme RTA'-->
-      <!--                    "-->
-      <!--                    :icon="['far', 'question-circle']"-->
-      <!--                  />-->
-      <!--                </th>-->
-      <!--                <th class="text-center">Actions</th>-->
-      <!--              </tr>-->
-      <!--            </thead>-->
-      <!--            <draggable tag="tbody" v-model="telephones">-->
-      <!--              <tr v-for="t in telephones" :key="t.id">-->
-      <!--                <td class="text-center">{{ t.priorite }}</td>-->
-      <!--                <td>-->
-      <!--                  <input-->
-      <!--                    class="form-control"-->
-      <!--                    type="text"-->
-      <!--                    v-model="t.numero"-->
-      <!--                    placeholder="..."-->
-      <!--                  />-->
-      <!--                </td>-->
-      <!--                <td>-->
-      <!--                  <select class="custom-select" v-model="t.telephone_type_id">-->
-      <!--                    <option-->
-      <!--                      v-for="t in listTelephoneTypes"-->
-      <!--                      :value="t.id"-->
-      <!--                      :key="t.id"-->
-      <!--                      >{{ t.type }}</option-->
-      <!--                    >-->
-      <!--                  </select>-->
-      <!--                </td>-->
-      <!--                <td class="align-middle text-center">-->
-      <!--                  <div class="custom-control custom-checkbox text-center">-->
-      <!--                    <input-->
-      <!--                      type="checkbox"-->
-      <!--                      class="custom-control-input"-->
-      <!--                      :id="t.priorite"-->
-      <!--                      v-model="t.rta"-->
-      <!--                    />-->
-      <!--                    <label-->
-      <!--                      class="custom-control-label"-->
-      <!--                      :for="t.priorite"-->
-      <!--                    ></label>-->
-      <!--                  </div>-->
-      <!--                </td>-->
-      <!--                <td>-->
-      <!--                  <div class="d-flex justify-content-center">-->
-      <!--                    <button-->
-      <!--                      type="button"-->
-      <!--                      class="btn btn-outline-danger border-0"-->
-      <!--                      @click="removeTelephone(t.priorite)"-->
-      <!--                      required-->
-      <!--                    >-->
-      <!--                      <font-awesome-icon :icon="['far', 'trash-alt']" />-->
-      <!--                    </button>-->
-      <!--                  </div>-->
-      <!--                </td>-->
-      <!--              </tr>-->
-      <!--            </draggable>-->
-      <!--          </table>-->
-      <!--          <button-->
-      <!--            type="button"-->
-      <!--            class="btn btn-outline-primary"-->
-      <!--            @click="addTelephone()"-->
-      <!--            :disabled="this.telephonesData.length >= 3"-->
-      <!--          >-->
-      <!--            <font-awesome-icon class="mr-1" :icon="['fas', 'plus']" />-->
-      <!--            Ajouter un numéro-->
-      <!--          </button>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--    </div>-->
-      <!--    <div class="col-sm-12 col-xl-6">-->
-      <!--      <div class="card card-primary card-outline mb-3">-->
-      <!--        <div class="card-header d-flex justify-content-between">-->
-      <!--          <h3 class="card-title">Références professionnelles</h3>-->
-      <!--          <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">-->
-      <!--            Enregistrer-->
-      <!--          </button>-->
-      <!--        </div>-->
-      <!--        <form role="form">-->
-      <!--          <div class="card-body">-->
-      <!--            <div class="form-group">-->
-      <!--              <label for="m-int-profession">Profession</label>-->
-      <!--              <input-->
-      <!--                type="text"-->
-      <!--                class="form-control"-->
-      <!--                id="m-int-profession"-->
-      <!--                name="profession"-->
-      <!--                v-model="activeInterventionData.profession"-->
-      <!--              />-->
-      <!--            </div>-->
-      <!--            <div class="form-group">-->
-      <!--              <label for="m-int-employeur">Employeur</label>-->
-      <!--              <input-->
-      <!--                type="text"-->
-      <!--                class="form-control"-->
-      <!--                id="m-int-employeur"-->
-      <!--                name="employeur"-->
-      <!--                v-model="activeInterventionData.employeur"-->
-      <!--              />-->
-      <!--            </div>-->
-      <!--            <div class="form-group">-->
-      <!--              <label for="m-int-lieu-travail">Lieu de travail</label>-->
-      <!--              <input-->
-      <!--                type="text"-->
-      <!--                class="form-control"-->
-      <!--                id="m-int-lieu-travail"-->
-      <!--                name="lieu_travail"-->
-      <!--                v-model="activeInterventionData.lieu_de_travail"-->
-      <!--              />-->
-      <!--            </div>-->
-      <!--            &lt;!&ndash; TODO Add image &ndash;&gt;-->
-      <!--          </div>-->
-      <!--        </form>-->
-      <!--      </div>-->
-      <!--      &lt;!&ndash; /.card &ndash;&gt;-->
-
-      <!--      <div class="card card-primary card-outline mb-3">-->
-      <!--        <div class="card-header d-flex justify-content-between">-->
-      <!--          <h3 class="card-title">Incorporation / Sortie</h3>-->
-      <!--        </div>-->
-      <!--        &lt;!&ndash; /.card-header &ndash;&gt;-->
-      <!--        &lt;!&ndash; form start &ndash;&gt;-->
-      <!--        <form role="form">-->
-      <!--          <div class="card-body">-->
-      <!--            <table class="table">-->
-      <!--              <thead>-->
-      <!--                <tr>-->
-      <!--                  <th>Incorporation</th>-->
-      <!--                  <th>Sortie</th>-->
-      <!--                  <th>Motif</th>-->
-      <!--                  <th>Localité</th>-->
-      <!--                  <th class="text-center">Actions</th>-->
-      <!--                </tr>-->
-      <!--              </thead>-->
-      <!--              <tbody>-->
-      <!--                <tr v-for="m in activeSapeurMutations" :key="m.id">-->
-      <!--                  <td>{{ m.incorporation }}</td>-->
-      <!--                  <td>{{ m.sortie }}</td>-->
-      <!--                  <td>{{ m.motif }}</td>-->
-      <!--                  <td>{{ getLocalite(m.localite_id).designation }}</td>-->
-      <!--                  <td>-->
-      <!--                    <div class="d-flex justify-content-center">-->
-      <!--                      <button-->
-      <!--                        type="button"-->
-      <!--                        class="btn btn-outline-primary border-0"-->
-      <!--                        @click="editMutation(m.id)"-->
-      <!--                      >-->
-      <!--                        <font-awesome-icon :icon="['far', 'edit']" />-->
-      <!--                      </button>-->
-      <!--                      <button-->
-      <!--                        type="button"-->
-      <!--                        class="btn btn-outline-danger border-0"-->
-      <!--                        @click="removeMutation(m.id)"-->
-      <!--                        v-if="activeSapeurMutations.length > 1"-->
-      <!--                      >-->
-      <!--                        <font-awesome-icon :icon="['far', 'trash-alt']" />-->
-      <!--                      </button>-->
-      <!--                    </div>-->
-      <!--                  </td>-->
-      <!--                </tr>-->
-      <!--              </tbody>-->
-      <!--            </table>-->
-      <!--            <button-->
-      <!--              type="button"-->
-      <!--              class="btn btn-outline-primary"-->
-      <!--              @click="finService"-->
-      <!--              v-if="finServiceBoutton"-->
-      <!--            >-->
-      <!--              <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />-->
-      <!--              Fin de service-->
-      <!--            </button>-->
-      <!--          </div>-->
-      <!--        </form>-->
-      <!--      </div>-->
-      <!--      <div class="card card-primary card-outline mb-3">-->
-      <!--        <div class="card-header">-->
-      <!--          <h3 class="card-title">Informations</h3>-->
-      <!--        </div>-->
-      <!--        <form role="form">-->
-      <!--          <div class="card-body">-->
-      <!--            <div class="form-group">-->
-      <!--              <label for="mainFonction">Fonction principale</label>-->
-      <!--              <select-->
-      <!--                id="mainFonction"-->
-      <!--                v-model="activeInterventionData.fonction_id"-->
-      <!--                class="custom-select"-->
-      <!--                disabled-->
-      <!--              >-->
-      <!--                <option v-for="f in listFonctions" :key="f.id" :value="f.id">-->
-      <!--                  {{ f.nom }}-->
-      <!--                </option>-->
-      <!--              </select>-->
-      <!--            </div>-->
-      <!--            <div class="form-group">-->
-      <!--              <label for="mainGrade">Grade actuel</label>-->
-      <!--              <select-->
-      <!--                id="mainGrade"-->
-      <!--                v-model="activeInterventionData.grade_id"-->
-      <!--                class="custom-select"-->
-      <!--                disabled-->
-      <!--              >-->
-      <!--                <option v-for="g in listGrades" :key="g.id" :value="g.id">-->
-      <!--                  {{ g.designation }}-->
-      <!--                </option>-->
-      <!--              </select>-->
-      <!--            </div>-->
-      <!--            &lt;!&ndash; TODO Actif et Porteur checkbox &ndash;&gt;-->
-      <!--          </div>-->
-      <!--        </form>-->
-      <!--      </div>-->
     </div>
   </div>
 </template>
@@ -621,31 +391,38 @@ export default {
       )
     }
   },
+  mounted() {
+    this.activeInterventionData.responsable = this.replaceBr(
+      this.activeInterventionData.responsable
+    )
+    this.activeInterventionData.description = this.replaceBr(
+      this.activeInterventionData.description
+    )
+    this.activeInterventionData.proprietaire = this.replaceBr(
+      this.activeInterventionData.proprietaire
+    )
+    this.activeInterventionData.heure_debut = this.formatHeure(
+      this.activeInterventionData.heure_debut
+    )
+    this.activeInterventionData.heure_fin = this.formatHeure(
+      this.activeInterventionData.heure_fin
+    )
+  },
   watch: {
     responsable(value) {
-      if (value !== undefined) {
-        this.activeInterventionData.responsable = value.replace('<br />', '\n')
-      }
+      this.activeInterventionData.responsable = this.replaceBr(value)
     },
     description(value) {
-      if (value !== undefined) {
-        this.activeInterventionData.description = value.replace('<br />', '\n')
-      }
+      this.activeInterventionData.description = this.replaceBr(value)
     },
     proprietaire(value) {
-      if (value !== undefined) {
-        this.activeInterventionData.proprietaire = value.replace('<br />', '\n')
-      }
+      this.activeInterventionData.proprietaire = this.replaceBr(value)
     },
     heureDebut(value) {
-      if (value && value.length === 8) {
-        this.activeInterventionData.heure_debut = value.slice(0, 5)
-      }
+      this.activeInterventionData.heure_debut = this.formatHeure(value)
     },
     heureFin(value) {
-      if (value && value.length === 8) {
-        this.activeInterventionData.heure_fin = value.slice(0, 5)
-      }
+      this.activeInterventionData.heure_fin = this.formatHeure(value)
     }
   },
   methods: {
@@ -664,6 +441,17 @@ export default {
           .then(() => (this.errors = {}))
           .catch(errors => (this.errors = errors))
       }
+    },
+    replaceBr(value) {
+      if (value) {
+        return value.replace('<br />', '\n')
+      }
+    },
+    formatHeure(value) {
+      if (value && value.length >= 8) {
+        return value.slice(0, 5)
+      }
+      return value
     }
   }
 }
