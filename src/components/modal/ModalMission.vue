@@ -27,14 +27,11 @@
         <!--        />-->
       </div>
       <div class="form-group">
-        <!-- TODO AUTOCOMPLETE TITRE -->
-        <label for="titre">Titre</label>
-        <input
-          type="datetime-local"
+        <autocomplete
           v-model="activeMission.titre"
-          class="form-control"
-          :class="{ 'is-invalid': errors['titre'] }"
-          id="titre"
+          :items="listMissions.map(m => m.titre)"
+          :error="!!errors['titre']"
+          title="Titre"
         />
       </div>
       <div class="form-group">
@@ -94,8 +91,13 @@
 import { mapState, mapMutations } from 'vuex'
 import { DateTime } from 'luxon'
 
+import Autocomplete from '@/components/Autocomplete'
+
 export default {
   name: 'ModalMission',
+  components: {
+    Autocomplete
+  },
   props: {
     data: {
       type: Object

@@ -316,9 +316,9 @@ import { mapGetters } from 'vuex'
 
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
-  { id: 3, type: 'Petite' },
-  { id: 2, type: 'Moyenne' },
-  { id: 0, type: 'Grande' }
+  { id: 2, type: 'Petite' },
+  { id: 3, type: 'Moyenne' },
+  { id: 4, type: 'Grande' }
 ]
 
 export default {

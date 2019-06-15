@@ -18,7 +18,7 @@
             </div>
             <div class="timeline-panel">
               <div class="timeline-heading">
-                <h4 class="timeline-title">{{ e.title }}</h4>
+                <h5 class="timeline-title">{{ e.title }}</h5>
                 <div class="timeline-panel-controls">
                   <div class="controls"></div>
                   <div class="timestamp">
@@ -26,7 +26,7 @@
                   </div>
                 </div>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body small">
                 <p>{{ e.description }}</p>
               </div>
             </div>
@@ -159,27 +159,11 @@ export default {
         .sort((a1, a2) => new Date(a1.date) - new Date(a2.date))
     },
     events() {
-      let events = [
-        {
-          date: this.data.date_debut + ' ' + this.data.heure_debut,
-          title: "Debut de l'intervention",
-          description: '',
-          type: 'start',
-          colorClass: 'default'
-        },
-        {
-          date: this.data.date_fin + ' ' + this.data.heure_fin,
-          title: "Fin de l'intervention",
-          description: '',
-          type: 'end',
-          colorClass: 'default'
-        }
-      ]
-
+      let events = []
       this.missions.forEach(m => {
         events.push({
           date: m.debut,
-          title: 'debut ' + m.titre,
+          title: 'Début ' + m.titre,
           description: m.resume,
           type: 'mission',
           colorClass: m.fin ? 'mission-ended' : 'mission-running'
@@ -187,7 +171,7 @@ export default {
 
         if (m.fin) {
           events.push({
-            date: m.debut,
+            date: m.fin,
             title: 'Fin ' + m.titre,
             description: m.resume,
             type: 'mission',
@@ -208,9 +192,41 @@ export default {
         }
       })
 
-      return [...events, ...eventsAppels].sort(
-        (e1, e2) => new Date(e2.date) - new Date(e1.date)
-      )
+      let chefIntervention = this.data.sapeur_id
+        ? this.getSapeur(this.data.sapeur_id)
+        : null
+      let startDate = this.data.date_fin + ' ' + this.data.heure_fin
+      let endDate = this.data.date_debut + ' ' + this.data.heure_debut
+
+      let startEvent = {
+        date: startDate,
+        title: "Debut de l'intervention",
+        description: chefIntervention
+          ? "Chef d'intervention : " +
+            chefIntervention.nom +
+            ' ' +
+            chefIntervention.prenom
+          : '',
+        type: 'start',
+        colorClass: 'default'
+      }
+
+      let duree = Math.abs(new Date(endDate) - new Date(startDate)) / 36e5
+      let endEvent = {
+        date: endDate,
+        title: "Fin de l'intervention",
+        description: 'Durée ' + duree + ' heures',
+        type: 'end',
+        colorClass: 'default'
+      }
+
+      return [
+        endEvent,
+        ...[...events, ...eventsAppels].sort(
+          (e1, e2) => new Date(e2.date) - new Date(e1.date)
+        ),
+        startEvent
+      ]
     }
   },
   mounted() {
@@ -308,14 +324,12 @@ export default {
 </script>
 
 <style scoped, lang="scss">
-#timeline-header {
-  font-size: 26px;
-}
-
 .timeline {
   list-style: none;
-  padding: 20px 0 20px;
+  padding: 20px 0 0 0;
   position: relative;
+  margin-bottom: 0;
+  padding-bottom: 0;
 
   &:before {
     background-color: #eee;
@@ -326,6 +340,8 @@ export default {
     position: absolute;
     top: 0;
     width: 3px;
+    margin-bottom: 25px;
+    margin-top: 25px;
   }
 
   > li {
@@ -347,7 +363,7 @@ export default {
       border: 1px solid #d4d4d4;
       box-shadow: 0 1px 2px rgba(100, 100, 100, 0.2);
       margin-left: 100px;
-      padding: 20px;
+      padding: 10px;
       position: relative;
 
       .timeline-heading {
@@ -396,7 +412,7 @@ export default {
       margin-left: -25px;
       position: absolute;
       text-align: center;
-      top: 16px;
+      top: 6px;
       width: 50px;
       z-index: 100;
     }
@@ -412,7 +428,7 @@ export default {
         position: absolute;
         left: -15px;
         right: auto;
-        top: 26px;
+        top: 16px;
       }
 
       &:after {
@@ -425,7 +441,7 @@ export default {
         position: absolute;
         left: -14px;
         right: auto;
-        top: 27px;
+        top: 17px;
       }
     }
   }

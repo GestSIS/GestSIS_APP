@@ -184,9 +184,9 @@ export default {
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
-              3: 'Petite',
-              2: 'Moyenne',
-              0: 'Grande'
+              2: 'Petite',
+              3: 'Moyenne',
+              4: 'Grande'
             }
             return degre[value]
           }

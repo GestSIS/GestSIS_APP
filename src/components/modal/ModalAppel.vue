@@ -27,19 +27,17 @@
         ></datetime>
       </div>
       <div class="form-group">
-        <label for="correspondant">Correspondant</label>
-        <input
-          type="string"
+        <autocomplete
           v-model="activeAppel.nom"
-          class="form-control"
-          :class="{ 'is-invalid': errors['debut'] }"
-          id="correspondant"
+          :items="listTelephones.map(t => t.nom)"
+          :error="!!errors['nom']"
+          title="Correspondant"
         />
       </div>
       <div class="form-group">
         <label for="numero">Numéro</label>
         <input
-          type="string"
+          type="text"
           v-model="activeAppel.numero"
           class="form-control"
           :class="{ 'is-invalid': errors['debut'] }"
@@ -71,8 +69,13 @@
 import { mapState, mapMutations } from 'vuex'
 import { DateTime } from 'luxon'
 
+import Autocomplete from '@/components/Autocomplete'
+
 export default {
   name: 'ModalAppel',
+  components: {
+    Autocomplete
+  },
   props: {
     data: {
       type: Object
@@ -91,7 +94,20 @@ export default {
     ...mapState({
       listTelephones: state => state.telephone.liste,
       activeInterventionId: state => state.intervention.active.id
-    })
+    }),
+    responsable() {
+      return this.activeAppel.nom
+    }
+  },
+  watch: {
+    responsable(value) {
+      let result = this.listTelephones.filter(
+        t => value.localeCompare(t.nom) === 0
+      )
+      if (result.length > 0) {
+        this.activeAppel.numero = result[0].numero
+      }
+    }
   },
   mounted() {
     if (this.listTelephones.length === 0) {
