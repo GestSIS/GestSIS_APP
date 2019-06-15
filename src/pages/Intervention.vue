@@ -115,8 +115,7 @@ export default {
   },
   data() {
     return {
-      //TODO Change default to general
-      activeTab: 'journal', //'general',
+      activeTab: 'general',
       loading: true
     }
   },

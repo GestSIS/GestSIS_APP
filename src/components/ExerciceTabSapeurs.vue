@@ -2,7 +2,7 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3>
-        {{ activeExerciceData.communication }} &ndash;
+        {{ activeExerciceData.designation }} &ndash;
         {{ activeExerciceData.date }}
       </h3>
       <button class="btn btn-outline-primary" @click="save">

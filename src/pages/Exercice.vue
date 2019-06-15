@@ -93,7 +93,7 @@ export default {
       return this.id === 'new'
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeExerciceData.communication
+      return this.newMode ? 'Nouveau' : this.activeExerciceData.designation
     }
   },
   mounted() {

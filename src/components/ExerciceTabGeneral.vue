@@ -9,14 +9,14 @@
     <div class="card-body">
       <!-- NOM -->
       <div class="form-group">
-        <label for="m-exe-des">Communication</label>
+        <label for="m-exe-des">Designation</label>
         <input
           type="text"
           class="form-control"
-          :class="{ 'is-invalid': errors['communication'] }"
+          :class="{ 'is-invalid': errors['designation'] }"
           id="m-exe-des"
           name="nom"
-          v-model="activeExerciceData.communication"
+          v-model="activeExerciceData.designation"
         />
       </div>
       <!-- CATEGORIE -->
@@ -154,15 +154,15 @@
       <!--                  </div>-->
       <!-- COMMUNICATION -->
       <div class="form-group">
-        <label for="m-sap-communication">Designation</label>
+        <label for="m-sap-communication">Communications</label>
         <textarea
           type="text"
           class="form-control"
-          :class="{ 'is-invalid': errors['designation'] }"
+          :class="{ 'is-invalid': errors['communications'] }"
           id="m-sap-communication"
-          name="nom"
-          v-model="activeExerciceData.designation"
-        />
+          name="communications"
+          v-model="activeExerciceData.communications"
+        ></textarea>
       </div>
     </div>
   </div>

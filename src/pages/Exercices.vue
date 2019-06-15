@@ -170,8 +170,8 @@ export default {
           dataClass: 'align-middle'
         },
         {
-          title: 'Communication',
-          name: 'communication',
+          title: 'Designation',
+          name: 'designation',
           dataClass: 'align-middle'
         },
         {
