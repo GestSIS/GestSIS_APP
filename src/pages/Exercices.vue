@@ -45,7 +45,17 @@
             :fields="fields"
             :detail-row-component="detailRow"
             :css="css.table"
+            :data-manager="dataManager"
           >
+<!--            <template slot="tableHeader">-->
+<!--              <template>-->
+<!--                <tr>-->
+<!--                  <th colspan="2">Basic Info</th>-->
+<!--                  <th colspan="6">Details</th>-->
+<!--                </tr>-->
+<!--              </template>-->
+<!--              <vuetable-row-header></vuetable-row-header>-->
+<!--            </template>-->
             <div slot="details" slot-scope="props">
               <button
                 class="btn btn-link border-0"
@@ -84,7 +94,9 @@ import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceComptable from '@/components/ExerciceComptable'
 
 import Vuetable from 'vuetable-2'
+// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
+import _ from 'lodash'
 
 export default {
   name: 'exercices',
@@ -97,7 +109,7 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
-        this.$refs.vuetable_exercices.setData(this.listExercices)
+        this.$refs.vuetable_exercices.setData(this.computedData)
       })
     }
   },
@@ -111,12 +123,12 @@ export default {
       if (this.currentExerciceComptableId || 0 !== 0) {
         this.$store.dispatch('fetchListExercice').then(() => {
           this.loading = false
-          this.$refs.vuetable_exercices.setData(this.listExercices)
+          this.$refs.vuetable_exercices.setData(this.computedData)
         })
       }
     } else {
       this.loading = false
-      this.$refs.vuetable_exercices.setData(this.listExercices)
+      this.$refs.vuetable_exercices.setData(this.computedData)
     }
   },
   data() {
@@ -133,15 +145,14 @@ export default {
         {
           title: 'Date',
           name: 'date',
+          sortField: 'date',
           dataClass: 'align-middle'
         },
         {
           title: 'Categorie',
-          name: 'exercice_categorie_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return svm.getExerciceCategorie(value).designation
-          }
+          name: 'categorie',
+          sortField: 'categorie',
+          dataClass: 'align-middle'
         },
         {
           title: 'Heure',
@@ -158,11 +169,9 @@ export default {
         },
         {
           title: 'Localité',
-          name: 'localite_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return svm.getLocalite(value).designation
-          }
+          name: 'localite',
+          sortField: 'localite',
+          dataClass: 'align-middle'
         },
         {
           title: 'Lieu',
@@ -172,6 +181,7 @@ export default {
         {
           title: 'Designation',
           name: 'designation',
+          sortField: 'designation',
           dataClass: 'align-middle'
         },
         {
@@ -201,12 +211,37 @@ export default {
       'getLocalite',
       'listExerciceComptable',
       'currentExerciceComptableId'
-    ])
+    ]),
+    computedData() {
+      return this.listExercices.map(s => {
+        return {
+          ...s,
+          categorie: this.getExerciceCategorie(s.exercice_categorie_id)
+            .designation,
+          localite: this.getLocalite(s.localite_id).designation
+        }
+      })
+    }
   },
   methods: {
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id]
       this.$refs.vuetable_exercices.toggleDetailRow(id)
+    },
+    dataManager(sortOrder) {
+      if (this.computedData.length < 1) return
+
+      let local = this.computedData
+
+      // sortOrder can be empty, so we have to check for that as well
+      if (sortOrder.length > 0) {
+        console.log('orderBy:', sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+      }
+
+      return {
+        data: local
+      }
     }
   }
 }

@@ -2,14 +2,6 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-12 col-md-4 col-xl-4 pl-0">
-        <!--        &lt;!&ndash; general form elements &ndash;&gt;-->
-        <!--        <div class="card card-primary card-outline mb-3">-->
-        <!--          &lt;!&ndash; /.card-header &ndash;&gt;-->
-        <!--          <div class="card-header d-flex justify-content-between">-->
-        <!--            <h3 class="card-title">Journal</h3>-->
-        <!--          </div>-->
-        <!--          <div class="card-body">-->
-        <!--            <div class="container">-->
         <ul class="timeline">
           <li v-for="e in events" :key="e.i" class="timeline-item">
             <div class="timeline-badge" :class="e.colorClass">

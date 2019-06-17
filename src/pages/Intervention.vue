@@ -115,7 +115,8 @@ export default {
   },
   data() {
     return {
-      activeTab: 'general',
+      //TODO UPDATE TO 'general'
+      activeTab: 'sapeurs',
       loading: true
     }
   },

@@ -102,7 +102,7 @@ export default {
     saveActiveExercice({ state, commit }) {
       return ExerciceService.saveExercice(
         state.currentExercice.id,
-        ...state.currentExercice.data
+        state.currentExercice.data
       ).then(async data => {
         await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
         return data

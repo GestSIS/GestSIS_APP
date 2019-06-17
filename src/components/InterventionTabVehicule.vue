@@ -110,7 +110,6 @@ export default {
     updateVehicules(value) {
       this.vehicules = {}
       let svm = this
-      console.log(value)
 
       value.forEach(
         v => (svm.vehicules = { ...svm.vehicules, [v.vehicule_id]: true })

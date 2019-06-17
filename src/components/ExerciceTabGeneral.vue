@@ -185,6 +185,9 @@ export default {
     ]),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id
+    },
+    exerciceHeure() {
+      return this.activeExerciceData.heure
     }
   },
   props: {
@@ -201,7 +204,15 @@ export default {
       this.activeExerciceData.duree =
         this.activeExerciceData.duree ||
         this.getExerciceCategorie(value).duree_base
+    },
+    exerciceHeure(data) {
+      this.activeExerciceData.heure = this.formatHeure(data)
     }
+  },
+  mounted() {
+    this.activeExerciceData.heure = this.formatHeure(
+      this.activeExerciceData.heure
+    )
   },
   methods: {
     save() {
@@ -219,6 +230,12 @@ export default {
           .then(() => (this.errors = {}))
           .catch(errors => (this.errors = errors))
       }
+    },
+    formatHeure(value) {
+      if (value && value.length >= 8) {
+        return value.slice(0, 5)
+      }
+      return value
     }
   }
 }

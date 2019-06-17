@@ -363,7 +363,6 @@ export default {
       return this.activeInterventionData.heure_fin
     },
     dateDebutMin() {
-      console.log(this.currentExerciceComptableId)
       if (!this.currentExerciceComptableId) return
       return this.exerciceComptableDebut(
         this.activeInterventionData.exercice_comptable_id

@@ -32,6 +32,9 @@ export default {
     [types.UPDATE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
       state.active.sapeurs = payload
     },
+    [types.UPDATE_CURRENT_INTERVENTION_QUITTANCES](state, payload) {
+      state.active.quittances = payload
+    },
     [types.UPDATE_CURRENT_INTERVENTION_MATERIELS](state, payload) {
       state.active.materiels = payload
     },
@@ -99,9 +102,6 @@ export default {
     activeInterventionData: state => {
       return state.active.data
     },
-    activeInterventionSapeurs: state => {
-      return state.active.sapeurs
-    },
     getIntervention: state => intervention_id => {
       return state.liste.filter(e => e.id === intervention_id)[0]
     }
@@ -122,6 +122,11 @@ export default {
     fetchInterventionSapeurs({ commit }, payload) {
       return InterventionService.getSapeurs(payload).then(data => {
         return commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+      })
+    },
+    fetchInterventionQuittances({ commit }, payload) {
+      return InterventionService.getQuittances(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data)
       })
     },
     fetchInterventionMateriels({ commit }, payload) {

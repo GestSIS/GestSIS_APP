@@ -13,7 +13,7 @@ export default {
     detailRowClass: 'vuetable-detail-row',
     handleIcon: 'fa fa-bars text-secondary',
     renderIcon(classes) {
-      return `<i class="${classes.join(' ')}"></span>`
+      return `<i class="${classes.join(' ')}"></i>`
     }
   }
 }

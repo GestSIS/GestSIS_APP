@@ -12,6 +12,9 @@ export default {
   getSapeurs(interventionId) {
     return Api().get('/interventions/' + interventionId + '/sapeurs')
   },
+  getQuittances(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/quittances')
+  },
   getMateriels(interventionId) {
     return Api().get('/interventions/' + interventionId + '/materiels')
   },

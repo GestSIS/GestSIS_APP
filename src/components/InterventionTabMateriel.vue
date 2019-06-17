@@ -75,7 +75,6 @@ export default {
         this.activeInterventionId
       )
     }
-    console.log(this.materiels)
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

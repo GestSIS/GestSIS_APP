@@ -74,40 +74,40 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/publipostage" class="nav-link internal-link">
             <font-awesome-icon icon="envelope" />
             <span>Publipostage</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/matériel" class="nav-link internal-link">
             <font-awesome-icon icon="toolbox" />
             <span>Matériel personel</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/certificats-medicaux" class="nav-link internal-link">
             <font-awesome-icon icon="file-medical-alt" />
             <span>Certificats médicaux</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/impressions" class="nav-link internal-link">
             <font-awesome-icon icon="sitemap" />
             <span>Impressions</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/configuration" class="nav-link internal-link">
             <font-awesome-icon icon="sliders-h" />
             <span>Configuration</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link internal-link">
+          <router-link to="/rta" class="nav-link internal-link">
             <font-awesome-icon icon="globe-europe" />
             <span>Exportation -> RTA</span>
-          </a>
+          </router-link>
         </li>
       </ul>
     </nav>
