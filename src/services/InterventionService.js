@@ -27,6 +27,9 @@ export default {
   getAppels(interventionId) {
     return Api().get('/interventions/' + interventionId + '/appels')
   },
+  getPhases(interventionId) {
+    return Api().get('/interventions/' + interventionId + '/phases')
+  },
   createIntervention(interventionData) {
     return Api().post('/interventions/', interventionData, {
       headers: { 'Content-Type': 'application/json' }

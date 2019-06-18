@@ -47,6 +47,9 @@ export default {
     [types.UPDATE_CURRENT_INTERVENTION_APPELS](state, payload) {
       state.active.appels = payload
     },
+    [types.UPDATE_CURRENT_INTERVENTION_PHASES](state, payload) {
+      state.active.phases = payload
+    },
 
     //Materiel
     [types.REMOVE_CURRENT_INTERVENTION_MATERIEL](state, payload) {
@@ -147,6 +150,11 @@ export default {
     fetchInterventionMissions({ commit }, payload) {
       return InterventionService.getMissions(payload).then(data => {
         return commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+      })
+    },
+    fetchInterventionPhases({ commit }, payload) {
+      return InterventionService.getPhases(payload).then(data => {
+        return commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
       })
     },
     selectIntervention({ commit }, payload) {

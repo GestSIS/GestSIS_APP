@@ -43,13 +43,33 @@
                     <th>
                       {{ getSapeur(parseInt(presence)) | sapeur }}
                     </th>
-                    <td><input type="checkbox" :checked="quittances.filter(s => s.sapeur_id === parseInt(presence)).length === 1"/></td>
+                    <td>
+                      <div class="custom-control custom-checkbox d-inline">
+                        <input
+                          type="checkbox"
+                          class="custom-control-input"
+                          :id="presence"
+                          :checked="
+                            quittances.filter(
+                              s => s.sapeur_id === parseInt(presence)
+                            ).length === 1
+                          "
+                        />
+                        <label
+                          class="custom-control-label"
+                          :for="presence"
+                          @click="() => {}"
+                        ></label>
+                      </div>
+                    </td>
                     <td
                       v-for="i in Array(columns.length * 4).keys()"
                       :key="presence + '-' + i"
-                      :class="{'bg-secondary' : presences[parseInt(presence)][i] === 1, 'bg-success' : presences[parseInt(presence)][i] === 2}"
-                    >
-                    </td>
+                      :class="{
+                        'bg-secondary': presences[parseInt(presence)][i] === 1,
+                        'bg-success': presences[parseInt(presence)][i] === 2
+                      }"
+                    ></td>
                   </tr>
                 </tbody>
               </table>
@@ -64,10 +84,25 @@
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Phases de l'intervention</h3>
             <button type="button" class="btn btn-primary" @click="newPhase">
-              Nouvelle phase
+              Nouvelle phaseContent
             </button>
           </div>
-          <div class="card-body">Content</div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Début</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="phase in phases" :key="phase.id">
+                  <td>{{ phase.debut }}</td>
+                  <td>{{ getPhaseType(phase.phase_type_id).designation }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -90,12 +125,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getSapeur']),
+    ...mapGetters(['getSapeur', 'getPhaseType']),
     ...mapState({
       id: state => state.intervention.active.id,
       data: state => state.intervention.active.data,
       quittances: state => state.intervention.active.quittances,
-      sapeurs: state => state.intervention.active.sapeurs
+      sapeurs: state => state.intervention.active.sapeurs,
+      phases: state => state.intervention.active.phases
     }),
     listSapeurs() {
       return Array.from(
@@ -107,7 +143,9 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch('fetchPhaseTypes')
     this.$store.dispatch('fetchInterventionQuittances', this.id)
+    this.$store.dispatch('fetchInterventionPhases', this.id)
     this.$store.dispatch('fetchInterventionSapeurs', this.id).then(() => {
       this.listSapeurs.forEach(
         c =>
