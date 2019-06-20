@@ -8,7 +8,7 @@
       role="dialog"
       v-if="visible"
     >
-      <div class="modal-dialog" :class="computedSize" role="document">
+      <div class="modal-dialog modal-dialog-scrollable" :class="computedSize" role="document">
         <component
           :is="component"
           :callback="callback"
@@ -40,7 +40,8 @@ export default {
     ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`),
     ModalMateriel: () => import(`@/components/modal/ModalMateriel`),
     ModalMission: () => import(`@/components/modal/ModalMission`),
-    ModalAppel: () => import(`@/components/modal/ModalAppel`)
+    ModalAppel: () => import(`@/components/modal/ModalAppel`),
+    ModalPresence: () => import(`@/components/modal/ModalPresence`)
   },
   data() {
     return {

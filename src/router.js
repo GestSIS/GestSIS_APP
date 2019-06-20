@@ -53,6 +53,11 @@ export default new Router({
       path: '/interventions',
       name: 'interventions',
       component: () => import('@/pages/Interventions.vue')
+    },
+    {
+      path: '/frais',
+      name: 'frais',
+      component: () => import('@/pages/Frais.vue')
     }
   ]
 })

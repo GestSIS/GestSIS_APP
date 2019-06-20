@@ -19,7 +19,8 @@ import {
   faPhone,
   faChild,
   faStop,
-  faPlay
+  faPlay,
+  faHourglassEnd
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
@@ -59,5 +60,6 @@ library.add(
   faPhone,
   faChild,
   faStop,
-  faPlay
+  faPlay,
+  faHourglassEnd
 )

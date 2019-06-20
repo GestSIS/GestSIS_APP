@@ -87,6 +87,11 @@
           <div class="form-group">
             <label for="m-exe-duree">Durée</label>
             <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <font-awesome-icon :icon="['fas', 'hourglass-end']" />
+                </div>
+              </div>
               <input
                 type="number"
                 class="form-control"

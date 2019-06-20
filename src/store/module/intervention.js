@@ -72,26 +72,18 @@ export default {
     //Missions
     [types.REMOVE_CURRENT_INTERVENTION_MISSION](state, payload) {
       state.active.missions = state.active.missions.filter(p => p.id != payload)
-    }
+    },
 
     //Sapeurs
-    // [types.ADD_CURRENT_INTERVENTION_SAPEURS](state, payload) {
-    //   state.active.sapeurs = [
-    //     ...state.active.sapeurs,
-    //     payload
-    //   ]
-    // },
-    // [types.REMOVE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
-    //   state.active.sapeurs = state.active.sapeurs.filter(
-    //     p => p.id !== payload
-    //   )
-    // },
-    // [types.EDIT_CURRENT_INTERVENTION_SAPEURS](state, payload) {
-    //   state.active.sapeurs = [
-    //     ...state.active.sapeurs.filter(p => p.id !== payload.id),
-    //     payload
-    //   ]
-    // }
+    [types.REMOVE_CURRENT_INTERVENTION_SAPEUR](state, payload) {
+      state.active.sapeurs = state.active.sapeurs.filter(p => p.id !== payload)
+    },
+    [types.EDIT_CURRENT_INTERVENTION_SAPEUR](state, payload) {
+      state.active.sapeurs = [
+        ...state.active.sapeurs.filter(p => p.id !== payload.id),
+        payload
+      ]
+    }
   },
   getters: {
     listInterventions: state => {
@@ -310,37 +302,31 @@ export default {
         await commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload)
         return data
       })
-    }
+    },
 
-    // addSapeurs({ state, commit }, payload) {
-    //   return InterventionService.addSapeurs(state.active.data.id, {
-    //     sapeurs: payload
-    //   }).then(async data => {
-    //     await commit(types.ADD_CURRENT_INTERVENTION_SAPEURS, data)
-    //     return data
-    //   })
-    // },
-    // editSapeurs({ state, commit }, payload) {
-    //   return InterventionService.editSapeurs(
-    //     state.active.data.id,
-    //     {
-    //       sapeurs: payload
-    //     }
-    //   ).then(async data => {
-    //     await commit(types.EDIT_CURRENT_INTERVENTION_SAPEURS, data)
-    //     return data
-    //   })
-    // },
-    // removeSapeurs({ state, commit }, payload) {
-    //   return InterventionService.removeSapeurs(
-    //     state.active.data.id,
-    //     {
-    //       sapeurs: payload
-    //     }
-    //   ).then(async data => {
-    //     await commit(types.REMOVE_CURRENT_INTERVENTION_SAPEURS, payload)
-    //     return data
-    //   })
-    // }
+    addPresences({ state, commit }, payload) {
+      return InterventionService.addSapeurs(state.active.data.id, {
+        sapeurs: payload
+      }).then(async data => {
+        await commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+        return data
+      })
+    },
+    editPresence({ state, commit }, payload) {
+      return InterventionService.editSapeurs(state.active.data.id, {
+        sapeurs: [payload]
+      }).then(async data => {
+        await commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload)
+        return data
+      })
+    },
+    removePresence({ state, commit }, payload) {
+      return InterventionService.removeSapeurs(state.active.data.id, {
+        sapeurs: [payload]
+      }).then(async data => {
+        await commit(types.REMOVE_CURRENT_INTERVENTION_SAPEUR, payload)
+        return data
+      })
+    }
   }
 }

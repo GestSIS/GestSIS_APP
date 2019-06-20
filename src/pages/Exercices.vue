@@ -47,15 +47,15 @@
             :css="css.table"
             :data-manager="dataManager"
           >
-<!--            <template slot="tableHeader">-->
-<!--              <template>-->
-<!--                <tr>-->
-<!--                  <th colspan="2">Basic Info</th>-->
-<!--                  <th colspan="6">Details</th>-->
-<!--                </tr>-->
-<!--              </template>-->
-<!--              <vuetable-row-header></vuetable-row-header>-->
-<!--            </template>-->
+            <!--            <template slot="tableHeader">-->
+            <!--              <template>-->
+            <!--                <tr>-->
+            <!--                  <th colspan="2">Basic Info</th>-->
+            <!--                  <th colspan="6">Details</th>-->
+            <!--                </tr>-->
+            <!--              </template>-->
+            <!--              <vuetable-row-header></vuetable-row-header>-->
+            <!--            </template>-->
             <div slot="details" slot-scope="props">
               <button
                 class="btn btn-link border-0"
@@ -132,7 +132,6 @@ export default {
     }
   },
   data() {
-    const svm = this
     return {
       css: CssForBootstrap4,
       toggles: {},
@@ -225,7 +224,10 @@ export default {
   },
   methods: {
     toggleDetails(id) {
-      this.toggles[id] = !this.toggles[id]
+      this.toggles = {
+        ...this.toggles,
+        [id]: !this.toggles[id]
+      }
       this.$refs.vuetable_exercices.toggleDetailRow(id)
     },
     dataManager(sortOrder) {

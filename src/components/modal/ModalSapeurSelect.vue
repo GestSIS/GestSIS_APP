@@ -6,7 +6,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="container-fluid">
+    <div class="modal-body">
       <div class="row mt-2">
         <div class="col-12">
           <div class="form-group d-flex align-items-center">

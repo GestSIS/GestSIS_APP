@@ -104,7 +104,7 @@ export default {
   removeSapeurs(interventionId, sapeursIds) {
     return Api().delete(
       '/interventions/' + interventionId + '/sapeurs/',
-      sapeursIds,
+      { data: sapeursIds },
       {
         headers: { 'Content-Type': 'application/json' }
       }

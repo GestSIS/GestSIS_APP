@@ -7,11 +7,16 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Présences</h3>
-            <button type="button" class="btn btn-primary" @click="addSapeur">
-              Ajouter un sapeur
+            <button type="button" class="btn btn-primary" @click="addPresences">
+              Ajouter des présences
             </button>
           </div>
           <div class="card-body">
+            <div class="badge-wrapper">
+              <span class="badge badge-secondary mr-2">Intervention</span>
+              <span class="badge badge-primary mr-2">Entretient</span>
+              <span class="badge badge-success mr-2">Piquet</span>
+            </div>
             <div class="table-wrapper">
               <table class="table table-bordered">
                 <thead>
@@ -22,55 +27,93 @@
                       colspan="4"
                       v-for="(col, i) in columns"
                       :key="i"
-                      class="text-center"
+                      class="text-center pr-1 pl-1"
                     >
                       {{ col }}h
                     </th>
                   </tr>
                   <tr>
-                    <th v-for="(col, i) in columns" :key="'1' + i"></th>
-                    <th v-for="(col, i) in columns" :key="'2' + i"></th>
-                    <th v-for="(col, i) in columns" :key="'3' + i"></th>
-                    <th v-for="(col, i) in columns" :key="'4' + i"></th>
+                    <th v-for="(col, i) in columns" :key="'1' + i" class="pr-1 pl-1"></th>
+                    <th v-for="(col, i) in columns" :key="'2' + i" class="pr-1 pl-1"></th>
+                    <th v-for="(col, i) in columns" :key="'3' + i" class="pr-1 pl-1"></th>
+                    <th v-for="(col, i) in columns" :key="'4' + i" class="pr-1 pl-1"></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!--                  <tr v-for="sapeur in listSapeurs" :key="sapeur.id">-->
-                  <tr
-                    v-for="presence in Object.keys(presences)"
-                    :key="presence"
-                  >
-                    <th>
-                      {{ getSapeur(parseInt(presence)) | sapeur }}
+                <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
+                  <tr>
+                    <th class="ml-0 pl-0">
+                      <button
+                        class="btn btn-link border-0"
+                        @click="expandSap(s.id)"
+                      >
+                        <font-awesome-icon
+                          v-if="toggles[s.id] || false"
+                          :icon="['fas', 'angle-down']"
+                        />
+                        <font-awesome-icon
+                          v-if="!(toggles[s.id] || false)"
+                          :icon="['fas', 'angle-right']"
+                        />
+                      </button>
+                      {{ s | sapeur }}
                     </th>
-                    <td>
+                    <td class="text-center">
                       <div class="custom-control custom-checkbox d-inline">
                         <input
                           type="checkbox"
                           class="custom-control-input"
-                          :id="presence"
+                          :id="s.id"
                           :checked="
                             quittances.filter(
-                              s => s.sapeur_id === parseInt(presence)
+                              q => q.sapeur_id === parseInt(s.id)
                             ).length === 1
                           "
                         />
                         <label
                           class="custom-control-label"
-                          :for="presence"
+                          :for="s.id"
                           @click="() => {}"
                         ></label>
                       </div>
                     </td>
                     <td
                       v-for="i in Array(columns.length * 4).keys()"
-                      :key="presence + '-' + i"
+                      :key="s.id + '-' + i"
                       :class="{
-                        'bg-secondary': presences[parseInt(presence)][i] === 1,
-                        'bg-success': presences[parseInt(presence)][i] === 2
+                        'bg-secondary': computedPresences[s.id][i] === 1,
+                        'bg-success': computedPresences[s.id][i] === 2
                       }"
+                      class="pr-1 pl-1"
                     ></td>
                   </tr>
+                  <template v-if="toggles[s.id]">
+                    <tr
+                      v-for="p in sortedPresences(s.id)"
+                      :key="p.id"
+                      :class="{
+                        'alert-success': !!p.piquet === true
+                      }"
+                    >
+                      <td :colspan="2 + columns.length * 4">
+                        {{ p.debut | datePresence }} -
+                        {{ p.fin | datePresence }}
+                        <button
+                          type="button"
+                          class="btn btn-outline-primary border-0 ml-2"
+                          @click="editPresence(p)"
+                        >
+                          <font-awesome-icon :icon="['far', 'edit']" />
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-outline-danger border-0"
+                          @click="removePresence(p.id)"
+                        >
+                          <font-awesome-icon :icon="['far', 'trash-alt']" />
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
                 </tbody>
               </table>
             </div>
@@ -84,7 +127,7 @@
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Phases de l'intervention</h3>
             <button type="button" class="btn btn-primary" @click="newPhase">
-              Nouvelle phaseContent
+              Nouvelle phase
             </button>
           </div>
           <div class="card-body">
@@ -110,18 +153,14 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'InterventionTabSapeurs',
   data() {
     return {
       columns: [],
-      presences: {
-        //sapeur_id:{
-        //num col:type,
-        //}
-      }
+      toggles: {}
     }
   },
   computed: {
@@ -130,31 +169,40 @@ export default {
       id: state => state.intervention.active.id,
       data: state => state.intervention.active.data,
       quittances: state => state.intervention.active.quittances,
-      sapeurs: state => state.intervention.active.sapeurs,
+      presences: state => state.intervention.active.sapeurs,
       phases: state => state.intervention.active.phases
     }),
     listSapeurs() {
       return Array.from(
         new Set([
-          ...this.sapeurs.map(s => s.sapeur_id),
+          ...this.presences.map(s => s.sapeur_id),
           ...this.quittances.map(s => s.sapeur_id)
         ])
       ).map(id => this.getSapeur(id))
+    },
+    sortedSapeurs() {
+      return [...Object.keys(this.computedPresences)
+        .map(s => parseInt(s))
+        .map(this.getSapeur)
+        .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom)]
+    },
+    computedPresences() {
+      let temp = []
+      this.listSapeurs.forEach(
+        s =>
+          (temp = {
+            ...temp,
+            [s.id]: this.computeSapeur(s.id)
+          })
+      )
+      return temp
     }
   },
   mounted() {
     this.$store.dispatch('fetchPhaseTypes')
     this.$store.dispatch('fetchInterventionQuittances', this.id)
     this.$store.dispatch('fetchInterventionPhases', this.id)
-    this.$store.dispatch('fetchInterventionSapeurs', this.id).then(() => {
-      this.listSapeurs.forEach(
-        c =>
-          (this.presences = {
-            ...this.presences,
-            [c.id]: this.computeSapeur(c.id)
-          })
-      )
-    })
+    this.$store.dispatch('fetchInterventionSapeurs', this.id)
 
     let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut)
     let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin)
@@ -164,25 +212,43 @@ export default {
     for (let i = 0; i < diff; ++i) {
       this.columns.push((min + i) % 24)
     }
-
-    // this.listSapeurs.forEach(
-    //   c => (this.presences[c.id] = this.computeSapeur(c.id))
-    // )
-    //TODO Init columns
-    //Compute presence to
+  },
+  filters: {
+    datePresence(d) {
+      return d.slice(-8, -3)
+    }
   },
   methods: {
-    addSapeur() {
+    ...mapMutations(['SHOW_MODAL']),
+    addPresences() {
+      this.SHOW_MODAL({
+        component: 'ModalPresence',
+        callback: () => {},
+        data: { mode: 'add', id: this.data.id }
+      })
+    },
+    editPresence(presence) {
       //TODO
+      let clone = {}
+      Object.assign(clone, presence)
+      this.SHOW_MODAL({
+        component: 'ModalPresence',
+        callback: () => {},
+        data: { mode: 'edit', presence: clone }
+      })
+    },
+    removePresence(id) {
+      this.$store.dispatch('removePresence', id)
     },
     newPhase() {
       //TODO
+      this.$store.dispatch('addPresences')
     },
     computeSapeur(id) {
       let res = {}
       let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut)
 
-      this.sapeurs
+      this.presences
         .filter(s => s.sapeur_id === id)
         .forEach(q => {
           let diff = ((new Date(q.debut) - start) / 3600000) * 4
@@ -196,12 +262,32 @@ export default {
           }
         })
       return res
+    },
+    expandSap(id) {
+      this.toggles = {
+        ...this.toggles,
+        [id]: !this.toggles[id]
+      }
+    },
+    sortedPresences(id) {
+      return this.presences
+        .filter(p => p.sapeur_id === id)
+        .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut))
     }
   }
 }
 </script>
 
 <style scoped>
+.no-wrap {
+  white-space: nowrap;
+}
+
+.badge-wrapper {
+  font-size: 16px;
+  margin-bottom: 1rem;
+}
+
 .table-wrapper {
   overflow-x: scroll;
   overflow-y: visible;
