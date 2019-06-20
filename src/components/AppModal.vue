@@ -8,7 +8,11 @@
       role="dialog"
       v-if="visible"
     >
-      <div class="modal-dialog modal-dialog-scrollable" :class="computedSize" role="document">
+      <div
+        class="modal-dialog modal-dialog-scrollable"
+        :class="computedSize"
+        role="document"
+      >
         <component
           :is="component"
           :callback="callback"

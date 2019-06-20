@@ -33,10 +33,26 @@
                     </th>
                   </tr>
                   <tr>
-                    <th v-for="(col, i) in columns" :key="'1' + i" class="pr-1 pl-1"></th>
-                    <th v-for="(col, i) in columns" :key="'2' + i" class="pr-1 pl-1"></th>
-                    <th v-for="(col, i) in columns" :key="'3' + i" class="pr-1 pl-1"></th>
-                    <th v-for="(col, i) in columns" :key="'4' + i" class="pr-1 pl-1"></th>
+                    <th
+                      v-for="(col, i) in columns"
+                      :key="'1' + i"
+                      class="pr-1 pl-1"
+                    ></th>
+                    <th
+                      v-for="(col, i) in columns"
+                      :key="'2' + i"
+                      class="pr-1 pl-1"
+                    ></th>
+                    <th
+                      v-for="(col, i) in columns"
+                      :key="'3' + i"
+                      class="pr-1 pl-1"
+                    ></th>
+                    <th
+                      v-for="(col, i) in columns"
+                      :key="'4' + i"
+                      class="pr-1 pl-1"
+                    ></th>
                   </tr>
                 </thead>
                 <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
@@ -81,7 +97,8 @@
                       :key="s.id + '-' + i"
                       :class="{
                         'bg-secondary': computedPresences[s.id][i] === 1,
-                        'bg-success': computedPresences[s.id][i] === 2
+                        'bg-primary': computedPresences[s.id][i] === 2,
+                        'bg-success': computedPresences[s.id][i] === 3
                       }"
                       class="pr-1 pl-1"
                     ></td>
@@ -181,10 +198,12 @@ export default {
       ).map(id => this.getSapeur(id))
     },
     sortedSapeurs() {
-      return [...Object.keys(this.computedPresences)
-        .map(s => parseInt(s))
-        .map(this.getSapeur)
-        .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom)]
+      return [
+        ...Object.keys(this.computedPresences)
+          .map(s => parseInt(s))
+          .map(this.getSapeur)
+          .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom)
+      ]
     },
     computedPresences() {
       let temp = []
@@ -252,16 +271,36 @@ export default {
         .filter(s => s.sapeur_id === id)
         .forEach(q => {
           let diff = ((new Date(q.debut) - start) / 3600000) * 4
+          //Durée de la présence en quart d'heures
           let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000) * 4
 
           for (let i = 0; i < duree; ++i) {
+            let code = null
+            if (q.piquet) {
+              //Piquet
+              code = 3
+            } else {
+              //DetectPhase
+              let currentDate = new Date(q.debut)
+              currentDate.setMinutes(currentDate.getMinutes() + i * 15)
+              code = this.getPhaseTypeAt(currentDate)
+            }
             res = {
               ...res,
-              [diff + i]: q.piquet ? 2 : 1
+              [diff + i]: code
             }
           }
         })
       return res
+    },
+    getPhaseTypeAt(date) {
+      let res = this.phases
+        .filter(p => new Date(p.debut) <= date)
+        .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut))
+      if(res.length > 0){
+        return res[0].id
+      }
+      return 1
     },
     expandSap(id) {
       this.toggles = {
