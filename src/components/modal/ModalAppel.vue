@@ -138,7 +138,7 @@ export default {
           .catch(errors => (this.errors = errors))
       } else {
         this.$store
-          .dispatch('editAppel', this.activeAppel)
+          .dispatch('editAppel', { ...this.activeAppel, date2: undefined })
           .then(() => {
             this.errors = {}
             this.HIDE_MODAL()

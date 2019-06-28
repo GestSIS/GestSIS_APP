@@ -35,6 +35,9 @@ export default {
   name: 'autocomplete',
 
   props: {
+    value: {
+      default: ''
+    },
     items: {
       type: Array,
       required: false,
@@ -50,17 +53,15 @@ export default {
       required: false
     }
   },
-
   data() {
     return {
       isOpen: false,
       results: [],
-      search: '',
+      search: this.value,
       isLoading: false,
       arrowCounter: 0
     }
   },
-
   methods: {
     onChange() {
       // Let's warn the parent that a change was made
@@ -111,6 +112,9 @@ export default {
       if (val.length !== oldValue.length) {
         this.results = val
       }
+    },
+    value: function(val) {
+      this.search = val
     }
   },
   mounted() {
