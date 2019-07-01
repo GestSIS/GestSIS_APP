@@ -3,11 +3,19 @@ import PhaseTypeService from '../../services/PhaseTypeService'
 
 export default {
   state: {
-    liste: []
+    liste: [],
+    active: {
+      id: null,
+      data: {}
+    }
   },
   mutations: {
     [types.UPDATE_PHASE_TYPE_LIST](state, payload) {
       state.liste = payload
+    },
+    [types.UPDATE_CURRENT_PHASE](state, payload) {
+      state.active.data = payload
+      state.active.id = payload.id
     }
   },
   getters: {
@@ -19,6 +27,16 @@ export default {
     fetchPhaseTypes({ commit }) {
       return PhaseTypeService.getPhases().then(data => {
         return commit(types.UPDATE_PHASE_TYPE_LIST, data)
+      })
+    },
+    updateActivePhase({ commit }, payload) {
+      return commit(types.UPDATE_CURRENT_PHASE, payload)
+    },
+    resetActivePhase({ commit }) {
+      return commit(types.UPDATE_CURRENT_PHASE, {
+        debut: null,
+        id: null,
+        phase_type_id: null
       })
     }
   }

@@ -81,6 +81,8 @@ export default {
     setResult(result) {
       this.search = result
       this.isOpen = false
+      this.arrowCounter = -1
+      this.$emit('input', this.search)
     },
     onArrowDown() {
       if (this.arrowCounter < this.results.length) {

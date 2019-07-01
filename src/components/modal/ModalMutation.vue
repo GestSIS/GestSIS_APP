@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'ModalMutation',
@@ -73,7 +73,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeSapeurId', 'listLocalites', 'activeMutation'])
+    ...mapState({
+      activeSapeurId: state => state.sapeur.id,
+      activeMutation: state => state.mutation.active.data
+    }),
+    ...mapGetters(['listLocalitesSIS'])
   },
   mounted() {
     if (this.listLocalites.length === 0) {

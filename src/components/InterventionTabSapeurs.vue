@@ -260,8 +260,15 @@ export default {
       this.$store.dispatch('removePresence', id)
     },
     newPhase() {
-      //TODO
-      this.$store.dispatch('addPresences')
+      this.$store.dispatch('resetActivePhase')
+      this.SHOW_MODAL({
+        component: 'ModalPhase',
+        callback: () => {},
+        data: {
+          min: this.data.date_debut + ' ' + this.data.heure_debut,
+          max: this.data.date_fin + ' ' + this.data.heure_fin
+        }
+      })
     },
     computeSapeur(id) {
       let res = {}
@@ -297,7 +304,7 @@ export default {
       let res = this.phases
         .filter(p => new Date(p.debut) <= date)
         .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut))
-      if(res.length > 0){
+      if (res.length > 0) {
         return res[0].id
       }
       return 1

@@ -156,7 +156,7 @@ export default {
     }
   },
   watch: {
-    activeInterventionId() {
+    id() {
       let svm = this
       if (!this.newMode) {
         let id = parseInt(this.id)

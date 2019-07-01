@@ -42,9 +42,9 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
-          <option v-for="s in listSapeurs" :key="s.id" :value="s.id">{{
-            s | sapeur
-          }}</option>
+          <option v-for="s in listSapeurs" :key="s.id" :value="s.id"
+            >{{ s | sapeur }}
+          </option>
         </select>
       </div>
       <div class="form-group">
@@ -146,7 +146,11 @@ export default {
 
       if ((this.activeMission.id || 0) === 0) {
         this.$store
-          .dispatch('addMission', this.activeMission)
+          .dispatch('addMission', {
+            ...this.activeMission,
+            debut2: undefined,
+            fin2: undefined
+          })
           .then(() => {
             this.errors = {}
             this.HIDE_MODAL()
@@ -154,7 +158,11 @@ export default {
           .catch(errors => (this.errors = errors))
       } else {
         this.$store
-          .dispatch('editMission', this.activeMission)
+          .dispatch('editMission', {
+            ...this.activeMission,
+            debut2: undefined,
+            fin2: undefined
+          })
           .then(() => {
             this.errors = {}
             this.HIDE_MODAL()

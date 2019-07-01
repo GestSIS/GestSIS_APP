@@ -2,7 +2,7 @@ import types from '../mutationTypes'
 
 export default {
   state: {
-    currentMutation: {
+    active: {
       id: 0,
       localite_id: 0,
       incorporation: null,
@@ -13,11 +13,6 @@ export default {
   mutations: {
     [types.UPDATE_CURRENT_MUTATION](state, payload) {
       state.currentMutation = payload
-    }
-  },
-  getters: {
-    activeMutation: state => {
-      return state.currentMutation
     }
   },
   actions: {

@@ -20,9 +20,13 @@ export default {
     [types.UPDATE_INTERVENTION_LIST](state, payload) {
       state.liste = payload
     },
-    // [types.ADD_INTERVENTION](state, payload) {
-    //   state.liste = [...state.liste, payload]
-    // },
+    [types.ADD_INTERVENTION](state, payload) {
+      state.liste = [...state.liste, payload]
+      state.active.data = {
+        ...payload
+      }
+      state.active.id = payload.id
+    },
     [types.SELECT_CURRENT_INTERVENTION](state, payload) {
       state.active.id = payload
     },
@@ -83,6 +87,11 @@ export default {
         ...state.active.sapeurs.filter(p => p.id !== payload.id),
         payload
       ]
+    },
+
+    //Phases
+    [types.REMOVE_CURRENT_INTERVENTION_PHASE](state, payload) {
+      state.active.phases = state.active.phases.filter(p => p.id !== payload)
     }
   },
   getters: {
@@ -184,6 +193,7 @@ export default {
         ...state.active.data,
         exercice_comptable_id: getters.currentExerciceComptableId
       }).then(async data => {
+        console.log(data)
         await commit(types.ADD_INTERVENTION, data)
         await commit(types.SELECT_CURRENT_INTERVENTION, data.id)
         await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
@@ -325,6 +335,33 @@ export default {
         sapeurs: [payload]
       }).then(async data => {
         await commit(types.REMOVE_CURRENT_INTERVENTION_SAPEUR, payload)
+        return data
+      })
+    },
+
+    //Phases
+    addPhase({ state, commit }, payload) {
+      return InterventionService.addPhase(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
+          return data
+        }
+      )
+    },
+    editPhase({ state, commit }, payload) {
+      return InterventionService.editPhase(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, payload)
+          return data
+        }
+      )
+    },
+    removePhase({ state, commit }, payload) {
+      return InterventionService.removePhase(
+        state.active.data.id,
+        payload
+      ).then(async data => {
+        await commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload)
         return data
       })
     }

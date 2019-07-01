@@ -45,7 +45,8 @@ export default {
     ModalMateriel: () => import(`@/components/modal/ModalMateriel`),
     ModalMission: () => import(`@/components/modal/ModalMission`),
     ModalAppel: () => import(`@/components/modal/ModalAppel`),
-    ModalPresence: () => import(`@/components/modal/ModalPresence`)
+    ModalPresence: () => import(`@/components/modal/ModalPresence`),
+    ModalPhase: () => import(`@/components/modal/ModalPhase`)
   },
   data() {
     return {

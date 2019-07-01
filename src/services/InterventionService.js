@@ -159,5 +159,30 @@ export default {
     return Api().delete('/interventions/' + interventionId + '/missions/', {
       data: { missions: [missionId] }
     })
+  },
+
+  //Phase
+  addPhase(interventionId, phaseData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/phases/',
+      { phases: [phaseData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  editPhase(interventionId, phaseData) {
+    return Api().put(
+      '/interventions/' + interventionId + '/phases/',
+      { phases: [phaseData] },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removePhase(interventionId, phaseId) {
+    return Api().delete('/interventions/' + interventionId + '/phases/', {
+      data: { phases: [phaseId] }
+    })
   }
 }
