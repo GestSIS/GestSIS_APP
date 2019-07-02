@@ -20,9 +20,6 @@ export default {
     }
   },
   getters: {
-    listGrades: state => {
-      return state.liste
-    },
     getGrade: state => grade_id => {
       return state.liste.filter(g => g.id === grade_id)[0]
     },

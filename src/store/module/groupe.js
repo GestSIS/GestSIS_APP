@@ -15,9 +15,6 @@ export default {
     }
   },
   getters: {
-    listGroupes: state => {
-      return state.liste
-    },
     listGroupesSapeurs: state => {
       return state.listeWithSapeurs
     },

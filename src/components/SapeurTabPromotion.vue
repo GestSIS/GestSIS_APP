@@ -53,17 +53,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'SapeurTabPromotion',
   computed: {
-    ...mapGetters([
-      'activeSapeurGrades',
-      'activeSapeurId',
-      'listGrades',
-      'getGrade'
-    ])
+    ...mapState({
+      listGrades: state => state.grade.liste,
+      activeSapeurId: state => state.sapeur.active.id,
+      activeSapeurGrades: state => state.sapeur.active.grades
+    }),
+    ...mapGetters(['getGrade'])
   },
   mounted() {
     if (this.listGrades.length === 0) {

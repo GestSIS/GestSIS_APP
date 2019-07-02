@@ -205,7 +205,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'ModalSapeurSelect',
@@ -233,15 +233,14 @@ export default {
     })
   },
   computed: {
-    ...mapGetters([
-      'getSapeur',
-      'listSapeur',
-      'listFonctions',
-      'listGrades',
-      'listGroupes',
-      'listCivilites',
-      'treeGroupesSapeurs'
-    ]),
+    ...mapState({
+      listGroupes: state => state.groupe.liste,
+      listGrades: state => state.grade.liste,
+      listCivilites: state => state.baseData.civilites,
+      listFonctions: state => state.fonction.liste,
+      listSapeurs: state => state.sapeur.liste
+    }),
+    ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
     flattenedTree() {
       let flattened = []
       let svm = this

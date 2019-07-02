@@ -33,17 +33,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'SapeurTabOrganisation',
   computed: {
-    ...mapGetters([
-      'activeSapeurId',
-      'activeSapeurGroupes',
-      'listGroupes',
-      'getGroupe'
-    ])
+    ...mapState({
+      listGroupes: state => state.groupe.liste,
+      activeSapeurId: state => state.sapeur.active.id,
+      activeSapeurGroupes: state => state.sapeur.active.groupes
+    }),
+    ...mapGetters(['getGroupe'])
   },
   mounted() {
     if (this.listGroupes.length === 0) {

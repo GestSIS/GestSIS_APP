@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceComptable from '@/components/ExerciceComptable'
@@ -97,7 +97,7 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listInterventions)
+        this.$refs.vuetable.setData(this.listeInterventions)
       })
     }
   },
@@ -107,14 +107,14 @@ export default {
     this.$store.dispatch('fetchTypeInterventions')
     this.$store.dispatch('fetchInterventionTraitements')
 
-    if (this.listInterventions.length === 0) {
+    if (this.listeInterventions.length === 0) {
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false
-        this.$refs.vuetable.setData(this.listInterventions)
+        this.$refs.vuetable.setData(this.listeInterventions)
       })
     } else {
       this.loading = false
-      this.$refs.vuetable.setData(this.listInterventions)
+      this.$refs.vuetable.setData(this.listeInterventions)
     }
   },
   data() {
@@ -211,9 +211,12 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      listeInterventions: state => state.intervention.liste,
+      listeInterventionsTypes: state => state.typeIntervention.liste
+    }),
     ...mapGetters([
       'currentExerciceComptableId',
-      'listInterventions',
       'activeInterventionId',
       'getTypeIntervention',
       'getLocalite',

@@ -421,7 +421,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -460,16 +460,18 @@ export default {
     this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId)
   },
   computed: {
+    ...mapState({
+      listCivilites: state => state.baseData.civilites,
+      listFonctions: state => state.fonction.liste,
+      listGrades: state => state.grade.liste
+    }),
     ...mapGetters([
       'activeSapeur',
       'activeSapeurId',
       'activeSapeurMutations',
       'activeSapeurTelephones',
-      'listCivilites',
       'listLocalitesSis',
       'listTelephoneTypes',
-      'listFonctions',
-      'listGrades',
       'getLocalite',
       'getTelephone'
     ]),

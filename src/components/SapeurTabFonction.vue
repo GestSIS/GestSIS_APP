@@ -54,17 +54,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'SapeurTabFonction',
   computed: {
-    ...mapGetters([
-      'activeSapeurFonctions',
-      'activeSapeurId',
-      'listFonctions',
-      'getFonction'
-    ])
+    ...mapState({
+      listFonctions: state => state.fonction.liste,
+      activeSapeurId: state => state.sapeur.active.id,
+      activeSapeurFonctions: state => state.sapeur.active.fonctions
+    }),
+    ...mapGetters(['getFonction'])
   },
   mounted() {
     if (this.listFonctions.length === 0) {

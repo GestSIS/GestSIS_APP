@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 //TODO: Empêcher fonctions à double
 
@@ -76,7 +76,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeSapeurId', 'listFonctions', 'activeFonction'])
+    ...mapState({
+      listFonctions: state => state.fonction.liste
+    }),
+    ...mapGetters(['activeSapeurId', 'activeFonction'])
   },
   mounted() {
     if (this.listFonctions.length === 0) {

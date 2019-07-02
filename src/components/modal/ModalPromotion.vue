@@ -25,9 +25,9 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
-          <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
-            g.designation
-          }}</option>
+          <option v-for="g in listGrades" :key="g.id" :value="g.id"
+            >{{ g.designation }}
+          </option>
         </select>
       </div>
       <div class="form-group">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'ModalPromotion',
@@ -63,7 +63,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeSapeurId', 'listGrades', 'activeGrade'])
+    ...mapState({
+      listGrades: state => state.grade.liste
+    }),
+    ...mapGetters(['activeSapeurId', 'activeGrade'])
   },
   mounted() {
     if (this.listGrades.length === 0) {

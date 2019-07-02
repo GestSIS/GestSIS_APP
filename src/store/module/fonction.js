@@ -21,9 +21,6 @@ export default {
     }
   },
   getters: {
-    listFonctions: state => {
-      return state.liste
-    },
     getFonction: state => fonction_id => {
       return state.liste.filter(f => f.id === fonction_id)[0]
     },

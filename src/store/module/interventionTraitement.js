@@ -7,19 +7,12 @@ export default {
   },
   mutations: {
     [types.UPDATE_INTERVENTION_TRAITEMENT_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload.slice(0).sort((t1, t2) => t1.designation > t2.designation)
     }
   },
   getters: {
-    listInterventionTraitement: state => {
-      return state.liste
-        .slice(0)
-        .sort((t1, t2) => t1.designation > t2.designation)
-    },
     getInterventionTraitement: state => intervention_traitement_id => {
-      return state.liste.filter(
-        t => t.id === intervention_traitement_id
-      )[0]
+      return state.liste.filter(t => t.id === intervention_traitement_id)[0]
     }
   },
   actions: {
