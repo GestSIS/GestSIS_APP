@@ -3,7 +3,7 @@ import GradeService from '../../services/GradeService'
 
 export default {
   state: {
-    grades: [],
+    liste: [],
     currentGrade: {
       id: 0,
       grade_id: 0,
@@ -13,7 +13,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_GRADE_LIST](state, payload) {
-      state.grades = payload
+      state.liste = payload
     },
     [types.UPDATE_CURRENT_GRADE](state, payload) {
       state.currentGrade = payload
@@ -21,10 +21,10 @@ export default {
   },
   getters: {
     listGrades: state => {
-      return state.grades
+      return state.liste
     },
     getGrade: state => grade_id => {
-      return state.grades.filter(g => g.id === grade_id)[0]
+      return state.liste.filter(g => g.id === grade_id)[0]
     },
     activeGrade: state => {
       return state.currentGrade

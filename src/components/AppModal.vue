@@ -46,7 +46,9 @@ export default {
     ModalMission: () => import(`@/components/modal/ModalMission`),
     ModalAppel: () => import(`@/components/modal/ModalAppel`),
     ModalPresence: () => import(`@/components/modal/ModalPresence`),
-    ModalPhase: () => import(`@/components/modal/ModalPhase`)
+    ModalPhase: () => import(`@/components/modal/ModalPhase`),
+    ModalImputerExercice: () =>
+      import(`@/components/modal/ModalImputerExercice`)
   },
   data() {
     return {
@@ -62,7 +64,12 @@ export default {
       data: state => state.modal.modalData
     }),
     computedSize() {
-      return this.size < 0 ? 'modal-sm' : this.size > 0 ? 'modal-lg' : ''
+      const sizesClass = {
+        [-1]: 'modal-sm',
+        1: 'modal-lg',
+        2: 'modal-xl'
+      }
+      return sizesClass[this.size]
     }
   },
   created() {

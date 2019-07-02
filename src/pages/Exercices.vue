@@ -262,7 +262,7 @@ export default {
         data: local
       }
     },
-    onRowClass(dataItem, index) {
+    onRowClass(dataItem) {
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',

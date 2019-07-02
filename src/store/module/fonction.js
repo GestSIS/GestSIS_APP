@@ -3,7 +3,7 @@ import FonctionService from '../../services/FonctionService'
 
 export default {
   state: {
-    fonctions: [],
+    liste: [],
     currentFonction: {
       id: 0,
       fonction_id: 0,
@@ -14,7 +14,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_FONCTION_LIST](state, payload) {
-      state.fonctions = payload
+      state.liste = payload
     },
     [types.UPDATE_CURRENT_FONCTION](state, payload) {
       state.currentFonction = payload
@@ -22,10 +22,10 @@ export default {
   },
   getters: {
     listFonctions: state => {
-      return state.fonctions
+      return state.liste
     },
     getFonction: state => fonction_id => {
-      return state.fonctions.filter(f => f.id === fonction_id)[0]
+      return state.liste.filter(f => f.id === fonction_id)[0]
     },
     activeFonction: state => {
       return state.currentFonction

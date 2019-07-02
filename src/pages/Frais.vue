@@ -100,8 +100,8 @@ export default {
     // ...mapGetters(['activeExerciceData']),
   },
   mounted() {
-    // this.$store.dispatch('fetchListSapeur')
-    // this.$store.dispatch('fetchLocalites')
+    this.$store.dispatch('fetchIndemnitesTypes')
+    this.$store.dispatch('fetchFraisTypes')
     // this.$store.dispatch('fetchExerciceCategories')
     // this.$store.dispatch('fetchExercicesComptables')
     // this.$store.dispatch('fetchExcuseTypes')

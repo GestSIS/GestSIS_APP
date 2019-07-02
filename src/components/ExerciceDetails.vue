@@ -80,7 +80,7 @@ export default {
       svm.convoque = data.filter(s => s.convoque).length
       svm.present = data.filter(s => s.present).length
       svm.remplace = data.filter(s => s.remplace).length
-      svm.excuse = data.filter(s => s.excuse).length
+      svm.excuse = data.filter(s => s.excuse_type_id).length
       svm.amende = data.filter(s => s.amende).length
       svm.loading = false
     })

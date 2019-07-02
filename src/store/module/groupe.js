@@ -3,27 +3,27 @@ import GroupeService from '../../services/GroupeService'
 
 export default {
   state: {
-    groupes: [],
-    groupesSapeurs: []
+    liste: [],
+    listeWithSapeurs: []
   },
   mutations: {
     [types.UPDATE_GROUPE_LIST](state, payload) {
-      state.groupes = payload
+      state.liste = payload
     },
     [types.UPDATE_GROUPE_SAPEUR_LIST](state, payload) {
-      state.groupesSapeurs = payload
+      state.listeWithSapeurs = payload
     }
   },
   getters: {
     listGroupes: state => {
-      return state.groupes
+      return state.liste
     },
     listGroupesSapeurs: state => {
-      return state.groupesSapeurs
+      return state.listeWithSapeurs
     },
     treeGroupesSapeurs: state => {
       let insideGroupes = function(groupeId) {
-        return state.groupesSapeurs
+        return state.listeWithSapeurs
           .filter(i => i.pere_id === groupeId)
           .map(s => Object.assign({}, s))
           .map(s => {
@@ -37,7 +37,7 @@ export default {
       return insideGroupes(null)
     },
     getGroupe: state => groupe_id => {
-      return state.groupes.filter(g => g.id === groupe_id)[0]
+      return state.liste.filter(g => g.id === groupe_id)[0]
     }
   },
   actions: {

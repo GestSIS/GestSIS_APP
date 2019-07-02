@@ -8,6 +8,11 @@
             Enregistrer
           </button>
         </div>
+        <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
         <vuetable
           v-show="!loading"
           ref="vuetable_frais_exercices"
@@ -27,13 +32,13 @@
           <!--              <vuetable-row-header></vuetable-row-header>-->
           <!--            </template>-->
           <div slot="actions" slot-scope="props">
-            <router-link
-              tag="button"
-              :to="'/exercices/' + props.rowData.id"
+            <button
               class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 3"
+              @click="imputerExercice(props.rowData.id)"
             >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </router-link>
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
           </div>
         </vuetable>
       </div>
@@ -42,7 +47,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
@@ -68,16 +73,11 @@ export default {
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
     }
-    if (this.listExercices.length === 0) {
-      if (this.currentExerciceComptableId || 0 !== 0) {
-        this.$store.dispatch('fetchListExercice').then(() => {
-          this.loading = false
-          this.$refs.vuetable_frais_exercices.setData(this.computedData)
-        })
-      }
-    } else {
-      this.loading = false
-      this.$refs.vuetable_frais_exercices.setData(this.computedData)
+    if (this.currentExerciceComptableId || 0 !== 0) {
+      this.$store.dispatch('fetchListExercice').then(() => {
+        this.loading = false
+        this.$refs.vuetable_frais_exercices.setData(this.computedData)
+      })
     }
   },
   data() {
@@ -184,12 +184,22 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
       }
       this.$refs.vuetable_frais_exercices.toggleDetailRow(id)
+    },
+    imputerExercice(exerciceId) {
+      //TODO
+
+      this.SHOW_MODAL({
+        component: 'ModalImputerExercice',
+        data: { id: exerciceId },
+        size: 2
+      })
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return
@@ -206,7 +216,7 @@ export default {
         data: local
       }
     },
-    onRowClass(dataItem, index) {
+    onRowClass(dataItem) {
       const statutsClass = {
         0: '', //'Annulé',
         1: '', //'A saisir',
