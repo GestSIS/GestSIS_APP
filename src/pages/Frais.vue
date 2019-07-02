@@ -47,19 +47,24 @@
             >
               Interventions
             </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'annuel' }"
+              role="tab"
+              @click.prevent="activeTab = 'annuel'"
+            >
+              Indemnités et Frais annuels
+            </button>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
-            <!--            <ExerciceTabSapeurs-->
-            <!--              v-if="activeTab === 'comptes'"-->
-            <!--            ></ExerciceTabSapeurs>-->
-            <!--            <ExerciceTabSapeurs-->
-            <!--              v-if="activeTab === 'exercices'"-->
-            <!--            ></ExerciceTabSapeurs>-->
-            <!--            <ExerciceTabSapeurs-->
-            <!--              v-if="activeTab === 'interventions'"-->
-            <!--            ></ExerciceTabSapeurs>-->
+            <FraisTabComptes v-if="activeTab === 'comptes'"></FraisTabComptes>
+            <FraisTabExercice v-if="activeTab === 'exercices'">
+            </FraisTabExercice>
+            <FraisTabIntervention v-if="activeTab === 'interventions'">
+            </FraisTabIntervention>
+            <FraisTabAnnuel v-if="activeTab === 'annuel'"></FraisTabAnnuel>
           </div>
         </div>
       </div>
@@ -71,11 +76,19 @@
 // import { mapGetters } from 'vuex'
 
 import ExerciceComptable from '@/components/ExerciceComptable'
+import FraisTabExercice from '@/components/FraisTabExercice'
+import FraisTabComptes from '@/components/FraisTabComptes'
+import FraisTabIntervention from '@/components/FraisTabIntervention'
+import FraisTabAnnuel from '@/components/FraisTabAnnuel'
 
 export default {
-  name: 'exercice',
+  name: 'frais',
   components: {
-    ExerciceComptable
+    ExerciceComptable,
+    FraisTabComptes,
+    FraisTabExercice,
+    FraisTabIntervention,
+    FraisTabAnnuel
   },
   data() {
     return {

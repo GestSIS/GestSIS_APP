@@ -1,116 +1,64 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Exercices
-            </li>
-          </ol>
-        </nav>
-      </div>
-      <div class="col-md-4 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Liste des exercices</h3>
+  <div class="row">
+    <div class="col-sm-12 col-xl-12">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Exercices</h3>
+          <button @click.prevent="save" class="btn btn-primary">
+            Enregistrer
+          </button>
+        </div>
+        <vuetable
+          v-show="!loading"
+          ref="vuetable_frais_exercices"
+          :api-mode="false"
+          :fields="fields"
+          :css="css.table"
+          :data-manager="dataManager"
+          :row-class="onRowClass"
+        >
+          <!--            <template slot="tableHeader">-->
+          <!--              <template>-->
+          <!--                <tr>-->
+          <!--                  <th colspan="2">Basic Info</th>-->
+          <!--                  <th colspan="6">Details</th>-->
+          <!--                </tr>-->
+          <!--              </template>-->
+          <!--              <vuetable-row-header></vuetable-row-header>-->
+          <!--            </template>-->
+          <div slot="actions" slot-scope="props">
             <router-link
               tag="button"
-              to="/exercices/new"
-              class="btn btn-outline-primary"
+              :to="'/exercices/' + props.rowData.id"
+              class="btn btn-outline-primary border-0"
             >
-              Ajouter un exercice
+              <font-awesome-icon :icon="['far', 'edit']" />
             </router-link>
           </div>
-          <div class="card-body d-flex justify-content-center" v-if="loading">
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </div>
-          <vuetable
-            v-show="!loading"
-            ref="vuetable_exercices"
-            :api-mode="false"
-            :fields="fields"
-            :detail-row-component="detailRow"
-            :css="css.table"
-            :data-manager="dataManager"
-            :row-class="onRowClass"
-          >
-            <!--            <template slot="tableHeader">-->
-            <!--              <template>-->
-            <!--                <tr>-->
-            <!--                  <th colspan="2">Basic Info</th>-->
-            <!--                  <th colspan="6">Details</th>-->
-            <!--                </tr>-->
-            <!--              </template>-->
-            <!--              <vuetable-row-header></vuetable-row-header>-->
-            <!--            </template>-->
-            <div slot="details" slot-scope="props">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props">
-              <router-link
-                tag="button"
-                :to="'/exercices/' + props.rowData.id"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-            </div>
-          </vuetable>
-        </div>
+        </vuetable>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
-import ExerciceDetails from '@/components/ExerciceDetails'
-import ExerciceComptable from '@/components/ExerciceComptable'
+import { mapState, mapGetters } from 'vuex'
 
 import Vuetable from 'vuetable-2'
-// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
 import _ from 'lodash'
 
 export default {
-  name: 'exercices',
+  name: 'FraisTabExercice',
   components: {
-    Vuetable,
-    ExerciceComptable
+    Vuetable
   },
   watch: {
     currentExerciceComptableId() {
       this.loading = true
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
-        this.$refs.vuetable_exercices.setData(this.computedData)
+        this.$refs.vuetable_frais_exercices.setData(this.computedData)
       })
     }
   },
@@ -124,12 +72,12 @@ export default {
       if (this.currentExerciceComptableId || 0 !== 0) {
         this.$store.dispatch('fetchListExercice').then(() => {
           this.loading = false
-          this.$refs.vuetable_exercices.setData(this.computedData)
+          this.$refs.vuetable_frais_exercices.setData(this.computedData)
         })
       }
     } else {
       this.loading = false
-      this.$refs.vuetable_exercices.setData(this.computedData)
+      this.$refs.vuetable_frais_exercices.setData(this.computedData)
     }
   },
   data() {
@@ -137,11 +85,6 @@ export default {
       css: CssForBootstrap4,
       toggles: {},
       fields: [
-        {
-          title: '',
-          name: 'details',
-          dataClass: 'align-middle'
-        },
         {
           title: 'Date',
           name: 'date',
@@ -185,10 +128,10 @@ export default {
           dataClass: 'align-middle'
         },
         {
-          title: 'Statut',
+          title: 'statut',
           name: 'statut',
-          dataClass: 'align-middle',
           sortField: 'statut',
+          dataClass: 'align-middle',
           formatter(value) {
             const statuts = {
               0: 'Annulé',
@@ -206,8 +149,7 @@ export default {
           dataClass: 'align-middle'
         }
       ],
-      loading: true,
-      detailRow: ExerciceDetails
+      loading: true
     }
   },
   props: {
@@ -220,8 +162,10 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      listExercices: state => state.exercice.liste.filter(e => e.statut > 2)
+    }),
     ...mapGetters([
-      'listExercices',
       'activeExerciceId',
       'getExerciceCategorie',
       'getLocalite',
@@ -245,7 +189,7 @@ export default {
         ...this.toggles,
         [id]: !this.toggles[id]
       }
-      this.$refs.vuetable_exercices.toggleDetailRow(id)
+      this.$refs.vuetable_frais_exercices.toggleDetailRow(id)
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return
@@ -264,10 +208,10 @@ export default {
     },
     onRowClass(dataItem, index) {
       const statutsClass = {
-        0: 'text-danger', //'Annulé',
+        0: '', //'Annulé',
         1: '', //'A saisir',
         2: '', //'En attente de validation',
-        3: '', //'A imputer',
+        3: 'table-warning', //'A imputer',
         4: 'table-success' //'Imputée'
       }
       return statutsClass[dataItem.statut]
@@ -276,4 +220,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

@@ -5,9 +5,9 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Promotions</h3>
-          <button type="button" class="btn btn-primary" @click="newGrade">
-            Ajouter une promotion
+          <h3 class="card-title">Comptes</h3>
+          <button type="button" class="btn btn-primary" @click="manageComptes">
+            Gestion des comptes
           </button>
         </div>
         <div class="card-body">
@@ -22,31 +22,7 @@
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="g in activeSapeurGrades" :key="g.id">
-                <td>{{ g.date }}</td>
-                <td>{{ getGrade(g.grade_id).designation }}</td>
-                <td>{{ g.remarque }}</td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary border-0"
-                      @click="editGrade(g.id)"
-                    >
-                      <font-awesome-icon :icon="['far', 'edit']" />
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger border-0"
-                      @click="supprimerGrade(g.id)"
-                    >
-                      <font-awesome-icon :icon="['far', 'trash-alt']" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -58,7 +34,7 @@
 // import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'SapeurTabPromotion',
+  name: 'FraisTabCompte',
   data() {
     return {
       data: [
@@ -94,6 +70,9 @@ export default {
     // }
   },
   methods: {
+    manageComptes() {
+      //TODO
+    }
     // ...mapMutations(['SHOW_MODAL']),
     // newGrade() {
     //   this.$store.dispatch('resetActiveGrade')
