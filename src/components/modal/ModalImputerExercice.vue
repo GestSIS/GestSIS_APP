@@ -90,6 +90,19 @@
         </div>
       </div>
       <div v-if="phase === 2">
+        <div
+          class="alert alert-dismissible alert-success"
+          v-if="successMessageVisibility"
+        >
+          <button
+            type="button"
+            class="close"
+            @click="successMessageVisibility = false"
+          >
+            &times;
+          </button>
+          Imputations effectuées avec <strong>succès</strong>!
+        </div>
         <table class="table">
           <thead>
             <tr>
@@ -101,14 +114,13 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ getSapeur(ecriture.sapeur_id) }}</td>
+              <td>{{ getSapeur(ecriture.sapeur_id) | sapeur }}</td>
               <td>{{ ecriture.solde }}</td>
               <td>{{ ecriture.indemnite }}</td>
               <td>{{ ecriture.total }}</td>
             </tr>
           </tbody>
         </table>
-        //TODO Affichage des écritures générées
       </div>
     </div>
     <div class="modal-footer">
@@ -139,7 +151,8 @@ export default {
       phase: 1,
       activeIndemniteIndex: null,
       activeIndemnite: null,
-      ecritures: []
+      ecritures: [],
+      successMessageVisibility: true
     }
   },
   computed: {
