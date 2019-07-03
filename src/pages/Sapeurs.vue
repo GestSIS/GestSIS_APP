@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import SapeurDetails from '@/components/SapeurDetails'
 
 export default {
@@ -121,8 +121,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['listSapeur', 'activeSapeurId']),
-    ...mapState(['activeSapeur']),
+    ...mapState({
+      listSapeur: state => state.sapeur.liste,
+      activeSapeurId: state => state.sapeur.active.id
+    }),
     filteredSapeurs() {
       return this.listSapeur.filter(this.filters[this.filter])
     }

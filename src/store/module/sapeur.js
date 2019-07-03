@@ -17,11 +17,6 @@ export default {
     }
   },
   getters: {
-    listSapeur: state => {
-      return state.liste.sort((s1, s2) =>
-        (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
-      )
-    },
     getSapeur: state => id => {
       return state.liste.filter(s => s.id === id)[0]
     },
@@ -68,13 +63,16 @@ export default {
   mutations: {
     [types.UPDATE_SAPEURS_LIST](state, payload) {
       state.liste = payload
+        .slice(0)
+        .sort((s1, s2) =>
+          (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
+        )
     },
     [types.SELECT_CURRENT_SAPEUR](state, payload) {
       state.active.id = payload
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload
-      state.liste = [...state.liste.filter(s => s.id !== payload.id), payload]
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
       state.active.telephones = payload
@@ -101,9 +99,7 @@ export default {
       state.active.permis = [...state.active.permis, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_PERMIS](state, payload) {
-      state.active.permis = state.active.permis.filter(
-        p => p.id !== payload
-      )
+      state.active.permis = state.active.permis.filter(p => p.id !== payload)
     },
     [types.EDIT_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.active.permis = [
@@ -112,10 +108,7 @@ export default {
       ]
     },
     [types.ADD_CURRENT_SAPEUR_TELEPHONE](state, payload) {
-      state.active.telephones = [
-        ...state.active.telephones,
-        payload
-      ]
+      state.active.telephones = [...state.active.telephones, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_TELEPHONE](state, payload) {
       state.active.telephones = state.active.telephones.filter(
@@ -130,10 +123,7 @@ export default {
     },
 
     [types.ADD_CURRENT_SAPEUR_FONCTION](state, payload) {
-      state.active.fonctions = [
-        ...state.active.fonctions,
-        payload
-      ]
+      state.active.fonctions = [...state.active.fonctions, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_FONCTION](state, payload) {
       state.active.fonctions = state.active.fonctions.filter(
@@ -151,9 +141,7 @@ export default {
       state.active.grades = [...state.active.grades, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_GRADE](state, payload) {
-      state.active.grades = state.active.grades.filter(
-        p => p.id !== payload
-      )
+      state.active.grades = state.active.grades.filter(p => p.id !== payload)
     },
     [types.EDIT_CURRENT_SAPEUR_GRADE](state, payload) {
       state.active.grades = [
@@ -166,9 +154,7 @@ export default {
       state.active.cours = [...state.active.cours, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_COURS](state, payload) {
-      state.active.cours = state.active.cours.filter(
-        c => c.id !== payload
-      )
+      state.active.cours = state.active.cours.filter(c => c.id !== payload)
     },
     [types.EDIT_CURRENT_SAPEUR_COURS](state, payload) {
       state.active.cours = [
@@ -178,10 +164,7 @@ export default {
     },
 
     [types.ADD_CURRENT_SAPEUR_MUTATION](state, payload) {
-      state.active.mutations = [
-        ...state.active.mutations,
-        payload
-      ]
+      state.active.mutations = [...state.active.mutations, payload]
     },
     [types.REMOVE_CURRENT_SAPEUR_MUTATION](state, payload) {
       state.active.mutations = state.active.mutations.filter(
@@ -251,32 +234,29 @@ export default {
       )
     },
     addTelephone({ state, commit }, payload) {
-      return SapeurService.addTelephone(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
-        return data
-      })
+      return SapeurService.addTelephone(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
+          return data
+        }
+      )
     },
 
     editTelephone({ state, commit }, payload) {
-      return SapeurService.editTelephone(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data)
-        return data
-      })
+      return SapeurService.editTelephone(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data)
+          return data
+        }
+      )
     },
     removeTelephone({ state, commit }, payload) {
-      return SapeurService.removeTelephone(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload)
-        return data
-      })
+      return SapeurService.removeTelephone(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload)
+          return data
+        }
+      )
     },
 
     addPermis({ state, commit }, payload) {
@@ -288,50 +268,45 @@ export default {
       )
     },
     editPermis({ state, commit }, payload) {
-      return SapeurService.editPermis(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
-        return data
-      })
+      return SapeurService.editPermis(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
+          return data
+        }
+      )
     },
     removePermis({ state, commit }, payload) {
-      return SapeurService.removePermis(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
-        return data
-      })
+      return SapeurService.removePermis(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
+          return data
+        }
+      )
     },
 
     addFonction({ state, commit }, payload) {
-      return SapeurService.addFonction(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
-        return data
-      })
+      return SapeurService.addFonction(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
+          return data
+        }
+      )
     },
     editFonction({ state, commit }, payload) {
-      return SapeurService.editFonction(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
-        return data
-      })
+      return SapeurService.editFonction(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
+          return data
+        }
+      )
     },
     removeFonction({ state, commit }, payload) {
-      return SapeurService.removeFonction(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload)
-        return data
-      })
+      return SapeurService.removeFonction(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload)
+          return data
+        }
+      )
     },
 
     addGrade({ state, commit }, payload) {
@@ -351,13 +326,12 @@ export default {
       )
     },
     removeGrade({ state, commit }, payload) {
-      return SapeurService.removeGrade(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload)
-        return data
-      })
+      return SapeurService.removeGrade(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload)
+          return data
+        }
+      )
     },
 
     addCours({ state, commit }, payload) {
@@ -377,41 +351,37 @@ export default {
       )
     },
     removeCours({ state, commit }, payload) {
-      return SapeurService.removeCours(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload)
-        return data
-      })
+      return SapeurService.removeCours(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload)
+          return data
+        }
+      )
     },
 
     addMutation({ state, commit }, payload) {
-      return SapeurService.addMutation(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.ADD_CURRENT_SAPEUR_MUTATION, data)
-        return data
-      })
+      return SapeurService.addMutation(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.ADD_CURRENT_SAPEUR_MUTATION, data)
+          return data
+        }
+      )
     },
     editMutation({ state, commit }, payload) {
-      return SapeurService.editMutation(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.EDIT_CURRENT_SAPEUR_MUTATION, data)
-        return data
-      })
+      return SapeurService.editMutation(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.EDIT_CURRENT_SAPEUR_MUTATION, data)
+          return data
+        }
+      )
     },
     removeMutation({ state, commit }, payload) {
-      return SapeurService.removeMutation(
-        state.active.data.id,
-        payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_SAPEUR_MUTATION, payload)
-        return data
-      })
+      return SapeurService.removeMutation(state.active.data.id, payload).then(
+        async data => {
+          await commit(types.REMOVE_CURRENT_SAPEUR_MUTATION, payload)
+          return data
+        }
+      )
     }
   }
 }

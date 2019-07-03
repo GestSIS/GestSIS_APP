@@ -4,7 +4,7 @@ import CoursService from '../../services/CoursService'
 export default {
   state: {
     liste: [],
-    currentCours: {
+    active: {
       id: 0,
       cours_id: 0,
       fonction_id: 0,
@@ -22,18 +22,12 @@ export default {
       state.liste = payload
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
-      state.currentCours = payload
+      state.active = payload
     }
   },
   getters: {
-    listCours: state => {
-      return state.liste
-    },
     getCours: state => cours_id => {
       return state.liste.filter(c => c.id === cours_id)[0]
-    },
-    activeCours: state => {
-      return state.currentCours
     }
   },
   actions: {

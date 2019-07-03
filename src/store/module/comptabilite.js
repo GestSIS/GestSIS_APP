@@ -40,7 +40,6 @@ export default {
       })
     },
     imputerExercice({ commit }, payload) {
-      console.log(payload)
       return ComptabiliteService.imputerExercice(payload.exercice_id, payload)
     }
   }

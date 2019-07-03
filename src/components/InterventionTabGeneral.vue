@@ -126,8 +126,8 @@
                     v-for="type in listTypeIntervention"
                     :value="type.id"
                     :key="type.id"
-                    >{{ type.designation }}</option
-                  >
+                    >{{ type.designation }}
+                  </option>
                 </select>
               </div>
               <!-- STAT FEDERAL -->
@@ -145,8 +145,8 @@
                     v-for="stat in listStatFederal"
                     :key="stat.id"
                     :value="stat.id"
-                    >{{ stat.designation }}</option
-                  >
+                    >{{ stat.designation }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -178,8 +178,8 @@
                     v-for="localite in listLocalitesSis"
                     :key="localite.id"
                     :value="localite.id"
-                    >{{ localite.npa + ' ' + localite.designation }}</option
-                  >
+                    >{{ localite.npa + ' ' + localite.designation }}
+                  </option>
                 </select>
               </div>
               <!-- Chef d'intervention -->
@@ -197,8 +197,8 @@
                     v-for="sapeur in listSapeur"
                     :key="sapeur.id"
                     :value="sapeur.id"
-                    >{{ sapeur.nom + ' ' + sapeur.prenom }}</option
-                  >
+                    >{{ sapeur.nom + ' ' + sapeur.prenom }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -272,8 +272,8 @@
                     v-for="traitement in listInterventionTraitement"
                     :key="traitement.id"
                     :value="traitement.id"
-                    >{{ traitement.designation }}</option
-                  >
+                    >{{ traitement.designation }}
+                  </option>
                 </select>
               </div>
 
@@ -290,9 +290,9 @@
                   style="width: 100%"
                   v-model="activeInterventionData.degre"
                 >
-                  <option v-for="deg in degre" :key="deg.id" :value="deg.id">{{
-                    deg.type
-                  }}</option>
+                  <option v-for="deg in degre" :key="deg.id" :value="deg.id"
+                    >{{ deg.type }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -338,13 +338,13 @@ export default {
     ...mapState({
       listTypeIntervention: state => state.typeIntervention.liste,
       listStatFederal: state => state.statFederal.liste,
-      listInterventionTraitement: state => state.interventionTraitement.liste
+      listInterventionTraitement: state => state.interventionTraitement.liste,
+      listSapeur: state => state.sapeur.liste
     }),
     ...mapGetters([
       'activeInterventionId',
       'activeInterventionData',
       'listLocalitesSis',
-      'listSapeur',
       'currentExerciceComptableId',
       'exerciceComptableDebut',
       'exerciceComptableFin'

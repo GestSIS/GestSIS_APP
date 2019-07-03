@@ -53,18 +53,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'SapeurTabCours',
   computed: {
-    ...mapGetters([
-      'activeSapeurCours',
-      'activeSapeurId',
-      'listCours',
-      'getCours',
-      'getLocalite'
-    ])
+    ...mapState({
+      activeSapeurCours: state => state.sapeur.active.cours,
+      activeSapeurId: state => state.sapeur.active.id,
+      listCours: state => state.cours.liste
+    }),
+    ...mapGetters(['getCours', 'getLocalite'])
   },
   mounted() {
     if (this.listCours.length === 0) {

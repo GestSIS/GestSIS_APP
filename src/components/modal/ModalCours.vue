@@ -27,9 +27,9 @@
           :class="{ 'is-invalid': errors['cours_id'] }"
           :disabled="!addMode"
         >
-          <option v-for="c in listCours" :key="c.id" :value="c.id">{{
-            c.designation
-          }}</option>
+          <option v-for="c in listCours" :key="c.id" :value="c.id"
+            >{{ c.designation }}
+          </option>
           <!-- TODO limiter le nombre de cours -->
         </select>
       </div>
@@ -41,9 +41,9 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listLocalites" :key="l.id" :value="l.id">{{
-            l.designation
-          }}</option>
+          <option v-for="l in listLocalites" :key="l.id" :value="l.id"
+            >{{ l.designation }}
+          </option>
         </select>
       </div>
       <div class="form-group" v-if="addMode">
@@ -55,9 +55,9 @@
           disabled
         >
           <option value="0">-</option>
-          <option v-for="c in listCours" :key="c.id" :value="c.id">{{
-            c.designation
-          }}</option>
+          <option v-for="c in listCours" :key="c.id" :value="c.id"
+            >{{ c.designation }}
+          </option>
           <!-- TODO Limiter le nombre de cours -->
         </select>
       </div>
@@ -73,9 +73,9 @@
               :class="{ 'is-invalid': errors['grade_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="g in listGrades" :key="g.id" :value="g.id">{{
-                g.designation
-              }}</option>
+              <option v-for="g in listGrades" :key="g.id" :value="g.id"
+                >{{ g.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -103,9 +103,9 @@
               :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="f in listFonctions" :key="f.id" :value="f.id">{{
-                f.nom
-              }}</option>
+              <option v-for="f in listFonctions" :key="f.id" :value="f.id"
+                >{{ f.nom }}
+              </option>
             </select>
           </div>
         </div>
@@ -136,8 +136,8 @@
                 v-for="f in activeSapeurFonctions"
                 :key="f.id"
                 :value="f.id"
-                >{{ getFonction(f.fonction_id).nom }}</option
-              >
+                >{{ getFonction(f.fonction_id).nom }}
+              </option>
             </select>
           </div>
         </div>
@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'ModalCours',
@@ -165,17 +165,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'activeSapeurId',
-      'activeSapeurFonctions',
-      'listCours',
-      'listFonctions',
-      'listGrades',
-      'listLocalites',
-      'getCours',
-      'getFonction',
-      'activeCours'
-    ]),
+    ...mapState({
+      listGrades: state => state.grade.liste,
+      listFonctions: state => state.fonction.liste,
+      listCours: state => state.cours.liste,
+      activeSapeurId: state => state.sapeur.active.id,
+      activeSapeurFonctions: state => state.sapeur.active.fonctions,
+      activeCours: state => state.cours.active
+    }),
+    ...mapGetters(['listLocalites', 'getCours', 'getFonction']),
     addMode() {
       return (this.activeCours.id || 0) === 0
     },
