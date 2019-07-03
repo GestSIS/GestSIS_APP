@@ -48,7 +48,9 @@ export default {
     ModalPresence: () => import(`@/components/modal/ModalPresence`),
     ModalPhase: () => import(`@/components/modal/ModalPhase`),
     ModalImputerExercice: () =>
-      import(`@/components/modal/ModalImputerExercice`)
+      import(`@/components/modal/ModalImputerExercice`),
+    ModalImputerIntervention: () =>
+      import(`@/components/modal/ModalImputerIntervention`)
   },
   data() {
     return {

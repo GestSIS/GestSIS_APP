@@ -41,6 +41,9 @@ export default {
     },
     imputerExercice({ commit }, payload) {
       return ComptabiliteService.imputerExercice(payload.exercice_id, payload)
+    },
+    imputerIntervention({ commit }, payload) {
+      return ComptabiliteService.imputerIntervention(payload.intervention_id, payload)
     }
   }
 }

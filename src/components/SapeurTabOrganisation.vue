@@ -6,7 +6,7 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-body">
-          <table id="sap-groupe" class="table" cellspacing="0" width="100%">
+          <table id="sap-groupe" class="table">
             <thead>
               <tr>
                 <th data-field="groupe">Groupe</th>
@@ -14,15 +14,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="g in activeSapeurGroupes" :key="g.id">
+              <tr v-for="g in groupeDisplay" :key="g.id">
                 <td>
-                  {{
-                    (getGroupe(g.groupe_id).no || 0) !== 0
-                      ? getGroupe(g.groupe_id).no
-                      : ''
-                  }}
+                  {{ g.no }}
                 </td>
-                <td>{{ getGroupe(g.groupe_id).designation }}</td>
+                <td>{{ g.designation }}</td>
               </tr>
             </tbody>
           </table>
@@ -43,7 +39,18 @@ export default {
       activeSapeurId: state => state.sapeur.active.id,
       activeSapeurGroupes: state => state.sapeur.active.groupes
     }),
-    ...mapGetters(['getGroupe'])
+    ...mapGetters(['getGroupe']),
+    groupeDisplay() {
+      let svm = this
+      return this.activeSapeurGroupes.map(groupe => {
+        let g = svm.getGroupe(groupe.groupe_id)
+        return {
+          id: groupe.id,
+          designation: g.designation,
+          no: g.no || ''
+        }
+      })
+    }
   },
   mounted() {
     if (this.listGroupes.length === 0) {

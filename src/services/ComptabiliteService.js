@@ -9,5 +9,8 @@ export default {
   },
   imputerExercice(exerciceId, payload) {
     return Api().post('/imputation/exercice/' + exerciceId, payload)
+  },
+  imputerIntervention(interventionId, payload) {
+    return Api().post('/imputation/intervention/' + interventionId, payload)
   }
 }

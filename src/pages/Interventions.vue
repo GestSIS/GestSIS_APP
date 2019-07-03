@@ -43,8 +43,8 @@
             :class="{ 'd-none': loading }"
             :api-mode="false"
             :fields="fields"
-            :detail-row-component="detailRow"
             :css="css.table"
+            :row-class="onRowClass"
           >
             <div slot="details" slot-scope="props">
               <button
@@ -80,7 +80,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 
-import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceComptable from '@/components/ExerciceComptable'
 
 import Vuetable from 'vuetable-2'
@@ -192,13 +191,26 @@ export default {
           }
         },
         {
+          title: 'Statut',
+          name: 'statut',
+          dataClass: 'align-middle',
+          formatter(value) {
+            const statuts = {
+              0: 'A saisir',
+              1: 'A valider',
+              2: 'Validée',
+              3: 'Imputée'
+            }
+            return statuts[value]
+          }
+        },
+        {
           title: 'Actions',
           name: 'actions',
           dataClass: 'align-middle'
         }
       ],
-      loading: true,
-      detailRow: ExerciceDetails
+      loading: true
     }
   },
   props: {
@@ -228,6 +240,15 @@ export default {
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id]
       this.$refs.vuetable.toggleDetailRow(id)
+    },
+    onRowClass(dataItem) {
+      const statutsClass = {
+        0: '', //'A saisir',
+        1: '', //'En attente de validation',
+        2: '', // 'Validée',
+        3: 'table-success' //'Imputée'
+      }
+      return statutsClass[dataItem.statut]
     }
   }
 }
