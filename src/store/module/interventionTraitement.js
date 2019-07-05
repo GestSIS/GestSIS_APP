@@ -7,7 +7,9 @@ export default {
   },
   mutations: {
     [types.UPDATE_INTERVENTION_TRAITEMENT_LIST](state, payload) {
-      state.liste = payload.slice(0).sort((t1, t2) => t1.designation > t2.designation)
+      state.liste = payload
+        .slice(0)
+        .sort((t1, t2) => t1.designation > t2.designation)
     }
   },
   getters: {

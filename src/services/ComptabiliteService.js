@@ -12,5 +12,14 @@ export default {
   },
   imputerIntervention(interventionId, payload) {
     return Api().post('/imputation/intervention/' + interventionId, payload)
+  },
+  getEcrituresForExercice(exerciceId) {
+    return Api().get('/ecritures/exercice/' + exerciceId)
+  },
+  getEcrituresForInterventions(interventionId) {
+    return Api().get('/ecritures/intervention/' + interventionId)
+  },
+  getEcrituresAnnuelsForExerciceComptable(exerciceComtableId) {
+    return Api().get('/ecritures/annuel/' + exerciceComtableId)
   }
 }

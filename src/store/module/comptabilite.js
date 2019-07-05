@@ -8,8 +8,12 @@ export default {
       interventions: [],
       annuels: []
     },
+    listeFraisAnnuels: [],
+    listeIndemnitesAnnuels: [],
     frais: {},
-    ecritures: []
+    ecritures: {
+      annuels: []
+    }
   },
   mutations: {
     [types.UPDATE_INDEMNITES_TYPES](state, payload) {
@@ -23,10 +27,10 @@ export default {
         ...state.frais,
         ...payload
       }
+    },
+    [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
+      state.ecritures.annuels = [...payload]
     }
-  },
-  getters: {
-    //TODO
   },
   actions: {
     fetchIndemnitesTypes({ commit }) {
@@ -39,11 +43,21 @@ export default {
         return commit(types.UPDATE_FRAIS_TYPES, data)
       })
     },
-    imputerExercice({ commit }, payload) {
+    fetchEcrituresAnnuels({ commit, getters }) {
+      return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
+        getters.currentExerciceComptableId
+      ).then(data => {
+        return commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data)
+      })
+    },
+    imputerExercice(context, payload) {
       return ComptabiliteService.imputerExercice(payload.exercice_id, payload)
     },
-    imputerIntervention({ commit }, payload) {
-      return ComptabiliteService.imputerIntervention(payload.intervention_id, payload)
+    imputerIntervention(context, payload) {
+      return ComptabiliteService.imputerIntervention(
+        payload.intervention_id,
+        payload
+      )
     }
   }
 }
