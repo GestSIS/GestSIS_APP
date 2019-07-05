@@ -1,5 +1,6 @@
 import types from '../mutationTypes'
 import InterventionService from '../../services/InterventionService'
+import ExerciceService from '../../services/ExerciceService'
 
 export default {
   state: {
@@ -26,6 +27,15 @@ export default {
         ...payload
       }
       state.active.id = payload.id
+    },
+    [types.UPDATE_INTERVENTION_STATUT](state, payload) {
+      state.liste = [
+        ...state.liste.filter(e => e.id !== payload.id),
+        {
+          ...state.liste.filter(e => e.id === payload.id)[0],
+          statut: payload.statut
+        }
+      ]
     },
     [types.SELECT_CURRENT_INTERVENTION](state, payload) {
       state.active.id = payload
@@ -209,6 +219,17 @@ export default {
         return data
       })
     },
+    validerIntervention({ commit }, payload) {
+      return InterventionService.validerIntervention(payload).then(
+        async data => {
+          await commit(types.UPDATE_INTERVENTION_STATUT, {
+            id: payload,
+            statut: data
+          })
+          return data
+        }
+      )
+    },
 
     //Materiel
     addMateriel({ state, commit }, payload) {
@@ -318,7 +339,11 @@ export default {
       return InterventionService.addSapeurs(state.active.data.id, {
         sapeurs: payload
       }).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+        await commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data.sapeurs)
+        await commit(types.UPDATE_INTERVENTION_STATUT, {
+          id: state.active.id,
+          statut: data.statut
+        })
         return data
       })
     },
@@ -335,6 +360,10 @@ export default {
         sapeurs: [payload]
       }).then(async data => {
         await commit(types.REMOVE_CURRENT_INTERVENTION_SAPEUR, payload)
+        await commit(types.UPDATE_INTERVENTION_STATUT, {
+          id: state.active.id,
+          statut: data
+        })
         return data
       })
     },

@@ -35,6 +35,9 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
   },
+  validerIntervention(interventionId) {
+    return Api().post('/interventions/' + interventionId + '/valider')
+  },
   saveIntervention(interventionId, interventionData) {
     return Api().put('/interventions/' + interventionId, interventionData, {
       headers: { 'Content-Type': 'application/json' }

@@ -69,6 +69,13 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </router-link>
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerIntervention(props.rowData.id)"
+                v-if="props.rowData.statut === 1"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
             </div>
           </vuetable>
         </div>
@@ -98,6 +105,10 @@ export default {
         this.loading = false
         this.$refs.vuetable.setData(this.listeInterventions)
       })
+    },
+    listeInterventions() {
+      this.loading = false
+      this.$refs.vuetable.setData(this.listeInterventions)
     }
   },
   mounted() {
@@ -240,6 +251,9 @@ export default {
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id]
       this.$refs.vuetable.toggleDetailRow(id)
+    },
+    validerIntervention(id) {
+      this.$store.dispatch('validerIntervention', id)
     },
     onRowClass(dataItem) {
       const statutsClass = {
