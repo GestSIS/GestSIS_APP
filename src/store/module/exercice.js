@@ -14,6 +14,15 @@ export default {
     [types.UPDATE_EXERCICE_LIST](state, payload) {
       state.liste = payload
     },
+    [types.UPDATE_EXERCICE_STATUT](state, payload) {
+      state.liste = [
+        ...state.liste.filter(e => e.id !== payload.id),
+        {
+          ...state.liste.filter(e => e.id === payload.id)[0],
+          statut: payload.statut
+        }
+      ]
+    },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload]
     },
@@ -99,6 +108,12 @@ export default {
         return data
       })
     },
+    validerExercice({ commit }, payload) {
+      return ExerciceService.validerExercice(payload).then(async data => {
+        await commit(types.UPDATE_EXERCICE_STATUT, data)
+        return data
+      })
+    },
     saveActiveExercice({ state, commit }) {
       return ExerciceService.saveExercice(
         state.currentExercice.id,
@@ -113,7 +128,11 @@ export default {
       return ExerciceService.addSapeurs(state.currentExercice.data.id, {
         sapeurs: payload
       }).then(async data => {
-        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
+        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data.sapeurs)
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: state.currentExercice.data.id,
+          statut: data.statut
+        })
         return data
       })
     },
@@ -130,6 +149,10 @@ export default {
         sapeurs: payload
       }).then(async data => {
         await commit(types.REMOVE_CURRENT_EXERCICE_SAPEURS, payload)
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: state.currentExercice.data.id,
+          statut: data
+        })
         return data
       })
     }

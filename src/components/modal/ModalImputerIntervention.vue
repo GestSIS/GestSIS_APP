@@ -109,7 +109,9 @@
               <th>Fonction</th>
               <th>Solde</th>
               <th>Indemnité</th>
-              <th>Solde</th>
+              <th>Taux weekend</th>
+              <th>Taux nuit</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -117,6 +119,8 @@
               <td>{{ getSapeur(ecriture.sapeur_id) | sapeur }}</td>
               <td>{{ ecriture.solde }}</td>
               <td>{{ ecriture.indemnite }}</td>
+              <td>{{ ecriture.taux_weekend }}</td>
+              <td>{{ ecriture.taux_nuit }}</td>
               <td>{{ ecriture.total }}</td>
             </tr>
           </tbody>

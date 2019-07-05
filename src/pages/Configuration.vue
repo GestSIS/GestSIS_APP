@@ -1,0 +1,138 @@
+<template>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <ol class="breadcrumb bg-white">
+          <li class="breadcrumb-item">
+            <router-link tag="a" to="/">
+              Accueil
+            </router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Configuration
+          </li>
+        </ol>
+      </div>
+      <div class="col-md-4 d-flex justify-content-end">
+        <!--        <exercice-comptable />-->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <nav v-if="!newMode">
+          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'general' }"
+              role="tab"
+              @click.prevent="activeTab = 'general'"
+            >
+              Informations
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'sapeurs' }"
+              role="tab"
+              @click.prevent="activeTab = 'sapeurs'"
+            >
+              Sapeurs
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'journal' }"
+              role="tab"
+              @click.prevent="activeTab = 'journal'"
+            >
+              Journal
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'mat-veh' }"
+              role="tab"
+              @click.prevent="activeTab = 'mat-veh'"
+            >
+              Matériels & Véhicules
+            </button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" role="tabpanel">
+            <!--            <InterventionTabGeneral-->
+            <!--              :newMode="newMode"-->
+            <!--              v-if="activeTab === 'general'"-->
+            <!--              >General</InterventionTabGeneral-->
+            <!--            >-->
+            <!--            <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'"-->
+            <!--              >Sapeurs</InterventionTabSapeurs-->
+            <!--            >-->
+            <!--            <InterventionTabJournal v-else-if="activeTab === 'journal'"-->
+            <!--              >Journal</InterventionTabJournal-->
+            <!--            >-->
+            <!--            <div class="container-fluid" v-else-if="activeTab === 'mat-veh'">-->
+            <!--              <div class="row">-->
+            <!--                <InterventionTabMateriel>Materiels</InterventionTabMateriel>-->
+            <!--                <InterventionTabVehicule>Véhicules</InterventionTabVehicule>-->
+            <!--              </div>-->
+            <!--            </div>-->
+          </div>
+          <div>
+            Loading
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+// import { mapGetters } from 'vuex'
+
+// import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
+// import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
+// import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
+// import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
+// import InterventionTabJournal from '@/components/InterventionTabJournal.vue'
+// import ExerciceComptable from '@/components/ExerciceComptable'
+
+export default {
+  name: 'configuration',
+  components: {
+    // InterventionTabSapeurs,
+    // InterventionTabGeneral,
+    // InterventionTabMateriel,
+    // InterventionTabVehicule,
+    // InterventionTabJournal,
+    // ExerciceComptable
+  },
+  // props: {
+  //   id: {
+  //     type: String
+  //   }
+  // },
+  computed: {
+    // ...mapGetters(['activeInterventionData', 'activeInterventionId']),
+  },
+  mounted() {
+    // this.$store.dispatch('fetchListSapeur')
+    // this.$store.dispatch('fetchLocalites')
+    // this.$store.dispatch('fetchInterventionTraitements')
+    // this.$store.dispatch('fetchExercicesComptables')
+    // this.$store.dispatch('fetchTypeInterventions')
+    // this.$store.dispatch('fetchStatFederals')
+    // let id = parseInt(this.id)
+    // let svm = this
+    // if (this.newMode) {
+    //   this.$store
+    //     .dispatch('resetActiveIntervention')
+    //     .then(() => (svm.loading = false))
+    // } else {
+    //   this.$store.dispatch('selectIntervention', id)
+    //   this.$store
+    //     .dispatch('fetchIntervention', id)
+    //     .then(() => (svm.loading = false))
+    // }
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>

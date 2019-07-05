@@ -146,11 +146,7 @@ export default {
 
       if ((this.activeMission.id || 0) === 0) {
         this.$store
-          .dispatch('addMission', {
-            ...this.activeMission,
-            debut2: undefined,
-            fin2: undefined
-          })
+          .dispatch('addMission', this.activeMission)
           .then(() => {
             this.errors = {}
             this.HIDE_MODAL()
@@ -158,11 +154,7 @@ export default {
           .catch(errors => (this.errors = errors))
       } else {
         this.$store
-          .dispatch('editMission', {
-            ...this.activeMission,
-            debut2: undefined,
-            fin2: undefined
-          })
+          .dispatch('editMission', this.activeMission)
           .then(() => {
             this.errors = {}
             this.HIDE_MODAL()

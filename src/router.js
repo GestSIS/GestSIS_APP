@@ -58,6 +58,11 @@ export default new Router({
       path: '/frais',
       name: 'frais',
       component: () => import('@/pages/Frais.vue')
+    },
+    {
+      path: '/configuration',
+      name: 'configuration',
+      component: () => import('@/pages/Configuration.vue')
     }
   ]
 })

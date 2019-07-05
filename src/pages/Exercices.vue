@@ -80,6 +80,13 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </router-link>
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerExercice(props.rowData.id)"
+                v-if="props.rowData.statut === 2"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
             </div>
           </vuetable>
         </div>
@@ -112,6 +119,9 @@ export default {
         this.loading = false
         this.$refs.vuetable_exercices.setData(this.computedData)
       })
+    },
+    listExercices() {
+      this.$refs.vuetable_exercices.setData(this.computedData)
     }
   },
   mounted() {
@@ -120,14 +130,14 @@ export default {
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
     }
-    if (this.listExercices.length === 0) {
-      if (this.currentExerciceComptableId || 0 !== 0) {
-        this.$store.dispatch('fetchListExercice').then(() => {
-          this.loading = false
-          this.$refs.vuetable_exercices.setData(this.computedData)
-        })
-      }
-    } else {
+
+    if (this.currentExerciceComptableId || 0 !== 0) {
+      this.$store.dispatch('fetchListExercice').then(() => {
+        this.loading = false
+        this.$refs.vuetable_exercices.setData(this.computedData)
+      })
+    }
+    if (this.listExercices.length !== 0) {
       this.loading = false
       this.$refs.vuetable_exercices.setData(this.computedData)
     }
@@ -246,6 +256,9 @@ export default {
         [id]: !this.toggles[id]
       }
       this.$refs.vuetable_exercices.toggleDetailRow(id)
+    },
+    validerExercice(id) {
+      this.$store.dispatch('validerExercice', id)
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return

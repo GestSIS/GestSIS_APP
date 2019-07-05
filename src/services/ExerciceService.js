@@ -17,6 +17,9 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
   },
+  validerExercice(exerciceId) {
+    return Api().post('/exercices/' + exerciceId + '/valider')
+  },
   saveExercice(exerciceId, exerciceData) {
     return Api().put('/exercices/' + exerciceId, exerciceData, {
       headers: { 'Content-Type': 'application/json' }
