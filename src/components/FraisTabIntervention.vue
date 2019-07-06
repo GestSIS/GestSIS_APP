@@ -65,6 +65,11 @@ export default {
         this.loading = false
         this.$refs.vuetable_frais_interventions.setData(this.computedData)
       })
+    },
+    listInterventions() {
+      this.loading = true
+      this.$refs.vuetable_frais_interventions.setData(this.computedData)
+      this.loading = false
     }
   },
   mounted() {
@@ -109,6 +114,7 @@ export default {
         {
           title: "Type d'intervention",
           name: 'type_intervention',
+          dataClass: 'align-middle',
           sortField: 'type_intervention'
         },
         {
@@ -189,27 +195,25 @@ export default {
   computed: {
     ...mapState({
       listInterventions: state =>
-        state.intervention.liste.filter(e => e.statut > 1)
+        state.intervention.liste.filter(e => e.statut > 1),
+      listExerciceComptable: state => state.exerciceComptable.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters([
       'activeInterventionId',
       'getTypeIntervention',
       'getLocalite',
       'getStatFederal',
-      'getInterventionTraitement',
-      'listExerciceComptable',
-      'currentExerciceComptableId'
+      'getInterventionTraitement'
     ]),
     computedData() {
       let svm = this
-      return this.listInterventions.map(i => {
-        return {
-          ...i,
-          type_intervention: svm.getTypeIntervention(i.type_intervention_id)
-            .designation,
-          localite: svm.getLocalite(i.localite_id).designation
-        }
-      })
+      return this.listInterventions.map(i => ({
+        ...i,
+        type_intervention: svm.getTypeIntervention(i.type_intervention_id)
+          .designation,
+        localite: svm.getLocalite(i.localite_id).designation
+      }))
     }
   },
   methods: {

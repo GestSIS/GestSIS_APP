@@ -174,19 +174,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'ExerciceTabGeneral',
   computed: {
+    ...mapState({
+      currentExerciceComptableId: state => state.exerciceComptable.activeId,
+      activeExerciceId: state => state.exercice.active.id,
+      activeExerciceData: state => state.exercice.active.data,
+      activeExerciceSapeurs: state => state.exercice.active.sapeurs
+    }),
     ...mapGetters([
-      'activeExerciceId',
-      'activeExerciceData',
-      'activeExerciceSapeurs',
       'listLocalitesSis',
       'listExerciceCategories',
-      'getExerciceCategorie',
-      'currentExerciceComptableId'
+      'getExerciceCategorie'
     ]),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id

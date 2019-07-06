@@ -13,6 +13,8 @@ export default {
   mutations: {
     [types.UPDATE_EXERCICE_LIST](state, payload) {
       state.liste = payload
+        .slice(0)
+        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date))
     },
     [types.UPDATE_EXERCICE_STATUT](state, payload) {
       state.liste = [
@@ -22,6 +24,8 @@ export default {
           statut: payload.statut
         }
       ]
+        .slice(0)
+        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date))
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload]
@@ -42,20 +46,9 @@ export default {
     }
   },
   getters: {
-    listExercices: state => {
-      return state.liste
-        .slice(0)
-        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date))
-    },
-    activeExerciceId: state => {
-      return state.currentExercice.id
-    },
-    activeExerciceSapeurs: state => {
-      return state.currentExercice.sapeurs
-    },
-    activeExerciceData: state => {
-      return state.currentExercice.data
-    },
+    activeExerciceId: state => state.currentExercice.id,
+    activeExerciceSapeurs: state => state.currentExercice.sapeurs,
+    activeExerciceData: state => state.currentExercice.data,
     getExercice: state => exercice_id => {
       return state.liste.filter(e => e.id === exercice_id)[0]
     }
@@ -64,19 +57,17 @@ export default {
     fetchListExercice({ getters, commit }) {
       return ExerciceService.getExercices(
         getters.currentExerciceComptableId
-      ).then(data => {
-        return commit(types.UPDATE_EXERCICE_LIST, data)
-      })
+      ).then(data => commit(types.UPDATE_EXERCICE_LIST, data))
     },
     fetchExercice({ commit }, payload) {
-      return ExerciceService.getExercice(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
-      })
+      return ExerciceService.getExercice(payload).then(data =>
+        commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
+      )
     },
     fetchExerciceSapeurs({ commit }, payload) {
-      return ExerciceService.getSapeurs(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
-      })
+      return ExerciceService.getSapeurs(payload).then(data =>
+        commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
+      )
     },
     selectExercice({ commit }, payload) {
       return commit(types.SELECT_CURRENT_EXERCICE, payload)

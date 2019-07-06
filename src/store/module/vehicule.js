@@ -11,15 +11,14 @@ export default {
     }
   },
   getters: {
-    getVehicule: state => vehicule_id => {
-      return state.liste.filter(m => m.id === vehicule_id)[0]
-    }
+    getVehicule: state => vehicule_id =>
+      state.liste.filter(m => m.id === vehicule_id)[0]
   },
   actions: {
     fetchVehicules({ commit }) {
-      return VehiculeService.getVehicules().then(data => {
-        return commit(types.UPDATE_VEHICULE_LIST, data)
-      })
+      return VehiculeService.getVehicules().then(data =>
+        commit(types.UPDATE_VEHICULE_LIST, data)
+      )
     }
   }
 }

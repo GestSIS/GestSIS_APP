@@ -65,11 +65,22 @@ export default {
         this.loading = false
         this.$refs.vuetable_frais_exercices.setData(this.computedData)
       })
+    },
+    listExercices() {
+      this.loading = true
+      this.$refs.vuetable_frais_exercices.setData(this.computedData)
+      this.loading = false
     }
   },
   mounted() {
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchExerciceCategories')
+    //TODO Fetch only if neccessary
+    if (this.localites.length === 0) {
+      this.$store.dispatch('fetchLocalites')
+    }
+    if (this.exerciceCategories.length === 0) {
+      this.$store.dispatch('fetchExerciceCategories')
+    }
+
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
     }
@@ -163,24 +174,20 @@ export default {
   },
   computed: {
     ...mapState({
-      listExercices: state => state.exercice.liste.filter(e => e.statut > 2)
+      listExercices: state => state.exercice.liste.filter(e => e.statut > 2),
+      localites: state => state.localite.liste,
+      exerciceCategories: state => state.exerciceCategorie.liste,
+      listExerciceComptable: state => state.exerciceComptable.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters([
-      'activeExerciceId',
-      'getExerciceCategorie',
-      'getLocalite',
-      'listExerciceComptable',
-      'currentExerciceComptableId'
-    ]),
+    ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
-      return this.listExercices.map(s => {
-        return {
-          ...s,
-          categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-            .designation,
-          localite: this.getLocalite(s.localite_id).designation
-        }
-      })
+      return this.listExercices.map(s => ({
+        ...s,
+        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
+          .designation,
+        localite: this.getLocalite(s.localite_id).designation
+      }))
     }
   },
   methods: {

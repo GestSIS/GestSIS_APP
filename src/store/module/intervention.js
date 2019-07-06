@@ -123,49 +123,47 @@ export default {
     fetchListIntervention({ getters, commit }) {
       return InterventionService.getInterventions(
         getters.currentExerciceComptableId
-      ).then(data => {
-        return commit(types.UPDATE_INTERVENTION_LIST, data)
-      })
+      ).then(data => commit(types.UPDATE_INTERVENTION_LIST, data))
     },
     fetchIntervention({ commit }, payload) {
-      return InterventionService.getIntervention(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
-      })
+      return InterventionService.getIntervention(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
+      )
     },
     fetchInterventionSapeurs({ commit }, payload) {
-      return InterventionService.getSapeurs(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
-      })
+      return InterventionService.getSapeurs(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
+      )
     },
     fetchInterventionQuittances({ commit }, payload) {
-      return InterventionService.getQuittances(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data)
-      })
+      return InterventionService.getQuittances(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data)
+      )
     },
     fetchInterventionMateriels({ commit }, payload) {
-      return InterventionService.getMateriels(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
-      })
+      return InterventionService.getMateriels(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
+      )
     },
     fetchInterventionVehicules({ commit }, payload) {
-      return InterventionService.getVehicules(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
-      })
+      return InterventionService.getVehicules(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
+      )
     },
     fetchInterventionAppels({ commit }, payload) {
-      return InterventionService.getAppels(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
-      })
+      return InterventionService.getAppels(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+      )
     },
     fetchInterventionMissions({ commit }, payload) {
-      return InterventionService.getMissions(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
-      })
+      return InterventionService.getMissions(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+      )
     },
     fetchInterventionPhases({ commit }, payload) {
-      return InterventionService.getPhases(payload).then(data => {
-        return commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
-      })
+      return InterventionService.getPhases(payload).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
+      )
     },
     selectIntervention({ commit }, payload) {
       return commit(types.SELECT_CURRENT_INTERVENTION, payload)
@@ -213,20 +211,16 @@ export default {
       return InterventionService.saveIntervention(
         state.active.id,
         state.active.data
-      ).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
-        return data
-      })
+      ).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data).then(() => data)
+      )
     },
     validerIntervention({ commit }, payload) {
-      return InterventionService.validerIntervention(payload).then(
-        async data => {
-          await commit(types.UPDATE_INTERVENTION_STATUT, {
-            id: payload,
-            statut: data
-          })
-          return data
-        }
+      return InterventionService.validerIntervention(payload).then(data =>
+        commit(types.UPDATE_INTERVENTION_STATUT, {
+          id: payload,
+          statut: data
+        }).then(() => data)
       )
     },
 
@@ -235,28 +229,31 @@ export default {
       return InterventionService.addMateriel(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
-        return data
-      })
+      ).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data).then(
+          () => data
+        )
+      )
     },
     editMateriel({ state, commit }, payload) {
       return InterventionService.editMateriel(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
-        return data
-      })
+      ).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data).then(
+          () => data
+        )
+      )
     },
     removeMateriel({ state, commit }, payload) {
       return InterventionService.removeMateriel(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload)
-        return data
-      })
+      ).then(data =>
+        commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload).then(
+          () => data
+        )
+      )
     },
 
     //Vehicules
@@ -264,74 +261,79 @@ export default {
       return InterventionService.addVehicules(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
-        return data
-      })
+      ).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data).then(
+          () => data
+        )
+      )
     },
     removeVehicules({ state, commit }, payload) {
       return InterventionService.removeVehicules(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload)
-        return data
-      })
+      ).then(data =>
+        commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload).then(
+          () => data
+        )
+      )
     },
 
     //Missions
     addMission({ state, commit }, payload) {
       return InterventionService.addMission(state.active.data.id, payload).then(
-        async data => {
-          await commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
-          return data
-        }
+        data =>
+          commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data).then(
+            () => data
+          )
       )
     },
     editMission({ state, commit }, payload) {
       return InterventionService.editMission(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
-        return data
-      })
+      ).then(data =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data).then(
+          () => data
+        )
+      )
     },
     removeMission({ state, commit }, payload) {
       return InterventionService.removeMission(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload)
-        return data
-      })
+      ).then(data =>
+        commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload).then(
+          () => data
+        )
+      )
     },
 
     //Appels
     addAppel({ state, commit }, payload) {
       return InterventionService.addAppel(state.active.data.id, payload).then(
-        async data => {
-          await commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
-          return data
-        }
+        data =>
+          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data).then(
+            () => data
+          )
       )
     },
     editAppel({ state, commit }, payload) {
       return InterventionService.editAppel(state.active.data.id, payload).then(
-        async data => {
-          await commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
-          return data
-        }
+        data =>
+          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data).then(
+            () => data
+          )
       )
     },
     removeAppel({ state, commit }, payload) {
       return InterventionService.removeAppel(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload)
-        return data
-      })
+      ).then(data =>
+        commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload).then(
+          () => data
+        )
+      )
     },
 
     addPresences({ state, commit }, payload) {
@@ -349,10 +351,9 @@ export default {
     editPresence({ state, commit }, payload) {
       return InterventionService.editSapeurs(state.active.data.id, {
         sapeurs: [payload]
-      }).then(async data => {
-        await commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload)
-        return data
-      })
+      }).then(data =>
+        commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload).then(() => data)
+      )
     },
     removePresence({ state, commit }, payload) {
       return InterventionService.removeSapeurs(state.active.data.id, {
@@ -370,28 +371,29 @@ export default {
     //Phases
     addPhase({ state, commit }, payload) {
       return InterventionService.addPhase(state.active.data.id, payload).then(
-        async data => {
-          await commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
-          return data
-        }
+        data =>
+          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data).then(
+            () => data
+          )
       )
     },
     editPhase({ state, commit }, payload) {
       return InterventionService.editPhase(state.active.data.id, payload).then(
-        async data => {
-          await commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, payload)
-          return data
-        }
+        data =>
+          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, payload).then(
+            () => data
+          )
       )
     },
     removePhase({ state, commit }, payload) {
       return InterventionService.removePhase(
         state.active.data.id,
         payload
-      ).then(async data => {
-        await commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload)
-        return data
-      })
+      ).then(data =>
+        commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload).then(
+          () => data
+        )
+      )
     }
   }
 }

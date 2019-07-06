@@ -12,9 +12,9 @@ export default {
   },
   actions: {
     fetchMissions({ commit }) {
-      return MissionService.getMissions().then(data => {
-        return commit(types.UPDATE_MISSION_LIST, data)
-      })
+      return MissionService.getMissions().then(data =>
+        commit(types.UPDATE_MISSION_LIST, data)
+      )
     }
   }
 }

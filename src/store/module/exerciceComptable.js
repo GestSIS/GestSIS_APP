@@ -3,48 +3,35 @@ import ExerciceComptableService from '../../services/ExerciceComptableService'
 
 export default {
   state: {
-    exercicesComptables: [],
-    activeExerciceComptableId: null
+    liste: [],
+    activeId: null
   },
   mutations: {
     [types.UPDATE_EXERCICE_COMPTABLE_LIST](state, payload) {
-      state.exercicesComptables = payload
-      if ((state.activeExerciceComptableId || 0) === 0) {
-        state.activeExerciceComptableId = payload.sort(
-          (e1, e2) => e2.annee - e1.annee
-        )[0].id
+      state.liste = payload
+      if ((state.activeId || 0) === 0) {
+        state.activeId = payload.sort((e1, e2) => e2.annee - e1.annee)[0].id
       }
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {
-      state.activeExerciceComptableId = payload
+      state.activeId = payload
     }
   },
   getters: {
-    listExerciceComptable: state => {
-      return state.exercicesComptables
-    },
-    currentExerciceComptableId: state => {
-      return state.activeExerciceComptableId
-    },
-    getExerciceComptable: state => id => {
-      return state.exercicesComptables.filter(e => e.id === id)[0]
-    },
-    exerciceComptableDebut: state => id => {
-      // console.log(state.exercicesComptables)
-      // console.log(id)
-      return state.exercicesComptables.filter(e => e.id === id)[0].debut
-    },
-    exerciceComptableFin: state => id => {
-      // console.log(state.exercicesComptables)
-      // console.log(id)
-      return state.exercicesComptables.filter(e => e.id === id)[0].fin
-    }
+    listExerciceComptable: state => state.liste,
+    currentExerciceComptableId: state => state.activeId,
+    getExerciceComptable: state => id =>
+      state.liste.filter(e => e.id === id)[0],
+    exerciceComptableDebut: state => id =>
+      state.liste.filter(e => e.id === id)[0].debut,
+    exerciceComptableFin: state => id =>
+      state.liste.filter(e => e.id === id)[0].fin
   },
   actions: {
     fetchExercicesComptables({ commit }) {
-      return ExerciceComptableService.getExercices().then(data => {
-        return commit(types.UPDATE_EXERCICE_COMPTABLE_LIST, data)
-      })
+      return ExerciceComptableService.getExercices().then(data =>
+        commit(types.UPDATE_EXERCICE_COMPTABLE_LIST, data)
+      )
     },
     selectExerciceComptable({ commit }, excuse_type_id) {
       return commit(types.SELECT_EXERCICE_COMPTABLE, excuse_type_id)

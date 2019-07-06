@@ -30,9 +30,9 @@ export default {
   },
   actions: {
     fetchFonctions({ commit }) {
-      return FonctionService.getFonctions().then(data => {
-        return commit(types.UPDATE_FONCTION_LIST, data)
-      })
+      return FonctionService.getFonctions().then(data =>
+        commit(types.UPDATE_FONCTION_LIST, data)
+      )
     },
     updateActiveFonction({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_FONCTION, payload)

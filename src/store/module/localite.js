@@ -11,21 +11,16 @@ export default {
     }
   },
   getters: {
-    listLocalites: state => {
-      return state.liste
-    },
-    listLocalitesSis: state => {
-      return state.liste
-    },
-    getLocalite: state => localite_id => {
-      return state.liste.filter(l => l.id === localite_id)[0]
-    }
+    listLocalites: state => state.liste,
+    listLocalitesSis: state => state.liste,
+    getLocalite: state => localite_id =>
+      state.liste.filter(l => l.id === localite_id)[0]
   },
   actions: {
     fetchLocalites({ commit }) {
-      return LocaliteService.getLocalites().then(data => {
-        return commit(types.UPDATE_LOCALITE_LIST, data)
-      })
+      return LocaliteService.getLocalites().then(data =>
+        commit(types.UPDATE_LOCALITE_LIST, data)
+      )
     }
   }
 }

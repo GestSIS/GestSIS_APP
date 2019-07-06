@@ -152,16 +152,14 @@ export default {
         }
 
         return new Promise((resolve, reject) => {
-          let newSapeurs = newSap.map(s => {
-            return {
-              convoque: false,
-              present: false,
-              remplace: false,
-              excuse_type_id: null,
-              sapeur_id: s,
-              amende: false
-            }
-          })
+          let newSapeurs = newSap.map(s => ({
+            convoque: false,
+            present: false,
+            remplace: false,
+            excuse_type_id: null,
+            sapeur_id: s,
+            amende: false
+          }))
 
           let removedSapeurs = removedSap.map(
             id =>

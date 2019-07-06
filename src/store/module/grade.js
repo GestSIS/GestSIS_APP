@@ -29,9 +29,9 @@ export default {
   },
   actions: {
     fetchGrades({ commit }) {
-      return GradeService.getGrades().then(data => {
-        return commit(types.UPDATE_GRADE_LIST, data)
-      })
+      return GradeService.getGrades().then(data =>
+        commit(types.UPDATE_GRADE_LIST, data)
+      )
     },
     updateActiveGrade({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_GRADE, payload)

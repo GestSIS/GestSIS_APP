@@ -288,7 +288,7 @@ export default {
       return flattened
     },
     availableSapeurs() {
-      return this.listSapeur
+      return this.listSapeurs
         .slice(0)
         .filter(s => !this.chosenSapeurs.includes(s.id))
         .map(s => s.id)
@@ -304,27 +304,6 @@ export default {
         this.selectedSapeurs.filter(x => this.chosenSapeurs.includes(x))
           .length > 0
       )
-    }
-  },
-  watch: {
-    groupBy(value) {
-      //TODO
-      switch (value) {
-        case 'none':
-          //TODO
-          break
-        case 'fonction':
-          //TODO
-          break
-        case 'grade':
-          //TODO
-          break
-        case 'civilite':
-          //TODO
-          break
-        case 'groupe':
-          break
-      }
     }
   },
   methods: {
@@ -401,9 +380,7 @@ export default {
           ? Array.from(new Set([...svm.selectedSapeurs, s]))
           : svm.selectedSapeurs.filter(i => i !== s)
       })
-      groupe.groupes.forEach(g => {
-        svm.selectGroupSingle(g, state)
-      })
+      groupe.groupes.forEach(g => svm.selectGroupSingle(g, state))
     },
     filtreSapeur() {
       let svm = this

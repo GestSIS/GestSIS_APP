@@ -12,9 +12,9 @@ export default {
   },
   actions: {
     fetchTelephones({ commit }) {
-      return TelephoneService.getTelephones().then(data => {
-        return commit(types.UPDATE_TELEPHONE_LIST, data)
-      })
+      return TelephoneService.getTelephones().then(data =>
+        commit(types.UPDATE_TELEPHONE_LIST, data)
+      )
     }
   }
 }

@@ -19,15 +19,14 @@ export default {
     }
   },
   getters: {
-    getMateriel: state => materiel_id => {
-      return state.liste.filter(m => m.id === materiel_id)[0]
-    }
+    getMateriel: state => materiel_id =>
+      state.liste.filter(m => m.id === materiel_id)[0]
   },
   actions: {
     fetchMateriels({ commit }) {
-      return MaterielService.getMateriels().then(data => {
-        return commit(types.UPDATE_MATERIEL_LIST, data)
-      })
+      return MaterielService.getMateriels().then(data =>
+        commit(types.UPDATE_MATERIEL_LIST, data)
+      )
     },
     updateActiveMateriel({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_MATERIEL, payload)

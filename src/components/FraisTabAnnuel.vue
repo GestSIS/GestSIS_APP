@@ -4,7 +4,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Indemnités et Frais annuels</h3>
-          <button @click.prevent="save" class="btn btn-primary">
+          <button @click.prevent="generer" class="btn btn-primary">
             Générer
           </button>
         </div>
@@ -54,19 +54,23 @@ export default {
       this.loading = true
       this.$store.dispatch('fetchListExercice').then(() => {
         this.loading = false
-        this.$refs.vuetable_frais_annuels.setData(this.computedData)
+        this.$refs.vuetable_frais_annuels.setData(this.computeData())
       })
     }
   },
   mounted() {
     this.$store.dispatch('fetchListSapeur')
+    if (this.listeFonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions')
+    }
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
     }
+
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false
-        this.$refs.vuetable_frais_annuels.setData(this.computedData)
+        this.$refs.vuetable_frais_annuels.setData(this.computeData())
       })
     }
   },
@@ -79,6 +83,12 @@ export default {
           title: 'Nom Prénom',
           name: 'nomPrenom',
           sortField: 'nomPrenom',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Fonction',
+          name: 'fonction',
+          sortField: 'fonction',
           dataClass: 'align-middle'
         },
         {
@@ -107,17 +117,22 @@ export default {
   },
   computed: {
     ...mapState({
-      listeEcritures: state => state.comptabilite.ecritures.annuels
+      listeEcritures: state => state.comptabilite.ecritures.annuels,
+      listeFonctions: state => state.fonction.liste,
+      listExerciceComptable: state => state.exerciceComptable.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters([
       'activeExerciceId',
       'getExerciceCategorie',
       'getLocalite',
       'getSapeur',
-      'listExerciceComptable',
-      'currentExerciceComptableId'
-    ]),
-    computedData() {
+      'getFonction'
+    ])
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    computeData() {
       let sapeurs = []
       this.listeEcritures.forEach(e => {
         if (sapeurs.filter(s => s.id === e.sapeur_id).length === 0) {
@@ -128,6 +143,7 @@ export default {
               ...sapeur,
               nomPrenom: sapeur.nom + ' ' + sapeur.prenom,
               ecritures: [e],
+              fonction: this.getFonction(sapeur.fonction_id).nom,
               total: parseFloat(e.total)
             }
           ]
@@ -148,10 +164,11 @@ export default {
         }
       })
       return sapeurs
-    }
-  },
-  methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    },
+    generer() {
+      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 })
+      //TODO Modal de génération des frais annuels
+    },
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
@@ -160,9 +177,8 @@ export default {
       this.$refs.vuetable_frais_annuels.toggleDetailRow(id)
     },
     dataManager(sortOrder) {
-      if (this.computedData.length < 1) return
-
-      let local = this.computedData
+      let local = this.computeData()
+      if (local.length < 1) return
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {

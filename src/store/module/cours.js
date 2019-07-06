@@ -26,15 +26,13 @@ export default {
     }
   },
   getters: {
-    getCours: state => cours_id => {
-      return state.liste.filter(c => c.id === cours_id)[0]
-    }
+    getCours: state => cours_id => state.liste.filter(c => c.id === cours_id)[0]
   },
   actions: {
     fetchCours({ commit }) {
-      return CoursService.getCours().then(data => {
-        return commit(types.UPDATE_COURS_LIST, data)
-      })
+      return CoursService.getCours().then(data =>
+        commit(types.UPDATE_COURS_LIST, data)
+      )
     },
     updateActiveCours({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_COURS, payload)

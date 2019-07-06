@@ -44,6 +44,7 @@
             :api-mode="false"
             :fields="fields"
             :css="css.table"
+            :data-manager="dataManager"
             :row-class="onRowClass"
           >
             <div slot="details" slot-scope="props">
@@ -91,6 +92,7 @@ import ExerciceComptable from '@/components/ExerciceComptable'
 
 import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
+import _ from 'lodash'
 
 export default {
   name: 'interventions',
@@ -141,7 +143,8 @@ export default {
         {
           title: 'Date',
           name: 'date_debut',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
+          sortField: 'date_debut'
         },
         {
           title: 'Heure',
@@ -149,14 +152,16 @@ export default {
           dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5)
-          }
+          },
+          sortField: 'heure_debut'
         },
         {
           title: "Type d'intervention",
           name: 'type_intervention_id',
           formatter(value) {
             return self.getTypeIntervention(value).designation
-          }
+          },
+          sortField: 'type_intervention_id'
         },
         {
           title: 'Localité',
@@ -164,7 +169,8 @@ export default {
           dataClass: 'align-middle',
           formatter(value) {
             return self.getLocalite(value).designation
-          }
+          },
+          sortField: 'localite_id'
         },
         {
           title: 'Lieu',
@@ -177,7 +183,8 @@ export default {
           dataClass: 'align-middle',
           formatter(value) {
             return self.getStatFederal(value).designation
-          }
+          },
+          sortField: 'stat_federal_id'
         },
         {
           title: 'Traitement',
@@ -185,7 +192,8 @@ export default {
           dataClass: 'align-middle',
           formatter(value) {
             return self.getInterventionTraitement(value).designation
-          }
+          },
+          sortField: 'intervention_traitement_id'
         },
         {
           title: 'Étendue',
@@ -199,7 +207,8 @@ export default {
               4: 'Grande'
             }
             return degre[value]
-          }
+          },
+          sortField: 'degre'
         },
         {
           title: 'Statut',
@@ -213,7 +222,8 @@ export default {
               3: 'Imputée'
             }
             return statuts[value]
-          }
+          },
+          sortField: 'statut'
         },
         {
           title: 'Actions',
@@ -254,6 +264,21 @@ export default {
     },
     validerIntervention(id) {
       this.$store.dispatch('validerIntervention', id)
+    },
+    dataManager(sortOrder) {
+      if (this.listeInterventions.length < 1) return
+
+      let local = this.listeInterventions
+
+      // sortOrder can be empty, so we have to check for that as well
+      if (sortOrder.length > 0) {
+        console.log('orderBy:', sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+      }
+
+      return {
+        data: local
+      }
     },
     onRowClass(dataItem) {
       const statutsClass = {

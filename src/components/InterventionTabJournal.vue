@@ -174,15 +174,13 @@ export default {
         return events
       })
 
-      let eventsAppels = this.appels.map(a => {
-        return {
-          date: a.date,
-          title: a.nom,
-          description: a.commentaire,
-          type: 'appel',
-          colorClass: 'appel'
-        }
-      })
+      let eventsAppels = this.appels.map(a => ({
+        date: a.date,
+        title: a.nom,
+        description: a.commentaire,
+        type: 'appel',
+        colorClass: 'appel'
+      }))
 
       let chefIntervention = this.data.sapeur_id
         ? this.getSapeur(this.data.sapeur_id)

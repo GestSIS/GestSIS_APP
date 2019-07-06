@@ -11,20 +11,16 @@ export default {
     }
   },
   getters: {
-    listExerciceCategories: state => {
-      return state.liste
-        .slice(0)
-        .sort((c1, c2) => c1.designation > c2.designation)
-    },
-    getExerciceCategorie: state => categorie_id => {
-      return state.liste.filter(c => c.id === categorie_id)[0]
-    }
+    listExerciceCategories: state =>
+      state.liste.slice(0).sort((c1, c2) => c1.designation > c2.designation),
+    getExerciceCategorie: state => categorie_id =>
+      state.liste.filter(c => c.id === categorie_id)[0]
   },
   actions: {
     fetchExerciceCategories({ commit }) {
-      return ExerciceCategorieService.getCategories().then(data => {
-        return commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
-      })
+      return ExerciceCategorieService.getCategories().then(data =>
+        commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
+      )
     }
   }
 }

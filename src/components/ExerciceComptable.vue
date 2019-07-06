@@ -33,16 +33,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'ExerciceComptable',
   computed: {
-    ...mapGetters([
-      'listExerciceComptable',
-      'currentExerciceComptableId',
-      'getExerciceComptable'
-    ])
+    ...mapState({
+      listExerciceComptable: state => state.exerciceComptable.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
+    }),
+    ...mapGetters(['getExerciceComptable'])
   },
   data() {
     return {

@@ -25,9 +25,9 @@ export default {
   },
   actions: {
     fetchPhaseTypes({ commit }) {
-      return PhaseTypeService.getPhases().then(data => {
-        return commit(types.UPDATE_PHASE_TYPE_LIST, data)
-      })
+      return PhaseTypeService.getPhases().then(data =>
+        commit(types.UPDATE_PHASE_TYPE_LIST, data)
+      )
     },
     updateActivePhase({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_PHASE, payload)

@@ -50,7 +50,8 @@ export default {
     ModalImputerExercice: () =>
       import(`@/components/modal/ModalImputerExercice`),
     ModalImputerIntervention: () =>
-      import(`@/components/modal/ModalImputerIntervention`)
+      import(`@/components/modal/ModalImputerIntervention`),
+    ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`)
   },
   data() {
     return {

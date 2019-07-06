@@ -13,15 +13,14 @@ export default {
     }
   },
   getters: {
-    getInterventionTraitement: state => intervention_traitement_id => {
-      return state.liste.filter(t => t.id === intervention_traitement_id)[0]
-    }
+    getInterventionTraitement: state => intervention_traitement_id =>
+      state.liste.filter(t => t.id === intervention_traitement_id)[0]
   },
   actions: {
     fetchInterventionTraitements({ commit }) {
-      return InterventionTraitementService.getStats().then(data => {
-        return commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
-      })
+      return InterventionTraitementService.getStats().then(data =>
+        commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
+      )
     }
   }
 }

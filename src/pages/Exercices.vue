@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import ExerciceDetails from '@/components/ExerciceDetails'
 import ExerciceComptable from '@/components/ExerciceComptable'
@@ -230,23 +230,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'listExercices',
-      'activeExerciceId',
-      'getExerciceCategorie',
-      'getLocalite',
-      'listExerciceComptable',
-      'currentExerciceComptableId'
-    ]),
+    ...mapState({
+      listExercices: state => state.exercice.liste,
+      listExerciceComptable: state => state.exerciceComptable.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
+    }),
+    ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
-      return this.listExercices.map(s => {
-        return {
-          ...s,
-          categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-            .designation,
-          localite: this.getLocalite(s.localite_id).designation
-        }
-      })
+      return this.listExercices.map(s => ({
+        ...s,
+        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
+          .designation,
+        localite: this.getLocalite(s.localite_id).designation
+      }))
     }
   },
   methods: {

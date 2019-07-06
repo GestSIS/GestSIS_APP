@@ -102,6 +102,7 @@ export default {
   mounted() {
     this.$store.dispatch('fetchIndemnitesTypes')
     this.$store.dispatch('fetchFraisTypes')
+    this.$store.dispatch('fetchComptes')
     // this.$store.dispatch('fetchExerciceCategories')
     // this.$store.dispatch('fetchExercicesComptables')
     // this.$store.dispatch('fetchExcuseTypes')
