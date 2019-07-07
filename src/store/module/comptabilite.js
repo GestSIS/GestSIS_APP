@@ -66,28 +66,36 @@ export default {
       return ComptabiliteService.imputerExercice(
         payload.exercice_id,
         payload
-      ).then(data =>
+      ).then(data => {
         commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload.exercice_id,
           statut: data.statut
         })
-      )
+        return data
+      })
     },
     imputerIntervention({ commit }, payload) {
       return ComptabiliteService.imputerIntervention(
         payload.intervention_id,
         payload
-      ).then(data =>
+      ).then(data => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload.intervention_id,
           statut: data.statut
         })
-      )
+        return data
+      })
     },
     imputerAnnuel({ commit, getters }) {
       return ComptabiliteService.imputerAnnuel(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data))
+      ).then(data => {
+        commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
+          ...data.indemnites,
+          ...data.frais
+        ])
+        return data
+      })
     }
   }
 }

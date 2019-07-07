@@ -1,8 +1,5 @@
 <template>
   <div class="detail-row d-flex">
-    <div class="spinner-border" role="status" v-show="loading">
-      <span class="sr-only">Loading...</span>
-    </div>
     <div class="mr-3">
       Convoqué
       <span
@@ -66,7 +63,6 @@ export default {
   data() {
     return {
       data: {},
-      loading: false,
       convoque: 0,
       present: 0,
       remplace: 0,
@@ -75,14 +71,12 @@ export default {
     }
   },
   mounted() {
-    let svm = this
     ExerciceService.getSapeurs(this.rowData.id).then(data => {
-      svm.convoque = data.filter(s => s.convoque).length
-      svm.present = data.filter(s => s.present).length
-      svm.remplace = data.filter(s => s.remplace).length
-      svm.excuse = data.filter(s => s.excuse_type_id).length
-      svm.amende = data.filter(s => s.amende).length
-      svm.loading = false
+      this.convoque = data.filter(s => s.convoque).length
+      this.present = data.filter(s => s.present).length
+      this.remplace = data.filter(s => s.remplace).length
+      this.excuse = data.filter(s => s.excuse_type_id).length
+      this.amende = data.filter(s => s.amende).length
     })
   }
 }

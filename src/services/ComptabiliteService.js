@@ -13,6 +13,9 @@ export default {
   imputerIntervention(interventionId, payload) {
     return Api().post('/imputation/intervention/' + interventionId, payload)
   },
+  imputerAnnuel(exerciceComptableId) {
+    return Api().post('/imputation/annuel/' + exerciceComptableId)
+  },
   getComptes() {
     return Api().get('/comptes/')
   },

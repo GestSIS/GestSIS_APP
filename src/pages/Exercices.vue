@@ -146,6 +146,8 @@ export default {
     return {
       css: CssForBootstrap4,
       toggles: {},
+      loading: true,
+      detailRow: ExerciceDetails,
       fields: [
         {
           title: '',
@@ -215,9 +217,7 @@ export default {
           name: 'actions',
           dataClass: 'align-middle'
         }
-      ],
-      loading: true,
-      detailRow: ExerciceDetails
+      ]
     }
   },
   props: {
@@ -263,7 +263,6 @@ export default {
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        console.log('orderBy:', sortOrder[0].sortField, sortOrder[0].direction)
         local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
       }
 

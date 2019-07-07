@@ -6,9 +6,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Comptes</h3>
-          <button type="button" class="btn btn-primary" @click="manageComptes">
-            Gestion des comptes
-          </button>
+          <!--          <button type="button" class="btn btn-primary" @click="manageComptes">-->
+          <!--            Gestion des comptes-->
+          <!--          </button>-->
         </div>
         <div class="card-body">
           <table id="sap-promotions" class="table" cellspacing="0" width="100%">
@@ -95,4 +95,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>

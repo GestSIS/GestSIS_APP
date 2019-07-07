@@ -211,17 +211,19 @@ export default {
       return InterventionService.saveIntervention(
         state.active.id,
         state.active.data
-      ).then(data =>
-        commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data).then(() => data)
-      )
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
+        return data
+      })
     },
     validerIntervention({ commit }, payload) {
-      return InterventionService.validerIntervention(payload).then(data =>
+      return InterventionService.validerIntervention(payload).then(data => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload,
           statut: data
-        }).then(() => data)
-      )
+        })
+        return data
+      })
     },
 
     //Materiel
@@ -229,31 +231,28 @@ export default {
       return InterventionService.addMateriel(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
+        return data
+      })
     },
     editMateriel({ state, commit }, payload) {
       return InterventionService.editMateriel(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
+        return data
+      })
     },
     removeMateriel({ state, commit }, payload) {
       return InterventionService.removeMateriel(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload)
+        return data
+      })
     },
 
     //Vehicules
@@ -261,21 +260,19 @@ export default {
       return InterventionService.addVehicules(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
+        return data
+      })
     },
     removeVehicules({ state, commit }, payload) {
       return InterventionService.removeVehicules(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload)
+        return data
+      })
     },
 
     //Missions
@@ -291,21 +288,19 @@ export default {
       return InterventionService.editMission(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+        return data
+      })
     },
     removeMission({ state, commit }, payload) {
       return InterventionService.removeMission(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload)
+        return data
+      })
     },
 
     //Appels
@@ -329,11 +324,10 @@ export default {
       return InterventionService.removeAppel(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload)
+        return data
+      })
     },
 
     addPresences({ state, commit }, payload) {
@@ -351,9 +345,10 @@ export default {
     editPresence({ state, commit }, payload) {
       return InterventionService.editSapeurs(state.active.data.id, {
         sapeurs: [payload]
-      }).then(data =>
-        commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload).then(() => data)
-      )
+      }).then(data => {
+        commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload)
+        return data
+      })
     },
     removePresence({ state, commit }, payload) {
       return InterventionService.removeSapeurs(state.active.data.id, {
@@ -389,11 +384,10 @@ export default {
       return InterventionService.removePhase(
         state.active.data.id,
         payload
-      ).then(data =>
-        commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload).then(
-          () => data
-        )
-      )
+      ).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload)
+        return data
+      })
     }
   }
 }

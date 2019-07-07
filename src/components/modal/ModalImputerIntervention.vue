@@ -196,9 +196,9 @@ export default {
           intervention_id: this.data.id,
           indemnite_intervention_type_id: this.activeIndemnite.id
         })
-        .then(ecritures => {
+        .then(data => {
           this.phase = 2
-          this.ecritures = ecritures
+          this.ecritures = data.ecritures
         })
     },
     onKeyDown() {

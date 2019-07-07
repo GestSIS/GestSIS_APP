@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="alert alert-dismissible alert-primary">
+      <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
         <button type="button" class="close" data-dismiss="alert">
           &times;
         </button>
@@ -75,11 +75,8 @@
             <tr>
               <th>Sapeur</th>
               <th>Designation</th>
-              <th>Solde</th>
-              <th>Indemnité</th>
-              <th>Frais</th>
-              <th>Taux weekend</th>
-              <th>Taux nuit</th>
+              <th>Tarif</th>
+              <th>Quantité</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -87,10 +84,8 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>{{ getSapeur(ecriture.sapeur_id) | sapeur }}</td>
               <td>{{ ecriture.designation }}</td>
-              <td class="text-right">{{ ecriture.solde }}</td>
-              <td class="text-right">{{ ecriture.indemnite }}</td>
-              <td class="text-right">{{ ecriture.frais }}</td>
-              <td class="text-right">{{ ecriture.taux_nuit }}</td>
+              <td class="text-right">{{ ecriture.tarif }}</td>
+              <td class="text-right">{{ ecriture.quantite }}</td>
               <td class="text-right">{{ ecriture.total }}</td>
             </tr>
           </tbody>
@@ -131,7 +126,7 @@ export default {
       fraisAnnuel: state => state.comptabilite.frais.annuels,
       indemnitesAnnuel: state => state.comptabilite.indemnites.annuels
     }),
-    ...mapGetters(['getFonction', 'getCompte']),
+    ...mapGetters(['getFonction', 'getCompte', 'getSapeur']),
     listDisplay() {
       let svm = this
       return [
@@ -167,7 +162,12 @@ export default {
       this.HIDE_MODAL()
     },
     imputer() {
-      this.$store.dispatch('imputerAnnuel')
+      this.$store.dispatch('imputerAnnuel').then(data => {
+        this.phase = 2
+        this.ecritures = [...data.frais, ...data.indemnites].sort(
+          (e1, e2) => e2.sapeur_id - e1.sapeur_id
+        )
+      })
     }
   }
 }

@@ -21,7 +21,24 @@
           :css="css.table"
           :data-manager="dataManager"
           :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          :detail-row-component="detailRow"
         >
+          <div slot="details" slot-scope="props">
+            <button
+              class="btn btn-link border-0"
+              @click="toggleDetails(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="toggles[props.rowData.id] || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!(toggles[props.rowData.id] || false)"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </div>
           <div slot="actions" slot-scope="props">
             <button
               class="btn btn-outline-primary border-0"
@@ -39,6 +56,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import FraisEcritureDetails from '@/components/FraisEcritureDetails'
 
 import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
@@ -52,10 +70,15 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true
-      this.$store.dispatch('fetchListExercice').then(() => {
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false
         this.$refs.vuetable_frais_annuels.setData(this.computeData())
       })
+    },
+    listeEcritures() {
+      this.loading = true
+      this.$refs.vuetable_frais_annuels.setData(this.computeData())
+      this.loading = false
     }
   },
   mounted() {
@@ -75,12 +98,40 @@ export default {
     }
   },
   data() {
+    let svm = this
     return {
       css: CssForBootstrap4,
       toggles: {},
+      detailRow: FraisEcritureDetails,
+      loading: true,
+      ecritureColumns: [
+        {
+          title: 'Designation',
+          field: 'designation'
+        },
+        {
+          title: 'Type',
+          field: 'frais',
+          formatter: field => (field > 0 ? 'Frais' : 'Indemnité')
+        },
+        {
+          title: 'Compte',
+          field: 'compte_id',
+          formatter: field => svm.getCompte(field).designation
+        },
+        {
+          title: 'Total',
+          field: 'total'
+        }
+      ],
       fields: [
         {
-          title: 'Nom Prénom',
+          title: '',
+          name: 'details',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Sapeur',
           name: 'nomPrenom',
           sortField: 'nomPrenom',
           dataClass: 'align-middle'
@@ -102,8 +153,7 @@ export default {
           name: 'actions',
           dataClass: 'align-middle'
         }
-      ],
-      loading: true
+      ]
     }
   },
   props: {
@@ -122,13 +172,7 @@ export default {
       listExerciceComptable: state => state.exerciceComptable.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters([
-      'activeExerciceId',
-      'getExerciceCategorie',
-      'getLocalite',
-      'getSapeur',
-      'getFonction'
-    ])
+    ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte'])
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -163,7 +207,16 @@ export default {
           ]
         }
       })
-      return sapeurs
+      return sapeurs.map(s => ({
+        ...s,
+        getEcritures: () =>
+          new Promise(
+            function(resolve) {
+              resolve(this.ecritures)
+            }.bind(s)
+          ),
+        columns: this.ecritureColumns
+      }))
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 })
@@ -182,7 +235,6 @@ export default {
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        console.log('orderBy:', sortOrder[0].sortField, sortOrder[0].direction)
         local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
       }
 
@@ -201,4 +253,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>

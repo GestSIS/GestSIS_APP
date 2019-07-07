@@ -4,9 +4,9 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Exercices</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
+          <!--          <button @click.prevent="save" class="btn btn-primary">-->
+          <!--            Enregistrer-->
+          <!--          </button>-->
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -21,16 +21,25 @@
           :css="css.table"
           :data-manager="dataManager"
           :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          :detail-row-component="detailRow"
         >
-          <!--            <template slot="tableHeader">-->
-          <!--              <template>-->
-          <!--                <tr>-->
-          <!--                  <th colspan="2">Basic Info</th>-->
-          <!--                  <th colspan="6">Details</th>-->
-          <!--                </tr>-->
-          <!--              </template>-->
-          <!--              <vuetable-row-header></vuetable-row-header>-->
-          <!--            </template>-->
+          <div slot="details" slot-scope="props">
+            <button
+              class="btn btn-link border-0"
+              @click="toggleDetails(props.rowData.id)"
+              v-if="props.rowData.statut === 4"
+            >
+              <font-awesome-icon
+                v-if="toggles[props.rowData.id] || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!(toggles[props.rowData.id] || false)"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </div>
           <div slot="actions" slot-scope="props">
             <button
               class="btn btn-outline-primary border-0"
@@ -48,6 +57,8 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import FraisEcritureDetails from '@/components/FraisEcritureDetails'
+import ComptabiliteService from '@/services/ComptabiliteService'
 
 import Vuetable from 'vuetable-2'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
@@ -74,6 +85,8 @@ export default {
   },
   mounted() {
     //TODO Fetch only if neccessary
+    this.$store.dispatch('fetchListSapeur')
+
     if (this.localites.length === 0) {
       this.$store.dispatch('fetchLocalites')
     }
@@ -92,10 +105,38 @@ export default {
     }
   },
   data() {
+    let svm = this
     return {
       css: CssForBootstrap4,
       toggles: {},
+      detailRow: FraisEcritureDetails,
+      loading: true,
+      ecritureColumns: [
+        {
+          title: 'Sapeur',
+          field: 'sapeur_id',
+          formatter: field =>
+            [svm.getSapeur(field)].map(s => `${s.nom} ${s.prenom}`)[0]
+        },
+        {
+          title: 'Solde',
+          field: 'solde'
+        },
+        {
+          title: 'Indemnité',
+          field: 'indemnite'
+        },
+        {
+          title: 'Total',
+          field: 'total'
+        }
+      ],
       fields: [
+        {
+          title: '',
+          name: 'details',
+          dataClass: 'align-middle'
+        },
         {
           title: 'Date',
           name: 'date',
@@ -159,8 +200,7 @@ export default {
           name: 'actions',
           dataClass: 'align-middle'
         }
-      ],
-      loading: true
+      ]
     }
   },
   props: {
@@ -180,13 +220,15 @@ export default {
       listExerciceComptable: state => state.exerciceComptable.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
+    ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),
     computedData() {
       return this.listExercices.map(s => ({
         ...s,
         categorie: this.getExerciceCategorie(s.exercice_categorie_id)
           .designation,
-        localite: this.getLocalite(s.localite_id).designation
+        localite: this.getLocalite(s.localite_id).designation,
+        getEcritures: () => ComptabiliteService.getEcrituresForExercice(s.id),
+        columns: this.ecritureColumns
       }))
     }
   },
@@ -215,7 +257,6 @@ export default {
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        console.log('orderBy:', sortOrder[0].sortField, sortOrder[0].direction)
         local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
       }
 
@@ -237,4 +278,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>
