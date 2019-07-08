@@ -37,9 +37,9 @@ Vue.filter('sapeur', function(sapeur) {
   return sapeur.nom + ' ' + sapeur.prenom
 })
 
-Vue.filter('compte', function(sapeur) {
-  if (!sapeur) return ''
-  return sapeur.no + ' ' + sapeur.designation
+Vue.filter('compte', function(compte) {
+  if (!compte) return ''
+  return compte.numero + ' - ' + compte.designation
 })
 
 new Vue({

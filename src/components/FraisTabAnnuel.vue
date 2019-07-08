@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-12">
+    <div class="col-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Indemnités et Frais annuels</h3>
@@ -120,8 +120,22 @@ export default {
           formatter: field => svm.getCompte(field).designation
         },
         {
+          title: 'Tarif',
+          field: 'tarif',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Quantité',
+          field: 'quantite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
           title: 'Total',
-          field: 'total'
+          field: 'total',
+          headerClassName: 'text-center',
+          className: 'text-right'
         }
       ],
       fields: [

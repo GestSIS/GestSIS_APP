@@ -117,15 +117,21 @@ export default {
         },
         {
           title: 'Solde',
-          field: 'solde'
+          field: 'solde',
+          headerClassName: 'text-center',
+          className: 'text-right'
         },
         {
           title: 'Indemnité',
-          field: 'indemnite'
+          field: 'indemnite',
+          headerClassName: 'text-center',
+          className: 'text-right'
         },
         {
           title: 'Total',
-          field: 'total'
+          field: 'total',
+          headerClassName: 'text-center',
+          className: 'text-right'
         }
       ],
       fields: [

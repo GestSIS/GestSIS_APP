@@ -6,7 +6,11 @@
     <table class="table mb-0">
       <thead>
         <tr>
-          <th v-for="(column, index) in columns" :key="index">
+          <th
+            v-for="(column, index) in columns"
+            :key="index"
+            :class="column.headerClassName || ''"
+          >
             {{ column.title }}
           </th>
         </tr>

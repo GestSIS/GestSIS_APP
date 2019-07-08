@@ -73,8 +73,6 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
-
 import ExerciceComptable from '@/components/ExerciceComptable'
 import FraisTabExercice from '@/components/FraisTabExercice'
 import FraisTabComptes from '@/components/FraisTabComptes'
@@ -96,16 +94,11 @@ export default {
       loading: true
     }
   },
-  computed: {
-    // ...mapGetters(['activeExerciceData']),
-  },
   mounted() {
+    //TODO Load only if neccessary
     this.$store.dispatch('fetchIndemnitesTypes')
     this.$store.dispatch('fetchFraisTypes')
     this.$store.dispatch('fetchComptes')
-    // this.$store.dispatch('fetchExerciceCategories')
-    // this.$store.dispatch('fetchExercicesComptables')
-    // this.$store.dispatch('fetchExcuseTypes')
   }
 }
 </script>

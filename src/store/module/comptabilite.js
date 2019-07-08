@@ -16,6 +16,10 @@ export default {
     },
     ecritures: {
       annuels: []
+    },
+    active: {
+      compteId: null,
+      ecritures: []
     }
   },
   mutations: {
@@ -36,6 +40,12 @@ export default {
     },
     [types.UPDATE_COMPTES_LISTE](state, payload) {
       state.comptes = payload
+    },
+    [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
+      state.active.ecritures = payload
+    },
+    [types.SELECT_CURRENT_COMPTE](state, payload) {
+      state.active.compteId = payload
     }
   },
   getters: {
@@ -46,6 +56,18 @@ export default {
       return ComptabiliteService.getComptes().then(data =>
         commit(types.UPDATE_COMPTES_LISTE, data)
       )
+    },
+    selectActiveCompte({ commit, dispatch }, payload) {
+      commit(types.SELECT_CURRENT_COMPTE, payload)
+      return dispatch('fetchEcritureComptes')
+    },
+    fetchEcritureComptes({ state, getters, commit }) {
+      return ComptabiliteService.getEcritureForCompte(
+        state.active.compteId,
+        getters.currentExerciceComptableId
+      ).then(data => {
+        return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data)
+      })
     },
     fetchIndemnitesTypes({ commit }) {
       return ComptabiliteService.getIndemniteTypes().then(data =>

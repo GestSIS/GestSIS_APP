@@ -19,6 +19,9 @@ export default {
   getComptes() {
     return Api().get('/comptes/')
   },
+  getEcritureForCompte(compteId, exerciceComptableId) {
+    return Api().get(`comptes/${compteId}/ecritures/${exerciceComptableId}`)
+  },
   getEcrituresForExercice(exerciceId) {
     return Api().get('/ecritures/exercice/' + exerciceId)
   },

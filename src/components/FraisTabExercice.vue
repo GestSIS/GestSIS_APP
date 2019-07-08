@@ -84,8 +84,9 @@ export default {
     }
   },
   mounted() {
-    //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListSapeur')
+    if (this.listSapeurs.length === 0) {
+      this.$store.dispatch('fetchListSapeur')
+    }
 
     if (this.localites.length === 0) {
       this.$store.dispatch('fetchLocalites')
@@ -120,15 +121,21 @@ export default {
         },
         {
           title: 'Solde',
-          field: 'solde'
+          field: 'solde',
+          headerClassName: 'text-center',
+          className: 'text-right'
         },
         {
           title: 'Indemnité',
-          field: 'indemnite'
+          field: 'indemnite',
+          headerClassName: 'text-center',
+          className: 'text-right'
         },
         {
           title: 'Total',
-          field: 'total'
+          field: 'total',
+          headerClassName: 'text-center',
+          className: 'text-right'
         }
       ],
       fields: [
@@ -215,6 +222,7 @@ export default {
   computed: {
     ...mapState({
       listExercices: state => state.exercice.liste.filter(e => e.statut > 2),
+      listSapeurs: state => state.sapeur.liste,
       localites: state => state.localite.liste,
       exerciceCategories: state => state.exerciceCategorie.liste,
       listExerciceComptable: state => state.exerciceComptable.liste,
