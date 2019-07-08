@@ -44,19 +44,11 @@
             :api-mode="false"
             :fields="fields"
             :detail-row-component="detailRow"
+            detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
           >
-            <!--            <template slot="tableHeader">-->
-            <!--              <template>-->
-            <!--                <tr>-->
-            <!--                  <th colspan="2">Basic Info</th>-->
-            <!--                  <th colspan="6">Details</th>-->
-            <!--                </tr>-->
-            <!--              </template>-->
-            <!--              <vuetable-row-header></vuetable-row-header>-->
-            <!--            </template>-->
             <div slot="details" slot-scope="props">
               <button
                 class="btn btn-link border-0"
@@ -284,4 +276,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>
