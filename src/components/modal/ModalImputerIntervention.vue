@@ -46,6 +46,8 @@
                 <td>{{ indemnite.indemnite }}</td>
                 <td>{{ indemnite.solde_min }}</td>
                 <td>{{ indemnite.solde_min_pour }}</td>
+                <td>{{ indemnite.taux_nuit }}</td>
+                <td>{{ indemnite.taux_weekend }}</td>
                 <td>{{ indemnite.unite_id }}</td>
                 <td>{{ indemnite.compte_id }}</td>
                 <td>

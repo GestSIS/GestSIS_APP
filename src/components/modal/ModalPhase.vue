@@ -17,6 +17,8 @@
           id="debut"
           :min-datetime="min"
           :max-datetime="max"
+          :minute-step="15"
+          :disabled="activePhase.debut === null && activePhase.id"
         ></datetime>
         <!--        <input-->
         <!--          type="date"-->
@@ -81,15 +83,20 @@ export default {
     this.min = DateTime.fromSQL(this.data.min).toISO()
     this.max = DateTime.fromSQL(this.data.max).toISO()
 
-    this.activePhase.debut2 = DateTime.fromSQL(this.activePhase.debut).toISO()
+    if (this.activePhase.debut === null && this.activePhase.id) {
+      this.activePhase.debut2 = this.min
+    } else {
+      this.activePhase.debut2 = DateTime.fromSQL(this.activePhase.debut).toISO()
+    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      this.activePhase.debut = DateTime.fromISO(
-        this.activePhase.debut2
-      ).toFormat(this.format)
-
+      if (!(this.activePhase.debut === null && this.activePhase.id)) {
+        this.activePhase.debut = DateTime.fromISO(
+          this.activePhase.debut2
+        ).toFormat(this.format)
+      }
       if ((this.activePhase.id || 0) === 0) {
         this.$store
           .dispatch('addPhase', {

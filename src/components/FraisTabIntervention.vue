@@ -116,6 +116,24 @@ export default {
             [svm.getSapeur(field)].map(s => `${s.nom} ${s.prenom}`)[0]
         },
         {
+          title: 'Tarif',
+          field: 'tarif',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Taux',
+          field: 'taux',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Quantité',
+          field: 'quantite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
           title: 'Solde',
           field: 'solde',
           headerClassName: 'text-center',

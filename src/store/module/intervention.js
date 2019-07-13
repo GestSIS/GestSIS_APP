@@ -278,10 +278,10 @@ export default {
     //Missions
     addMission({ state, commit }, payload) {
       return InterventionService.addMission(state.active.data.id, payload).then(
-        data =>
-          commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data).then(
-            () => data
-          )
+        data => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
+          return data
+        }
       )
     },
     editMission({ state, commit }, payload) {
@@ -306,18 +306,18 @@ export default {
     //Appels
     addAppel({ state, commit }, payload) {
       return InterventionService.addAppel(state.active.data.id, payload).then(
-        data =>
-          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data).then(
-            () => data
-          )
+        data => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+          return data
+        }
       )
     },
     editAppel({ state, commit }, payload) {
       return InterventionService.editAppel(state.active.data.id, payload).then(
-        data =>
-          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data).then(
-            () => data
-          )
+        data => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
+          return data
+        }
       )
     },
     removeAppel({ state, commit }, payload) {
@@ -366,18 +366,18 @@ export default {
     //Phases
     addPhase({ state, commit }, payload) {
       return InterventionService.addPhase(state.active.data.id, payload).then(
-        data =>
-          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data).then(
-            () => data
-          )
+        data => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
+          return data
+        }
       )
     },
     editPhase({ state, commit }, payload) {
       return InterventionService.editPhase(state.active.data.id, payload).then(
-        data =>
-          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, payload).then(
-            () => data
-          )
+        data => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
+          return data
+        }
       )
     },
     removePhase({ state, commit }, payload) {

@@ -232,16 +232,14 @@ export default {
     },
 
     addTelephone({ state, commit }, payload) {
-      return SapeurService.addTelephone(state.active.data.id, payload).then(
-        data => {
-          commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
-          return data
-        }
-      )
+      return SapeurService.addTelephone(state.active.id, payload).then(data => {
+        commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
+        return data
+      })
     },
 
     editTelephone({ state, commit }, payload) {
-      return SapeurService.editTelephone(state.active.data.id, payload).then(
+      return SapeurService.editTelephone(state.active.id, payload).then(
         data => {
           commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data)
           return data
@@ -249,7 +247,7 @@ export default {
       )
     },
     removeTelephone({ state, commit }, payload) {
-      return SapeurService.removeTelephone(state.active.data.id, payload).then(
+      return SapeurService.removeTelephone(state.active.id, payload).then(
         data =>
           commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload).then(
             () => data
@@ -258,48 +256,38 @@ export default {
     },
 
     addPermis({ state, commit }, payload) {
-      return SapeurService.addPermis(state.active.data.id, payload).then(
-        data => {
-          commit(types.ADD_CURRENT_SAPEUR_PERMIS, data)
-          return data
-        }
-      )
+      return SapeurService.addPermis(state.active.id, payload).then(data => {
+        commit(types.ADD_CURRENT_SAPEUR_PERMIS, data)
+        return data
+      })
     },
     editPermis({ state, commit }, payload) {
-      return SapeurService.editPermis(state.active.data.id, payload).then(
-        data => {
-          commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
-          return data
-        }
-      )
+      return SapeurService.editPermis(state.active.id, payload).then(data => {
+        commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
+        return data
+      })
     },
     removePermis({ state, commit }, payload) {
-      return SapeurService.removePermis(state.active.data.id, payload).then(
-        data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
-          return data
-        }
-      )
+      return SapeurService.removePermis(state.active.id, payload).then(data => {
+        commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
+        return data
+      })
     },
 
     addFonction({ state, commit }, payload) {
-      return SapeurService.addFonction(state.active.data.id, payload).then(
-        data => {
-          commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
-          return data
-        }
-      )
+      return SapeurService.addFonction(state.active.id, payload).then(data => {
+        commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
+        return data
+      })
     },
     editFonction({ state, commit }, payload) {
-      return SapeurService.editFonction(state.active.data.id, payload).then(
-        data => {
-          commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
-          return data
-        }
-      )
+      return SapeurService.editFonction(state.active.id, payload).then(data => {
+        commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
+        return data
+      })
     },
     removeFonction({ state, commit }, payload) {
-      return SapeurService.removeFonction(state.active.data.id, payload).then(
+      return SapeurService.removeFonction(state.active.id, payload).then(
         data => {
           commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload)
           return data

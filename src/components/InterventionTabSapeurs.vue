@@ -1,165 +1,187 @@
 <template>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-12 col-md-8 col-xl-8">
-        <!-- general form elements -->
-        <div class="card card-primary card-outline mb-3">
-          <!-- /.card-header -->
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Présences</h3>
-            <button type="button" class="btn btn-primary" @click="addPresences">
-              Ajouter des présences
-            </button>
-          </div>
-          <div class="card-body">
-            <div class="badge-wrapper">
-              <span class="badge badge-secondary mr-2">Intervention</span>
-              <span class="badge badge-primary mr-2">Entretient</span>
-              <span class="badge badge-success mr-2">Piquet</span>
-            </div>
-            <div class="table-wrapper">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th rowspan="2">Sapeurs</th>
-                    <th rowspan="2">Quittance</th>
-                    <th
-                      colspan="4"
-                      v-for="(col, i) in columns"
-                      :key="i"
-                      class="text-center pr-1 pl-1"
-                    >
-                      {{ col }}h
-                    </th>
-                  </tr>
-                  <tr>
-                    <th
-                      v-for="(col, i) in columns"
-                      :key="'1' + i"
-                      class="pr-1 pl-1"
-                    ></th>
-                    <th
-                      v-for="(col, i) in columns"
-                      :key="'2' + i"
-                      class="pr-1 pl-1"
-                    ></th>
-                    <th
-                      v-for="(col, i) in columns"
-                      :key="'3' + i"
-                      class="pr-1 pl-1"
-                    ></th>
-                    <th
-                      v-for="(col, i) in columns"
-                      :key="'4' + i"
-                      class="pr-1 pl-1"
-                    ></th>
-                  </tr>
-                </thead>
-                <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
-                  <tr>
-                    <th class="ml-0 pl-0">
-                      <button
-                        class="btn btn-link border-0"
-                        @click="expandSap(s.id)"
-                      >
-                        <font-awesome-icon
-                          v-if="toggles[s.id] || false"
-                          :icon="['fas', 'angle-down']"
-                        />
-                        <font-awesome-icon
-                          v-if="!(toggles[s.id] || false)"
-                          :icon="['fas', 'angle-right']"
-                        />
-                      </button>
-                      {{ s | sapeur }}
-                    </th>
-                    <td class="text-center">
-                      <div class="custom-control custom-checkbox d-inline">
-                        <input
-                          type="checkbox"
-                          class="custom-control-input"
-                          :id="s.id"
-                          :checked="
-                            quittances.filter(
-                              q => q.sapeur_id === parseInt(s.id)
-                            ).length === 1
-                          "
-                        />
-                        <label
-                          class="custom-control-label"
-                          :for="s.id"
-                          @click="() => {}"
-                        ></label>
-                      </div>
-                    </td>
-                    <td
-                      v-for="i in Array(columns.length * 4).keys()"
-                      :key="s.id + '-' + i"
-                      :class="{
-                        'bg-secondary': computedPresences[s.id][i] === 1,
-                        'bg-primary': computedPresences[s.id][i] === 2,
-                        'bg-success': computedPresences[s.id][i] === 3
-                      }"
-                      class="pr-1 pl-1"
-                    ></td>
-                  </tr>
-                  <template v-if="toggles[s.id]">
-                    <tr
-                      v-for="p in sortedPresences(s.id)"
-                      :key="p.id"
-                      :class="{
-                        'alert-success': !!p.piquet === true
-                      }"
-                    >
-                      <td :colspan="2 + columns.length * 4">
-                        {{ p.debut | datePresence }} -
-                        {{ p.fin | datePresence }}
-                        <button
-                          type="button"
-                          class="btn btn-outline-primary border-0 ml-2"
-                          @click="editPresence(p)"
-                        >
-                          <font-awesome-icon :icon="['far', 'edit']" />
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-outline-danger border-0"
-                          @click="removePresence(p.id)"
-                        >
-                          <font-awesome-icon :icon="['far', 'trash-alt']" />
-                        </button>
-                      </td>
-                    </tr>
-                  </template>
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <div class="row"></div>
+    <div class="col-sm-12 col-md-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline mb-3">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Phases de l'intervention</h3>
+          <button type="button" class="btn btn-primary" @click="newPhase">
+            Nouvelle phase
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Début</th>
+                <th>Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="phase in phases" :key="phase.id">
+                <td>
+                  {{
+                    phase.debut === null
+                      ? `${data.date_debut} ${data.heure_debut}`
+                      : phase.debut.slice(0, 16)
+                  }}
+                </td>
+                <td>{{ getPhaseType(phase.phase_type_id).designation }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0 ml-2"
+                    @click="editPhase(phase)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="removePhase(phase.id)"
+                    v-if="phase.debut !== null"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="col-sm-12 col-md-4 col-xl-4">
-        <!-- general form elements -->
-        <div class="card card-primary card-outline mb-3">
-          <!-- /.card-header -->
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Phases de l'intervention</h3>
-            <button type="button" class="btn btn-primary" @click="newPhase">
-              Nouvelle phase
-            </button>
+    </div>
+    <div class="col-sm-12 col-md-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline mb-3">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Présences</h3>
+          <button type="button" class="btn btn-primary" @click="addPresences">
+            Ajouter des présences
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="badge-wrapper">
+            <span class="badge badge-secondary mr-2">Intervention</span>
+            <span class="badge badge-primary mr-2">Entretient</span>
+            <span class="badge badge-success mr-2">Piquet</span>
           </div>
-          <div class="card-body">
-            <table class="table">
+          <div class="table-wrapper">
+            <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th>Début</th>
-                  <th>Type</th>
+                  <th rowspan="2">Sapeurs</th>
+                  <th rowspan="2">Quittance</th>
+                  <th
+                    colspan="4"
+                    v-for="(col, i) in columns"
+                    :key="i"
+                    class="text-center pr-1 pl-1"
+                  >
+                    {{ col }}h
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'1' + i"
+                    class="pr-1 pl-1"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'2' + i"
+                    class="pr-1 pl-1"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'3' + i"
+                    class="pr-1 pl-1"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'4' + i"
+                    class="pr-1 pl-1"
+                  ></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="phase in phases" :key="phase.id">
-                  <td>{{ phase.debut }}</td>
-                  <td>{{ getPhaseType(phase.phase_type_id).designation }}</td>
+              <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
+                <tr>
+                  <th class="ml-0 pl-0">
+                    <button
+                      class="btn btn-link border-0"
+                      @click="expandSap(s.id)"
+                    >
+                      <font-awesome-icon
+                        v-if="toggles[s.id] || false"
+                        :icon="['fas', 'angle-down']"
+                      />
+                      <font-awesome-icon
+                        v-if="!(toggles[s.id] || false)"
+                        :icon="['fas', 'angle-right']"
+                      />
+                    </button>
+                    {{ s | sapeur }}
+                  </th>
+                  <td class="text-center">
+                    <div class="custom-control custom-checkbox d-inline">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        :id="s.id"
+                        :checked="
+                          quittances.filter(q => q.sapeur_id === parseInt(s.id))
+                            .length === 1
+                        "
+                      />
+                      <label
+                        class="custom-control-label"
+                        :for="s.id"
+                        @click="() => {}"
+                      ></label>
+                    </div>
+                  </td>
+                  <td
+                    v-for="i in Array(columns.length * 4).keys()"
+                    :key="s.id + '-' + i"
+                    :class="{
+                      'bg-secondary': computedPresences[s.id][i] === 1,
+                      'bg-primary': computedPresences[s.id][i] === 2,
+                      'bg-success': computedPresences[s.id][i] === 3
+                    }"
+                    class="pr-1 pl-1"
+                  ></td>
                 </tr>
+                <template v-if="toggles[s.id]">
+                  <tr
+                    v-for="p in sortedPresences(s.id)"
+                    :key="p.id"
+                    :class="{
+                      'alert-success': !!p.piquet === true
+                    }"
+                  >
+                    <td :colspan="2 + columns.length * 4">
+                      {{ p.debut | datePresence }} -
+                      {{ p.fin | datePresence }}
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0 ml-2"
+                        @click="editPresence(p)"
+                      >
+                        <font-awesome-icon :icon="['far', 'edit']" />
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="removePresence(p.id)"
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
@@ -243,7 +265,12 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalPresence',
         callback: () => {},
-        data: { mode: 'add', id: this.data.id }
+        data: {
+          mode: 'add',
+          id: this.data.id,
+          min: this.data.date_debut + ' ' + this.data.heure_debut,
+          max: this.data.date_fin + ' ' + this.data.heure_fin
+        }
       })
     },
     editPresence(presence) {
@@ -269,6 +296,22 @@ export default {
           max: this.data.date_fin + ' ' + this.data.heure_fin
         }
       })
+    },
+    editPhase(phase) {
+      let clone = {}
+      Object.assign(clone, phase)
+      this.$store.dispatch('updateActivePhase', clone)
+      this.SHOW_MODAL({
+        component: 'ModalPhase',
+        callback: () => {},
+        data: {
+          min: this.data.date_debut + ' ' + this.data.heure_debut,
+          max: this.data.date_fin + ' ' + this.data.heure_fin
+        }
+      })
+    },
+    removePhase(id) {
+      this.$store.dispatch('removePhase', id)
     },
     computeSapeur(id) {
       let res = {}
