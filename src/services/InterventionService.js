@@ -85,6 +85,22 @@ export default {
     })
   },
 
+  //Quittances
+  addQuittances(interventionId, quittancesData) {
+    return Api().post(
+      '/interventions/' + interventionId + '/quittances/',
+      { quittances: quittancesData },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  },
+  removeQuittances(interventionId, quittancesId) {
+    return Api().delete('/interventions/' + interventionId + '/quittances/', {
+      data: { quittances: quittancesId }
+    })
+  },
+
   //Sapeurs
   addSapeurs(interventionId, sapeursData) {
     return Api().post(

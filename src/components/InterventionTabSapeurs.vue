@@ -138,7 +138,7 @@
                       <label
                         class="custom-control-label"
                         :for="s.id"
-                        @click="() => {}"
+                        @click="e => editQuittance(e, s.id)"
                       ></label>
                     </div>
                   </td>
@@ -311,6 +311,19 @@ export default {
     },
     removePhase(id) {
       this.$store.dispatch('removePhase', id)
+    },
+    editQuittance(e, id) {
+      let quittances = this.quittances.filter(q => q.sapeur_id === parseInt(id))
+      if (quittances.length === 1) {
+        //remove quittance
+        this.$store.dispatch('removeQuittance', quittances[0].id)
+      } else {
+        //add quittance
+        this.$store.dispatch('addQuittance', id)
+      }
+      //TODO
+      console.log(e)
+      console.log(id)
     },
     computeSapeur(id) {
       let res = {}

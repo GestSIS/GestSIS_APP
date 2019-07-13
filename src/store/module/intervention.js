@@ -76,6 +76,12 @@ export default {
         p => !payload.includes(p.id)
       )
     },
+    //Quittances
+    [types.REMOVE_CURRENT_INTERVENTION_QUITTANCES](state, payload) {
+      state.active.quittances = state.active.quittances.filter(
+        p => p.id !== payload
+      )
+    },
 
     //Appels
     [types.REMOVE_CURRENT_INTERVENTION_APPEL](state, payload) {
@@ -271,6 +277,24 @@ export default {
         payload
       ).then(data => {
         commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload)
+        return data
+      })
+    },
+
+    //Quittances
+    addQuittance({ state, commit }, payload) {
+      return InterventionService.addQuittances(state.active.data.id, [
+        payload
+      ]).then(data => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data)
+        return data
+      })
+    },
+    removeQuittance({ state, commit }, payload) {
+      return InterventionService.removeQuittances(state.active.data.id, [
+        payload
+      ]).then(data => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_QUITTANCES, payload)
         return data
       })
     },

@@ -1,12 +1,19 @@
 <template>
   <div class="row">
-    <div class="col-sm-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Informations</h3>
+    <div class="col-12">
+      <div class="row mb-2">
+        <div class="col-auto mr-auto"></div>
+        <div class="col-auto">
           <button @click.prevent="save" class="btn btn-primary">
             Enregistrer
           </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header">
+          <h3 class="card-title">Informations</h3>
         </div>
         <div class="card-body">
           <div class="row">
@@ -102,13 +109,14 @@
           <!-- OBJET -->
           <div class="form-group">
             <label for="m-int-objet">Objet</label>
-            <textarea
+            <input
+              type="text"
               class="form-control"
               :class="{ 'is-invalid': errors['objet'] }"
               id="m-int-objet"
               name="objet"
               v-model="activeInterventionData.objet"
-            ></textarea>
+            />
           </div>
 
           <!-- LIEU -->
@@ -167,11 +175,8 @@
 
     <div class="col-sm-6">
       <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
+        <div class="card-header">
           <h3 class="card-title">Statistiques</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
         </div>
         <div class="card-body">
           <!-- INTERVENTION TRAITEMENT -->
@@ -284,11 +289,8 @@
 
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
+        <div class="card-header">
           <h3 class="card-title">Contact</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
         </div>
         <div class="card-body">
           <div class="row">
@@ -303,6 +305,7 @@
                   id="m-int-proprietaire"
                   name="proprietaire"
                   v-model="activeInterventionData.proprietaire"
+                  rows="5"
                 ></textarea>
               </div>
               <!-- Responsable -->
@@ -315,28 +318,11 @@
                   id="m-int-responsable"
                   name="responsable"
                   v-model="activeInterventionData.responsable"
+                  rows="5"
                 ></textarea>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Résumé</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
-        </div>
-        <div class="card-body">
-          <label for="m-int-traitement">Description</label>
-          <textarea
-            class="form-control"
-            v-model="activeInterventionData.description"
-            rows="30"
-          ></textarea>
         </div>
       </div>
     </div>
@@ -371,13 +357,13 @@ export default {
       listTypeIntervention: state => state.typeIntervention.liste,
       listStatFederal: state => state.statFederal.liste,
       listInterventionTraitement: state => state.interventionTraitement.liste,
-      listSapeur: state => state.sapeur.liste
+      listSapeur: state => state.sapeur.liste,
+      activeInterventionId: state => state.intervention.active.id,
+      activeInterventionData: state => state.intervention.active.data,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters([
-      'activeInterventionId',
-      'activeInterventionData',
       'listLocalitesSis',
-      'currentExerciceComptableId',
       'exerciceComptableDebut',
       'exerciceComptableFin'
     ]),

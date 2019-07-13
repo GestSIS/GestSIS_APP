@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
@@ -46,7 +46,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeInterventionId', 'activeInterventionData'])
+    ...mapState({
+      activeInterventionId: state => state.intervention.active.id,
+      activeInterventionData: state => state.intervention.active.data
+    })
   },
   methods: {
     save() {
