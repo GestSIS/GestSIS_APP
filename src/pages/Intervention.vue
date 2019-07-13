@@ -36,6 +36,14 @@
             </button>
             <button
               class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'resume' }"
+              role="tab"
+              @click.prevent="activeTab = 'resume'"
+            >
+              Résumé
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
               :class="{ active: activeTab === 'sapeurs' }"
               role="tab"
               @click.prevent="activeTab = 'sapeurs'"
@@ -71,17 +79,18 @@
               v-if="activeTab === 'general'"
               >General</InterventionTabGeneral
             >
+            <InterventionTabResume v-else-if="activeTab === 'resume'"
+              >Résumé</InterventionTabResume
+            >
             <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'"
               >Sapeurs</InterventionTabSapeurs
             >
             <InterventionTabJournal v-else-if="activeTab === 'journal'"
               >Journal</InterventionTabJournal
             >
-            <div class="container-fluid" v-else-if="activeTab === 'mat-veh'">
-              <div class="row">
-                <InterventionTabMateriel>Materiels</InterventionTabMateriel>
-                <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
-              </div>
+            <div class="row" v-else-if="activeTab === 'mat-veh'">
+              <InterventionTabMateriel>Materiels</InterventionTabMateriel>
+              <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
             </div>
           </div>
           <div v-else>
@@ -97,6 +106,7 @@
 import { mapGetters } from 'vuex'
 
 import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
+import InterventionTabResume from '@/components/InterventionTabResume.vue'
 import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
 import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
 import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
@@ -106,8 +116,9 @@ import ExerciceComptable from '@/components/ExerciceComptable'
 export default {
   name: 'intervention',
   components: {
-    InterventionTabSapeurs,
     InterventionTabGeneral,
+    InterventionTabResume,
+    InterventionTabSapeurs,
     InterventionTabMateriel,
     InterventionTabVehicule,
     InterventionTabJournal,
@@ -115,7 +126,6 @@ export default {
   },
   data() {
     return {
-      //TODO UPDATE TO 'general'
       activeTab: 'general',
       loading: true
     }
