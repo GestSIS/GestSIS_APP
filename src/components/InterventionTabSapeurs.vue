@@ -345,9 +345,6 @@ export default {
         //add quittance
         this.$store.dispatch('addQuittance', id)
       }
-      //TODO
-      console.log(e)
-      console.log(id)
     },
     computeSapeur(id) {
       let res = {}

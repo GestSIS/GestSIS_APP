@@ -1,3 +1,48 @@
+<style lang="scss" scoped>
+.centered {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5 !important;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type='email'] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type='password'] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin" _lpchecked="1">
@@ -37,9 +82,11 @@
       >
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">© 2019</p>
 
-      <router-link to="/sapeurs" class="is-active">Sapeurs</router-link>
+      <router-link to="/register" class="btn btn-link is-active"
+        >S'enregistrer</router-link
+      >
     </form>
   </div>
 </template>
@@ -48,8 +95,7 @@
 // import { mapGetters, mapState } from 'vuex'
 
 export default {
-  name: 'login',
-  props: ['redirect'],
+  name: 'register',
   data() {
     return {
       email: null,
@@ -59,7 +105,6 @@ export default {
   },
   methods: {
     login() {
-      console.log('LOGIN REQUEST')
       this.$store
         .dispatch('login', { email: this.email, password: this.password })
         .then(() => {

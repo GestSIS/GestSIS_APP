@@ -206,7 +206,7 @@ export default {
   },
   mounted() {
     this.editMode = this.data.mode === 'edit'
-    console.log(this.data)
+
     if (this.editMode) {
       this.piquet = this.data.presence.piquet
       this.date_debut = this.data.presence.debut.slice(0, 10)

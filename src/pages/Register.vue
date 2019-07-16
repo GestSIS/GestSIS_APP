@@ -3,42 +3,121 @@
     <form class="text-center form-signin" _lpchecked="1">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
+      <h1 class="h3 mb-3 font-weight-normal">Veuillez vous enregistrer</h1>
+      <label for="inputEmail" class="sr-only">Nom d'utilisateur</label>
       <input
+        v-model="name"
+        type="text"
+        id="inputName"
+        class="form-control"
+        placeholder="Nom d'utilisateur"
+        required=""
+        autofocus=""
+        autocomplete="off"
+        :class="{ 'is-invalid': error.name }"
+      />
+      <div class="invalid-feedback" v-if="error.name">
+        Nom invalide
+      </div>
+      <label for="inputEmail" class="sr-only">Email</label>
+      <input
+        v-model="email"
         type="email"
         id="inputEmail"
         class="form-control"
         placeholder="Email address"
         required=""
-        autofocus=""
-        style='background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC"); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;'
         autocomplete="off"
+        :class="{ 'is-invalid': error.email }"
       />
-      <label for="inputPassword" class="sr-only">Password</label>
+      <div class="invalid-feedback" v-if="error.email">
+        Email déjà existant
+      </div>
+      <label for="inputPassword" class="sr-only">Mot de passe</label>
       <input
+        v-model="password"
         type="password"
         id="inputPassword"
         class="form-control"
         placeholder="Password"
         required=""
-        style='background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC"); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;'
         autocomplete="off"
+        :class="{ 'is-invalid': error.password }"
       />
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me" /> Remember me
-        </label>
+      <div class="invalid-feedback" v-if="error.password">
+        Taille minimum: 8
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
+      <label for="inputPasswordConfirmation" class="sr-only"
+        >Confirmation</label
+      >
+      <input
+        v-model="password_confirmation"
+        type="password"
+        id="inputPasswordConfirmation"
+        class="form-control"
+        placeholder="Confirmation"
+        required=""
+        autocomplete="off"
+        :class="{
+          'is-invalid':
+            error.password_confirmation || password !== password_confirmation
+        }"
+      />
+      <div class="invalid-feedback" v-if="error.password_confirmation">
+        Mot de passe différent
+      </div>
+      <button
+        class="btn btn-lg btn-primary btn-block"
+        type="submit"
+        @click="login"
+      >
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">© 2019</p>
 
-      <router-link to="/sapeurs" class="is-active">Sapeurs</router-link>
+      <router-link to="/login" class="btn btn-link is-active"
+        >Se connecter</router-link
+      >
     </form>
   </div>
 </template>
+
+<script>
+// import { mapGetters, mapState } from 'vuex'
+
+export default {
+  name: 'register',
+  data() {
+    return {
+      name: null,
+      email: null,
+      password: null,
+      password_confirmation: null,
+      error: {}
+    }
+  },
+  methods: {
+    login() {
+      this.$store
+        .dispatch('register', {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          password_confirmation: this.password_confirmation
+        })
+        .then(() => {
+          this.error = {}
+          this.$router.push(
+            this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
+          )
+        })
+        .catch(data => {
+          this.error = data.error
+        })
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .centered {

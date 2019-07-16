@@ -36,9 +36,13 @@ export default {
 
   //Téléphones
   addTelephone(sapeurId, telephoneData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/telephones/', telephoneData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Api.api().post(
+      '/sapeurs/' + sapeurId + '/telephones/',
+      telephoneData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
   editTelephone(sapeurId, telephoneData) {
     return Api.api().put(
@@ -50,7 +54,9 @@ export default {
     )
   },
   removeTelephone(sapeurId, telephoneId) {
-    return Api.api().delete('/sapeurs/' + sapeurId + '/telephones/' + telephoneId)
+    return Api.api().delete(
+      '/sapeurs/' + sapeurId + '/telephones/' + telephoneId
+    )
   },
 
   //Permis
@@ -74,9 +80,13 @@ export default {
 
   //Fonctions
   addFonction(sapeurId, fonctionData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Api.api().post(
+      '/sapeurs/' + sapeurId + '/fonctions/',
+      fonctionData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
   editFonction(sapeurId, fonctionData) {
     return Api.api().put(
@@ -131,9 +141,13 @@ export default {
 
   //Mutations
   addMutation(sapeurId, mutationData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Api.api().post(
+      '/sapeurs/' + sapeurId + '/mutations/',
+      mutationData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
   editMutation(sapeurId, mutationData) {
     return Api.api().put(

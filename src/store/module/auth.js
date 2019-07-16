@@ -7,11 +7,11 @@ import Api from '../../services/Api'
 export default {
   state: {
     authenticated: !!TokenService.getToken(),
-    user: null
+    user: null,
+    refreshTokenPromise: null
   },
   mutations: {
     [types.AUTH_SUCCESSFULL](state, payload) {
-      console.log('Mutation')
       state = {
         authenticated: payload.authenticated,
         user: payload.user
@@ -24,35 +24,21 @@ export default {
         user: null
       }
       return state
+    },
+    [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
+      state.refreshTokenPromise = payload
     }
   },
   getters: {
     isAuthenticated: state => state.authenticated
   },
   actions: {
-    login({ commit, dispatch }, payload) {
+    login({ commit }, payload) {
       return AuthService.login(payload).then(data => {
         TokenService.saveToken(data.accessToken)
-        TokenService.saveRefreshToken(data.resfreshToken)
-
-        const refreshToken = () => {
-          return AuthService.refreshToken(TokenService.getRefreshToken()).then(
-            data => {
-              TokenService.saveToken(data.accessToken)
-              TokenService.saveRefreshToken(data.refreshToken)
-            }
-          )
-        }
-        const onRefreshFail = () => {
-          return dispatch('logout')
-        }
+        TokenService.saveRefreshToken(data.refreshToken)
 
         Api.setAccessToken(data.accessToken)
-
-        Api.set401Interceptor(refreshToken, onRefreshFail)
-
-        console.log(data)
-        console.log(data.user)
 
         return commit(types.AUTH_SUCCESSFULL, {
           authenticated: true,
@@ -60,25 +46,12 @@ export default {
         })
       })
     },
-    register({ commit, dispatch }, payload) {
+    register({ commit }, payload) {
       return AuthService.register(payload).then(data => {
-        TokenService.saveToken(data.data.accessToken)
-        TokenService.saveRefreshToken(data.data.resfreshToken)
-
-        const refreshToken = () => {
-          return AuthService.refreshToken(TokenService.getRefreshToken()).then(
-            data => {
-              TokenService.saveToken(data.accessToken)
-              TokenService.saveRefreshToken(data.refreshToken)
-            }
-          )
-        }
-        const onRefreshFail = () => {
-          return dispatch('logout')
-        }
+        TokenService.saveToken(data.accessToken)
+        TokenService.saveRefreshToken(data.refreshToken)
 
         Api.setAccessToken(data.accessToken)
-        Api.set401Interceptor(refreshToken, onRefreshFail)
 
         return commit(types.AUTH_SUCCESSFULL, {
           authenticated: true,
@@ -89,9 +62,34 @@ export default {
     logout({ commit }) {
       TokenService.removeToken()
       TokenService.removeRefreshToken()
-      Api.remove401Interceptor()
 
       return commit(types.AUTH_LOGOUT)
+    },
+    refreshToken({ commit, state }) {
+      console.log('Call refresh token')
+      if (!state.refreshTokenPromise) {
+        console.log('Call refresh token for real')
+        const p = AuthService.refreshToken(TokenService.getRefreshToken())
+
+        commit(types.AUTH_REFRESH_TOKEN_PROMISES, p)
+
+        // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
+        // Clear the promise on error as well.
+        p.then(data => {
+          // commit(types.AUTH_SUCCESSFULL, data)
+          TokenService.saveToken(data.accessToken)
+          TokenService.saveRefreshToken(data.refreshToken)
+          Api.setAccessToken(data.accessToken)
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null)
+        }).catch(e => {
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null)
+          return e
+        })
+      } else {
+        console.log('ignore send call refresh')
+      }
+
+      return state.refreshTokenPromise
     }
   }
 }

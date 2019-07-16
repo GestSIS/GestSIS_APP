@@ -8,6 +8,6 @@ export default {
     return Api.auth().post('/register', payload)
   },
   refreshToken(payload) {
-    return Api.auth().post('refresh-token', payload)
+    return Api.auth().post('refresh-token', { token: payload })
   }
 }

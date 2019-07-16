@@ -208,7 +208,6 @@ export default {
         ...state.active.data,
         exercice_comptable_id: getters.currentExerciceComptableId
       }).then(async data => {
-        console.log(data)
         await commit(types.ADD_INTERVENTION, data)
         await commit(types.SELECT_CURRENT_INTERVENTION, data.id)
         await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)

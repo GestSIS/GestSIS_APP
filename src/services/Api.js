@@ -3,30 +3,17 @@ import axios from 'axios'
 const API_URL = 'http://127.0.0.1:8000/api/v2'
 const AUTH_URL = 'http://127.0.0.1:8001/api/v1'
 
+import store from '../store/index'
 const api = {
-  _401interceptor: null,
+  _401interceptor: true,
+  _refreshToken: null,
+  _refreshFailed: null,
 
   setAccessToken: token => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   },
 
-  set401Interceptor(refreshToken, refreshFailed){
-    this._401interceptor = axios.interceptors.response.use(null, error => {
-      if (error.config && error.response && error.response.status === 401) {
-        return refreshToken().then(() => {
-          return axios.request(error.config).catch(refreshFailed)
-        })
-      }
-
-      return Promise.reject(error)
-    })
-  },
-
-  remove401Interceptor(){
-    axios.interceptors.response.eject(this._401interceptor)
-  },
-
-  api: () => {
+  api() {
     let api = axios.create({
       baseURL: API_URL,
       headers: {
@@ -36,15 +23,36 @@ const api = {
     })
 
     api.interceptors.response.use(
-      function(response) {
-        console.log("Interceptor stupid")
+      response => {
         if (response.data.error !== undefined) {
           throw response.data.error
         }
         return response.data.data
       },
-      function(error) {
-        // Do something with response error
+      async error => {
+        if (error.config && error.response && error.response.status === 401) {
+          // Refresh the access token
+          try {
+            await store.dispatch('refreshToken')
+
+            error.config.headers.Authorization = `Bearer ${
+              axios.defaults.headers.common['Authorization']
+            }`
+
+            // Retry the original request
+            return axios({
+              method: error.config.method,
+              url: error.config.url,
+              data: error.config.data
+            }).then(response => {
+              return response.data.data
+            })
+          } catch (e) {
+            // Refresh has failed - reject the original request
+            throw error
+          }
+        }
+
         return Promise.reject(error)
       }
     )
@@ -57,23 +65,20 @@ const api = {
       baseURL: AUTH_URL,
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       }
     })
 
     auth.interceptors.response.use(
       function(response) {
-        console.log(response)
         if (response.status === 401) {
-          console.log("Throw error status")
           throw response.data
         }
-        console.log("No error in interceptor")
         return response.data
       },
       function(error) {
         // Do something with response error
-        return Promise.reject(error)
+        return Promise.reject(error.response.data)
       }
     )
 
