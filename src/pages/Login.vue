@@ -14,7 +14,7 @@
         required=""
         autofocus=""
         autocomplete="off"
-        :class="{'is-invalid':error}"
+        :class="{ 'is-invalid': error }"
       />
       <label for="inputPassword" class="sr-only">Password</label>
       <input
@@ -25,7 +25,7 @@
         placeholder="Password"
         required=""
         autocomplete="off"
-        :class="{'is-invalid':error}"
+        :class="{ 'is-invalid': error }"
       />
       <div class="invalid-feedback" v-if="error">
         Informations de connexion invalides
@@ -49,9 +49,7 @@
 
 export default {
   name: 'login',
-  props: [
-    'redirect'
-  ],
+  props: ['redirect'],
   data() {
     return {
       email: null,
@@ -64,16 +62,14 @@ export default {
       console.log('LOGIN REQUEST')
       this.$store
         .dispatch('login', { email: this.email, password: this.password })
-        .then((err) => {
-          console.log(err)
-          console.log("Login successful")
+        .then(() => {
           this.error = null
-          //TODO LOGIN
+          this.$router.push(
+            this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
+          )
         })
-        .catch((error) => {
-          console.log("ERROR WHile login")
+        .catch(error => {
           this.error = error
-          //TODO ERROR LOGIN
         })
     }
   }
