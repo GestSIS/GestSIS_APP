@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getGrades() {
-    return Api().get('/grades/')
+    return Api.api().get('/grades/')
   }
 }

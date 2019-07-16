@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getStats() {
-    return Api().get('/intervention-traitement/')
+    return Api.api().get('/intervention-traitement/')
   }
 }

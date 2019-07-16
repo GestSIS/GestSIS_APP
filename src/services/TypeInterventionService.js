@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getTypes() {
-    return Api().get('/type-intervention/')
+    return Api.api().get('/type-intervention/')
   }
 }

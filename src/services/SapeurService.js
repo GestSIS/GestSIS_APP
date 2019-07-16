@@ -2,46 +2,46 @@ import Api from '@/services/Api'
 
 export default {
   getSapeurs() {
-    return Api().get('/sapeurs/')
+    return Api.api().get('/sapeurs/')
   },
   getData(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId)
+    return Api.api().get('/sapeurs/' + sapeurId)
   },
   getPermis(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/permis')
+    return Api.api().get('/sapeurs/' + sapeurId + '/permis')
   },
   getTelephones(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/telephones')
+    return Api.api().get('/sapeurs/' + sapeurId + '/telephones')
   },
   getGroupes(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/groupes')
+    return Api.api().get('/sapeurs/' + sapeurId + '/groupes')
   },
   getGrades(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/grades')
+    return Api.api().get('/sapeurs/' + sapeurId + '/grades')
   },
   getFonctions(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/fonctions')
+    return Api.api().get('/sapeurs/' + sapeurId + '/fonctions')
   },
   getCours(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/cours')
+    return Api.api().get('/sapeurs/' + sapeurId + '/cours')
   },
   getMutations(sapeurId) {
-    return Api().get('/sapeurs/' + sapeurId + '/mutations')
+    return Api.api().get('/sapeurs/' + sapeurId + '/mutations')
   },
   saveSapeur(sapeurId, sapeurData) {
-    return Api().put('/sapeurs/' + sapeurId, sapeurData, {
+    return Api.api().put('/sapeurs/' + sapeurId, sapeurData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
 
   //Téléphones
   addTelephone(sapeurId, telephoneData) {
-    return Api().post('/sapeurs/' + sapeurId + '/telephones/', telephoneData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/telephones/', telephoneData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editTelephone(sapeurId, telephoneData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/telephones/' + telephoneData.id,
       telephoneData,
       {
@@ -50,17 +50,17 @@ export default {
     )
   },
   removeTelephone(sapeurId, telephoneId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/telephones/' + telephoneId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/telephones/' + telephoneId)
   },
 
   //Permis
   addPermis(sapeurId, permisData) {
-    return Api().post('/sapeurs/' + sapeurId + '/permis/', permisData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/permis/', permisData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editPermis(sapeurId, permisData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/permis/' + permisData.permis_id,
       permisData,
       {
@@ -69,17 +69,17 @@ export default {
     )
   },
   removePermis(sapeurId, permisId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/permis/' + permisId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/permis/' + permisId)
   },
 
   //Fonctions
   addFonction(sapeurId, fonctionData) {
-    return Api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editFonction(sapeurId, fonctionData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/fonctions/' + fonctionData.id,
       fonctionData,
       {
@@ -88,17 +88,17 @@ export default {
     )
   },
   removeFonction(sapeurId, fonctionId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/fonctions/' + fonctionId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/fonctions/' + fonctionId)
   },
 
   //Grades
   addGrade(sapeurId, gradeData) {
-    return Api().post('/sapeurs/' + sapeurId + '/grades/', gradeData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/grades/', gradeData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editGrade(sapeurId, gradeData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/grades/' + gradeData.id,
       gradeData,
       {
@@ -107,17 +107,17 @@ export default {
     )
   },
   removeGrade(sapeurId, gradeId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId)
   },
 
   //Cours
   addCours(sapeurId, coursData) {
-    return Api().post('/sapeurs/' + sapeurId + '/cours/', coursData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/cours/', coursData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editCours(sapeurId, coursData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/cours/' + coursData.id,
       coursData,
       {
@@ -126,17 +126,17 @@ export default {
     )
   },
   removeCours(sapeurId, coursId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId)
   },
 
   //Mutations
   addMutation(sapeurId, mutationData) {
-    return Api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData, {
+    return Api.api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
   editMutation(sapeurId, mutationData) {
-    return Api().put(
+    return Api.api().put(
       '/sapeurs/' + sapeurId + '/mutations/' + mutationData.id,
       mutationData,
       {
@@ -145,6 +145,6 @@ export default {
     )
   },
   removeMutation(sapeurId, mutationId) {
-    return Api().delete('/sapeurs/' + sapeurId + '/mutations/' + mutationId)
+    return Api.api().delete('/sapeurs/' + sapeurId + '/mutations/' + mutationId)
   }
 }

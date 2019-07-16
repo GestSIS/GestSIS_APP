@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getMateriels() {
-    return Api().get('/materiels/')
+    return Api.api().get('/materiels/')
   }
 }

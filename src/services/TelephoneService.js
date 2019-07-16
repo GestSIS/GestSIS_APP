@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getTelephones() {
-    return Api().get('/telephones/')
+    return Api.api().get('/telephones/')
   }
 }

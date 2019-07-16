@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getPhases() {
-    return Api().get('/phase-types/')
+    return Api.api().get('/phase-types/')
   }
 }

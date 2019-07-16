@@ -31,7 +31,6 @@
               </div>
             </div>
           </div>
-          TODO switch compte button
           <!--          <button type="button" class="btn btn-primary" @click="manageComptes">-->
           <!--            Gestion des comptes-->
           <!--          </button>-->

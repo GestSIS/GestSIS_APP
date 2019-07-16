@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getMissions() {
-    return Api().get('/mission-types/')
+    return Api.api().get('/mission-types/')
   }
 }

@@ -2,6 +2,6 @@ import Api from '@/services/Api'
 
 export default {
   getCategories() {
-    return Api().get('/exercice-categories/')
+    return Api.api().get('/exercice-categories/')
   }
 }

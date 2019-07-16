@@ -68,7 +68,7 @@
             <span class="badge badge-primary mr-2">Entretient</span>
             <span class="badge badge-success mr-2">Piquet</span>
           </div>
-          <div class="table-wrapper">
+          <div class="table-wrapper" ref="wrapper">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -78,7 +78,7 @@
                     colspan="4"
                     v-for="(col, i) in columns"
                     :key="i"
-                    class="text-center pr-1 pl-1"
+                    class="text-center pr-3 pl-3"
                   >
                     {{ col }}h
                   </th>
@@ -87,22 +87,22 @@
                   <th
                     v-for="(col, i) in columns"
                     :key="'1' + i"
-                    class="pr-1 pl-1"
+                    class="pr-3 pl-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'2' + i"
-                    class="pr-1 pl-1"
+                    class="pr-3 pl-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'3' + i"
-                    class="pr-1 pl-1"
+                    class="pr-3 pl-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'4' + i"
-                    class="pr-1 pl-1"
+                    class="pr-3 pl-3"
                   ></th>
                 </tr>
               </thead>
@@ -150,7 +150,7 @@
                       'bg-primary': computedPresences[s.id][i] === 2,
                       'bg-success': computedPresences[s.id][i] === 3
                     }"
-                    class="pr-1 pl-1"
+                    class="pr-3 pl-3"
                   ></td>
                 </tr>
                 <template v-if="toggles[s.id]">
@@ -252,6 +252,24 @@ export default {
     for (let i = 0; i < diff; ++i) {
       this.columns.push((min + i) % 24)
     }
+
+    if (this.$refs.wrapper.addEventListener) {
+      // IE9, Chrome, Safari, Opera
+      this.$refs.wrapper.addEventListener(
+        'mousewheel',
+        this.scrollHorizontally,
+        false
+      )
+      // Firefox
+      this.$refs.wrapper.addEventListener(
+        'DOMMouseScroll',
+        this.scrollHorizontally,
+        false
+      )
+    } else {
+      // IE 6/7/8
+      this.$refs.wrapper.attachEvent('onmousewheel', this.scrollHorizontally)
+    }
   },
   filters: {
     datePresence(d) {
@@ -260,6 +278,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    scrollHorizontally(e) {
+      e = window.event || e
+      var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail))
+      this.$refs.wrapper.scrollLeft -= delta * 40 // Multiplied by 40
+      e.preventDefault()
+    },
     addPresences() {
       this.SHOW_MODAL({
         component: 'ModalPresence',

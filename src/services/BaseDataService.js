@@ -2,12 +2,12 @@ import Api from '@/services/Api'
 
 export default {
   getPermisType() {
-    return Api().get('/permis/')
+    return Api.api().get('/permis/')
   },
   getCivilites() {
-    return Api().get('/civilites/')
+    return Api.api().get('/civilites/')
   },
   getTelephones() {
-    return Api().get('/telephone-types/')
+    return Api.api().get('/telephone-types/')
   }
 }

@@ -2,9 +2,9 @@ import Api from '@/services/Api'
 
 export default {
   getGroupes() {
-    return Api().get('/groupes/')
+    return Api.api().get('/groupes/')
   },
   getGroupesSapeurs() {
-    return Api().get('/groupes-sapeurs')
+    return Api.api().get('/groupes-sapeurs')
   }
 }
