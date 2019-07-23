@@ -176,7 +176,7 @@ export default {
             this.activeSapeurPermis.filter(permis => permis.id === p.id)[0].date
         ) {
           this.$store
-            .dispatch('editPermis', { permis_id: p.id, date: p.date })
+            .dispatch('editPermis', { id: p.id, date: p.date })
             .then(() => this.saveSuccessfull(p.permis_type_id))
             .catch(err => this.saveError(p.permis_type_id, err))
         } else {

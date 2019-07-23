@@ -2,7 +2,7 @@ import types from '../mutationTypes'
 
 import { TokenService } from '../../services/StorageService'
 import AuthService from '../../services/AuthService'
-import Api from '../../services/Api'
+import Api from '../../http/Request'
 
 export default {
   state: {

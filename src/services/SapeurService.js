@@ -1,4 +1,4 @@
-import Api from '@/services/Api'
+import Api from '@/http/Request'
 
 export default {
   getSapeurs() {
@@ -67,7 +67,7 @@ export default {
   },
   editPermis(sapeurId, permisData) {
     return Api.api().put(
-      '/sapeurs/' + sapeurId + '/permis/' + permisData.permis_id,
+      '/sapeurs/' + sapeurId + '/permis/' + permisData.id,
       permisData,
       {
         headers: { 'Content-Type': 'application/json' }

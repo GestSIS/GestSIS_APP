@@ -213,7 +213,7 @@ export default {
       return [
         endEvent,
         ...[...events, ...eventsAppels].sort(
-          (e1, e2) => new Date(e2.date) - new Date(e1.date)
+          (e1, e2) => new Date(e1.date) - new Date(e2.date)
         ),
         startEvent
       ]

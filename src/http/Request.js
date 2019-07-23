@@ -3,8 +3,9 @@ import axios from 'axios'
 const API_URL = 'http://127.0.0.1:8000/api/v2'
 const AUTH_URL = 'http://127.0.0.1:8001/api/v1'
 
-import store from '../store/index'
-const api = {
+import store from '@/store'
+
+const request = {
   _401interceptor: true,
   _refreshToken: null,
   _refreshFailed: null,
@@ -86,4 +87,4 @@ const api = {
   }
 }
 
-export default api
+export default request

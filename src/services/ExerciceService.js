@@ -1,4 +1,4 @@
-import Api from '@/services/Api'
+import Api from '@/http/Request'
 
 export default {
   getExercices(exerciceComptableId) {
@@ -26,9 +26,13 @@ export default {
     })
   },
   addSapeurs(exercieId, sapeursData) {
-    return Api.api().post('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Api.api().post(
+      '/exercices/' + exercieId + '/sapeurs/',
+      sapeursData,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   },
   editSapeurs(exercieId, sapeursData) {
     return Api.api().put('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
