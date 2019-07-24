@@ -33,7 +33,6 @@
                 :id="sap.id + 'convoque'"
                 checked=""
                 v-model="sap.convoque"
-                @change="selectPresent(sap)"
               />
               <label
                 class="custom-control-label"

@@ -22,7 +22,8 @@ import {
   faPlay,
   faHourglassEnd,
   faFileInvoiceDollar,
-  faCheck
+  faCheck,
+  faInfoCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons'
@@ -65,5 +66,6 @@ library.add(
   faPlay,
   faHourglassEnd,
   faFileInvoiceDollar,
-  faCheck
+  faCheck,
+  faInfoCircle
 )

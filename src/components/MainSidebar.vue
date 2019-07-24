@@ -86,7 +86,10 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/certificats-medicaux" class="nav-link internal-link">
+          <router-link
+            to="/certificats-medicaux"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon icon="file-medical-alt" />
             <span>Certificats médicaux</span>
           </router-link>
@@ -107,6 +110,12 @@
           <router-link to="/rta" class="nav-link internal-link">
             <font-awesome-icon icon="globe-europe" />
             <span>Exportation -> RTA</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/about" class="nav-link internal-link">
+            <font-awesome-icon icon="info-circle" />
+            <span>A propos</span>
           </router-link>
         </li>
       </ul>
