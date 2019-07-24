@@ -66,9 +66,7 @@ export default {
       return commit(types.AUTH_LOGOUT)
     },
     refreshToken({ commit, state }) {
-      console.log('Call refresh token')
       if (!state.refreshTokenPromise) {
-        console.log('Call refresh token for real')
         const p = AuthService.refreshToken(TokenService.getRefreshToken())
 
         commit(types.AUTH_REFRESH_TOKEN_PROMISES, p)
