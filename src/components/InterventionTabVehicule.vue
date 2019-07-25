@@ -90,7 +90,9 @@ export default {
   methods: {
     save() {
       let vehiculesIds = this.interventionVehicules.map(v => v.vehicule_id)
-      let ids = Object.keys(this.vehicules).filter(item => this.vehicules[item])
+      let ids = Object.keys(this.vehicules)
+        .filter(item => this.vehicules[item])
+        .map(x => parseInt(x))
 
       //New One
       let newOne = ids.filter(item => !vehiculesIds.includes(item))
@@ -104,8 +106,12 @@ export default {
             .map(v => v.id)[0]
       )
 
-      this.$store.dispatch('removeVehicules', removedIds)
-      this.$store.dispatch('addVehicules', newOne)
+      if (removedIds.length > 0) {
+        this.$store.dispatch('removeVehicules', removedIds)
+      }
+      if (newOne.length > 0) {
+        this.$store.dispatch('addVehicules', newOne)
+      }
     },
     updateVehicules(value) {
       this.vehicules = {}
