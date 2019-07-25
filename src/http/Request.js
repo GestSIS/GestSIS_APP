@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const API_URL = 'http://127.0.0.1:8000/api/v2'
-const AUTH_URL = 'http://127.0.0.1:8001/api/v1'
+const API_URL = process.env.VUE_APP_API_ENDPOINT
+const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT
 
 import store from '@/store'
 
