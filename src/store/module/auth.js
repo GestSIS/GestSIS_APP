@@ -83,8 +83,6 @@ export default {
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, null)
           return e
         })
-      } else {
-        console.log('ignore send call refresh')
       }
 
       return state.refreshTokenPromise
