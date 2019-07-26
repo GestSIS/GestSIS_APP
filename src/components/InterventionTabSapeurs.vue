@@ -297,7 +297,6 @@ export default {
       })
     },
     editPresence(presence) {
-      //TODO
       let clone = {}
       Object.assign(clone, presence)
       this.SHOW_MODAL({
@@ -305,6 +304,7 @@ export default {
         callback: () => {},
         data: {
           mode: 'edit',
+          sapeurs: [clone.sapeur_id],
           presence: clone,
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin
@@ -386,7 +386,7 @@ export default {
         .filter(p => new Date(p.debut) <= date)
         .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut))
       if (res.length > 0) {
-        return res[0].id
+        return res[0].phase_type_id
       }
       return 1
     },

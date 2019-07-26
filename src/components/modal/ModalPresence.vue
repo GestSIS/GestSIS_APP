@@ -205,6 +205,9 @@ export default {
     this.editMode = this.data.mode === 'edit'
 
     if (this.editMode) {
+      this.data.sapeurs.forEach(
+        s => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
+      )
       this.piquet = this.data.presence.piquet
       this.date_debut = this.data.presence.debut.slice(0, 10)
       this.date_fin = this.data.presence.fin.slice(0, 10)
