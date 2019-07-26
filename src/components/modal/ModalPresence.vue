@@ -128,7 +128,12 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+        :disabled="!nbSelectedSapeurs"
+      >
         {{ editMode ? 'Enregistrer' : 'Ajouter' }}
       </button>
     </div>
@@ -136,7 +141,7 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'ModalPresence',
@@ -157,15 +162,14 @@ export default {
       heure_fin: null,
       errors: {},
       selectedSapeurs: {},
-      piquet: false,
-      sapeurs: [1, 2, 3]
+      piquet: false
     }
   },
   computed: {
+    ...mapState({
+      listSapeurs: state => state.sapeur.liste.filter(s => s.actif)
+    }),
     ...mapGetters(['getSapeur']),
-    listSapeurs() {
-      return this.sapeurs.map(this.getSapeur)
-    },
     heureDebut() {
       return null //this.activeInterventionData.heure_debut
     },
@@ -173,18 +177,10 @@ export default {
       return null //this.activeInterventionData.heure_fin
     },
     dateDebutMin() {
-      return null
-      // if (!this.currentExerciceComptableId) return
-      // return this.exerciceComptableDebut(
-      //   this.activeInterventionData.exercice_comptable_id
-      // )
+      return this.data.min.slice(0, 10)
     },
     dateDebutMax() {
-      return null
-      // if (!this.currentExerciceComptableId) return
-      // return this.exerciceComptableFin(
-      //   this.activeInterventionData.exercice_comptable_id
-      // )
+      return this.data.max.slice(0, 10)
     },
     dateFinMin() {
       return null
@@ -197,11 +193,12 @@ export default {
       // )
     },
     dateFinMax() {
-      return null
-      // if (!this.currentExerciceComptableId) return
-      // return this.exerciceComptableFin(
-      //   this.activeInterventionData.exercice_comptable_id
-      // )
+      return this.data.max.slice(0, 10)
+    },
+    nbSelectedSapeurs() {
+      return Object.keys(this.selectedSapeurs).filter(
+        s => this.selectedSapeurs[s]
+      ).length
     }
   },
   mounted() {
@@ -214,7 +211,8 @@ export default {
       this.heure_debut = this.data.presence.debut.slice(11, 16)
       this.heure_fin = this.data.presence.fin.slice(11, 16)
     } else {
-      //TODO
+      this.date_debut = this.dateDebutMin
+      this.date_fin = this.dateDebutMin
     }
   },
   methods: {
@@ -229,10 +227,23 @@ export default {
           fin,
           piquet: this.piquet
         }
-        this.$store.dispatch('editPresence', presence).then(() => {
-          this.callback()
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('editPresence', presence)
+          .then(() => {
+            this.callback()
+            this.HIDE_MODAL()
+          })
+          .catch(error => {
+            let debut = error['sapeurs.0.debut']
+            let fin = error['sapeurs.0.fin']
+            this.errors = {
+              ...error,
+              date_debut: debut,
+              date_fin: fin,
+              heure_debut: debut,
+              heure_fin: fin
+            }
+          })
       } else {
         let presences = []
         Object.keys(this.selectedSapeurs)
@@ -243,10 +254,23 @@ export default {
               { sapeur_id: s, debut, fin, piquet: this.piquet }
             ]
           })
-        this.$store.dispatch('addPresences', presences).then(() => {
-          this.callback()
-          this.HIDE_MODAL()
-        })
+        this.$store
+          .dispatch('addPresences', presences)
+          .then(() => {
+            this.callback()
+            this.HIDE_MODAL()
+          })
+          .catch(error => {
+            let debut = error['sapeurs.0.debut']
+            let fin = error['sapeurs.0.fin']
+            this.errors = {
+              ...error,
+              date_debut: debut,
+              date_fin: fin,
+              heure_debut: debut,
+              heure_fin: fin
+            }
+          })
       }
     }
   }

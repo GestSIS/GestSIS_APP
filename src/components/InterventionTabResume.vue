@@ -55,7 +55,7 @@ export default {
     save() {
       this.$store
         .dispatch('saveActiveIntervention', {
-          id: this.activeInterventionData,
+          id: this.activeInterventionData.id,
           description: this.activeInterventionData.description
         })
         .then(() => (this.errors = {}))

@@ -214,10 +214,10 @@ export default {
         return data
       })
     },
-    saveActiveIntervention({ state, commit }) {
+    saveActiveIntervention({ state, commit }, payload) {
       return InterventionService.saveIntervention(
         state.active.id,
-        state.active.data
+        payload
       ).then(data => {
         commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
         return data

@@ -303,7 +303,12 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalPresence',
         callback: () => {},
-        data: { mode: 'edit', presence: clone }
+        data: {
+          mode: 'edit',
+          presence: clone,
+          min: this.data.date_debut + ' ' + this.data.heure_debut,
+          max: this.data.date_fin + ' ' + this.data.heure_fin
+        }
       })
     },
     removePresence(id) {

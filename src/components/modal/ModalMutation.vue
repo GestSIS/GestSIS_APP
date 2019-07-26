@@ -75,9 +75,9 @@ export default {
   computed: {
     ...mapState({
       activeSapeurId: state => state.sapeur.id,
-      activeMutation: state => state.mutation.active.data
+      activeMutation: state => state.mutation.active
     }),
-    ...mapGetters(['listLocalitesSIS'])
+    ...mapGetters(['listLocalitesSis'])
   },
   mounted() {
     if (this.listLocalites.length === 0) {
