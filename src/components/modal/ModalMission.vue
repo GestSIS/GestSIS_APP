@@ -151,7 +151,16 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                debut: errors['missions.0.debut'],
+                fin: errors['missions.0.fin'],
+                sapeur_id: errors['missions.0.sapeur_id'],
+                titre: errors['missions.0.titre']
+              })
+          )
       } else {
         this.$store
           .dispatch('editMission', this.activeMission)
@@ -159,7 +168,16 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                debut: errors['missions.0.debut'],
+                fin: errors['missions.0.fin'],
+                sapeur_id: errors['missions.0.sapeur_id'],
+                titre: errors['missions.0.titre']
+              })
+          )
       }
     }
   }

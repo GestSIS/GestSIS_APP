@@ -70,7 +70,14 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                materiel_id: errors['materiels.0.materiel_id'],
+                quantite: errors['materiels.0.quantite']
+              })
+          )
       } else {
         this.$store
           .dispatch('editMateriel', this.activeMateriel)
@@ -78,7 +85,14 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                materiel_id: errors['materiels.0.materiel_id'],
+                quantite: errors['materiels.0.quantite']
+              })
+          )
       }
     }
   }

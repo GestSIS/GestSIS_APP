@@ -40,7 +40,7 @@
           type="text"
           v-model="activeAppel.numero"
           class="form-control"
-          :class="{ 'is-invalid': errors['debut'] }"
+          :class="{ 'is-invalid': errors['numero'] }"
           id="numero"
         />
       </div>
@@ -135,7 +135,16 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                date: errors['appels.0.date'],
+                nom: errors['appels.0.nom'],
+                numero: errors['appels.0.numero'],
+                commentaire: errors['appels.0.commentaire']
+              })
+          )
       } else {
         this.$store
           .dispatch('editAppel', { ...this.activeAppel, date2: undefined })
@@ -143,7 +152,16 @@ export default {
             this.errors = {}
             this.HIDE_MODAL()
           })
-          .catch(errors => (this.errors = errors))
+          .catch(
+            errors =>
+              (this.errors = {
+                ...errors,
+                date: errors['appels.0.date'],
+                nom: errors['appels.0.nom'],
+                numero: errors['appels.0.numero'],
+                commentaire: errors['appels.0.commentaire']
+              })
+          )
       }
     }
   }
