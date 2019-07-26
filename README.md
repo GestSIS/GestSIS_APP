@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/Ph0tonic/GestSIS_APP.svg?token=CpCE2t9dSFqCXfyBr7VR&branch=master)](https://travis-ci.com/Ph0tonic/GestSIS_APP)
 
-# GestSIS App
+# GestSIS_APP
 
 Effectuer les 3 commandes ci-dessous pour lancer le serveur de production.
 Il est possible de configurer l'URL de l'api et du serveur d'authentification dans le fichier `.env`!
