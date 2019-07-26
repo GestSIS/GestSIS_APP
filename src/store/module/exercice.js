@@ -82,7 +82,7 @@ export default {
         date: null,
         heure: null,
         lieu: '',
-        communication: '',
+        communications: '',
         designation: '',
         duree: null,
         status: 0
