@@ -26,6 +26,8 @@
                 <th>Indemnite</th>
                 <th>Solde min</th>
                 <th>Pour</th>
+                <th>Taux nuit</th>
+                <th>Taux weekend</th>
                 <th>Unité</th>
                 <th>Compte</th>
                 <th>Par fonction</th>
@@ -49,7 +51,7 @@
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
                 <td>{{ indemnite.unite_id }}</td>
-                <td>{{ indemnite.compte_id }}</td>
+                <td>{{ getCompte(indemnite.compte_id) | compte }}</td>
                 <td>
                   <div class="custom-control custom-checkbox">
                     <input
@@ -167,7 +169,7 @@ export default {
         state.comptabilite.indemnites.interventions,
       listFonctions: state => state.fonction.liste
     }),
-    ...mapGetters(['getFonction', 'getSapeur']),
+    ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {
       return this.activeIndemnite !== null && this.activeIndemnite.par_fonction
     }

@@ -90,10 +90,10 @@
           </table>
         </div>
         <div class="col-6">
-          <p v-if="groupBy !== 'groupe' && groupBy !== 'none'">
+          <p v-if="groupBy !== 'groupe' && groupBy !== 'none' && groupBy !== 'fonction'">
             Coming soon!
           </p>
-          <table class="table" v-if="groupBy === 'groupe'">
+          <table class="table" v-if="groupBy === 'groupe' || groupBy === 'fonction'">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -102,7 +102,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="item in flattenedTree"
+                v-for="item in listSapeurSelect"
                 :key="item.parent_id + '-' + item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
@@ -241,6 +241,51 @@ export default {
       listSapeurs: state => state.sapeur.liste
     }),
     ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
+    listSapeurSelect() {
+      let svm = this
+      if(this.groupBy === 'groupe'){
+        return this.flattenedTree
+      }else if(this.groupBy === 'fonction'){
+        let liste = []
+        this.listFonctions.forEach(fonction => 
+        {
+          let expanded = svm.expanded[fonction.id]
+          liste = [...liste,
+            {
+              designation: fonction.nom,
+              level: 0,
+              leaf: false,
+              id: fonction.id,
+              expanded: expanded,
+              parent_id: 0,
+              empty: 
+                !svm.listSapeurs
+                  .map(s => ({...s, sapeur_id: s.id}))
+                  .filter(svm.filtreSapeur())
+                  .filter(s => s.fonction_id === fonction.id)
+                  .length
+            }]
+          if(expanded){
+            liste = [...liste, 
+              ...svm.listSapeurs
+                  .map(s => ({...s, sapeur_id: s.id}))
+                  .filter(svm.filtreSapeur())
+                  .filter(s => s.fonction_id === fonction.id)
+                  .map(sapeur => ({
+                    designation: `${sapeur.nom} ${sapeur.prenom}`,
+                    level: 1,
+                    leaf: true,
+                    id: sapeur.id,
+                    parent_id: sapeur.fonction_id,
+                  }))
+            ]
+          }
+          }
+        )
+        return liste
+      }
+      return []
+    },
     flattenedTree() {
       let flattened = []
       let svm = this
@@ -371,16 +416,28 @@ export default {
         ? Array.from(new Set([...this.selectedGroups, groupe.id]))
         : this.selectedGroups.filter(i => i !== groupe.id)
 
-      groupe.sapeurs.filter(this.filtreSapeur()).forEach(s => {
-        svm.displaySelected = {
-          ...svm.displaySelected,
-          [svm.computeId({ leaf: true, id: s })]: state
-        }
-        svm.selectedSapeurs = state
-          ? Array.from(new Set([...svm.selectedSapeurs, s]))
-          : svm.selectedSapeurs.filter(i => i !== s)
-      })
-      groupe.groupes.forEach(g => svm.selectGroupSingle(g, state))
+      if(this.groupBy === 'groupe'){
+        groupe.sapeurs.filter(this.filtreSapeur()).forEach(s => {
+          svm.displaySelected = {
+            ...svm.displaySelected,
+            [svm.computeId({ leaf: true, id: s })]: state
+          }
+          svm.selectedSapeurs = state
+            ? Array.from(new Set([...svm.selectedSapeurs, s]))
+            : svm.selectedSapeurs.filter(i => i !== s)
+        })
+        groupe.groupes.forEach(g => svm.selectGroupSingle(g, state)) 
+      } else if(this.groupBy === 'fonction') {
+        svm.listSapeurs.map(s => ({...s, sapeur_id : s.id})).filter(this.filtreSapeur()).filter(s => s.fonction_id === groupe.id).forEach(s => {
+          svm.displaySelected = {
+            ...svm.displaySelected,
+              [svm.computeId({ leaf: true, id: s.id })]: state
+          }
+          svm.selectedSapeurs = state
+            ? Array.from(new Set([...svm.selectedSapeurs, s.id]))
+            : svm.selectedSapeurs.filter(i => i !== s.id)
+        })
+      }
     },
     filtreSapeur() {
       let svm = this

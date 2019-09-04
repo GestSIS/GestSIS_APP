@@ -185,8 +185,8 @@ export default {
       let chefIntervention = this.data.sapeur_id
         ? this.getSapeur(this.data.sapeur_id)
         : null
-      let startDate = this.data.date_fin + ' ' + this.data.heure_fin
-      let endDate = this.data.date_debut + ' ' + this.data.heure_debut
+      let endDate = this.data.date_fin + ' ' + this.data.heure_fin
+      let startDate = this.data.date_debut + ' ' + this.data.heure_debut
 
       let startEvent = {
         date: startDate,
@@ -211,11 +211,11 @@ export default {
       }
 
       return [
-        endEvent,
+        startEvent,
         ...[...events, ...eventsAppels].sort(
           (e1, e2) => new Date(e1.date) - new Date(e2.date)
         ),
-        startEvent
+        endEvent
       ]
     }
   },

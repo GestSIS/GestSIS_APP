@@ -1,9 +1,11 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <h2>Coming soon!</h2>
       <!-- general form elements -->
       <div class="card card-primary card-outline">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Organisation</h3>
+        </div>
         <!-- /.card-header -->
         <div class="card-body">
           <table id="sap-groupe" class="table">

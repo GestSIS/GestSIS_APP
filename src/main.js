@@ -12,7 +12,7 @@ import VueTimepicker from 'vue2-timepicker'
 import Datetime from 'vue-datetime'
 import VueAWN from 'vue-awesome-notifications'
 
-import 'vue-directive-tooltip/css/index.css'
+import 'vue-directive-tooltip/src/css/index.scss'
 require('./assets/sass/main.scss')
 require('./icons')
 
