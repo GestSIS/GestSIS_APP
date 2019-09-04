@@ -19,7 +19,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav v-if="!newMode">
+        <nav>
           <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
             <button
               class="btn btn-link nav-item nav-link"
@@ -27,56 +27,133 @@
               role="tab"
               @click.prevent="activeTab = 'general'"
             >
-              Informations
+              General
             </button>
             <button
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'sapeurs' }"
+              :class="{ active: activeTab === 'sapeur' }"
               role="tab"
-              @click.prevent="activeTab = 'sapeurs'"
+              @click.prevent="activeTab = 'sapeur'"
             >
               Sapeurs
             </button>
             <button
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'journal' }"
+              :class="{ active: activeTab === 'exercice' }"
               role="tab"
-              @click.prevent="activeTab = 'journal'"
+              @click.prevent="activeTab = 'exercice'"
             >
-              Journal
+              Exercices
             </button>
             <button
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'mat-veh' }"
+              :class="{ active: activeTab === 'intervention' }"
               role="tab"
-              @click.prevent="activeTab = 'mat-veh'"
+              @click.prevent="activeTab = 'intervention'"
             >
-              Matériels & Véhicules
+              Interventions
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'frais' }"
+              role="tab"
+              @click.prevent="activeTab = 'frais'"
+            >
+              Frais
+            </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'medical' }"
+              role="tab"
+              @click.prevent="activeTab = 'medical'"
+            >
+              Contrôles médicaux
+            </button>
+            <button
+                    class="btn btn-link nav-item nav-link"
+                    :class="{ active: activeTab === 'droits' }"
+                    role="tab"
+                    @click.prevent="activeTab = 'droits'"
+            >
+              Droits
+            </button>
+            <button
+                    class="btn btn-link nav-item nav-link"
+                    :class="{ active: activeTab === 'admin' }"
+                    role="tab"
+                    @click.prevent="activeTab = 'admin'"
+            >
+              GestSIS Admin
             </button>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
-            <!--            <InterventionTabGeneral-->
-            <!--              :newMode="newMode"-->
-            <!--              v-if="activeTab === 'general'"-->
-            <!--              >General</InterventionTabGeneral-->
-            <!--            >-->
-            <!--            <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'"-->
-            <!--              >Sapeurs</InterventionTabSapeurs-->
-            <!--            >-->
-            <!--            <InterventionTabJournal v-else-if="activeTab === 'journal'"-->
-            <!--              >Journal</InterventionTabJournal-->
-            <!--            >-->
-            <!--            <div class="container-fluid" v-else-if="activeTab === 'mat-veh'">-->
-            <!--              <div class="row">-->
-            <!--                <InterventionTabMateriel>Materiels</InterventionTabMateriel>-->
-            <!--                <InterventionTabVehicule>Véhicules</InterventionTabVehicule>-->
-            <!--              </div>-->
-            <!--            </div>-->
-          </div>
-          <div>
-            Loading
+            <div v-if="activeTab === 'general'">
+              TODO Info générales
+            </div>
+            <div v-if="activeTab === 'sapeur'">
+              TODO
+              <ul>
+                <li>Type de téléphone</li>
+                <li>Nombre de numéro max par sapeur</li>
+                <li>Liste des cours spécifique au SIS</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'exercice'">
+              TODO
+              <ul>
+                <li>Excuses types</li>
+                <li>Type d'exercice avec amendable ou non</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'intervention'">
+              TODO
+              <ul>
+                <li>Véhicules</li>
+                <li>Matériel</li>
+                <li>Missions type</li>
+                <li>Annuaire de téléphones</li>
+                <li>Catégorie intervention</li>
+                <li>Stat fédéral -> Dans section admin</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'frais'">
+              TODO
+              <ul>
+                <li>Liste des Comptes</li>
+                <li>Type de frais pour exercices</li>
+                <li>Type de frais pour interventions</li>
+                <li>Catégories de revenus</li>
+                <li>Exercices comptabes</li>
+                <li>Coordonnées bancaire du SIS pour ISO20022</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'medical'">
+              TODO
+              <ul>
+                <li>Médecins</li>
+                <li>Type de contrôles</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'droits'">
+              TODO
+              <ul>
+                <li>Droits et rôles</li>
+                <li>Rôle et droits liés aux rôles</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'droits'">
+              <p>TODO Nouvelle application ?</p>
+              <p>Les données suivantes sont celles correspondantes à l'application GestSIS 1.0</p>
+              <ul>
+                <li>Localités et communes</li>
+                <li>Cours cantonaux</li>
+                <li>Fonctions</li>
+                <li>Grades</li>
+                <li>Stat fédéral</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -96,12 +173,12 @@
 
 export default {
   name: 'configuration',
+  data() {
+    return {
+      activeTab: 'general'
+    }
+  },
   components: {
-    // InterventionTabSapeurs,
-    // InterventionTabGeneral,
-    // InterventionTabMateriel,
-    // InterventionTabVehicule,
-    // InterventionTabJournal,
     // ExerciceComptable
   },
   // props: {
