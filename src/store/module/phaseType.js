@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import PhaseTypeService from '../../services/PhaseTypeService'
+import types from '../mutationTypes';
+import PhaseTypeService from '../../services/PhaseTypeService';
 
 export default {
   state: {
@@ -11,33 +11,33 @@ export default {
   },
   mutations: {
     [types.UPDATE_PHASE_TYPE_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     },
     [types.UPDATE_CURRENT_PHASE](state, payload) {
-      state.active.data = payload
-      state.active.id = payload.id
+      state.active.data = payload;
+      state.active.id = payload.id;
     }
   },
   getters: {
     getPhaseType: state => phase_type_id => {
-      return state.liste.filter(t => t.id === phase_type_id)[0]
+      return state.liste.filter(t => t.id === phase_type_id)[0];
     }
   },
   actions: {
     fetchPhaseTypes({ commit }) {
       return PhaseTypeService.getPhases().then(data =>
         commit(types.UPDATE_PHASE_TYPE_LIST, data)
-      )
+      );
     },
     updateActivePhase({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_PHASE, payload)
+      return commit(types.UPDATE_CURRENT_PHASE, payload);
     },
     resetActivePhase({ commit }) {
       return commit(types.UPDATE_CURRENT_PHASE, {
         debut: null,
         id: null,
         phase_type_id: null
-      })
+      });
     }
   }
-}
+};

@@ -127,7 +127,7 @@
 <script>
 export default {
   name: 'MaineSidebar'
-}
+};
 </script>
 
 <style lang="scss" scoped>

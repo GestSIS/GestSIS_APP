@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import SapeurService from '../../services/SapeurService'
+import types from '../mutationTypes';
+import SapeurService from '../../services/SapeurService';
 
 export default {
   state: {
@@ -22,14 +22,14 @@ export default {
         .slice(0)
         .sort((s1, s2) =>
           (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
-        )
+        );
     },
     [types.SELECT_CURRENT_SAPEUR](state, payload) {
-      state.active.id = payload
+      state.active.id = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
-      state.active.data = payload
-      let index = state.liste.map(s => s.id).indexOf(payload.id)
+      state.active.data = payload;
+      let index = state.liste.map(s => s.id).indexOf(payload.id);
       state.liste = [
         ...state.liste.slice(0, index),
         {
@@ -40,110 +40,110 @@ export default {
           actif: payload.actif
         },
         ...state.liste.slice(index + 1)
-      ]
+      ];
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
-      state.active.telephones = payload
+      state.active.telephones = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_PERMIS](state, payload) {
-      state.active.permis = payload
+      state.active.permis = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_GRADES](state, payload) {
-      state.active.grades = payload
+      state.active.grades = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_GROUPES](state, payload) {
-      state.active.groupes = payload
+      state.active.groupes = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_COURS](state, payload) {
-      state.active.cours = payload
+      state.active.cours = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_FONCTIONS](state, payload) {
-      state.active.fonctions = payload
+      state.active.fonctions = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_MUTATIONS](state, payload) {
-      state.active.mutations = payload
+      state.active.mutations = payload;
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
-      state.active.permis = [...state.active.permis, payload]
+      state.active.permis = [...state.active.permis, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_PERMIS](state, payload) {
-      state.active.permis = state.active.permis.filter(p => p.id !== payload)
+      state.active.permis = state.active.permis.filter(p => p.id !== payload);
     },
     [types.EDIT_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.active.permis = [
         ...state.active.permis.filter(p => p.id !== payload.id),
         payload
-      ]
+      ];
     },
     [types.ADD_CURRENT_SAPEUR_TELEPHONE](state, payload) {
-      state.active.telephones = [...state.active.telephones, payload]
+      state.active.telephones = [...state.active.telephones, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_TELEPHONE](state, payload) {
       state.active.telephones = state.active.telephones.filter(
         p => p.id !== payload
-      )
+      );
     },
     [types.EDIT_CURRENT_SAPEUR_TELEPHONE](state, payload) {
       state.active.telephones = [
         ...state.active.telephones.filter(p => p.id !== payload.id),
         payload
-      ]
+      ];
     },
 
     [types.ADD_CURRENT_SAPEUR_FONCTION](state, payload) {
-      state.active.fonctions = [...state.active.fonctions, payload]
+      state.active.fonctions = [...state.active.fonctions, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_FONCTION](state, payload) {
       state.active.fonctions = state.active.fonctions.filter(
         p => p.id !== payload
-      )
+      );
     },
     [types.EDIT_CURRENT_SAPEUR_FONCTION](state, payload) {
       state.active.fonctions = [
         ...state.active.fonctions.filter(p => p.id !== payload.id),
         payload
-      ]
+      ];
     },
 
     [types.ADD_CURRENT_SAPEUR_GRADE](state, payload) {
-      state.active.grades = [...state.active.grades, payload]
+      state.active.grades = [...state.active.grades, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_GRADE](state, payload) {
-      state.active.grades = state.active.grades.filter(p => p.id !== payload)
+      state.active.grades = state.active.grades.filter(p => p.id !== payload);
     },
     [types.EDIT_CURRENT_SAPEUR_GRADE](state, payload) {
       state.active.grades = [
         ...state.active.grades.filter(p => p.id !== payload.id),
         payload
-      ]
+      ];
     },
 
     [types.ADD_CURRENT_SAPEUR_COURS](state, payload) {
-      state.active.cours = [...state.active.cours, payload]
+      state.active.cours = [...state.active.cours, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_COURS](state, payload) {
-      state.active.cours = state.active.cours.filter(c => c.id !== payload)
+      state.active.cours = state.active.cours.filter(c => c.id !== payload);
     },
     [types.EDIT_CURRENT_SAPEUR_COURS](state, payload) {
       state.active.cours = [
         ...state.active.cours.filter(c => c.id !== payload.id),
         payload
-      ]
+      ];
     },
 
     [types.ADD_CURRENT_SAPEUR_MUTATION](state, payload) {
-      state.active.mutations = [...state.active.mutations, payload]
+      state.active.mutations = [...state.active.mutations, payload];
     },
     [types.REMOVE_CURRENT_SAPEUR_MUTATION](state, payload) {
       state.active.mutations = state.active.mutations.filter(
         c => c.id !== payload
-      )
+      );
     },
     [types.EDIT_CURRENT_SAPEUR_MUTATION](state, payload) {
       state.active.mutations = [
         ...state.active.mutations.filter(c => c.id !== payload.id),
         payload
-      ]
+      ];
     }
   },
   getters: {
@@ -177,74 +177,74 @@ export default {
   },
   actions: {
     selectSapeur({ commit }, payload) {
-      return commit(types.SELECT_CURRENT_SAPEUR, payload)
+      return commit(types.SELECT_CURRENT_SAPEUR, payload);
     },
     fetchListSapeur({ commit }) {
       return SapeurService.getSapeurs().then(data =>
         commit(types.UPDATE_SAPEURS_LIST, data)
-      )
+      );
     },
     fetchSapeur({ commit }, payload) {
       return SapeurService.getData(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_DATA, data)
-      )
+      );
     },
     fetchSapeurPermis({ commit }, payload) {
       return SapeurService.getPermis(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
-      )
+      );
     },
     fetchSapeurTelephones({ commit }, payload) {
       return SapeurService.getTelephones(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
-      )
+      );
     },
     fetchSapeurGrades({ commit }, payload) {
       return SapeurService.getGrades(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
-      )
+      );
     },
     fetchSapeurFonctions({ commit }, payload) {
       return SapeurService.getFonctions(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
-      )
+      );
     },
     fetchSapeurCours({ commit }, payload) {
       return SapeurService.getCours(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
-      )
+      );
     },
     fetchSapeurMutations({ commit }, payload) {
       return SapeurService.getMutations(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_MUTATIONS, data)
-      )
+      );
     },
     fetchSapeurGroupes({ commit }, payload) {
       return SapeurService.getGroupes(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
-      )
+      );
     },
     saveActiveSapeur({ state }, payload) {
       return SapeurService.saveSapeur(
         state.active.data.id,
         payload || state.active.data
-      )
+      );
     },
 
     addTelephone({ state, commit }, payload) {
       return SapeurService.addTelephone(state.active.id, payload).then(data => {
-        commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data)
-        return data
-      })
+        commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
+        return data;
+      });
     },
 
     editTelephone({ state, commit }, payload) {
       return SapeurService.editTelephone(state.active.id, payload).then(
         data => {
-          commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data)
-          return data
+          commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data);
+          return data;
         }
-      )
+      );
     },
     removeTelephone({ state, commit }, payload) {
       return SapeurService.removeTelephone(state.active.id, payload).then(
@@ -252,122 +252,122 @@ export default {
           commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload).then(
             () => data
           )
-      )
+      );
     },
 
     addPermis({ state, commit }, payload) {
       return SapeurService.addPermis(state.active.id, payload).then(data => {
-        commit(types.ADD_CURRENT_SAPEUR_PERMIS, data)
-        return data
-      })
+        commit(types.ADD_CURRENT_SAPEUR_PERMIS, data);
+        return data;
+      });
     },
     editPermis({ state, commit }, payload) {
       return SapeurService.editPermis(state.active.id, payload).then(data => {
-        commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data)
-        return data
-      })
+        commit(types.EDIT_CURRENT_SAPEUR_PERMIS, data);
+        return data;
+      });
     },
     removePermis({ state, commit }, payload) {
       return SapeurService.removePermis(state.active.id, payload).then(data => {
-        commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload)
-        return data
-      })
+        commit(types.REMOVE_CURRENT_SAPEUR_PERMIS, payload);
+        return data;
+      });
     },
 
     addFonction({ state, commit }, payload) {
       return SapeurService.addFonction(state.active.id, payload).then(data => {
-        commit(types.ADD_CURRENT_SAPEUR_FONCTION, data)
-        return data
-      })
+        commit(types.ADD_CURRENT_SAPEUR_FONCTION, data);
+        return data;
+      });
     },
     editFonction({ state, commit }, payload) {
       return SapeurService.editFonction(state.active.id, payload).then(data => {
-        commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data)
-        return data
-      })
+        commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data);
+        return data;
+      });
     },
     removeFonction({ state, commit }, payload) {
       return SapeurService.removeFonction(state.active.id, payload).then(
         data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload)
-          return data
+          commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload);
+          return data;
         }
-      )
+      );
     },
 
     addGrade({ state, commit }, payload) {
       return SapeurService.addGrade(state.active.data.id, payload).then(
         data => {
-          commit(types.ADD_CURRENT_SAPEUR_GRADE, data)
-          return data
+          commit(types.ADD_CURRENT_SAPEUR_GRADE, data);
+          return data;
         }
-      )
+      );
     },
     editGrade({ state, commit }, payload) {
       return SapeurService.editGrade(state.active.data.id, payload).then(
         data => {
-          commit(types.EDIT_CURRENT_SAPEUR_GRADE, data)
-          return data
+          commit(types.EDIT_CURRENT_SAPEUR_GRADE, data);
+          return data;
         }
-      )
+      );
     },
     removeGrade({ state, commit }, payload) {
       return SapeurService.removeGrade(state.active.data.id, payload).then(
         data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload)
-          return data
+          commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload);
+          return data;
         }
-      )
+      );
     },
 
     addCours({ state, commit }, payload) {
       return SapeurService.addCours(state.active.data.id, payload).then(
         data => {
-          commit(types.ADD_CURRENT_SAPEUR_COURS, data)
-          return data
+          commit(types.ADD_CURRENT_SAPEUR_COURS, data);
+          return data;
         }
-      )
+      );
     },
     editCours({ state, commit }, payload) {
       return SapeurService.editCours(state.active.data.id, payload).then(
         data => {
-          commit(types.EDIT_CURRENT_SAPEUR_COURS, data)
-          return data
+          commit(types.EDIT_CURRENT_SAPEUR_COURS, data);
+          return data;
         }
-      )
+      );
     },
     removeCours({ state, commit }, payload) {
       return SapeurService.removeCours(state.active.data.id, payload).then(
         data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload)
-          return data
+          commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload);
+          return data;
         }
-      )
+      );
     },
 
     addMutation({ state, commit }, payload) {
       return SapeurService.addMutation(state.active.data.id, payload).then(
         data => {
-          commit(types.ADD_CURRENT_SAPEUR_MUTATION, data)
-          return data
+          commit(types.ADD_CURRENT_SAPEUR_MUTATION, data);
+          return data;
         }
-      )
+      );
     },
     editMutation({ state, commit }, payload) {
       return SapeurService.editMutation(state.active.data.id, payload).then(
         data => {
-          commit(types.EDIT_CURRENT_SAPEUR_MUTATION, data)
-          return data
+          commit(types.EDIT_CURRENT_SAPEUR_MUTATION, data);
+          return data;
         }
-      )
+      );
     },
     removeMutation({ state, commit }, payload) {
       return SapeurService.removeMutation(state.active.data.id, payload).then(
         data => {
-          commit(types.REMOVE_CURRENT_SAPEUR_MUTATION, payload)
-          return data
+          commit(types.REMOVE_CURRENT_SAPEUR_MUTATION, payload);
+          return data;
         }
-      )
+      );
     }
   }
-}
+};

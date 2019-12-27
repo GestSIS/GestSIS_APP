@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SapeurTabPermis',
@@ -75,7 +75,7 @@ export default {
       publicPath: process.env.BASE_URL,
       permisData: {},
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId'])
@@ -86,31 +86,31 @@ export default {
         this.$store
           .dispatch('fetchSapeurPermis', this.activeSapeurId)
           .then(() => {
-            this.initPermisData()
-          })
-      })
+            this.initPermisData();
+          });
+      });
     } else {
       this.$store
         .dispatch('fetchSapeurPermis', this.activeSapeurId)
         .then(() => {
-          this.initPermisData()
-        })
+          this.initPermisData();
+        });
     }
   },
   watch: {
     activeSapeurPermis() {
-      this.initPermisData()
+      this.initPermisData();
     },
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurPermis', id).then(() => {
-        this.initPermisData()
-      })
+        this.initPermisData();
+      });
     }
   },
   methods: {
     initPermisData() {
-      this.permisData = {}
-      this.errors = {}
+      this.permisData = {};
+      this.errors = {};
 
       this.listPermisType.forEach(p => {
         this.permisData[p.id] = {
@@ -118,28 +118,28 @@ export default {
           type: p.type,
           date: null,
           id: null
-        }
-      })
+        };
+      });
       this.activeSapeurPermis.forEach(p => {
         this.permisData[p.permis_type_id] = {
           ...this.permisData[p.permis_type_id],
           date: p.date,
           id: p.id
-        }
-        this.permisData[p.permis_type_id].date = p.date
-      })
+        };
+        this.permisData[p.permis_type_id].date = p.date;
+      });
     },
     saveSuccessfull(permis_type_id) {
       this.errors = {
         ...this.errors,
         [permis_type_id]: undefined
-      }
+      };
     },
     saveError(permis_type_id, error) {
       this.errors = {
         ...this.errors,
         [permis_type_id]: error
-      }
+      };
     },
     supprimerPermis(permis_type_id) {
       this.permisData = {
@@ -148,7 +148,7 @@ export default {
           ...this.permisData[permis_type_id],
           date: ''
         }
-      }
+      };
     },
     savePermis() {
       Object.values(this.permisData).forEach(p => {
@@ -160,14 +160,14 @@ export default {
               date: p.date
             })
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err))
+            .catch(err => this.saveError(p.permis_type_id, err));
         }
         //Removed
         else if (p.id !== null && (p.date === null || p.date === '')) {
           this.$store
             .dispatch('removePermis', p.id)
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err))
+            .catch(err => this.saveError(p.permis_type_id, err));
         }
         //Edited
         else if (
@@ -178,18 +178,18 @@ export default {
           this.$store
             .dispatch('editPermis', { id: p.id, date: p.date })
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err))
+            .catch(err => this.saveError(p.permis_type_id, err));
         } else {
           //Remove potential error messages
-          this.saveSuccessfull(p.permis_type_id)
+          this.saveSuccessfull(p.permis_type_id);
         }
-      })
+      });
     },
     isInvalid(key) {
-      return this.errors[key] !== undefined
+      return this.errors[key] !== undefined;
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -101,24 +101,24 @@ export default {
       email: null,
       password: null,
       error: null
-    }
+    };
   },
   methods: {
     login() {
       this.$store
         .dispatch('login', { email: this.email, password: this.password })
         .then(() => {
-          this.error = null
+          this.error = null;
           this.$router.push(
             this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
-          )
+          );
         })
         .catch(error => {
-          this.error = error
-        })
+          this.error = error;
+        });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

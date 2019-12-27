@@ -1,47 +1,47 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getInterventions(exerciceComptableId) {
     return Api.api().get('/interventions', {
       params: { exercice_comptable_id: exerciceComptableId }
-    })
+    });
   },
   getIntervention(interventionId) {
-    return Api.api().get('/interventions/' + interventionId)
+    return Api.api().get('/interventions/' + interventionId);
   },
   getSapeurs(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/sapeurs')
+    return Api.api().get('/interventions/' + interventionId + '/sapeurs');
   },
   getQuittances(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/quittances')
+    return Api.api().get('/interventions/' + interventionId + '/quittances');
   },
   getMateriels(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/materiels')
+    return Api.api().get('/interventions/' + interventionId + '/materiels');
   },
   getVehicules(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/vehicules')
+    return Api.api().get('/interventions/' + interventionId + '/vehicules');
   },
   getMissions(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/missions')
+    return Api.api().get('/interventions/' + interventionId + '/missions');
   },
   getAppels(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/appels')
+    return Api.api().get('/interventions/' + interventionId + '/appels');
   },
   getPhases(interventionId) {
-    return Api.api().get('/interventions/' + interventionId + '/phases')
+    return Api.api().get('/interventions/' + interventionId + '/phases');
   },
   createIntervention(interventionData) {
     return Api.api().post('/interventions/', interventionData, {
       headers: { 'Content-Type': 'application/json' }
-    })
+    });
   },
   validerIntervention(interventionId) {
-    return Api.api().post('/interventions/' + interventionId + '/valider')
+    return Api.api().post('/interventions/' + interventionId + '/valider');
   },
   saveIntervention(interventionId, interventionData) {
     return Api.api().put('/interventions/' + interventionId, interventionData, {
       headers: { 'Content-Type': 'application/json' }
-    })
+    });
   },
 
   //Matériel
@@ -52,7 +52,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   editMateriel(interventionId, materielData) {
     return Api.api().put(
@@ -61,7 +61,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeMateriel(interventionId, materielId) {
     return Api.api().delete(
@@ -69,7 +69,7 @@ export default {
       {
         data: { materiels: [materielId] }
       }
-    )
+    );
   },
 
   //Vehicules
@@ -80,7 +80,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeVehicules(interventionId, vehiculesId) {
     return Api.api().delete(
@@ -88,7 +88,7 @@ export default {
       {
         data: { vehicules: vehiculesId }
       }
-    )
+    );
   },
 
   //Quittances
@@ -99,7 +99,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeQuittances(interventionId, quittancesId) {
     return Api.api().delete(
@@ -107,7 +107,7 @@ export default {
       {
         data: { quittances: quittancesId }
       }
-    )
+    );
   },
 
   //Sapeurs
@@ -118,7 +118,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   editSapeurs(interventionId, sapeursData) {
     return Api.api().put(
@@ -127,7 +127,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeSapeurs(interventionId, sapeursIds) {
     return Api.api().delete(
@@ -136,7 +136,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
 
   //Appel
@@ -147,7 +147,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   editAppel(interventionId, appelData) {
     return Api.api().put(
@@ -156,12 +156,12 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeAppel(interventionId, appelId) {
     return Api.api().delete('/interventions/' + interventionId + '/appels/', {
       data: { appels: [appelId] }
-    })
+    });
   },
 
   //Mission
@@ -172,7 +172,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   editMission(interventionId, missionData) {
     return Api.api().put(
@@ -181,12 +181,12 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removeMission(interventionId, missionId) {
     return Api.api().delete('/interventions/' + interventionId + '/missions/', {
       data: { missions: [missionId] }
-    })
+    });
   },
 
   //Phase
@@ -197,7 +197,7 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   editPhase(interventionId, phaseData) {
     return Api.api().put(
@@ -206,11 +206,11 @@ export default {
       {
         headers: { 'Content-Type': 'application/json' }
       }
-    )
+    );
   },
   removePhase(interventionId, phaseId) {
     return Api.api().delete('/interventions/' + interventionId + '/phases/', {
       data: { phases: [phaseId] }
-    })
+    });
   }
-}
+};

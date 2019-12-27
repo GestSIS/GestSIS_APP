@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getExercices() {
-    return Api.api().get('/exercice-comptables/')
+    return Api.api().get('/exercice-comptables/');
   }
-}
+};

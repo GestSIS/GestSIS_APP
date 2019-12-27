@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
   { id: 2, type: 'Petite' },
   { id: 3, type: 'Moyenne' },
   { id: 4, type: 'Grande' }
-]
+];
 
 export default {
   name: 'InterventionTabResume',
@@ -43,7 +43,7 @@ export default {
     return {
       errors: {},
       degre
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -59,10 +59,10 @@ export default {
           description: this.activeInterventionData.description
         })
         .then(() => (this.errors = {}))
-        .catch(errors => (this.errors = errors))
+        .catch(errors => (this.errors = errors));
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

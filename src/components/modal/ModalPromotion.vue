@@ -53,14 +53,14 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalPromotion',
   data() {
     return {
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -70,7 +70,7 @@ export default {
   },
   mounted() {
     if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades')
+      this.$store.dispatch('fetchGrades');
     }
   },
   methods: {
@@ -80,22 +80,22 @@ export default {
         this.$store
           .dispatch('addGrade', this.activeGrade)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editGrade', this.activeGrade)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

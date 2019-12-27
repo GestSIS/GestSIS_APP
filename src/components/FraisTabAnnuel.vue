@@ -55,12 +55,12 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import FraisEcritureDetails from '@/components/FraisEcritureDetails'
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import FraisEcritureDetails from '@/components/FraisEcritureDetails';
 
-import Vuetable from 'vuetable-2'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
-import _ from 'lodash'
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
 
 export default {
   name: 'FraisTabAnnuel',
@@ -69,22 +69,22 @@ export default {
   },
   watch: {
     currentExerciceComptableId() {
-      this.loading = true
+      this.loading = true;
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_annuels.setData(this.computeData())
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_annuels.setData(this.computeData());
+      });
     },
     listeEcritures() {
-      this.loading = true
-      this.$refs.vuetable_frais_annuels.setData(this.computeData())
-      this.loading = false
+      this.loading = true;
+      this.$refs.vuetable_frais_annuels.setData(this.computeData());
+      this.loading = false;
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur')
+    this.$store.dispatch('fetchListSapeur');
     if (this.listeFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
@@ -92,13 +92,13 @@ export default {
 
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_annuels.setData(this.computeData())
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_annuels.setData(this.computeData());
+      });
     }
   },
   data() {
-    let svm = this
+    let svm = this;
     return {
       css: CssForBootstrap4,
       toggles: {},
@@ -168,7 +168,7 @@ export default {
           dataClass: 'align-middle'
         }
       ]
-    }
+    };
   },
   props: {
     propName: {
@@ -191,10 +191,10 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     computeData() {
-      let sapeurs = []
+      let sapeurs = [];
       this.listeEcritures.forEach(e => {
         if (sapeurs.filter(s => s.id === e.sapeur_id).length === 0) {
-          let sapeur = this.getSapeur(e.sapeur_id)
+          let sapeur = this.getSapeur(e.sapeur_id);
           sapeurs = [
             ...sapeurs,
             {
@@ -204,7 +204,7 @@ export default {
               fonction: this.getFonction(sapeur.fonction_id).nom,
               total: parseFloat(e.total)
             }
-          ]
+          ];
         } else {
           sapeurs = [
             ...sapeurs.filter(s => s.id !== e.sapeur_id),
@@ -218,53 +218,57 @@ export default {
                 (sapeurs.filter(s => s.id === e.sapeur_id)[0].total | 0) +
                 parseFloat(e.total)
             }
-          ]
+          ];
         }
-      })
+      });
       return sapeurs.map(s => ({
         ...s,
         getEcritures: () =>
           new Promise(
             function(resolve) {
-              resolve(this.ecritures)
+              resolve(this.ecritures);
             }.bind(s)
           ),
         columns: this.ecritureColumns
-      }))
+      }));
     },
     generer() {
-      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 })
+      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
       //TODO Modal de génération des frais annuels
     },
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
-      }
-      this.$refs.vuetable_frais_annuels.toggleDetailRow(id)
+      };
+      this.$refs.vuetable_frais_annuels.toggleDetailRow(id);
     },
     dataManager(sortOrder) {
-      let local = this.computeData()
-      if (local.length < 1) return
+      let local = this.computeData();
+      if (local.length < 1) return;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
       }
 
       return {
         data: local
-      }
+      };
     },
     onRowClass(dataItem) {
       const statutsClass = {
         0: 'text-danger', //'inactif',
         1: '' //'Actif',
-      }
-      return statutsClass[dataItem.actif]
+      };
+      return statutsClass[dataItem.actif];
     }
   }
-}
+};
 </script>
 
 <style>

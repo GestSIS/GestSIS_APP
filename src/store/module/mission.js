@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import MissionService from '../../services/MissionService'
+import types from '../mutationTypes';
+import MissionService from '../../services/MissionService';
 
 export default {
   state: {
@@ -7,14 +7,14 @@ export default {
   },
   mutations: {
     [types.UPDATE_MISSION_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     }
   },
   actions: {
     fetchMissions({ commit }) {
       return MissionService.getMissions().then(data =>
         commit(types.UPDATE_MISSION_LIST, data)
-      )
+      );
     }
   }
-}
+};

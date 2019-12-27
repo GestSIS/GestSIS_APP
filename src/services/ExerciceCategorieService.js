@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getCategories() {
-    return Api.api().get('/exercice-categories/')
+    return Api.api().get('/exercice-categories/');
   }
-}
+};

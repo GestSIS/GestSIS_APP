@@ -73,11 +73,11 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/ExerciceComptable'
-import FraisTabExercice from '@/components/FraisTabExercice'
-import FraisTabComptes from '@/components/FraisTabComptes'
-import FraisTabIntervention from '@/components/FraisTabIntervention'
-import FraisTabAnnuel from '@/components/FraisTabAnnuel'
+import ExerciceComptable from '@/components/ExerciceComptable';
+import FraisTabExercice from '@/components/FraisTabExercice';
+import FraisTabComptes from '@/components/FraisTabComptes';
+import FraisTabIntervention from '@/components/FraisTabIntervention';
+import FraisTabAnnuel from '@/components/FraisTabAnnuel';
 
 export default {
   name: 'frais',
@@ -92,15 +92,15 @@ export default {
     return {
       activeTab: 'comptes',
       loading: true
-    }
+    };
   },
   mounted() {
     //TODO Load only if neccessary
-    this.$store.dispatch('fetchIndemnitesTypes')
-    this.$store.dispatch('fetchFraisTypes')
-    this.$store.dispatch('fetchComptes')
+    this.$store.dispatch('fetchIndemnitesTypes');
+    this.$store.dispatch('fetchFraisTypes');
+    this.$store.dispatch('fetchComptes');
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

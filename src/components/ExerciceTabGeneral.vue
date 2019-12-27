@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ExerciceTabGeneral',
@@ -191,10 +191,10 @@ export default {
       'getExerciceCategorie'
     ]),
     exerciceCategorie() {
-      return this.activeExerciceData.exercice_categorie_id
+      return this.activeExerciceData.exercice_categorie_id;
     },
     exerciceHeure() {
-      return this.activeExerciceData.heure
+      return this.activeExerciceData.heure;
     }
   },
   props: {
@@ -204,22 +204,22 @@ export default {
     return {
       errors: {},
       loading: true
-    }
+    };
   },
   watch: {
     exerciceCategorie(value) {
       this.activeExerciceData.duree =
         this.activeExerciceData.duree ||
-        this.getExerciceCategorie(value).duree_base
+        this.getExerciceCategorie(value).duree_base;
     },
     exerciceHeure(data) {
-      this.activeExerciceData.heure = this.formatHeure(data)
+      this.activeExerciceData.heure = this.formatHeure(data);
     }
   },
   mounted() {
     this.activeExerciceData.heure = this.formatHeure(
       this.activeExerciceData.heure
-    )
+    );
   },
   methods: {
     save() {
@@ -227,25 +227,25 @@ export default {
         this.$store
           .dispatch('createExercice', this.activeExerciceData)
           .then(data => {
-            this.$router.push('/exercices/' + data.id)
-            this.errors = {}
+            this.$router.push('/exercices/' + data.id);
+            this.errors = {};
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('saveActiveExercice', this.activeExerciceData)
           .then(() => (this.errors = {}))
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     },
     formatHeure(value) {
       if (value && value.length >= 8) {
-        return value.slice(0, 5)
+        return value.slice(0, 5);
       }
-      return value
+      return value;
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

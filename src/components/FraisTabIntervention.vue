@@ -56,13 +56,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import FraisEcritureDetails from '@/components/FraisEcritureDetails'
-import ComptabiliteService from '@/services/ComptabiliteService'
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import FraisEcritureDetails from '@/components/FraisEcritureDetails';
+import ComptabiliteService from '@/services/ComptabiliteService';
 
-import Vuetable from 'vuetable-2'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
-import _ from 'lodash'
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
 
 export default {
   name: 'FraisTabIntervention',
@@ -71,38 +71,38 @@ export default {
   },
   watch: {
     currentExerciceComptableId() {
-      this.loading = true
+      this.loading = true;
       this.$store.dispatch('fetchListIntervention').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_interventions.setData(this.computedData)
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_interventions.setData(this.computedData);
+      });
     },
     listInterventions() {
-      this.loading = true
-      this.$refs.vuetable_frais_interventions.setData(this.computedData)
-      this.loading = false
+      this.loading = true;
+      this.$refs.vuetable_frais_interventions.setData(this.computedData);
+      this.loading = false;
     }
   },
   mounted() {
     //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListSapeur')
+    this.$store.dispatch('fetchListSapeur');
 
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchStatFederals')
-    this.$store.dispatch('fetchTypeInterventions')
-    this.$store.dispatch('fetchInterventionTraitements')
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchStatFederals');
+    this.$store.dispatch('fetchTypeInterventions');
+    this.$store.dispatch('fetchInterventionTraitements');
     if (this.listExerciceComptable.length === 0) {
       //console.log('Warning')
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchListIntervention').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_interventions.setData(this.computedData)
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_interventions.setData(this.computedData);
+      });
     }
   },
   data() {
-    let svm = this
+    let svm = this;
     return {
       css: CssForBootstrap4,
       toggles: {},
@@ -168,7 +168,7 @@ export default {
           name: 'heure_debut',
           dataClass: 'align-middle',
           formatter(value) {
-            return value.slice(0, 5)
+            return value.slice(0, 5);
           }
         },
         {
@@ -182,7 +182,7 @@ export default {
           name: 'localite_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return svm.getLocalite(value).designation
+            return svm.getLocalite(value).designation;
           }
         },
         {
@@ -195,7 +195,7 @@ export default {
           name: 'stat_federal_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return svm.getStatFederal(value).designation
+            return svm.getStatFederal(value).designation;
           }
         },
         {
@@ -203,7 +203,7 @@ export default {
           name: 'intervention_traitement_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return svm.getInterventionTraitement(value).designation
+            return svm.getInterventionTraitement(value).designation;
           }
         },
         {
@@ -216,8 +216,8 @@ export default {
               2: 'Petite',
               3: 'Moyenne',
               4: 'Grande'
-            }
-            return degre[value]
+            };
+            return degre[value];
           }
         },
         {
@@ -230,8 +230,8 @@ export default {
               1: 'A valider',
               2: 'A imputer',
               3: 'Imputée'
-            }
-            return statuts[value]
+            };
+            return statuts[value];
           }
         },
         {
@@ -240,7 +240,7 @@ export default {
           dataClass: 'align-middle'
         }
       ]
-    }
+    };
   },
   props: {
     propName: {
@@ -267,7 +267,7 @@ export default {
       'getSapeur'
     ]),
     computedData() {
-      let svm = this
+      let svm = this;
       return this.listInterventions.map(i => ({
         ...i,
         type_intervention: svm.getTypeIntervention(i.type_intervention_id)
@@ -276,7 +276,7 @@ export default {
         getEcritures: () =>
           ComptabiliteService.getEcrituresForInterventions(i.id),
         columns: this.ecritureColumns
-      }))
+      }));
     }
   },
   methods: {
@@ -285,8 +285,8 @@ export default {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
-      }
-      this.$refs.vuetable_frais_interventions.toggleDetailRow(id)
+      };
+      this.$refs.vuetable_frais_interventions.toggleDetailRow(id);
     },
     imputerIntervention(interventionId) {
       //TODO
@@ -295,21 +295,25 @@ export default {
         component: 'ModalImputerIntervention',
         data: { id: interventionId },
         size: 2
-      })
+      });
     },
     dataManager(sortOrder) {
-      if (this.computedData.length < 1) return
+      if (this.computedData.length < 1) return;
 
-      let local = this.computedData
+      let local = this.computedData;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
       }
 
       return {
         data: local
-      }
+      };
     },
     onRowClass(dataItem) {
       const statutsClass = {
@@ -317,11 +321,11 @@ export default {
         1: '', //'A valider',
         2: 'table-warning', //'A imputer',
         3: 'table-success' //'Imputée'
-      }
-      return statutsClass[dataItem.statut]
+      };
+      return statutsClass[dataItem.statut];
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

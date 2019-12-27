@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getTelephones() {
-    return Api.api().get('/telephones/')
+    return Api.api().get('/telephones/');
   }
-}
+};

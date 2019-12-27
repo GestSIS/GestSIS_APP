@@ -1,9 +1,9 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const API_URL = process.env.VUE_APP_API_ENDPOINT
-const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT
+const API_URL = process.env.VUE_APP_API_ENDPOINT;
+const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 
-import store from '@/store'
+import store from '@/store';
 
 const request = {
   _401interceptor: true,
@@ -11,7 +11,7 @@ const request = {
   _refreshFailed: null,
 
   setAccessToken: token => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   },
 
   api() {
@@ -21,24 +21,24 @@ const request = {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    })
+    });
 
     api.interceptors.response.use(
       response => {
         if (response.data.error !== undefined) {
-          throw response.data.error
+          throw response.data.error;
         }
-        return response.data.data
+        return response.data.data;
       },
       async error => {
         if (error.config && error.response && error.response.status === 401) {
           // Refresh the access token
           try {
-            await store.dispatch('refreshToken')
+            await store.dispatch('refreshToken');
 
             error.config.headers.Authorization = `Bearer ${
               axios.defaults.headers.common['Authorization']
-            }`
+            }`;
 
             // Retry the original request
             return axios({
@@ -46,19 +46,19 @@ const request = {
               url: error.config.url,
               data: error.config.data
             }).then(response => {
-              return response.data.data
-            })
+              return response.data.data;
+            });
           } catch (e) {
             // Refresh has failed - reject the original request
-            throw error
+            throw error;
           }
         }
 
-        return Promise.reject(error)
+        return Promise.reject(error);
       }
-    )
+    );
 
-    return api
+    return api;
   },
 
   auth: () => {
@@ -68,23 +68,23 @@ const request = {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    })
+    });
 
     auth.interceptors.response.use(
       function(response) {
         if (response.status === 401) {
-          throw response.data
+          throw response.data;
         }
-        return response.data
+        return response.data;
       },
       function(error) {
         // Do something with response error
-        return Promise.reject(error.response.data)
+        return Promise.reject(error.response.data);
       }
-    )
+    );
 
-    return auth
+    return auth;
   }
-}
+};
 
-export default request
+export default request;

@@ -1,4 +1,4 @@
-import types from '../mutationTypes'
+import types from '../mutationTypes';
 
 export default {
   state: {
@@ -12,12 +12,12 @@ export default {
   },
   mutations: {
     [types.UPDATE_CURRENT_MUTATION](state, payload) {
-      state.currentMutation = payload
+      state.currentMutation = payload;
     }
   },
   actions: {
     updateActiveMutation({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_MUTATION, payload)
+      return commit(types.UPDATE_CURRENT_MUTATION, payload);
     },
     resetActiveMutation({ commit }) {
       return commit(types.UPDATE_CURRENT_MUTATION, {
@@ -26,7 +26,7 @@ export default {
         incorporation: null,
         sortie: null,
         motif: ''
-      })
+      });
     }
   }
-}
+};

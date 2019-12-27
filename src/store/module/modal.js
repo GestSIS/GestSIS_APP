@@ -1,4 +1,4 @@
-import types from '../mutationTypes'
+import types from '../mutationTypes';
 
 export default {
   state: {
@@ -10,21 +10,21 @@ export default {
   },
   mutations: {
     [types.SHOW_MODAL](state, payload) {
-      state.modalVisible = true
+      state.modalVisible = true;
       if (typeof payload === 'string') {
-        state.modalComponent = payload
-        state.modalCallback = () => {}
-        state.modalSize = 0
-        state.modalData = 0
+        state.modalComponent = payload;
+        state.modalCallback = () => {};
+        state.modalSize = 0;
+        state.modalData = 0;
       } else {
-        state.modalComponent = payload.component
-        state.modalCallback = payload.callback || function() {}
-        state.modalSize = payload.size || 0
-        state.modalData = payload.data || 0
+        state.modalComponent = payload.component;
+        state.modalCallback = payload.callback || function() {};
+        state.modalSize = payload.size || 0;
+        state.modalData = payload.data || 0;
       }
     },
     [types.HIDE_MODAL](state) {
-      state.modalVisible = false
+      state.modalVisible = false;
     }
   }
-}
+};

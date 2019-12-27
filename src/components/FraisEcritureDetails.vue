@@ -51,23 +51,23 @@ export default {
       loading: true,
       columns: [],
       ecritures: []
-    }
+    };
   },
   mounted() {
-    this.loading = true
-    this.columns = this.rowData.columns
+    this.loading = true;
+    this.columns = this.rowData.columns;
     this.rowData.getEcritures().then(ecritures => {
-      this.ecritures = ecritures
-      this.loading = false
-    })
+      this.ecritures = ecritures;
+      this.loading = false;
+    });
   },
   methods: {
     computeColumn(column, ecriture) {
-      let formatter = column.formatter || (a => a)
-      return formatter(ecriture[column.field])
+      let formatter = column.formatter || (a => a);
+      return formatter(ecriture[column.field]);
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getPhases() {
-    return Api.api().get('/phase-types/')
+    return Api.api().get('/phase-types/');
   }
-}
+};

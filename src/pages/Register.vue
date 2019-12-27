@@ -94,7 +94,7 @@ export default {
       password: null,
       password_confirmation: null,
       error: {}
-    }
+    };
   },
   methods: {
     login() {
@@ -106,17 +106,17 @@ export default {
           password_confirmation: this.password_confirmation
         })
         .then(() => {
-          this.error = {}
+          this.error = {};
           this.$router.push(
             this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
-          )
+          );
         })
         .catch(data => {
-          this.error = data.error
-        })
+          this.error = data.error;
+        });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

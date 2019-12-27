@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import TelephoneService from '../../services/TelephoneService'
+import types from '../mutationTypes';
+import TelephoneService from '../../services/TelephoneService';
 
 export default {
   state: {
@@ -7,14 +7,14 @@ export default {
   },
   mutations: {
     [types.UPDATE_TELEPHONE_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     }
   },
   actions: {
     fetchTelephones({ commit }) {
       return TelephoneService.getTelephones().then(data =>
         commit(types.UPDATE_TELEPHONE_LIST, data)
-      )
+      );
     }
   }
-}
+};

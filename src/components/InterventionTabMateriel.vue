@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'InterventionTabMateriel',
@@ -67,33 +67,33 @@ export default {
         this.$store.dispatch(
           'fetchInterventionMateriels',
           this.activeInterventionId
-        )
-      })
+        );
+      });
     } else if (this.materiels.length === 0) {
       this.$store.dispatch(
         'fetchInterventionMateriels',
         this.activeInterventionId
-      )
+      );
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     newMateriel() {
-      this.$store.dispatch('resetActiveMateriel')
-      this.SHOW_MODAL('ModalMateriel')
+      this.$store.dispatch('resetActiveMateriel');
+      this.SHOW_MODAL('ModalMateriel');
     },
     editMateriel(grade_id) {
       this.$store.dispatch(
         'updateActiveMateriel',
         Object.assign({}, this.materiels.filter(m => m.id === grade_id)[0])
-      )
-      this.SHOW_MODAL('ModalMateriel')
+      );
+      this.SHOW_MODAL('ModalMateriel');
     },
     supprimerMateriel(grade_id) {
-      this.$store.dispatch('removeMateriel', grade_id)
+      this.$store.dispatch('removeMateriel', grade_id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

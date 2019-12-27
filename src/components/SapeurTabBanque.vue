@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SapeurTabBanque',
@@ -47,15 +47,15 @@ export default {
         })
         .catch(() => {
           // console.log('Save sapeur Error')
-        })
+        });
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeur', id)
+      this.$store.dispatch('fetchSapeur', id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getStats() {
-    return Api.api().get('/stat-federal/')
+    return Api.api().get('/stat-federal/');
   }
-}
+};

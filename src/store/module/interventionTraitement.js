@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import InterventionTraitementService from '../../services/InterventionTraitementService'
+import types from '../mutationTypes';
+import InterventionTraitementService from '../../services/InterventionTraitementService';
 
 export default {
   state: {
@@ -9,7 +9,7 @@ export default {
     [types.UPDATE_INTERVENTION_TRAITEMENT_LIST](state, payload) {
       state.liste = payload
         .slice(0)
-        .sort((t1, t2) => t1.designation > t2.designation)
+        .sort((t1, t2) => t1.designation > t2.designation);
     }
   },
   getters: {
@@ -20,7 +20,7 @@ export default {
     fetchInterventionTraitements({ commit }) {
       return InterventionTraitementService.getStats().then(data =>
         commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
-      )
+      );
     }
   }
-}
+};

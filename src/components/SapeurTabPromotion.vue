@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurTabPromotion',
@@ -67,22 +67,22 @@ export default {
   },
   mounted() {
     if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades')
+      this.$store.dispatch('fetchGrades');
     }
     if (this.activeSapeurGrades.length === 0) {
-      this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGrades', id)
+      this.$store.dispatch('fetchSapeurGrades', id);
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     newGrade() {
-      this.$store.dispatch('resetActiveGrade')
-      this.SHOW_MODAL('ModalPromotion')
+      this.$store.dispatch('resetActiveGrade');
+      this.SHOW_MODAL('ModalPromotion');
     },
     editGrade(grade_id) {
       this.$store.dispatch(
@@ -91,14 +91,14 @@ export default {
           {},
           this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
         )
-      )
-      this.SHOW_MODAL('ModalPromotion')
+      );
+      this.SHOW_MODAL('ModalPromotion');
     },
     supprimerGrade(grade_id) {
-      this.$store.dispatch('removeGrade', grade_id)
+      this.$store.dispatch('removeGrade', grade_id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

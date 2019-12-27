@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import VehiculeService from '../../services/VehiculeService'
+import types from '../mutationTypes';
+import VehiculeService from '../../services/VehiculeService';
 
 export default {
   state: {
@@ -7,7 +7,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_VEHICULE_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     }
   },
   getters: {
@@ -18,7 +18,7 @@ export default {
     fetchVehicules({ commit }) {
       return VehiculeService.getVehicules().then(data =>
         commit(types.UPDATE_VEHICULE_LIST, data)
-      )
+      );
     }
   }
-}
+};

@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import LocaliteService from '../../services/LocaliteService'
+import types from '../mutationTypes';
+import LocaliteService from '../../services/LocaliteService';
 
 export default {
   state: {
@@ -7,7 +7,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_LOCALITE_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     }
   },
   getters: {
@@ -20,7 +20,7 @@ export default {
     fetchLocalites({ commit }) {
       return LocaliteService.getLocalites().then(data =>
         commit(types.UPDATE_LOCALITE_LIST, data)
-      )
+      );
     }
   }
-}
+};

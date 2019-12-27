@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getMissions() {
-    return Api.api().get('/mission-types/')
+    return Api.api().get('/mission-types/');
   }
-}
+};

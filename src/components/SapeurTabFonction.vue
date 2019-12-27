@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurTabFonction',
@@ -68,20 +68,20 @@ export default {
   },
   mounted() {
     if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
-    this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
+    this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurFonctions', id)
+      this.$store.dispatch('fetchSapeurFonctions', id);
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     newFonction() {
-      this.$store.dispatch('resetActiveFonction')
-      this.SHOW_MODAL('ModalFonction')
+      this.$store.dispatch('resetActiveFonction');
+      this.SHOW_MODAL('ModalFonction');
     },
     editFonction(fonction_id) {
       this.$store.dispatch(
@@ -90,14 +90,14 @@ export default {
           {},
           this.activeSapeurFonctions.filter(f => f.id === fonction_id)[0]
         )
-      )
-      this.SHOW_MODAL('ModalFonction')
+      );
+      this.SHOW_MODAL('ModalFonction');
     },
     supprimerFonction(fonction_id) {
-      this.$store.dispatch('removeFonction', fonction_id)
+      this.$store.dispatch('removeFonction', fonction_id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

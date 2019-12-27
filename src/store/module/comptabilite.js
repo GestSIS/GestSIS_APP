@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import ComptabiliteService from '../../services/ComptabiliteService'
+import types from '../mutationTypes';
+import ComptabiliteService from '../../services/ComptabiliteService';
 
 export default {
   state: {
@@ -27,25 +27,25 @@ export default {
       state.indemnites = {
         ...state.indemnites,
         ...payload
-      }
+      };
     },
     [types.UPDATE_FRAIS_TYPES](state, payload) {
       state.frais = {
         ...state.frais,
         ...payload
-      }
+      };
     },
     [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
-      state.ecritures.annuels = [...payload]
+      state.ecritures.annuels = [...payload];
     },
     [types.UPDATE_COMPTES_LISTE](state, payload) {
-      state.comptes = payload
+      state.comptes = payload;
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
-      state.active.ecritures = payload
+      state.active.ecritures = payload;
     },
     [types.SELECT_CURRENT_COMPTE](state, payload) {
-      state.active.compteId = payload
+      state.active.compteId = payload;
     }
   },
   getters: {
@@ -55,34 +55,34 @@ export default {
     fetchComptes({ commit }) {
       return ComptabiliteService.getComptes().then(data =>
         commit(types.UPDATE_COMPTES_LISTE, data)
-      )
+      );
     },
     selectActiveCompte({ commit, dispatch }, payload) {
-      commit(types.SELECT_CURRENT_COMPTE, payload)
-      return dispatch('fetchEcritureComptes')
+      commit(types.SELECT_CURRENT_COMPTE, payload);
+      return dispatch('fetchEcritureComptes');
     },
     fetchEcritureComptes({ state, getters, commit }) {
       return ComptabiliteService.getEcritureForCompte(
         state.active.compteId,
         getters.currentExerciceComptableId
       ).then(data => {
-        return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data)
-      })
+        return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data);
+      });
     },
     fetchIndemnitesTypes({ commit }) {
       return ComptabiliteService.getIndemniteTypes().then(data =>
         commit(types.UPDATE_INDEMNITES_TYPES, data)
-      )
+      );
     },
     fetchFraisTypes({ commit }) {
       return ComptabiliteService.getFraisTypes().then(data =>
         commit(types.UPDATE_FRAIS_TYPES, data)
-      )
+      );
     },
     fetchEcrituresAnnuels({ commit, getters }) {
       return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data))
+      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
     },
     imputerExercice({ commit }, payload) {
       return ComptabiliteService.imputerExercice(
@@ -92,9 +92,9 @@ export default {
         commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload.exercice_id,
           statut: data.statut
-        })
-        return data
-      })
+        });
+        return data;
+      });
     },
     imputerIntervention({ commit }, payload) {
       return ComptabiliteService.imputerIntervention(
@@ -104,9 +104,9 @@ export default {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload.intervention_id,
           statut: data.statut
-        })
-        return data
-      })
+        });
+        return data;
+      });
     },
     imputerAnnuel({ commit, getters }) {
       return ComptabiliteService.imputerAnnuel(
@@ -115,9 +115,9 @@ export default {
         commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
           ...data.indemnites,
           ...data.frais
-        ])
-        return data
-      })
+        ]);
+        return data;
+      });
     }
   }
-}
+};

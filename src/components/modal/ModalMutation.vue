@@ -63,14 +63,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalMutation',
   data() {
     return {
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -81,7 +81,7 @@ export default {
   },
   mounted() {
     if (this.listLocalites.length === 0) {
-      this.$store.dispatch('fetchLocalites')
+      this.$store.dispatch('fetchLocalites');
     }
   },
   methods: {
@@ -91,22 +91,22 @@ export default {
         this.$store
           .dispatch('addMutation', this.activeMutation)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editMutation', this.activeMutation)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

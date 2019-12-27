@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import CoursService from '../../services/CoursService'
+import types from '../mutationTypes';
+import CoursService from '../../services/CoursService';
 
 export default {
   state: {
@@ -19,10 +19,10 @@ export default {
   },
   mutations: {
     [types.UPDATE_COURS_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
-      state.active = payload
+      state.active = payload;
     }
   },
   getters: {
@@ -32,10 +32,10 @@ export default {
     fetchCours({ commit }) {
       return CoursService.getCours().then(data =>
         commit(types.UPDATE_COURS_LIST, data)
-      )
+      );
     },
     updateActiveCours({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_COURS, payload)
+      return commit(types.UPDATE_CURRENT_COURS, payload);
     },
     resetActiveCours({ commit }) {
       return commit(types.UPDATE_CURRENT_COURS, {
@@ -49,7 +49,7 @@ export default {
         date: null,
         date_fonction: null,
         date_grade: null
-      })
+      });
     }
   }
-}
+};

@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import ExerciceCategorieService from '../../services/ExerciceCategorieService'
+import types from '../mutationTypes';
+import ExerciceCategorieService from '../../services/ExerciceCategorieService';
 
 export default {
   state: {
@@ -7,7 +7,7 @@ export default {
   },
   mutations: {
     [types.UPDATE_EXERCICE_CATEGORIE_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     }
   },
   getters: {
@@ -20,7 +20,7 @@ export default {
     fetchExerciceCategories({ commit }) {
       return ExerciceCategorieService.getCategories().then(data =>
         commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
-      )
+      );
     }
   }
-}
+};

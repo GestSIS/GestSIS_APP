@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getExcuses() {
-    return Api.api().get('/excuses-types/')
+    return Api.api().get('/excuses-types/');
   }
-}
+};

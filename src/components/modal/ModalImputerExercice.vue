@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex'
+import { mapMutations, mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'ModalImputerExercice',
@@ -153,37 +153,37 @@ export default {
       activeIndemnite: null,
       ecritures: [],
       successMessageVisibility: true
-    }
+    };
   },
   computed: {
     ...mapState({
       listeIndemnitesTypes: state => state.comptabilite.indemnites.exercices,
       listFonctions: state => state.fonction.liste,
-      listComptes: state => state.comptabilite.comptes,
+      listComptes: state => state.comptabilite.comptes
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {
-      return this.activeIndemnite !== null && this.activeIndemnite.par_fonction
+      return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
     }
   },
   mounted() {
     if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     selectIndemnite(index) {
-      this.activeIndemniteIndex = index
-      this.activeIndemnite = this.listeIndemnitesTypes[index]
+      this.activeIndemniteIndex = index;
+      this.activeIndemnite = this.listeIndemnitesTypes[index];
     },
     cancel() {
       //TODO Cancel depending on state
-      this.HIDE_MODAL()
+      this.HIDE_MODAL();
     },
     imputer() {
       if (this.indemniteType === null) {
-        return
+        return;
       }
 
       //TODO
@@ -193,28 +193,28 @@ export default {
           indemnite_exercice_type_id: this.activeIndemnite.id
         })
         .then(data => {
-          this.phase = 2
-          this.ecritures = data.ecritures
-        })
+          this.phase = 2;
+          this.ecritures = data.ecritures;
+        });
     },
     onKeyDown() {
-      console.log('Key down')
+      console.log('Key down');
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
           : ++this.activeIndemniteIndex % this.listeIndemnitesTypes.length
-      )
+      );
     },
     onKeyUp() {
-      console.log('Key up')
+      console.log('Key up');
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
           : --this.activeIndemniteIndex % this.listeIndemnitesTypes.length
-      )
+      );
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

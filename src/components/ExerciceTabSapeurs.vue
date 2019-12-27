@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'ExerciceTabSapeurs',
@@ -136,18 +136,18 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     save() {
-      this.$store.dispatch('editSapeurs', this.activeExerciceSapeurs)
+      this.$store.dispatch('editSapeurs', this.activeExerciceSapeurs);
     },
     sapeurNomPrenom(sapeur_id) {
-      let sapeur = this.getSapeur(sapeur_id)
-      return sapeur.nom + ' ' + sapeur.prenom
+      let sapeur = this.getSapeur(sapeur_id);
+      return sapeur.nom + ' ' + sapeur.prenom;
     },
     manageSapeurs() {
-      let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0)
-      let svm = this
+      let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0);
+      let svm = this;
       let callback = (newSap, removedSap) => {
         if (newSap === null || newSap === undefined) {
-          return
+          return;
         }
 
         return new Promise((resolve, reject) => {
@@ -158,12 +158,12 @@ export default {
             excuse_type_id: null,
             sapeur_id: s,
             amende: false
-          }))
+          }));
 
           let removedSapeurs = removedSap.map(
             id =>
               svm.activeExerciceSapeurs.filter(s => s.sapeur_id === id)[0].id
-          )
+          );
 
           //Sapeurs ajoutés
           if (newSapeurs.length > 0) {
@@ -171,12 +171,12 @@ export default {
               .dispatch('addSapeurs', newSapeurs)
               .then(() => {
                 if (removedSapeurs.length <= 0) {
-                  resolve()
+                  resolve();
                 }
               })
               .catch(() => {
-                reject("Erreur lors de l'opération")
-              })
+                reject("Erreur lors de l'opération");
+              });
           }
 
           if (removedSapeurs.length > 0) {
@@ -184,17 +184,17 @@ export default {
               .dispatch('removeSapeurs', removedSapeurs)
               .then(resolve)
               .catch(error => {
-                console.error('remove sap error')
-                console.error(error)
-                reject("Erreur lors de l'opération")
-              })
+                console.error('remove sap error');
+                console.error(error);
+                reject("Erreur lors de l'opération");
+              });
           }
 
           if (newSapeurs.length <= 0 && removedSapeurs.length <= 0) {
-            resolve('Solved')
+            resolve('Solved');
           }
-        })
-      }
+        });
+      };
       //this.$store.dispatch('resetActiveFonction')
 
       this.SHOW_MODAL({
@@ -202,40 +202,40 @@ export default {
         size: 1,
         callback,
         data
-      })
+      });
     },
     selectPresent(sapeur) {
-      sapeur.remplace = false
-      sapeur.amende = false
-      sapeur.excuse_type_id = null
+      sapeur.remplace = false;
+      sapeur.amende = false;
+      sapeur.excuse_type_id = null;
     },
     selectRemplace(sapeur) {
-      sapeur.present = false
-      sapeur.amende = false
-      sapeur.excuse_type_id = null
+      sapeur.present = false;
+      sapeur.amende = false;
+      sapeur.excuse_type_id = null;
     },
     selectExcuse(sapeur) {
       if (sapeur.excuse_type_id === true) {
-        sapeur.excuse_type_id === null
+        sapeur.excuse_type_id === null;
       }
-      let self = this
+      let self = this;
       this.SHOW_MODAL({
         component: 'ModalExcuse',
         callback: excuseTypeId => {
           if (excuseTypeId !== null && excuseTypeId !== undefined) {
-            let excuseType = self.getExcuseType(excuseTypeId)
-            sapeur.present = false
-            sapeur.remplace = false
-            sapeur.amende = excuseType.amende
-            sapeur.excuse_type_id = excuseTypeId
+            let excuseType = self.getExcuseType(excuseTypeId);
+            sapeur.present = false;
+            sapeur.remplace = false;
+            sapeur.amende = excuseType.amende;
+            sapeur.excuse_type_id = excuseTypeId;
           } else {
-            sapeur.excuse_type_id = null
+            sapeur.excuse_type_id = null;
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

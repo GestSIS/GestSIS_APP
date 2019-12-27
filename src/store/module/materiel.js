@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import MaterielService from '../../services/MaterielService'
+import types from '../mutationTypes';
+import MaterielService from '../../services/MaterielService';
 
 export default {
   state: {
@@ -12,10 +12,10 @@ export default {
   },
   mutations: {
     [types.UPDATE_MATERIEL_LIST](state, payload) {
-      state.liste = payload
+      state.liste = payload;
     },
     [types.UPDATE_CURRENT_MATERIEL](state, payload) {
-      state.active = payload
+      state.active = payload;
     }
   },
   getters: {
@@ -26,17 +26,17 @@ export default {
     fetchMateriels({ commit }) {
       return MaterielService.getMateriels().then(data =>
         commit(types.UPDATE_MATERIEL_LIST, data)
-      )
+      );
     },
     updateActiveMateriel({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_MATERIEL, payload)
+      return commit(types.UPDATE_CURRENT_MATERIEL, payload);
     },
     resetActiveMateriel({ commit }) {
       return commit(types.UPDATE_CURRENT_MATERIEL, {
         id: null,
         materiel_id: null,
         quantite: 0
-      })
+      });
     }
   }
-}
+};

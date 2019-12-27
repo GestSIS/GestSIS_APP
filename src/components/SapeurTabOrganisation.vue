@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'SapeurTabOrganisation',
@@ -43,32 +43,32 @@ export default {
     }),
     ...mapGetters(['getGroupe']),
     groupeDisplay() {
-      let svm = this
+      let svm = this;
       return this.activeSapeurGroupes.map(groupe => {
-        let g = svm.getGroupe(groupe.groupe_id)
+        let g = svm.getGroupe(groupe.groupe_id);
         return {
           id: groupe.id,
           designation: g.designation,
           no: g.no || ''
-        }
-      })
+        };
+      });
     }
   },
   mounted() {
     if (this.listGroupes.length === 0) {
       this.$store.dispatch('fetchGroupes').then(() => {
-        this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId)
-      })
+        this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
+      });
     } else {
-      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGroupes', id)
+      this.$store.dispatch('fetchSapeurGroupes', id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

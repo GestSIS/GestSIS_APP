@@ -70,18 +70,18 @@
               Contrôles médicaux
             </button>
             <button
-                    class="btn btn-link nav-item nav-link"
-                    :class="{ active: activeTab === 'droits' }"
-                    role="tab"
-                    @click.prevent="activeTab = 'droits'"
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'droits' }"
+              role="tab"
+              @click.prevent="activeTab = 'droits'"
             >
               Droits
             </button>
             <button
-                    class="btn btn-link nav-item nav-link"
-                    :class="{ active: activeTab === 'admin' }"
-                    role="tab"
-                    @click.prevent="activeTab = 'admin'"
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'admin' }"
+              role="tab"
+              @click.prevent="activeTab = 'admin'"
             >
               GestSIS Admin
             </button>
@@ -145,7 +145,10 @@
             </div>
             <div v-else-if="activeTab === 'droits'">
               <p>TODO Nouvelle application ?</p>
-              <p>Les données suivantes sont celles correspondantes à l'application GestSIS 1.0</p>
+              <p>
+                Les données suivantes sont celles correspondantes à
+                l'application GestSIS 1.0
+              </p>
               <ul>
                 <li>Localités et communes</li>
                 <li>Cours cantonaux</li>
@@ -176,7 +179,7 @@ export default {
   data() {
     return {
       activeTab: 'general'
-    }
+    };
   },
   components: {
     // ExerciceComptable
@@ -209,7 +212,7 @@ export default {
     //     .then(() => (svm.loading = false))
     // }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

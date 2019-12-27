@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 //TODO Add Mat
 const tabList = {
@@ -46,17 +46,17 @@ const tabList = {
   PERMIS: 'Permis',
   BANQUE: 'Banque',
   EXERCICE: 'Exercice'
-}
+};
 
-import SapeurTabGeneral from '@/components/SapeurTabGeneral'
-import SapeurTabFonction from '@/components/SapeurTabFonction'
-import SapeurTabCours from '@/components/SapeurTabCours'
-import SapeurTabPromotion from '@/components/SapeurTabPromotion'
-import SapeurTabMateriel from '@/components/SapeurTabMateriel'
-import SapeurTabOrganisation from '@/components/SapeurTabOrganisation'
-import SapeurTabPermis from '@/components/SapeurTabPermis'
-import SapeurTabBanque from '@/components/SapeurTabBanque'
-import SapeurTabExercice from '@/components/SapeurTabExercice'
+import SapeurTabGeneral from '@/components/SapeurTabGeneral';
+import SapeurTabFonction from '@/components/SapeurTabFonction';
+import SapeurTabCours from '@/components/SapeurTabCours';
+import SapeurTabPromotion from '@/components/SapeurTabPromotion';
+import SapeurTabMateriel from '@/components/SapeurTabMateriel';
+import SapeurTabOrganisation from '@/components/SapeurTabOrganisation';
+import SapeurTabPermis from '@/components/SapeurTabPermis';
+import SapeurTabBanque from '@/components/SapeurTabBanque';
+import SapeurTabExercice from '@/components/SapeurTabExercice';
 
 export default {
   name: 'SapeurDetails',
@@ -75,7 +75,7 @@ export default {
     return {
       activeTab: tabList.GENERAL,
       tabList: tabList
-    }
+    };
   },
   props: {
     id: {
@@ -85,7 +85,7 @@ export default {
   },
   mounted() {
     if (this.id || 0) {
-      this.loadDetails()
+      this.loadDetails();
     }
   },
   computed: {
@@ -93,18 +93,18 @@ export default {
   },
   methods: {
     selectTab(tab) {
-      this.activeTab = tab
+      this.activeTab = tab;
     },
     loadDetails() {
-      this.$store.dispatch('selectSapeur', this.id)
+      this.$store.dispatch('selectSapeur', this.id);
     }
   },
   watch: {
     id() {
-      this.loadDetails()
+      this.loadDetails();
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

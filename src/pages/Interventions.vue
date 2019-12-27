@@ -33,6 +33,61 @@
               Ajouter une intervention
             </router-link>
           </div>
+          <form>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <select
+                  class="form-control"
+                  id="exampleFormControlSelect1"
+                  @change="event => onFilter('localite_id', event.target.value)"
+                >
+                  <option>&lt;Localité&gt;</option>
+                  <option
+                    v-for="loc in filteredLocalites"
+                    :key="loc.id"
+                    :value="loc.id"
+                    >{{ loc.designation }}</option
+                  >
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>&lt;Type&gt;</option>
+                  <option>Feu batiment</option>
+                  <option>Feu cheminé</option>
+                  <option>Feu forêt</option>
+                  <option>Feu véhicule</option>
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>&lt;Statistiques Fédérales&gt;</option>
+                  <option>Lutte contre le feu</option>
+                  <option>Secours routiers</option>
+                  <option>Interventions diverses</option>
+                  <option>Défense chimique</option>
+                </select>
+              </div>
+              <div class="form-group col-md-2">
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>&lt;Traitement&gt;</option>
+                  <option>-</option>
+                  <option>A Facturer</option>
+                  <option>Payé</option>
+                  <option>Facturée</option>
+                </select>
+              </div>
+              <div class="form-group col-md-2">
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>&lt;Etendue&gt;</option>
+                  <option>Fausse alarame</option>
+                  <option>Petite</option>
+                  <option>Moyenne</option>
+                  <option>Grande</option>
+                </select>
+              </div>
+            </div>
+          </form>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Loading...</span>
@@ -86,13 +141,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
-import ExerciceComptable from '@/components/ExerciceComptable'
+import ExerciceComptable from '@/components/ExerciceComptable';
 
-import Vuetable from 'vuetable-2'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
-import _ from 'lodash'
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
 
 export default {
   name: 'interventions',
@@ -102,35 +157,64 @@ export default {
   },
   watch: {
     currentExerciceComptableId() {
-      this.loading = true
+      this.loading = true;
       this.$store.dispatch('fetchListIntervention').then(() => {
-        this.loading = false
-        this.$refs.vuetable.setData(this.listeInterventions)
-      })
+        this.loading = false;
+        this.$refs.vuetable.setData(this.filteredInterventions);
+      });
+    },
+    filteredInterventions(data) {
+      this.loading = false;
+      this.$refs.vuetable.setData(this.filteredInterventions);
+    },
+    filters() {
+      this.filteredInterventions = this.listeInterventions.filter(
+        Object.entries(this.filters)
+          .filter(([key, val], i) => val)
+          .map(([key, value], _) => x => x[key] === value)
+          .reduce((f, g) => f && g, () => true)
+      );
     },
     listeInterventions() {
-      this.loading = false
-      this.$refs.vuetable.setData(this.listeInterventions)
+      const ids = this.listeInterventions.map(i => i.localite_id);
+      this.filteredLocalites = this.listeLocalites.filter(l =>
+        ids.includes(l.id)
+      );
+
+      this.filteredInterventions = this.listeInterventions.filter(
+        Object.entries(this.filters)
+          .filter(([key, val], i) => val)
+          .map(([key, value], _) => x => x[key] === value)
+          .reduce((f, g) => f && g, () => true)
+      );
     }
   },
   mounted() {
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchStatFederals')
-    this.$store.dispatch('fetchTypeInterventions')
-    this.$store.dispatch('fetchInterventionTraitements')
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchStatFederals');
+    this.$store.dispatch('fetchTypeInterventions');
+    this.$store.dispatch('fetchInterventionTraitements');
 
     if (this.listeInterventions.length === 0) {
       this.$store.dispatch('fetchListIntervention').then(() => {
-        this.loading = false
-        this.$refs.vuetable.setData(this.listeInterventions)
-      })
+        this.loading = false;
+      });
     } else {
-      this.loading = false
-      this.$refs.vuetable.setData(this.listeInterventions)
+      this.loading = false;
+      const ids = this.listeInterventions.map(i => i.localite_id);
+      this.filteredLocalites = this.listeLocalites.filter(l =>
+        ids.includes(l.id)
+      );
+      this.filteredInterventions = this.listeInterventions.filter(
+        Object.entries(this.filters)
+          .filter(([key, val], i) => val)
+          .map(([key, value], _) => x => x[key] === value)
+          .reduce((f, g) => f && g, () => true)
+      );
     }
   },
   data() {
-    const self = this
+    const self = this;
     return {
       css: CssForBootstrap4,
       toggles: [],
@@ -151,7 +235,7 @@ export default {
           name: 'heure_debut',
           dataClass: 'align-middle',
           formatter(value) {
-            return value.slice(0, 5)
+            return value.slice(0, 5);
           },
           sortField: 'heure_debut'
         },
@@ -159,7 +243,7 @@ export default {
           title: "Type d'intervention",
           name: 'type_intervention_id',
           formatter(value) {
-            return self.getTypeIntervention(value).designation
+            return self.getTypeIntervention(value).designation;
           },
           sortField: 'type_intervention_id'
         },
@@ -168,7 +252,7 @@ export default {
           name: 'localite_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return self.getLocalite(value).designation
+            return self.getLocalite(value).designation;
           },
           sortField: 'localite_id'
         },
@@ -182,7 +266,7 @@ export default {
           name: 'stat_federal_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return self.getStatFederal(value).designation
+            return self.getStatFederal(value).designation;
           },
           sortField: 'stat_federal_id'
         },
@@ -191,7 +275,7 @@ export default {
           name: 'intervention_traitement_id',
           dataClass: 'align-middle',
           formatter(value) {
-            return self.getInterventionTraitement(value).designation
+            return self.getInterventionTraitement(value).designation;
           },
           sortField: 'intervention_traitement_id'
         },
@@ -205,8 +289,8 @@ export default {
               2: 'Petite',
               3: 'Moyenne',
               4: 'Grande'
-            }
-            return degre[value]
+            };
+            return degre[value];
           },
           sortField: 'degre'
         },
@@ -220,8 +304,8 @@ export default {
               1: 'A valider',
               2: 'Validée',
               3: 'Imputée'
-            }
-            return statuts[value]
+            };
+            return statuts[value];
           },
           sortField: 'statut'
         },
@@ -231,8 +315,11 @@ export default {
           dataClass: 'align-middle'
         }
       ],
-      loading: true
-    }
+      loading: true,
+      filters: {},
+      filteredLocalites: [],
+      filteredInterventions: []
+    };
   },
   props: {
     propName: {
@@ -246,7 +333,8 @@ export default {
   computed: {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
-      listeInterventionsTypes: state => state.typeIntervention.liste
+      listeInterventionsTypes: state => state.typeIntervention.liste,
+      listeLocalites: state => state.localite.liste
     }),
     ...mapGetters([
       'currentExerciceComptableId',
@@ -254,30 +342,38 @@ export default {
       'getTypeIntervention',
       'getLocalite',
       'getStatFederal',
-      'getInterventionTraitement'
+      'getInterventionTraitement',
+      'listLocalitesSis'
     ])
   },
   methods: {
     toggleDetails(id) {
-      this.toggles[id] = !this.toggles[id]
-      this.$refs.vuetable.toggleDetailRow(id)
+      this.toggles[id] = !this.toggles[id];
+      this.$refs.vuetable.toggleDetailRow(id);
     },
     validerIntervention(id) {
-      this.$store.dispatch('validerIntervention', id)
+      this.$store.dispatch('validerIntervention', id);
     },
     dataManager(sortOrder) {
-      if (this.listeInterventions.length < 1) return
+      if (this.filteredInterventions.length < 1) return;
 
-      let local = this.listeInterventions
+      let local = this.filteredInterventions;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
       }
 
       return {
         data: local
-      }
+      };
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filter, [key]: parseInt(value) };
     },
     onRowClass(dataItem) {
       const statutsClass = {
@@ -285,11 +381,11 @@ export default {
         1: '', //'En attente de validation',
         2: '', // 'Validée',
         3: 'table-success' //'Imputée'
-      }
-      return statutsClass[dataItem.statut]
+      };
+      return statutsClass[dataItem.statut];
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

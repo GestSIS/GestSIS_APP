@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'InterventionTabSapeurs',
@@ -199,7 +199,7 @@ export default {
     return {
       columns: [],
       toggles: {}
-    }
+    };
   },
   computed: {
     ...mapGetters(['getSapeur', 'getPhaseType']),
@@ -216,7 +216,7 @@ export default {
           ...this.presences.map(s => s.sapeur_id),
           ...this.quittances.map(s => s.sapeur_id)
         ])
-      ).map(id => this.getSapeur(id))
+      ).map(id => this.getSapeur(id));
     },
     sortedSapeurs() {
       return [
@@ -224,33 +224,33 @@ export default {
           .map(s => parseInt(s))
           .map(this.getSapeur)
           .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom)
-      ]
+      ];
     },
     computedPresences() {
-      let temp = []
+      let temp = [];
       this.listSapeurs.forEach(
         s =>
           (temp = {
             ...temp,
             [s.id]: this.computeSapeur(s.id)
           })
-      )
-      return temp
+      );
+      return temp;
     }
   },
   mounted() {
-    this.$store.dispatch('fetchPhaseTypes')
-    this.$store.dispatch('fetchInterventionQuittances', this.id)
-    this.$store.dispatch('fetchInterventionPhases', this.id)
-    this.$store.dispatch('fetchInterventionSapeurs', this.id)
+    this.$store.dispatch('fetchPhaseTypes');
+    this.$store.dispatch('fetchInterventionQuittances', this.id);
+    this.$store.dispatch('fetchInterventionPhases', this.id);
+    this.$store.dispatch('fetchInterventionSapeurs', this.id);
 
-    let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut)
-    let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin)
+    let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
+    let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
 
-    let diff = Math.abs(start - end) / 3600000
-    let min = start.getHours()
+    let diff = Math.abs(start - end) / 3600000;
+    let min = start.getHours();
     for (let i = 0; i < diff; ++i) {
-      this.columns.push((min + i) % 24)
+      this.columns.push((min + i) % 24);
     }
 
     if (this.$refs.wrapper.addEventListener) {
@@ -259,30 +259,30 @@ export default {
         'mousewheel',
         this.scrollHorizontally,
         false
-      )
+      );
       // Firefox
       this.$refs.wrapper.addEventListener(
         'DOMMouseScroll',
         this.scrollHorizontally,
         false
-      )
+      );
     } else {
       // IE 6/7/8
-      this.$refs.wrapper.attachEvent('onmousewheel', this.scrollHorizontally)
+      this.$refs.wrapper.attachEvent('onmousewheel', this.scrollHorizontally);
     }
   },
   filters: {
     datePresence(d) {
-      return d.slice(-8, -3)
+      return d.slice(-8, -3);
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     scrollHorizontally(e) {
-      e = window.event || e
-      var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail))
-      this.$refs.wrapper.scrollLeft -= delta * 40 // Multiplied by 40
-      e.preventDefault()
+      e = window.event || e;
+      var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+      this.$refs.wrapper.scrollLeft -= delta * 40; // Multiplied by 40
+      e.preventDefault();
     },
     addPresences() {
       this.SHOW_MODAL({
@@ -294,11 +294,11 @@ export default {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin
         }
-      })
+      });
     },
     editPresence(presence) {
-      let clone = {}
-      Object.assign(clone, presence)
+      let clone = {};
+      Object.assign(clone, presence);
       this.SHOW_MODAL({
         component: 'ModalPresence',
         callback: () => {},
@@ -309,13 +309,13 @@ export default {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin
         }
-      })
+      });
     },
     removePresence(id) {
-      this.$store.dispatch('removePresence', id)
+      this.$store.dispatch('removePresence', id);
     },
     newPhase() {
-      this.$store.dispatch('resetActivePhase')
+      this.$store.dispatch('resetActivePhase');
       this.SHOW_MODAL({
         component: 'ModalPhase',
         callback: () => {},
@@ -323,12 +323,12 @@ export default {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin
         }
-      })
+      });
     },
     editPhase(phase) {
-      let clone = {}
-      Object.assign(clone, phase)
-      this.$store.dispatch('updateActivePhase', clone)
+      let clone = {};
+      Object.assign(clone, phase);
+      this.$store.dispatch('updateActivePhase', clone);
       this.SHOW_MODAL({
         component: 'ModalPhase',
         callback: () => {},
@@ -336,73 +336,75 @@ export default {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin
         }
-      })
+      });
     },
     removePhase(id) {
-      this.$store.dispatch('removePhase', id)
+      this.$store.dispatch('removePhase', id);
     },
     editQuittance(e, id) {
-      let quittances = this.quittances.filter(q => q.sapeur_id === parseInt(id))
+      let quittances = this.quittances.filter(
+        q => q.sapeur_id === parseInt(id)
+      );
       if (quittances.length === 1) {
         //remove quittance
-        this.$store.dispatch('removeQuittance', quittances[0].id)
+        this.$store.dispatch('removeQuittance', quittances[0].id);
       } else {
         //add quittance
-        this.$store.dispatch('addQuittance', id)
+        this.$store.dispatch('addQuittance', id);
       }
     },
     computeSapeur(id) {
-      let res = {}
-      let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut)
+      let res = {};
+      let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
 
       this.presences
         .filter(s => s.sapeur_id === id)
         .forEach(q => {
-          let diff = ((new Date(q.debut) - start) / 3600000) * 4
+          let diff = ((new Date(q.debut) - start) / 3600000) * 4;
           //Durée de la présence en quart d'heures
-          let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000) * 4
+          let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000) * 4;
 
           for (let i = 0; i < duree; ++i) {
-            let code = null
+            let code = null;
             if (q.piquet) {
               //Piquet
-              code = 3
+              code = 3;
             } else {
               //DetectPhase
-              let currentDate = new Date(q.debut)
-              currentDate.setMinutes(currentDate.getMinutes() + i * 15)
-              code = this.getPhaseTypeAt(currentDate)
+              let currentDate = new Date(q.debut);
+              currentDate.setMinutes(currentDate.getMinutes() + i * 15);
+              code = this.getPhaseTypeAt(currentDate);
             }
             res = {
               ...res,
               [diff + i]: code
-            }
+            };
           }
-        })
-      return res
+        });
+      return res;
     },
     getPhaseTypeAt(date) {
       let res = this.phases
         .filter(p => new Date(p.debut) <= date)
-        .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut))
+        .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut));
       if (res.length > 0) {
-        return res[0].phase_type_id
+        return res[0].phase_type_id;
       }
-      return 1
+      return 1;
     },
     expandSap(id) {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
-      }
+      };
     },
     sortedPresences(id) {
       return this.presences
         .filter(p => p.sapeur_id === id)
-        .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut))
+        .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
     }
   }
-}
+};
 </script>
 
 <style scoped>

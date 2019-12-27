@@ -330,14 +330,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
   { id: 2, type: 'Petite' },
   { id: 3, type: 'Moyenne' },
   { id: 4, type: 'Grande' }
-]
+];
 
 export default {
   name: 'InterventionTabGeneral',
@@ -350,7 +350,7 @@ export default {
     return {
       errors: {},
       degre
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -368,80 +368,80 @@ export default {
       'exerciceComptableFin'
     ]),
     description() {
-      return this.activeInterventionData.description
+      return this.activeInterventionData.description;
     },
     proprietaire() {
-      return this.activeInterventionData.proprietaire
+      return this.activeInterventionData.proprietaire;
     },
     responsable() {
-      return this.activeInterventionData.responsable
+      return this.activeInterventionData.responsable;
     },
     heureDebut() {
-      return this.activeInterventionData.heure_debut
+      return this.activeInterventionData.heure_debut;
     },
     heureFin() {
-      return this.activeInterventionData.heure_fin
+      return this.activeInterventionData.heure_fin;
     },
     dateDebutMin() {
-      if (!this.currentExerciceComptableId) return
+      if (!this.currentExerciceComptableId) return;
       return this.exerciceComptableDebut(
         this.activeInterventionData.exercice_comptable_id
-      )
+      );
     },
     dateDebutMax() {
-      if (!this.currentExerciceComptableId) return
+      if (!this.currentExerciceComptableId) return;
       return this.exerciceComptableFin(
         this.activeInterventionData.exercice_comptable_id
-      )
+      );
     },
     dateFinMin() {
-      if (!this.currentExerciceComptableId) return
+      if (!this.currentExerciceComptableId) return;
       return (
         this.activeInterventionData.date_debut ||
         this.exerciceComptableDebut(
           this.activeInterventionData.exercice_comptable_id
         )
-      )
+      );
     },
     dateFinMax() {
-      if (!this.currentExerciceComptableId) return
+      if (!this.currentExerciceComptableId) return;
       return this.exerciceComptableFin(
         this.activeInterventionData.exercice_comptable_id
-      )
+      );
     }
   },
   mounted() {
     this.activeInterventionData.responsable = this.replaceBr(
       this.activeInterventionData.responsable
-    )
+    );
     this.activeInterventionData.description = this.replaceBr(
       this.activeInterventionData.description
-    )
+    );
     this.activeInterventionData.proprietaire = this.replaceBr(
       this.activeInterventionData.proprietaire
-    )
+    );
     this.activeInterventionData.heure_debut = this.formatHeure(
       this.activeInterventionData.heure_debut
-    )
+    );
     this.activeInterventionData.heure_fin = this.formatHeure(
       this.activeInterventionData.heure_fin
-    )
+    );
   },
   watch: {
     responsable(value) {
-      this.activeInterventionData.responsable = this.replaceBr(value)
+      this.activeInterventionData.responsable = this.replaceBr(value);
     },
     description(value) {
-      this.activeInterventionData.description = this.replaceBr(value)
+      this.activeInterventionData.description = this.replaceBr(value);
     },
     proprietaire(value) {
-      this.activeInterventionData.proprietaire = this.replaceBr(value)
+      this.activeInterventionData.proprietaire = this.replaceBr(value);
     },
     heureDebut(value) {
-      this.activeInterventionData.heure_debut = this.formatHeure(value)
+      this.activeInterventionData.heure_debut = this.formatHeure(value);
     },
     heureFin(value) {
-      this.activeInterventionData.heure_fin = this.formatHeure(value)
+      this.activeInterventionData.heure_fin = this.formatHeure(value);
     }
   },
   methods: {
@@ -450,30 +450,30 @@ export default {
         this.$store
           .dispatch('createIntervention', this.activeInterventionData)
           .then(data => {
-            this.$router.push('/interventions/' + data.id)
-            this.errors = {}
+            this.$router.push('/interventions/' + data.id);
+            this.errors = {};
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('saveActiveIntervention', this.activeInterventionData)
           .then(() => (this.errors = {}))
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     },
     replaceBr(value) {
       if (value) {
-        return value.replace('<br />', '\n')
+        return value.replace('<br />', '\n');
       }
     },
     formatHeure(value) {
       if (value && value.length >= 8) {
-        return value.slice(0, 5)
+        return value.slice(0, 5);
       }
-      return value
+      return value;
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

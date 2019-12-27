@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalExcuse',
@@ -38,15 +38,15 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     selectExcuseType(excuseTypeId) {
-      this.callback(excuseTypeId)
-      this.HIDE_MODAL()
+      this.callback(excuseTypeId);
+      this.HIDE_MODAL();
     },
     close() {
-      this.callback(null)
-      this.HIDE_MODAL()
+      this.callback(null);
+      this.HIDE_MODAL();
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ExerciceComptable',
@@ -47,20 +47,20 @@ export default {
   data() {
     return {
       dropdown: false
-    }
+    };
   },
   mounted() {
     if (this.listExerciceComptable.length === 0) {
-      this.$store.dispatch('fetchExercicesComptables')
+      this.$store.dispatch('fetchExercicesComptables');
     }
   },
   methods: {
     selectExercice(id) {
-      this.dropdown = false
-      this.$store.dispatch('selectExerciceComptable', id)
+      this.dropdown = false;
+      this.$store.dispatch('selectExerciceComptable', id);
     }
   }
-}
+};
 </script>
 
 <style scoped>

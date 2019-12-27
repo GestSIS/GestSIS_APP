@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './pages/Home'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from './pages/Home';
 
-import { TokenService } from './services/StorageService'
+import { TokenService } from './services/StorageService';
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   //mode: 'history',
@@ -79,28 +79,28 @@ const router = new Router({
       component: () => import('@/pages/About.vue')
     }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
-  const isPublic = to.matched.some(record => record.meta.public)
+  const isPublic = to.matched.some(record => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some(
     record => record.meta.onlyWhenLoggedOut
-  )
-  const loggedIn = !!TokenService.getToken()
+  );
+  const loggedIn = !!TokenService.getToken();
 
   if (!isPublic && !loggedIn) {
     return next({
       path: '/login',
       query: { redirect: to.fullPath } // Store the full path to redirect the user to after login
-    })
+    });
   }
 
   // Do not allow user to visit login page or register page if they are logged in
   if (loggedIn && onlyWhenLoggedOut) {
-    return next('/')
+    return next('/');
   }
 
-  next()
-})
+  next();
+});
 
-export default router
+export default router;

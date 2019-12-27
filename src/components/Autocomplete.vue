@@ -60,51 +60,51 @@ export default {
       search: this.value,
       isLoading: false,
       arrowCounter: 0
-    }
+    };
   },
   methods: {
     onChange() {
       // Let's warn the parent that a change was made
-      this.$emit('input', this.search)
+      this.$emit('input', this.search);
 
       // Let's  our flat array
-      this.filterResults()
-      this.isOpen = true
+      this.filterResults();
+      this.isOpen = true;
     },
 
     filterResults() {
       // first uncapitalize all the things
       this.results = this.items.filter(item => {
-        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-      })
+        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
+      });
     },
     setResult(result) {
-      this.search = result
-      this.isOpen = false
-      this.arrowCounter = -1
-      this.$emit('input', this.search)
+      this.search = result;
+      this.isOpen = false;
+      this.arrowCounter = -1;
+      this.$emit('input', this.search);
     },
     onArrowDown() {
       if (this.arrowCounter < this.results.length) {
-        this.arrowCounter = this.arrowCounter + 1
+        this.arrowCounter = this.arrowCounter + 1;
       }
     },
     onArrowUp() {
       if (this.arrowCounter > 0) {
-        this.arrowCounter = this.arrowCounter - 1
+        this.arrowCounter = this.arrowCounter - 1;
       }
     },
     onEnter() {
-      if (this.results.length === 0 || this.arrowCounter < 0) return
-      this.search = this.results[this.arrowCounter]
-      this.isOpen = false
-      this.arrowCounter = -1
-      this.$emit('input', this.search)
+      if (this.results.length === 0 || this.arrowCounter < 0) return;
+      this.search = this.results[this.arrowCounter];
+      this.isOpen = false;
+      this.arrowCounter = -1;
+      this.$emit('input', this.search);
     },
     handleClickOutside(evt) {
       if (!this.$el.contains(evt.target)) {
-        this.isOpen = false
-        this.arrowCounter = -1
+        this.isOpen = false;
+        this.arrowCounter = -1;
       }
     }
   },
@@ -112,20 +112,20 @@ export default {
     items: function(val, oldValue) {
       // actually compare them
       if (val.length !== oldValue.length) {
-        this.results = val
+        this.results = val;
       }
     },
     value: function(val) {
-      this.search = val
+      this.search = val;
     }
   },
   mounted() {
-    document.addEventListener('click', this.handleClickOutside)
+    document.addEventListener('click', this.handleClickOutside);
   },
   destroyed() {
-    document.removeEventListener('click', this.handleClickOutside)
+    document.removeEventListener('click', this.handleClickOutside);
   }
-}
+};
 </script>
 
 <style>

@@ -1,5 +1,5 @@
-import types from '../mutationTypes'
-import TypeInterventionService from '../../services/TypeInterventionService'
+import types from '../mutationTypes';
+import TypeInterventionService from '../../services/TypeInterventionService';
 
 export default {
   state: {
@@ -9,7 +9,7 @@ export default {
     [types.UPDATE_TYPE_INTERVENTION_LIST](state, payload) {
       state.liste = payload
         .slice(0)
-        .sort((t1, t2) => t1.designation > t2.designation)
+        .sort((t1, t2) => t1.designation > t2.designation);
     }
   },
   getters: {
@@ -20,7 +20,7 @@ export default {
     fetchTypeInterventions({ commit }) {
       return TypeInterventionService.getTypes().then(data =>
         commit(types.UPDATE_TYPE_INTERVENTION_LIST, data)
-      )
+      );
     }
   }
-}
+};

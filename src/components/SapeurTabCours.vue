@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurTabCours',
@@ -67,22 +67,22 @@ export default {
   },
   mounted() {
     if (this.listCours.length === 0) {
-      this.$store.dispatch('fetchCours')
+      this.$store.dispatch('fetchCours');
     }
     if (this.activeSapeurCours.length === 0) {
-      this.$store.dispatch('fetchSapeurCours', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id)
+      this.$store.dispatch('fetchSapeurCours', id);
     }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     newCours() {
-      this.$store.dispatch('resetActiveCours')
-      this.SHOW_MODAL('ModalCours')
+      this.$store.dispatch('resetActiveCours');
+      this.SHOW_MODAL('ModalCours');
     },
     editCours(cours_id) {
       this.$store.dispatch(
@@ -91,14 +91,14 @@ export default {
           { precedent_id: 0 },
           this.activeSapeurCours.filter(c => c.id === cours_id)[0]
         )
-      )
-      this.SHOW_MODAL('ModalCours')
+      );
+      this.SHOW_MODAL('ModalCours');
     },
     supprimerCours(fonction_id) {
-      this.$store.dispatch('removeCours', fonction_id)
+      this.$store.dispatch('removeCours', fonction_id);
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalMateriel',
   data() {
     return {
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -67,8 +67,8 @@ export default {
         this.$store
           .dispatch('addMateriel', this.activeMateriel)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -77,13 +77,13 @@ export default {
                 materiel_id: errors['materiels.0.materiel_id'],
                 quantite: errors['materiels.0.quantite']
               })
-          )
+          );
       } else {
         this.$store
           .dispatch('editMateriel', this.activeMateriel)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -92,11 +92,11 @@ export default {
                 materiel_id: errors['materiels.0.materiel_id'],
                 quantite: errors['materiels.0.quantite']
               })
-          )
+          );
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

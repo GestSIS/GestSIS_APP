@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapState } from 'vuex'
+import { mapMutations, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ModalPresence',
@@ -163,7 +163,7 @@ export default {
       errors: {},
       selectedSapeurs: {},
       piquet: false
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -171,19 +171,19 @@ export default {
     }),
     ...mapGetters(['getSapeur']),
     heureDebut() {
-      return null //this.activeInterventionData.heure_debut
+      return null; //this.activeInterventionData.heure_debut
     },
     heureFin() {
-      return null //this.activeInterventionData.heure_fin
+      return null; //this.activeInterventionData.heure_fin
     },
     dateDebutMin() {
-      return this.data.min.slice(0, 10)
+      return this.data.min.slice(0, 10);
     },
     dateDebutMax() {
-      return this.data.max.slice(0, 10)
+      return this.data.max.slice(0, 10);
     },
     dateFinMin() {
-      return null
+      return null;
       // if (!this.currentExerciceComptableId) return
       // return (
       //   this.activeInterventionData.date_debut ||
@@ -193,91 +193,91 @@ export default {
       // )
     },
     dateFinMax() {
-      return this.data.max.slice(0, 10)
+      return this.data.max.slice(0, 10);
     },
     nbSelectedSapeurs() {
       return Object.keys(this.selectedSapeurs).filter(
         s => this.selectedSapeurs[s]
-      ).length
+      ).length;
     }
   },
   mounted() {
-    this.editMode = this.data.mode === 'edit'
+    this.editMode = this.data.mode === 'edit';
 
     if (this.editMode) {
       this.data.sapeurs.forEach(
         s => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
-      )
-      this.piquet = this.data.presence.piquet
-      this.date_debut = this.data.presence.debut.slice(0, 10)
-      this.date_fin = this.data.presence.fin.slice(0, 10)
-      this.heure_debut = this.data.presence.debut.slice(11, 16)
-      this.heure_fin = this.data.presence.fin.slice(11, 16)
+      );
+      this.piquet = this.data.presence.piquet;
+      this.date_debut = this.data.presence.debut.slice(0, 10);
+      this.date_fin = this.data.presence.fin.slice(0, 10);
+      this.heure_debut = this.data.presence.debut.slice(11, 16);
+      this.heure_fin = this.data.presence.fin.slice(11, 16);
     } else {
-      this.date_debut = this.dateDebutMin
-      this.date_fin = this.dateDebutMin
+      this.date_debut = this.dateDebutMin;
+      this.date_fin = this.dateDebutMin;
     }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      let debut = this.date_debut + ' ' + this.heure_debut
-      let fin = this.date_fin + ' ' + this.heure_fin
+      let debut = this.date_debut + ' ' + this.heure_debut;
+      let fin = this.date_fin + ' ' + this.heure_fin;
       if (this.editMode) {
         let presence = {
           ...this.data.presence,
           debut,
           fin,
           piquet: this.piquet
-        }
+        };
         this.$store
           .dispatch('editPresence', presence)
           .then(() => {
-            this.callback()
-            this.HIDE_MODAL()
+            this.callback();
+            this.HIDE_MODAL();
           })
           .catch(error => {
-            let debut = error['sapeurs.0.debut']
-            let fin = error['sapeurs.0.fin']
+            let debut = error['sapeurs.0.debut'];
+            let fin = error['sapeurs.0.fin'];
             this.errors = {
               ...error,
               date_debut: debut,
               date_fin: fin,
               heure_debut: debut,
               heure_fin: fin
-            }
-          })
+            };
+          });
       } else {
-        let presences = []
+        let presences = [];
         Object.keys(this.selectedSapeurs)
           .filter(s => this.selectedSapeurs[s])
           .forEach(s => {
             presences = [
               ...presences,
               { sapeur_id: s, debut, fin, piquet: this.piquet }
-            ]
-          })
+            ];
+          });
         this.$store
           .dispatch('addPresences', presences)
           .then(() => {
-            this.callback()
-            this.HIDE_MODAL()
+            this.callback();
+            this.HIDE_MODAL();
           })
           .catch(error => {
-            let debut = error['sapeurs.0.debut']
-            let fin = error['sapeurs.0.fin']
+            let debut = error['sapeurs.0.debut'];
+            let fin = error['sapeurs.0.fin'];
             this.errors = {
               ...error,
               date_debut: debut,
               date_fin: fin,
               heure_debut: debut,
               heure_fin: fin
-            }
-          })
+            };
+          });
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

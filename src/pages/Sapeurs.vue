@@ -87,8 +87,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import SapeurDetails from '@/components/SapeurDetails'
+import { mapState } from 'vuex';
+import SapeurDetails from '@/components/SapeurDetails';
 
 export default {
   components: {
@@ -97,9 +97,9 @@ export default {
   mounted() {
     this.$store.dispatch('fetchListSapeur').then(() => {
       if (this.activeSapeurId === 0 && this.listSapeur.length > 0) {
-        this.selectSapeur(this.listSapeur[0].id)
+        this.selectSapeur(this.listSapeur[0].id);
       }
-    })
+    });
   },
   data() {
     return {
@@ -109,7 +109,7 @@ export default {
         inactif: s => s.actif === 0,
         all: () => true
       }
-    }
+    };
   },
   props: {
     propName: {
@@ -126,15 +126,15 @@ export default {
       activeSapeurId: state => state.sapeur.active.id
     }),
     filteredSapeurs() {
-      return this.listSapeur.filter(this.filters[this.filter])
+      return this.listSapeur.filter(this.filters[this.filter]);
     }
   },
   methods: {
     selectSapeur(sapeurId) {
-      this.$store.dispatch('selectSapeur', sapeurId)
+      this.$store.dispatch('selectSapeur', sapeurId);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

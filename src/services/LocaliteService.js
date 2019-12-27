@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getLocalites() {
-    return Api.api().get('/localites/')
+    return Api.api().get('/localites/');
   }
-}
+};

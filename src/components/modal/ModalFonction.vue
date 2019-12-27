@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 //TODO: Empêcher fonctions à double
 
@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -84,7 +84,7 @@ export default {
   },
   mounted() {
     if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
   },
   methods: {
@@ -94,22 +94,22 @@ export default {
         this.$store
           .dispatch('addFonction', this.activeFonction)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editFonction', this.activeFonction)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

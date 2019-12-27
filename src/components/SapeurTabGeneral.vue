@@ -421,8 +421,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
-import draggable from 'vuedraggable'
+import { mapGetters, mapMutations, mapState } from 'vuex';
+import draggable from 'vuedraggable';
 
 export default {
   name: 'SapeurTabGeneral',
@@ -430,34 +430,34 @@ export default {
     draggable
   },
   data() {
-    return { telephonesData: [], errorsData: {}, errorsTel: {} }
+    return { telephonesData: [], errorsData: {}, errorsTel: {} };
   },
   mounted() {
     if (this.listCivilites.length === 0) {
-      this.$store.dispatch('fetchCivilites')
+      this.$store.dispatch('fetchCivilites');
     }
     if (this.listLocalitesSis.length === 0) {
-      this.$store.dispatch('fetchLocalites')
+      this.$store.dispatch('fetchLocalites');
     }
     if (this.listTelephoneTypes.length === 0) {
-      this.$store.dispatch('fetchTelephoneTypes')
+      this.$store.dispatch('fetchTelephoneTypes');
     }
     if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades')
+      this.$store.dispatch('fetchGrades');
     }
     if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
 
-    this.$store.dispatch('fetchSapeur', this.activeSapeurId)
+    this.$store.dispatch('fetchSapeur', this.activeSapeurId);
     this.$store
       .dispatch('fetchSapeurTelephones', this.activeSapeurId)
       .then(() => {
         this.telephonesData = [
           ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
-        ]
-      })
-    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId)
+        ];
+      });
+    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
   },
   computed: {
     ...mapState({
@@ -477,14 +477,14 @@ export default {
     ]),
     telephones: {
       get: function() {
-        return this.telephonesData
+        return this.telephonesData;
       },
       set(telephones) {
-        telephones.forEach((t, i) => (t.priorite = i + 1))
+        telephones.forEach((t, i) => (t.priorite = i + 1));
 
         this.telephonesData = telephones.sort(
           (t1, t2) => t1.priorite - t2.priorite
-        )
+        );
       }
     },
     finServiceBoutton() {
@@ -496,20 +496,20 @@ export default {
       return (
         this.activeSapeurMutations.length > 0 &&
         (this.activeSapeurMutations[0].sortie || '') === ''
-      )
+      );
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.errorsData = {}
+      this.errorsData = {};
 
-      this.$store.dispatch('fetchSapeur', id)
+      this.$store.dispatch('fetchSapeur', id);
       this.$store.dispatch('fetchSapeurTelephones', id).then(() => {
         this.telephonesData = [
           ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
-        ]
-      })
-      this.$store.dispatch('fetchSapeurMutations', id)
+        ];
+      });
+      this.$store.dispatch('fetchSapeurMutations', id);
     }
   },
   methods: {
@@ -520,20 +520,20 @@ export default {
       this.activeSapeurTelephones.forEach(t => {
         //Suppression des numéros supprimé
         if (this.telephones.filter(t2 => t2.id === t.id).length === 0) {
-          this.$store.dispatch('removeTelephone', t.id)
+          this.$store.dispatch('removeTelephone', t.id);
         }
-      })
+      });
 
       this.telephones.forEach(t => {
         //numéros modifiés
         if (t.id !== null) {
-          this.$store.dispatch('editTelephone', t)
+          this.$store.dispatch('editTelephone', t);
         }
         //Nouveaux numéros
         else {
-          this.$store.dispatch('addTelephone', t)
+          this.$store.dispatch('addTelephone', t);
         }
-      })
+      });
     },
     addTelephone() {
       if (this.telephonesData.length < 3) {
@@ -545,11 +545,11 @@ export default {
             rta: 0,
             priorite: this.telephones.length + 1
           }
-        ]
+        ];
       }
     },
     removeTelephone(priorite) {
-      this.telephones = this.telephones.filter(t => t.priorite !== priorite)
+      this.telephones = this.telephones.filter(t => t.priorite !== priorite);
     },
     saveSapeur() {
       let fields = [
@@ -564,21 +564,21 @@ export default {
         'date_naissance',
         'suffixe',
         'remarque'
-      ]
-      let saveSapeur = Object.assign({}, this.activeSapeur)
+      ];
+      let saveSapeur = Object.assign({}, this.activeSapeur);
       for (let key in Object.keys(saveSapeur)) {
         if (!fields.includes(key)) {
-          delete saveSapeur[key]
+          delete saveSapeur[key];
         }
       }
       this.$store
         .dispatch('saveActiveSapeur', saveSapeur)
         .then(() => {
-          this.errorsData = {}
+          this.errorsData = {};
         })
         .catch(err => {
-          this.errorsData = err
-        })
+          this.errorsData = err;
+        });
     },
     saveSapeurRefPro() {
       this.$store
@@ -592,14 +592,14 @@ export default {
         })
         .catch(() => {
           // console.log('Save sapeur Error')
-        })
+        });
     },
     newMutation() {
-      this.$store.dispatch('resetActiveMutation')
-      this.SHOW_MODAL('ModalMutation')
+      this.$store.dispatch('resetActiveMutation');
+      this.SHOW_MODAL('ModalMutation');
     },
     removeMutation(mutationId) {
-      this.$store.dispatch('removeMutation', mutationId)
+      this.$store.dispatch('removeMutation', mutationId);
     },
     editMutation(mutation_id) {
       this.$store.dispatch(
@@ -608,14 +608,14 @@ export default {
           {},
           this.activeSapeurMutations.filter(m => m.id === mutation_id)[0]
         )
-      )
-      this.SHOW_MODAL('ModalMutation')
+      );
+      this.SHOW_MODAL('ModalMutation');
     },
     finService() {
       //TODO
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

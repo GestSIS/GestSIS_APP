@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getGrades() {
-    return Api.api().get('/grades/')
+    return Api.api().get('/grades/');
   }
-}
+};

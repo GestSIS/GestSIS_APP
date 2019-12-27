@@ -20,17 +20,17 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'ExerciceInput',
   computed: {
     ...mapGetters(['currentExercice', 'currentExerciceId']),
     sapeurs() {
-      return []
+      return [];
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

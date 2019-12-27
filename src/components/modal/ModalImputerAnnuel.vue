@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex'
+import { mapMutations, mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'ModalImputerAnnuel',
@@ -119,7 +119,7 @@ export default {
       phase: 1,
       ecritures: [],
       successMessageVisibility: true
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -128,7 +128,7 @@ export default {
     }),
     ...mapGetters(['getFonction', 'getCompte', 'getSapeur']),
     listDisplay() {
-      let svm = this
+      let svm = this;
       return [
         ...this.fraisAnnuel.map(f => ({
           ...f,
@@ -149,7 +149,7 @@ export default {
             c => `${c.numero} ${c.designation}`
           )[0]
         }))
-        .sort((c1, c2) => c2.tri - c1.tri)
+        .sort((c1, c2) => c2.tri - c1.tri);
     }
   },
   mounted() {
@@ -159,18 +159,18 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     cancel() {
       //TODO Cancel depending on state
-      this.HIDE_MODAL()
+      this.HIDE_MODAL();
     },
     imputer() {
       this.$store.dispatch('imputerAnnuel').then(data => {
-        this.phase = 2
+        this.phase = 2;
         this.ecritures = [...data.frais, ...data.indemnites].sort(
           (e1, e2) => e2.sapeur_id - e1.sapeur_id
-        )
-      })
+        );
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { DateTime } from 'luxon'
+import { mapState, mapMutations } from 'vuex';
+import { DateTime } from 'luxon';
 
-import Autocomplete from '@/components/Autocomplete'
+import Autocomplete from '@/components/Autocomplete';
 
 export default {
   name: 'ModalAppel',
@@ -88,7 +88,7 @@ export default {
       format: 'yyyy-MM-dd HH:mm',
       min: null,
       max: null
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -96,29 +96,29 @@ export default {
       activeInterventionId: state => state.intervention.active.id
     }),
     responsable() {
-      return this.activeAppel.nom
+      return this.activeAppel.nom;
     }
   },
   watch: {
     responsable(value) {
       let result = this.listTelephones.filter(
         t => value.localeCompare(t.nom) === 0
-      )
+      );
       if (result.length > 0) {
-        this.activeAppel.numero = result[0].numero
+        this.activeAppel.numero = result[0].numero;
       }
     }
   },
   mounted() {
     if (this.listTelephones.length === 0) {
-      this.$store.dispatch('fetchTelephones')
+      this.$store.dispatch('fetchTelephones');
     }
-    this.activeAppel = this.data.appel
+    this.activeAppel = this.data.appel;
 
-    this.min = DateTime.fromSQL(this.data.min).toISO()
-    this.max = DateTime.fromSQL(this.data.max).toISO()
+    this.min = DateTime.fromSQL(this.data.min).toISO();
+    this.max = DateTime.fromSQL(this.data.max).toISO();
 
-    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date).toISO()
+    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date).toISO();
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -126,14 +126,14 @@ export default {
       //Format back dates to SQL Format
       this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
         this.format
-      )
+      );
 
       if ((this.activeAppel.id || 0) === 0) {
         this.$store
           .dispatch('addAppel', this.activeAppel)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -144,13 +144,13 @@ export default {
                 numero: errors['appels.0.numero'],
                 commentaire: errors['appels.0.commentaire']
               })
-          )
+          );
       } else {
         this.$store
           .dispatch('editAppel', { ...this.activeAppel, date2: undefined })
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -161,11 +161,11 @@ export default {
                 numero: errors['appels.0.numero'],
                 commentaire: errors['appels.0.commentaire']
               })
-          )
+          );
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

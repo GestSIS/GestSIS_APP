@@ -1,8 +1,8 @@
-import types from '../mutationTypes'
+import types from '../mutationTypes';
 
-import { TokenService } from '../../services/StorageService'
-import AuthService from '../../services/AuthService'
-import Api from '../../http/Request'
+import { TokenService } from '../../services/StorageService';
+import AuthService from '../../services/AuthService';
+import Api from '../../http/Request';
 
 export default {
   state: {
@@ -15,18 +15,18 @@ export default {
       state = {
         authenticated: payload.authenticated,
         user: payload.user
-      }
-      return state
+      };
+      return state;
     },
     [types.AUTH_LOGOUT](state) {
       state = {
         authenticated: false,
         user: null
-      }
-      return state
+      };
+      return state;
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
-      state.refreshTokenPromise = payload
+      state.refreshTokenPromise = payload;
     }
   },
   getters: {
@@ -35,57 +35,57 @@ export default {
   actions: {
     login({ commit }, payload) {
       return AuthService.login(payload).then(data => {
-        TokenService.saveToken(data.accessToken)
-        TokenService.saveRefreshToken(data.refreshToken)
+        TokenService.saveToken(data.accessToken);
+        TokenService.saveRefreshToken(data.refreshToken);
 
-        Api.setAccessToken(data.accessToken)
+        Api.setAccessToken(data.accessToken);
 
         return commit(types.AUTH_SUCCESSFULL, {
           authenticated: true,
           user: data.user
-        })
-      })
+        });
+      });
     },
     register({ commit }, payload) {
       return AuthService.register(payload).then(data => {
-        TokenService.saveToken(data.accessToken)
-        TokenService.saveRefreshToken(data.refreshToken)
+        TokenService.saveToken(data.accessToken);
+        TokenService.saveRefreshToken(data.refreshToken);
 
-        Api.setAccessToken(data.accessToken)
+        Api.setAccessToken(data.accessToken);
 
         return commit(types.AUTH_SUCCESSFULL, {
           authenticated: true,
           user: data.user
-        })
-      })
+        });
+      });
     },
     logout({ commit }) {
-      TokenService.removeToken()
-      TokenService.removeRefreshToken()
+      TokenService.removeToken();
+      TokenService.removeRefreshToken();
 
-      return commit(types.AUTH_LOGOUT)
+      return commit(types.AUTH_LOGOUT);
     },
     refreshToken({ commit, state }) {
       if (!state.refreshTokenPromise) {
-        const p = AuthService.refreshToken(TokenService.getRefreshToken())
+        const p = AuthService.refreshToken(TokenService.getRefreshToken());
 
-        commit(types.AUTH_REFRESH_TOKEN_PROMISES, p)
+        commit(types.AUTH_REFRESH_TOKEN_PROMISES, p);
 
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
         p.then(data => {
           // commit(types.AUTH_SUCCESSFULL, data)
-          TokenService.saveToken(data.accessToken)
-          TokenService.saveRefreshToken(data.refreshToken)
-          Api.setAccessToken(data.accessToken)
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null)
+          TokenService.saveToken(data.accessToken);
+          TokenService.saveRefreshToken(data.refreshToken);
+          Api.setAccessToken(data.accessToken);
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
         }).catch(e => {
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null)
-          return e
-        })
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          return e;
+        });
       }
 
-      return state.refreshTokenPromise
+      return state.refreshTokenPromise;
     }
   }
-}
+};

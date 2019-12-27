@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { DateTime } from 'luxon'
+import { mapState, mapMutations } from 'vuex';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'ModalPhase',
@@ -65,7 +65,7 @@ export default {
       format: 'yyyy-MM-dd HH:mm',
       min: null,
       max: null
-    }
+    };
   },
   props: {
     data: {
@@ -80,13 +80,15 @@ export default {
     })
   },
   mounted() {
-    this.min = DateTime.fromSQL(this.data.min).toISO()
-    this.max = DateTime.fromSQL(this.data.max).toISO()
+    this.min = DateTime.fromSQL(this.data.min).toISO();
+    this.max = DateTime.fromSQL(this.data.max).toISO();
 
     if (this.activePhase.debut === null && this.activePhase.id) {
-      this.activePhase.debut2 = this.min
+      this.activePhase.debut2 = this.min;
     } else {
-      this.activePhase.debut2 = DateTime.fromSQL(this.activePhase.debut).toISO()
+      this.activePhase.debut2 = DateTime.fromSQL(
+        this.activePhase.debut
+      ).toISO();
     }
   },
   methods: {
@@ -95,7 +97,7 @@ export default {
       if (!(this.activePhase.debut === null && this.activePhase.id)) {
         this.activePhase.debut = DateTime.fromISO(
           this.activePhase.debut2
-        ).toFormat(this.format)
+        ).toFormat(this.format);
       }
       if ((this.activePhase.id || 0) === 0) {
         this.$store
@@ -104,10 +106,10 @@ export default {
             debut2: undefined
           })
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editPhase', {
@@ -115,14 +117,14 @@ export default {
             debut2: undefined
           })
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

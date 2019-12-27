@@ -1,4 +1,4 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faUser,
   faFireExtinguisher,
@@ -24,9 +24,9 @@ import {
   faFileInvoiceDollar,
   faCheck,
   faInfoCircle
-} from '@fortawesome/free-solid-svg-icons'
+} from '@fortawesome/free-solid-svg-icons';
 
-import { faGripfire } from '@fortawesome/free-brands-svg-icons'
+import { faGripfire } from '@fortawesome/free-brands-svg-icons';
 import {
   faEdit,
   faCalendarAlt,
@@ -34,7 +34,7 @@ import {
   faQuestionCircle,
   faPlusSquare,
   faClock
-} from '@fortawesome/free-regular-svg-icons'
+} from '@fortawesome/free-regular-svg-icons';
 
 library.add(
   faDoorClosed,
@@ -68,4 +68,4 @@ library.add(
   faFileInvoiceDollar,
   faCheck,
   faInfoCircle
-)
+);

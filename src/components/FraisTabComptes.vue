@@ -74,11 +74,11 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
-import Vuetable from 'vuetable-2'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
-import _ from 'lodash'
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
 
 export default {
   name: 'FraisTabCompte',
@@ -115,7 +115,7 @@ export default {
           dataClass: 'align-middle'
         }
       ]
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -128,26 +128,26 @@ export default {
     ...mapGetters(['getSapeur', 'getFonction', 'getCompte'])
   },
   mounted() {
-    this.loading = true
+    this.loading = true;
 
     if (this.listSapeurs.length === 0) {
-      this.$store.dispatch('fetchListSapeur')
+      this.$store.dispatch('fetchListSapeur');
     }
 
     if (this.activeExerciceComptableId !== null) {
-      this.init()
+      this.init();
     } else {
-      this.$store.dispatch('fetchExercicesComptables')
+      this.$store.dispatch('fetchExercicesComptables');
     }
   },
   watch: {
     activeExerciceComptableId() {
-      this.loading = true
-      this.init()
+      this.loading = true;
+      this.init();
     },
     listeComptes(newOne, oldOne) {
       if (oldOne.length === 0) {
-        this.init()
+        this.init();
       }
     }
   },
@@ -156,49 +156,53 @@ export default {
       //TODO
     },
     selectCompte(id) {
-      this.loading = true
-      this.$store.dispatch('selectActiveCompte', id).then(this.updateTable)
-      this.dropdown = false
+      this.loading = true;
+      this.$store.dispatch('selectActiveCompte', id).then(this.updateTable);
+      this.dropdown = false;
     },
     init() {
       if (this.activeCompteId === null && this.listeComptes.length > 0) {
         this.$store
           .dispatch('selectActiveCompte', this.listeComptes[0].id)
           .then(() => {
-            this.$refs.vuetable_ecriture_comptes.setData(this.computeData())
-            this.loading = false
-          })
+            this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
+            this.loading = false;
+          });
       } else if (this.activeCompteId !== null) {
         this.$store.dispatch('fetchEcritureComptes').then(() => {
-          this.$refs.vuetable_ecriture_comptes.setData(this.computeData())
-          this.loading = false
-        })
+          this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
+          this.loading = false;
+        });
       }
     },
     updateTable() {
-      this.loading = true
-      this.$refs.vuetable_ecriture_comptes.setData(this.computeData())
-      this.loading = false
+      this.loading = true;
+      this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
+      this.loading = false;
     },
     dataManager(sortOrder) {
-      let local = this.computeData()
-      if (local.length < 1) return
+      let local = this.computeData();
+      if (local.length < 1) return;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
       }
 
       return {
         data: local
-      }
+      };
     },
     computeData() {
-      let svm = this
+      let svm = this;
       return this.ecritures.map(e => ({
         ...e,
         sapeur: [svm.getSapeur(e.sapeur_id)].map(s => `${s.nom} ${s.prenom}`)[0]
-      }))
+      }));
     },
     ...mapMutations(['SHOW_MODAL'])
     // editEcriture() {
@@ -206,7 +210,7 @@ export default {
     //   this.SHOW_MODAL('ModalPromotion')
     // },
   }
-}
+};
 </script>
 
 <style>

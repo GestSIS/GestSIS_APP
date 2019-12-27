@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'AppModal',
@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       component: null
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -71,34 +71,34 @@ export default {
         [-1]: 'modal-sm',
         1: 'modal-lg',
         2: 'modal-xl'
-      }
-      return sizesClass[this.size]
+      };
+      return sizesClass[this.size];
     }
   },
   created() {
     const escapeHandler = e => {
       if (e.key === 'Escape' && this.visible) {
-        this.callback()
-        this.HIDE_MODAL()
+        this.callback();
+        this.HIDE_MODAL();
       }
-    }
+    };
 
-    document.addEventListener('keydown', escapeHandler)
+    document.addEventListener('keydown', escapeHandler);
     this.$once('hook:destroyed', () => {
-      document.removeEventListener('keydown', escapeHandler)
-    })
+      document.removeEventListener('keydown', escapeHandler);
+    });
   },
   methods: {
     ...mapMutations(['HIDE_MODAL'])
   },
   watch: {
     modalComponent(componentName) {
-      if (!componentName) return
+      if (!componentName) return;
 
-      this.component = componentName
+      this.component = componentName;
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

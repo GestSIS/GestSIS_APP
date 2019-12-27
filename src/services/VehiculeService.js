@@ -1,7 +1,7 @@
-import Api from '@/http/Request'
+import Api from '@/http/Request';
 
 export default {
   getVehicules() {
-    return Api.api().get('/vehicules/')
+    return Api.api().get('/vehicules/');
   }
-}
+};

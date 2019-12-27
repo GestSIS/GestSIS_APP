@@ -47,14 +47,14 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/ExerciceComptable'
+import ExerciceComptable from '@/components/ExerciceComptable';
 
 export default {
   name: 'exercices',
   components: {
     ExerciceComptable
   }
-}
+};
 </script>
 
 <style>

@@ -103,15 +103,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
-import InterventionTabResume from '@/components/InterventionTabResume.vue'
-import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
-import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
-import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
-import InterventionTabJournal from '@/components/InterventionTabJournal.vue'
-import ExerciceComptable from '@/components/ExerciceComptable'
+import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue';
+import InterventionTabResume from '@/components/InterventionTabResume.vue';
+import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue';
+import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue';
+import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue';
+import InterventionTabJournal from '@/components/InterventionTabJournal.vue';
+import ExerciceComptable from '@/components/ExerciceComptable';
 
 export default {
   name: 'intervention',
@@ -128,7 +128,7 @@ export default {
     return {
       activeTab: 'general',
       loading: true
-    }
+    };
   },
   props: {
     id: {
@@ -138,51 +138,51 @@ export default {
   computed: {
     ...mapGetters(['activeInterventionData', 'activeInterventionId']),
     newMode() {
-      return this.id === 'new'
+      return this.id === 'new';
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeInterventionData.objet
+      return this.newMode ? 'Nouveau' : this.activeInterventionData.objet;
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur')
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchInterventionTraitements')
-    this.$store.dispatch('fetchExercicesComptables')
-    this.$store.dispatch('fetchTypeInterventions')
-    this.$store.dispatch('fetchStatFederals')
+    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchInterventionTraitements');
+    this.$store.dispatch('fetchExercicesComptables');
+    this.$store.dispatch('fetchTypeInterventions');
+    this.$store.dispatch('fetchStatFederals');
 
-    let id = parseInt(this.id)
-    let svm = this
+    let id = parseInt(this.id);
+    let svm = this;
     if (this.newMode) {
       this.$store
         .dispatch('resetActiveIntervention')
-        .then(() => (svm.loading = false))
+        .then(() => (svm.loading = false));
     } else {
-      this.$store.dispatch('selectIntervention', id)
+      this.$store.dispatch('selectIntervention', id);
       this.$store
         .dispatch('fetchIntervention', id)
-        .then(() => (svm.loading = false))
+        .then(() => (svm.loading = false));
     }
   },
   watch: {
     id() {
-      let svm = this
+      let svm = this;
       if (!this.newMode) {
-        let id = parseInt(this.id)
+        let id = parseInt(this.id);
 
-        this.$store.dispatch('selectIntervention', id)
+        this.$store.dispatch('selectIntervention', id);
         this.$store
           .dispatch('fetchIntervention', id)
-          .then(() => (svm.loading = false))
+          .then(() => (svm.loading = false));
       } else {
         this.$store
           .dispatch('resetActiveIntervention')
-          .then(() => (svm.loading = false))
+          .then(() => (svm.loading = false));
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

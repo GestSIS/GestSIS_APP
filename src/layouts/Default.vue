@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
-import AppModal from '@/components/AppModal'
-import MainSidebar from '@/components/MainSidebar'
+import Navbar from '@/components/Navbar';
+import AppModal from '@/components/AppModal';
+import MainSidebar from '@/components/MainSidebar';
 
 export default {
   components: {
@@ -38,7 +38,7 @@ export default {
     MainSidebar,
     AppModal
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

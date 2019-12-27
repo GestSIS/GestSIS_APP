@@ -88,10 +88,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { DateTime } from 'luxon'
+import { mapState, mapMutations } from 'vuex';
+import { DateTime } from 'luxon';
 
-import Autocomplete from '@/components/Autocomplete'
+import Autocomplete from '@/components/Autocomplete';
 
 export default {
   name: 'ModalMission',
@@ -110,7 +110,7 @@ export default {
       format: 'yyyy-MM-dd HH:mm',
       min: null,
       max: null
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -121,17 +121,17 @@ export default {
   },
   mounted() {
     if (this.listMissions.length === 0) {
-      this.$store.dispatch('fetchMissions')
+      this.$store.dispatch('fetchMissions');
     }
-    this.activeMission = this.data.mission
+    this.activeMission = this.data.mission;
 
-    this.min = DateTime.fromSQL(this.data.min).toISO()
-    this.max = DateTime.fromSQL(this.data.max).toISO()
+    this.min = DateTime.fromSQL(this.data.min).toISO();
+    this.max = DateTime.fromSQL(this.data.max).toISO();
 
     this.activeMission.debut2 = DateTime.fromSQL(
       this.activeMission.debut
-    ).toISO()
-    this.activeMission.fin2 = DateTime.fromSQL(this.activeMission.fin).toISO()
+    ).toISO();
+    this.activeMission.fin2 = DateTime.fromSQL(this.activeMission.fin).toISO();
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -139,17 +139,17 @@ export default {
       //Format back dates to SQL Format
       this.activeMission.debut = DateTime.fromISO(
         this.activeMission.debut2
-      ).toFormat(this.format)
+      ).toFormat(this.format);
       this.activeMission.fin = DateTime.fromISO(
         this.activeMission.fin2
-      ).toFormat(this.format)
+      ).toFormat(this.format);
 
       if ((this.activeMission.id || 0) === 0) {
         this.$store
           .dispatch('addMission', this.activeMission)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -160,13 +160,13 @@ export default {
                 sapeur_id: errors['missions.0.sapeur_id'],
                 titre: errors['missions.0.titre']
               })
-          )
+          );
       } else {
         this.$store
           .dispatch('editMission', this.activeMission)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
+            this.errors = {};
+            this.HIDE_MODAL();
           })
           .catch(
             errors =>
@@ -177,11 +177,11 @@ export default {
                 sapeur_id: errors['missions.0.sapeur_id'],
                 titre: errors['missions.0.titre']
               })
-          )
+          );
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

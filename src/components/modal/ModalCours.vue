@@ -155,14 +155,14 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalCours',
   data() {
     return {
       errors: {}
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -175,90 +175,90 @@ export default {
     }),
     ...mapGetters(['listLocalites', 'getCours', 'getFonction']),
     addMode() {
-      return (this.activeCours.id || 0) === 0
+      return (this.activeCours.id || 0) === 0;
     },
     activeCoursId() {
-      return this.activeCours.cours_id
+      return this.activeCours.cours_id;
     },
     activesFonctions() {
-      return this.activeSapeurFonctions.filter(f => f.fin === null)
+      return this.activeSapeurFonctions.filter(f => f.fin === null);
     }
   },
   mounted() {
     if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
+      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
     }
 
     if (this.listCours.length === 0) {
-      this.$store.dispatch('fetchCours')
+      this.$store.dispatch('fetchCours');
     }
     if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
     if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades')
+      this.$store.dispatch('fetchGrades');
     }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      let saveData = Object.assign({}, this.activeCours)
+      let saveData = Object.assign({}, this.activeCours);
       Object.keys(saveData).map(key => {
         saveData[key] =
-          saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key]
-      })
+          saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
+      });
 
       if (this.addMode) {
         this.$store
           .dispatch('addCours', saveData)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
-            this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId)
-            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
+            this.errors = {};
+            this.HIDE_MODAL();
+            this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
+            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editCours', saveData)
           .then(() => {
-            this.errors = {}
-            this.HIDE_MODAL()
-            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId)
+            this.errors = {};
+            this.HIDE_MODAL();
+            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
           })
-          .catch(errors => (this.errors = errors))
+          .catch(errors => (this.errors = errors));
       }
     },
     dateChange() {
-      this.activeCours.date_grade = this.activeCours.date
-      this.activeCours.date_fonction = this.activeCours.date
+      this.activeCours.date_grade = this.activeCours.date;
+      this.activeCours.date_fonction = this.activeCours.date;
     }
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id)
+      this.$store.dispatch('fetchSapeurCours', id);
     },
     activeCoursId: function(cours_id) {
-      let cours = this.listCours.filter(c => c.id === cours_id)[0]
-      this.activeCours.fonction_id = cours.fonction_id || 0
-      this.activeCours.grade_id = cours.grade_id || 0
-      this.activeCours.precedent_id = cours.precedent_id || 0
-      this.activeCours.fonction_sapeur_id = 0
+      let cours = this.listCours.filter(c => c.id === cours_id)[0];
+      this.activeCours.fonction_id = cours.fonction_id || 0;
+      this.activeCours.grade_id = cours.grade_id || 0;
+      this.activeCours.precedent_id = cours.precedent_id || 0;
+      this.activeCours.fonction_sapeur_id = 0;
 
       if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.getFonction(this.activeCours.fonction_id)
+        let fonction = this.getFonction(this.activeCours.fonction_id);
         if (fonction.cumulable === 0) {
           let fonctions = this.activesFonctions.filter(
             f => this.getFonction(f.fonction_id).cumulable === 0
-          )
+          );
           if (fonctions.length > 0) {
-            this.activeCours.fonction_sapeur_id = fonctions[0].id || 0
+            this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;
           }
         }
       }
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

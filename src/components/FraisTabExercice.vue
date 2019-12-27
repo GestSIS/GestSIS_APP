@@ -56,13 +56,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import FraisEcritureDetails from '@/components/FraisEcritureDetails'
-import ComptabiliteService from '@/services/ComptabiliteService'
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import FraisEcritureDetails from '@/components/FraisEcritureDetails';
+import ComptabiliteService from '@/services/ComptabiliteService';
 
-import Vuetable from 'vuetable-2'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js'
-import _ from 'lodash'
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
 
 export default {
   name: 'FraisTabExercice',
@@ -71,28 +71,28 @@ export default {
   },
   watch: {
     currentExerciceComptableId() {
-      this.loading = true
+      this.loading = true;
       this.$store.dispatch('fetchListExercice').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_exercices.setData(this.computedData)
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_exercices.setData(this.computedData);
+      });
     },
     listExercices() {
-      this.loading = true
-      this.$refs.vuetable_frais_exercices.setData(this.computedData)
-      this.loading = false
+      this.loading = true;
+      this.$refs.vuetable_frais_exercices.setData(this.computedData);
+      this.loading = false;
     }
   },
   mounted() {
     if (this.listSapeurs.length === 0) {
-      this.$store.dispatch('fetchListSapeur')
+      this.$store.dispatch('fetchListSapeur');
     }
 
     if (this.localites.length === 0) {
-      this.$store.dispatch('fetchLocalites')
+      this.$store.dispatch('fetchLocalites');
     }
     if (this.exerciceCategories.length === 0) {
-      this.$store.dispatch('fetchExerciceCategories')
+      this.$store.dispatch('fetchExerciceCategories');
     }
 
     if (this.listExerciceComptable.length === 0) {
@@ -100,13 +100,13 @@ export default {
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchListExercice').then(() => {
-        this.loading = false
-        this.$refs.vuetable_frais_exercices.setData(this.computedData)
-      })
+        this.loading = false;
+        this.$refs.vuetable_frais_exercices.setData(this.computedData);
+      });
     }
   },
   data() {
-    let svm = this
+    let svm = this;
     return {
       css: CssForBootstrap4,
       toggles: {},
@@ -161,7 +161,7 @@ export default {
           name: 'heure',
           dataClass: 'align-middle',
           formatter(value) {
-            return value.slice(0, 5)
+            return value.slice(0, 5);
           }
         },
         {
@@ -198,8 +198,8 @@ export default {
               2: 'En attente de validation',
               3: 'A imputer',
               4: 'Imputée'
-            }
-            return statuts[value]
+            };
+            return statuts[value];
           }
         },
         {
@@ -208,7 +208,7 @@ export default {
           dataClass: 'align-middle'
         }
       ]
-    }
+    };
   },
   props: {
     propName: {
@@ -237,7 +237,7 @@ export default {
         localite: this.getLocalite(s.localite_id).designation,
         getEcritures: () => ComptabiliteService.getEcrituresForExercice(s.id),
         columns: this.ecritureColumns
-      }))
+      }));
     }
   },
   methods: {
@@ -246,8 +246,8 @@ export default {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
-      }
-      this.$refs.vuetable_frais_exercices.toggleDetailRow(id)
+      };
+      this.$refs.vuetable_frais_exercices.toggleDetailRow(id);
     },
     imputerExercice(exerciceId) {
       //TODO
@@ -256,21 +256,25 @@ export default {
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
         size: 2
-      })
+      });
     },
     dataManager(sortOrder) {
-      if (this.computedData.length < 1) return
+      if (this.computedData.length < 1) return;
 
-      let local = this.computedData
+      let local = this.computedData;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
-        local = _.orderBy(local, sortOrder[0].sortField, sortOrder[0].direction)
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
       }
 
       return {
         data: local
-      }
+      };
     },
     onRowClass(dataItem) {
       const statutsClass = {
@@ -279,11 +283,11 @@ export default {
         2: '', //'En attente de validation',
         3: 'table-warning', //'A imputer',
         4: 'table-success' //'Imputée'
-      }
-      return statutsClass[dataItem.statut]
+      };
+      return statutsClass[dataItem.statut];
     }
   }
-}
+};
 </script>
 
 <style>

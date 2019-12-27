@@ -48,14 +48,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'InterventionTabVehicules',
   data() {
     return {
       vehicules: {}
-    }
+    };
   },
   computed: {
     ...mapGetters(['getVehicule']),
@@ -70,59 +70,59 @@ export default {
       this.$store.dispatch('fetchVehicules').then(() => {
         this.$store
           .dispatch('fetchInterventionVehicules', this.activeInterventionId)
-          .then(() => this.updateVehicules(this.interventionVehicules))
-      })
+          .then(() => this.updateVehicules(this.interventionVehicules));
+      });
     } else if (this.interventionVehicules.length === 0) {
       this.$store
         .dispatch('fetchInterventionVehicules', this.activeInterventionId)
         .then(() => {
-          this.updateVehicules(this.interventionVehicules)
-        })
+          this.updateVehicules(this.interventionVehicules);
+        });
     } else {
-      this.updateVehicules(this.interventionVehicules)
+      this.updateVehicules(this.interventionVehicules);
     }
   },
   watch: {
     interventionVehicules(value) {
-      this.updateVehicules(value)
+      this.updateVehicules(value);
     }
   },
   methods: {
     save() {
-      let vehiculesIds = this.interventionVehicules.map(v => v.vehicule_id)
+      let vehiculesIds = this.interventionVehicules.map(v => v.vehicule_id);
       let ids = Object.keys(this.vehicules)
         .filter(item => this.vehicules[item])
-        .map(x => parseInt(x))
+        .map(x => parseInt(x));
 
       //New One
-      let newOne = ids.filter(item => !vehiculesIds.includes(item))
+      let newOne = ids.filter(item => !vehiculesIds.includes(item));
 
       //Removed
-      let removed = vehiculesIds.filter(item => !ids.includes(item))
+      let removed = vehiculesIds.filter(item => !ids.includes(item));
       let removedIds = removed.map(
         vehicule_id =>
           this.interventionVehicules
             .filter(v => v.vehicule_id === vehicule_id)
             .map(v => v.id)[0]
-      )
+      );
 
       if (removedIds.length > 0) {
-        this.$store.dispatch('removeVehicules', removedIds)
+        this.$store.dispatch('removeVehicules', removedIds);
       }
       if (newOne.length > 0) {
-        this.$store.dispatch('addVehicules', newOne)
+        this.$store.dispatch('addVehicules', newOne);
       }
     },
     updateVehicules(value) {
-      this.vehicules = {}
-      let svm = this
+      this.vehicules = {};
+      let svm = this;
 
       value.forEach(
         v => (svm.vehicules = { ...svm.vehicules, [v.vehicule_id]: true })
-      )
+      );
     }
   }
-}
+};
 </script>
 
 <style scoped></style>

@@ -63,11 +63,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue'
-import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue'
-import ExerciceComptable from '@/components/ExerciceComptable'
+import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue';
+import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue';
+import ExerciceComptable from '@/components/ExerciceComptable';
 
 export default {
   name: 'exercice',
@@ -80,7 +80,7 @@ export default {
     return {
       tabPresence: true,
       loading: true
-    }
+    };
   },
   props: {
     id: {
@@ -90,42 +90,42 @@ export default {
   computed: {
     ...mapGetters(['activeExerciceData']),
     newMode() {
-      return this.id === 'new'
+      return this.id === 'new';
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeExerciceData.designation
+      return this.newMode ? 'Nouveau' : this.activeExerciceData.designation;
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur')
-    this.$store.dispatch('fetchLocalites')
-    this.$store.dispatch('fetchExerciceCategories')
-    this.$store.dispatch('fetchExercicesComptables')
-    this.$store.dispatch('fetchExcuseTypes')
+    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchExerciceCategories');
+    this.$store.dispatch('fetchExercicesComptables');
+    this.$store.dispatch('fetchExcuseTypes');
 
-    let id = parseInt(this.id)
+    let id = parseInt(this.id);
 
     if (this.newMode) {
-      this.$store.dispatch('resetActiveExercice')
+      this.$store.dispatch('resetActiveExercice');
     } else {
-      this.$store.dispatch('selectExercice', id)
+      this.$store.dispatch('selectExercice', id);
       this.$store.dispatch('fetchExercice', id).then(() => {
-        this.loading = false
-      })
-      this.$store.dispatch('fetchExerciceSapeurs', id)
+        this.loading = false;
+      });
+      this.$store.dispatch('fetchExerciceSapeurs', id);
     }
-    this.tabPresence = !this.newMode
+    this.tabPresence = !this.newMode;
   },
   watch: {
     activeExerciceId() {
-      let id = parseInt(this.id)
+      let id = parseInt(this.id);
 
-      this.$store.dispatch('selectExercice', id)
-      this.$store.dispatch('fetchExercice', id)
-      this.$store.dispatch('fetchExerciceSapeurs', id)
+      this.$store.dispatch('selectExercice', id);
+      this.$store.dispatch('fetchExercice', id);
+      this.$store.dispatch('fetchExerciceSapeurs', id);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

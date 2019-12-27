@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import ExerciceService from '@/services/ExerciceService'
+import ExerciceService from '@/services/ExerciceService';
 
 export default {
   name: 'ExerciceDetails',
@@ -68,18 +68,18 @@ export default {
       remplace: 0,
       excuse: 0,
       amende: 0
-    }
+    };
   },
   mounted() {
     ExerciceService.getSapeurs(this.rowData.id).then(data => {
-      this.convoque = data.filter(s => s.convoque).length
-      this.present = data.filter(s => s.present).length
-      this.remplace = data.filter(s => s.remplace).length
-      this.excuse = data.filter(s => s.excuse_type_id).length
-      this.amende = data.filter(s => s.amende).length
-    })
+      this.convoque = data.filter(s => s.convoque).length;
+      this.present = data.filter(s => s.present).length;
+      this.remplace = data.filter(s => s.remplace).length;
+      this.excuse = data.filter(s => s.excuse_type_id).length;
+      this.amende = data.filter(s => s.amende).length;
+    });
   }
-}
+};
 </script>
 
 <style scoped>
