@@ -15,11 +15,13 @@ const request = {
   },
 
   api() {
+    
     let api = axios.create({
       baseURL: API_URL,
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     });
 
@@ -66,7 +68,8 @@ const request = {
       baseURL: AUTH_URL,
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     });
 

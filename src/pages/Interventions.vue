@@ -165,13 +165,13 @@ export default {
     },
     filteredInterventions(data) {
       this.loading = false;
-      this.$refs.vuetable.setData(this.filteredInterventions);
+      this.$refs.vuetable.setData(data);
     },
     filters() {
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
-          .filter(([key, val], i) => val)
-          .map(([key, value], _) => x => x[key] === value)
+          .filter(([, val]) => val)
+          .map(([key, value]) => x => x[key] === value)
           .reduce((f, g) => f && g, () => true)
       );
     },
@@ -183,8 +183,8 @@ export default {
 
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
-          .filter(([key, val], i) => val)
-          .map(([key, value], _) => x => x[key] === value)
+          .filter(([, val]) => val)
+          .map(([key, value]) => x => x[key] === value)
           .reduce((f, g) => f && g, () => true)
       );
     }
@@ -207,8 +207,8 @@ export default {
       );
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
-          .filter(([key, val], i) => val)
-          .map(([key, value], _) => x => x[key] === value)
+          .filter(([, val]) => val)
+          .map(([key, value]) => x => x[key] === value)
           .reduce((f, g) => f && g, () => true)
       );
     }
