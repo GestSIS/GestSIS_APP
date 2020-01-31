@@ -191,50 +191,48 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     computeData() {
-      let sapeurs = [];
-      this.listeEcritures.forEach(e => {
-        if (sapeurs.filter(s => s.id === e.sapeur_id).length === 0) {
-          let sapeur = this.getSapeur(e.sapeur_id);
-          sapeurs = [
-            ...sapeurs,
-            {
+      //Group by sapeur ID
+      return (
+        Object.entries(
+          this.listeEcritures.reduce((reduced, ecriture) => {
+            (reduced[ecriture.sapeur_id] =
+              reduced[ecriture.sapeur_id] || []).push(ecriture);
+            return reduced;
+          }, {})
+        )
+          // Map to real data
+          .map(([key, value]) => ({
+            id: +key,
+            ecritures: value,
+            total: value.map(e => parseFloat(e.total)).reduce((a, b) => a + b)
+          }))
+          // Add sapeur data
+          .map(e => {
+            let sapeur = this.getSapeur(e.id);
+            return {
+              ...e,
               ...sapeur,
               nomPrenom: sapeur.nom + ' ' + sapeur.prenom,
-              ecritures: [e],
-              fonction: this.getFonction(sapeur.fonction_id).nom,
-              total: parseFloat(e.total)
-            }
-          ];
-        } else {
-          sapeurs = [
-            ...sapeurs.filter(s => s.id !== e.sapeur_id),
-            {
-              ...sapeurs.filter(s => s.id === e.sapeur_id)[0],
-              ecritures: [
-                ...sapeurs.filter(s => s.id === e.sapeur_id)[0].ecritures,
-                e
-              ],
-              total:
-                (sapeurs.filter(s => s.id === e.sapeur_id)[0].total | 0) +
-                parseFloat(e.total)
-            }
-          ];
-        }
-      });
-      return sapeurs.map(s => ({
-        ...s,
-        getEcritures: () =>
-          new Promise(
-            function(resolve) {
-              resolve(this.ecritures);
-            }.bind(s)
-          ),
-        columns: this.ecritureColumns
-      }));
+              fonction: sapeur.fonction_id
+                ? this.getFonction(sapeur.fonction_id).nom
+                : ''
+            };
+          })
+          // Add data relative to table
+          .map(s => ({
+            ...s,
+            getEcritures: () =>
+              new Promise(
+                function(resolve) {
+                  resolve(this.ecritures);
+                }.bind(s)
+              ),
+            columns: this.ecritureColumns
+          }))
+      );
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
-      //TODO Modal de génération des frais annuels
     },
     toggleDetails(id) {
       this.toggles = {
