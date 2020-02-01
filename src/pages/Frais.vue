@@ -55,6 +55,14 @@
             >
               Indemnités et Frais annuels
             </button>
+            <button
+              class="btn btn-link nav-item nav-link"
+              :class="{ active: activeTab === 'sapeurs' }"
+              role="tab"
+              @click.prevent="activeTab = 'sapeurs'"
+            >
+              Sapeurs
+            </button>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -65,6 +73,7 @@
             <FraisTabIntervention v-if="activeTab === 'interventions'">
             </FraisTabIntervention>
             <FraisTabAnnuel v-if="activeTab === 'annuel'"></FraisTabAnnuel>
+            <FraisTabSapeur v-if="activeTab === 'sapeurs'"></FraisTabSapeur>
           </div>
         </div>
       </div>
@@ -78,6 +87,7 @@ import FraisTabExercice from '@/components/FraisTabExercice';
 import FraisTabComptes from '@/components/FraisTabComptes';
 import FraisTabIntervention from '@/components/FraisTabIntervention';
 import FraisTabAnnuel from '@/components/FraisTabAnnuel';
+import FraisTabSapeur from '@/components/FraisTabSapeur';
 
 export default {
   name: 'frais',
@@ -86,7 +96,8 @@ export default {
     FraisTabComptes,
     FraisTabExercice,
     FraisTabIntervention,
-    FraisTabAnnuel
+    FraisTabAnnuel,
+    FraisTabSapeur
   },
   data() {
     return {

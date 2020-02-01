@@ -142,7 +142,7 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle details-width'
         },
         {
           title: 'Date',
@@ -293,5 +293,8 @@ export default {
 <style>
 .m-td-0 > td {
   padding: 0 !important;
+}
+.details-width {
+  width: 8px;
 }
 </style>

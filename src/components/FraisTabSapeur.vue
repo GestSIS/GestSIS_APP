@@ -65,7 +65,7 @@ import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 export default {
-  name: 'FraisTabIntervention',
+  name: 'FraisTabSapeur',
   components: {
     Vuetable
   },
@@ -87,13 +87,11 @@ export default {
     //TODO Fetch only if neccessary
     this.$store.dispatch('fetchListSapeur');
 
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchStatFederals');
-    this.$store.dispatch('fetchTypeInterventions');
-    this.$store.dispatch('fetchInterventionTraitements');
-    if (this.listExerciceComptable.length === 0) {
-      //console.log('Warning')
-    }
+    // this.$store.dispatch('fetchLocalites');
+    // this.$store.dispatch('fetchStatFederals');
+    // this.$store.dispatch('fetchTypeInterventions');
+    // this.$store.dispatch('fetchInterventionTraitements');
+
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false;
@@ -156,7 +154,7 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle details-width'
         },
         {
           title: 'Date',
@@ -267,6 +265,7 @@ export default {
       'getSapeur'
     ]),
     computedData() {
+      // Details of ecritures for an intervention will be loaded on the flight
       return this.listInterventions.map(i => ({
         ...i,
         type_intervention: this.getTypeIntervention(i.type_intervention_id)
