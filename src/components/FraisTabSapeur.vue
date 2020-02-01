@@ -327,7 +327,4 @@ export default {
 </script>
 
 <style scoped>
-.details-width {
-  width: 8px;
-}
 </style>

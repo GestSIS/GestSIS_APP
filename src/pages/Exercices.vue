@@ -144,7 +144,7 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle details-width'
         },
         {
           title: 'Date',
@@ -281,6 +281,10 @@ export default {
 </script>
 
 <style>
+table button.btn {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .m-td-0 > td {
   padding: 0 !important;
 }

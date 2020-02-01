@@ -273,7 +273,4 @@ export default {
 .m-td-0 > td {
   padding: 0 !important;
 }
-.details-width {
-  width: 8px;
-}
 </style>
