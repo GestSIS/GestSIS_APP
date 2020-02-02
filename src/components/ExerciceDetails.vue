@@ -84,7 +84,7 @@ export default {
 
 <style scoped>
 .detail-row {
-  margin-left: 40px;
+  margin-left: 33px;
   border-left: 1px solid lightgray;
   padding: 0.8em;
 }
