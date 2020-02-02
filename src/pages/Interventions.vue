@@ -336,7 +336,7 @@ export default {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
       listeInterventionsTypes: state => state.typeIntervention.liste,
-      listeLocalites: state => state.localite.liste.sort((a,b) => (a.designation > b.designation) ? 1 : ((b.designation > a.designation) ? -1 : 0))
+      listeLocalites: state => state.localite.liste.sort((a,b) => a.designation.localeCompare(b.designation))
     }),
     ...mapGetters([
       'currentExerciceComptableId',

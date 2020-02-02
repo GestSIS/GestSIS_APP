@@ -33,6 +33,9 @@ export default {
   getEcrituresForInterventions(interventionId) {
     return Api.api().get('/ecritures/intervention/' + interventionId);
   },
+  getEcrituresForExerciceComptable(exerciceComptableId) {
+    return Api.api().get('/ecritures/' + exerciceComptableId);
+  },
   getEcrituresAnnuelsForExerciceComptable(exerciceComtableId) {
     return Api.api().get('/ecritures/annuel/' + exerciceComtableId);
   }

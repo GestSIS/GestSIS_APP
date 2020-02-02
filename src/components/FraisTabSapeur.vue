@@ -15,7 +15,7 @@
         </div>
         <vuetable
           v-show="!loading"
-          ref="vuetable_frais_interventions"
+          ref="vuetable_frais_sapeurs"
           :api-mode="false"
           :fields="fields"
           :css="css.table"
@@ -40,7 +40,7 @@
               />
             </button>
           </div>
-          <div slot="actions" slot-scope="props">
+          <!-- <div slot="actions" slot-scope="props">
             <button
               class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 2"
@@ -48,7 +48,7 @@
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
-          </div>
+          </div> -->
         </vuetable>
       </div>
     </div>
@@ -74,12 +74,12 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchListIntervention').then(() => {
         this.loading = false;
-        this.$refs.vuetable_frais_interventions.setData(this.computedData);
+        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       });
     },
     listInterventions() {
       this.loading = true;
-      this.$refs.vuetable_frais_interventions.setData(this.computedData);
+      this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       this.loading = false;
     }
   },
@@ -93,9 +93,12 @@ export default {
     // this.$store.dispatch('fetchInterventionTraitements');
 
     if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListIntervention').then(() => {
+      ComptabiliteService.getEcrituresForExerciceComptable(
+        this.currentExerciceComptableId
+      ).then(data => {
+        this.ecritures = data;
         this.loading = false;
-        this.$refs.vuetable_frais_interventions.setData(this.computedData);
+        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       });
     }
   },
@@ -106,6 +109,7 @@ export default {
       toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
+      ecritures: [],
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -157,80 +161,22 @@ export default {
           dataClass: 'align-middle details-width'
         },
         {
-          title: 'Date',
-          name: 'date_debut',
+          title: 'Sapeur',
+          name: 'nomPrenom',
+          sortField: 'nomPrenom',
           dataClass: 'align-middle'
         },
         {
-          title: 'Heure',
-          name: 'heure_debut',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return value.slice(0, 5);
-          }
-        },
-        {
-          title: "Type d'intervention",
-          name: 'type_intervention',
-          dataClass: 'align-middle',
-          sortField: 'type_intervention'
-        },
-        {
-          title: 'Localité',
-          name: 'localite_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return svm.getLocalite(value).designation;
-          }
-        },
-        {
-          title: 'Lieu',
-          name: 'lieu',
+          title: 'Fonction',
+          name: 'fonction',
+          sortField: 'fonction',
           dataClass: 'align-middle'
         },
         {
-          title: 'Stat fédéral',
-          name: 'stat_federal_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return svm.getStatFederal(value).designation;
-          }
-        },
-        {
-          title: 'Traitement',
-          name: 'intervention_traitement_id',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return svm.getInterventionTraitement(value).designation;
-          }
-        },
-        {
-          title: 'Étendue',
-          name: 'degre',
-          dataClass: 'align-middle',
-          formatter(value) {
-            const degre = {
-              1: 'Fausse-alarme',
-              2: 'Petite',
-              3: 'Moyenne',
-              4: 'Grande'
-            };
-            return degre[value];
-          }
-        },
-        {
-          title: 'Statut',
-          name: 'statut',
-          dataClass: 'align-middle',
-          formatter(value) {
-            const statuts = {
-              0: 'A saisir',
-              1: 'A valider',
-              2: 'A imputer',
-              3: 'Imputée'
-            };
-            return statuts[value];
-          }
+          title: 'Total',
+          name: 'total',
+          sortField: 'montant',
+          dataClass: 'align-middle'
         },
         {
           title: 'Actions',
@@ -253,6 +199,7 @@ export default {
     ...mapState({
       listInterventions: state =>
         state.intervention.liste.filter(e => e.statut > 1),
+      listeSapeurs: state => state.sapeur.liste,
       listExerciceComptable: state => state.exerciceComptable.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
@@ -261,20 +208,44 @@ export default {
       'getTypeIntervention',
       'getLocalite',
       'getStatFederal',
+      'getFonction',
       'getInterventionTraitement',
       'getSapeur'
     ]),
     computedData() {
       // Details of ecritures for an intervention will be loaded on the flight
-      return this.listInterventions.map(i => ({
-        ...i,
-        type_intervention: this.getTypeIntervention(i.type_intervention_id)
-          .designation,
-        localite: this.getLocalite(i.localite_id).designation,
-        getEcritures: () =>
-          ComptabiliteService.getEcrituresForInterventions(i.id),
-        columns: this.ecritureColumns
-      }));
+      // TODO: Create GroupBy with
+      let idsSapeursFiltered = new Set(this.ecritures.map(e => e.sapeur_id));
+      let ecrituresBySapeur = this.ecritures.reduce((acc, e) => {
+        acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
+        return acc;
+      }, new Map());
+
+      this.listeSapeurs.filter(s => ecrituresBySapeur.has(s.id));
+      console.log(ecrituresBySapeur)
+      return this.listeSapeurs
+        .filter(s => idsSapeursFiltered.has(s.id))
+        .map(s => ({
+          nomPrenom: `${s.nom} ${s.prenom}`,
+          fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
+          total: ecrituresBySapeur
+            .get(s.id)
+            .reduce((a, b) => a + +b.total, 0),
+          getEcritures: () => {
+            this.ecrituresBySapeur.get(s.id);
+          },
+          columns: this.ecritureColumns
+        }));
+
+      // return this.listInterventions.map(i => ({
+      //   ...i,
+      //   type_intervention: this.getTypeIntervention(i.type_intervention_id)
+      //     .designation,
+      //   localite: this.getLocalite(i.localite_id).designation,
+      //   getEcritures: () => //TODO: Change this to right ones
+      //     ComptabiliteService.getEcrituresForInterventions(i.id),
+      //   columns: this.ecritureColumns
+      // }));
     }
   },
   methods: {
@@ -284,7 +255,7 @@ export default {
         ...this.toggles,
         [id]: !this.toggles[id]
       };
-      this.$refs.vuetable_frais_interventions.toggleDetailRow(id);
+      this.$refs.vuetable_frais_sapeurs.toggleDetailRow(id);
     },
     imputerIntervention(interventionId) {
       //TODO
@@ -326,5 +297,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
