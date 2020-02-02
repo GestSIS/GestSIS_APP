@@ -3,12 +3,12 @@
     <div class="spinner-border" role="status" v-show="loading">
       <span class="sr-only">Loading...</span>
     </div>
-    <table class="table mb-0" v-if="!loading && !ecritures.length">
+    <table class="table mb-0" v-show="!loading && !ecritures.length">
       <tr>
         <th colspan="*">Aucune donnée</th>
       </tr>
     </table>
-    <table class="table mb-0" v-if="!loading && ecritures.length">
+    <table class="table mb-0" v-show="!loading && ecritures.length">
       <thead>
         <tr>
           <th

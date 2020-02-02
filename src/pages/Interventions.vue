@@ -176,9 +176,9 @@ export default {
       );
     },
     listeInterventions() {
-      const ids = this.listeInterventions.map(i => i.localite_id);
+      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
       this.filteredLocalites = this.listeLocalites.filter(l =>
-        ids.includes(l.id)
+        ids.has(l.id)
       );
 
       this.filteredInterventions = this.listeInterventions.filter(
@@ -201,9 +201,11 @@ export default {
       });
     } else {
       this.loading = false;
-      const ids = this.listeInterventions.map(i => i.localite_id);
+      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
+      console.log(ids)
+      console.log(ids.has(1))
       this.filteredLocalites = this.listeLocalites.filter(l =>
-        ids.includes(l.id)
+        ids.has(l.id)
       );
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
@@ -334,7 +336,7 @@ export default {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
       listeInterventionsTypes: state => state.typeIntervention.liste,
-      listeLocalites: state => state.localite.liste
+      listeLocalites: state => state.localite.liste.sort((a,b) => (a.designation > b.designation) ? 1 : ((b.designation > a.designation) ? -1 : 0))
     }),
     ...mapGetters([
       'currentExerciceComptableId',
