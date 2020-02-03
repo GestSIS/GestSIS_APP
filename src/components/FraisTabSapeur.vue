@@ -28,7 +28,6 @@
             <button
               class="btn btn-link border-0"
               @click="toggleDetails(props.rowData.id)"
-              v-if="props.rowData.statut === 3"
             >
               <font-awesome-icon
                 v-if="toggles[props.rowData.id] || false"
@@ -112,28 +111,8 @@ export default {
       ecritures: [],
       ecritureColumns: [
         {
-          title: 'Sapeur',
-          field: 'sapeur_id',
-          formatter: field =>
-            [svm.getSapeur(field)].map(s => `${s.nom} ${s.prenom}`)[0]
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Taux',
-          field: 'taux',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-right'
+          title: 'Ecriture',
+          field: 'designation'
         },
         {
           title: 'Solde',
@@ -144,6 +123,24 @@ export default {
         {
           title: 'Indemnité',
           field: 'indemnite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Frais',
+          field: 'frais',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Quantité',
+          field: 'quantite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Taux',
+          field: 'taux',
           headerClassName: 'text-center',
           className: 'text-right'
         },
@@ -214,38 +211,21 @@ export default {
     ]),
     computedData() {
       // Details of ecritures for an intervention will be loaded on the flight
-      // TODO: Create GroupBy with
-      let idsSapeursFiltered = new Set(this.ecritures.map(e => e.sapeur_id));
       let ecrituresBySapeur = this.ecritures.reduce((acc, e) => {
         acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
         return acc;
       }, new Map());
 
-      this.listeSapeurs.filter(s => ecrituresBySapeur.has(s.id));
-      console.log(ecrituresBySapeur)
       return this.listeSapeurs
-        .filter(s => idsSapeursFiltered.has(s.id))
+        .filter(s => ecrituresBySapeur.has(s.id))
         .map(s => ({
+          id: s.id,
           nomPrenom: `${s.nom} ${s.prenom}`,
           fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
-          total: ecrituresBySapeur
-            .get(s.id)
-            .reduce((a, b) => a + +b.total, 0),
-          getEcritures: () => {
-            this.ecrituresBySapeur.get(s.id);
-          },
+          total: ecrituresBySapeur.get(s.id).reduce((a, b) => a + +b.total, 0),
+          getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
           columns: this.ecritureColumns
         }));
-
-      // return this.listInterventions.map(i => ({
-      //   ...i,
-      //   type_intervention: this.getTypeIntervention(i.type_intervention_id)
-      //     .designation,
-      //   localite: this.getLocalite(i.localite_id).designation,
-      //   getEcritures: () => //TODO: Change this to right ones
-      //     ComptabiliteService.getEcrituresForInterventions(i.id),
-      //   columns: this.ecritureColumns
-      // }));
     }
   },
   methods: {
@@ -256,15 +236,6 @@ export default {
         [id]: !this.toggles[id]
       };
       this.$refs.vuetable_frais_sapeurs.toggleDetailRow(id);
-    },
-    imputerIntervention(interventionId) {
-      //TODO
-
-      this.SHOW_MODAL({
-        component: 'ModalImputerIntervention',
-        data: { id: interventionId },
-        size: 2
-      });
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;
