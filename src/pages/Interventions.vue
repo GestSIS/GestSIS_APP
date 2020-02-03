@@ -202,8 +202,7 @@ export default {
     } else {
       this.loading = false;
       const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-      console.log(ids)
-      console.log(ids.has(1))
+
       this.filteredLocalites = this.listeLocalites.filter(l =>
         ids.has(l.id)
       );
