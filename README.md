@@ -43,7 +43,7 @@ npm run build
 Si le serveur de développement est lancé dans une machine virtuelle, mais que l'accès se fait depuis l'hôte, il est nécessaire de suivre les étapes suivantes.
 - dans `.env.local`, remplacer `127.0.0.1` par l'adresse réelle de la machine virtuelle
 - créer un fichier `vue.config.js` à la racine, contenant le code suivant
-```
+```js
 module.exports = {
   devServer: {
     host: 'YOUR-HOST-HERE',
