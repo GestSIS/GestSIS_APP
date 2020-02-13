@@ -59,7 +59,7 @@
                 </div>
               </div>
             </div>
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush" id="liste-sapeurs">
               <router-link
                 v-for="sapeur in filteredSapeurs"
                 tag="li"
@@ -137,4 +137,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#liste-sapeurs {
+  li {
+    padding: 0.25rem 0.75rem;
+  }
+}
+</style>

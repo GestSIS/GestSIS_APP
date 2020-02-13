@@ -13,7 +13,7 @@
         </button>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active">
+        <div class="tab-pane fade show active" id="tab-sapeur-details">
           <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
           <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
           <SapeurTabCours v-if="activeTab === tabList.COURS" />
@@ -107,4 +107,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

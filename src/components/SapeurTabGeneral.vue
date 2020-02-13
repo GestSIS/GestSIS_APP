@@ -198,7 +198,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Priorité</th>
+                <th :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
                 <th>Numéro</th>
                 <th>Type</th>
                 <th>
@@ -216,7 +216,12 @@
             </thead>
             <draggable tag="tbody" v-model="telephones">
               <tr v-for="t in telephones" :key="t.id">
-                <td class="text-center">{{ t.priorite }}</td>
+                <td
+                  class="text-center"
+                  :class="{ 'd-none': telephones.length <= 1 }"
+                >
+                  {{ t.priorite }}
+                </td>
                 <td>
                   <input
                     class="form-control"
@@ -376,6 +381,15 @@
             >
               <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />
               Fin de service
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              @click="incorporation"
+              v-else
+            >
+              <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />
+              Incorporation
             </button>
           </div>
         </form>
@@ -594,25 +608,32 @@ export default {
           // console.log('Save sapeur Error')
         });
     },
-    newMutation() {
-      this.$store.dispatch('resetActiveMutation');
-      this.SHOW_MODAL('ModalMutation');
-    },
     removeMutation(mutationId) {
       this.$store.dispatch('removeMutation', mutationId);
     },
-    editMutation(mutation_id) {
+    editMutation(mutationId) {
       this.$store.dispatch(
         'updateActiveMutation',
         Object.assign(
           {},
-          this.activeSapeurMutations.filter(m => m.id === mutation_id)[0]
+          this.activeSapeurMutations.filter(m => m.id === mutationId)[0]
         )
       );
       this.SHOW_MODAL('ModalMutation');
     },
     finService() {
-      //TODO
+      this.$store.dispatch(
+        'updateActiveMutation',
+        Object.assign(
+          { action: 'finService' },
+          this.activeSapeurMutations.filter(m => !m.sortie)[0]
+        )
+      );
+      this.SHOW_MODAL('ModalMutation');
+    },
+    incorporation() {
+      this.$store.dispatch('resetActiveMutation');
+      this.SHOW_MODAL('ModalMutation');
     }
   }
 };

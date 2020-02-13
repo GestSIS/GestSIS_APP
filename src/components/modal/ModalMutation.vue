@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter une promotion</h5>
+      <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="form-group" v-bind:class="{ 'd-none': finDeService }">
         <label for="cours-date">Incorporation</label>
         <input
           type="date"
@@ -18,7 +18,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="cours-date">Sortie</label>
+        <label for="cours-date">Fin de service</label>
         <input
           type="date"
           v-model="activeMutation.sortie"
@@ -26,8 +26,11 @@
           :class="{ 'is-invalid': errors['sortie'] }"
           id="cours-date"
         />
+        <div class="invalid-feedback" v-if="errors['sortie']">
+          Date invalide
+        </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" :class="{ 'd-none': finDeService }">
         <label for="localite">Localite</label>
         <select
           id="localite"
@@ -35,7 +38,7 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listLocalites" :key="l.id" :value="l.id">{{
+          <option v-for="l in listLocalitesSis" :key="l.id" :value="l.id">{{
             l.designation
           }}</option>
         </select>
@@ -56,7 +59,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMutation.id ? 'Modifier' : 'Ajouter' }}
+        {{ buttonValidateText }}
       </button>
     </div>
   </div>
@@ -69,7 +72,8 @@ export default {
   name: 'ModalMutation',
   data() {
     return {
-      errors: {}
+      errors: {},
+      modalTitle: 'Ajouter une promotion'
     };
   },
   computed: {
@@ -77,10 +81,23 @@ export default {
       activeSapeurId: state => state.sapeur.id,
       activeMutation: state => state.mutation.active
     }),
-    ...mapGetters(['listLocalitesSis'])
+    ...mapGetters(['listLocalitesSis']),
+    finDeService() {
+      return this.activeMutation.action == 'finService';
+    },
+    buttonValidateText() {
+      if (this.finDeService) {
+        return 'Valider';
+      }
+
+      return this.activeMutation.id ? 'Modifier' : 'Ajouter';
+    }
   },
   mounted() {
-    if (this.listLocalites.length === 0) {
+    if (this.finDeService) {
+      this.modalTitle = 'Fin de service';
+    }
+    if (this.listLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
   },
