@@ -1,86 +1,93 @@
 <template>
-  <div>
-    <div class="container-fluid">
-      <ol class="breadcrumb bg-white">
-        <li class="breadcrumb-item">
-          <router-link tag="a" to="/">
-            Accueil
-          </router-link>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-          Sapeurs
-        </li>
-      </ol>
-      <div class="row">
-        <div class="col-md-3">
-          <!-- /.card-header -->
-          <div class="card card-primary card-outline">
-            <div class="card-header">
-              <h3 class="card-title">Filtres</h3>
-              <div class="card-body px-0">
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutActif"
-                    name="actif"
-                    class="custom-control-input"
-                    value="actif"
-                    v-model="filter"
-                  />
-                  <label class="custom-control-label" for="statutActif"
-                    >Actif</label
-                  >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutInactif"
-                    name="actif"
-                    class="custom-control-input"
-                    value="inactif"
-                    v-model="filter"
-                  />
-                  <label class="custom-control-label" for="statutInactif"
-                    >Inactif</label
-                  >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="statutTous"
-                    name="actif"
-                    class="custom-control-input"
-                    value="all"
-                    v-model="filter"
-                  />
-                  <label class="custom-control-label" for="statutTous"
-                    >Tous</label
-                  >
-                </div>
+  <div class="container-fluid">
+        <div class="row">
+    <div class="col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white">
+          <li class="breadcrumb-item">
+            <router-link tag="a" to="/">
+              Accueil
+            </router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Sapeurs
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-md-4 d-flex justify-content-end">
+      <exercice-comptable />
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">Filtres</h3>
+            <div class="card-body px-0">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input
+                  type="radio"
+                  id="statutActif"
+                  name="actif"
+                  class="custom-control-input"
+                  value="actif"
+                  v-model="filter"
+                />
+                <label class="custom-control-label" for="statutActif"
+                  >Actif</label
+                >
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input
+                  type="radio"
+                  id="statutInactif"
+                  name="actif"
+                  class="custom-control-input"
+                  value="inactif"
+                  v-model="filter"
+                />
+                <label class="custom-control-label" for="statutInactif"
+                  >Inactif</label
+                >
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input
+                  type="radio"
+                  id="statutTous"
+                  name="actif"
+                  class="custom-control-input"
+                  value="all"
+                  v-model="filter"
+                />
+                <label class="custom-control-label" for="statutTous"
+                  >Tous</label
+                >
               </div>
             </div>
-            <ul class="list-group list-group-flush" id="liste-sapeurs">
-              <router-link
-                v-for="sapeur in filteredSapeurs"
-                tag="li"
-                :to="`/sapeurs/${sapeur.id}`"
-                :key="sapeur.id"
-                class="list-group-item list-group-item-action"
-                :class="{
-                  active: parseInt(id) === sapeur.id
-                }"
-              >
-                {{ sapeur.nom }} {{ sapeur.prenom }}
-              </router-link>
-              <li v-if="filteredSapeurs.length === 0" class="list-group-item">
-                Aucun sapeur
-              </li>
-            </ul>
           </div>
+          <ul class="list-group list-group-flush" id="liste-sapeurs">
+            <router-link
+              v-for="sapeur in filteredSapeurs"
+              tag="li"
+              :to="`/sapeurs/${sapeur.id}`"
+              :key="sapeur.id"
+              class="list-group-item list-group-item-action"
+              :class="{
+                active: parseInt(id) === sapeur.id
+              }"
+            >
+              {{ sapeur.nom }} {{ sapeur.prenom }}
+            </router-link>
+            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+              Aucun sapeur
+            </li>
+          </ul>
         </div>
-        <div class="col-md-9">
-          <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
-        </div>
+      </div>
+      <div class="col-md-9">
+        <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
       </div>
     </div>
   </div>
@@ -88,10 +95,12 @@
 
 <script>
 import { mapState } from 'vuex';
+import ExerciceComptable from '@/components/ExerciceComptable';
 import SapeurDetails from '@/components/SapeurDetails';
 
 export default {
   components: {
+    ExerciceComptable,
     SapeurDetails
   },
   mounted() {
