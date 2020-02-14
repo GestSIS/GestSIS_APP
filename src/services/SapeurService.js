@@ -28,6 +28,9 @@ export default {
   getMutations(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
   },
+  getExercices(sapeurId, exerciceComptableId) {
+    return Api.api().get('/sapeurs/' + sapeurId + '/exercices/' + exerciceComptableId);
+  },
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData, {
       headers: { 'Content-Type': 'application/json' }

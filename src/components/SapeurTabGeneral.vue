@@ -502,14 +502,9 @@ export default {
       }
     },
     finServiceBoutton() {
-      if (this.activeSapeurMutations.length > 0) {
-        // console.log(this.activeSapeurMutations[0].sortie || '')
-        // console.log(this.activeSapeurMutations[0].sortie)
-      }
-
       return (
         this.activeSapeurMutations.length > 0 &&
-        (this.activeSapeurMutations[0].sortie || '') === ''
+        (this.activeSapeurMutations[this.activeSapeurMutations.length - 1].sortie || '') === ''
       );
     }
   },
@@ -539,7 +534,7 @@ export default {
       });
 
       this.telephones.forEach(t => {
-        //numéros modifiés
+        //Numéros modifiés
         if (t.id !== null) {
           this.$store.dispatch('editTelephone', t);
         }
@@ -629,7 +624,8 @@ export default {
           this.activeSapeurMutations.filter(m => !m.sortie)[0]
         )
       );
-      this.SHOW_MODAL('ModalMutation');
+      // this.SHOW_MODAL('ModalMutation');
+      this.SHOW_MODAL('ModalMutationDesactivation');
     },
     incorporation() {
       this.$store.dispatch('resetActiveMutation');

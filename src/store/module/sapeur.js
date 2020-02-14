@@ -13,7 +13,8 @@ export default {
       grades: [],
       fonctions: [],
       mutations: [],
-      cours: []
+      cours: [],
+      exercices: []
     }
   },
   mutations: {
@@ -62,6 +63,9 @@ export default {
     },
     [types.UPDATE_CURRENT_SAPEUR_MUTATIONS](state, payload) {
       state.active.mutations = payload;
+    },
+    [types.UPDATE_CURRENT_SAPEUR_EXERCICES](state, payload) {
+      state.active.exercices = payload;
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.active.permis = [...state.active.permis, payload];
@@ -222,6 +226,11 @@ export default {
     fetchSapeurGroupes({ commit }, payload) {
       return SapeurService.getGroupes(payload).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
+      );
+    },
+    fetchSapeurExercices({ commit, getters }, payload) {
+      return SapeurService.getExercices(payload, getters.currentExerciceComptableId).then(data =>
+        commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data)
       );
     },
     saveActiveSapeur({ state }, payload) {
