@@ -177,9 +177,7 @@ export default {
     },
     listeInterventions() {
       const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-      this.filteredLocalites = this.listeLocalites.filter(l =>
-        ids.has(l.id)
-      );
+      this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
 
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
@@ -203,9 +201,7 @@ export default {
       this.loading = false;
       const ids = new Set(this.listeInterventions.map(i => i.localite_id));
 
-      this.filteredLocalites = this.listeLocalites.filter(l =>
-        ids.has(l.id)
-      );
+      this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
       this.filteredInterventions = this.listeInterventions.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
@@ -335,7 +331,10 @@ export default {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
       listeInterventionsTypes: state => state.typeIntervention.liste,
-      listeLocalites: state => state.localite.liste.sort((a,b) => a.designation.localeCompare(b.designation))
+      listeLocalites: state =>
+        state.localite.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        )
     }),
     ...mapGetters([
       'currentExerciceComptableId',

@@ -1,24 +1,24 @@
 <template>
   <div class="container-fluid">
-        <div class="row">
-    <div class="col-md-8">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white">
-          <li class="breadcrumb-item">
-            <router-link tag="a" to="/">
-              Accueil
-            </router-link>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Sapeurs
-          </li>
-        </ol>
-      </nav>
+    <div class="row">
+      <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-white">
+            <li class="breadcrumb-item">
+              <router-link tag="a" to="/">
+                Accueil
+              </router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Sapeurs
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-md-4 d-flex justify-content-end">
+        <exercice-comptable />
+      </div>
     </div>
-    <div class="col-md-4 d-flex justify-content-end">
-      <exercice-comptable />
-    </div>
-  </div>
     <div class="row">
       <div class="col-md-3">
         <!-- /.card-header -->

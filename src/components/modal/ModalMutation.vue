@@ -102,7 +102,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     save() {
       if ((this.activeMutation.id || 0) === 0) {
         this.$store
@@ -117,7 +117,11 @@ export default {
           .dispatch('editMutation', this.activeMutation)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            if (this.finDeService) {
+              this.SHOW_MODAL('ModalMutationDesactivation');
+            } else {
+              this.HIDE_MODAL();
+            }
           })
           .catch(errors => (this.errors = errors));
       }

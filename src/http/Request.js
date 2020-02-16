@@ -15,7 +15,6 @@ const request = {
   },
 
   api() {
-    
     let api = axios.create({
       baseURL: API_URL,
       headers: {

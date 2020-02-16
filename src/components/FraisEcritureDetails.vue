@@ -8,6 +8,7 @@
         <th colspan="*">Aucune donnée</th>
       </tr>
     </table>
+
     <table class="table mb-0" v-else>
       <thead>
         <tr>

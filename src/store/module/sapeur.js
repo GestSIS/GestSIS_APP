@@ -229,9 +229,10 @@ export default {
       );
     },
     fetchSapeurExercices({ commit, getters }, payload) {
-      return SapeurService.getExercices(payload, getters.currentExerciceComptableId).then(data =>
-        commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data)
-      );
+      return SapeurService.getExercices(
+        payload,
+        getters.currentExerciceComptableId
+      ).then(data => commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data));
     },
     saveActiveSapeur({ state }, payload) {
       return SapeurService.saveSapeur(

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'SapeurTabExercice',
@@ -54,7 +54,7 @@ export default {
     ...mapState({
       activeSapeurId: state => state.sapeur.active.id,
       activeSapeurExercice: state => state.sapeur.active.exercices,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters(['getLocalite', 'getExerciceCategorie']),
     exerciceDisplay() {
@@ -62,9 +62,10 @@ export default {
         let localite = this.getLocalite(exercice.localite_id);
         return {
           ...exercice,
-          categorie: this.getExerciceCategorie(exercice.exercice_categorie_id).designation,
+          categorie: this.getExerciceCategorie(exercice.exercice_categorie_id)
+            .designation,
           localite: `${localite.npa} ${localite.designation}`,
-          heure: exercice.heure.substr(0,5),
+          heure: exercice.heure.substr(0, 5)
         };
       });
     }
@@ -77,7 +78,7 @@ export default {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurExercices', id);
     },
-    currentExerciceComptableId(id) {
+    currentExerciceComptableId() {
       this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
     }
   }

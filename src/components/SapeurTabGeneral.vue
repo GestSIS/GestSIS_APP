@@ -350,7 +350,13 @@
                   <td>{{ m.incorporation }}</td>
                   <td>{{ m.sortie }}</td>
                   <td>{{ m.motif }}</td>
-                  <td>{{ getLocalite(m.localite_id).designation }}</td>
+                  <td>
+                    {{
+                      m.localite_id
+                        ? getLocalite(m.localite_id).designation
+                        : ''
+                    }}
+                  </td>
                   <td>
                     <div class="d-flex justify-content-center">
                       <button
@@ -504,7 +510,8 @@ export default {
     finServiceBoutton() {
       return (
         this.activeSapeurMutations.length > 0 &&
-        (this.activeSapeurMutations[this.activeSapeurMutations.length - 1].sortie || '') === ''
+        (this.activeSapeurMutations[this.activeSapeurMutations.length - 1]
+          .sortie || '') === ''
       );
     }
   },
@@ -617,6 +624,11 @@ export default {
       this.SHOW_MODAL('ModalMutation');
     },
     finService() {
+      this.$store.dispatch('fetchGroupes', this.activeSapeurId);
+      this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
+      this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
+      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
+      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
       this.$store.dispatch(
         'updateActiveMutation',
         Object.assign(
@@ -624,8 +636,7 @@ export default {
           this.activeSapeurMutations.filter(m => !m.sortie)[0]
         )
       );
-      // this.SHOW_MODAL('ModalMutation');
-      this.SHOW_MODAL('ModalMutationDesactivation');
+      this.SHOW_MODAL('ModalMutation');
     },
     incorporation() {
       this.$store.dispatch('resetActiveMutation');

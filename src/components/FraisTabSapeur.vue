@@ -102,7 +102,6 @@ export default {
     }
   },
   data() {
-    let svm = this;
     return {
       css: CssForBootstrap4,
       toggles: {},
