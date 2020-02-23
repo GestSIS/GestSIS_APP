@@ -378,6 +378,30 @@ export default {
           return data;
         }
       );
+    },
+
+    finFonctions({ state, commit }, payload) {
+      return SapeurService.finFonctions(
+        state.active.data.id,
+        payload.fin,
+        payload.ids
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, payload);
+        return data;
+      });
+    },
+
+    quitterGroupes({ state, commit }, payload) {
+      return SapeurService.quitterGroupes(state.active.data.id, payload).then(
+        data => {
+          commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, payload);
+          return data;
+        }
+      );
+    },
+
+    supprimerConvocation({ state }, payload) {
+      return SapeurService.supprimerConvocation(state.active.data.id, payload);
     }
   }
 };

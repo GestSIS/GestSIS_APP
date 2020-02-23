@@ -13,39 +13,23 @@ export default {
     return Api.api().get('/exercices/' + exerciceId + '/sapeurs');
   },
   createExercice(exerciceData) {
-    return Api.api().post('/exercices/', exerciceData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().post('/exercices/', exerciceData);
   },
   validerExercice(exerciceId) {
     return Api.api().post('/exercices/' + exerciceId + '/valider');
   },
   saveExercice(exerciceId, exerciceData) {
-    return Api.api().put('/exercices/' + exerciceId, exerciceData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().put('/exercices/' + exerciceId, exerciceData);
   },
   addSapeurs(exercieId, sapeursData) {
-    return Api.api().post(
-      '/exercices/' + exercieId + '/sapeurs/',
-      sapeursData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/exercices/' + exercieId + '/sapeurs/', sapeursData);
   },
   editSapeurs(exercieId, sapeursData) {
-    return Api.api().put('/exercices/' + exercieId + '/sapeurs/', sapeursData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().put('/exercices/' + exercieId + '/sapeurs/', sapeursData);
   },
   removeSapeurs(exercieId, sapeursIds) {
-    return Api.api().delete(
-      '/exercices/' + exercieId + '/sapeurs/',
-      { data: sapeursIds },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().delete('/exercices/' + exercieId + '/sapeurs/', {
+      data: sapeursIds
+    });
   }
 };

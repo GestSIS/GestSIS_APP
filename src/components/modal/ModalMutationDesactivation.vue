@@ -9,6 +9,21 @@
       </button>
     </div>
     <div class="modal-body">
+      <form class="form-inline mb-2" v-if="fonctions.length">
+        <div class="form-group">
+          <label for="fin">Date</label>
+          <input
+            type="date"
+            class="form-control mx-sm-3"
+            :class="{ 'is-invalid': erreurs.date }"
+            id="fin"
+            v-model="mutationDate"
+          />
+          <small class="invalid-feedback" width="inherit" v-if="erreurs.date">
+            Date requise
+          </small>
+        </div>
+      </form>
       <table class="table" id="mutation-desactivation-table">
         <thead>
           <tr>
@@ -120,7 +135,9 @@ export default {
     return {
       exercices: [],
       groupes: [],
-      fonctions: []
+      fonctions: [],
+      mutationDate: null,
+      erreurs: {}
     };
   },
   computed: {
@@ -128,6 +145,7 @@ export default {
       activeSapeurId: state => state.sapeur.id,
       activeSapeurExercice: state => state.sapeur.active.exercices,
       activeSapeurGroupe: state => state.sapeur.active.groupes,
+      activeSapeurMutations: state => state.sapeur.active.mutations,
       activeSapeurFonction: state =>
         state.sapeur.active.fonctions.filter(f => !f.fin)
     }),
@@ -163,6 +181,7 @@ export default {
     if (this.listLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
+
     this.exercices = this.activeSapeurExercice.map(e => ({
       ...e,
       info: `${
@@ -180,10 +199,48 @@ export default {
       id: f.id,
       selected: true
     }));
+
+    // Récupère la date de la dernière mutation
+    if (this.fonctions.length) {
+      this.mutationDate = this.activeSapeurMutations.sort(
+        (a, b) => new Date(b.sortie) - new Date(a.sortie)
+      )[0].sortie;
+    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
+      console.log(!this.mutationDate);
+      if (this.fonctions.length > 0 && !this.mutationDate) {
+        this.erreurs = {
+          ...this.erreurs,
+          date: 'Date requise'
+        };
+        return;
+      }
+
+      let isSelected = e => e.selected;
+      let mapToId = e => e.id;
+
+      if (this.fonctions.filter(isSelected).length) {
+        this.$store.dispatch('finFonctions', {
+          fin: this.mutationDate,
+          ids: this.fonctions.filter(isSelected).map(mapToId)
+        });
+      }
+      if (this.exercices.filter(isSelected).length) {
+        this.$store.dispatch(
+          'supprimerConvocation',
+          this.exercices.filter(isSelected).map(mapToId)
+        );
+      }
+      if (this.groupes.filter(isSelected).length) {
+        this.$store.dispatch(
+          'quitterGroupes',
+          this.groupes.filter(isSelected).map(mapToId)
+        );
+      }
+
       this.$store.dispatch('editMutation', this.activeMutation).then(() => {
         this.errors = {};
         this.HIDE_MODAL();

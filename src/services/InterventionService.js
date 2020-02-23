@@ -31,37 +31,25 @@ export default {
     return Api.api().get('/interventions/' + interventionId + '/phases');
   },
   createIntervention(interventionData) {
-    return Api.api().post('/interventions/', interventionData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().post('/interventions/', interventionData);
   },
   validerIntervention(interventionId) {
     return Api.api().post('/interventions/' + interventionId + '/valider');
   },
   saveIntervention(interventionId, interventionData) {
-    return Api.api().put('/interventions/' + interventionId, interventionData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().put('/interventions/' + interventionId, interventionData);
   },
 
   //Matériel
   addMateriel(interventionId, materielData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/materiels/',
-      { materiels: [materielData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/materiels/', {
+      materiels: [materielData]
+    });
   },
   editMateriel(interventionId, materielData) {
-    return Api.api().put(
-      '/interventions/' + interventionId + '/materiels/',
-      { materiels: [materielData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().put('/interventions/' + interventionId + '/materiels/', {
+      materiels: [materielData]
+    });
   },
   removeMateriel(interventionId, materielId) {
     return Api.api().delete(
@@ -74,13 +62,9 @@ export default {
 
   //Vehicules
   addVehicules(interventionId, vehiculesData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/vehicules/',
-      { vehicules: vehiculesData },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/vehicules/', {
+      vehicules: vehiculesData
+    });
   },
   removeVehicules(interventionId, vehiculesId) {
     return Api.api().delete(
@@ -93,13 +77,9 @@ export default {
 
   //Quittances
   addQuittances(interventionId, quittancesData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/quittances/',
-      { quittances: quittancesData },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/quittances/', {
+      quittances: quittancesData
+    });
   },
   removeQuittances(interventionId, quittancesId) {
     return Api.api().delete(
@@ -114,49 +94,31 @@ export default {
   addSapeurs(interventionId, sapeursData) {
     return Api.api().post(
       '/interventions/' + interventionId + '/sapeurs/',
-      sapeursData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      sapeursData
     );
   },
   editSapeurs(interventionId, sapeursData) {
     return Api.api().put(
       '/interventions/' + interventionId + '/sapeurs/',
-      sapeursData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      sapeursData
     );
   },
   removeSapeurs(interventionId, sapeursIds) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/sapeurs/',
-      { data: sapeursIds },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/sapeurs/', {
+      data: sapeursIds
+    });
   },
 
   //Appel
   addAppel(interventionId, appelData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/appels/',
-      { appels: [appelData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/appels/', {
+      appels: [appelData]
+    });
   },
   editAppel(interventionId, appelData) {
-    return Api.api().put(
-      '/interventions/' + interventionId + '/appels/',
-      { appels: [appelData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().put('/interventions/' + interventionId + '/appels/', {
+      appels: [appelData]
+    });
   },
   removeAppel(interventionId, appelId) {
     return Api.api().delete('/interventions/' + interventionId + '/appels/', {
@@ -166,22 +128,14 @@ export default {
 
   //Mission
   addMission(interventionId, missionData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/missions/',
-      { missions: [missionData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/missions/', {
+      missions: [missionData]
+    });
   },
   editMission(interventionId, missionData) {
-    return Api.api().put(
-      '/interventions/' + interventionId + '/missions/',
-      { missions: [missionData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().put('/interventions/' + interventionId + '/missions/', {
+      missions: [missionData]
+    });
   },
   removeMission(interventionId, missionId) {
     return Api.api().delete('/interventions/' + interventionId + '/missions/', {
@@ -191,22 +145,14 @@ export default {
 
   //Phase
   addPhase(interventionId, phaseData) {
-    return Api.api().post(
-      '/interventions/' + interventionId + '/phases/',
-      { phases: [phaseData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/interventions/' + interventionId + '/phases/', {
+      phases: [phaseData]
+    });
   },
   editPhase(interventionId, phaseData) {
-    return Api.api().put(
-      '/interventions/' + interventionId + '/phases/',
-      { phases: [phaseData] },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().put('/interventions/' + interventionId + '/phases/', {
+      phases: [phaseData]
+    });
   },
   removePhase(interventionId, phaseId) {
     return Api.api().delete('/interventions/' + interventionId + '/phases/', {
