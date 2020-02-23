@@ -110,7 +110,7 @@
               />
             </td>
             <td>{{ fonction.nom }}</td>
-            <td></td>
+            <td>{{ fonction.info }}</td>
           </tr>
         </tbody>
       </table>
@@ -196,7 +196,9 @@ export default {
     }));
     this.fonctions = this.activeSapeurFonction.map(f => ({
       ...this.getFonction(f.fonction_id),
+      debut: f.debut,
       id: f.id,
+      info: `Début ${this.formatDate(new Date(f.debut))}`,
       selected: true
     }));
 
@@ -209,9 +211,36 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    formatDate(date) {
+      var monthNames = [
+        'janvier',
+        'février',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'août',
+        'septembre',
+        'octobre',
+        'novembre',
+        'décembre'
+      ];
+
+      var day = date.getDate();
+      var monthIndex = date.getMonth();
+      var year = date.getFullYear();
+
+      return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    },
     save() {
-      console.log(!this.mutationDate);
-      if (this.fonctions.length > 0 && !this.mutationDate) {
+      if (
+        this.fonctions.length > 0 &&
+        (!this.mutationDate ||
+          this.fonctions.some(
+            f => new Date(f.debut) >= new Date(this.mutationDate)
+          ))
+      ) {
         this.erreurs = {
           ...this.erreurs,
           date: 'Date requise'
@@ -241,10 +270,8 @@ export default {
         );
       }
 
-      this.$store.dispatch('editMutation', this.activeMutation).then(() => {
-        this.errors = {};
-        this.HIDE_MODAL();
-      });
+      this.errors = {};
+      this.HIDE_MODAL();
     },
     selectGroupe(event, groupeId) {
       let state = event.target.checked;

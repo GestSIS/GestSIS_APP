@@ -386,7 +386,7 @@ export default {
         payload.fin,
         payload.ids
       ).then(data => {
-        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, payload);
+        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data);
         return data;
       });
     },
