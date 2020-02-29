@@ -624,11 +624,6 @@ export default {
       this.SHOW_MODAL('ModalMutation');
     },
     finService() {
-      this.$store.dispatch('fetchGroupes', this.activeSapeurId);
-      this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-      this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
-      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
       this.$store.dispatch(
         'updateActiveMutation',
         Object.assign(

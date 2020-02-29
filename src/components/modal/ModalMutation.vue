@@ -73,12 +73,16 @@ export default {
   data() {
     return {
       errors: {},
-      modalTitle: 'Ajouter une promotion'
+      modalTitle: 'Ajouter une promotion',
+      mutationInitiale: {},
+      groupes: [],
+      exercices: [],
+      fonctions: []
     };
   },
   computed: {
     ...mapState({
-      activeSapeurId: state => state.sapeur.id,
+      activeSapeurId: state => state.sapeur.active.id,
       activeMutation: state => state.mutation.active
     }),
     ...mapGetters(['listLocalitesSis']),
@@ -100,6 +104,22 @@ export default {
     if (this.listLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
+
+    //Chargement de données en prévision de la fin de service
+
+    this.mutationInitiale = Object.assign({}, this.activeMutation);
+    this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
+    this.$store.dispatch('fetchGroupes', this.activeSapeurId);
+
+    this.$store
+      .dispatch('fetchSapeurExercices', this.activeSapeurId)
+      .then(data => (this.exercices = data));
+    this.$store
+      .dispatch('fetchSapeurGroupes', this.activeSapeurId)
+      .then(data => (this.groupes = data));
+    this.$store
+      .dispatch('fetchSapeurFonctions', this.activeSapeurId)
+      .then(data => (this.fonctions = data));
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
@@ -117,7 +137,16 @@ export default {
           .dispatch('editMutation', this.activeMutation)
           .then(() => {
             this.errors = {};
-            if (this.finDeService) {
+
+            if (
+              (this.finDeService ||
+                (!this.mutationInitiale.sortie &&
+                  !!this.activeMutation.sortie)) &&
+              this.groupes.length +
+                this.exercices.length +
+                this.fonctions.length >
+                0
+            ) {
               this.SHOW_MODAL('ModalMutationDesactivation');
             } else {
               this.HIDE_MODAL();

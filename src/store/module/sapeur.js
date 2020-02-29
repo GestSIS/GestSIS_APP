@@ -209,9 +209,10 @@ export default {
       );
     },
     fetchSapeurFonctions({ commit }, payload) {
-      return SapeurService.getFonctions(payload).then(data =>
-        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
-      );
+      return SapeurService.getFonctions(payload).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data);
+        return data;
+      });
     },
     fetchSapeurCours({ commit }, payload) {
       return SapeurService.getCours(payload).then(data =>
@@ -224,15 +225,19 @@ export default {
       );
     },
     fetchSapeurGroupes({ commit }, payload) {
-      return SapeurService.getGroupes(payload).then(data =>
-        commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
-      );
+      return SapeurService.getGroupes(payload).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data);
+        return data;
+      });
     },
     fetchSapeurExercices({ commit, getters }, payload) {
       return SapeurService.getExercices(
         payload,
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data));
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data);
+        return data;
+      });
     },
     saveActiveSapeur({ state }, payload) {
       return SapeurService.saveSapeur(
