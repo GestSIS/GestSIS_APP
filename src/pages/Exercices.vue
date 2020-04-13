@@ -93,16 +93,43 @@ import { mapGetters, mapState } from 'vuex';
 import ExerciceDetails from '@/components/ExerciceDetails';
 import ExerciceComptable from '@/components/ExerciceComptable';
 
+import store from '@/store/index';
+
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
+
+function loadData(routeTo, next) {
+  let loadLocalities = store.dispatch('fetchLocalites');
+  let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+
+  if (store.state.exerciceComptable.activeId || 0 !== 0) {
+    let loadExercices = store.dispatch('fetchListExercice');
+
+    Promise.all([loadExercices, loadLocalities, loadExerciceCategories]).then(
+      () => {
+        next();
+      }
+    );
+  } else {
+    Promise.all([loadLocalities, loadExerciceCategories]).next(() => {
+      next();
+    });
+  }
+}
 
 export default {
   name: 'exercices',
   components: {
     Vuetable,
     ExerciceComptable
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {
@@ -117,22 +144,8 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchExerciceCategories');
-    if (this.listExerciceComptable.length === 0) {
-      //console.log('Warning')
-    }
-
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListExercice').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_exercices.setData(this.computedData);
-      });
-    }
-    if (this.listExercices.length !== 0) {
-      this.loading = false;
-      this.$refs.vuetable_exercices.setData(this.computedData);
-    }
+    this.$refs.vuetable_exercices.setData(this.computedData);
+    this.loading = false;
   },
   data() {
     return {

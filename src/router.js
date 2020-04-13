@@ -4,6 +4,8 @@ import Home from './pages/Home';
 
 import { TokenService } from './services/StorageService';
 
+import NProgress from 'nprogress';
+
 Vue.use(Router);
 
 const router = new Router({
@@ -101,6 +103,15 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
+});
+
+router.beforeEach((routeTo, routeFrom, next) => {
+  NProgress.start();
+  next();
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;

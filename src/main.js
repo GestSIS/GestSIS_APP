@@ -13,6 +13,7 @@ import Datetime from 'vue-datetime';
 import VueAWN from 'vue-awesome-notifications';
 
 import 'vue-directive-tooltip/src/css/index.scss';
+import 'nprogress/nprogress.css';
 require('./assets/sass/main.scss');
 require('./icons');
 

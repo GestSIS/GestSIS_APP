@@ -17,10 +17,14 @@ export default {
       state.liste.filter(c => c.id === categorie_id)[0]
   },
   actions: {
-    fetchExerciceCategories({ commit }) {
-      return ExerciceCategorieService.getCategories().then(data =>
-        commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
-      );
+    fetchExerciceCategories({ commit, state }) {
+      if (state.liste.size > 0) {
+        return Promise.resolve();
+      } else {
+        return ExerciceCategorieService.getCategories().then(data =>
+          commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
+        );
+      }
     }
   }
 };
