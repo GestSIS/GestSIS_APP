@@ -12,57 +12,45 @@ export default {
   },
   mutations: {
     [types.AUTH_SUCCESSFULL](state, payload) {
-      state = {
-        authenticated: payload.authenticated,
-        user: payload.user
-      };
-      return state;
+      TokenService.saveToken(payload.accessToken);
+      TokenService.saveRefreshToken(payload.refreshToken);
+      TokenService.saveUser(payload.user);
+      Api.setAccessToken(payload.accessToken);
+
+      state.user = payload.user;
     },
     [types.AUTH_LOGOUT](state) {
-      state = {
-        authenticated: false,
-        user: null
-      };
-      return state;
+      TokenService.removeToken();
+      TokenService.removeRefreshToken();
+      TokenService.removeUser();
+
+      state.user = null;
+
+      location.reload();
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
+      TokenService.saveToken(payload.accessToken);
+      TokenService.saveRefreshToken(payload.refreshToken);
+      Api.setAccessToken(payload.accessToken);
+
       state.refreshTokenPromise = payload;
     }
   },
   getters: {
-    isAuthenticated: state => state.authenticated
+    isLoggedIn: state => !!state.user
   },
   actions: {
     login({ commit }, payload) {
       return AuthService.login(payload).then(data => {
-        TokenService.saveToken(data.accessToken);
-        TokenService.saveRefreshToken(data.refreshToken);
-
-        Api.setAccessToken(data.accessToken);
-
-        return commit(types.AUTH_SUCCESSFULL, {
-          authenticated: true,
-          user: data.user
-        });
+        return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
-    register({ commit }, payload) {
-      return AuthService.register(payload).then(data => {
-        TokenService.saveToken(data.accessToken);
-        TokenService.saveRefreshToken(data.refreshToken);
-
-        Api.setAccessToken(data.accessToken);
-
-        return commit(types.AUTH_SUCCESSFULL, {
-          authenticated: true,
-          user: data.user
-        });
+    register({ commit }, credentials) {
+      return AuthService.register(credentials).then(data => {
+        return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
     logout({ commit }) {
-      TokenService.removeToken();
-      TokenService.removeRefreshToken();
-
       return commit(types.AUTH_LOGOUT);
     },
     refreshToken({ commit, state }) {
@@ -74,11 +62,7 @@ export default {
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
         p.then(data => {
-          // commit(types.AUTH_SUCCESSFULL, data)
-          TokenService.saveToken(data.accessToken);
-          TokenService.saveRefreshToken(data.refreshToken);
-          Api.setAccessToken(data.accessToken);
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
         }).catch(e => {
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
           return e;
