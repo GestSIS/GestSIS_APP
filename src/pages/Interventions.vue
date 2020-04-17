@@ -142,18 +142,47 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import store from '@/store/index';
 
-import ExerciceComptable from '@/components/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
+
+async function loadData(routeTo, next) {
+  let loadLocalities = store.dispatch('fetchLocalites');
+  let loadStatFederal = store.dispatch('fetchStatFederals');
+  let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+  let loadInterventionTraitement = store.dispatch(
+    'fetchInterventionTraitements'
+  );
+
+  await store.dispatch('fetchExercicesComptables');
+
+  let loadExercices = store.dispatch('fetchListIntervention');
+  Promise.all([
+    loadExercices,
+    loadLocalities,
+    loadStatFederal,
+    loadTypeInterventions,
+    loadInterventionTraitement
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'interventions',
   components: {
     Vuetable,
     ExerciceComptable
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {
@@ -188,27 +217,16 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchStatFederals');
-    this.$store.dispatch('fetchTypeInterventions');
-    this.$store.dispatch('fetchInterventionTraitements');
+    this.loading = false;
+    const ids = new Set(this.listeInterventions.map(i => i.localite_id));
 
-    if (this.listeInterventions.length === 0) {
-      this.$store.dispatch('fetchListIntervention').then(() => {
-        this.loading = false;
-      });
-    } else {
-      this.loading = false;
-      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-
-      this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
-      this.filteredInterventions = this.listeInterventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(([key, value]) => x => x[key] === value)
-          .reduce((f, g) => f && g, () => true)
-      );
-    }
+    this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
+    this.filteredInterventions = this.listeInterventions.filter(
+      Object.entries(this.filters)
+        .filter(([, val]) => val)
+        .map(([key, value]) => x => x[key] === value)
+        .reduce((f, g) => f && g, () => true)
+    );
   },
   data() {
     const self = this;

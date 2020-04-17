@@ -168,11 +168,6 @@
 // import { mapGetters } from 'vuex'
 
 // import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
-// import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
-// import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
-// import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
-// import InterventionTabJournal from '@/components/InterventionTabJournal.vue'
-// import ExerciceComptable from '@/components/ExerciceComptable'
 
 export default {
   name: 'configuration',

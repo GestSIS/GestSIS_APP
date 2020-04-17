@@ -21,15 +21,15 @@ const TokenService = {
     localStorage.removeItem(USER_KEY);
   },
 
-  getToken() {
+  getAccessToken() {
     return localStorage.getItem(TOKEN_KEY);
   },
 
-  saveToken(accessToken) {
+  saveAccessToken(accessToken) {
     localStorage.setItem(TOKEN_KEY, accessToken);
   },
 
-  removeToken() {
+  removeAccessToken() {
     localStorage.removeItem(TOKEN_KEY);
   },
 

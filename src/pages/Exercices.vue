@@ -89,34 +89,28 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
-import ExerciceDetails from '@/components/ExerciceDetails';
-import ExerciceComptable from '@/components/ExerciceComptable';
-
 import store from '@/store/index';
+
+import ExerciceDetails from '@/components/exercice/ExerciceDetails';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
-function loadData(routeTo, next) {
+async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
 
-  if (store.state.exerciceComptable.activeId || 0 !== 0) {
-    let loadExercices = store.dispatch('fetchListExercice');
+  await store.dispatch('fetchExercicesComptables');
 
-    Promise.all([loadExercices, loadLocalities, loadExerciceCategories]).then(
-      () => {
-        next();
-      }
-    );
-  } else {
-    Promise.all([loadLocalities, loadExerciceCategories]).next(() => {
+  let loadExercices = store.dispatch('fetchListExercice');
+  Promise.all([loadExercices, loadLocalities, loadExerciceCategories]).then(
+    () => {
       next();
-    });
-  }
+    }
+  );
 }
 
 export default {

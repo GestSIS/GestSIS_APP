@@ -12,6 +12,7 @@ import Tooltip from 'vue-directive-tooltip';
 import VueTimepicker from 'vue2-timepicker';
 import Datetime from 'vue-datetime';
 import VueAWN from 'vue-awesome-notifications';
+import types from './store/mutationTypes';
 
 import 'vue-directive-tooltip/src/css/index.scss';
 import 'nprogress/nprogress.css';
@@ -47,11 +48,15 @@ Vue.filter('compte', function(compte) {
 new Vue({
   router,
   store,
-  created () {
+  created() {
     const user = TokenService.getUser();
     const accessToken = TokenService.getAccessToken();
     const refreshToken = TokenService.getRefreshToken();
-    this.$store.commit(types.AUTH_SUCCESSFULL, {user, accessToken, refreshToken});
+    this.$store.commit(types.AUTH_SUCCESSFULL, {
+      user,
+      accessToken,
+      refreshToken
+    });
   },
   render: h => h(App)
 }).$mount('#app');

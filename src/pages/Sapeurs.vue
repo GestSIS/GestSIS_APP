@@ -75,7 +75,7 @@
               :key="sapeur.id"
               class="list-group-item list-group-item-action"
               :class="{
-                active: parseInt(id) === sapeur.id
+                active: activeSapeurId === sapeur.id
               }"
             >
               {{ sapeur.nom }} {{ sapeur.prenom }}
@@ -87,7 +87,7 @@
         </div>
       </div>
       <div class="col-md-9">
-        <SapeurDetails v-if="activeSapeurId > 0" :id="parseInt(id)" />
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -95,13 +95,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import ExerciceComptable from '@/components/ExerciceComptable';
-import SapeurDetails from '@/components/SapeurDetails';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 export default {
   components: {
-    ExerciceComptable,
-    SapeurDetails
+    ExerciceComptable
   },
   mounted() {
     this.$store.dispatch('fetchListSapeur').then(() => {
@@ -119,15 +117,6 @@ export default {
         all: () => true
       }
     };
-  },
-  props: {
-    propName: {
-      type: Number,
-      default: 0
-    },
-    id: {
-      type: String
-    }
   },
   computed: {
     ...mapState({

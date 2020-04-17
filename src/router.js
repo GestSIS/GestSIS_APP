@@ -9,7 +9,7 @@ import NProgress from 'nprogress';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  //mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -35,7 +35,14 @@ const router = new Router({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      component: () => import('@/pages/Sapeurs.vue')
+      component: () => import('@/pages/Sapeurs.vue'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/sapeur/SapeurDetails.vue'),
+          props: true
+        }
+      ]
     },
     {
       path: '/sapeurs/:id',
@@ -88,7 +95,7 @@ router.beforeEach((to, from, next) => {
   const onlyWhenLoggedOut = to.matched.some(
     record => record.meta.onlyWhenLoggedOut
   );
-  const loggedIn = !!TokenService.getToken();
+  const loggedIn = !!TokenService.getAccessToken();
 
   if (!isPublic && !loggedIn) {
     return next({

@@ -6,13 +6,13 @@ import Api from '../../http/Request';
 
 export default {
   state: {
-    authenticated: !!TokenService.getToken(),
+    authenticated: !!TokenService.getAccessToken(),
     user: null,
     refreshTokenPromise: null
   },
   mutations: {
     [types.AUTH_SUCCESSFULL](state, payload) {
-      TokenService.saveToken(payload.accessToken);
+      TokenService.saveAccessToken(payload.accessToken);
       TokenService.saveRefreshToken(payload.refreshToken);
       TokenService.saveUser(payload.user);
       Api.setAccessToken(payload.accessToken);
@@ -26,10 +26,10 @@ export default {
 
       state.user = null;
 
-      location.reload();
+      //location.reload();
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
-      TokenService.saveToken(payload.accessToken);
+      TokenService.saveAccessToken(payload.accessToken);
       TokenService.saveRefreshToken(payload.refreshToken);
       Api.setAccessToken(payload.accessToken);
 

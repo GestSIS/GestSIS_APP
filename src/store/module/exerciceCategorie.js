@@ -18,7 +18,7 @@ export default {
   },
   actions: {
     fetchExerciceCategories({ commit, state }) {
-      if (state.liste.size > 0) {
+      if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
         return ExerciceCategorieService.getCategories().then(data =>

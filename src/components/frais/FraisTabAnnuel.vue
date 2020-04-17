@@ -56,7 +56,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import FraisEcritureDetails from '@/components/FraisEcritureDetails';
+import FraisEcritureDetails from '@/components/frais/FraisEcritureDetails';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';

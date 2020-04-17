@@ -18,7 +18,7 @@ export default {
   },
   actions: {
     fetchLocalites({ commit, state }) {
-      if (state.liste.size > 0) {
+      if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
         return LocaliteService.getLocalites().then(data =>

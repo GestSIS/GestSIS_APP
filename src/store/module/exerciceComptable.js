@@ -28,10 +28,14 @@ export default {
       state.liste.filter(e => e.id === id)[0].fin
   },
   actions: {
-    fetchExercicesComptables({ commit }) {
-      return ExerciceComptableService.getExercices().then(data =>
-        commit(types.UPDATE_EXERCICE_COMPTABLE_LIST, data)
-      );
+    fetchExercicesComptables({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return ExerciceComptableService.getExercices().then(data =>
+          commit(types.UPDATE_EXERCICE_COMPTABLE_LIST, data)
+        );
+      }
     },
     selectExerciceComptable({ commit }, excuse_type_id) {
       return commit(types.SELECT_EXERCICE_COMPTABLE, excuse_type_id);
