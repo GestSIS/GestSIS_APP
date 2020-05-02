@@ -83,9 +83,9 @@ const router = new Router({
       component: () => import('@/pages/ControlesMedicaux.vue')
     },
     {
-      path: '/controle-medical/:id',
+      path: '/controles-medicaux/:id',
       name: 'controle-medical',
-      props:true,
+      props: true,
       component: () => import('@/pages/ControleMedical.vue')
     },
     {
