@@ -38,21 +38,27 @@
         data-accordion="false"
       >
         <li class="nav-item">
-          <router-link to="/sapeurs" class="nav-link internal-link">
+          <router-link :to="{ name: 'sapeurs' }" class="nav-link internal-link">
             <font-awesome-icon icon="user" />
             <span>Sapeurs</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/interventions" class="nav-link internal-link">
+          <router-link
+            :to="{ name: 'interventions' }"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon icon="fire-extinguisher" />
             <span>Interventions</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/exercices" class="nav-link internal-link">
+          <router-link
+            :to="{ name: 'exercices' }"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon :icon="['fas', 'calendar-alt']" />
-            <span>Exercices & Séances</span>
+            <span>Exercices &amp; Séances</span>
           </router-link>
         </li>
         <li class="nav-item">
@@ -62,7 +68,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/frais" class="nav-link internal-link">
+          <router-link :to="{ name: 'frais' }" class="nav-link internal-link">
             <font-awesome-icon icon="calculator" />
             <span>Frais</span>
           </router-link>
@@ -87,11 +93,11 @@
         </li>
         <li class="nav-item">
           <router-link
-            to="/certificats-medicaux"
+            :to="{ name: 'controles-medicaux' }"
             class="nav-link internal-link"
           >
             <font-awesome-icon icon="file-medical-alt" />
-            <span>Certificats médicaux</span>
+            <span>Contrôles médicaux</span>
           </router-link>
         </li>
         <li class="nav-item">
@@ -101,7 +107,10 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/configuration" class="nav-link internal-link">
+          <router-link
+            :to="{ name: 'configuration' }"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon icon="sliders-h" />
             <span>Configuration</span>
           </router-link>
@@ -113,7 +122,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/about" class="nav-link internal-link">
+          <router-link :to="{ name: 'about' }" class="nav-link internal-link">
             <font-awesome-icon icon="info-circle" />
             <span>A propos</span>
           </router-link>

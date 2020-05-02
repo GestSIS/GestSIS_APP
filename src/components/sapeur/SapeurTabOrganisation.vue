@@ -1,31 +1,27 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <!-- general form elements -->
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Organisation</h3>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-          <table id="sap-groupe" class="table">
-            <thead>
-              <tr>
-                <th data-field="groupe">Groupe</th>
-                <th data-field="designation">Désignation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="g in groupeDisplay" :key="g.id">
-                <td>
-                  {{ g.no }}
-                </td>
-                <td>{{ g.designation }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <!-- general form elements -->
+  <div class="card card-primary card-outline">
+    <div class="card-header d-flex justify-content-between">
+      <h3 class="card-title">Organisation</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="sap-groupe" class="table">
+        <thead>
+          <tr>
+            <th data-field="groupe">Groupe</th>
+            <th data-field="designation">Désignation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="g in groupeDisplay" :key="g.id">
+            <td>
+              {{ g.no }}
+            </td>
+            <td>{{ g.designation }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

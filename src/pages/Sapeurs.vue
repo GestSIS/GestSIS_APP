@@ -101,12 +101,8 @@ export default {
   components: {
     ExerciceComptable
   },
-  mounted() {
-    this.$store.dispatch('fetchListSapeur').then(() => {
-      if (this.activeSapeurId === 0 && this.listSapeur.length > 0) {
-        this.selectSapeur(this.listSapeur[0].id);
-      }
-    });
+  beforeCreate() {
+    this.$store.dispatch('fetchListSapeur')
   },
   data() {
     return {
@@ -125,11 +121,6 @@ export default {
     }),
     filteredSapeurs() {
       return this.listSapeur.filter(this.filters[this.filter]);
-    }
-  },
-  methods: {
-    selectSapeur(sapeurId) {
-      this.$store.dispatch('selectSapeur', sapeurId);
     }
   }
 };

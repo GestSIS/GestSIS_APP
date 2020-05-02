@@ -20,7 +20,7 @@ export default {
       state.user = payload.user;
     },
     [types.AUTH_LOGOUT](state) {
-      TokenService.removeToken();
+      TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
 
@@ -56,14 +56,14 @@ export default {
     refreshToken({ commit, state }) {
       if (!state.refreshTokenPromise) {
         const p = AuthService.refreshToken(TokenService.getRefreshToken());
-
-        commit(types.AUTH_REFRESH_TOKEN_PROMISES, p);
-
+        
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
         p.then(data => {
+          console.log(data)
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
         }).catch(e => {
+          console.log("Disconnected")
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
           return e;
         });

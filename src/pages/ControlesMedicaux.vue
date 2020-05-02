@@ -10,7 +10,7 @@
               </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-              Exercices
+              Contrôles Medicaux
             </li>
           </ol>
         </nav>
@@ -24,13 +24,13 @@
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>Liste des exercices</h3>
+            <h3>Liste des contrôles médicaux</h3>
             <router-link
               tag="button"
               to="/exercices/new"
               class="btn btn-outline-primary"
             >
-              Ajouter un exercice
+              Ajouter
             </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
@@ -40,7 +40,7 @@
           </div>
           <vuetable
             v-show="!loading"
-            ref="vuetable_exercices"
+            ref="vuetable_mediaux"
             :api-mode="false"
             :fields="fields"
             :detail-row-component="detailRow"
@@ -91,7 +91,6 @@
 import { mapGetters, mapState } from 'vuex';
 import store from '@/store/index';
 
-import ExerciceDetails from '@/components/exercice/ExerciceDetails';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 import Vuetable from 'vuetable-2';
@@ -99,14 +98,13 @@ import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
-async function loadData(routeTo, next) {
-  let loadLocalities = store.dispatch('fetchLocalites');
-  let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+function loadData(routeTo, next) {
+  let loadSapeurs = store.dispatch('fetchListSapeur');
+  // let loadControlesTypes = store.dispatch('fetchControlesTypes');
+  // let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
-  await store.dispatch('fetchExercicesComptables');
-
-  let loadExercices = store.dispatch('fetchListExercice');
-  Promise.all([loadExercices, loadLocalities, loadExerciceCategories]).then(
+  Promise.all([loadSapeurs]).then(
+    //, loadControlesTypes, loadControlesMedicaux]).then(
     () => {
       next();
     }
@@ -114,7 +112,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'exercices',
+  name: 'controles-medicaux',
   components: {
     Vuetable,
     ExerciceComptable
@@ -126,19 +124,12 @@ export default {
     loadData(routeTo, next);
   },
   watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListExercice').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_exercices.setData(this.computedData);
-      });
-    },
-    listExercices() {
-      this.$refs.vuetable_exercices.setData(this.computedData);
+    listControles() {
+      this.$refs.vuetable_mediaux.setData(this.computedData);
     }
   },
   mounted() {
-    this.$refs.vuetable_exercices.setData(this.computedData);
+    this.$refs.vuetable_mediaux.setData(this.computedData);
     this.loading = false;
   },
   data() {
@@ -146,47 +137,36 @@ export default {
       css: CssForBootstrap4,
       toggles: {},
       loading: true,
-      detailRow: ExerciceDetails,
       fields: [
         {
-          title: '',
-          name: 'details',
-          dataClass: 'align-middle details-width'
+          title: 'Sapeur',
+          name: 'sapeur',
+          sortField: 'sapeur'
         },
         {
-          title: 'Date',
+          title: 'Age',
+          name: 'age',
+          sortField: 'age',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Type',
+          name: 'type'
+        },
+        {
+          title: 'Medecin',
+          name: 'medecin',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Consultation',
           name: 'date',
           sortField: 'date',
           dataClass: 'align-middle'
         },
         {
-          title: 'Categorie',
-          name: 'categorie',
-          sortField: 'categorie',
-          dataClass: 'align-middle'
-        },
-        {
-          title: 'Heure',
-          name: 'heure',
-          dataClass: 'align-middle',
-          formatter(value) {
-            return value.slice(0, 5);
-          }
-        },
-        {
-          title: 'Duree',
-          name: 'duree',
-          dataClass: 'align-middle'
-        },
-        {
-          title: 'Localité',
-          name: 'localite',
-          sortField: 'localite',
-          dataClass: 'align-middle'
-        },
-        {
-          title: 'Lieu',
-          name: 'lieu',
+          title: 'Validité',
+          name: 'validité',
           dataClass: 'align-middle'
         },
         {
@@ -196,20 +176,22 @@ export default {
           dataClass: 'align-middle'
         },
         {
-          title: 'Statut',
-          name: 'statut',
+          title: 'Accepter',
+          name: 'accepter',
+          sortField: 'accepter',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'En cours',
+          name: 'en_cours',
+          sortField: 'en_cours',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Doc',
+          name: 'doc',
           dataClass: 'align-middle',
-          sortField: 'statut',
-          formatter(value) {
-            const statuts = {
-              0: 'Annulé',
-              1: 'A saisir',
-              2: 'En attente de validation',
-              3: 'A imputer',
-              4: 'Imputée'
-            };
-            return statuts[value];
-          }
+          sortField: 'doc'
         },
         {
           title: 'Actions',
@@ -224,7 +206,7 @@ export default {
       listExercices: state => state.exercice.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
+    ...mapGetters(['getSapeur', 'getLocalite', 'getMedecin']),
     computedData() {
       return this.listExercices.map(s => ({
         ...s,
@@ -240,7 +222,7 @@ export default {
         ...this.toggles,
         [id]: !this.toggles[id]
       };
-      this.$refs.vuetable_exercices.toggleDetailRow(id);
+      this.$refs.vuetable_mediaux.toggleDetailRow(id);
     },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);

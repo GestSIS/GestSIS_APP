@@ -13,15 +13,19 @@
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="tab-sapeur-details">
-        <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
-        <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
-        <SapeurTabCours v-if="activeTab === tabList.COURS" />
-        <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
-        <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
-        <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
-        <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
-        <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
-        <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
+        <div class="row">
+          <div class="col-12">
+            <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
+            <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
+            <SapeurTabCours v-if="activeTab === tabList.COURS" />
+            <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
+            <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
+            <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
+            <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
+            <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
+            <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -53,12 +57,15 @@ import SapeurTabPermis from '@/components/sapeur/SapeurTabPermis';
 import SapeurTabBanque from '@/components/sapeur/SapeurTabBanque';
 import SapeurTabExercice from '@/components/sapeur/SapeurTabExercice';
 
-function loadData(routeTo, next) {
-  const sapeurId = routeTo.params.id;
-  const selectSapeur = store.dispatch('selectSapeur', parseInt(sapeurId));
-  const loadSapeur = store.dispatch('fetchSapeur', parseInt(sapeurId));
+async function loadData(routeTo, next) {
+  const sapeurId = parseInt(routeTo.params.id);
+  await store.dispatch('selectSapeur', sapeurId);
 
-  Promise.all([selectSapeur, loadSapeur]).then(() => {
+  const loadTelephones = store.dispatch('fetchTelephoneTypes');
+  const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+  const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
+
+  Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
     next();
   });
 }

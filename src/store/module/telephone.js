@@ -11,10 +11,14 @@ export default {
     }
   },
   actions: {
-    fetchTelephones({ commit }) {
-      return TelephoneService.getTelephones().then(data =>
-        commit(types.UPDATE_TELEPHONE_LIST, data)
-      );
+    fetchTelephones({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return TelephoneService.getTelephones().then(data =>
+          commit(types.UPDATE_TELEPHONE_LIST, data)
+        );
+      }
     }
   }
 };

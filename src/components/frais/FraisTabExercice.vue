@@ -10,7 +10,7 @@
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">Chargement...</span>
           </div>
         </div>
         <vuetable
@@ -211,10 +211,6 @@ export default {
     };
   },
   props: {
-    propName: {
-      type: Number,
-      default: 0
-    },
     id: {
       type: String
     }

@@ -90,7 +90,7 @@
           </form>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
+              <span class="sr-only">Chargement...</span>
             </div>
           </div>
           <vuetable
@@ -336,15 +336,6 @@ export default {
       filteredInterventions: []
     };
   },
-  props: {
-    propName: {
-      type: Number,
-      default: 0
-    },
-    id: {
-      type: String
-    }
-  },
   computed: {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
@@ -356,12 +347,10 @@ export default {
     }),
     ...mapGetters([
       'currentExerciceComptableId',
-      'activeInterventionId',
       'getTypeIntervention',
       'getLocalite',
       'getStatFederal',
-      'getInterventionTraitement',
-      'listLocalitesSis'
+      'getInterventionTraitement'
     ])
   },
   methods: {

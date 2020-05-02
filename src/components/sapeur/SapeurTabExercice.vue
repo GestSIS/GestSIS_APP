@@ -1,46 +1,42 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <!-- general form elements -->
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Exercices</h3>
-        </div>
-        <div class="card-body">
-          <table id="sap-fonctions" class="table" cellspacing="0" width="100%">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>heure</th>
-                <th>Catégorie</th>
-                <th>Localité</th>
-                <th>Communication</th>
-                <th>C</th>
-                <th>P</th>
-                <th>Ex</th>
-                <th>Excuse</th>
-                <th>A</th>
-                <th>Solde</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="e in exerciceDisplay" :key="e.id">
-                <td>{{ e.date }}</td>
-                <td>{{ e.heure }}</td>
-                <td>{{ e.categorie }}</td>
-                <td>{{ e.localite }}</td>
-                <td>{{ e.communications }}</td>
-                <td>{{ e.convoque }}</td>
-                <td>{{ e.present }}</td>
-                <td>{{ e.excuse_id }}</td>
-                <td>{{ e.excuse_id }}</td>
-                <td>{{ e.amende_id }}</td>
-                <td>0.0</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <!-- general form elements -->
+  <div class="card card-primary card-outline">
+    <div class="card-header d-flex justify-content-between">
+      <h3 class="card-title">Exercices</h3>
+    </div>
+    <div class="card-body">
+      <table id="sap-fonctions" class="table" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>heure</th>
+            <th>Catégorie</th>
+            <th>Localité</th>
+            <th>Communication</th>
+            <th>C</th>
+            <th>P</th>
+            <th>Ex</th>
+            <th>Excuse</th>
+            <th>A</th>
+            <th>Solde</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="e in exerciceDisplay" :key="e.id">
+            <td>{{ e.date }}</td>
+            <td>{{ e.heure }}</td>
+            <td>{{ e.categorie }}</td>
+            <td>{{ e.localite }}</td>
+            <td>{{ e.communications }}</td>
+            <td>{{ e.convoque }}</td>
+            <td>{{ e.present }}</td>
+            <td>{{ e.excuse_id }}</td>
+            <td>{{ e.excuse_id }}</td>
+            <td>{{ e.amende_id }}</td>
+            <td>0.0</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

@@ -78,6 +78,17 @@ const router = new Router({
       component: () => import('@/pages/Frais.vue')
     },
     {
+      path: '/controles-medicaux',
+      name: 'controles-medicaux',
+      component: () => import('@/pages/ControlesMedicaux.vue')
+    },
+    {
+      path: '/controle-medical/:id',
+      name: 'controle-medical',
+      props:true,
+      component: () => import('@/pages/ControleMedical.vue')
+    },
+    {
       path: '/configuration',
       name: 'configuration',
       component: () => import('@/pages/Configuration.vue')
