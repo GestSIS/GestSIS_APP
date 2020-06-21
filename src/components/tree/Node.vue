@@ -1,9 +1,12 @@
 <template>
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
-    <div class="tree-node-header focusable hoverable" @click="() => expand(node)">
+    <div
+      class="tree-node-header focusable hoverable"
+      @click="() => expand(data)"
+    >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        v-if="node.children"
+        v-if="computedChildren.length > 0"
         aria-hidden="true"
         role="presentation"
         focusable="false"
@@ -14,16 +17,18 @@
         <path d="M8,5.14V19.14L19,12.14L8,5.14Z"></path>
       </svg>
       <div class="tree-node-content">
-        <span><!-- TODO ADD LOGO if present --></span>
-        <span>{{ node.label }}</span>
+        <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
+        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" />
+        <div>{{ data.label }}</div>
       </div>
     </div>
     <transition-expand>
-      <div v-show="expanded && node.children" class="tree-node-children">
+      <div v-show="expanded && data.children" class="tree-node-children">
         <node
-          v-for="item in node.children"
+          v-for="item in lazyChildren"
           :key="item.id"
           :node="item"
+          :_types="_types"
           class="tree-node--parent"
         />
       </div>
@@ -40,6 +45,11 @@ export default {
     TransitionExpand,
   },
   props: {
+    _types: {
+      required: false,
+      type: Object,
+      default: () => {},
+    },
     node: {
       required: true,
       type: Object,
@@ -47,17 +57,37 @@ export default {
     isRoot: {
       required: false,
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      expanded: false
-    }
+      expanded: false,
+      computed: false,
+    };
+  },
+  computed: {
+    data() {
+      return {
+        ...this._types[this.node.type],
+        ...this.node,
+      };
+    },
+    computedChildren() {
+      return Array.isArray(this.node.children) ? this.node.children : (typeof this.node.children === "function") ? this.node.children() : [];
+    },
+    lazyChildren() {
+      const children = this.computedChildren
+      return this.computed ? children : [];
+    },
   },
   methods: {
-    expand() {
-      this.expanded = !this.expanded
+    async expand() {
+      if (!this.computed) {
+        this.computed = true;
+        await this.$nextTick()  
+      }
+      this.expanded = !this.expanded;
     },
   },
 };
@@ -131,7 +161,15 @@ export default {
   width: 1em;
   height: 1em;
   margin-left: 5px;
-  transition: transform .3s;
+  transition: transform 0.3s;
+}
+
+.tree-node-icon {
+  font-size: 28px;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
 }
 
 .tree-node-arrow--rotate {
@@ -140,6 +178,8 @@ export default {
 
 .tree-node-content {
   padding-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .tree-node .tree-node--parent {

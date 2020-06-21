@@ -27,7 +27,7 @@
             </button>
           </div>
           <div class="card-body">
-            <tree/>
+            <tree :tree="tree" :_types="types" />
           </div>
         </div>
       </div>
@@ -36,20 +36,258 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
+import { mapState } from 'vuex';
 
-// import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
-// import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue'
-// import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue'
-// import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue'
-// import InterventionTabJournal from '@/components/InterventionTabJournal.vue'
-import Tree from '@/components/tree/Tree.vue'
+import Tree from '@/components/tree/Tree.vue';
 
 export default {
   name: 'groups',
   components: {
-    Tree
-  }
+    Tree,
+  },
+  data() {
+    return {
+      types: {
+        homme: {
+          icon: ['fas', 'mars'],
+        },
+        femme: {
+          icon: ['fas', 'venus'],
+        },
+        groupe: {
+          icon: ['fas', 'sitemap'],
+        },
+        fonction: {
+          icon: ['fas', 'medal'],
+        },
+        cours: {
+          icon: ['fas', 'book'],
+        },
+        grade: {
+          icon: ['fas', 'award'],
+        },
+        alphabetique: {
+          icon: ['fas', 'sort-alpha-up-alt'],
+        },
+        civilite: {
+          icon: ['fas', 'user'],
+        },
+        date: {
+          icon: ['fas', 'birthday-cake'],
+        },
+        exercice: {
+          icon: ['fas', 'calendar-alt'],
+        },
+        excuse: {
+          icon: ['fas', 'scroll'],
+        },
+        intervention: {
+          icon: ['fas', 'fire-extinguisher'],
+        },
+        permis: {
+          icon: ['fas', 'car'],
+        },
+      },
+      tree: [
+        {
+          id: 1,
+          type: 'groupe',
+          label: 'Groupes',
+          children: () => this.groupeTree
+        },
+        {
+          id: 2,
+          label: 'Fonctions',
+          type: 'fonction',
+          children: [
+            {
+              label: "Organisation d'alarmes",
+              type: 'groupe',
+              children: [
+                {
+                  type: 'homme',
+                  label: 'Georges',
+                },
+                {
+                  type: 'femme',
+                  label: 'Louisa',
+                },
+              ],
+            },
+            {
+              id: 2,
+              label: 'Good service (disabled node with icon)',
+              icon: ['fas', 'sitemap'],
+              disabled: true,
+              children: [
+                { label: 'Prompt attention' },
+                { label: 'Professional waiter' },
+              ],
+            },
+            {
+              id: 3,
+              label: 'Pleasant surroundings (with icon)',
+              icon: ['fas', 'sitemap'],
+              children: [
+                {
+                  label: 'Happy atmosphere (with image)',
+                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+                },
+                { label: 'Good table presentation' },
+                { label: 'Pleasing decor' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          label: 'Sans Fonctions',
+          type: 'fonction',
+          children: [
+            {
+              label: "Organisation d'alarmes",
+              type: 'groupe',
+              children: [
+                {
+                  type: 'homme',
+                  label: 'Georges',
+                },
+                {
+                  type: 'femme',
+                  label: 'Louisa',
+                },
+              ],
+            },
+            {
+              id: 2,
+              label: 'Good service (disabled node with icon)',
+              icon: ['fas', 'sitemap'],
+              disabled: true,
+              children: [
+                { label: 'Prompt attention' },
+                { label: 'Professional waiter' },
+              ],
+            },
+            {
+              id: 3,
+              label: 'Pleasant surroundings (with icon)',
+              icon: ['fas', 'sitemap'],
+              children: [
+                {
+                  label: 'Happy atmosphere (with image)',
+                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+                },
+                { label: 'Good table presentation' },
+                { label: 'Pleasing decor' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          label: 'Cours suivis',
+          type: 'cours',
+          children: [
+            {
+              label: "Organisation d'alarmes",
+              type: 'groupe',
+              children: [
+                {
+                  type: 'homme',
+                  label: 'Georges',
+                },
+                {
+                  type: 'femme',
+                  label: 'Louisa',
+                },
+              ],
+            },
+            {
+              id: 2,
+              label: 'Good service (disabled node with icon)',
+              icon: ['fas', 'sitemap'],
+              disabled: true,
+              children: [
+                { label: 'Prompt attention' },
+                { label: 'Professional waiter' },
+              ],
+            },
+            {
+              id: 3,
+              label: 'Pleasant surroundings (with icon)',
+              icon: ['fas', 'sitemap'],
+              children: [
+                {
+                  label: 'Happy atmosphere (with image)',
+                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+                },
+                { label: 'Good table presentation' },
+                { label: 'Pleasing decor' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          label: 'Grade actuel',
+          type: 'grade',
+        },
+        {
+          id: 2,
+          label: 'Alphabétique',
+          type: 'alphabetique',
+        },
+        {
+          id: 2,
+          label: 'Date de naissance',
+          type: 'date',
+        },
+        {
+          id: 2,
+          label: 'Civilité',
+          type: 'civilite',
+        },
+        {
+          id: 2,
+          label: 'Exercices',
+          type: 'exercice',
+        },
+      ],
+    };
+  },
+  created() {
+    this.$store.dispatch('fetchGroupesSapeurs');
+    this.$store.dispatch('fetchSapeurs');
+  },
+  computed: {
+    ...mapState({
+      groups: (state) => state.groupe.listeWithSapeurs,
+      sapeurs: (state) => state.sapeur.liste,
+    }),
+    groupeTree() {
+      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
+      const sapeurMapping = (s) => {
+        const sapeur = this.sapeurs.find((sapeur) => sapeur.id == s.id) | {nom: 'georges', prenom:'georges', civilite: 1}
+        return {
+          label: `${sapeur.nom} ${sapeur.prenom}`,
+          type: sapeur.civilite ? 'homme': 'femme',
+        }
+      }
+      const groupeMapping = (g) => ({
+        label: g.designation,
+        type: g.type == 0 ? 'groupe' : 'groupe-inter',
+        children: () => [
+          ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),
+          ...g.sapeurs.map(sapeurMapping)
+        ],
+      });
+
+      return this.groups.filter(groupFilter(null)).map(groupeMapping);
+    },
+  },
+  methods: {
+    name() {},
+  },
 };
 </script>
 
