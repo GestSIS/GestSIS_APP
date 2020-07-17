@@ -1,5 +1,6 @@
 <template>
   <div class="columns">
+    <p>Test</p>
     <ul class="menu-list">
       <li>
         <router-link to="/login" class="is-active">Login</router-link>

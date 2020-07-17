@@ -20,5 +20,8 @@ yarn-error.log*
 *.sln
 *.sw*
 
+# Scripts perso
+run.sh
+
 # Vue configuration
 vue.config.js

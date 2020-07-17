@@ -17,10 +17,14 @@ export default {
       state.liste.filter(t => t.id === intervention_traitement_id)[0]
   },
   actions: {
-    fetchInterventionTraitements({ commit }) {
-      return InterventionTraitementService.getStats().then(data =>
-        commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
-      );
+    fetchInterventionTraitements({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return InterventionTraitementService.getStats().then(data =>
+          commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
+        );
+      }
     }
   }
 };

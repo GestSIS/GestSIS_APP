@@ -13,7 +13,8 @@ export default {
       grades: [],
       fonctions: [],
       mutations: [],
-      cours: []
+      cours: [],
+      exercices: []
     }
   },
   mutations: {
@@ -62,6 +63,9 @@ export default {
     },
     [types.UPDATE_CURRENT_SAPEUR_MUTATIONS](state, payload) {
       state.active.mutations = payload;
+    },
+    [types.UPDATE_CURRENT_SAPEUR_EXERCICES](state, payload) {
+      state.active.exercices = payload;
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.active.permis = [...state.active.permis, payload];
@@ -184,45 +188,56 @@ export default {
         commit(types.UPDATE_SAPEURS_LIST, data)
       );
     },
-    fetchSapeur({ commit }, payload) {
-      return SapeurService.getData(payload).then(data =>
+    fetchSapeur({ commit }, sapeurId) {
+      return SapeurService.getData(sapeurId).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_DATA, data)
       );
     },
-    fetchSapeurPermis({ commit }, payload) {
-      return SapeurService.getPermis(payload).then(data =>
+    fetchSapeurPermis({ commit, state }) {
+      return SapeurService.getPermis(state.active.id).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       );
     },
-    fetchSapeurTelephones({ commit }, payload) {
-      return SapeurService.getTelephones(payload).then(data =>
+    fetchSapeurTelephones({ commit, state }) {
+      return SapeurService.getTelephones(state.active.id).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
       );
     },
-    fetchSapeurGrades({ commit }, payload) {
-      return SapeurService.getGrades(payload).then(data =>
+    fetchSapeurGrades({ commit, state }) {
+      return SapeurService.getGrades(state.active.id).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
       );
     },
-    fetchSapeurFonctions({ commit }, payload) {
-      return SapeurService.getFonctions(payload).then(data =>
-        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data)
-      );
+    fetchSapeurFonctions({ commit, state }) {
+      return SapeurService.getFonctions(state.active.id).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data);
+        return data;
+      });
     },
-    fetchSapeurCours({ commit }, payload) {
-      return SapeurService.getCours(payload).then(data =>
+    fetchSapeurCours({ commit, state }) {
+      return SapeurService.getCours(state.active.id).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
       );
     },
-    fetchSapeurMutations({ commit }, payload) {
-      return SapeurService.getMutations(payload).then(data =>
+    fetchSapeurMutations({ commit, state }) {
+      return SapeurService.getMutations(state.active.id).then(data =>
         commit(types.UPDATE_CURRENT_SAPEUR_MUTATIONS, data)
       );
     },
-    fetchSapeurGroupes({ commit }, payload) {
-      return SapeurService.getGroupes(payload).then(data =>
-        commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data)
-      );
+    fetchSapeurGroupes({ commit, state }) {
+      return SapeurService.getGroupes(state.active.id).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data);
+        return data;
+      });
+    },
+    fetchSapeurExercices({ commit, getters, state }) {
+      return SapeurService.getExercices(
+        state.active.id,
+        getters.currentExerciceComptableId
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data);
+        return data;
+      });
     },
     saveActiveSapeur({ state }, payload) {
       return SapeurService.saveSapeur(
@@ -231,25 +246,27 @@ export default {
       );
     },
 
-    addTelephone({ state, commit }, payload) {
-      return SapeurService.addTelephone(state.active.id, payload).then(data => {
-        commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
-        return data;
-      });
+    addTelephone({ state, commit }, telephone) {
+      return SapeurService.addTelephone(state.active.id, telephone).then(
+        data => {
+          commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
+          return data;
+        }
+      );
     },
 
-    editTelephone({ state, commit }, payload) {
-      return SapeurService.editTelephone(state.active.id, payload).then(
+    editTelephone({ state, commit }, telephone) {
+      return SapeurService.editTelephone(state.active.id, telephone).then(
         data => {
           commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data);
           return data;
         }
       );
     },
-    removeTelephone({ state, commit }, payload) {
-      return SapeurService.removeTelephone(state.active.id, payload).then(
+    removeTelephone({ state, commit }, telephoneId) {
+      return SapeurService.removeTelephone(state.active.id, telephoneId).then(
         data =>
-          commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, payload).then(
+          commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, telephoneId).then(
             () => data
           )
       );
@@ -368,6 +385,30 @@ export default {
           return data;
         }
       );
+    },
+
+    finFonctions({ state, commit }, payload) {
+      return SapeurService.finFonctions(
+        state.active.data.id,
+        payload.fin,
+        payload.ids
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data);
+        return data;
+      });
+    },
+
+    quitterGroupes({ state, commit }, payload) {
+      return SapeurService.quitterGroupes(state.active.data.id, payload).then(
+        data => {
+          commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, payload);
+          return data;
+        }
+      );
+    },
+
+    supprimerConvocation({ state }, payload) {
+      return SapeurService.supprimerConvocation(state.active.data.id, payload);
     }
   }
 };

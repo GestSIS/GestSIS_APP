@@ -17,10 +17,14 @@ export default {
       state.liste.filter(t => t.id === type_intervention_id)[0]
   },
   actions: {
-    fetchTypeInterventions({ commit }) {
-      return TypeInterventionService.getTypes().then(data =>
-        commit(types.UPDATE_TYPE_INTERVENTION_LIST, data)
-      );
+    fetchTypeInterventions({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return TypeInterventionService.getTypes().then(data =>
+          commit(types.UPDATE_TYPE_INTERVENTION_LIST, data)
+        );
+      }
     }
   }
 };

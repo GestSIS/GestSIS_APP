@@ -39,7 +39,7 @@
 import { mapState } from 'vuex';
 
 import Tree from '@/components/tree/Tree.vue';
-import ExerciceComptable from '@/components/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'groups',

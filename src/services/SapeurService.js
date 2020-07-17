@@ -28,29 +28,26 @@ export default {
   getMutations(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
   },
+  getExercices(sapeurId, exerciceComptableId) {
+    return Api.api().get(
+      '/sapeurs/' + sapeurId + '/exercices/' + exerciceComptableId
+    );
+  },
   saveSapeur(sapeurId, sapeurData) {
-    return Api.api().put('/sapeurs/' + sapeurId, sapeurData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
   },
 
   //Téléphones
   addTelephone(sapeurId, telephoneData) {
     return Api.api().post(
       '/sapeurs/' + sapeurId + '/telephones/',
-      telephoneData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      telephoneData
     );
   },
   editTelephone(sapeurId, telephoneData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/telephones/' + telephoneData.id,
-      telephoneData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      telephoneData
     );
   },
   removeTelephone(sapeurId, telephoneId) {
@@ -61,17 +58,12 @@ export default {
 
   //Permis
   addPermis(sapeurId, permisData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/permis/', permisData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().post('/sapeurs/' + sapeurId + '/permis/', permisData);
   },
   editPermis(sapeurId, permisData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/permis/' + permisData.id,
-      permisData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      permisData
     );
   },
   removePermis(sapeurId, permisId) {
@@ -80,21 +72,12 @@ export default {
 
   //Fonctions
   addFonction(sapeurId, fonctionData) {
-    return Api.api().post(
-      '/sapeurs/' + sapeurId + '/fonctions/',
-      fonctionData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData);
   },
   editFonction(sapeurId, fonctionData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/fonctions/' + fonctionData.id,
-      fonctionData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      fonctionData
     );
   },
   removeFonction(sapeurId, fonctionId) {
@@ -102,20 +85,21 @@ export default {
       '/sapeurs/' + sapeurId + '/fonctions/' + fonctionId
     );
   },
+  finFonctions(sapeurId, date, fonctionsId) {
+    return Api.api().post('/sapeurs/' + sapeurId + '/fin-fonctions/', {
+      ids: fonctionsId,
+      date: date
+    });
+  },
 
   //Grades
   addGrade(sapeurId, gradeData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/grades/', gradeData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().post('/sapeurs/' + sapeurId + '/grades/', gradeData);
   },
   editGrade(sapeurId, gradeData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/grades/' + gradeData.id,
-      gradeData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      gradeData
     );
   },
   removeGrade(sapeurId, gradeId) {
@@ -124,17 +108,12 @@ export default {
 
   //Cours
   addCours(sapeurId, coursData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/cours/', coursData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return Api.api().post('/sapeurs/' + sapeurId + '/cours/', coursData);
   },
   editCours(sapeurId, coursData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/cours/' + coursData.id,
-      coursData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      coursData
     );
   },
   removeCours(sapeurId, coursId) {
@@ -143,26 +122,30 @@ export default {
 
   //Mutations
   addMutation(sapeurId, mutationData) {
-    return Api.api().post(
-      '/sapeurs/' + sapeurId + '/mutations/',
-      mutationData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    return Api.api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData);
   },
   editMutation(sapeurId, mutationData) {
     return Api.api().put(
       '/sapeurs/' + sapeurId + '/mutations/' + mutationData.id,
-      mutationData,
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
+      mutationData
     );
   },
   removeMutation(sapeurId, mutationId) {
     return Api.api().delete(
       '/sapeurs/' + sapeurId + '/mutations/' + mutationId
     );
+  },
+
+  //Groupes
+  quitterGroupes(sapeurId, groupesId) {
+    return Api.api().post('/sapeurs/' + sapeurId + '/quitter-groupes/', {
+      groupes: groupesId
+    });
+  },
+
+  supprimerConvocation(sapeurId, convocationsIds) {
+    return Api.api().post('/sapeurs/' + sapeurId + '/supprimer-convocations', {
+      convocations: convocationsIds
+    });
   }
 };

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store/index';
+import { TokenService } from './services/StorageService';
 
 import Default from './layouts/Default';
 import NoSidebar from './layouts/NoSidebar';
@@ -11,8 +12,10 @@ import Tooltip from 'vue-directive-tooltip';
 import VueTimepicker from 'vue2-timepicker';
 import Datetime from 'vue-datetime';
 import VueAWN from 'vue-awesome-notifications';
+import types from './store/mutationTypes';
 
 import 'vue-directive-tooltip/src/css/index.scss';
+import 'nprogress/nprogress.css';
 require('./assets/sass/main.scss');
 require('./icons');
 
@@ -45,5 +48,15 @@ Vue.filter('compte', function(compte) {
 new Vue({
   router,
   store,
+  created() {
+    const user = TokenService.getUser();
+    const accessToken = TokenService.getAccessToken();
+    const refreshToken = TokenService.getRefreshToken();
+    this.$store.commit(types.AUTH_SUCCESSFULL, {
+      user,
+      accessToken,
+      refreshToken
+    });
+  },
   render: h => h(App)
 }).$mount('#app');

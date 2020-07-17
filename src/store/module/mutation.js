@@ -7,12 +7,13 @@ export default {
       localite_id: 0,
       incorporation: null,
       sortie: null,
-      motif: ''
+      motif: '',
+      action: ''
     }
   },
   mutations: {
     [types.UPDATE_CURRENT_MUTATION](state, payload) {
-      state.currentMutation = payload;
+      state.active = payload;
     }
   },
   actions: {

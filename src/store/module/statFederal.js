@@ -18,10 +18,14 @@ export default {
       state.liste.filter(t => t.id === type_intervention_id)[0]
   },
   actions: {
-    fetchStatFederals({ commit }) {
-      return StatFederalService.getStats().then(data =>
-        commit(types.UPDATE_STAT_FEDERAL_LIST, data)
-      );
+    fetchStatFederals({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return StatFederalService.getStats().then(data =>
+          commit(types.UPDATE_STAT_FEDERAL_LIST, data)
+        );
+      }
     }
   }
 };

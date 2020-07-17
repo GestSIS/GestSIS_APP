@@ -82,12 +82,12 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/ExerciceComptable';
-import FraisTabExercice from '@/components/FraisTabExercice';
-import FraisTabComptes from '@/components/FraisTabComptes';
-import FraisTabIntervention from '@/components/FraisTabIntervention';
-import FraisTabAnnuel from '@/components/FraisTabAnnuel';
-import FraisTabSapeur from '@/components/FraisTabSapeur';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import FraisTabExercice from '@/components/frais/FraisTabExercice';
+import FraisTabComptes from '@/components/frais/FraisTabComptes';
+import FraisTabIntervention from '@/components/frais/FraisTabIntervention';
+import FraisTabAnnuel from '@/components/frais/FraisTabAnnuel';
+import FraisTabSapeur from '@/components/frais/FraisTabSapeur';
 
 export default {
   name: 'frais',

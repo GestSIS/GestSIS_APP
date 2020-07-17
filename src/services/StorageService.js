@@ -1,4 +1,5 @@
 const TOKEN_KEY = 'access_token';
+const USER_KEY = 'logged_user';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
 /**
@@ -8,15 +9,27 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
  * accessed through this instace.
  **/
 const TokenService = {
-  getToken() {
+  getUser() {
+    return JSON.parse(localStorage.getItem(USER_KEY));
+  },
+
+  saveUser(accessToken) {
+    localStorage.setItem(USER_KEY, JSON.stringify(accessToken));
+  },
+
+  removeUser() {
+    localStorage.removeItem(USER_KEY);
+  },
+
+  getAccessToken() {
     return localStorage.getItem(TOKEN_KEY);
   },
 
-  saveToken(accessToken) {
+  saveAccessToken(accessToken) {
     localStorage.setItem(TOKEN_KEY, accessToken);
   },
 
-  removeToken() {
+  removeAccessToken() {
     localStorage.removeItem(TOKEN_KEY);
   },
 

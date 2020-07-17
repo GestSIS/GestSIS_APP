@@ -3,6 +3,8 @@ import axios from 'axios';
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 
+console.log(API_URL)
+console.log(AUTH_URL)
 import store from '@/store';
 
 const request = {
@@ -15,7 +17,6 @@ const request = {
   },
 
   api() {
-    
     let api = axios.create({
       baseURL: API_URL,
       headers: {
@@ -81,6 +82,7 @@ const request = {
         return response.data;
       },
       function(error) {
+        console.log(error)
         // Do something with response error
         return Promise.reject(error.response.data);
       }
