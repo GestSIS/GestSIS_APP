@@ -65,9 +65,9 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import ExerciceTabSapeurs from '@/components/ExerciceTabSapeurs.vue';
-import ExerciceTabGeneral from '@/components/ExerciceTabGeneral.vue';
-import ExerciceComptable from '@/components/ExerciceComptable';
+import ExerciceTabSapeurs from '@/components/exercice/ExerciceTabSapeurs.vue';
+import ExerciceTabGeneral from '@/components/exercice/ExerciceTabGeneral.vue';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 export default {
   name: 'exercice',

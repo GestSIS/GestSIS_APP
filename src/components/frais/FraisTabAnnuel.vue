@@ -1,21 +1,21 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-12">
+    <div class="col-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Interventions</h3>
-          <!--          <button @click.prevent="save" class="btn btn-primary">-->
-          <!--            Enregistrer-->
-          <!--          </button>-->
+          <h3 class="card-title">Indemnités et Frais annuels</h3>
+          <button @click.prevent="generer" class="btn btn-primary">
+            Générer
+          </button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">Chargement...</span>
           </div>
         </div>
         <vuetable
           v-show="!loading"
-          ref="vuetable_frais_sapeurs"
+          ref="vuetable_frais_annuels"
           :api-mode="false"
           :fields="fields"
           :css="css.table"
@@ -39,15 +39,15 @@
               />
             </button>
           </div>
-          <!-- <div slot="actions" slot-scope="props">
+          <div slot="actions" slot-scope="props">
             <button
               class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 2"
-              @click="imputerIntervention(props.rowData.id)"
+              v-if="props.rowData.statut === 3"
+              @click="imputerExercice(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
-          </div> -->
+          </div>
         </vuetable>
       </div>
     </div>
@@ -56,48 +56,44 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import FraisEcritureDetails from '@/components/FraisEcritureDetails';
-import ComptabiliteService from '@/services/ComptabiliteService';
+import FraisEcritureDetails from '@/components/frais/FraisEcritureDetails';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 export default {
-  name: 'FraisTabSapeur',
+  name: 'FraisTabAnnuel',
   components: {
     Vuetable
   },
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListIntervention').then(() => {
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false;
-        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
+        this.$refs.vuetable_frais_annuels.setData(this.computeData());
       });
     },
-    listInterventions() {
+    listeEcritures() {
       this.loading = true;
-      this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
+      this.$refs.vuetable_frais_annuels.setData(this.computeData());
       this.loading = false;
     }
   },
   mounted() {
-    //TODO Fetch only if neccessary
     this.$store.dispatch('fetchListSapeur');
-
-    // this.$store.dispatch('fetchLocalites');
-    // this.$store.dispatch('fetchStatFederals');
-    // this.$store.dispatch('fetchTypeInterventions');
-    // this.$store.dispatch('fetchInterventionTraitements');
+    if (this.listeFonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions');
+    }
+    if (this.listExerciceComptable.length === 0) {
+      //console.log('Warning')
+    }
 
     if (this.currentExerciceComptableId || 0 !== 0) {
-      ComptabiliteService.getEcrituresForExerciceComptable(
-        this.currentExerciceComptableId
-      ).then(data => {
-        this.ecritures = data;
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false;
-        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
+        this.$refs.vuetable_frais_annuels.setData(this.computeData());
       });
     }
   },
@@ -108,39 +104,30 @@ export default {
       toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
-      ecritures: [],
       ecritureColumns: [
         {
-          title: 'Ecriture',
+          title: 'Designation',
           field: 'designation'
         },
         {
-          title: 'Solde',
-          field: 'solde',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Indemnité',
-          field: 'indemnite',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Frais',
+          title: 'Type',
           field: 'frais',
+          formatter: field => (field > 0 ? 'Frais' : 'Indemnité')
+        },
+        {
+          title: 'Compte',
+          field: 'compte_id',
+          formatter: field => svm.getCompte(field).designation
+        },
+        {
+          title: 'Tarif',
+          field: 'tarif',
           headerClassName: 'text-center',
           className: 'text-right'
         },
         {
           title: 'Quantité',
           field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Taux',
-          field: 'taux',
           headerClassName: 'text-center',
           className: 'text-right'
         },
@@ -184,63 +171,75 @@ export default {
     };
   },
   props: {
-    propName: {
-      type: Number,
-      default: 0
-    },
     id: {
       type: String
     }
   },
   computed: {
     ...mapState({
-      listInterventions: state =>
-        state.intervention.liste.filter(e => e.statut > 1),
-      listeSapeurs: state => state.sapeur.liste,
+      listeEcritures: state => state.comptabilite.ecritures.annuels,
+      listeFonctions: state => state.fonction.liste,
       listExerciceComptable: state => state.exerciceComptable.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters([
-      'activeInterventionId',
-      'getTypeIntervention',
-      'getLocalite',
-      'getStatFederal',
-      'getFonction',
-      'getInterventionTraitement',
-      'getSapeur'
-    ]),
-    computedData() {
-      // Details of ecritures for an intervention will be loaded on the flight
-      let ecrituresBySapeur = this.ecritures.reduce((acc, e) => {
-        acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
-        return acc;
-      }, new Map());
-
-      return this.listeSapeurs
-        .filter(s => ecrituresBySapeur.has(s.id))
-        .map(s => ({
-          id: s.id,
-          nomPrenom: `${s.nom} ${s.prenom}`,
-          fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
-          total: ecrituresBySapeur.get(s.id).reduce((a, b) => a + +b.total, 0),
-          getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
-          columns: this.ecritureColumns
-        }));
-    }
+    ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte'])
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    computeData() {
+      //Group by sapeur ID
+      return (
+        Object.entries(
+          this.listeEcritures.reduce((reduced, ecriture) => {
+            (reduced[ecriture.sapeur_id] =
+              reduced[ecriture.sapeur_id] || []).push(ecriture);
+            return reduced;
+          }, {})
+        )
+          // Map to real data
+          .map(([key, value]) => ({
+            id: +key,
+            ecritures: value,
+            total: value.map(e => parseFloat(e.total)).reduce((a, b) => a + b)
+          }))
+          // Add sapeur data
+          .map(e => {
+            let sapeur = this.getSapeur(e.id);
+            return {
+              ...e,
+              ...sapeur,
+              nomPrenom: sapeur.nom + ' ' + sapeur.prenom,
+              fonction: sapeur.fonction_id
+                ? this.getFonction(sapeur.fonction_id).nom
+                : ''
+            };
+          })
+          // Add data relative to table
+          .map(s => ({
+            ...s,
+            getEcritures: () =>
+              new Promise(
+                function(resolve) {
+                  resolve(this.ecritures);
+                }.bind(s)
+              ),
+            columns: this.ecritureColumns
+          }))
+      );
+    },
+    generer() {
+      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
+    },
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
         [id]: !this.toggles[id]
       };
-      this.$refs.vuetable_frais_sapeurs.toggleDetailRow(id);
+      this.$refs.vuetable_frais_annuels.toggleDetailRow(id);
     },
     dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
+      let local = this.computeData();
+      if (local.length < 1) return;
 
       // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
@@ -257,15 +256,17 @@ export default {
     },
     onRowClass(dataItem) {
       const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'A valider',
-        2: 'table-warning', //'A imputer',
-        3: 'table-success' //'Imputée'
+        0: 'text-danger', //'inactif',
+        1: '' //'Actif',
       };
-      return statutsClass[dataItem.statut];
+      return statutsClass[dataItem.actif];
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>

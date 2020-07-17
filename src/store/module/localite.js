@@ -17,10 +17,14 @@ export default {
       state.liste.filter(l => l.id === localite_id)[0]
   },
   actions: {
-    fetchLocalites({ commit }) {
-      return LocaliteService.getLocalites().then(data =>
-        commit(types.UPDATE_LOCALITE_LIST, data)
-      );
+    fetchLocalites({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      } else {
+        return LocaliteService.getLocalites().then(data =>
+          commit(types.UPDATE_LOCALITE_LIST, data)
+        );
+      }
     }
   }
 };

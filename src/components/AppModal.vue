@@ -51,7 +51,9 @@ export default {
       import(`@/components/modal/ModalImputerExercice`),
     ModalImputerIntervention: () =>
       import(`@/components/modal/ModalImputerIntervention`),
-    ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`)
+    ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`),
+    ModalMutationDesactivation: () =>
+      import(`@/components/modal/ModalMutationDesactivation`)
   },
   data() {
     return {

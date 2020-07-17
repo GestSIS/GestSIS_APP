@@ -4,6 +4,8 @@ import Home from './pages/Home';
 
 import { TokenService } from './services/StorageService';
 
+import NProgress from 'nprogress';
+
 Vue.use(Router);
 
 const router = new Router({
@@ -33,7 +35,14 @@ const router = new Router({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      component: () => import('@/pages/Sapeurs.vue')
+      component: () => import('@/pages/Sapeurs.vue'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('@/components/sapeur/SapeurDetails.vue'),
+          props: true
+        }
+      ]
     },
     {
       path: '/sapeurs/:id',
@@ -69,6 +78,17 @@ const router = new Router({
       component: () => import('@/pages/Frais.vue')
     },
     {
+      path: '/controles-medicaux',
+      name: 'controles-medicaux',
+      component: () => import('@/pages/ControlesMedicaux.vue')
+    },
+    {
+      path: '/controles-medicaux/:id',
+      name: 'controle-medical',
+      props: true,
+      component: () => import('@/pages/ControleMedical.vue')
+    },
+    {
       path: '/configuration',
       name: 'configuration',
       component: () => import('@/pages/Configuration.vue')
@@ -86,7 +106,7 @@ router.beforeEach((to, from, next) => {
   const onlyWhenLoggedOut = to.matched.some(
     record => record.meta.onlyWhenLoggedOut
   );
-  const loggedIn = !!TokenService.getToken();
+  const loggedIn = !!TokenService.getAccessToken();
 
   if (!isPublic && !loggedIn) {
     return next({
@@ -101,6 +121,15 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
+});
+
+router.beforeEach((routeTo, routeFrom, next) => {
+  NProgress.start();
+  next();
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;

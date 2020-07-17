@@ -64,7 +64,7 @@
               role="tab"
               @click.prevent="activeTab = 'mat-veh'"
             >
-              Matériels & Véhicules
+              Matériels &amp; Véhicules
             </button>
           </div>
         </nav>
@@ -105,13 +105,13 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue';
-import InterventionTabResume from '@/components/InterventionTabResume.vue';
-import InterventionTabSapeurs from '@/components/InterventionTabSapeurs.vue';
-import InterventionTabMateriel from '@/components/InterventionTabMateriel.vue';
-import InterventionTabVehicule from '@/components/InterventionTabVehicule.vue';
-import InterventionTabJournal from '@/components/InterventionTabJournal.vue';
-import ExerciceComptable from '@/components/ExerciceComptable';
+import InterventionTabGeneral from '@/components/intervention/InterventionTabGeneral.vue';
+import InterventionTabResume from '@/components/intervention/InterventionTabResume.vue';
+import InterventionTabSapeurs from '@/components/intervention/InterventionTabSapeurs.vue';
+import InterventionTabMateriel from '@/components/intervention/InterventionTabMateriel.vue';
+import InterventionTabVehicule from '@/components/intervention/InterventionTabVehicule.vue';
+import InterventionTabJournal from '@/components/intervention/InterventionTabJournal.vue';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 export default {
   name: 'intervention',
