@@ -14,7 +14,7 @@
         </ol>
       </div>
       <div class="col-md-4 d-flex justify-content-end">
-        <!--        <exercice-comptable />-->
+        <exercice-comptable />
       </div>
     </div>
     <div class="row">
@@ -39,11 +39,13 @@
 import { mapState } from 'vuex';
 
 import Tree from '@/components/tree/Tree.vue';
+import ExerciceComptable from '@/components/ExerciceComptable';
 
 export default {
   name: 'groups',
   components: {
     Tree,
+    ExerciceComptable
   },
   data() {
     return {
@@ -94,164 +96,164 @@ export default {
           type: 'groupe',
           label: 'Groupes',
           children: () => this.groupeTree
-        },
-        {
-          id: 2,
-          label: 'Fonctions',
-          type: 'fonction',
-          children: [
-            {
-              label: "Organisation d'alarmes",
-              type: 'groupe',
-              children: [
-                {
-                  type: 'homme',
-                  label: 'Georges',
-                },
-                {
-                  type: 'femme',
-                  label: 'Louisa',
-                },
-              ],
-            },
-            {
-              id: 2,
-              label: 'Good service (disabled node with icon)',
-              icon: ['fas', 'sitemap'],
-              disabled: true,
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' },
-              ],
-            },
-            {
-              id: 3,
-              label: 'Pleasant surroundings (with icon)',
-              icon: ['fas', 'sitemap'],
-              children: [
-                {
-                  label: 'Happy atmosphere (with image)',
-                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-                },
-                { label: 'Good table presentation' },
-                { label: 'Pleasing decor' },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: 'Sans Fonctions',
-          type: 'fonction',
-          children: [
-            {
-              label: "Organisation d'alarmes",
-              type: 'groupe',
-              children: [
-                {
-                  type: 'homme',
-                  label: 'Georges',
-                },
-                {
-                  type: 'femme',
-                  label: 'Louisa',
-                },
-              ],
-            },
-            {
-              id: 2,
-              label: 'Good service (disabled node with icon)',
-              icon: ['fas', 'sitemap'],
-              disabled: true,
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' },
-              ],
-            },
-            {
-              id: 3,
-              label: 'Pleasant surroundings (with icon)',
-              icon: ['fas', 'sitemap'],
-              children: [
-                {
-                  label: 'Happy atmosphere (with image)',
-                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-                },
-                { label: 'Good table presentation' },
-                { label: 'Pleasing decor' },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: 'Cours suivis',
-          type: 'cours',
-          children: [
-            {
-              label: "Organisation d'alarmes",
-              type: 'groupe',
-              children: [
-                {
-                  type: 'homme',
-                  label: 'Georges',
-                },
-                {
-                  type: 'femme',
-                  label: 'Louisa',
-                },
-              ],
-            },
-            {
-              id: 2,
-              label: 'Good service (disabled node with icon)',
-              icon: ['fas', 'sitemap'],
-              disabled: true,
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' },
-              ],
-            },
-            {
-              id: 3,
-              label: 'Pleasant surroundings (with icon)',
-              icon: ['fas', 'sitemap'],
-              children: [
-                {
-                  label: 'Happy atmosphere (with image)',
-                  img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-                },
-                { label: 'Good table presentation' },
-                { label: 'Pleasing decor' },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: 'Grade actuel',
-          type: 'grade',
-        },
-        {
-          id: 2,
-          label: 'Alphabétique',
-          type: 'alphabetique',
-        },
-        {
-          id: 2,
-          label: 'Date de naissance',
-          type: 'date',
-        },
-        {
-          id: 2,
-          label: 'Civilité',
-          type: 'civilite',
-        },
-        {
-          id: 2,
-          label: 'Exercices',
-          type: 'exercice',
-        },
+        }
+        // {
+        //   id: 2,
+        //   label: 'Fonctions',
+        //   type: 'fonction',
+        //   children: [
+        //     {
+        //       label: "Organisation d'alarmes",
+        //       type: 'groupe',
+        //       children: [
+        //         {
+        //           type: 'homme',
+        //           label: 'Georges',
+        //         },
+        //         {
+        //           type: 'femme',
+        //           label: 'Louisa',
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       id: 2,
+        //       label: 'Good service (disabled node with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       disabled: true,
+        //       children: [
+        //         { label: 'Prompt attention' },
+        //         { label: 'Professional waiter' },
+        //       ],
+        //     },
+        //     {
+        //       id: 3,
+        //       label: 'Pleasant surroundings (with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       children: [
+        //         {
+        //           label: 'Happy atmosphere (with image)',
+        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+        //         },
+        //         { label: 'Good table presentation' },
+        //         { label: 'Pleasing decor' },
+        //       ],
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Sans Fonctions',
+        //   type: 'fonction',
+        //   children: [
+        //     {
+        //       label: "Organisation d'alarmes",
+        //       type: 'groupe',
+        //       children: [
+        //         {
+        //           type: 'homme',
+        //           label: 'Georges',
+        //         },
+        //         {
+        //           type: 'femme',
+        //           label: 'Louisa',
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       id: 2,
+        //       label: 'Good service (disabled node with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       disabled: true,
+        //       children: [
+        //         { label: 'Prompt attention' },
+        //         { label: 'Professional waiter' },
+        //       ],
+        //     },
+        //     {
+        //       id: 3,
+        //       label: 'Pleasant surroundings (with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       children: [
+        //         {
+        //           label: 'Happy atmosphere (with image)',
+        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+        //         },
+        //         { label: 'Good table presentation' },
+        //         { label: 'Pleasing decor' },
+        //       ],
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Cours suivis',
+        //   type: 'cours',
+        //   children: [
+        //     {
+        //       label: "Organisation d'alarmes",
+        //       type: 'groupe',
+        //       children: [
+        //         {
+        //           type: 'homme',
+        //           label: 'Georges',
+        //         },
+        //         {
+        //           type: 'femme',
+        //           label: 'Louisa',
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       id: 2,
+        //       label: 'Good service (disabled node with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       disabled: true,
+        //       children: [
+        //         { label: 'Prompt attention' },
+        //         { label: 'Professional waiter' },
+        //       ],
+        //     },
+        //     {
+        //       id: 3,
+        //       label: 'Pleasant surroundings (with icon)',
+        //       icon: ['fas', 'sitemap'],
+        //       children: [
+        //         {
+        //           label: 'Happy atmosphere (with image)',
+        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
+        //         },
+        //         { label: 'Good table presentation' },
+        //         { label: 'Pleasing decor' },
+        //       ],
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Grade actuel',
+        //   type: 'grade',
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Alphabétique',
+        //   type: 'alphabetique',
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Date de naissance',
+        //   type: 'date',
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Civilité',
+        //   type: 'civilite',
+        // },
+        // {
+        //   id: 2,
+        //   label: 'Exercices',
+        //   type: 'exercice',
+        // },
       ],
     };
   },
@@ -267,14 +269,14 @@ export default {
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
       const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sapeur) => sapeur.id == s.id) | {nom: 'georges', prenom:'georges', civilite: 1}
+        const sapeur = this.sapeurs.find((sapeur) => sapeur.id === s.id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1}
         return {
           label: `${sapeur.nom} ${sapeur.prenom}`,
           type: sapeur.civilite ? 'homme': 'femme',
         }
       }
       const groupeMapping = (g) => ({
-        label: g.designation,
+        label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupe-inter',
         children: () => [
           ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),

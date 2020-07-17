@@ -18,7 +18,7 @@
       </svg>
       <div class="tree-node-content">
         <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
-        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" />
+        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" class="tree-node-icon" />
         <div>{{ data.label }}</div>
       </div>
     </div>
@@ -127,6 +127,10 @@ export default {
   opacity: 0;
   transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1),
     opacity 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+
+.tree-node-icon {
+  margin-right: 4px;
 }
 
 .focus-helper:before {
