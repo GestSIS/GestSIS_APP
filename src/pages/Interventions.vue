@@ -33,12 +33,12 @@
               Ajouter une intervention
             </router-link>
           </div>
-          <form>
+          <form class="card-body">
             <div class="form-row">
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-4">
                 <select
-                  class="form-control"
-                  id="exampleFormControlSelect1"
+                  class="custom-select custom-select-sm"
+                  id="filterLocalite"
                   @change="event => onFilter('localite_id', event.target.value)"
                 >
                   <option>&lt;Localité&gt;</option>
@@ -50,17 +50,21 @@
                   >
                 </select>
               </div>
-              <div class="form-group col-md-3">
-                <select class="form-control" id="exampleFormControlSelect1">
+              <div class="form-group col-md-4">
+                <select class="custom-select custom-select-sm" id="filterType"
+                  @change="event => onFilter('type_intervention_id', event.target.value)">
                   <option>&lt;Type&gt;</option>
-                  <option>Feu batiment</option>
-                  <option>Feu cheminé</option>
-                  <option>Feu forêt</option>
-                  <option>Feu véhicule</option>
+                  <option
+                    v-for="type in filteredInterventionsTypes"
+                    :key="type.id"
+                    :value="type.id"
+                    >{{ type.designation }}</option
+                  >
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="custom-select custom-select-sm" id="filterStatistique"
+                  @change="event => onFilter('stat_federal_id', event.target.value)">
                   <option>&lt;Statistiques Fédérales&gt;</option>
                   <option>Lutte contre le feu</option>
                   <option>Secours routiers</option>
@@ -68,8 +72,9 @@
                   <option>Défense chimique</option>
                 </select>
               </div>
-              <div class="form-group col-md-2">
-                <select class="form-control" id="exampleFormControlSelect1">
+              <div class="form-group col-md-4">
+                <select class="custom-select custom-select-sm" id="filterTraitement"
+                  @change="event => onFilter('intervention_traitement_id', event.target.value)">
                   <option>&lt;Traitement&gt;</option>
                   <option>-</option>
                   <option>A Facturer</option>
@@ -77,8 +82,9 @@
                   <option>Facturée</option>
                 </select>
               </div>
-              <div class="form-group col-md-2">
-                <select class="form-control" id="exampleFormControlSelect1">
+              <div class="form-group col-md-4">
+                <select class="custom-select custom-select-sm" id="filterEtendue"
+                  @change="event => onFilter('degree', event.target.value)">
                   <option>&lt;Etendue&gt;</option>
                   <option>Fausse alarame</option>
                   <option>Petite</option>
@@ -201,32 +207,13 @@ export default {
         Object.entries(this.filters)
           .filter(([, val]) => val)
           .map(([key, value]) => x => x[key] === value)
-          .reduce((f, g) => f && g, () => true)
+          .reduce((f, g) => x => f(x) && g(x), () => true)
       );
     },
-    listeInterventions() {
-      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-      this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
-
-      this.filteredInterventions = this.listeInterventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(([key, value]) => x => x[key] === value)
-          .reduce((f, g) => f && g, () => true)
-      );
-    }
   },
   mounted() {
     this.loading = false;
-    const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-
-    this.filteredLocalites = this.listeLocalites.filter(l => ids.has(l.id));
-    this.filteredInterventions = this.listeInterventions.filter(
-      Object.entries(this.filters)
-        .filter(([, val]) => val)
-        .map(([key, value]) => x => x[key] === value)
-        .reduce((f, g) => f && g, () => true)
-    );
+    this.$refs.vuetable.setData(data);
   },
   data() {
     const self = this;
@@ -332,8 +319,6 @@ export default {
       ],
       loading: true,
       filters: {},
-      filteredLocalites: [],
-      filteredInterventions: []
     };
   },
   computed: {
@@ -351,7 +336,23 @@ export default {
       'getLocalite',
       'getStatFederal',
       'getInterventionTraitement'
-    ])
+    ]),
+    filteredInterventionsTypes() {
+      const ids = new Set(this.listeInterventions.map(i => i.type_intervention_id));
+      return this.listeInterventionsTypes.filter(t => ids.has(t.id))
+    },
+    filteredLocalites() {
+      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
+      return this.listeLocalites.filter(t => ids.has(t.id))
+    },
+    filteredInterventions() {
+      return this.listeInterventions.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val)
+          .map(([key, value]) => x => x[key] === value)
+          .reduce((f, g) => x => f(x) && g(x), () => true)
+      );
+    }
   },
   methods: {
     toggleDetails(id) {
@@ -380,7 +381,7 @@ export default {
       };
     },
     onFilter(key, value) {
-      this.filters = { ...this.filter, [key]: parseInt(value) };
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
     onRowClass(dataItem) {
       const statutsClass = {
