@@ -37,15 +37,34 @@
 
 <script>
 import { mapState } from 'vuex';
+import store from '@/store/index';
 
 import Tree from '@/components/tree/Tree.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+
+async function loadData(routeTo, next) {
+  let loadSapeurs = store.dispatch('fetchListSapeur');
+  let loadGroupes = store.dispatch('fetchGroupesSapeurs');
+
+  Promise.all([
+    loadSapeurs,
+    loadGroupes
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'groups',
   components: {
     Tree,
     ExerciceComptable
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   data() {
     return {
@@ -256,10 +275,6 @@ export default {
         // },
       ],
     };
-  },
-  created() {
-    this.$store.dispatch('fetchGroupesSapeurs');
-    this.$store.dispatch('fetchSapeurs');
   },
   computed: {
     ...mapState({
