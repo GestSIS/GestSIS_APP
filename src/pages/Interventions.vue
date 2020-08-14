@@ -65,31 +65,35 @@
               <div class="form-group col-md-4">
                 <select class="custom-select custom-select-sm" id="filterStatistique"
                   @change="event => onFilter('stat_federal_id', event.target.value)">
-                  <option>&lt;Statistiques Fédérales&gt;</option>
-                  <option>Lutte contre le feu</option>
-                  <option>Secours routiers</option>
-                  <option>Interventions diverses</option>
-                  <option>Défense chimique</option>
+                  <option>&lt;Statistique fédérale&gt;</option>
+                  <option
+                    v-for="stat in filteredStatFederal"
+                    :key="stat.id"
+                    :value="stat.id"
+                    >{{ stat.designation }}</option
+                  >
                 </select>
               </div>
               <div class="form-group col-md-4">
                 <select class="custom-select custom-select-sm" id="filterTraitement"
                   @change="event => onFilter('intervention_traitement_id', event.target.value)">
                   <option>&lt;Traitement&gt;</option>
-                  <option>-</option>
-                  <option>A Facturer</option>
-                  <option>Payé</option>
-                  <option>Facturée</option>
+                  <option
+                    v-for="traitement in listeTraitement"
+                    :key="traitement.id"
+                    :value="traitement.id"
+                    >{{ traitement.designation }}</option
+                  >
                 </select>
               </div>
               <div class="form-group col-md-4">
                 <select class="custom-select custom-select-sm" id="filterEtendue"
-                  @change="event => onFilter('degree', event.target.value)">
+                  @change="event => onFilter('degre', parseInt(event.target.value))">
                   <option>&lt;Etendue&gt;</option>
-                  <option>Fausse alarame</option>
-                  <option>Petite</option>
-                  <option>Moyenne</option>
-                  <option>Grande</option>
+                  <option value="1">Fausse alarame</option>
+                  <option value="2">Petite</option>
+                  <option value="3">Moyenne</option>
+                  <option value="4">Grande</option>
                 </select>
               </div>
             </div>
@@ -325,6 +329,8 @@ export default {
     ...mapState({
       listeInterventions: state => state.intervention.liste,
       listeInterventionsTypes: state => state.typeIntervention.liste,
+      listeStatFederal: state => state.statFederal.liste,
+      listeTraitement: state => state.interventionTraitement.liste,
       listeLocalites: state =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
@@ -344,6 +350,10 @@ export default {
     filteredLocalites() {
       const ids = new Set(this.listeInterventions.map(i => i.localite_id));
       return this.listeLocalites.filter(t => ids.has(t.id))
+    },
+    filteredStatFederal() {
+      const ids = new Set(this.listeInterventions.map(i => i.stat_federal_id));
+      return this.listeStatFederal.filter(t => ids.has(t.id))
     },
     filteredInterventions() {
       return this.listeInterventions.filter(
