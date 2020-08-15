@@ -18,14 +18,17 @@ export default {
     },
     [types.UPDATE_EXERCICE_STATUT](state, payload) {
       state.liste = [
-        ...state.liste.filter(e => e.id !== payload.id),
-        {
-          ...state.liste.filter(e => e.id === payload.id)[0],
-          statut: payload.statut
-        }
+        ...state.liste.map(e => {
+          if (e.id !== payload.id) {
+            return e;
+          } else {
+            return {
+              ...e,
+              statut: payload.statut
+            }
+          }
+        })
       ]
-        .slice(0)
-        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];

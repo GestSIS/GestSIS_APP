@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
@@ -15,7 +15,7 @@
           </ol>
         </nav>
       </div>
-      <div class="col-md-4 d-flex justify-content-end">
+      <div class="col-md-6 d-flex justify-content-end">
         <exercice-comptable />
       </div>
     </div>
@@ -74,9 +74,9 @@
               </router-link>
               <button
                 class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
                 v-if="props.rowData.statut === 2"
               >
+                <!-- @click="aa(props.rowData.id)" -->
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
             </div>
