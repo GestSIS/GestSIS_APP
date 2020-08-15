@@ -12,7 +12,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_GRADE_LIST](state, payload) {
+    [types.UPDATE_GRADE_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_GRADE](state, payload) {
@@ -30,7 +30,7 @@ export default {
   actions: {
     fetchGrades({ commit }) {
       return GradeService.getGrades().then(data =>
-        commit(types.UPDATE_GRADE_LIST, data)
+        commit(types.UPDATE_GRADE_LISTE, data)
       );
     },
     updateActiveGrade({ commit }, payload) {

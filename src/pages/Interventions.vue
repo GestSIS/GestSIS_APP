@@ -170,7 +170,7 @@ async function loadData(routeTo, next) {
 
   await store.dispatch('fetchExercicesComptables');
 
-  let loadExercices = store.dispatch('fetchListIntervention');
+  let loadExercices = store.dispatch('fetchListeIntervention');
   Promise.all([
     loadExercices,
     loadLocalities,
@@ -197,7 +197,7 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListIntervention').then(() => {
+      this.$store.dispatch('fetchListeIntervention').then(() => {
         this.loading = false;
         this.$refs.vuetable.setData(this.filteredInterventions);
       });

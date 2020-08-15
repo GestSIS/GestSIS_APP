@@ -35,10 +35,10 @@ export default {
         ...payload
       };
     },
-    [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
+    [types.UPDATE_ECRITURES_ANNUELS_LISTEE](state, payload) {
       state.ecritures.annuels = [...payload];
     },
-    [types.UPDATE_COMPTES_LISTE](state, payload) {
+    [types.UPDATE_COMPTES_LISTEE](state, payload) {
       state.comptes = payload;
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
@@ -54,7 +54,7 @@ export default {
   actions: {
     fetchComptes({ commit }) {
       return ComptabiliteService.getComptes().then(data =>
-        commit(types.UPDATE_COMPTES_LISTE, data)
+        commit(types.UPDATE_COMPTES_LISTEE, data)
       );
     },
     selectActiveCompte({ commit, dispatch }, payload) {
@@ -82,7 +82,7 @@ export default {
     fetchEcrituresAnnuels({ commit, getters }) {
       return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
+      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTEE, data));
     },
     imputerExercice({ commit }, payload) {
       return ComptabiliteService.imputerExercice(
@@ -112,7 +112,7 @@ export default {
       return ComptabiliteService.imputerAnnuel(
         getters.currentExerciceComptableId
       ).then(data => {
-        commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
+        commit(types.UPDATE_ECRITURES_ANNUELS_LISTEE, [
           ...data.indemnites,
           ...data.frais
         ]);

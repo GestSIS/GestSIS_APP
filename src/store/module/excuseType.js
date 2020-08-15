@@ -7,7 +7,7 @@ export default {
     activeExcuseTypeId: null
   },
   mutations: {
-    [types.UPDATE_EXCUSE_TYPE_LIST](state, payload) {
+    [types.UPDATE_EXCUSE_TYPE_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.SELECT_EXCUSE_TYPE](state, payload) {
@@ -22,7 +22,7 @@ export default {
   actions: {
     fetchExcuseTypes({ commit }) {
       return ExcuseTypeService.getExcuses().then(data =>
-        commit(types.UPDATE_EXCUSE_TYPE_LIST, data)
+        commit(types.UPDATE_EXCUSE_TYPE_LISTE, data)
       );
     },
     selectExcuseType({ commit }, excuse_type_id) {

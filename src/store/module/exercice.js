@@ -11,7 +11,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_EXERCICE_LIST](state, payload) {
+    [types.UPDATE_EXERCICE_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
@@ -54,10 +54,10 @@ export default {
     }
   },
   actions: {
-    fetchListExercice({ getters, commit }) {
+    fetchListeExercice({ getters, commit }) {
       return ExerciceService.getExercices(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_EXERCICE_LIST, data));
+      ).then(data => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
     fetchExercice({ commit }, payload) {
       return ExerciceService.getExercice(payload).then(data =>

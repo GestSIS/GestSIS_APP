@@ -102,7 +102,7 @@ export default {
     ExerciceComptable
   },
   beforeCreate() {
-    this.$store.dispatch('fetchListSapeur')
+    this.$store.dispatch('fetchListeSapeur')
   },
   data() {
     return {

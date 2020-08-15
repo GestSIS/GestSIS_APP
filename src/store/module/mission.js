@@ -6,14 +6,14 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_MISSION_LIST](state, payload) {
+    [types.UPDATE_MISSION_LISTE](state, payload) {
       state.liste = payload;
     }
   },
   actions: {
     fetchMissions({ commit }) {
       return MissionService.getMissions().then(data =>
-        commit(types.UPDATE_MISSION_LIST, data)
+        commit(types.UPDATE_MISSION_LISTE, data)
       );
     }
   }

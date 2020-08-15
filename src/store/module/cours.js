@@ -18,7 +18,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_COURS_LIST](state, payload) {
+    [types.UPDATE_COURS_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
@@ -31,7 +31,7 @@ export default {
   actions: {
     fetchCours({ commit }) {
       return CoursService.getCours().then(data =>
-        commit(types.UPDATE_COURS_LIST, data)
+        commit(types.UPDATE_COURS_LISTE, data)
       );
     },
     updateActiveCours({ commit }, payload) {

@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_TELEPHONE_LIST](state, payload) {
+    [types.UPDATE_TELEPHONE_LISTE](state, payload) {
       state.liste = payload;
     }
   },
@@ -16,7 +16,7 @@ export default {
         return Promise.resolve();
       } else {
         return TelephoneService.getTelephones().then(data =>
-          commit(types.UPDATE_TELEPHONE_LIST, data)
+          commit(types.UPDATE_TELEPHONE_LISTE, data)
         );
       }
     }

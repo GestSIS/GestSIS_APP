@@ -99,12 +99,12 @@ import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListSapeur');
-  // let loadControlesTypes = store.dispatch('fetchControlesTypes');
-  // let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  let loadMedecins = store.dispatch('fetchMedecins');
+  let loadControlesMedicauxTypes = store.dispatch('fetchControlesMedicauxTypes');
+  let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
-  Promise.all([loadSapeurs]).then(
-    //, loadControlesTypes, loadControlesMedicaux]).then(
+  Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControlesMedicaux]).then(
     () => {
       next();
     }
@@ -203,7 +203,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listExercices: state => state.exercice.liste,
+      listExercices: state => state.controleMedicaux.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters(['getSapeur', 'getLocalite', 'getMedecin']),

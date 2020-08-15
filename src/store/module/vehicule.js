@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_VEHICULE_LIST](state, payload) {
+    [types.UPDATE_VEHICULE_LISTE](state, payload) {
       state.liste = payload;
     }
   },
@@ -17,7 +17,7 @@ export default {
   actions: {
     fetchVehicules({ commit }) {
       return VehiculeService.getVehicules().then(data =>
-        commit(types.UPDATE_VEHICULE_LIST, data)
+        commit(types.UPDATE_VEHICULE_LISTE, data)
       );
     }
   }

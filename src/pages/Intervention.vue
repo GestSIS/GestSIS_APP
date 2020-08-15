@@ -145,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchListeSapeur');
     this.$store.dispatch('fetchLocalites');
     this.$store.dispatch('fetchInterventionTraitements');
     this.$store.dispatch('fetchExercicesComptables');

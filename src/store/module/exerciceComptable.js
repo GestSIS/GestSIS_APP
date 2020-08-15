@@ -7,7 +7,7 @@ export default {
     activeId: null
   },
   mutations: {
-    [types.UPDATE_EXERCICE_COMPTABLE_LIST](state, payload) {
+    [types.UPDATE_EXERCICE_COMPTABLE_LISTE](state, payload) {
       state.liste = payload;
       if ((state.activeId || 0) === 0) {
         state.activeId = payload.sort((e1, e2) => e2.annee - e1.annee)[0].id;
@@ -33,7 +33,7 @@ export default {
         return Promise.resolve();
       } else {
         return ExerciceComptableService.getExercices().then(data =>
-          commit(types.UPDATE_EXERCICE_COMPTABLE_LIST, data)
+          commit(types.UPDATE_EXERCICE_COMPTABLE_LISTE, data)
         );
       }
     },

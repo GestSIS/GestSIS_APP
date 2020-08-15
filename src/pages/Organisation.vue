@@ -21,7 +21,7 @@
       <div class="col-md-12">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
-            <span></span>
+            <h3>Groupes</h3>
             <button class="btn btn-outline-primary">
               Save
             </button>
@@ -43,7 +43,7 @@ import Tree from '@/components/tree/Tree.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListSapeur');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadGroupes = store.dispatch('fetchGroupesSapeurs');
 
   Promise.all([

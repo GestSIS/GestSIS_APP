@@ -17,7 +17,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_INTERVENTION_LIST](state, payload) {
+    [types.UPDATE_INTERVENTION_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.ADD_INTERVENTION](state, payload) {
@@ -128,10 +128,10 @@ export default {
     }
   },
   actions: {
-    fetchListIntervention({ getters, commit }) {
+    fetchListeIntervention({ getters, commit }) {
       return InterventionService.getInterventions(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_INTERVENTION_LIST, data));
+      ).then(data => commit(types.UPDATE_INTERVENTION_LISTE, data));
     },
     fetchIntervention({ commit }, payload) {
       return InterventionService.getIntervention(payload).then(data =>

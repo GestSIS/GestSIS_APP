@@ -82,7 +82,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchListeSapeur');
     if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }

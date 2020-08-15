@@ -1,19 +1,19 @@
 import types from '../mutationTypes';
-import VehiculeService from '../../services/ControlesMedicauxService';
+import ControlesMedicauxService from '../../services/ControlesMedicauxService';
 
 export default {
   state: {
     liste: []
   },
   mutations: {
-    [types.UPDATE_CONTROLE_MEDICAUX_LIST](state, payload) {
+    [types.UPDATE_CONTROLE_MEDICAUX_LISTE](state, payload) {
       state.liste = payload;
     }
   },
   actions: {
     fetchControlesMedicaux({ commit }) {
-      return VehiculeService.getVehicules().then(data =>
-        commit(types.UPDATE_CONTROLE_MEDICAUX_LIST, data)
+      return ControlesMedicauxService.getControlesMedicaux().then(data =>
+        commit(types.UPDATE_CONTROLE_MEDICAUX_LISTE, data)
       );
     }
   }

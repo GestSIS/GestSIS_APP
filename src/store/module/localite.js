@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_LOCALITE_LIST](state, payload) {
+    [types.UPDATE_LOCALITE_LISTE](state, payload) {
       state.liste = payload;
     }
   },
@@ -22,7 +22,7 @@ export default {
         return Promise.resolve();
       } else {
         return LocaliteService.getLocalites().then(data =>
-          commit(types.UPDATE_LOCALITE_LIST, data)
+          commit(types.UPDATE_LOCALITE_LISTE, data)
         );
       }
     }

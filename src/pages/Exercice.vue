@@ -97,7 +97,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchListeSapeur');
     this.$store.dispatch('fetchLocalites');
     this.$store.dispatch('fetchExerciceCategories');
     this.$store.dispatch('fetchExercicesComptables');
