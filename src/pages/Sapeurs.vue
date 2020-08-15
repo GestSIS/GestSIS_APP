@@ -75,7 +75,7 @@
               :key="sapeur.id"
               class="list-group-item list-group-item-action"
               :class="{
-                active: activeSapeurId === sapeur.id
+                active: activeSapeurId === sapeur.id,
               }"
             >
               {{ sapeur.nom }} {{ sapeur.prenom }}
@@ -94,35 +94,54 @@
 </template>
 
 <script>
+import store from '@/store/index';
+
 import { mapState } from 'vuex';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
+const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
+  if (
+    (!('id' in routeTo.params) || !routeTo.params.id) &&
+    store.state.sapeur.active.id > 0
+  ) {
+    next({ name: 'sapeurs-details', params: { id: store.state.sapeur.active.id } });
+  } else {
+    next();
+  }
+}
+
 export default {
   components: {
-    ExerciceComptable
+    ExerciceComptable,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
   },
   beforeCreate() {
-    this.$store.dispatch('fetchListeSapeur')
+    this.$store.dispatch('fetchListeSapeur');
   },
   data() {
     return {
       filter: 'actif',
       filters: {
-        actif: s => s.actif === 1,
-        inactif: s => s.actif === 0,
-        all: () => true
-      }
+        actif: (s) => s.actif === 1,
+        inactif: (s) => s.actif === 0,
+        all: () => true,
+      },
     };
   },
   computed: {
     ...mapState({
-      listSapeur: state => state.sapeur.liste,
-      activeSapeurId: state => state.sapeur.active.id
+      listSapeur: (state) => state.sapeur.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
     }),
     filteredSapeurs() {
       return this.listSapeur.filter(this.filters[this.filter]);
-    }
-  }
+    },
+  },
 };
 </script>
 
