@@ -62,6 +62,11 @@ const router = new Router({
       component: () => import('@/pages/Exercices.vue')
     },
     {
+      path: '/organisation',
+      name: 'organisation',
+      component: () => import('@/pages/Organisation.vue')
+    },
+    {
       path: '/interventions/:id',
       name: 'intervention',
       props: true,

@@ -23,7 +23,16 @@ import {
   faHourglassEnd,
   faFileInvoiceDollar,
   faCheck,
-  faInfoCircle
+  faInfoCircle,
+  faMars,
+  faVenus,
+  faMedal,
+  faBook,
+  faAward,
+  faSortAlphaUpAlt,
+  faScroll,
+  faCar,
+  faBirthdayCake,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -33,7 +42,7 @@ import {
   faTrashAlt,
   faQuestionCircle,
   faPlusSquare,
-  faClock
+  faClock,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
@@ -67,5 +76,14 @@ library.add(
   faHourglassEnd,
   faFileInvoiceDollar,
   faCheck,
-  faInfoCircle
+  faInfoCircle,
+  faMars,
+  faVenus,
+  faMedal,
+  faBook,
+  faAward,
+  faSortAlphaUpAlt,
+  faScroll,
+  faCar,
+  faBirthdayCake
 );
