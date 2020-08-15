@@ -123,11 +123,6 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  watch: {
-    listControles() {
-      this.$refs.vuetable_mediaux.setData(this.computedData);
-    }
-  },
   mounted() {
     this.$refs.vuetable_mediaux.setData(this.computedData);
     this.loading = false;
@@ -203,17 +198,23 @@ export default {
   },
   computed: {
     ...mapState({
-      listExercices: state => state.controleMedicaux.liste,
+      listeControlesMedicaux: state => state.controlesMedicaux.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters(['getSapeur', 'getLocalite', 'getMedecin']),
+    ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
     computedData() {
-      return this.listExercices.map(s => ({
-        ...s,
-        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-          .designation,
-        localite: this.getLocalite(s.localite_id).designation
-      }));
+      const now = Date.now();
+      return this.listeControlesMedicaux.map(s => {
+        const sapeur = this.getSapeur(s.sapeur_id);
+        var age = Math.floor(((now - new Date(sapeur.date_naissance).getTime()) / 1000 / (60 * 60 * 24))/365.25);
+        return {
+          ...s,
+          sapeur: `${sapeur.nom} ${sapeur.prenom}`,
+          age,
+          type: this.getControleMedicalType(s.controle_medical_type_id).designation,
+          medecin: this.getMedecin(s.medecin_id).designation
+        };
+      });
     }
   },
   methods: {

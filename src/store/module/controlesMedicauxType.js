@@ -11,10 +11,13 @@ export default {
     }
   },
   actions: {
-    fetchControlesMedicaux({ commit }) {
+    fetchControlesMedicauxTypes({ commit }) {
       return ControlesMedicauxTypeService.getTypes().then(data =>
         commit(types.UPDATE_CONTROLE_MEDICAUX_TYPES_LISTE, data)
       );
     }
+  },
+  getters: {
+    getControleMedicalType: state => id => state.liste.filter(s => s.id === id)[0],
   }
 };

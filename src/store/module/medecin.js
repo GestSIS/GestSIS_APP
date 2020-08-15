@@ -16,5 +16,8 @@ export default {
         commit(types.UPDATE_MEDECIN_LISTE, data)
       );
     }
+  },
+  getters: {
+    getMedecin: state => id => state.liste.filter(s => s.id === id)[0],
   }
 };
