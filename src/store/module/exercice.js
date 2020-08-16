@@ -77,6 +77,7 @@ export default {
     },
     resetActiveExercice({ commit, getters }) {
       commit(types.SELECT_CURRENT_EXERCICE, null);
+      commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, []);
       return commit(types.UPDATE_CURRENT_EXERCICE_DATA, {
         id: null,
         localite_id: null,
