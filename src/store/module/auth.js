@@ -65,6 +65,7 @@ export default {
         }).catch(e => {
           console.log("Disconnected")
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          //TODO: Redirect to home page or login page
           return e;
         });
       }

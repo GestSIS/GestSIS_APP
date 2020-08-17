@@ -283,8 +283,6 @@ import SapeurMutations from '@/components/sapeur/SapeurMutations';
 import SapeurTelephones from '@/components/sapeur/SapeurTelephones';
 
 async function loadData(routeTo, next) {
-  console.log('Status');
-  console.log(store.state);
   let loadTelephones = store.dispatch('fetchTelephones');
   let loadLocalites = store.dispatch('fetchLocalites');
   let loadTelephonesType = store.dispatch('fetchSapeurTelephones');

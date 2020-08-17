@@ -30,12 +30,12 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Infos</h5>
             <button class="btn btn-outline-primary" @click="save">
-              Contrôle médical
+              {{ modeAjout ? 'Ajouter' : 'Enregistrer' }}
             </button>
           </div>
           <div class="card-body">
             <!-- NOM -->
-            <div class="form-group">
+            <div class="form-group" v-if="!modeAjout">
               <label for="m-exe-des">Sapeur</label>
               <input
                 type="text"
@@ -43,8 +43,26 @@
                 :class="{ 'is-invalid': errors['designation'] }"
                 id="m-exe-des"
                 name="nom"
-                v-model="activeControle.sapeur"
+                readonly
+                :value="sapeurName"
               />
+            </div>
+            <div class="form-group" v-else>
+              <label for="m-exe-des">Sapeur</label>
+              <select
+                class="custom-select required"
+                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
+                id="m-sap-cat"
+                style="width: 100%"
+                v-model="controleMedical.sapeur_id"
+              >
+                <option
+                  v-for="sapeur in listeSapeurs"
+                  :key="sapeur.id"
+                  :value="sapeur.id"
+                  >{{ sapeur.nom }} {{ sapeur.prenom }}</option
+                >
+              </select>
             </div>
             <!-- MEDECIN -->
             <div class="form-group">
@@ -54,13 +72,13 @@
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
-                v-model="activeControle.medecin"
+                v-model="controleMedical.medecin_id"
               >
                 <option
-                  v-for="medecin in medecins"
+                  v-for="medecin in listeMedecins"
                   :key="medecin.id"
                   :value="medecin.id"
-                  >{{ medecin.nom }}</option
+                  >{{ medecin.designation }}</option
                 >
               </select>
             </div>
@@ -72,9 +90,9 @@
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
-                v-model="activeControle.type"
+                v-model="controleMedical.controle_medical_type_id"
               >
-                <option v-for="t in types" :key="t.id" :value="t.id">{{
+                <option v-for="t in listeControlesTypes" :key="t.id" :value="t.id">{{
                   t.designation
                 }}</option>
               </select>
@@ -96,7 +114,7 @@
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="consultation"
-                      v-model="activeControle.consultation"
+                      v-model="controleMedical.consultation"
                     />
                   </div>
                 </div>
@@ -117,66 +135,9 @@
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="validite"
-                      v-model="activeControle.validite"
+                      v-model="controleMedical.validite"
                     />
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <!-- DUREE -->
-                <div class="form-group">
-                  <label for="m-exe-duree">Durée</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <font-awesome-icon :icon="['fas', 'hourglass-end']" />
-                      </div>
-                    </div>
-                    <input
-                      type="number"
-                      class="form-control"
-                      :class="{ 'is-invalid': errors['duree'] }"
-                      min="1"
-                      max="780"
-                      id="m-exe-duree"
-                      name="nom"
-                    />
-                    <div class="input-group-append">
-                      <span class="input-group-text">min</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <!-- LOCALITE -->
-                <div class="form-group">
-                  <label for="m-sap-localite">Localité</label>
-                  <select
-                    class="custom-select required"
-                    :class="{ 'is-invalid': errors['localite_id'] }"
-                    id="m-sap-localite"
-                    name="localite_id"
-                    style="width: 100%"
-                  >
-                    <option>TODO</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-6">
-                <!-- LIEU -->
-                <div class="form-group">
-                  <label for="m-exe-lieu">Lieu</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    :class="{ 'is-invalid': errors['lieu'] }"
-                    id="m-exe-lieu"
-                    name="nom"
-                  />
                 </div>
               </div>
             </div>
@@ -209,39 +170,43 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+
+function loadData(routeTo, next) {
+  const idControle = parseInt(routeTo.params.id);
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadMedecins = store.dispatch('fetchMedecins');
+  const loadControlesMedicauxTypes = store.dispatch('fetchControlesMedicauxTypes');
+  
+  let loadControleMedicale = idControle > 0 ?
+    store.dispatch('fetchControleMedical', idControle) :
+    store.dispatch('resetControleMedical');
+
+  Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControleMedicale]).then(
+    () => {
+      next();
+    }
+  );
+}
 
 export default {
   name: 'controleMedical',
   components: {
     ExerciceComptable
   },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       errors: {},
-      loading: true,
-      activeControle: {
-        sapeur: 'Jacques Robuchon',
-        medecin: 1,
-        type: 1,
-        accepte: true,
-        actif: true,
-        consultation: '2000-12-12',
-        validite: '2005-12-12',
-        designation: 'Test'
-      },
-      medecins: [
-        { id: 1, nom: 'Jackpot' },
-        { id: 2, nom: 'Test' },
-        { id: 3, nom: 'Petunia' }
-      ],
-      types: [
-        { id: 1, designation: 'Jackpot' },
-        { id: 2, designation: 'Test' },
-        { id: 3, designation: 'Petunia' }
-      ]
+      loading: true
     };
   },
   props: {
@@ -250,8 +215,23 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['getSapeur']),
+    ...mapState({
+      controleMedical: state => state.controleMedical.active.data,
+      listeMedecins: state => state.medecin.liste,
+      listeSapeurs: state => state.sapeur.liste,
+      listeControlesTypes: state => state.controlesMedicauxType.liste,
+      currentExerciceComptableId: state => state.exerciceComptable.activeId
+    }),
     breadcrumbFinal() {
-      return this.activeControle.designation;
+      return this.controleMedical.designation;
+    },
+    sapeurName() {
+      const sapeur = this.getSapeur(this.controleMedical.sapeur_id);
+      return sapeur ? `${sapeur.nom} ${sapeur.prenom}` : '';
+    },
+    modeAjout() {
+      return !parseInt(this.id) > 0;
     }
   },
   methods: {

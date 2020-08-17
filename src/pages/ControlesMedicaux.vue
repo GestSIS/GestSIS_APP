@@ -67,7 +67,7 @@
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
-                :to="'/exercices/' + props.rowData.id"
+                :to="{name:'controle-medical', params:{'id':props.rowData.id}}"
                 class="btn btn-outline-primary border-0"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
@@ -198,7 +198,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeControlesMedicaux: state => state.controlesMedicaux.liste,
+      listeControlesMedicaux: state => state.controleMedical.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
     ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
