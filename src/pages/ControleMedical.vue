@@ -98,7 +98,7 @@
               </select>
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-12 col-xl-6">
                 <!-- CONSULTATION -->
                 <div class="form-group">
                   <label for="m-exe-date">Consultation</label>
@@ -119,7 +119,16 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-4 d-xl-none" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(1)">+1</button>
+              </div>
+              <div class="col-4 d-xl-none" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(2)">+2</button>
+              </div>
+              <div class="col-4 d-xl-none" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(5)">+5</button>
+              </div>
+              <div class="col-12 col-xl-6" v-if="expirable">
                 <!-- Validité -->
                 <div class="form-group">
                   <label for="m-exe-date">Validité</label>
@@ -139,6 +148,15 @@
                     />
                   </div>
                 </div>
+              </div>
+              <div class="col-4 d-none d-xl-block" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(1)">+1</button>
+              </div>
+              <div class="col-4 d-none d-xl-block" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(2)">+2</button>
+              </div>
+              <div class="col-4 d-none d-xl-block" v-if="expirable">
+                <button class="btn btn-primary btn-block" @click="validite(5)">+5</button>
               </div>
             </div>
             <div class="form-group">
@@ -232,10 +250,21 @@ export default {
     },
     modeAjout() {
       return !parseInt(this.id) > 0;
+    },
+    expirable() {
+      const types = this.listeControlesTypes.filter(t => t.id === this.controleMedical.controle_medical_type_id);
+      return types.length > 0 && types[0].expirable;
     }
   },
   methods: {
-    save() {}
+    save() {},
+    validite(duree) {
+      var d = new Date(this.controleMedical.consultation || Date.now());
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+      this.controleMedical.validite = `${year+duree}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`;
+    }
   }
 };
 </script>
