@@ -16,6 +16,20 @@ const request = {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   },
 
+  apiFileDownload() {
+    let api = axios.create({
+      baseURL: API_URL,
+      responseType: 'blob',
+      headers: {
+        'Accept': 'application/pdf',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
+    });
+
+    return api;
+  },
+
   api() {
     let api = axios.create({
       baseURL: API_URL,

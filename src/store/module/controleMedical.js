@@ -6,7 +6,7 @@ export default {
     liste: [],
     active: {
       id: null,
-      data: {},
+      data: {}
     }
   },
   mutations: {
@@ -19,7 +19,15 @@ export default {
     },
     [types.RESET_CURRENT_CONTROLE_MEDICAL](state) {
       state.active.id = null;
-      state.active.data = {};
+      state.active.data = {
+        designation: '',
+        validite: '',
+        sapeur_id: '',
+        medecin_id: '',
+        consultation: '',
+        validite: '',
+        accepter: 0
+      };
     }
   },
   actions: {
@@ -35,6 +43,47 @@ export default {
     },
     resetControleMedical({ commit }) {
       return commit(types.RESET_CURRENT_CONTROLE_MEDICAL)
-    }
+    },
+
+    createControleMedical({ commit, state }, payload) {
+      return ControlesMedicauxService.createControleMedical(
+        payload || state.active.data
+      ).then(
+        data => {
+          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
+          return data;
+        }
+      );
+    },
+
+    updateControleMedical({ commit, state }, payload) {
+      return ControlesMedicauxService.updateControleMedical(
+        state.active.data.id,
+        payload || state.active.data
+      ).then(
+        data => {
+          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
+          return data;
+        }
+      )
+    },
+
+    addJustificatif({ state, commit }, justificatif) {
+      return ControlesMedicauxService.addJustificatif(state.active.id, justificatif).then(
+        data => {
+          commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
+          return data;
+        }
+      );
+    },
+
+    removeJustificatif({ state, commit }, justificatifId) {
+      return ControlesMedicauxService.removeJustificatif(state.active.id, telephoneId).then(
+        data =>
+          commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, telephoneId).then(
+            () => data
+          )
+      );
+    },
   }
 };

@@ -27,7 +27,7 @@
             <h3>Liste des contrôles médicaux</h3>
             <router-link
               tag="button"
-              to="/exercices/new"
+              to="/controles-medicaux/ajout"
               class="btn btn-outline-primary"
             >
               Ajouter
