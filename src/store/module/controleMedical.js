@@ -71,16 +71,16 @@ export default {
     addJustificatif({ state, commit }, justificatif) {
       return ControlesMedicauxService.addJustificatif(state.active.id, justificatif).then(
         data => {
-          commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
+          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
           return data;
         }
       );
     },
 
-    removeJustificatif({ state, commit }, justificatifId) {
-      return ControlesMedicauxService.removeJustificatif(state.active.id, telephoneId).then(
+    removeJustificatif({ state, commit }, controleMedicalId) {
+      return ControlesMedicauxService.removeJustificatif(controleMedicalId || state.active.id).then(
         data =>
-          commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, telephoneId).then(
+          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data).then(
             () => data
           )
       );

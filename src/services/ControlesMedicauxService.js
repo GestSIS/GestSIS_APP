@@ -20,15 +20,15 @@ export default {
   addJustificatif(id, file) {
     const form = new FormData();
     form.append('justificatif', file)
-    return Api.api().post('/controles-medicaux/' + id + '/justificatifs/', form,
+    return Api.api().post('/controles-medicaux/' + id + '/justificatif/', form,
     {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
   },
-  getJustificatif(controleMedicalId, justificatifId) {
-    return Api.apiFileDownload().get(`/controles-medicaux/${controleMedicalId}/justificatifs/${justificatifId}`)
+  getJustificatif(controleMedicalId) {
+    return Api.apiFileDownload().get(`/controles-medicaux/${controleMedicalId}/justificatif/`)
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
@@ -41,9 +41,9 @@ export default {
         window.URL.revokeObjectURL(url);
       });
   },
-  removeJustificatif(controleMedicalId, justificatifId) {
+  removeJustificatif(controleMedicalId) {
     return Api.api().delete(
-      '/controles-medicaux/' + controleMedicalId + '/justificatifs/' + justificatifId
+      '/controles-medicaux/' + controleMedicalId + '/justificatif/'
     );
   }
 };

@@ -205,21 +205,48 @@
       <div class="col-lg-8 col-12">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
-            <h5>Documents</h5>
+            <h5>Document</h5>
             <button class="btn btn-outline-primary" @click="ajoutJustificatif">
               Ajouter
             </button>
           </div>
           <div class="card-body">
-            <p>Aucun document actuellement</p>
-            <div
-              v-for="justificatif in controleMedical.justificatifs"
-              :key="justificatif.id"
-            >
-              {{ justificatif.filename }}
-              <a :href="'http://localhost:8000/api/v2/controles-medicaux/'+id+'/justificatifs/'+justificatif.id" download>Here</a>
-              <button @click="openJustificatif(justificatif)">Open</button>
+            <div v-if="controleMedical.filename">
+              {{ controleMedical.filename }}
+              <a :href="'http://localhost:8000/api/v2/controles-medicaux/'+id+'/justificatif/'" download>Here</a>
+              <button @click="downloadJustificatif()">Open</button>
             </div>
+            <p v-else>Aucun document actuellement</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Handle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Larry</td>
+                  <td>the Bird</td>
+                  <td>@twitter</td>
+                </tr>
+              </tbody>
+            </table>
 
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -325,8 +352,8 @@ export default {
     },
   },
   methods: {
-    openJustificatif(justificatif) {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id ,justificatif.id);
+    downloadJustificatif() {
+      ControlesMedicauxService.getJustificatif(this.controleMedical.id);
     },
     save() {
       if (this.modeAjout) {
