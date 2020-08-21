@@ -184,8 +184,8 @@ export default {
               .dispatch('removeSapeurs', removedSapeurs)
               .then(resolve)
               .catch((error) => {
-                console.error('remove sap error');
-                console.error(error);
+                // console.error('remove sap error');
+                // console.error(error);
                 reject("Erreur lors de l'opération");
               });
           }
