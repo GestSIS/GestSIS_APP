@@ -206,23 +206,17 @@
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Document</h5>
-            <button class="btn btn-outline-primary" @click="ajoutJustificatif">
-              Ajouter
-            </button>
           </div>
           <div class="card-body">
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
-              <a :href="'http://localhost:8000/api/v2/controles-medicaux/'+id+'/justificatif/'" download>Here</a>
-              <button @click="downloadJustificatif()">Download</button>
-              <button @click="displayJustificatif()">Display</button>
-              <button @click="removeJustificatif()">Supprimer</button>
+              <button class="btn btn-outline-primary ml-2" @click="downloadJustificatif()">Download</button>
+              <!-- TODO Affichage du fichier pdf -->
+              <!-- <button class="btn btn-outline-primary ml-2" @click="displayJustificatif()">Display</button> -->
+              <button class="btn btn-outline-primary ml-2" @click="removeJustificatif()">Supprimer</button>
             </div>
-            <p v-else>Aucun document actuellement</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-              </div>
+            <div class="input-group mb-3" v-else>
+              <p class="w-100">Aucun document</p>
               <div class="custom-file">
                 <input
                   type="file"
@@ -232,8 +226,11 @@
                   accept="application/pdf"
                   ref="file-justificatif"
                 >
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                <label class="custom-file-label" for="inputGroupFile01">Choisissez un fichier</label>
               </div>
+              <button class="btn btn-outline-primary ml-2" @click="ajoutJustificatif" v-if="!controleMedical.filename">
+                Ajouter
+              </button>
             </div>
             <div v-if="pdfData3">
               <pdf-viewer :pdf-data="pdfUri"></pdf-viewer>
