@@ -217,7 +217,7 @@ export default {
   },
   mounted() {
     this.loading = false;
-    this.$refs.vuetable.setData(data);
+    this.$refs.vuetable.setData(this.filteredInterventions);
   },
   data() {
     const self = this;
