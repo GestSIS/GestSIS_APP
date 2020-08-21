@@ -214,40 +214,10 @@
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
               <a :href="'http://localhost:8000/api/v2/controles-medicaux/'+id+'/justificatif/'" download>Here</a>
-              <button @click="downloadJustificatif()">Open</button>
+              <button @click="downloadJustificatif()">Download</button>
+              <button @click="displayJustificatif()">Display</button>
             </div>
             <p v-else>Aucun document actuellement</p>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
-            </table>
-
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
@@ -264,7 +234,9 @@
                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
               </div>
             </div>
-            
+            <div v-if="pdfData3">
+              <pdf-viewer :pdf-data="pdfUri"></pdf-viewer>
+            </div>
           </div>
         </div>
       </div>
@@ -279,6 +251,7 @@ import store from '@/store/index';
 import ControlesMedicauxService from '@/services/ControlesMedicauxService';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import PdfViewer from '@/components/pdf/PdfViewer';
 
 function loadData(routeTo, next) {
   const idControle = parseInt(routeTo.params.id);
@@ -307,6 +280,7 @@ export default {
   name: 'controleMedical',
   components: {
     ExerciceComptable,
+    PdfViewer
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -318,6 +292,10 @@ export default {
     return {
       errors: {},
       loading: true,
+      pdfData1: null,
+      pdfData2: null,
+      pdfData3: null,
+      pdfUri: null
     };
   },
   props: {
@@ -353,7 +331,30 @@ export default {
   },
   methods: {
     downloadJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id);
+      ControlesMedicauxService.getJustificatif(this.controleMedical.id)
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        // link.target = '_blank' // If we want to open it in another tab
+        console.log(response);
+        link.setAttribute('download', 'file.pdf')
+        // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
+        link.click();
+        window.URL.revokeObjectURL(url);
+      });
+    },
+    displayJustificatif() {
+      ControlesMedicauxService.getJustificatif(this.controleMedical.id)
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          // this.pdfUri = url;
+          this.pdfUri = URL.createObjectURL(new Blob([response.data]));
+          this.pdfData1 = new Blob([response.data]);
+          this.pdfData2 = new Blob([response.data], {type: 'application/pdf'});
+          this.pdfData3 = response.data;
+          window.URL.revokeObjectURL(url);
+        });
     },
     save() {
       if (this.modeAjout) {

@@ -19,7 +19,7 @@ const request = {
   apiFileDownload() {
     let api = axios.create({
       baseURL: API_URL,
-      responseType: 'blob',
+      responseType: 'array',
       headers: {
         'Accept': 'application/pdf',
         'Content-Type': 'application/json',

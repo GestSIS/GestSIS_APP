@@ -43,27 +43,11 @@
             ref="vuetable_mediaux"
             :api-mode="false"
             :fields="fields"
-            :detail-row-component="detailRow"
             detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
           >
-            <div slot="details" slot-scope="props">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
@@ -155,13 +139,14 @@ export default {
         },
         {
           title: 'Consultation',
-          name: 'date',
-          sortField: 'date',
+          name: 'consultation',
+          sortField: 'consultation',
           dataClass: 'align-middle'
         },
         {
           title: 'Validité',
-          name: 'validité',
+          name: 'validite',
+          sortField: 'validite',
           dataClass: 'align-middle'
         },
         {
@@ -218,13 +203,6 @@ export default {
     }
   },
   methods: {
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id]
-      };
-      this.$refs.vuetable_mediaux.toggleDetailRow(id);
-    },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },

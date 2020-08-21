@@ -62,7 +62,6 @@ export default {
         p.then(data => {
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
         }).catch(e => {
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
           commit(types.AUTH_LOGOUT)
           //TODO: Redirect to home page or login page
           return e;
