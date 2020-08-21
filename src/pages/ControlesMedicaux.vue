@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
@@ -15,7 +15,7 @@
           </ol>
         </nav>
       </div>
-      <div class="col-md-4 d-flex justify-content-end">
+      <div class="col-md-6 d-flex justify-content-end">
         <exercice-comptable />
       </div>
     </div>
@@ -27,7 +27,7 @@
             <h3>Liste des contrôles médicaux</h3>
             <router-link
               tag="button"
-              to="/exercices/new"
+              to="/controles-medicaux/ajout"
               class="btn btn-outline-primary"
             >
               Ajouter
@@ -43,40 +43,24 @@
             ref="vuetable_mediaux"
             :api-mode="false"
             :fields="fields"
-            :detail-row-component="detailRow"
             detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
           >
-            <div slot="details" slot-scope="props">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
-                :to="'/exercices/' + props.rowData.id"
+                :to="{name:'controle-medical', params:{'id':props.rowData.id}}"
                 class="btn btn-outline-primary border-0"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </router-link>
               <button
                 class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
                 v-if="props.rowData.statut === 2"
               >
+                <!-- @click="aa(props.rowData.id)" -->
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
             </div>
@@ -99,12 +83,12 @@ import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListSapeur');
-  // let loadControlesTypes = store.dispatch('fetchControlesTypes');
-  // let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  let loadMedecins = store.dispatch('fetchMedecins');
+  let loadControlesMedicauxTypes = store.dispatch('fetchControlesMedicauxTypes');
+  let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
-  Promise.all([loadSapeurs]).then(
-    //, loadControlesTypes, loadControlesMedicaux]).then(
+  Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControlesMedicaux]).then(
     () => {
       next();
     }
@@ -122,11 +106,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  watch: {
-    listControles() {
-      this.$refs.vuetable_mediaux.setData(this.computedData);
-    }
   },
   mounted() {
     this.$refs.vuetable_mediaux.setData(this.computedData);
@@ -160,13 +139,14 @@ export default {
         },
         {
           title: 'Consultation',
-          name: 'date',
-          sortField: 'date',
+          name: 'consultation',
+          sortField: 'consultation',
           dataClass: 'align-middle'
         },
         {
           title: 'Validité',
-          name: 'validité',
+          name: 'validite',
+          sortField: 'validite',
           dataClass: 'align-middle'
         },
         {
@@ -203,27 +183,26 @@ export default {
   },
   computed: {
     ...mapState({
-      listExercices: state => state.exercice.liste,
+      listeControlesMedicaux: state => state.controleMedical.liste,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters(['getSapeur', 'getLocalite', 'getMedecin']),
+    ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
     computedData() {
-      return this.listExercices.map(s => ({
-        ...s,
-        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-          .designation,
-        localite: this.getLocalite(s.localite_id).designation
-      }));
+      const now = Date.now();
+      return this.listeControlesMedicaux.map(s => {
+        const sapeur = this.getSapeur(s.sapeur_id);
+        var age = Math.floor(((now - new Date(sapeur.date_naissance).getTime()) / 1000 / (60 * 60 * 24))/365.25);
+        return {
+          ...s,
+          sapeur: `${sapeur.nom} ${sapeur.prenom}`,
+          age,
+          type: this.getControleMedicalType(s.controle_medical_type_id).designation,
+          medecin: this.getMedecin(s.medecin_id).designation
+        };
+      });
     }
   },
   methods: {
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id]
-      };
-      this.$refs.vuetable_mediaux.toggleDetailRow(id);
-    },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },

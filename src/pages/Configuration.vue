@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
             <router-link tag="a" to="/">
@@ -143,7 +143,7 @@
                 <li>Rôle et droits liés aux rôles</li>
               </ul>
             </div>
-            <div v-else-if="activeTab === 'droits'">
+            <div v-else-if="activeTab === 'autres'">
               <p>TODO Nouvelle application ?</p>
               <p>
                 Les données suivantes sont celles correspondantes à
@@ -188,7 +188,7 @@ export default {
     // ...mapGetters(['activeInterventionData', 'activeInterventionId']),
   },
   mounted() {
-    // this.$store.dispatch('fetchListSapeur')
+    // this.$store.dispatch('fetchListeSapeur')
     // this.$store.dispatch('fetchLocalites')
     // this.$store.dispatch('fetchInterventionTraitements')
     // this.$store.dispatch('fetchExercicesComptables')

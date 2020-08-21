@@ -58,7 +58,7 @@
                 v-for="item in chosenSapeurs.map(getSapeur)"
                 :key="item.id"
                 :class="{
-                  'table-primary': displaySelected[computeId(item)]
+                  'table-primary': displaySelected[computeId(item)],
                 }"
               >
                 <td>
@@ -93,8 +93,8 @@
           <p
             v-if="
               groupBy !== 'groupe' &&
-                groupBy !== 'none' &&
-                groupBy !== 'fonction'
+              groupBy !== 'none' &&
+              groupBy !== 'fonction'
             "
           >
             Coming soon!
@@ -115,7 +115,7 @@
                 :key="item.parent_id + '-' + item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
-                  'text-muted': item.empty
+                  'text-muted': item.empty,
                 }"
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
@@ -171,7 +171,7 @@
                 v-for="item in availableSapeurs.map(getSapeur)"
                 :key="item.id"
                 :class="{
-                  'table-primary': selectedSapeurs.includes(item.id)
+                  'table-primary': selectedSapeurs.includes(item.id),
                 }"
               >
                 <td>
@@ -226,7 +226,7 @@ export default {
       selectedSapeurs: [],
       selectedGroups: [],
       expanded: {},
-      displaySelected: {}
+      displaySelected: {},
     };
   },
   mounted() {
@@ -234,7 +234,7 @@ export default {
 
     this.$store.dispatch('fetchGroupesSapeurs').then(() => {
       let svm = this;
-      let recursive = item => {
+      let recursive = (item) => {
         svm.expanded = { ...svm.expanded, [item.id]: false };
         item.groupes.forEach(recursive);
       };
@@ -243,11 +243,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listGroupes: state => state.groupe.liste,
-      listGrades: state => state.grade.liste,
-      listCivilites: state => state.baseData.civilites,
-      listFonctions: state => state.fonction.liste,
-      listSapeurs: state => state.sapeur.liste
+      listGroupes: (state) => state.groupe.liste,
+      listGrades: (state) => state.grade.liste,
+      listCivilites: (state) => state.baseData.civilites,
+      listFonctions: (state) => state.fonction.liste,
+      listSapeurs: (state) => state.sapeur.liste,
     }),
     ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
     listSapeurSelect() {
@@ -256,7 +256,7 @@ export default {
         return this.flattenedTree;
       } else if (this.groupBy === 'fonction') {
         let liste = [];
-        this.listFonctions.forEach(fonction => {
+        this.listFonctions.forEach((fonction) => {
           let expanded = svm.expanded[fonction.id];
           liste = [
             ...liste,
@@ -268,25 +268,25 @@ export default {
               expanded: expanded,
               parent_id: 0,
               empty: !svm.listSapeurs
-                .map(s => ({ ...s, sapeur_id: s.id }))
+                .map((s) => ({ ...s, sapeur_id: s.id }))
                 .filter(svm.filtreSapeur())
-                .filter(s => s.fonction_id === fonction.id).length
-            }
+                .filter((s) => s.fonction_id === fonction.id).length,
+            },
           ];
           if (expanded) {
             liste = [
               ...liste,
               ...svm.listSapeurs
-                .map(s => ({ ...s, sapeur_id: s.id }))
+                .map((s) => ({ ...s, sapeur_id: s.id }))
                 .filter(svm.filtreSapeur())
-                .filter(s => s.fonction_id === fonction.id)
-                .map(sapeur => ({
+                .filter((s) => s.fonction_id === fonction.id)
+                .map((sapeur) => ({
                   designation: `${sapeur.nom} ${sapeur.prenom}`,
                   level: 1,
                   leaf: true,
                   id: sapeur.id,
-                  parent_id: sapeur.fonction_id
-                }))
+                  parent_id: sapeur.fonction_id,
+                })),
             ];
           }
         });
@@ -297,7 +297,7 @@ export default {
     flattenedTree() {
       let flattened = [];
       let svm = this;
-      let recursive = function(groupe, level) {
+      let recursive = function (groupe, level) {
         let expanded = svm.expanded[groupe.id];
         let flaten = [
           {
@@ -308,18 +308,18 @@ export default {
             expanded: expanded,
             empty:
               !groupe.groupes.length &&
-              !groupe.sapeurs.filter(svm.filtreSapeur()).length
-          }
+              !groupe.sapeurs.filter(svm.filtreSapeur()).length,
+          },
         ];
         if (expanded) {
           groupe.groupes.forEach(
-            g => (flaten = [...flaten, ...recursive(g, level + 1)])
+            (g) => (flaten = [...flaten, ...recursive(g, level + 1)])
           );
           groupe.sapeurs
             .filter(svm.filtreSapeur())
-            .map(s => svm.getSapeur(s))
+            .map((s) => svm.getSapeur(s))
             .forEach(
-              s =>
+              (s) =>
                 (flaten = [
                   ...flaten,
                   {
@@ -327,8 +327,8 @@ export default {
                     leaf: true,
                     level: level + 1,
                     parent_id: groupe.id,
-                    id: s.id
-                  }
+                    id: s.id,
+                  },
                 ])
             );
         }
@@ -336,28 +336,28 @@ export default {
       };
 
       this.treeGroupesSapeurs.forEach(
-        i => (flattened = [...flattened, ...recursive(i, 0)])
+        (i) => (flattened = [...flattened, ...recursive(i, 0)])
       );
       return flattened;
     },
     availableSapeurs() {
       return this.listSapeurs
         .slice(0)
-        .filter(s => !this.chosenSapeurs.includes(s.id))
-        .map(s => s.id);
+        .filter((s) => !this.chosenSapeurs.includes(s.id))
+        .map((s) => s.id);
     },
     addSapeurState() {
       return (
-        this.selectedSapeurs.filter(x => !this.chosenSapeurs.includes(x))
+        this.selectedSapeurs.filter((x) => !this.chosenSapeurs.includes(x))
           .length > 0
       );
     },
     removeSapeurState() {
       return (
-        this.selectedSapeurs.filter(x => this.chosenSapeurs.includes(x))
+        this.selectedSapeurs.filter((x) => this.chosenSapeurs.includes(x))
           .length > 0
       );
-    }
+    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -367,18 +367,18 @@ export default {
     },
     save() {
       //Sapeurs ajoutés
-      let newSap = this.chosenSapeurs.filter(s => !this.data.includes(s));
+      let newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
 
       //Sapeurs supprimés
-      let removedSap = this.data.filter(s => !this.chosenSapeurs.includes(s));
+      let removedSap = this.data.filter((s) => !this.chosenSapeurs.includes(s));
 
       let svm = this;
       this.callback(newSap, removedSap)
         .then(() => {
           this.HIDE_MODAL();
         })
-        .catch(errorMessage => {
-          console.error(errorMessage);
+        .catch((errorMessage) => {
+          // console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },
@@ -391,7 +391,7 @@ export default {
     },
     selectSapeur(id) {
       this.selectedSapeurs = this.selectedSapeurs.includes(id)
-        ? this.selectedSapeurs.filter(i => i !== id)
+        ? this.selectedSapeurs.filter((i) => i !== id)
         : [...this.selectedSapeurs, id];
     },
     selectGroupe(id, state = undefined) {
@@ -399,7 +399,7 @@ export default {
       let svm = this;
 
       //Select groupe itself
-      let recursiveSearch = item => {
+      let recursiveSearch = (item) => {
         let found = item.id === id;
         if (found) {
           svm.selectGroupSingle(item, selected, true);
@@ -416,44 +416,44 @@ export default {
       if (!first) {
         this.displaySelected = {
           ...this.displaySelected,
-          [this.computeId({ leaf: false, id: groupe.id })]: state
+          [this.computeId({ leaf: false, id: groupe.id })]: state,
         };
       }
 
       this.selectedGroups = state
         ? Array.from(new Set([...this.selectedGroups, groupe.id]))
-        : this.selectedGroups.filter(i => i !== groupe.id);
+        : this.selectedGroups.filter((i) => i !== groupe.id);
 
       if (this.groupBy === 'groupe') {
-        groupe.sapeurs.filter(this.filtreSapeur()).forEach(s => {
+        groupe.sapeurs.filter(this.filtreSapeur()).forEach((s) => {
           svm.displaySelected = {
             ...svm.displaySelected,
-            [svm.computeId({ leaf: true, id: s })]: state
+            [svm.computeId({ leaf: true, id: s })]: state,
           };
           svm.selectedSapeurs = state
             ? Array.from(new Set([...svm.selectedSapeurs, s]))
-            : svm.selectedSapeurs.filter(i => i !== s);
+            : svm.selectedSapeurs.filter((i) => i !== s);
         });
-        groupe.groupes.forEach(g => svm.selectGroupSingle(g, state));
+        groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
       } else if (this.groupBy === 'fonction') {
         svm.listSapeurs
-          .map(s => ({ ...s, sapeur_id: s.id }))
+          .map((s) => ({ ...s, sapeur_id: s.id }))
           .filter(this.filtreSapeur())
-          .filter(s => s.fonction_id === groupe.id)
-          .forEach(s => {
+          .filter((s) => s.fonction_id === groupe.id)
+          .forEach((s) => {
             svm.displaySelected = {
               ...svm.displaySelected,
-              [svm.computeId({ leaf: true, id: s.id })]: state
+              [svm.computeId({ leaf: true, id: s.id })]: state,
             };
             svm.selectedSapeurs = state
               ? Array.from(new Set([...svm.selectedSapeurs, s.id]))
-              : svm.selectedSapeurs.filter(i => i !== s.id);
+              : svm.selectedSapeurs.filter((i) => i !== s.id);
           });
       }
     },
     filtreSapeur() {
       let svm = this;
-      return s =>
+      return (s) =>
         svm.getSapeur(s.sapeur_id || s).actif === 1 &&
         !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
@@ -466,7 +466,7 @@ export default {
     toggleGroupe(id) {
       this.expanded = {
         ...this.expanded,
-        [id]: !this.expanded[id]
+        [id]: !this.expanded[id],
       };
     },
     addSapeurs() {
@@ -476,21 +476,21 @@ export default {
     },
     removeSapeurs() {
       this.chosenSapeurs = this.chosenSapeurs.filter(
-        item => !this.selectedSapeurs.includes(item)
+        (item) => !this.selectedSapeurs.includes(item)
       );
     },
     addSingleSapeur(id) {
       this.chosenSapeurs = [...this.chosenSapeurs, id];
     },
     removeSingleSapeur(id) {
-      this.chosenSapeurs = this.chosenSapeurs.filter(item => item !== id);
+      this.chosenSapeurs = this.chosenSapeurs.filter((item) => item !== id);
     },
     computeId(item) {
       return item.leaf === true || item.leaf === undefined
         ? item.id
         : 'g' + item.id;
-    }
-  }
+    },
+  },
 };
 </script>
 

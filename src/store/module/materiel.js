@@ -11,7 +11,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_MATERIEL_LIST](state, payload) {
+    [types.UPDATE_MATERIEL_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_MATERIEL](state, payload) {
@@ -25,7 +25,7 @@ export default {
   actions: {
     fetchMateriels({ commit }) {
       return MaterielService.getMateriels().then(data =>
-        commit(types.UPDATE_MATERIEL_LIST, data)
+        commit(types.UPDATE_MATERIEL_LISTE, data)
       );
     },
     updateActiveMateriel({ commit }, payload) {

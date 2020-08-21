@@ -130,8 +130,8 @@ export default {
       'activeExerciceSapeurs',
       'getSapeur',
       'getExcuseType',
-      'listExcuseTypes'
-    ])
+      'listExcuseTypes',
+    ]),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -143,7 +143,7 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom;
     },
     manageSapeurs() {
-      let data = this.activeExerciceSapeurs.map(s => s.sapeur_id).slice(0);
+      let data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
       let svm = this;
       let callback = (newSap, removedSap) => {
         if (newSap === null || newSap === undefined) {
@@ -151,18 +151,18 @@ export default {
         }
 
         return new Promise((resolve, reject) => {
-          let newSapeurs = newSap.map(s => ({
+          let newSapeurs = newSap.map((s) => ({
             convoque: false,
             present: false,
             remplace: false,
             excuse_type_id: null,
             sapeur_id: s,
-            amende: false
+            amende: false,
           }));
 
           let removedSapeurs = removedSap.map(
-            id =>
-              svm.activeExerciceSapeurs.filter(s => s.sapeur_id === id)[0].id
+            (id) =>
+              svm.activeExerciceSapeurs.filter((s) => s.sapeur_id === id)[0].id
           );
 
           //Sapeurs ajoutés
@@ -183,9 +183,9 @@ export default {
             svm.$store
               .dispatch('removeSapeurs', removedSapeurs)
               .then(resolve)
-              .catch(error => {
-                console.error('remove sap error');
-                console.error(error);
+              .catch((error) => {
+                // console.error('remove sap error');
+                // console.error(error);
                 reject("Erreur lors de l'opération");
               });
           }
@@ -201,7 +201,7 @@ export default {
         component: 'ModalSapeurSelect',
         size: 1,
         callback,
-        data
+        data,
       });
     },
     selectPresent(sapeur) {
@@ -221,7 +221,7 @@ export default {
       let self = this;
       this.SHOW_MODAL({
         component: 'ModalExcuse',
-        callback: excuseTypeId => {
+        callback: (excuseTypeId) => {
           if (excuseTypeId !== null && excuseTypeId !== undefined) {
             let excuseType = self.getExcuseType(excuseTypeId);
             sapeur.present = false;
@@ -231,10 +231,10 @@ export default {
           } else {
             sapeur.excuse_type_id = null;
           }
-        }
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

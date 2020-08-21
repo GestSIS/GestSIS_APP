@@ -18,7 +18,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_SAPEURS_LIST](state, payload) {
+    [types.UPDATE_SAPEURS_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((s1, s2) =>
@@ -183,9 +183,9 @@ export default {
     selectSapeur({ commit }, payload) {
       return commit(types.SELECT_CURRENT_SAPEUR, payload);
     },
-    fetchListSapeur({ commit }) {
+    fetchListeSapeur({ commit }) {
       return SapeurService.getSapeurs().then(data =>
-        commit(types.UPDATE_SAPEURS_LIST, data)
+        commit(types.UPDATE_SAPEURS_LISTE, data)
       );
     },
     fetchSapeur({ commit }, sapeurId) {
@@ -240,6 +240,7 @@ export default {
       });
     },
     saveActiveSapeur({ state }, payload) {
+      //TODO Update store with new values
       return SapeurService.saveSapeur(
         state.active.data.id,
         payload || state.active.data

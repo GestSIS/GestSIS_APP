@@ -7,10 +7,10 @@ export default {
     listeWithSapeurs: []
   },
   mutations: {
-    [types.UPDATE_GROUPE_LIST](state, payload) {
+    [types.UPDATE_GROUPE_LISTE](state, payload) {
       state.liste = payload;
     },
-    [types.UPDATE_GROUPE_SAPEUR_LIST](state, payload) {
+    [types.UPDATE_GROUPE_SAPEUR_LISTE](state, payload) {
       state.listeWithSapeurs = payload;
     }
   },
@@ -37,12 +37,12 @@ export default {
   actions: {
     fetchGroupes({ commit }) {
       return GroupeService.getGroupes().then(data =>
-        commit(types.UPDATE_GROUPE_LIST, data)
+        commit(types.UPDATE_GROUPE_LISTE, data)
       );
     },
     fetchGroupesSapeurs({ commit }) {
       return GroupeService.getGroupesSapeurs().then(data =>
-        commit(types.UPDATE_GROUPE_SAPEUR_LIST, data)
+        commit(types.UPDATE_GROUPE_SAPEUR_LISTE, data)
       );
     }
   }

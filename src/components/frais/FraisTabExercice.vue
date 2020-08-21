@@ -72,7 +72,7 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListExercice').then(() => {
+      this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;
         this.$refs.vuetable_frais_exercices.setData(this.computedData);
       });
@@ -85,7 +85,7 @@ export default {
   },
   mounted() {
     if (this.listSapeurs.length === 0) {
-      this.$store.dispatch('fetchListSapeur');
+      this.$store.dispatch('fetchListeSapeur');
     }
 
     if (this.localites.length === 0) {
@@ -99,7 +99,7 @@ export default {
       //console.log('Warning')
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListExercice').then(() => {
+      this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;
         this.$refs.vuetable_frais_exercices.setData(this.computedData);
       });

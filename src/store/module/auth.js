@@ -60,11 +60,10 @@ export default {
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
         p.then(data => {
-          console.log(data)
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
         }).catch(e => {
-          console.log("Disconnected")
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          commit(types.AUTH_LOGOUT)
+          //TODO: Redirect to home page or login page
           return e;
         });
       }

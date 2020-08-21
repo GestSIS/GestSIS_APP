@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_EXERCICE_CATEGORIE_LIST](state, payload) {
+    [types.UPDATE_EXERCICE_CATEGORIE_LISTE](state, payload) {
       state.liste = payload;
     }
   },
@@ -22,7 +22,7 @@ export default {
         return Promise.resolve();
       } else {
         return ExerciceCategorieService.getCategories().then(data =>
-          commit(types.UPDATE_EXERCICE_CATEGORIE_LIST, data)
+          commit(types.UPDATE_EXERCICE_CATEGORIE_LISTE, data)
         );
       }
     }

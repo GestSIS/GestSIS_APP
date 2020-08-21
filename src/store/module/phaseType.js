@@ -10,7 +10,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_PHASE_TYPE_LIST](state, payload) {
+    [types.UPDATE_PHASE_TYPE_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_PHASE](state, payload) {
@@ -26,7 +26,7 @@ export default {
   actions: {
     fetchPhaseTypes({ commit }) {
       return PhaseTypeService.getPhases().then(data =>
-        commit(types.UPDATE_PHASE_TYPE_LIST, data)
+        commit(types.UPDATE_PHASE_TYPE_LISTE, data)
       );
     },
     updateActivePhase({ commit }, payload) {

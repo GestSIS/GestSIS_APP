@@ -11,21 +11,24 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_EXERCICE_LIST](state, payload) {
+    [types.UPDATE_EXERCICE_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
     [types.UPDATE_EXERCICE_STATUT](state, payload) {
       state.liste = [
-        ...state.liste.filter(e => e.id !== payload.id),
-        {
-          ...state.liste.filter(e => e.id === payload.id)[0],
-          statut: payload.statut
-        }
+        ...state.liste.map(e => {
+          if (e.id !== payload.id) {
+            return e;
+          } else {
+            return {
+              ...e,
+              statut: payload.statut
+            }
+          }
+        })
       ]
-        .slice(0)
-        .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
@@ -54,10 +57,10 @@ export default {
     }
   },
   actions: {
-    fetchListExercice({ getters, commit }) {
+    fetchListeExercice({ getters, commit }) {
       return ExerciceService.getExercices(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_EXERCICE_LIST, data));
+      ).then(data => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
     fetchExercice({ commit }, payload) {
       return ExerciceService.getExercice(payload).then(data =>
@@ -74,6 +77,7 @@ export default {
     },
     resetActiveExercice({ commit, getters }) {
       commit(types.SELECT_CURRENT_EXERCICE, null);
+      commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, []);
       return commit(types.UPDATE_CURRENT_EXERCICE_DATA, {
         id: null,
         localite_id: null,

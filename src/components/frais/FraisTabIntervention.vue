@@ -72,7 +72,7 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListIntervention').then(() => {
+      this.$store.dispatch('fetchListeIntervention').then(() => {
         this.loading = false;
         this.$refs.vuetable_frais_interventions.setData(this.computedData);
       });
@@ -85,7 +85,7 @@ export default {
   },
   mounted() {
     //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListSapeur');
+    this.$store.dispatch('fetchListeSapeur');
 
     this.$store.dispatch('fetchLocalites');
     this.$store.dispatch('fetchStatFederals');
@@ -95,7 +95,7 @@ export default {
       //console.log('Warning')
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListIntervention').then(() => {
+      this.$store.dispatch('fetchListeIntervention').then(() => {
         this.loading = false;
         this.$refs.vuetable_frais_interventions.setData(this.computedData);
       });

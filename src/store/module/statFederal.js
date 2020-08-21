@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_STAT_FEDERAL_LIST](state, payload) {
+    [types.UPDATE_STAT_FEDERAL_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((t1, t2) => t1.designation > t2.designation);
@@ -23,7 +23,7 @@ export default {
         return Promise.resolve();
       } else {
         return StatFederalService.getStats().then(data =>
-          commit(types.UPDATE_STAT_FEDERAL_LIST, data)
+          commit(types.UPDATE_STAT_FEDERAL_LISTE, data)
         );
       }
     }

@@ -39,16 +39,11 @@ const router = new Router({
       children: [
         {
           path: ':id',
+          name: 'sapeurs-details',
           component: () => import('@/components/sapeur/SapeurDetails.vue'),
           props: true
         }
       ]
-    },
-    {
-      path: '/sapeurs/:id',
-      name: 'sapeurs-details',
-      props: true,
-      component: () => import('@/pages/Sapeurs.vue')
     },
     {
       path: '/exercices/:id',

@@ -13,7 +13,7 @@ export default {
     }
   },
   mutations: {
-    [types.UPDATE_FONCTION_LIST](state, payload) {
+    [types.UPDATE_FONCTION_LISTE](state, payload) {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_FONCTION](state, payload) {
@@ -31,7 +31,7 @@ export default {
   actions: {
     fetchFonctions({ commit }) {
       return FonctionService.getFonctions().then(data =>
-        commit(types.UPDATE_FONCTION_LIST, data)
+        commit(types.UPDATE_FONCTION_LISTE, data)
       );
     },
     updateActiveFonction({ commit }, payload) {

@@ -131,7 +131,7 @@ export default {
     this.loading = true;
 
     if (this.listSapeurs.length === 0) {
-      this.$store.dispatch('fetchListSapeur');
+      this.$store.dispatch('fetchListeSapeur');
     }
 
     if (this.activeExerciceComptableId !== null) {

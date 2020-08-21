@@ -49,6 +49,7 @@ new Vue({
   router,
   store,
   created() {
+    // TODO might be improved by checking that token is still valid when launching app
     const user = TokenService.getUser();
     const accessToken = TokenService.getAccessToken();
     const refreshToken = TokenService.getRefreshToken();

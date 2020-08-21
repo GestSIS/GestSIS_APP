@@ -6,7 +6,7 @@ export default {
     liste: []
   },
   mutations: {
-    [types.UPDATE_INTERVENTION_TRAITEMENT_LIST](state, payload) {
+    [types.UPDATE_INTERVENTION_TRAITEMENT_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((t1, t2) => t1.designation > t2.designation);
@@ -22,7 +22,7 @@ export default {
         return Promise.resolve();
       } else {
         return InterventionTraitementService.getStats().then(data =>
-          commit(types.UPDATE_INTERVENTION_TRAITEMENT_LIST, data)
+          commit(types.UPDATE_INTERVENTION_TRAITEMENT_LISTE, data)
         );
       }
     }
