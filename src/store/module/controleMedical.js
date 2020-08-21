@@ -26,8 +26,17 @@ export default {
         medecin_id: '',
         consultation: '',
         validite: '',
+        filename: null,
         accepter: 0
       };
+    },
+    [types.REMOVE_JUSTIFICATIF](state, payload) {
+      if(state.active.id == payload) {
+        state.active.data = {
+          ... state.active.data,
+          filename: null
+        };
+      }
     }
   },
   actions: {
@@ -79,10 +88,10 @@ export default {
 
     removeJustificatif({ state, commit }, controleMedicalId) {
       return ControlesMedicauxService.removeJustificatif(controleMedicalId || state.active.id).then(
-        data =>
-          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data).then(
-            () => data
-          )
+        data => {
+          commit(types.REMOVE_JUSTIFICATIF, controleMedicalId || state.active.id)
+          return data
+        }
       );
     },
   }

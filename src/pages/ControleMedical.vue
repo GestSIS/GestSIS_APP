@@ -216,6 +216,7 @@
               <a :href="'http://localhost:8000/api/v2/controles-medicaux/'+id+'/justificatif/'" download>Here</a>
               <button @click="downloadJustificatif()">Download</button>
               <button @click="displayJustificatif()">Display</button>
+              <button @click="removeJustificatif()">Supprimer</button>
             </div>
             <p v-else>Aucun document actuellement</p>
             <div class="input-group mb-3">
@@ -373,6 +374,9 @@ export default {
         const file = this.$refs['file-justificatif'].files[0];
         this.$store.dispatch('addJustificatif', file);
       }
+    },
+    removeJustificatif() {
+      this.$store.dispatch('removeJustificatif');
     },
     validite(duree) {
       var d = new Date(this.controleMedical.consultation || Date.now());
