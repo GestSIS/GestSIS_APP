@@ -15,7 +15,7 @@
         <div
           :class="{
             'col-12': !activeIndemniteHasFonction,
-            'col-8': activeIndemniteHasFonction
+            'col-8': activeIndemniteHasFonction,
           }"
         >
           <table class="table" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
@@ -38,7 +38,7 @@
                 class=""
                 @click="selectIndemnite(index)"
                 :class="{
-                  'table-primary': index === activeIndemniteIndex
+                  'table-primary': index === activeIndemniteIndex,
                 }"
               >
                 <td>{{ indemnite.designation }}</td>
@@ -152,19 +152,19 @@ export default {
       activeIndemniteIndex: null,
       activeIndemnite: null,
       ecritures: [],
-      successMessageVisibility: true
+      successMessageVisibility: true,
     };
   },
   computed: {
     ...mapState({
-      listeIndemnitesTypes: state => state.comptabilite.indemnites.exercices,
-      listFonctions: state => state.fonction.liste,
-      listComptes: state => state.comptabilite.comptes
+      listeIndemnitesTypes: (state) => state.comptabilite.indemnites.exercices,
+      listFonctions: (state) => state.fonction.liste,
+      listComptes: (state) => state.comptabilite.comptes,
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {
       return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
-    }
+    },
   },
   mounted() {
     if (this.listFonctions.length === 0) {
@@ -190,15 +190,15 @@ export default {
       this.$store
         .dispatch('imputerExercice', {
           exercice_id: this.data.id,
-          indemnite_exercice_type_id: this.activeIndemnite.id
+          indemnite_exercice_type_id: this.activeIndemnite.id,
         })
-        .then(data => {
+        .then((data) => {
           this.phase = 2;
           this.ecritures = data.ecritures;
         });
     },
     onKeyDown() {
-      console.log('Key down');
+      // console.log('Key down');
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
@@ -206,14 +206,14 @@ export default {
       );
     },
     onKeyUp() {
-      console.log('Key up');
+      // consolelog('Key up');
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
           : --this.activeIndemniteIndex % this.listeIndemnitesTypes.length
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

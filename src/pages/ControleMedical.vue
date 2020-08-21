@@ -210,10 +210,20 @@
           <div class="card-body">
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
-              <button class="btn btn-outline-primary ml-2" @click="downloadJustificatif()">Download</button>
+              <button
+                class="btn btn-outline-primary ml-2"
+                @click="downloadJustificatif()"
+              >
+                Download
+              </button>
               <!-- TODO Affichage du fichier pdf -->
               <!-- <button class="btn btn-outline-primary ml-2" @click="displayJustificatif()">Display</button> -->
-              <button class="btn btn-outline-primary ml-2" @click="removeJustificatif()">Supprimer</button>
+              <button
+                class="btn btn-outline-primary ml-2"
+                @click="removeJustificatif()"
+              >
+                Supprimer
+              </button>
             </div>
             <div class="input-group mb-3" v-else>
               <p class="w-100">Aucun document</p>
@@ -225,10 +235,16 @@
                   aria-describedby="inputGroupFileAddon01"
                   accept="application/pdf"
                   ref="file-justificatif"
+                />
+                <label class="custom-file-label" for="inputGroupFile01"
+                  >Choisissez un fichier</label
                 >
-                <label class="custom-file-label" for="inputGroupFile01">Choisissez un fichier</label>
               </div>
-              <button class="btn btn-outline-primary ml-2" @click="ajoutJustificatif" v-if="!controleMedical.filename">
+              <button
+                class="btn btn-outline-primary ml-2"
+                @click="ajoutJustificatif"
+                v-if="!controleMedical.filename"
+              >
                 Ajouter
               </button>
             </div>
@@ -278,7 +294,7 @@ export default {
   name: 'controleMedical',
   components: {
     ExerciceComptable,
-    PdfViewer
+    PdfViewer,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -293,7 +309,7 @@ export default {
       pdfData1: null,
       pdfData2: null,
       pdfData3: null,
-      pdfUri: null
+      pdfUri: null,
     };
   },
   props: {
@@ -329,30 +345,34 @@ export default {
   },
   methods: {
     downloadJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id)
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        // link.target = '_blank' // If we want to open it in another tab
-        console.log(response);
-        link.setAttribute('download', 'file.pdf')
-        // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-        link.click();
-        window.URL.revokeObjectURL(url);
-      });
+      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
+        (response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          // link.target = '_blank' // If we want to open it in another tab
+          // console.log(response);
+          link.setAttribute('download', 'file.pdf');
+          // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
+          link.click();
+          window.URL.revokeObjectURL(url);
+        }
+      );
     },
     displayJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id)
-        .then((response) => {
+      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
+        (response) => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           // this.pdfUri = url;
           this.pdfUri = URL.createObjectURL(new Blob([response.data]));
           this.pdfData1 = new Blob([response.data]);
-          this.pdfData2 = new Blob([response.data], {type: 'application/pdf'});
+          this.pdfData2 = new Blob([response.data], {
+            type: 'application/pdf',
+          });
           this.pdfData3 = response.data;
           window.URL.revokeObjectURL(url);
-        });
+        }
+      );
     },
     save() {
       if (this.modeAjout) {
@@ -367,7 +387,7 @@ export default {
       }
     },
     ajoutJustificatif() {
-      if(this.$refs['file-justificatif'].files.length > 0) {
+      if (this.$refs['file-justificatif'].files.length > 0) {
         const file = this.$refs['file-justificatif'].files[0];
         this.$store.dispatch('addJustificatif', file);
       }
@@ -380,7 +400,9 @@ export default {
       var year = d.getFullYear();
       var month = d.getMonth() + 1;
       var day = d.getDate();
-      this.controleMedical.validite = `${year + duree}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`;
+      this.controleMedical.validite = `${year + duree}-${('0' + month).slice(
+        -2
+      )}-${('0' + day).slice(-2)}`;
     },
   },
 };
