@@ -108,7 +108,7 @@ const request = {
         return response.data;
       },
       function (error) {
-        console.log(error);
+        // console.log(error);
         // Do something with response error
         return Promise.reject(error.response.data);
       }
