@@ -33,6 +33,9 @@ export default {
       '/sapeurs/' + sapeurId + '/exercices/' + exerciceComptableId
     );
   },
+  createSapeur(sapeurData) {
+    return Api.api().post('/sapeurs/', sapeurData);
+  },
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
   },

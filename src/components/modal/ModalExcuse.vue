@@ -12,7 +12,7 @@
       <ul class="list-group list-group-flush">
         <li
           class="list-group-item list-group-item-action"
-          v-for="excuse in listExcuseTypes"
+          v-for="excuse in listeExcuseTypes"
           :key="excuse.id"
           @click="selectExcuseType(excuse.id)"
         >
@@ -27,13 +27,15 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalExcuse',
   props: ['callback'],
   computed: {
-    ...mapGetters(['listExcuseTypes'])
+    ...mapState({
+      listeExcuseTypes: state => state.excuseType.liste
+    })
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

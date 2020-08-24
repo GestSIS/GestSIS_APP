@@ -119,18 +119,20 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ExerciceTabSapeurs',
   computed: {
+    ...mapState({
+      listeExcuseTypes: state => state.excuseType.liste
+    }),
     ...mapGetters([
       'activeExerciceId',
       'activeExerciceData',
       'activeExerciceSapeurs',
       'getSapeur',
       'getExcuseType',
-      'listExcuseTypes',
     ]),
   },
   methods: {

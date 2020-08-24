@@ -15,7 +15,6 @@ export default {
     }
   },
   getters: {
-    listExcuseTypes: state => state.liste,
     getExcuseType: state => exercice_id =>
       state.liste.filter(e => e.id === exercice_id)[0]
   },

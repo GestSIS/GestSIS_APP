@@ -18,7 +18,7 @@
               v-model="activeSapeur.civilite_id"
             >
               <option
-                v-for="civilite in listCivilites"
+                v-for="civilite in listeCivilites"
                 :value="civilite.id"
                 :key="civilite.id"
                 >{{ civilite.designation }}</option
@@ -170,7 +170,6 @@
               </div>
             </div>
           </div>
-          <p></p>
           <!-- REMARQUE -->
           <div class="form-group">
             <label for="m-sap-remarques">Remarques</label>
@@ -310,7 +309,7 @@ export default {
     };
   },
   mounted() {
-    if (this.listCivilites.length === 0) {
+    if (this.listeCivilites.length === 0) {
       this.$store.dispatch('fetchCivilites');
     }
     if (this.listLocalitesSis.length === 0) {
@@ -327,7 +326,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listCivilites: state => state.baseData.civilites,
+      listeCivilites: state => state.baseData.civilites,
       listFonctions: state => state.fonction.liste,
       listGrades: state => state.grade.liste
     }),
