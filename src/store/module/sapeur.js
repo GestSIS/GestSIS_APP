@@ -28,6 +28,18 @@ export default {
     [types.SELECT_CURRENT_SAPEUR](state, payload) {
       state.active.id = payload;
     },
+    [types.CREATE_SAPEUR](state, payload) {
+      state.liste = [
+        ...state.liste,
+        {
+          fonction_id: payload.fonction_id,
+          nom: payload.nom,
+          prenom: payload.prenom,
+          actif: payload.actif,
+          date_naissance: payload.date_naissance
+        }
+      ];
+    },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
       let index = state.liste.map(s => s.id).indexOf(payload.id);
@@ -38,7 +50,8 @@ export default {
           fonction_id: payload.fonction_id,
           nom: payload.nom,
           prenom: payload.prenom,
-          actif: payload.actif
+          actif: payload.actif,
+          date_naissance: payload.date_naissance
         },
         ...state.liste.slice(index + 1)
       ];
@@ -239,21 +252,31 @@ export default {
         return data;
       });
     },
-    saveActiveSapeur({ state }, payload) {
+    createSapeur({ commit }, payload) {
+      return SapeurService.createSapeur(
+        payload
+      ).then(data => {
+        commit(types.CREATE_SAPEUR, data);
+        return data
+      });
+    },
+    saveActiveSapeur({ state, commit }, payload) {
       //TODO Update store with new values
       return SapeurService.saveSapeur(
         state.active.data.id,
         payload || state.active.data
-      );
+      ).then(data => {
+        commit(types.UPDATE_CURRENT_SAPEUR_DATA, data);
+        return data
+      });
     },
 
     addTelephone({ state, commit }, telephone) {
-      return SapeurService.addTelephone(state.active.id, telephone).then(
-        data => {
-          commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
-          return data;
-        }
-      );
+      return SapeurService.addTelephone(state.active.id, telephone)
+      .then(data => {
+        commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
+        return data;
+      });
     },
 
     editTelephone({ state, commit }, telephone) {

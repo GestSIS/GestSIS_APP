@@ -1,5 +1,41 @@
 <template>
   <div>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="tab-sapeur-details">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-body d-flex flex-row-reverse">
+            <button
+              type="button"
+              class="btn btn-outline-primary ml-2 d-none"
+              disabled
+            >
+              Exporter
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ml-2 d-none"
+              disabled
+            >
+              Importer
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ml-2 d-none"
+              disabled
+            >
+              Fiche sapeur
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ml-2"
+              @click="addSapeur"
+            >
+              Ajouter un sapeur
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <nav class="nav nav-tabs mb-3">
       <button
         v-for="tab in Object.keys(tabList)"
@@ -32,6 +68,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import store from '@/store/index';
 
 //TODO Add Mat
@@ -44,7 +81,7 @@ const tabList = {
   ORGANISATION: 'Organisation',
   PERMIS: 'Permis',
   BANQUE: 'Banque',
-  EXERCICE: 'Exercice'
+  EXERCICE: 'Exercice',
 };
 
 import SapeurTabGeneral from '@/components/sapeur/SapeurTabGeneral';
@@ -58,16 +95,20 @@ import SapeurTabBanque from '@/components/sapeur/SapeurTabBanque';
 import SapeurTabExercice from '@/components/sapeur/SapeurTabExercice';
 
 async function loadData(routeTo, next) {
-  const sapeurId = parseInt(routeTo.params.id);
-  await store.dispatch('selectSapeur', sapeurId);
-
-  const loadTelephones = store.dispatch('fetchTelephoneTypes');
-  const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
-  const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
-
-  Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
+  if (routeTo.params.id == 'ajout') {
     next();
-  });
+  } else {
+    const sapeurId = parseInt(routeTo.params.id);
+    await store.dispatch('selectSapeur', sapeurId);
+
+    const loadTelephones = store.dispatch('fetchTelephoneTypes');
+    const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+    const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
+
+    Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
+      next();
+    });
+  }
 }
 
 export default {
@@ -81,19 +122,19 @@ export default {
     SapeurTabOrganisation,
     SapeurTabPermis,
     SapeurTabBanque,
-    SapeurTabExercice
+    SapeurTabExercice,
   },
   data() {
     return {
       activeTab: tabList.GENERAL,
-      tabList: tabList
+      tabList: tabList,
     };
   },
   props: {
     id: {
       type: [String, Number],
-      required: true
-    }
+      required: true,
+    },
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -101,11 +142,31 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  computed: {
+    modeAjout() {
+      return this.id == 'ajout';
+    },
+  },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     selectTab(tab) {
       this.activeTab = tab;
-    }
-  }
+    },
+    addSapeur() {
+      this.SHOW_MODAL({
+        component: 'ModalSapeur',
+        size: 2,
+        callback: (sapeurId) => {
+          this.$store.dispatch('selectSapeur', sapeurId)
+          .then(() => {
+            this.$router.push({ name: 'sapeurs-details', params: { id: sapeurId } })
+          })
+          //TODO
+        },
+      })
+      // this.activeTab = tabList.GENERAL;
+    },
+  },
 };
 </script>
 
