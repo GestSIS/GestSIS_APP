@@ -111,7 +111,7 @@ export default {
       },
       tree: [
         {
-          id: 1,
+          id: 'g',
           type: 'groupe',
           label: 'Groupes',
           children: () => this.groupeTree
@@ -284,8 +284,9 @@ export default {
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
       const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sapeur) => sapeur.id === s.id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1}
+        const sapeur = this.sapeurs.find((sapeur) => sapeur.id === s.sapeur_id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1, id: s.sapeur_id}
         return {
+          id: `s-${s.sapeur_id}`,
           label: `${sapeur.nom} ${sapeur.prenom}`,
           type: sapeur.civilite ? 'homme': 'femme',
         }
@@ -293,6 +294,7 @@ export default {
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupe-inter',
+        id: `g-${g.id}`,
         children: () => [
           ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),
           ...g.sapeurs.map(sapeurMapping)
