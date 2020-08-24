@@ -185,11 +185,11 @@
             </div>
             <input
               class="form-control"
-              :class="{ 'is-invalid': errorsData['date_incorporation'] }"
+              :class="{ 'is-invalid': errorsData['incorporation'] }"
               type="date"
               id="m-sap-incorporation"
               name="date_incorporation"
-              v-model="sapeur.date_incorporation"
+              v-model="sapeur.incorporation"
             />
           </div>
         </div>
@@ -233,7 +233,7 @@ export default {
         email: '',
         date_naissance: '',
         suffixe: '',
-        date_incorporation: '',
+        incorporation: '',
         remarque: '',
         civilite_id: null
       }
