@@ -206,8 +206,6 @@
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Document</h5>
-          </div>
-          <div class="card-body">
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
               <button
@@ -216,8 +214,6 @@
               >
                 Download
               </button>
-              <!-- TODO Affichage du fichier pdf -->
-              <!-- <button class="btn btn-outline-primary ml-2" @click="displayJustificatif()">Display</button> -->
               <button
                 class="btn btn-outline-primary ml-2"
                 @click="removeJustificatif()"
@@ -225,7 +221,9 @@
                 Supprimer
               </button>
             </div>
-            <div class="input-group mb-3" v-else>
+          </div>
+          <div class="card-body" v-if="!controleMedical.filename">
+            <div class="input-group mb-3">
               <p class="w-100">Aucun document</p>
               <div class="custom-file">
                 <input
@@ -248,10 +246,8 @@
                 Ajouter
               </button>
             </div>
-            <div v-if="pdfData3">
-              <pdf-viewer :pdf-data="pdfUri"></pdf-viewer>
-            </div>
           </div>
+          <pdf-viewer :pdf-data="pdfData" />
         </div>
       </div>
     </div>
@@ -302,20 +298,37 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  mounted() {
+    this.displayJustificatif();
+  },
+  watch: {
+    controleMedical(next, prev) {
+      if (
+        (this.pdfData === null && next.filename) ||
+        (prev.filename !== next.filename && next.filename)
+      ) {
+        this.displayJustificatif();
+      } else {
+        this.pdfData = null;
+      }
+    },
+  },
   data() {
     return {
       errors: {},
       loading: true,
-      pdfData1: null,
-      pdfData2: null,
-      pdfData3: null,
-      pdfUri: null,
+      pdfData: null,
     };
   },
   props: {
     id: {
       type: [String, Number],
     },
+  },
+  mounted() {
+    if (this.controleMedical.filename) {
+      this.displayJustificatif();
+    }
   },
   computed: {
     ...mapGetters(['getSapeur']),
@@ -362,15 +375,7 @@ export default {
     displayJustificatif() {
       ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
         (response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          // this.pdfUri = url;
-          this.pdfUri = URL.createObjectURL(new Blob([response.data]));
-          this.pdfData1 = new Blob([response.data]);
-          this.pdfData2 = new Blob([response.data], {
-            type: 'application/pdf',
-          });
-          this.pdfData3 = response.data;
-          window.URL.revokeObjectURL(url);
+          this.pdfData = response.data;
         }
       );
     },

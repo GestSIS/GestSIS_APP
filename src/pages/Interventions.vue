@@ -39,7 +39,9 @@
                 <select
                   class="custom-select custom-select-sm"
                   id="filterLocalite"
-                  @change="event => onFilter('localite_id', event.target.value)"
+                  @change="
+                    (event) => onFilter('localite_id', event.target.value)
+                  "
                 >
                   <option>&lt;Localité&gt;</option>
                   <option
@@ -51,8 +53,14 @@
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <select class="custom-select custom-select-sm" id="filterType"
-                  @change="event => onFilter('type_intervention_id', event.target.value)">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterType"
+                  @change="
+                    (event) =>
+                      onFilter('type_intervention_id', event.target.value)
+                  "
+                >
                   <option>&lt;Type&gt;</option>
                   <option
                     v-for="type in filteredInterventionsTypes"
@@ -63,8 +71,13 @@
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <select class="custom-select custom-select-sm" id="filterStatistique"
-                  @change="event => onFilter('stat_federal_id', event.target.value)">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterStatistique"
+                  @change="
+                    (event) => onFilter('stat_federal_id', event.target.value)
+                  "
+                >
                   <option>&lt;Statistique fédérale&gt;</option>
                   <option
                     v-for="stat in filteredStatFederal"
@@ -75,8 +88,14 @@
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <select class="custom-select custom-select-sm" id="filterTraitement"
-                  @change="event => onFilter('intervention_traitement_id', event.target.value)">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterTraitement"
+                  @change="
+                    (event) =>
+                      onFilter('intervention_traitement_id', event.target.value)
+                  "
+                >
                   <option>&lt;Traitement&gt;</option>
                   <option
                     v-for="traitement in listeTraitement"
@@ -87,10 +106,15 @@
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <select class="custom-select custom-select-sm" id="filterEtendue"
-                  @change="event => onFilter('degre', parseInt(event.target.value))">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterEtendue"
+                  @change="
+                    (event) => onFilter('degre', parseInt(event.target.value))
+                  "
+                >
                   <option>&lt;Etendue&gt;</option>
-                  <option value="1">Fausse alarame</option>
+                  <option value="1">Fausse alarme</option>
                   <option value="2">Petite</option>
                   <option value="3">Moyenne</option>
                   <option value="4">Grande</option>
@@ -176,7 +200,7 @@ async function loadData(routeTo, next) {
     loadLocalities,
     loadStatFederal,
     loadTypeInterventions,
-    loadInterventionTraitement
+    loadInterventionTraitement,
   ]).then(() => {
     next();
   });
@@ -186,7 +210,7 @@ export default {
   name: 'interventions',
   components: {
     Vuetable,
-    ExerciceComptable
+    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -205,14 +229,6 @@ export default {
     filteredInterventions(data) {
       this.loading = false;
       this.$refs.vuetable.setData(data);
-    },
-    filters() {
-      this.filteredInterventions = this.listeInterventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(([key, value]) => x => x[key] === value)
-          .reduce((f, g) => x => f(x) && g(x), () => true)
-      );
     },
   },
   mounted() {
@@ -234,7 +250,7 @@ export default {
           title: 'Date',
           name: 'date_debut',
           dataClass: 'align-middle',
-          sortField: 'date_debut'
+          sortField: 'date_debut',
         },
         {
           title: 'Heure',
@@ -243,7 +259,7 @@ export default {
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortField: 'heure_debut'
+          sortField: 'heure_debut',
         },
         {
           title: "Type d'intervention",
@@ -251,7 +267,7 @@ export default {
           formatter(value) {
             return self.getTypeIntervention(value).designation;
           },
-          sortField: 'type_intervention_id'
+          sortField: 'type_intervention_id',
         },
         {
           title: 'Localité',
@@ -260,12 +276,12 @@ export default {
           formatter(value) {
             return self.getLocalite(value).designation;
           },
-          sortField: 'localite_id'
+          sortField: 'localite_id',
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Stat fédéral',
@@ -274,7 +290,7 @@ export default {
           formatter(value) {
             return self.getStatFederal(value).designation;
           },
-          sortField: 'stat_federal_id'
+          sortField: 'stat_federal_id',
         },
         {
           title: 'Traitement',
@@ -283,7 +299,7 @@ export default {
           formatter(value) {
             return self.getInterventionTraitement(value).designation;
           },
-          sortField: 'intervention_traitement_id'
+          sortField: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
@@ -294,11 +310,11 @@ export default {
               1: 'Fausse-alarme',
               2: 'Petite',
               3: 'Moyenne',
-              4: 'Grande'
+              4: 'Grande',
             };
             return degre[value];
           },
-          sortField: 'degre'
+          sortField: 'degre',
         },
         {
           title: 'Statut',
@@ -309,17 +325,17 @@ export default {
               0: 'A saisir',
               1: 'A valider',
               2: 'Validée',
-              3: 'Imputée'
+              3: 'Imputée',
             };
             return statuts[value];
           },
-          sortField: 'statut'
+          sortField: 'statut',
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
+          dataClass: 'align-middle',
+        },
       ],
       loading: true,
       filters: {},
@@ -327,42 +343,49 @@ export default {
   },
   computed: {
     ...mapState({
-      listeInterventions: state => state.intervention.liste,
-      listeInterventionsTypes: state => state.typeIntervention.liste,
-      listeStatFederal: state => state.statFederal.liste,
-      listeTraitement: state => state.interventionTraitement.liste,
-      listeLocalites: state =>
+      listeInterventions: (state) => state.intervention.liste,
+      listeInterventionsTypes: (state) => state.typeIntervention.liste,
+      listeStatFederal: (state) => state.statFederal.liste,
+      listeTraitement: (state) => state.interventionTraitement.liste,
+      listeLocalites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
-        )
+        ),
     }),
     ...mapGetters([
       'currentExerciceComptableId',
       'getTypeIntervention',
       'getLocalite',
       'getStatFederal',
-      'getInterventionTraitement'
+      'getInterventionTraitement',
     ]),
     filteredInterventionsTypes() {
-      const ids = new Set(this.listeInterventions.map(i => i.type_intervention_id));
-      return this.listeInterventionsTypes.filter(t => ids.has(t.id))
+      const ids = new Set(
+        this.listeInterventions.map((i) => i.type_intervention_id)
+      );
+      return this.listeInterventionsTypes.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
-      const ids = new Set(this.listeInterventions.map(i => i.localite_id));
-      return this.listeLocalites.filter(t => ids.has(t.id))
+      const ids = new Set(this.listeInterventions.map((i) => i.localite_id));
+      return this.listeLocalites.filter((t) => ids.has(t.id));
     },
     filteredStatFederal() {
-      const ids = new Set(this.listeInterventions.map(i => i.stat_federal_id));
-      return this.listeStatFederal.filter(t => ids.has(t.id))
+      const ids = new Set(
+        this.listeInterventions.map((i) => i.stat_federal_id)
+      );
+      return this.listeStatFederal.filter((t) => ids.has(t.id));
     },
     filteredInterventions() {
       return this.listeInterventions.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
-          .map(([key, value]) => x => x[key] === value)
-          .reduce((f, g) => x => f(x) && g(x), () => true)
+          .map(([key, value]) => (x) => x[key] === value)
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
       );
-    }
+    },
   },
   methods: {
     toggleDetails(id) {
@@ -387,7 +410,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onFilter(key, value) {
@@ -398,11 +421,11 @@ export default {
         0: '', //'A saisir',
         1: '', //'En attente de validation',
         2: '', // 'Validée',
-        3: 'table-success' //'Imputée'
+        3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

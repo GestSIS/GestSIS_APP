@@ -85,6 +85,7 @@ export default {
   mounted() {
     //TODO Fetch only if neccessary
     this.$store.dispatch('fetchListeSapeur');
+    this.$store.dispatch('fetchFonctions');
 
     // this.$store.dispatch('fetchLocalites');
     // this.$store.dispatch('fetchStatFederals');
