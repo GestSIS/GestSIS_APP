@@ -33,6 +33,61 @@
               Ajouter un exercice
             </router-link>
           </div>
+
+          <form class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterLocalite"
+                  @change="
+                    (event) => onFilter('localite_id', event.target.value)
+                  "
+                >
+                  <option>&lt;Localité&gt;</option>
+                  <option
+                    v-for="loc in filteredLocalites"
+                    :key="loc.id"
+                    :value="loc.id"
+                    >{{ loc.designation }}</option
+                  >
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterCategorie"
+                  @change="
+                    (event) => onFilter('exercice_categorie_id', event.target.value)
+                  "
+                >
+                  <option>&lt;Catégorie&gt;</option>
+                  <option
+                    v-for="catgeorie in filteredExercicesCategories"
+                    :key="catgeorie.id"
+                    :value="catgeorie.id"
+                    >{{ catgeorie.designation }}</option
+                  >
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <select
+                  class="custom-select custom-select-sm"
+                  id="filterStatus"
+                  @change="
+                    (event) => onFilter('status', parseInt(event.target.value))
+                  "
+                >
+                  <option>&lt;Status&gt;</option>
+                  <option value="1">Sapeurs à ajouter</option>
+                  <option value="2">Présences à saisir</option>
+                  <option value="3">A solder</option>
+                  <option value="4">Soldé</option>
+                  <option value="5">Annulé</option>
+                </select>
+              </div>
+            </div>
+          </form>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Chargement...</span>
@@ -117,7 +172,7 @@ export default {
   name: 'exercices',
   components: {
     Vuetable,
-    ExerciceComptable
+    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -133,37 +188,39 @@ export default {
         this.$refs.vuetable_exercices.setData(this.computedData);
       });
     },
-    listExercices() {
-      this.$refs.vuetable_exercices.setData(this.computedData);
-    }
+    filteredExercices(data) {
+      this.loading = false;
+      this.$refs.vuetable_exercices.setData(data);
+    },
   },
   mounted() {
-    this.$refs.vuetable_exercices.setData(this.computedData);
+    this.$refs.vuetable_exercices.setData(this.filteredExercices);
     this.loading = false;
   },
   data() {
     return {
+      loading: true,
+      filters: {},
       css: CssForBootstrap4,
       toggles: {},
-      loading: true,
       detailRow: ExerciceDetails,
       fields: [
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width'
+          dataClass: 'align-middle details-width',
         },
         {
           title: 'Date',
           name: 'date',
           sortField: 'date',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Categorie',
           name: 'categorie',
           sortField: 'categorie',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Heure',
@@ -171,29 +228,29 @@ export default {
           dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
-          }
+          },
         },
         {
           title: 'Duree',
           name: 'duree',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Localité',
           name: 'localite',
           sortField: 'localite',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle'
+          dataClass: 'align-middle',
         },
         {
           title: 'Statut',
@@ -206,39 +263,63 @@ export default {
               1: 'A saisir',
               2: 'En attente de validation',
               3: 'A imputer',
-              4: 'Imputée'
+              4: 'Imputée',
             };
             return statuts[value];
-          }
+          },
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+          dataClass: 'align-middle',
+        },
+      ],
     };
   },
   computed: {
     ...mapState({
-      listExercices: state => state.exercice.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeExercices: (state) => state.exercice.liste,
+      listeCategories: (state) => state.exerciceCategorie.liste,
+      listeLocalites: (state) =>
+        state.localite.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        ),
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
-      return this.listExercices.map(s => ({
+      return this.listeExercices.map((s) => ({
         ...s,
         categorie: this.getExerciceCategorie(s.exercice_categorie_id)
           .designation,
-        localite: this.getLocalite(s.localite_id).designation
+        localite: this.getLocalite(s.localite_id).designation,
       }));
-    }
+    },
+    filteredExercicesCategories() {
+      const ids = new Set(this.listeExercices.map((i) => i.exercice_categorie_id));
+      return this.listeCategories.filter((t) => ids.has(t.id));
+    },
+    filteredLocalites() {
+      const ids = new Set(this.listeExercices.map((i) => i.localite_id));
+      return this.listeLocalites.filter((t) => ids.has(t.id));
+    },
+    filteredExercices() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val)
+          .map(([key, value]) => (x) => x[key] === value)
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
   },
   methods: {
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
       this.$refs.vuetable_exercices.toggleDetailRow(id);
     },
@@ -260,7 +341,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
@@ -269,11 +350,14 @@ export default {
         1: '', //'A saisir',
         2: '', //'En attente de validation',
         3: '', //'A imputer',
-        4: 'table-success' //'Imputée'
+        4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
+    },
+  },
 };
 </script>
 
