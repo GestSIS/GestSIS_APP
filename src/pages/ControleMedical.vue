@@ -10,7 +10,7 @@
               </router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'exercices' }">
+              <router-link tag="a" :to="{ name: 'controles-medicaux' }">
                 Controles médicaux
               </router-link>
             </li>
