@@ -303,9 +303,10 @@ export default {
   },
   watch: {
     controleMedical(next, prev) {
-      if (this.pdfData === null && next.filename || prev.filename !== next.filename && next.filename) {
-        console.log(next)
-        console.log(prev)
+      if (
+        (this.pdfData === null && next.filename) ||
+        (prev.filename !== next.filename && next.filename)
+      ) {
         this.displayJustificatif();
       } else {
         this.pdfData = null;
@@ -324,8 +325,8 @@ export default {
       type: [String, Number],
     },
   },
-  mounted(){
-    if(this.controleMedical.filename) {
+  mounted() {
+    if (this.controleMedical.filename) {
       this.displayJustificatif();
     }
   },
