@@ -75,15 +75,15 @@
                   class="custom-select custom-select-sm"
                   id="filterStatus"
                   @change="
-                    (event) => onFilter('status', parseInt(event.target.value))
+                    (event) => onFilter('statut', parseInt(event.target.value))
                   "
                 >
-                  <option>&lt;Status&gt;</option>
+                  <option value="-1">&lt;Statut&gt;</option>
+                  <option value="0">Annulé</option>
                   <option value="1">Sapeurs à ajouter</option>
-                  <option value="2">Présences à saisir</option>
-                  <option value="3">A solder</option>
-                  <option value="4">Soldé</option>
-                  <option value="5">Annulé</option>
+                  <option value="2">En attente de validation</option>
+                  <option value="3">A imputer</option>
+                  <option value="4">Imputée</option>
                 </select>
               </div>
             </div>
@@ -306,7 +306,7 @@ export default {
     filteredExercices() {
       return this.computedData.filter(
         Object.entries(this.filters)
-          .filter(([, val]) => val)
+          .filter(([, val]) => val >= 0)
           .map(([key, value]) => (x) => x[key] === value)
           .reduce(
             (f, g) => (x) => f(x) && g(x),
