@@ -243,6 +243,7 @@ export default {
   },
   computed: {
     ...mapState({
+      //TODO Refactor names
       listGroupes: (state) => state.groupe.liste,
       listGrades: (state) => state.grade.liste,
       listCivilites: (state) => state.baseData.civilites,
