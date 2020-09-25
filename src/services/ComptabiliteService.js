@@ -38,5 +38,14 @@ export default {
   },
   getEcrituresAnnuelsForExerciceComptable(exerciceComtableId) {
     return Api.api().get('/ecritures/annuel/' + exerciceComtableId);
+  },
+  getAmendesForExerciceComptable(exerciceComptableId) {
+    return Api.api().get('/ecritures/amende/' + exerciceComptableId);
+  },
+  genererAmendesAnnuels(exerciceComptableId) {
+    return Api.api().post('/generer-amende/' + exerciceComptableId);
+  },
+  genererAmendesPourSapeur(exerciceComptableId, sapeurId) {
+    return Api.api().post('/generer-amende/' + exerciceComptableId + '/sapeur/' + sapeurId);
   }
 };

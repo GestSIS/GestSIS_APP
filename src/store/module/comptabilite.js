@@ -9,6 +9,7 @@ export default {
       interventions: [],
       annuels: []
     },
+    amendes: [],
     listeFraisAnnuels: [],
     listeIndemnitesAnnuels: [],
     frais: {
@@ -35,11 +36,14 @@ export default {
         ...payload
       };
     },
-    [types.UPDATE_ECRITURES_ANNUELS_LISTEE](state, payload) {
+    [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
       state.ecritures.annuels = [...payload];
     },
-    [types.UPDATE_COMPTES_LISTEE](state, payload) {
+    [types.UPDATE_COMPTES_LISTE](state, payload) {
       state.comptes = payload;
+    },
+    [types.UPDATE_ECRITURES_AMENDES](state, payload) {
+      state.amendes = payload;
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
       state.active.ecritures = payload;
@@ -54,7 +58,7 @@ export default {
   actions: {
     fetchComptes({ commit }) {
       return ComptabiliteService.getComptes().then(data =>
-        commit(types.UPDATE_COMPTES_LISTEE, data)
+        commit(types.UPDATE_COMPTES_LISTE, data)
       );
     },
     selectActiveCompte({ commit, dispatch }, payload) {
@@ -82,7 +86,12 @@ export default {
     fetchEcrituresAnnuels({ commit, getters }) {
       return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTEE, data));
+      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
+    },
+    fetchAmendes({commit, getters }) {
+      return ComptabiliteService.getAmendesForExerciceComptable(
+        getters.currentExerciceComptableId
+      ).then(data => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
     imputerExercice({ commit }, payload) {
       return ComptabiliteService.imputerExercice(
@@ -112,12 +121,34 @@ export default {
       return ComptabiliteService.imputerAnnuel(
         getters.currentExerciceComptableId
       ).then(data => {
-        commit(types.UPDATE_ECRITURES_ANNUELS_LISTEE, [
+        commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
           ...data.indemnites,
           ...data.frais
         ]);
         return data;
       });
+    },
+    genererAmendesAnnuels({ commit }, { exerciceComptableId, tarifs }) {
+      const baseTarifs = {
+        montants: [
+          { couts : 0},
+          { couts : 50},
+          { couts : 70},
+          { couts : 100},
+          { couts : 150},
+        ],
+        compteId: 12
+      }
+      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId, tarifs).then(//data =>
+        // commit(types.UPDATE_COURS_LISTE, data)
+        //TODO
+      );
+    },
+    genererAmendesPourSapeur({ commit }, { exerciceComptableId, sapeurId, tarifs }) {
+      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId, sapeurId, tarifs).then(//data =>
+        // commit(types.UPDATE_COURS_LISTE, data)
+        //TODO
+      );
     }
   }
 };

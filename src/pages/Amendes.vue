@@ -1,0 +1,287 @@
+<template>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-white">
+            <li class="breadcrumb-item">
+              <router-link tag="a" to="/"> Accueil </router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Amendes</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end">
+        <exercice-comptable />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-5">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Liste des amendes</h3>
+            <router-link
+              tag="button"
+              to="/amendes/new"
+              class="btn btn-outline-primary"
+            >
+              Générer les amendes
+            </router-link>
+          </div>
+          <div class="card-body d-flex justify-content-center" v-if="loading">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Chargement...</span>
+            </div>
+          </div>
+          <vuetable
+            v-show="!loading"
+            ref="vuetable_amendes_sapeurs"
+            :api-mode="false"
+            :fields="fields"
+            :css="css.table"
+            :data-manager="dataManager"
+            :row-class="onRowClass"
+            detail-row-class="m-td-0"
+            :detail-row-component="detailRow"
+          >
+            <div slot="details" slot-scope="props">
+              <button
+                class="btn btn-link border-0"
+                @click="toggleDetails(props.rowData.id)"
+              >
+                <font-awesome-icon
+                  v-if="toggles[props.rowData.id] || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!(toggles[props.rowData.id] || false)"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div>
+            <!-- <div slot="actions" slot-scope="props">
+              <button
+                class="btn btn-outline-primary border-0"
+                v-if="props.rowData.statut === 2"
+                @click="imputerIntervention(props.rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </div> -->
+          </vuetable>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import AmendesSapeurDetails from '@/components/amende/AmendesSapeurDetails';
+import ComptabiliteService from '@/services/ComptabiliteService';
+
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
+
+import store from '@/store/index';
+
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+
+async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
+  let loadAmendes = store.dispatch('fetchAmendes');
+  Promise.all([loadAmendes]).then(() => {
+    next();
+  });
+}
+
+export default {
+  name: 'interventions',
+  components: {
+    Vuetable,
+    ExerciceComptable,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchAmendes').then(() => {
+        this.loading = false;
+        this.$refs.vuetable_amendes_sapeurs.setData(this.filteredAmendes);
+      });
+    },
+    filteredAmendes(data) {
+      this.loading = false;
+      this.$refs.vuetable_amendes_sapeurs.setData(data);
+    },
+  },
+  mounted() {
+    this.loading = false;
+    this.$refs.vuetable_amendes_sapeurs.setData(this.filteredAmendes);
+  },
+  data() {
+    const self = this;
+    return {
+      css: CssForBootstrap4,
+      toggles: [],
+      detailRow: AmendesSapeurDetails,
+      amendeColumns: [
+        {
+          title: 'Ecriture',
+          field: 'designation'
+        },
+        {
+          title: 'Solde',
+          field: 'solde',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Indemnité',
+          field: 'indemnite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Frais',
+          field: 'frais',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Quantité',
+          field: 'quantite',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Taux',
+          field: 'taux',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        },
+        {
+          title: 'Total',
+          field: 'total',
+          headerClassName: 'text-center',
+          className: 'text-right'
+        }
+      ],
+      fields: [
+        {
+          title: '',
+          name: 'details',
+          dataClass: 'align-middle'
+        },
+        {
+          title: 'Sapeur',
+          name: 'sapeur',
+          dataClass: 'align-middle',
+          sortField: 'date_debut',
+        },
+        {
+          title: 'Nombre',
+          name: 'nb',
+          dataClass: 'align-middle',
+          sortField: 'heure_debut',
+        },
+        {
+          title: "Montant",
+          name: 'montant',
+          sortField: 'type_intervention_id',
+        },
+        {
+          title: 'Actions',
+          name: 'actions',
+          dataClass: 'align-middle',
+        },
+      ],
+      loading: true,
+      filters: {},
+    };
+  },
+  computed: {
+    ...mapState({
+      listeLocalites: (state) =>
+        state.localite.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        ),
+      listeAmendes: (state) => state.comptabilite.amendes
+    }),
+    ...mapGetters(['currentExerciceComptableId', 'getLocalite']),
+    // filteredInterventionsTypes() {
+    //   const ids = new Set(
+    //     this.listeInterventions.map((i) => i.type_intervention_id)
+    //   );
+    //   return this.listeInterventionsTypes.filter((t) => ids.has(t.id));
+    // },
+    // filteredLocalites() {
+    //   const ids = new Set(this.listeInterventions.map((i) => i.localite_id));
+    //   return this.listeLocalites.filter((t) => ids.has(t.id));
+    // },
+    // filteredStatFederal() {
+    //   const ids = new Set(
+    //     this.listeInterventions.map((i) => i.stat_federal_id)
+    //   );
+    //   return this.listeStatFederal.filter((t) => ids.has(t.id));
+    // },
+    filteredAmendes() {
+      return this.listeAmendes.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val)
+          .map(([key, value]) => (x) => x[key] === value)
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+  },
+  methods: {
+    toggleDetails(id) {
+      this.toggles[id] = !this.toggles[id];
+      this.$refs.vuetable_amendes_sapeurs.toggleDetailRow(id);
+    },
+    dataManager(sortOrder) {
+      if (this.filteredAmendes.length < 1) return;
+
+      let local = this.filteredAmendes;
+
+      // sortOrder can be empty, so we have to check for that as well
+      if (sortOrder.length > 0) {
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
+      }
+
+      return {
+        data: local,
+      };
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
+    },
+    onRowClass(dataItem) {
+      const statutsClass = {
+        0: '', //'A saisir',
+        1: '', //'En attente de validation',
+        2: '', // 'Validée',
+        3: 'table-success', //'Imputée'
+      };
+      return statutsClass[dataItem.statut];
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped></style>
