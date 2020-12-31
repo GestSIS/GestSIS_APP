@@ -43,9 +43,9 @@ export default {
     return Api.api().get('/ecritures/amende/' + exerciceComptableId);
   },
   genererAmendesAnnuels(exerciceComptableId) {
-    return Api.api().post('/generer-amende/' + exerciceComptableId);
+    return Api.api().post('/generer-amendes/' + exerciceComptableId);
   },
   genererAmendesPourSapeur(exerciceComptableId, sapeurId) {
-    return Api.api().post('/generer-amende/' + exerciceComptableId + '/sapeur/' + sapeurId);
+    return Api.api().post('/generer-amendes/' + exerciceComptableId + '/sapeur/' + sapeurId);
   }
 };

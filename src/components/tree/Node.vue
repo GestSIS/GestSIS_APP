@@ -18,7 +18,7 @@
       </svg>
       <div class="tree-node-content">
         <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
-        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" class="tree-node-icon" />
+        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" class="tree-node-icon" :color="data.color"/>
         <div>{{ data.label }}</div>
       </div>
     </div>

@@ -18,16 +18,25 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-4">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Groupes</h3>
+          </div>
+          <div class="card-body">
+            <tree :tree="tree" :_types="types" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card card-primary card-outline">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Infos complémentaires</h3>
             <button class="btn btn-outline-primary">
               Save
             </button>
           </div>
           <div class="card-body">
-            <tree :tree="tree" :_types="types" />
           </div>
         </div>
       </div>
@@ -71,9 +80,11 @@ export default {
       types: {
         homme: {
           icon: ['fas', 'mars'],
+          color: '#3498db'
         },
         femme: {
           icon: ['fas', 'venus'],
+          color: '#9b59b6'
         },
         groupe: {
           icon: ['fas', 'sitemap'],
@@ -284,11 +295,11 @@ export default {
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
       const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sapeur) => sapeur.id === s.sapeur_id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1, id: s.sapeur_id}
+        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1, id: s.sapeur_id}
         return {
           id: `s-${s.sapeur_id}`,
           label: `${sapeur.nom} ${sapeur.prenom}`,
-          type: sapeur.civilite ? 'homme': 'femme',
+          type: sapeur.civilite_id === 1 ? 'homme': 'femme',
         }
       }
       const groupeMapping = (g) => ({

@@ -21,13 +21,12 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des amendes</h3>
-            <router-link
-              tag="button"
-              to="/amendes/new"
-              class="btn btn-outline-primary"
+            <button
+              class="btn btn-primary"
+              @click="generer"
             >
               Générer les amendes
-            </router-link>
+            </button>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
@@ -92,14 +91,15 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadAmendes = store.dispatch('fetchAmendes');
-  Promise.all([loadAmendes]).then(() => {
+  Promise.all([loadSapeurs, loadAmendes]).then(() => {
     next();
   });
 }
 
 export default {
-  name: 'interventions',
+  name: 'amendes',
   components: {
     Vuetable,
     ExerciceComptable,
@@ -120,6 +120,7 @@ export default {
     },
     filteredAmendes(data) {
       this.loading = false;
+      console.log("Test")
       this.$refs.vuetable_amendes_sapeurs.setData(data);
     },
   },
@@ -135,45 +136,17 @@ export default {
       detailRow: AmendesSapeurDetails,
       amendeColumns: [
         {
-          title: 'Ecriture',
+          title: 'Exercice',
           field: 'designation'
         },
         {
-          title: 'Solde',
-          field: 'solde',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Indemnité',
-          field: 'indemnite',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Frais',
-          field: 'frais',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        },
-        {
-          title: 'Taux',
-          field: 'taux',
-          headerClassName: 'text-center',
-          className: 'text-right'
+          title: 'Date',
+          field: 'date',
         },
         {
           title: 'Total',
           field: 'total',
-          headerClassName: 'text-center',
-          className: 'text-right'
-        }
+        },
       ],
       fields: [
         {
@@ -185,18 +158,18 @@ export default {
           title: 'Sapeur',
           name: 'sapeur',
           dataClass: 'align-middle',
-          sortField: 'date_debut',
+          sortField: 'sapeur',
         },
         {
           title: 'Nombre',
           name: 'nb',
           dataClass: 'align-middle',
-          sortField: 'heure_debut',
+          sortField: 'nb',
         },
         {
           title: "Montant",
-          name: 'montant',
-          sortField: 'type_intervention_id',
+          name: 'total',
+          sortField: 'total',
         },
         {
           title: 'Actions',
@@ -216,25 +189,9 @@ export default {
         ),
       listeAmendes: (state) => state.comptabilite.amendes
     }),
-    ...mapGetters(['currentExerciceComptableId', 'getLocalite']),
-    // filteredInterventionsTypes() {
-    //   const ids = new Set(
-    //     this.listeInterventions.map((i) => i.type_intervention_id)
-    //   );
-    //   return this.listeInterventionsTypes.filter((t) => ids.has(t.id));
-    // },
-    // filteredLocalites() {
-    //   const ids = new Set(this.listeInterventions.map((i) => i.localite_id));
-    //   return this.listeLocalites.filter((t) => ids.has(t.id));
-    // },
-    // filteredStatFederal() {
-    //   const ids = new Set(
-    //     this.listeInterventions.map((i) => i.stat_federal_id)
-    //   );
-    //   return this.listeStatFederal.filter((t) => ids.has(t.id));
-    // },
+    ...mapGetters(['currentExerciceComptableId', 'getSapeur']),
     filteredAmendes() {
-      return this.listeAmendes.filter(
+      const amendes = this.listeAmendes.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
           .map(([key, value]) => (x) => x[key] === value)
@@ -243,9 +200,27 @@ export default {
             () => true
           )
       );
+
+      const sapeurs = amendes.reduce((rv, a) => {
+        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
+          ...this.getSapeur(a.sapeur_id),
+          amendes: [],
+        }).amendes.push(a);
+        return rv;
+      }, {});
+      return Object.values(sapeurs).map(s => ({
+          ...s,
+          nb: s.amendes.length,
+          sapeur: s.nom+" "+s.prenom,
+          total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
+          columns: this.amendeColumns,
+      }));
     },
   },
   methods: {
+    generer() {
+      this.$store.dispatch('genererAmendesAnnuels', this.currentExerciceComptableId);
+    },
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id];
       this.$refs.vuetable_amendes_sapeurs.toggleDetailRow(id);

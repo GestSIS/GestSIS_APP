@@ -128,20 +128,9 @@ export default {
         return data;
       });
     },
-    genererAmendesAnnuels({ commit }, { exerciceComptableId, tarifs }) {
-      const baseTarifs = {
-        montants: [
-          { couts : 0},
-          { couts : 50},
-          { couts : 70},
-          { couts : 100},
-          { couts : 150},
-        ],
-        compteId: 12
-      }
-      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId, tarifs).then(//data =>
-        // commit(types.UPDATE_COURS_LISTE, data)
-        //TODO
+    genererAmendesAnnuels({ commit }, exerciceComptableId) {
+      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId).then(data =>
+        commit(types.UPDATE_ECRITURES_AMENDES, data)
       );
     },
     genererAmendesPourSapeur({ commit }, { exerciceComptableId, sapeurId, tarifs }) {

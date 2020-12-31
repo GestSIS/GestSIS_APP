@@ -35,12 +35,12 @@ Vue.use(Tooltip);
 Vue.use(Datetime);
 //Vue.use(VueTimepicker)
 
-Vue.filter('sapeur', function(sapeur) {
+Vue.filter('sapeur', function (sapeur) {
   if (!sapeur) return '';
   return sapeur.nom + ' ' + sapeur.prenom;
 });
 
-Vue.filter('compte', function(compte) {
+Vue.filter('compte', function (compte) {
   if (!compte) return '';
   return compte.numero + ' - ' + compte.designation;
 });
@@ -53,11 +53,13 @@ new Vue({
     const user = TokenService.getUser();
     const accessToken = TokenService.getAccessToken();
     const refreshToken = TokenService.getRefreshToken();
-    this.$store.commit(types.AUTH_SUCCESSFULL, {
-      user,
-      accessToken,
-      refreshToken
-    });
+    if (accessToken !== null && refreshToken !== null) {
+      this.$store.commit(types.AUTH_SUCCESSFULL, {
+        user,
+        accessToken,
+        refreshToken,
+      });
+    }
   },
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount('#app');

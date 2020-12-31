@@ -3,7 +3,7 @@
     <div class="spinner-border" role="status" v-if="loading">
       <span class="sr-only">Chargement...</span>
     </div>
-    <table class="table mb-0" v-else-if="!ecritures.length">
+    <table class="table mb-0" v-else-if="!amendes.length">
       <tr>
         <th colspan="*">Aucune donnée</th>
       </tr>
@@ -28,7 +28,7 @@
             :key="index"
             :class="column.className || ''"
           >
-            {{ computeColumn(column, ecriture) }}
+            {{ computeColumn(column, amende) }}
           </td>
         </tr>
       </tbody>
@@ -62,11 +62,9 @@ export default {
   mounted() {
     this.loading = true;
     this.columns = this.rowData.columns;
-    this.rowData.getAmendes().then(amendes => {
-      this.amendes = amendes;
-      this.loading = false;
-    });
-  },
+    this.amendes = this.rowData.amendes;
+    this.loading = false;
+    },
   methods: {
     computeColumn(column, amende) {
       let formatter = column.formatter || (a => a);
