@@ -53,6 +53,7 @@ export default {
     ModalImputerIntervention: () =>
       import(`@/components/modal/ModalImputerIntervention`),
     ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`),
+    ModalRapportIntervention: () => import(`@/components/modal/ModalRapportIntervention`),
     ModalMutationDesactivation: () =>
       import(`@/components/modal/ModalMutationDesactivation`)
   },

@@ -20,20 +20,54 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-3">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
-            <h3>Liste des exercices</h3>
+            <h5>Actions</h5>
+          </div>
+          <form class="card-body">
             <router-link
               tag="button"
               to="/exercices/new"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-primary btn-block"
             >
               Ajouter un exercice
             </router-link>
+            <router-link
+              tag="button"
+              :disabled="!selectedId"
+              :to='"/exercices/"+selectedId'
+              class="btn btn-outline-primary btn-block"
+            >
+              Modifier
+            </router-link>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Impressions</h5>
           </div>
-
+          <form class="card-body">
+            <button
+              :disabled="!selectedId"
+              @click="listePresences"
+              class="btn btn-outline-primary btn-block"
+            >
+              Liste de présences
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Filtres</h5>
+          </div>
           <form class="card-body">
             <div class="form-row">
               <div class="form-group col-md-4">
@@ -88,6 +122,12 @@
               </div>
             </div>
           </form>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary card-outline mb-5">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Chargement...</span>
@@ -103,6 +143,7 @@
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
+            @vuetable:row-clicked="selectExercice"
           >
             <div slot="details" slot-scope="props">
               <button
@@ -200,6 +241,7 @@ export default {
   data() {
     return {
       loading: true,
+      selectedId: null,
       filters: {},
       css: CssForBootstrap4,
       toggles: {},
@@ -326,6 +368,12 @@ export default {
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },
+    selectExercice(row) {
+      this.selectedId = row.data.id;
+    },
+    listePresences() {
+      //TODO: liste des présences
+    },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;
 
@@ -345,6 +393,10 @@ export default {
       };
     },
     onRowClass(dataItem) {
+      if (dataItem.id === this.selectedId) {
+        return 'table-primary'
+      };
+
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',
