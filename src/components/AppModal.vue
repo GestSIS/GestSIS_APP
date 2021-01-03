@@ -36,6 +36,7 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'AppModal',
   components: {
+    ModalConfirmation: () => import(`@/components/modal/ModalConfirmation`),
     ModalCours: () => import(`@/components/modal/ModalCours`),
     ModalFonction: () => import(`@/components/modal/ModalFonction`),
     ModalPromotion: () => import(`@/components/modal/ModalPromotion`),

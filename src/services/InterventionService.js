@@ -3,7 +3,7 @@ import Api from '@/http/Request';
 export default {
   getInterventions(exerciceComptableId) {
     return Api.api().get('/interventions', {
-      params: { exercice_comptable_id: exerciceComptableId }
+      params: { exercice_comptable_id: exerciceComptableId },
     });
   },
   getIntervention(interventionId) {
@@ -33,6 +33,9 @@ export default {
   createIntervention(interventionData) {
     return Api.api().post('/interventions/', interventionData);
   },
+  removeIntervention(interventionId) {
+    return Api.api().delete('/interventions/' + interventionId);
+  },
   validerIntervention(interventionId) {
     return Api.api().post('/interventions/' + interventionId + '/valider');
   },
@@ -43,19 +46,19 @@ export default {
   //Matériel
   addMateriel(interventionId, materielData) {
     return Api.api().post('/interventions/' + interventionId + '/materiels/', {
-      materiels: [materielData]
+      materiels: [materielData],
     });
   },
   editMateriel(interventionId, materielData) {
     return Api.api().put('/interventions/' + interventionId + '/materiels/', {
-      materiels: [materielData]
+      materiels: [materielData],
     });
   },
   removeMateriel(interventionId, materielId) {
     return Api.api().delete(
       '/interventions/' + interventionId + '/materiels/',
       {
-        data: { materiels: [materielId] }
+        data: { materiels: [materielId] },
       }
     );
   },
@@ -63,14 +66,14 @@ export default {
   //Vehicules
   addVehicules(interventionId, vehiculesData) {
     return Api.api().post('/interventions/' + interventionId + '/vehicules/', {
-      vehicules: vehiculesData
+      vehicules: vehiculesData,
     });
   },
   removeVehicules(interventionId, vehiculesId) {
     return Api.api().delete(
       '/interventions/' + interventionId + '/vehicules/',
       {
-        data: { vehicules: vehiculesId }
+        data: { vehicules: vehiculesId },
       }
     );
   },
@@ -78,14 +81,14 @@ export default {
   //Quittances
   addQuittances(interventionId, quittancesData) {
     return Api.api().post('/interventions/' + interventionId + '/quittances/', {
-      quittances: quittancesData
+      quittances: quittancesData,
     });
   },
   removeQuittances(interventionId, quittancesId) {
     return Api.api().delete(
       '/interventions/' + interventionId + '/quittances/',
       {
-        data: { quittances: quittancesId }
+        data: { quittances: quittancesId },
       }
     );
   },
@@ -105,58 +108,58 @@ export default {
   },
   removeSapeurs(interventionId, sapeursIds) {
     return Api.api().delete('/interventions/' + interventionId + '/sapeurs/', {
-      data: sapeursIds
+      data: sapeursIds,
     });
   },
 
   //Appel
   addAppel(interventionId, appelData) {
     return Api.api().post('/interventions/' + interventionId + '/appels/', {
-      appels: [appelData]
+      appels: [appelData],
     });
   },
   editAppel(interventionId, appelData) {
     return Api.api().put('/interventions/' + interventionId + '/appels/', {
-      appels: [appelData]
+      appels: [appelData],
     });
   },
   removeAppel(interventionId, appelId) {
     return Api.api().delete('/interventions/' + interventionId + '/appels/', {
-      data: { appels: [appelId] }
+      data: { appels: [appelId] },
     });
   },
 
   //Mission
   addMission(interventionId, missionData) {
     return Api.api().post('/interventions/' + interventionId + '/missions/', {
-      missions: [missionData]
+      missions: [missionData],
     });
   },
   editMission(interventionId, missionData) {
     return Api.api().put('/interventions/' + interventionId + '/missions/', {
-      missions: [missionData]
+      missions: [missionData],
     });
   },
   removeMission(interventionId, missionId) {
     return Api.api().delete('/interventions/' + interventionId + '/missions/', {
-      data: { missions: [missionId] }
+      data: { missions: [missionId] },
     });
   },
 
   //Phase
   addPhase(interventionId, phaseData) {
     return Api.api().post('/interventions/' + interventionId + '/phases/', {
-      phases: [phaseData]
+      phases: [phaseData],
     });
   },
   editPhase(interventionId, phaseData) {
     return Api.api().put('/interventions/' + interventionId + '/phases/', {
-      phases: [phaseData]
+      phases: [phaseData],
     });
   },
   removePhase(interventionId, phaseId) {
     return Api.api().delete('/interventions/' + interventionId + '/phases/', {
-      data: { phases: [phaseId] }
+      data: { phases: [phaseId] },
     });
-  }
+  },
 };

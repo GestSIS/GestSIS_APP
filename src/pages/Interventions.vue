@@ -40,6 +40,13 @@
             >
               Modifier
             </router-link>
+            <button
+              :disabled="!canDelete"
+              @click="supprimerIntervention(selectedId)"
+              class="btn btn-outline-primary btn-block"
+            >
+              Supprimer
+            </button>
           </form>
         </div>
       </div>
@@ -440,12 +447,28 @@ export default {
         }
       });
     },
+    canDelete() {
+      return this.selectedId && this.listeInterventions.filter(i => i.id == this.selectedId && i.statut < 3).length > 0;
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id];
       this.$refs.vuetable.toggleDetailRow(id);
+    },
+    supprimerIntervention(id) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data:{
+          title: "Voulez-vous vraiment supprimer l'intervention ?",
+          question:"Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement."
+        },
+        callback: () => {
+          console.log(this.selectedId)
+          this.$store.dispatch('removeIntervention', this.selectedId)
+        }
+      });
     },
     validerIntervention(id) {
       this.$store.dispatch('validerIntervention', id);

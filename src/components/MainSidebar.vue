@@ -135,7 +135,7 @@
 
 <script>
 export default {
-  name: 'MaineSidebar'
+  name: 'MainSidebar'
 };
 </script>
 
