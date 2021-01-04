@@ -35,7 +35,7 @@
             <router-link
               tag="button"
               :disabled="!selectedId"
-              :to='"/interventions/"+selectedId'
+              :to="'/interventions/' + selectedId"
               class="btn btn-outline-primary btn-block"
             >
               Modifier
@@ -303,13 +303,11 @@ export default {
         {
           title: 'Date',
           name: 'date_debut',
-          dataClass: 'align-middle',
           sortField: 'date_debut',
         },
         {
           title: 'Heure',
           name: 'heure_debut',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -326,7 +324,6 @@ export default {
         {
           title: 'Localité',
           name: 'localite_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getLocalite(value).designation;
           },
@@ -335,12 +332,11 @@ export default {
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle',
+          sortField: 'lieu',
         },
         {
           title: 'Stat fédéral',
           name: 'stat_federal_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getStatFederal(value).designation;
           },
@@ -349,7 +345,6 @@ export default {
         {
           title: 'Traitement',
           name: 'intervention_traitement_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getInterventionTraitement(value).designation;
           },
@@ -358,7 +353,6 @@ export default {
         {
           title: 'Étendue',
           name: 'degre',
-          dataClass: 'align-middle',
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
@@ -373,7 +367,6 @@ export default {
         {
           title: 'Statut',
           name: 'statut',
-          dataClass: 'align-middle',
           formatter(value) {
             const statuts = {
               0: 'A saisir',
@@ -388,7 +381,6 @@ export default {
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle',
         },
       ],
       loading: true,
@@ -431,25 +423,32 @@ export default {
     },
     filteredInterventions() {
       const self = this;
-      return this.listeInterventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(([key, value]) => (x) => x[key] === value)
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      ).map(i => {
-        if (i.id == self.selectedId) {
-          return {...i, 'row-class':'bg-primary'};
-        }else{
-          return i;
-        }
-      });
+      return this.listeInterventions
+        .filter(
+          Object.entries(this.filters)
+            .filter(([, val]) => val)
+            .map(([key, value]) => (x) => x[key] === value)
+            .reduce(
+              (f, g) => (x) => f(x) && g(x),
+              () => true
+            )
+        )
+        .map((i) => {
+          if (i.id == self.selectedId) {
+            return { ...i, 'row-class': 'bg-primary' };
+          } else {
+            return i;
+          }
+        });
     },
     canDelete() {
-      return this.selectedId && this.listeInterventions.filter(i => i.id == this.selectedId && i.statut < 3).length > 0;
-    }
+      return (
+        this.selectedId &&
+        this.listeInterventions.filter(
+          (i) => i.id == this.selectedId && i.statut < 3
+        ).length > 0
+      );
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -460,13 +459,14 @@ export default {
     supprimerIntervention(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
-        data:{
+        data: {
           title: "Voulez-vous vraiment supprimer l'intervention ?",
-          question:"Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement."
+          question:
+            "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
         },
         callback: () => {
-          this.$store.dispatch('removeIntervention', this.selectedId)
-        }
+          this.$store.dispatch('removeIntervention', this.selectedId);
+        },
       });
     },
     validerIntervention(id) {
@@ -476,7 +476,7 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalRapportIntervention',
         size: 1,
-        data:{interventionId:this.selectedId},
+        data: { interventionId: this.selectedId },
       });
       //TODO: imprimer le rapport d'intervention -> modal
     },
@@ -506,8 +506,8 @@ export default {
     },
     onRowClass(dataItem) {
       if (dataItem.id === this.selectedId) {
-        return 'table-primary'
-      };
+        return 'table-primary';
+      }
       const statutsClass = {
         0: '', // 'A saisir',
         1: '', // 'En attente de validation',

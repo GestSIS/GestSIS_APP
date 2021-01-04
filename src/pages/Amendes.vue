@@ -152,18 +152,15 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle'
         },
         {
           title: 'Sapeur',
           name: 'sapeur',
-          dataClass: 'align-middle',
           sortField: 'sapeur',
         },
         {
           title: 'Nombre',
           name: 'nb',
-          dataClass: 'align-middle',
           sortField: 'nb',
         },
         {
@@ -174,7 +171,6 @@ export default {
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle',
         },
       ],
       loading: true,

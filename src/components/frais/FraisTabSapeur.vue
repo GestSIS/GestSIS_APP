@@ -66,7 +66,7 @@ import _ from 'lodash';
 export default {
   name: 'FraisTabSapeur',
   components: {
-    Vuetable
+    Vuetable,
   },
   watch: {
     currentExerciceComptableId() {
@@ -80,7 +80,7 @@ export default {
       this.loading = true;
       this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       this.loading = false;
-    }
+    },
   },
   mounted() {
     //TODO Fetch only if neccessary
@@ -95,7 +95,7 @@ export default {
     if (this.currentExerciceComptableId || 0 !== 0) {
       ComptabiliteService.getEcrituresForExerciceComptable(
         this.currentExerciceComptableId
-      ).then(data => {
+      ).then((data) => {
         this.ecritures = data;
         this.loading = false;
         this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
@@ -112,89 +112,85 @@ export default {
       ecritureColumns: [
         {
           title: 'Ecriture',
-          field: 'designation'
+          field: 'designation',
         },
         {
           title: 'Solde',
           field: 'solde',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Indemnité',
           field: 'indemnite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Frais',
           field: 'frais',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Quantité',
           field: 'quantite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Taux',
           field: 'taux',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Total',
           field: 'total',
           headerClassName: 'text-center',
-          className: 'text-right'
-        }
+          className: 'text-right',
+        },
       ],
       fields: [
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width'
+          dataClass: 'details-width',
         },
         {
           title: 'Sapeur',
           name: 'nomPrenom',
           sortField: 'nomPrenom',
-          dataClass: 'align-middle'
         },
         {
           title: 'Fonction',
           name: 'fonction',
           sortField: 'fonction',
-          dataClass: 'align-middle'
         },
         {
           title: 'Total',
           name: 'total',
-          sortField: 'montant',
-          dataClass: 'align-middle'
+          sortField: 'total',
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+        },
+      ],
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapState({
-      listInterventions: state =>
-        state.intervention.liste.filter(e => e.statut > 1),
-      listeSapeurs: state => state.sapeur.liste,
-      listExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listInterventions: (state) =>
+        state.intervention.liste.filter((e) => e.statut > 1),
+      listeSapeurs: (state) => state.sapeur.liste,
+      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([
       'activeInterventionId',
@@ -203,7 +199,7 @@ export default {
       'getStatFederal',
       'getFonction',
       'getInterventionTraitement',
-      'getSapeur'
+      'getSapeur',
     ]),
     computedData() {
       // Details of ecritures for an intervention will be loaded on the flight
@@ -213,23 +209,23 @@ export default {
       }, new Map());
 
       return this.listeSapeurs
-        .filter(s => ecrituresBySapeur.has(s.id))
-        .map(s => ({
+        .filter((s) => ecrituresBySapeur.has(s.id))
+        .map((s) => ({
           id: s.id,
           nomPrenom: `${s.nom} ${s.prenom}`,
           fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
           total: ecrituresBySapeur.get(s.id).reduce((a, b) => a + +b.total, 0),
           getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
-          columns: this.ecritureColumns
+          columns: this.ecritureColumns,
         }));
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
       this.$refs.vuetable_frais_sapeurs.toggleDetailRow(id);
     },
@@ -248,7 +244,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
@@ -256,11 +252,11 @@ export default {
         0: '', //'A saisir',
         1: '', //'A valider',
         2: 'table-warning', //'A imputer',
-        3: 'table-success' //'Imputée'
+        3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

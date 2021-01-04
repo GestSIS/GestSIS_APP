@@ -83,7 +83,7 @@ import _ from 'lodash';
 export default {
   name: 'FraisTabCompte',
   components: {
-    Vuetable
+    Vuetable,
   },
   data() {
     return {
@@ -95,37 +95,33 @@ export default {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle'
         },
         {
           title: 'Sapeur',
           name: 'sapeur',
           sortField: 'sapeur',
-          dataClass: 'align-middle'
         },
         {
           title: 'Total',
           name: 'total',
           sortField: 'total',
-          dataClass: 'align-middle'
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+        },
+      ],
     };
   },
   computed: {
     ...mapState({
-      ecritures: state => state.comptabilite.active.ecritures,
-      activeCompteId: state => state.comptabilite.active.compteId,
-      activeExerciceComptableId: state => state.exerciceComptable.activeId,
-      listSapeurs: state => state.sapeur.liste,
-      listeComptes: state => state.comptabilite.comptes
+      ecritures: (state) => state.comptabilite.active.ecritures,
+      activeCompteId: (state) => state.comptabilite.active.compteId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      listSapeurs: (state) => state.sapeur.liste,
+      listeComptes: (state) => state.comptabilite.comptes,
     }),
-    ...mapGetters(['getSapeur', 'getFonction', 'getCompte'])
+    ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
   },
   mounted() {
     this.loading = true;
@@ -149,11 +145,11 @@ export default {
       if (oldOne.length === 0) {
         this.init();
       }
-    }
+    },
   },
   methods: {
     manageCompte() {
-      //TODO
+      //TODO: Manage comptes
     },
     selectCompte(id) {
       this.loading = true;
@@ -194,22 +190,24 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     computeData() {
       let svm = this;
-      return this.ecritures.map(e => ({
+      return this.ecritures.map((e) => ({
         ...e,
-        sapeur: [svm.getSapeur(e.sapeur_id)].map(s => `${s.nom} ${s.prenom}`)[0]
+        sapeur: [svm.getSapeur(e.sapeur_id)].map(
+          (s) => `${s.nom} ${s.prenom}`
+        )[0],
       }));
     },
-    ...mapMutations(['SHOW_MODAL'])
+    ...mapMutations(['SHOW_MODAL']),
     // editEcriture() {
     //   this.$store.dispatch('resetActiveGrade')
     //   this.SHOW_MODAL('ModalPromotion')
     // },
-  }
+  },
 };
 </script>
 

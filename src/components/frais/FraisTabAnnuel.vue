@@ -65,7 +65,7 @@ import _ from 'lodash';
 export default {
   name: 'FraisTabAnnuel',
   components: {
-    Vuetable
+    Vuetable,
   },
   watch: {
     currentExerciceComptableId() {
@@ -79,7 +79,7 @@ export default {
       this.loading = true;
       this.$refs.vuetable_frais_annuels.setData(this.computeData());
       this.loading = false;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchListeSapeur');
@@ -107,82 +107,78 @@ export default {
       ecritureColumns: [
         {
           title: 'Designation',
-          field: 'designation'
+          field: 'designation',
         },
         {
           title: 'Type',
           field: 'frais',
-          formatter: field => (field > 0 ? 'Frais' : 'Indemnité')
+          formatter: (field) => (field > 0 ? 'Frais' : 'Indemnité'),
         },
         {
           title: 'Compte',
           field: 'compte_id',
-          formatter: field => svm.getCompte(field).designation
+          formatter: (field) => svm.getCompte(field).designation,
         },
         {
           title: 'Tarif',
           field: 'tarif',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Quantité',
           field: 'quantite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Total',
           field: 'total',
           headerClassName: 'text-center',
-          className: 'text-right'
-        }
+          className: 'text-right',
+        },
       ],
       fields: [
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width'
+          dataClass: 'details-width',
         },
         {
           title: 'Sapeur',
           name: 'nomPrenom',
           sortField: 'nomPrenom',
-          dataClass: 'align-middle'
         },
         {
           title: 'Fonction',
           name: 'fonction',
           sortField: 'fonction',
-          dataClass: 'align-middle'
         },
         {
           title: 'Total',
           name: 'total',
           sortField: 'montant',
-          dataClass: 'align-middle'
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+        },
+      ],
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapState({
-      listeEcritures: state => state.comptabilite.ecritures.annuels,
-      listeFonctions: state => state.fonction.liste,
-      listExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeEcritures: (state) => state.comptabilite.ecritures.annuels,
+      listeFonctions: (state) => state.fonction.liste,
+      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte'])
+    ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte']),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -200,10 +196,12 @@ export default {
           .map(([key, value]) => ({
             id: +key,
             ecritures: value,
-            total: value.map(e => parseFloat(e.total)).reduce((a, b) => a + b)
+            total: value
+              .map((e) => parseFloat(e.total))
+              .reduce((a, b) => a + b),
           }))
           // Add sapeur data
-          .map(e => {
+          .map((e) => {
             let sapeur = this.getSapeur(e.id);
             return {
               ...e,
@@ -211,19 +209,19 @@ export default {
               nomPrenom: sapeur.nom + ' ' + sapeur.prenom,
               fonction: sapeur.fonction_id
                 ? this.getFonction(sapeur.fonction_id).nom
-                : ''
+                : '',
             };
           })
           // Add data relative to table
-          .map(s => ({
+          .map((s) => ({
             ...s,
             getEcritures: () =>
               new Promise(
-                function(resolve) {
+                function (resolve) {
                   resolve(this.ecritures);
                 }.bind(s)
               ),
-            columns: this.ecritureColumns
+            columns: this.ecritureColumns,
           }))
       );
     },
@@ -233,7 +231,7 @@ export default {
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
       this.$refs.vuetable_frais_annuels.toggleDetailRow(id);
     },
@@ -251,17 +249,17 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
       const statutsClass = {
         0: 'text-danger', //'inactif',
-        1: '' //'Actif',
+        1: '', //'Actif',
       };
       return statutsClass[dataItem.actif];
-    }
-  }
+    },
+  },
 };
 </script>
 

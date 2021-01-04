@@ -67,7 +67,7 @@ import _ from 'lodash';
 export default {
   name: 'FraisTabExercice',
   components: {
-    Vuetable
+    Vuetable,
   },
   watch: {
     currentExerciceComptableId() {
@@ -81,7 +81,7 @@ export default {
       this.loading = true;
       this.$refs.vuetable_frais_exercices.setData(this.computedData);
       this.loading = false;
-    }
+    },
   },
   mounted() {
     if (this.listSapeurs.length === 0) {
@@ -116,132 +116,127 @@ export default {
         {
           title: 'Sapeur',
           field: 'sapeur_id',
-          formatter: field =>
-            [svm.getSapeur(field)].map(s => `${s.nom} ${s.prenom}`)[0]
+          formatter: (field) =>
+            [svm.getSapeur(field)].map((s) => `${s.nom} ${s.prenom}`)[0],
         },
         {
           title: 'Solde',
           field: 'solde',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Indemnité',
           field: 'indemnite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Total',
           field: 'total',
           headerClassName: 'text-center',
-          className: 'text-right'
-        }
+          className: 'text-right',
+        },
       ],
       fields: [
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width'
+          dataClass: 'align-middle details-width',
         },
         {
           title: 'Date',
           name: 'date',
           sortField: 'date',
-          dataClass: 'align-middle'
         },
         {
           title: 'Categorie',
           name: 'categorie',
           sortField: 'categorie',
-          dataClass: 'align-middle'
         },
         {
           title: 'Heure',
           name: 'heure',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
-          }
+          },
+          sortField: 'heure',
         },
         {
           title: 'Duree',
           name: 'duree',
-          dataClass: 'align-middle'
+          sortField: 'duree',
         },
         {
           title: 'Localité',
           name: 'localite',
           sortField: 'localite',
-          dataClass: 'align-middle'
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle'
+          sortField: 'lieu',
         },
         {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle'
         },
         {
           title: 'statut',
           name: 'statut',
           sortField: 'statut',
-          dataClass: 'align-middle',
           formatter(value) {
             const statuts = {
               0: 'Annulé',
               1: 'A saisir',
               2: 'En attente de validation',
               3: 'A imputer',
-              4: 'Imputée'
+              4: 'Imputée',
             };
             return statuts[value];
-          }
+          },
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+        },
+      ],
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapState({
-      listExercices: state => state.exercice.liste.filter(e => e.statut > 2),
-      listSapeurs: state => state.sapeur.liste,
-      localites: state => state.localite.liste,
-      exerciceCategories: state => state.exerciceCategorie.liste,
-      listExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listExercices: (state) =>
+        state.exercice.liste.filter((e) => e.statut > 2),
+      listSapeurs: (state) => state.sapeur.liste,
+      localites: (state) => state.localite.liste,
+      exerciceCategories: (state) => state.exerciceCategorie.liste,
+      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),
     computedData() {
-      return this.listExercices.map(s => ({
+      return this.listExercices.map((s) => ({
         ...s,
         categorie: this.getExerciceCategorie(s.exercice_categorie_id)
           .designation,
         localite: this.getLocalite(s.localite_id).designation,
         getEcritures: () => ComptabiliteService.getEcrituresForExercice(s.id),
-        columns: this.ecritureColumns
+        columns: this.ecritureColumns,
       }));
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
       this.$refs.vuetable_frais_exercices.toggleDetailRow(id);
     },
@@ -251,7 +246,7 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
-        size: 2
+        size: 2,
       });
     },
     dataManager(sortOrder) {
@@ -269,7 +264,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
@@ -278,11 +273,11 @@ export default {
         1: '', //'A saisir',
         2: '', //'En attente de validation',
         3: 'table-warning', //'A imputer',
-        4: 'table-success' //'Imputée'
+        4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

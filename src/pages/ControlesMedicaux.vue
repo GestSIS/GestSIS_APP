@@ -125,8 +125,7 @@ export default {
         {
           title: 'Age',
           name: 'age',
-          sortField: 'age',
-          dataClass: 'align-middle'
+          sortField: 'age'
         },
         {
           title: 'Type',
@@ -142,8 +141,7 @@ export default {
         {
           title: 'Consultation',
           name: 'consultation',
-          sortField: 'consultation',
-          dataClass: 'align-middle'
+          sortField: 'consultation'
         },
         {
           title: 'Validité',
@@ -154,31 +152,26 @@ export default {
         {
           title: 'Designation',
           name: 'designation',
-          sortField: 'designation',
-          dataClass: 'align-middle'
+          sortField: 'designation'
         },
         {
           title: 'Accepter',
           name: 'accepter',
-          sortField: 'accepter',
-          dataClass: 'align-middle'
+          sortField: 'accepter'
         },
         {
           title: 'En cours',
           name: 'en_cours',
-          sortField: 'en_cours',
-          dataClass: 'align-middle'
+          sortField: 'en_cours'
         },
         {
           title: 'Doc',
           name: 'doc',
-          dataClass: 'align-middle',
           sortField: 'doc'
         },
         {
           title: 'Actions',
-          name: 'actions',
-          dataClass: 'align-middle'
+          name: 'actions'
         }
       ]
     };

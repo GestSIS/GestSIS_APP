@@ -67,7 +67,7 @@ import _ from 'lodash';
 export default {
   name: 'FraisTabIntervention',
   components: {
-    Vuetable
+    Vuetable,
   },
   watch: {
     currentExerciceComptableId() {
@@ -81,7 +81,7 @@ export default {
       this.loading = true;
       this.$refs.vuetable_frais_interventions.setData(this.computedData);
       this.loading = false;
-    }
+    },
   },
   mounted() {
     //TODO Fetch only if neccessary
@@ -112,147 +112,144 @@ export default {
         {
           title: 'Sapeur',
           field: 'sapeur_id',
-          formatter: field =>
-            [svm.getSapeur(field)].map(s => `${s.nom} ${s.prenom}`)[0]
+          formatter: (field) =>
+            [svm.getSapeur(field)].map((s) => `${s.nom} ${s.prenom}`)[0],
         },
         {
           title: 'Tarif',
           field: 'tarif',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Taux',
           field: 'taux',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Quantité',
           field: 'quantite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Solde',
           field: 'solde',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Indemnité',
           field: 'indemnite',
           headerClassName: 'text-center',
-          className: 'text-right'
+          className: 'text-right',
         },
         {
           title: 'Total',
           field: 'total',
           headerClassName: 'text-center',
-          className: 'text-right'
-        }
+          className: 'text-right',
+        },
       ],
       fields: [
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle'
         },
         {
           title: 'Date',
           name: 'date_debut',
-          dataClass: 'align-middle'
+          sortField: 'date_debut',
         },
         {
           title: 'Heure',
           name: 'heure_debut',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
-          }
+          },
+          sortField: 'heure_debut',
         },
         {
           title: "Type d'intervention",
           name: 'type_intervention',
-          dataClass: 'align-middle',
-          sortField: 'type_intervention'
+          sortField: 'type_intervention',
         },
         {
           title: 'Localité',
           name: 'localite_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return svm.getLocalite(value).designation;
-          }
+          },
+          sortField: 'localite_id',
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle'
+          sortField: 'lieu',
         },
         {
           title: 'Stat fédéral',
           name: 'stat_federal_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return svm.getStatFederal(value).designation;
-          }
+          },
+          sortField: 'stat_federal_id',
         },
         {
           title: 'Traitement',
           name: 'intervention_traitement_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return svm.getInterventionTraitement(value).designation;
-          }
+          },
+          sortField: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
           name: 'degre',
-          dataClass: 'align-middle',
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
               2: 'Petite',
               3: 'Moyenne',
-              4: 'Grande'
+              4: 'Grande',
             };
             return degre[value];
-          }
+          },
+          sortField: 'degre',
         },
         {
           title: 'Statut',
           name: 'statut',
-          dataClass: 'align-middle',
           formatter(value) {
             const statuts = {
               0: 'A saisir',
               1: 'A valider',
               2: 'A imputer',
-              3: 'Imputée'
+              3: 'Imputée',
             };
             return statuts[value];
-          }
+          },
+          sortField: 'statut',
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+        },
+      ],
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapState({
-      listInterventions: state =>
-        state.intervention.liste.filter(e => e.statut > 1),
-      listExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listInterventions: (state) =>
+        state.intervention.liste.filter((e) => e.statut > 1),
+      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([
       'activeInterventionId',
@@ -260,26 +257,26 @@ export default {
       'getLocalite',
       'getStatFederal',
       'getInterventionTraitement',
-      'getSapeur'
+      'getSapeur',
     ]),
     computedData() {
-      return this.listInterventions.map(i => ({
+      return this.listInterventions.map((i) => ({
         ...i,
         type_intervention: this.getTypeIntervention(i.type_intervention_id)
           .designation,
         localite: this.getLocalite(i.localite_id).designation,
         getEcritures: () =>
           ComptabiliteService.getEcrituresForInterventions(i.id),
-        columns: this.ecritureColumns
+        columns: this.ecritureColumns,
       }));
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
       this.$refs.vuetable_frais_interventions.toggleDetailRow(id);
     },
@@ -289,7 +286,7 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalImputerIntervention',
         data: { id: interventionId },
-        size: 2
+        size: 2,
       });
     },
     dataManager(sortOrder) {
@@ -307,7 +304,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
@@ -315,11 +312,11 @@ export default {
         0: '', //'A saisir',
         1: '', //'A valider',
         2: 'table-warning', //'A imputer',
-        3: 'table-success' //'Imputée'
+        3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

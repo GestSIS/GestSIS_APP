@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Exercices
@@ -37,7 +35,7 @@
             <router-link
               tag="button"
               :disabled="!selectedId"
-              :to='"/exercices/"+selectedId'
+              :to="'/exercices/' + selectedId"
               class="btn btn-outline-primary btn-block"
             >
               Modifier
@@ -83,8 +81,9 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                    >{{ loc.designation }}</option
                   >
+                    {{ loc.designation }}
+                  </option>
                 </select>
               </div>
               <div class="form-group col-md-4">
@@ -92,7 +91,8 @@
                   class="custom-select custom-select-sm"
                   id="filterCategorie"
                   @change="
-                    (event) => onFilter('exercice_categorie_id', event.target.value)
+                    (event) =>
+                      onFilter('exercice_categorie_id', event.target.value)
                   "
                 >
                   <option>&lt;Catégorie&gt;</option>
@@ -100,8 +100,9 @@
                     v-for="catgeorie in filteredExercicesCategories"
                     :key="catgeorie.id"
                     :value="catgeorie.id"
-                    >{{ catgeorie.designation }}</option
                   >
+                    {{ catgeorie.designation }}
+                  </option>
                 </select>
               </div>
               <div class="form-group col-md-4">
@@ -122,7 +123,7 @@
               </div>
             </div>
           </form>
-      </div>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -250,24 +251,21 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width',
+          dataClass: 'details-width',
         },
         {
           title: 'Date',
           name: 'date',
           sortField: 'date',
-          dataClass: 'align-middle',
         },
         {
           title: 'Categorie',
           name: 'categorie',
           sortField: 'categorie',
-          dataClass: 'align-middle',
         },
         {
           title: 'Heure',
           name: 'heure',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -275,29 +273,25 @@ export default {
         {
           title: 'Duree',
           name: 'duree',
-          dataClass: 'align-middle',
+          sortField: 'duree',
         },
         {
           title: 'Localité',
           name: 'localite',
           sortField: 'localite',
-          dataClass: 'align-middle',
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle',
         },
         {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle',
         },
         {
           title: 'Statut',
           name: 'statut',
-          dataClass: 'align-middle',
           sortField: 'statut',
           formatter(value) {
             const statuts = {
@@ -313,7 +307,6 @@ export default {
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle',
         },
       ],
     };
@@ -338,7 +331,9 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(this.listeExercices.map((i) => i.exercice_categorie_id));
+      const ids = new Set(
+        this.listeExercices.map((i) => i.exercice_categorie_id)
+      );
       return this.listeCategories.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
@@ -394,8 +389,8 @@ export default {
     },
     onRowClass(dataItem) {
       if (dataItem.id === this.selectedId) {
-        return 'table-primary'
-      };
+        return 'table-primary';
+      }
 
       const statutsClass = {
         0: 'text-danger', //'Annulé',
