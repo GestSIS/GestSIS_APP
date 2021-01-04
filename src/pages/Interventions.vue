@@ -465,7 +465,6 @@ export default {
           question:"Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement."
         },
         callback: () => {
-          console.log(this.selectedId)
           this.$store.dispatch('removeIntervention', this.selectedId)
         }
       });

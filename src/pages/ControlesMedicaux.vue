@@ -130,11 +130,13 @@ export default {
         },
         {
           title: 'Type',
-          name: 'type'
+          name: 'type',
+          sortField: 'type'
         },
         {
           title: 'Medecin',
           name: 'medecin',
+          sortField: 'medecin',
           dataClass: 'align-middle'
         },
         {

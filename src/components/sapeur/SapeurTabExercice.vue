@@ -13,12 +13,11 @@
             <th>Catégorie</th>
             <th>Localité</th>
             <th>Communication</th>
-            <th>C</th>
-            <th>P</th>
-            <th>Ex</th>
-            <th>Excuse</th>
-            <th>A</th>
-            <th>Solde</th>
+            <th>Convoqué</th>
+            <th>Présent</th>
+            <th>Excusé</th>
+            <th>Amende</th>
+            <!-- <th>Solde</th> -->
           </tr>
         </thead>
         <tbody>
@@ -28,12 +27,31 @@
             <td>{{ e.categorie }}</td>
             <td>{{ e.localite }}</td>
             <td>{{ e.communications }}</td>
-            <td>{{ e.convoque }}</td>
-            <td>{{ e.present }}</td>
-            <td>{{ e.excuse_id }}</td>
-            <td>{{ e.excuse_id }}</td>
-            <td>{{ e.amende_id }}</td>
-            <td>0.0</td>
+            <td>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="convoque" :checked="e.convoque" disabled>
+                <label class="custom-control-label" for="convoque"></label>
+              </div>
+            </td>
+            <td>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="present" :checked="e.present" disabled>
+                <label class="custom-control-label" for="present"></label>
+              </div>
+            </td>
+            <td>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="excuse" :checked="e.excuse_type_id" disabled>
+                <label class="custom-control-label" for="excuse">{{ e.excuse_type_id ? getExcuseType(e.excuse_type_id).designation : "" }}</label>
+              </div>
+            </td>
+            <td>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="amende" :checked="e.amende_id" disabled>
+                <label class="custom-control-label" for="amende"></label>
+              </div>
+            </td>
+            <!-- <td>0.0</td> -->
           </tr>
         </tbody>
       </table>
@@ -52,7 +70,7 @@ export default {
       activeSapeurExercice: state => state.sapeur.active.exercices,
       currentExerciceComptableId: state => state.exerciceComptable.activeId
     }),
-    ...mapGetters(['getLocalite', 'getExerciceCategorie']),
+    ...mapGetters(['getLocalite', 'getExerciceCategorie', 'getExcuseType']),
     exerciceDisplay() {
       return this.activeSapeurExercice.map(exercice => {
         let localite = this.getLocalite(exercice.localite_id);
@@ -67,6 +85,9 @@ export default {
     }
   },
   mounted() {
+    //TODO: Load before any display
+    //TODO: Affichage solde ? Droits ?
+    this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
     this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
     this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
   },

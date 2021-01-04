@@ -220,7 +220,6 @@ export default {
       });
     },
     removeIntervention({ commit }, interventionId) {
-      console.log(interventionId);
       return InterventionService.removeIntervention(interventionId).then(() => {
         return commit(types.REMOVE_INTERVENTION, interventionId);
       });
