@@ -25,8 +25,8 @@ export default {
           (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
         );
     },
-    [types.SELECT_CURRENT_SAPEUR](state, payload) {
-      state.active.id = payload;
+    [types.SELECT_CURRENT_SAPEUR](state, sapeurId) {
+      state.active.id = sapeurId;
     },
     [types.CREATE_SAPEUR](state, payload) {
       state.liste = [

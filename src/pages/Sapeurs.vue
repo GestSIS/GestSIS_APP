@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Sapeurs
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Sapeurs</li>
           </ol>
         </nav>
       </div>
@@ -104,11 +100,25 @@ const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
     (!('id' in routeTo.params) || !routeTo.params.id) &&
     store.state.sapeur.active.id > 0
   ) {
-    next({ name: 'sapeurs-details', params: { id: store.state.sapeur.active.id } });
+    // Redirection dans le cas ou on a déjà sélectionné un sapeur
+    next({
+      name: 'sapeurs-details',
+      params: { id: store.state.sapeur.active.id },
+    });
+  } else if (
+    (!('id' in routeTo.params) || !routeTo.params.id) &&
+    store.state.sapeur.liste.length > 0
+  ) {
+    // Sélection du premier sapeur
+    store.dispatch('selectSapeur', store.state.sapeur.liste[0].id);
+    next({
+      name: 'sapeurs-details',
+      params: { id: store.state.sapeur.liste[0].id },
+    });
   } else {
     next();
   }
-}
+};
 
 export default {
   components: {
@@ -121,7 +131,18 @@ export default {
     redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
   },
   beforeCreate() {
-    this.$store.dispatch('fetchListeSapeur');
+    this.$store.dispatch('fetchListeSapeur').then(() => {
+      if (
+        store.state.sapeur.active.id <= 0 &&
+        store.state.sapeur.liste.length > 0
+      ) {
+        store.dispatch('selectSapeur', store.state.sapeur.liste[0].id);
+        this.$router.push({
+          name: 'sapeurs-details',
+          params: { id: store.state.sapeur.liste[0].id },
+        });
+      }
+    });
   },
   data() {
     return {
@@ -135,11 +156,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listSapeur: (state) => state.sapeur.liste,
+      listeSapeur: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
     }),
     filteredSapeurs() {
-      return this.listSapeur.filter(this.filters[this.filter]);
+      return this.listeSapeur.filter(this.filters[this.filter]);
     },
   },
 };
