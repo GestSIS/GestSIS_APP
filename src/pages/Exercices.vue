@@ -144,6 +144,7 @@
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
+            no-data-template="Aucun exercice/séance à afficher"
             @vuetable:row-clicked="selectExercice"
           >
             <div slot="details" slot-scope="props">

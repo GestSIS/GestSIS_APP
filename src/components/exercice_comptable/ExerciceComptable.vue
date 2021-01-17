@@ -26,14 +26,14 @@
           {{ e.annee }}
         </button>
         <div class="dropdown-divider"></div>
-        <button class="dropdown-item" type="button">Paramètres</button>
+        <button class="dropdown-item" type="button" @click="parametres">Paramètres</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ExerciceComptable',
@@ -55,9 +55,16 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     selectExercice(id) {
       this.dropdown = false;
       this.$store.dispatch('selectExerciceComptable', id);
+    },
+    parametres() {
+      this.SHOW_MODAL({
+        component: 'ModalExerciceComptable',
+      });
+      this.dropdown = false;
     }
   }
 };

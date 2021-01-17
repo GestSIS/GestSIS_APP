@@ -21,74 +21,91 @@
       <div class="col-md-12">
         <nav>
           <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-            <button
+            <router-link
+              :to="{ name: 'configuration' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'general' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'general'"
+              tag="button"
             >
-              General
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Général</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-exercice-comptable' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'sapeur' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'sapeur'"
+              tag="button"
             >
-              Sapeurs
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Exercice Comptables</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-sapeur' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'exercice' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'exercice'"
+              tag="button"
             >
-              Exercices
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Sapeur</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-exercice' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'intervention' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'intervention'"
+              tag="button"
             >
-              Interventions
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Exercice</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-intervention' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'frais' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'frais'"
+              tag="button"
             >
-              Frais
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Intervention</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-frais' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'medical' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'medical'"
+              tag="button"
             >
-              Contrôles médicaux
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Frais</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-controle-medical' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'droits' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'droits'"
+              tag="button"
             >
-              Droits
-            </button>
-            <button
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Contrôles médicaux</span>
+            </router-link>
+            <router-link
+              :to="{ name: 'param-droits' }"
               class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'admin' }"
+              active-class="active"
               role="tab"
-              @click.prevent="activeTab = 'admin'"
+              tag="button"
             >
-              GestSIS Admin
-            </button>
+              <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
+              <span>Droits et rôles</span>
+            </router-link>
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
+            <router-view></router-view>
             <div v-if="activeTab === 'general'">
               TODO Info générales
             </div>
@@ -98,6 +115,12 @@
                 <li>Type de téléphone</li>
                 <li>Nombre de numéro max par sapeur</li>
                 <li>Liste des cours spécifique au SIS</li>
+              </ul>
+            </div>
+            <div v-else-if="activeTab === 'exercice-comptable'">
+              <ul>
+                <li>Exercices comptables</li>
+                <li>Ajouter, supprimer, clôturer</li>
               </ul>
             </div>
             <div v-else-if="activeTab === 'exercice'">
@@ -175,9 +198,6 @@ export default {
     return {
       activeTab: 'general'
     };
-  },
-  components: {
-    // ExerciceComptable
   },
   // props: {
   //   id: {

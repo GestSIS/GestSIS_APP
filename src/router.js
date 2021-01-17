@@ -17,20 +17,20 @@ const router = new Router({
       name: 'login',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
       component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Login.vue')
+        import(/* webpackChunkName: "about" */ '@/pages/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
       component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Register.vue')
+        import(/* webpackChunkName: "about" */ '@/pages/Register.vue'),
     },
     {
       path: '/',
       name: 'home',
       meta: { layout: 'no-sidebar', public: true },
-      component: Home
+      component: Home,
     },
     {
       path: '/sapeurs',
@@ -41,82 +41,126 @@ const router = new Router({
           path: ':id',
           name: 'sapeurs-details',
           component: () => import('@/components/sapeur/SapeurDetails.vue'),
-          props: true
-        }
-      ]
+          props: true,
+        },
+      ],
     },
     {
       path: '/exercices/:id',
       name: 'exercice',
       props: true,
-      component: () => import('@/pages/Exercice.vue')
+      component: () => import('@/pages/Exercice.vue'),
     },
     {
       path: '/exercices',
       name: 'exercices',
-      component: () => import('@/pages/Exercices.vue')
+      component: () => import('@/pages/Exercices.vue'),
     },
     {
       path: '/organisation',
       name: 'organisation',
-      component: () => import('@/pages/Organisation.vue')
+      component: () => import('@/pages/Organisation.vue'),
     },
     {
       path: '/interventions/:id',
       name: 'intervention',
       props: true,
-      component: () => import('@/pages/Intervention.vue')
+      component: () => import('@/pages/Intervention.vue'),
     },
     {
       path: '/interventions',
       name: 'interventions',
-      component: () => import('@/pages/Interventions.vue')
+      component: () => import('@/pages/Interventions.vue'),
     },
     {
       path: '/frais',
       name: 'frais',
-      component: () => import('@/pages/Frais.vue')
+      component: () => import('@/pages/Frais.vue'),
     },
     {
       path: '/controles-medicaux',
       name: 'controles-medicaux',
-      component: () => import('@/pages/ControlesMedicaux.vue')
+      component: () => import('@/pages/ControlesMedicaux.vue'),
     },
     {
       path: '/controles-medicaux/:id',
       name: 'controle-medical',
       props: true,
-      component: () => import('@/pages/ControleMedical.vue')
+      component: () => import('@/pages/ControleMedical.vue'),
     },
     {
       path: '/amendes/',
       name: 'amendes',
-      component: () => import('@/pages/Amendes.vue')
+      component: () => import('@/pages/Amendes.vue'),
     },
     {
       path: '/configuration',
       name: 'configuration',
-      component: () => import('@/pages/Configuration.vue')
+      component: () => import('@/pages/Configuration.vue'),
+      children: [
+        {
+          path: 'exercice-comptable',
+          name: 'param-exercice-comptable',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'sapeur',
+          name: 'param-sapeur',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'exercice',
+          name: 'param-exercice',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'intervention',
+          name: 'param-intervention',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'frais',
+          name: 'param-frais',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'controle-medical',
+          name: 'param-controle-medical',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+        {
+          path: 'droits',
+          name: 'param-droits',
+          component: () =>
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+        },
+      ],
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/pages/About.vue')
-    }
-  ]
+      component: () => import('@/pages/About.vue'),
+    },
+  ],
 });
 
 router.beforeEach((to, from, next) => {
-  const isPublic = to.matched.some(record => record.meta.public);
+  const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some(
-    record => record.meta.onlyWhenLoggedOut
+    (record) => record.meta.onlyWhenLoggedOut
   );
   const loggedIn = !!TokenService.getAccessToken();
 
   if (!isPublic && !loggedIn) {
     return next({
       path: '/login',
-      query: { redirect: to.fullPath } // Store the full path to redirect the user to after login
+      query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
     });
   }
 

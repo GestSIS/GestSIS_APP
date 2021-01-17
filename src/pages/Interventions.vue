@@ -186,6 +186,7 @@
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
+            no-data-template="Aucune intervention à afficher"
             @vuetable:row-clicked="selectIntervention"
           >
             <div slot="details" slot-scope="props">
