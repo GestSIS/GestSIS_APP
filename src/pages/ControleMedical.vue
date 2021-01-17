@@ -308,7 +308,7 @@ export default {
         (prev.filename !== next.filename && next.filename)
       ) {
         this.displayJustificatif();
-      } else {
+      } else if(!next.filename) {
         this.pdfData = null;
       }
     },

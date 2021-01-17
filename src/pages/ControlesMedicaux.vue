@@ -40,7 +40,7 @@
           </div>
           <vuetable
             v-show="!loading"
-            ref="vuetable_mediaux"
+            ref="vuetable_medicaux"
             :api-mode="false"
             :fields="fields"
             detail-row-class="m-td-0"
@@ -49,6 +49,19 @@
             no-data-template="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
           >
+            <div slot="accepter" slot-scope="props" class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="accepter" :checked="props.rowData.accepter" disabled>
+              <label class="custom-control-label" for="accepter"></label>
+            </div>
+            <div slot="en_cours" slot-scope="props" class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="en_cours" :checked="props.rowData.en_cours" disabled>
+              <label class="custom-control-label" for="en_cours"></label>
+            </div>
+            <div slot="doc" slot-scope="props">
+              <button class="btn" v-if="props.rowData.filename" @click="downloadJustificatif(props.rowData)">
+                <font-awesome-icon :icon="['far', 'file-pdf']"/>
+              </button>
+            </div>
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
@@ -77,6 +90,7 @@ import { mapGetters, mapState } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ControlesMedicauxService from '@/services/ControlesMedicauxService';
 
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
@@ -109,7 +123,7 @@ export default {
     loadData(routeTo, next);
   },
   mounted() {
-    this.$refs.vuetable_mediaux.setData(this.computedData);
+    this.$refs.vuetable_medicaux.setData(this.computedData);
     this.loading = false;
   },
   data() {
@@ -137,7 +151,6 @@ export default {
           title: 'Medecin',
           name: 'medecin',
           sortField: 'medecin',
-          dataClass: 'align-middle'
         },
         {
           title: 'Consultation',
@@ -148,7 +161,6 @@ export default {
           title: 'Validité',
           name: 'validite',
           sortField: 'validite',
-          dataClass: 'align-middle'
         },
         {
           title: 'Designation',
@@ -158,21 +170,25 @@ export default {
         {
           title: 'Accepter',
           name: 'accepter',
-          sortField: 'accepter'
+          sortField: 'accepter',
+          dataClass: 'text-center'
         },
         {
           title: 'En cours',
           name: 'en_cours',
-          sortField: 'en_cours'
+          sortField: 'en_cours',
+          dataClass: 'text-center'
         },
         {
           title: 'Doc',
           name: 'doc',
-          sortField: 'doc'
+          sortField: 'doc',
+          dataClass: 'text-center'
         },
         {
           title: 'Actions',
-          name: 'actions'
+          name: 'actions',
+          dataClass: 'text-center'
         }
       ]
     };
@@ -199,8 +215,19 @@ export default {
     }
   },
   methods: {
-    validerExercice(id) {
-      this.$store.dispatch('validerExercice', id);
+    downloadJustificatif({id, filename}) {
+      ControlesMedicauxService.getJustificatif(id).then(
+        (response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          // link.target = '_blank' // If we want to open it in another tab
+          link.setAttribute('download', filename);
+          // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
+          link.click();
+          window.URL.revokeObjectURL(url);
+        }
+      );
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;
@@ -221,6 +248,7 @@ export default {
       };
     },
     onRowClass(dataItem) {
+      // TODO: update pour mettre en évidence les contrôles-médicaux voulus
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',

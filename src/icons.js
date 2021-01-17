@@ -43,6 +43,7 @@ import {
   faQuestionCircle,
   faPlusSquare,
   faClock,
+  faFilePdf,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
@@ -85,5 +86,6 @@ library.add(
   faSortAlphaUpAlt,
   faScroll,
   faCar,
-  faBirthdayCake
+  faBirthdayCake,
+  faFilePdf
 );
