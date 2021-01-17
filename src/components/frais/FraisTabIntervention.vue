@@ -22,6 +22,7 @@
           :data-manager="dataManager"
           :row-class="onRowClass"
           detail-row-class="m-td-0"
+          no-data-template="Aucun écriture à afficher"
           :detail-row-component="detailRow"
         >
           <div slot="details" slot-scope="props">

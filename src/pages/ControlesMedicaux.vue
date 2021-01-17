@@ -46,6 +46,7 @@
             detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
+            no-data-template="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
           >
             <div slot="actions" slot-scope="props">

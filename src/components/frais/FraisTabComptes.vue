@@ -56,6 +56,7 @@
           :api-mode="false"
           :fields="fields"
           :css="css.table"
+          no-data-template="Aucune écriture à afficher"
           :data-manager="dataManager"
         >
           <!--          <div slot="actions" slot-scope="props">-->
