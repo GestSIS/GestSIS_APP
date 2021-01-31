@@ -114,13 +114,13 @@ const router = new Router({
           path: 'exercice',
           name: 'param-exercice',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabExercice.vue'),
         },
         {
           path: 'intervention',
           name: 'param-intervention',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabIntervention.vue'),
         },
         {
           path: 'frais',
@@ -141,6 +141,11 @@ const router = new Router({
             import('@/components/parametres/ParametreTabExerciceComptable.vue'),
         },
       ],
+    },
+    {
+      path: '/statistique',
+      name: 'statistique',
+      component: () => import('@/pages/Statistique.vue'),
     },
     {
       path: '/about',

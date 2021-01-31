@@ -21,10 +21,7 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des amendes</h3>
-            <button
-              class="btn btn-primary"
-              @click="generer"
-            >
+            <button class="btn btn-primary" @click="generer">
               Générer les amendes
             </button>
           </div>
@@ -121,7 +118,7 @@ export default {
     },
     filteredAmendes(data) {
       this.loading = false;
-      console.log("Test")
+      console.log('Test');
       this.$refs.vuetable_amendes_sapeurs.setData(data);
     },
   },
@@ -138,7 +135,7 @@ export default {
       amendeColumns: [
         {
           title: 'Exercice',
-          field: 'designation'
+          field: 'designation',
         },
         {
           title: 'Date',
@@ -165,7 +162,7 @@ export default {
           sortField: 'nb',
         },
         {
-          title: "Montant",
+          title: 'Montant',
           name: 'total',
           sortField: 'total',
         },
@@ -184,7 +181,7 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      listeAmendes: (state) => state.comptabilite.amendes
+      listeAmendes: (state) => state.comptabilite.amendes,
     }),
     ...mapGetters(['currentExerciceComptableId', 'getSapeur']),
     filteredAmendes() {
@@ -205,18 +202,21 @@ export default {
         }).amendes.push(a);
         return rv;
       }, {});
-      return Object.values(sapeurs).map(s => ({
-          ...s,
-          nb: s.amendes.length,
-          sapeur: s.nom+" "+s.prenom,
-          total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-          columns: this.amendeColumns,
+      return Object.values(sapeurs).map((s) => ({
+        ...s,
+        nb: s.amendes.length,
+        sapeur: s.nom + ' ' + s.prenom,
+        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
+        columns: this.amendeColumns,
       }));
     },
   },
   methods: {
     generer() {
-      this.$store.dispatch('genererAmendesAnnuels', this.currentExerciceComptableId);
+      this.$store.dispatch(
+        'genererAmendesAnnuels',
+        this.currentExerciceComptableId
+      );
     },
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id];

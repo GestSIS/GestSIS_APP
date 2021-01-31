@@ -44,6 +44,7 @@ import {
   faPlusSquare,
   faClock,
   faFilePdf,
+  faChartBar,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
@@ -87,5 +88,6 @@ library.add(
   faScroll,
   faCar,
   faBirthdayCake,
-  faFilePdf
+  faFilePdf,
+  faChartBar
 );

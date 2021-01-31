@@ -87,7 +87,7 @@ export default {
     if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
-    if (this.listExerciceComptable.length === 0) {
+    if (this.listeExerciceComptable.length === 0) {
       //console.log('Warning')
     }
 
@@ -176,7 +176,7 @@ export default {
     ...mapState({
       listeEcritures: (state) => state.comptabilite.ecritures.annuels,
       listeFonctions: (state) => state.fonction.liste,
-      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte']),

@@ -3,9 +3,9 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Exercices comptables</h3>
-      <button type="button" class="btn btn-primary" @click="newExerciceComptable">
-        Ajouter un exercice comptable
+      <h3 class="card-title">Interventions</h3>
+      <button type="button" class="btn btn-primary">
+        TODO What to do ???
       </button>
     </div>
     <div class="card-body">
@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="e in listeExerciceComptable" :key="e.id">
+          <!-- <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>
             <td>{{ e.debut }}</td>
@@ -33,7 +33,6 @@
               </div>
             </td>
             <td>
-              <!-- TODO Implement those 2 buttons -->
               <div class="d-flex justify-content-center">
                 <button
                   type="button"
@@ -51,7 +50,7 @@
                 </button>
               </div>
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </div>
@@ -62,20 +61,20 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'ParametreTabExerciceComptable',
+  name: 'ParametreTabIntervention',
   computed: {
     ...mapState({
-      listeExerciceComptable: state => state.exerciceComptable.liste,
-      activeExerciceComptableId: state => state.exerciceComptable.activeId
+      // listeExerciceComptable: state => state.exerciceComptable.liste,
+      // activeExerciceComptableId: state => state.exerciceComptable.activeId
     }),
   },
   mounted() {
   },
   methods: {
-    newExerciceComptable() {
-    },
-    save() {
-    },
+    // newExerciceComptable() {
+    // },
+    // save() {
+    // },
   },
   watch: {
   }

@@ -86,6 +86,12 @@
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/statistique" class="nav-link internal-link">
+            <font-awesome-icon :icon="['far', 'chart-bar']" />
+            <span>Statistiques</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/matériel" class="nav-link internal-link">
             <font-awesome-icon icon="toolbox" />
             <span>Matériel personel</span>
@@ -135,7 +141,7 @@
 
 <script>
 export default {
-  name: 'MainSidebar'
+  name: 'MainSidebar',
 };
 </script>
 

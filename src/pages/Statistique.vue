@@ -10,7 +10,7 @@
               </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-              A propos
+              Statistique
             </li>
           </ol>
         </nav>
@@ -24,21 +24,24 @@
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>A propos</h3>
+            <h3>Stats</h3>
           </div>
           <div class="card-body">
-            <h1>GestSIS</h1>
-            <p>
-              Application métier pour la gestion d'un service d'incendie et de
-              secours.
-            </p>
-            <p>Auteur : Bastien Wermeille</p>
-            <p>
-              Ce projet a été réalisé dans le cadre de mon Travail de Bachelor à
-              la He-Arc à Neuchâtel.
-            </p>
-            <img src="@/assets/he_arc.png" class="img-fluid" />
-            <p>© GestSIS 2019 - Tous droits réservés</p>
+            <h4>Exercices</h4>
+            <ul>
+              <li>Nb exercices par types</li>
+              <li>Présences et absences par sapeur</li>
+            </ul>
+            <h4>Intervention</h4>
+            <ul>
+              <li>Nb interventions par type</li>
+              <li>Nb heures par type intervention</li>
+              <li>Statistiques de présences sur intervention</li>
+            </ul>
+            <h4>Frais</h4>
+            <ul>
+              <li>Répartition des frais</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -50,7 +53,7 @@
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 export default {
-  name: 'about',
+  name: 'statistiques',
   components: {
     ExerciceComptable
   }

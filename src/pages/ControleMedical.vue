@@ -358,22 +358,10 @@ export default {
   },
   methods: {
     downloadJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
-        (response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          // link.target = '_blank' // If we want to open it in another tab
-          // console.log(response);
-          link.setAttribute('download', 'file.pdf');
-          // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-          link.click();
-          window.URL.revokeObjectURL(url);
-        }
-      );
+      ControlesMedicauxService.downloadJustificatif(this.controleMedical.id, this.controleMedical.filename)
     },
     displayJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
+      ControlesMedicauxService.downloadJustificatif(this.controleMedical.id).then(
         (response) => {
           this.pdfData = response.data;
         }

@@ -190,7 +190,7 @@ export default {
       listInterventions: (state) =>
         state.intervention.liste.filter((e) => e.statut > 1),
       listeSapeurs: (state) => state.sapeur.liste,
-      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([

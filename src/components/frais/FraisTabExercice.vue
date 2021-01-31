@@ -96,7 +96,7 @@ export default {
       this.$store.dispatch('fetchExerciceCategories');
     }
 
-    if (this.listExerciceComptable.length === 0) {
+    if (this.listeExerciceComptable.length === 0) {
       //console.log('Warning')
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
@@ -217,7 +217,7 @@ export default {
       listSapeurs: (state) => state.sapeur.liste,
       localites: (state) => state.localite.liste,
       exerciceCategories: (state) => state.exerciceCategorie.liste,
-      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),

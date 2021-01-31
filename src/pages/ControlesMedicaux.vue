@@ -182,7 +182,7 @@ export default {
         {
           title: 'Doc',
           name: 'doc',
-          sortField: 'doc',
+          sortField: 'filename',
           dataClass: 'text-center'
         },
         {
@@ -216,18 +216,7 @@ export default {
   },
   methods: {
     downloadJustificatif({id, filename}) {
-      ControlesMedicauxService.getJustificatif(id).then(
-        (response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          // link.target = '_blank' // If we want to open it in another tab
-          link.setAttribute('download', filename);
-          // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-          link.click();
-          window.URL.revokeObjectURL(url);
-        }
-      );
+      ControlesMedicauxService.downloadJustificatif(id, filename);
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;

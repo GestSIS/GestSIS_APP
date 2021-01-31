@@ -92,7 +92,7 @@ export default {
     this.$store.dispatch('fetchStatFederals');
     this.$store.dispatch('fetchTypeInterventions');
     this.$store.dispatch('fetchInterventionTraitements');
-    if (this.listExerciceComptable.length === 0) {
+    if (this.listeExerciceComptable.length === 0) {
       //console.log('Warning')
     }
     if (this.currentExerciceComptableId || 0 !== 0) {
@@ -249,7 +249,7 @@ export default {
     ...mapState({
       listInterventions: (state) =>
         state.intervention.liste.filter((e) => e.statut > 1),
-      listExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([

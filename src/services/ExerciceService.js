@@ -3,7 +3,7 @@ import Api from '@/http/Request';
 export default {
   getExercices(exerciceComptableId) {
     return Api.api().get('/exercices', {
-      params: { exercice_comptable_id: exerciceComptableId }
+      params: { exercice_comptable_id: exerciceComptableId },
     });
   },
   getExercice(exerciceId) {
@@ -29,7 +29,12 @@ export default {
   },
   removeSapeurs(exercieId, sapeursIds) {
     return Api.api().delete('/exercices/' + exercieId + '/sapeurs/', {
-      data: sapeursIds
+      data: sapeursIds,
     });
-  }
+  },
+  downloadListPresence(exerciceId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/exercices/${exerciceId}/liste-presence/`
+    );
+  },
 };

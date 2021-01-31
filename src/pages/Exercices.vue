@@ -52,7 +52,7 @@
           <form class="card-body">
             <button
               :disabled="!selectedId"
-              @click="listePresences"
+              @click="listePresences({ id: selectedId })"
               class="btn btn-outline-primary btn-block"
             >
               Liste de présences
@@ -191,6 +191,8 @@ import store from '@/store/index';
 
 import ExerciceDetails from '@/components/exercice/ExerciceDetails';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+
+import ExerciceService from '@/services/ExerciceService';
 
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
@@ -367,8 +369,8 @@ export default {
     selectExercice(row) {
       this.selectedId = row.data.id;
     },
-    listePresences() {
-      //TODO: liste des présences
+    listePresences({ id }) {
+      ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;

@@ -4,7 +4,7 @@ import ExerciceComptableService from '../../services/ExerciceComptableService';
 export default {
   state: {
     liste: [],
-    activeId: null
+    activeId: null,
   },
   mutations: {
     [types.UPDATE_EXERCICE_COMPTABLE_LISTE](state, payload) {
@@ -15,30 +15,29 @@ export default {
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {
       state.activeId = payload;
-    }
+    },
   },
   getters: {
-    listExerciceComptable: state => state.liste,
-    currentExerciceComptableId: state => state.activeId,
-    getExerciceComptable: state => id =>
-      state.liste.filter(e => e.id === id)[0],
-    exerciceComptableDebut: state => id =>
-      state.liste.filter(e => e.id === id)[0].debut,
-    exerciceComptableFin: state => id =>
-      state.liste.filter(e => e.id === id)[0].fin
+    currentExerciceComptableId: (state) => state.activeId,
+    getExerciceComptable: (state) => (id) =>
+      state.liste.filter((e) => e.id === id)[0],
+    exerciceComptableDebut: (state) => (id) =>
+      state.liste.filter((e) => e.id === id)[0].debut,
+    exerciceComptableFin: (state) => (id) =>
+      state.liste.filter((e) => e.id === id)[0].fin,
   },
   actions: {
     fetchExercicesComptables({ commit, state }) {
       if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
-        return ExerciceComptableService.getExercices().then(data =>
+        return ExerciceComptableService.getExercices().then((data) =>
           commit(types.UPDATE_EXERCICE_COMPTABLE_LISTE, data)
         );
       }
     },
     selectExerciceComptable({ commit }, excuse_type_id) {
       return commit(types.SELECT_EXERCICE_COMPTABLE, excuse_type_id);
-    }
-  }
+    },
+  },
 };
