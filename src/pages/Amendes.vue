@@ -118,7 +118,6 @@ export default {
     },
     filteredAmendes(data) {
       this.loading = false;
-      console.log('Test');
       this.$refs.vuetable_amendes_sapeurs.setData(data);
     },
   },
