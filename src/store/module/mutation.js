@@ -8,13 +8,13 @@ export default {
       incorporation: null,
       sortie: null,
       motif: '',
-      action: ''
-    }
+      action: '',
+    },
   },
   mutations: {
     [types.UPDATE_CURRENT_MUTATION](state, payload) {
       state.active = payload;
-    }
+    },
   },
   actions: {
     updateActiveMutation({ commit }, payload) {
@@ -26,8 +26,8 @@ export default {
         localite_id: 0,
         incorporation: null,
         sortie: null,
-        motif: ''
+        motif: '',
       });
-    }
-  }
+    },
+  },
 };

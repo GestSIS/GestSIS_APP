@@ -151,8 +151,10 @@ export default {
   mounted() {},
   computed: {
     ...mapState({
-      listeMedecin: (state) => state.medecin.liste.sort((a, b) => a.tri - b.tri),
-      listeType: (state) => state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
+      listeMedecin: (state) =>
+        state.medecin.liste.sort((a, b) => a.tri - b.tri),
+      listeType: (state) =>
+        state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

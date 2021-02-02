@@ -4,9 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">
-              Accueil
-            </router-link>
+            <router-link tag="a" to="/"> Accueil </router-link>
           </li>
           <li class="breadcrumb-item">
             <router-link tag="a" to="/interventions">
@@ -93,9 +91,7 @@
               <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
             </div>
           </div>
-          <div v-else>
-            Loading
-          </div>
+          <div v-else>Loading</div>
         </div>
       </div>
     </div>
@@ -122,18 +118,18 @@ export default {
     InterventionTabMateriel,
     InterventionTabVehicule,
     InterventionTabJournal,
-    ExerciceComptable
+    ExerciceComptable,
   },
   data() {
     return {
       activeTab: 'general',
-      loading: true
+      loading: true,
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapGetters(['activeInterventionData', 'activeInterventionId']),
@@ -142,7 +138,7 @@ export default {
     },
     breadcrumbFinal() {
       return this.newMode ? 'Nouveau' : this.activeInterventionData.objet;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchListeSapeur');
@@ -180,8 +176,8 @@ export default {
           .dispatch('resetActiveIntervention')
           .then(() => (svm.loading = false));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

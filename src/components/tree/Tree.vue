@@ -22,7 +22,7 @@ export default {
     _types: {
       type: Object,
       required: false,
-      default: () => {}
+      default: () => {},
     },
     tree: {
       type: Array,

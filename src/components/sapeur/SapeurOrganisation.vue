@@ -33,22 +33,22 @@ export default {
   name: 'SapeurOrganisation',
   computed: {
     ...mapState({
-      listGroupes: state => state.groupe.liste,
-      activeSapeurId: state => state.sapeur.active.id,
-      activeSapeurGroupes: state => state.sapeur.active.groupes
+      listGroupes: (state) => state.groupe.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurGroupes: (state) => state.sapeur.active.groupes,
     }),
     ...mapGetters(['getGroupe']),
     groupeDisplay() {
       let svm = this;
-      return this.activeSapeurGroupes.map(groupe => {
+      return this.activeSapeurGroupes.map((groupe) => {
         let g = svm.getGroupe(groupe.groupe_id);
         return {
           id: groupe.id,
           designation: g.designation,
-          no: g.no || ''
+          no: g.no || '',
         };
       });
-    }
+    },
   },
   mounted() {
     if (this.listGroupes.length === 0) {
@@ -62,8 +62,8 @@ export default {
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurGroupes', id);
-    }
-  }
+    },
+  },
 };
 </script>
 

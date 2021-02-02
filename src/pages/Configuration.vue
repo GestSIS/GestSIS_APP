@@ -4,9 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">
-              Accueil
-            </router-link>
+            <router-link tag="a" to="/">Accueil</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Configuration
@@ -106,9 +104,7 @@
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view></router-view>
-            <div v-if="activeTab === 'general'">
-              TODO Info générales
-            </div>
+            <div v-if="activeTab === 'general'">TODO Info générales</div>
             <div v-if="activeTab === 'sapeur'">
               TODO
               <ul>
@@ -196,7 +192,7 @@ export default {
   name: 'configuration',
   data() {
     return {
-      activeTab: 'general'
+      activeTab: 'general',
     };
   },
   // props: {
@@ -226,7 +222,7 @@ export default {
     //     .dispatch('fetchIntervention', id)
     //     .then(() => (svm.loading = false))
     // }
-  }
+  },
 };
 </script>
 

@@ -55,11 +55,11 @@ export default {
   name: 'SapeurCours',
   computed: {
     ...mapState({
-      activeSapeurCours: state => state.sapeur.active.cours,
-      activeSapeurId: state => state.sapeur.active.id,
-      listCours: state => state.cours.liste
+      activeSapeurCours: (state) => state.sapeur.active.cours,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      listCours: (state) => state.cours.liste,
     }),
-    ...mapGetters(['getCours', 'getLocalite'])
+    ...mapGetters(['getCours', 'getLocalite']),
   },
   mounted() {
     if (this.listCours.length === 0) {
@@ -72,7 +72,7 @@ export default {
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurCours', id);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -85,15 +85,15 @@ export default {
         'updateActiveCours',
         Object.assign(
           { precedent_id: 0 },
-          this.activeSapeurCours.filter(c => c.id === cours_id)[0]
+          this.activeSapeurCours.filter((c) => c.id === cours_id)[0]
         )
       );
       this.SHOW_MODAL('ModalCours');
     },
     supprimerCours(fonction_id) {
       this.$store.dispatch('removeCours', fonction_id);
-    }
-  }
+    },
+  },
 };
 </script>
 

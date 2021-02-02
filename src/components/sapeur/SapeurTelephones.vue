@@ -45,12 +45,9 @@
             </td>
             <td>
               <select class="custom-select" v-model="t.telephone_type_id">
-                <option
-                  v-for="t in telephonesTypes"
-                  :value="t.id"
-                  :key="t.id"
-                  >{{ t.type }}</option
-                >
+                <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
+                  {{ t.type }}
+                </option>
               </select>
             </td>
             <td class="align-middle text-center">
@@ -98,33 +95,33 @@ import draggable from 'vuedraggable';
 
 export default {
   components: {
-    draggable
+    draggable,
   },
   mounted() {
     this.telephonesData = [
-        ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
-      ];
+      ...this.activeSapeurTelephones.map((t) => Object.assign({}, t)),
+    ];
   },
   data() {
     return {
       telephonesData: [],
-      errorsTel: {}
+      errorsTel: {},
     };
   },
   watch: {
     activeSapeurTelephones() {
       this.telephonesData = [
-        ...this.activeSapeurTelephones.map(t => Object.assign({}, t))
+        ...this.activeSapeurTelephones.map((t) => Object.assign({}, t)),
       ];
-    }
+    },
   },
   computed: {
     ...mapState({
-      telephonesTypes: state => state.baseData.telephoneTypes
+      telephonesTypes: (state) => state.baseData.telephoneTypes,
     }),
     ...mapGetters(['activeSapeurTelephones']),
     telephones: {
-      get: function() {
+      get: function () {
         return this.telephonesData;
       },
       set(telephones) {
@@ -133,21 +130,21 @@ export default {
         this.telephonesData = telephones.sort(
           (t1, t2) => t1.priorite - t2.priorite
         );
-      }
-    }
+      },
+    },
   },
   methods: {
     saveTelephones() {
       //TODO Validation de toutes les données
 
-      this.activeSapeurTelephones.forEach(t => {
+      this.activeSapeurTelephones.forEach((t) => {
         //Suppression des numéros supprimé
-        if (this.telephones.filter(t2 => t2.id === t.id).length === 0) {
+        if (this.telephones.filter((t2) => t2.id === t.id).length === 0) {
           this.$store.dispatch('removeTelephone', t.id);
         }
       });
 
-      this.telephones.forEach(t => {
+      this.telephones.forEach((t) => {
         //Numéros modifiés
         if (t.id !== null) {
           this.$store.dispatch('editTelephone', t);
@@ -166,15 +163,15 @@ export default {
             id: null,
             telephone_type_id: 0, //this.listTelephoneTypes[0].id, //TODO Choisir si select de base
             rta: 0,
-            priorite: this.telephones.length + 1
-          }
+            priorite: this.telephones.length + 1,
+          },
         ];
       }
     },
     removeTelephone(priorite) {
-      this.telephones = this.telephones.filter(t => t.priorite !== priorite);
-    }
-  }
+      this.telephones = this.telephones.filter((t) => t.priorite !== priorite);
+    },
+  },
 };
 </script>
 

@@ -4,9 +4,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Droits</h3>
-      <button type="button" class="btn btn-primary">
-        TODO What to do ???
-      </button>
+      <button type="button" class="btn btn-primary">TODO What to do ???</button>
     </div>
     <div class="card-body">
       <table id="sap-cours" class="table" cellspacing="0" width="100%">
@@ -68,16 +66,14 @@ export default {
       // activeExerciceComptableId: state => state.exerciceComptable.activeId
     }),
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     // newExerciceComptable() {
     // },
     // save() {
     // },
   },
-  watch: {
-  }
+  watch: {},
 };
 </script>
 

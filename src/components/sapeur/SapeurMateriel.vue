@@ -13,17 +13,17 @@ export default {
   name: 'SapeurMateriel',
   data() {
     return {
-      publicPath: process.env.BASE_URL
+      publicPath: process.env.BASE_URL,
     };
   },
   computed: {
-    ...mapGetters(['listPermisType', 'activeSapeurPermis'])
+    ...mapGetters(['listPermisType', 'activeSapeurPermis']),
   },
   mounted() {
     if (this.listPermisType.length === 0) {
       this.$store.dispatch('fetchPermisType');
     }
-  }
+  },
 };
 </script>
 

@@ -36,22 +36,22 @@ export default {
 
   props: {
     value: {
-      default: ''
+      default: '',
     },
     items: {
       type: Array,
       required: false,
-      default: () => []
+      default: () => [],
     },
     error: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     title: {
       type: String,
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
@@ -59,7 +59,7 @@ export default {
       results: [],
       search: this.value,
       isLoading: false,
-      arrowCounter: 0
+      arrowCounter: 0,
     };
   },
   methods: {
@@ -74,7 +74,7 @@ export default {
 
     filterResults() {
       // first uncapitalize all the things
-      this.results = this.items.filter(item => {
+      this.results = this.items.filter((item) => {
         return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
       });
     },
@@ -106,25 +106,25 @@ export default {
         this.isOpen = false;
         this.arrowCounter = -1;
       }
-    }
+    },
   },
   watch: {
-    items: function(val, oldValue) {
+    items: function (val, oldValue) {
       // actually compare them
       if (val.length !== oldValue.length) {
         this.results = val;
       }
     },
-    value: function(val) {
+    value: function (val) {
       this.search = val;
-    }
+    },
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
   },
   destroyed() {
     document.removeEventListener('click', this.handleClickOutside);
-  }
+  },
 };
 </script>
 

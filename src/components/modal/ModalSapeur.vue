@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        Ajouter un sapeur
-      </h5>
+      <h5 class="modal-title" id="exampleModalLabel">Ajouter un sapeur</h5>
       <button type="button" class="close" @click="close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -24,8 +22,9 @@
               v-for="civilite in listeCivilites"
               :value="civilite.id"
               :key="civilite.id"
-              >{{ civilite.designation }}</option
             >
+              {{ civilite.designation }}
+            </option>
           </select>
         </div>
         <!-- NOM -->
@@ -96,8 +95,9 @@
               v-for="localite in listLocalitesSis"
               :key="localite.id"
               :value="localite.id"
-              >{{ localite.npa + ' ' + localite.designation }}</option
             >
+              {{ localite.npa + ' ' + localite.designation }}
+            </option>
           </select>
         </div>
         <!-- N° AVS -->
@@ -225,7 +225,7 @@ export default {
       errorsData: {},
       sapeur: {
         nom: '',
-        prenom:'',
+        prenom: '',
         rue: '',
         no_rue: '',
         localite_id: null,
@@ -235,18 +235,15 @@ export default {
         suffixe: '',
         incorporation: '',
         remarque: '',
-        civilite_id: null
-      }
-    }
+        civilite_id: null,
+      },
+    };
   },
   computed: {
     ...mapState({
-      listeCivilites: state => state.baseData.civilites
+      listeCivilites: (state) => state.baseData.civilites,
     }),
-    ...mapGetters([
-      'listLocalitesSis',
-      'getLocalite'
-    ])
+    ...mapGetters(['listLocalitesSis', 'getLocalite']),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -255,16 +252,17 @@ export default {
       this.HIDE_MODAL();
     },
     save() {
-      this.$store.dispatch('createSapeur', this.sapeur)
-      .then(data => {
-        this.callback(data.id);
-        this.HIDE_MODAL();
-      })
-      .catch(errors => {
-        this.errorsData = errors;
-      })
-    }
-  }
+      this.$store
+        .dispatch('createSapeur', this.sapeur)
+        .then((data) => {
+          this.callback(data.id);
+          this.HIDE_MODAL();
+        })
+        .catch((errors) => {
+          this.errorsData = errors;
+        });
+    },
+  },
 };
 </script>
 

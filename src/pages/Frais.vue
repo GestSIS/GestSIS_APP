@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Frais
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Frais</li>
           </ol>
         </nav>
       </div>
@@ -97,12 +93,12 @@ export default {
     FraisTabExercice,
     FraisTabIntervention,
     FraisTabAnnuel,
-    FraisTabSapeur
+    FraisTabSapeur,
   },
   data() {
     return {
       activeTab: 'comptes',
-      loading: true
+      loading: true,
     };
   },
   mounted() {
@@ -110,7 +106,7 @@ export default {
     this.$store.dispatch('fetchIndemnitesTypes');
     this.$store.dispatch('fetchFraisTypes');
     this.$store.dispatch('fetchComptes');
-  }
+  },
 };
 </script>
 

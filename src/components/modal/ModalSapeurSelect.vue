@@ -205,9 +205,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="save">
-        Enregistrer
-      </button>
+      <button class="btn btn-outline-primary" @click="save">Enregistrer</button>
       <button class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </div>

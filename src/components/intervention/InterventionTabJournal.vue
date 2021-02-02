@@ -140,10 +140,10 @@ export default {
   computed: {
     ...mapGetters(['getSapeur']),
     ...mapState({
-      id: state => state.intervention.active.id,
-      data: state => state.intervention.active.data,
-      missions: state => state.intervention.active.missions,
-      appels: state => state.intervention.active.appels
+      id: (state) => state.intervention.active.id,
+      data: (state) => state.intervention.active.data,
+      missions: (state) => state.intervention.active.missions,
+      appels: (state) => state.intervention.active.appels,
     }),
     sortedAppels() {
       return this.appels
@@ -152,13 +152,13 @@ export default {
     },
     events() {
       let events = [];
-      this.missions.forEach(m => {
+      this.missions.forEach((m) => {
         events.push({
           date: m.debut,
           title: 'Début ' + m.titre,
           description: m.resume,
           type: 'mission',
-          colorClass: m.fin ? 'mission-ended' : 'mission-running'
+          colorClass: m.fin ? 'mission-ended' : 'mission-running',
         });
 
         if (m.fin) {
@@ -167,19 +167,19 @@ export default {
             title: 'Fin ' + m.titre,
             description: m.resume,
             type: 'mission',
-            colorClass: 'mission-ended'
+            colorClass: 'mission-ended',
           });
         }
 
         return events;
       });
 
-      let eventsAppels = this.appels.map(a => ({
+      let eventsAppels = this.appels.map((a) => ({
         date: a.date,
         title: a.nom,
         description: a.commentaire,
         type: 'appel',
-        colorClass: 'appel'
+        colorClass: 'appel',
       }));
 
       let chefIntervention = this.data.sapeur_id
@@ -198,7 +198,7 @@ export default {
             chefIntervention.prenom
           : '',
         type: 'start',
-        colorClass: 'default'
+        colorClass: 'default',
       };
 
       let duree = Math.abs(new Date(endDate) - new Date(startDate)) / 36e5;
@@ -207,7 +207,7 @@ export default {
         title: "Fin de l'intervention",
         description: 'Durée ' + duree + ' heures',
         type: 'end',
-        colorClass: 'default'
+        colorClass: 'default',
       };
 
       return [
@@ -215,9 +215,9 @@ export default {
         ...[...events, ...eventsAppels].sort(
           (e1, e2) => new Date(e1.date) - new Date(e2.date)
         ),
-        endEvent
+        endEvent,
       ];
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchInterventionMissions', this.id);
@@ -234,7 +234,7 @@ export default {
         numero: '',
         date: null,
         nom: '',
-        commentaire: ''
+        commentaire: '',
       };
 
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
@@ -242,19 +242,19 @@ export default {
 
       this.SHOW_MODAL({
         component: 'ModalAppel',
-        data: { appel: newAppel, min, max }
+        data: { appel: newAppel, min, max },
       });
     },
     editAppel(id) {
       let cloneAppel = {};
-      Object.assign(cloneAppel, this.appels.filter(a => a.id === id)[0]);
+      Object.assign(cloneAppel, this.appels.filter((a) => a.id === id)[0]);
 
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
 
       this.SHOW_MODAL({
         component: 'ModalAppel',
-        data: { appel: cloneAppel, min, max }
+        data: { appel: cloneAppel, min, max },
       });
     },
 
@@ -268,19 +268,19 @@ export default {
         debut: null,
         fin: null,
         sapeur_id: null,
-        resume: ''
+        resume: '',
       };
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
 
       this.SHOW_MODAL({
         component: 'ModalMission',
-        data: { mission: newMission, min, max }
+        data: { mission: newMission, min, max },
       });
     },
     editMission(id) {
       let cloneMission = {};
-      Object.assign(cloneMission, this.missions.filter(m => m.id === id)[0]);
+      Object.assign(cloneMission, this.missions.filter((m) => m.id === id)[0]);
 
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
@@ -290,8 +290,8 @@ export default {
         data: {
           mission: cloneMission,
           min,
-          max
-        }
+          max,
+        },
       });
     },
     icon(type) {
@@ -299,17 +299,17 @@ export default {
         appel: ['fas', 'phone'],
         mission: ['fas', 'child'],
         start: ['fas', 'play'],
-        end: ['fas', 'stop']
+        end: ['fas', 'stop'],
       };
       return icons[type];
-    }
+    },
   },
   filters: {
     time(value) {
       let date = new Date(value);
       return date.getHours() + ':' + date.getMinutes();
-    }
-  }
+    },
+  },
 };
 </script>
 

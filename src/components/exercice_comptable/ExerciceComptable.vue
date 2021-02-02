@@ -26,7 +26,11 @@
           {{ e.annee }}
         </button>
         <div class="dropdown-divider"></div>
-        <router-link  :to="{ name: 'param-exercice-comptable' }" class="dropdown-item" tag="button">
+        <router-link
+          :to="{ name: 'param-exercice-comptable' }"
+          class="dropdown-item"
+          tag="button"
+        >
           <span>Paramètres</span>
         </router-link>
       </div>
@@ -41,14 +45,14 @@ export default {
   name: 'ExerciceComptable',
   computed: {
     ...mapState({
-      listeExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getExerciceComptable'])
+    ...mapGetters(['getExerciceComptable']),
   },
   data() {
     return {
-      dropdown: false
+      dropdown: false,
     };
   },
   mounted() {
@@ -62,7 +66,7 @@ export default {
       this.dropdown = false;
       this.$store.dispatch('selectExerciceComptable', id);
     },
-  }
+  },
 };
 </script>
 

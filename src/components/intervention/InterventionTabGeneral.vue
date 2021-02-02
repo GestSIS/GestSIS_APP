@@ -96,7 +96,7 @@
                     type="time"
                     class="form-control"
                     :class="{
-                      'is-invalid': errors['heure_fin']
+                      'is-invalid': errors['heure_fin'],
                     }"
                     id="m-int-heure_fin"
                     name="heure_fin"
@@ -146,7 +146,8 @@
                 v-for="localite in listLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-                >{{ localite.npa + ' ' + localite.designation }}
+              >
+                {{ localite.npa + ' ' + localite.designation }}
               </option>
             </select>
           </div>
@@ -165,7 +166,8 @@
                 v-for="sapeur in listSapeur"
                 :key="sapeur.id"
                 :value="sapeur.id"
-                >{{ sapeur.nom + ' ' + sapeur.prenom }}
+              >
+                {{ sapeur.nom + ' ' + sapeur.prenom }}
               </option>
             </select>
           </div>
@@ -185,7 +187,7 @@
             <select
               class="custom-select required"
               :class="{
-                'is-invalid': errors['intervention_traitement_id']
+                'is-invalid': errors['intervention_traitement_id'],
               }"
               id="m-int-traitement"
               name="localite_id"
@@ -196,7 +198,8 @@
                 v-for="traitement in listInterventionTraitement"
                 :key="traitement.id"
                 :value="traitement.id"
-                >{{ traitement.designation }}
+              >
+                {{ traitement.designation }}
               </option>
             </select>
           </div>
@@ -214,7 +217,8 @@
                 v-for="type in listTypeIntervention"
                 :value="type.id"
                 :key="type.id"
-                >{{ type.designation }}
+              >
+                {{ type.designation }}
               </option>
             </select>
           </div>
@@ -233,7 +237,8 @@
                 v-for="stat in listStatFederal"
                 :key="stat.id"
                 :value="stat.id"
-                >{{ stat.designation }}
+              >
+                {{ stat.designation }}
               </option>
             </select>
           </div>
@@ -271,15 +276,15 @@
             <select
               class="custom-select required"
               :class="{
-                'is-invalid': errors['degre']
+                'is-invalid': errors['degre'],
               }"
               id="m-int-degre"
               name="degre"
               style="width: 100%"
               v-model="activeInterventionData.degre"
             >
-              <option v-for="deg in degre" :key="deg.id" :value="deg.id"
-                >{{ deg.type }}
+              <option v-for="deg in degre" :key="deg.id" :value="deg.id">
+                {{ deg.type }}
               </option>
             </select>
           </div>
@@ -336,36 +341,36 @@ const degre = [
   { id: 1, type: 'Fausse-alarme' },
   { id: 2, type: 'Petite' },
   { id: 3, type: 'Moyenne' },
-  { id: 4, type: 'Grande' }
+  { id: 4, type: 'Grande' },
 ];
 
 export default {
   name: 'InterventionTabGeneral',
   props: {
     newMode: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
       errors: {},
-      degre
+      degre,
     };
   },
   computed: {
     ...mapState({
-      listTypeIntervention: state => state.typeIntervention.liste,
-      listStatFederal: state => state.statFederal.liste,
-      listInterventionTraitement: state => state.interventionTraitement.liste,
-      listSapeur: state => state.sapeur.liste,
-      activeInterventionId: state => state.intervention.active.id,
-      activeInterventionData: state => state.intervention.active.data,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listTypeIntervention: (state) => state.typeIntervention.liste,
+      listStatFederal: (state) => state.statFederal.liste,
+      listInterventionTraitement: (state) => state.interventionTraitement.liste,
+      listSapeur: (state) => state.sapeur.liste,
+      activeInterventionId: (state) => state.intervention.active.id,
+      activeInterventionData: (state) => state.intervention.active.data,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([
       'listLocalitesSis',
       'exerciceComptableDebut',
-      'exerciceComptableFin'
+      'exerciceComptableFin',
     ]),
     description() {
       return this.activeInterventionData.description;
@@ -408,7 +413,7 @@ export default {
       return this.exerciceComptableFin(
         this.activeInterventionData.exercice_comptable_id
       );
-    }
+    },
   },
   mounted() {
     this.activeInterventionData.responsable = this.replaceBr(
@@ -442,23 +447,23 @@ export default {
     },
     heureFin(value) {
       this.activeInterventionData.heure_fin = this.formatHeure(value);
-    }
+    },
   },
   methods: {
     save() {
       if (this.newMode) {
         this.$store
           .dispatch('createIntervention', this.activeInterventionData)
-          .then(data => {
+          .then((data) => {
             this.$router.push('/interventions/' + data.id);
             this.errors = {};
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       } else {
         this.$store
           .dispatch('saveActiveIntervention', this.activeInterventionData)
           .then(() => (this.errors = {}))
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       }
     },
     replaceBr(value) {
@@ -471,8 +476,8 @@ export default {
         return value.slice(0, 5);
       }
       return value;
-    }
-  }
+    },
+  },
 };
 </script>
 

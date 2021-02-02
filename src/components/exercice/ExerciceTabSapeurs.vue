@@ -5,9 +5,7 @@
         {{ activeExerciceData.designation }} &ndash;
         {{ activeExerciceData.date }}
       </h3>
-      <button class="btn btn-outline-primary" @click="save">
-        Sauvegarder
-      </button>
+      <button class="btn btn-outline-primary" @click="save">Sauvegarder</button>
     </div>
     <table class="table">
       <thead>
@@ -125,7 +123,7 @@ export default {
   name: 'ExerciceTabSapeurs',
   computed: {
     ...mapState({
-      listeExcuseTypes: state => state.excuseType.liste
+      listeExcuseTypes: (state) => state.excuseType.liste,
     }),
     ...mapGetters([
       'activeExerciceId',

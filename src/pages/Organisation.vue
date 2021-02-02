@@ -4,9 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">
-              Accueil
-            </router-link>
+            <router-link tag="a" to="/"> Accueil </router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Organisation
@@ -32,12 +30,9 @@
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Infos complémentaires</h3>
-            <button class="btn btn-outline-primary">
-              Save
-            </button>
+            <button class="btn btn-outline-primary">Save</button>
           </div>
-          <div class="card-body">
-          </div>
+          <div class="card-body"></div>
         </div>
       </div>
     </div>
@@ -55,10 +50,7 @@ async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadGroupes = store.dispatch('fetchGroupesSapeurs');
 
-  Promise.all([
-    loadSapeurs,
-    loadGroupes
-  ]).then(() => {
+  Promise.all([loadSapeurs, loadGroupes]).then(() => {
     next();
   });
 }
@@ -67,7 +59,7 @@ export default {
   name: 'groups',
   components: {
     Tree,
-    ExerciceComptable
+    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -80,11 +72,11 @@ export default {
       types: {
         homme: {
           icon: ['fas', 'mars'],
-          color: '#3498db'
+          color: '#3498db',
         },
         femme: {
           icon: ['fas', 'venus'],
-          color: '#9b59b6'
+          color: '#9b59b6',
         },
         groupe: {
           icon: ['fas', 'sitemap'],
@@ -125,8 +117,8 @@ export default {
           id: 'g',
           type: 'groupe',
           label: 'Groupes',
-          children: () => this.groupeTree
-        }
+          children: () => this.groupeTree,
+        },
         // {
         //   id: 2,
         //   label: 'Fonctions',
@@ -295,20 +287,25 @@ export default {
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
       const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {nom: 'Ancien', prenom:'Sapeur', civilite: 1, id: s.sapeur_id}
+        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
+          nom: 'Ancien',
+          prenom: 'Sapeur',
+          civilite: 1,
+          id: s.sapeur_id,
+        };
         return {
           id: `s-${s.sapeur_id}`,
           label: `${sapeur.nom} ${sapeur.prenom}`,
-          type: sapeur.civilite_id === 1 ? 'homme': 'femme',
-        }
-      }
+          type: sapeur.civilite_id === 1 ? 'homme' : 'femme',
+        };
+      };
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupe-inter',
         id: `g-${g.id}`,
         children: () => [
           ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeurs.map(sapeurMapping)
+          ...g.sapeurs.map(sapeurMapping),
         ],
       });
 

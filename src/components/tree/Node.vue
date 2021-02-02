@@ -18,7 +18,13 @@
       </svg>
       <div class="tree-node-content">
         <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
-        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" class="tree-node-icon" :color="data.color"/>
+        <font-awesome-icon
+          v-else-if="data.icon"
+          :icon="data.icon"
+          size="lg"
+          class="tree-node-icon"
+          :color="data.color"
+        />
         <div>{{ data.label }}</div>
       </div>
     </div>
@@ -74,10 +80,14 @@ export default {
       };
     },
     computedChildren() {
-      return Array.isArray(this.node.children) ? this.node.children : (typeof this.node.children === "function") ? this.node.children() : [];
+      return Array.isArray(this.node.children)
+        ? this.node.children
+        : typeof this.node.children === 'function'
+        ? this.node.children()
+        : [];
     },
     lazyChildren() {
-      const children = this.computedChildren
+      const children = this.computedChildren;
       return this.computed ? children : [];
     },
   },
@@ -85,7 +95,7 @@ export default {
     async expand() {
       if (!this.computed) {
         this.computed = true;
-        await this.$nextTick()  
+        await this.$nextTick();
       }
       this.expanded = !this.expanded;
     },

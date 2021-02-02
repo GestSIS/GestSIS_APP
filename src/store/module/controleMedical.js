@@ -6,8 +6,8 @@ export default {
     liste: [],
     active: {
       id: null,
-      data: {}
-    }
+      data: {},
+    },
   },
   mutations: {
     [types.UPDATE_CONTROLE_MEDICAUX_LISTE](state, payload) {
@@ -27,72 +27,69 @@ export default {
         consultation: '',
         validite: '',
         filename: null,
-        accepter: 0
+        accepter: 0,
       };
     },
     [types.REMOVE_JUSTIFICATIF](state, payload) {
-      if(state.active.id == payload) {
+      if (state.active.id == payload) {
         state.active.data = {
-          ... state.active.data,
-          filename: null
+          ...state.active.data,
+          filename: null,
         };
       }
-    }
+    },
   },
   actions: {
     fetchControlesMedicaux({ commit }) {
-      return ControlesMedicauxService.getControlesMedicaux().then(data =>
+      return ControlesMedicauxService.getControlesMedicaux().then((data) =>
         commit(types.UPDATE_CONTROLE_MEDICAUX_LISTE, data)
       );
     },
     fetchControleMedical({ commit }, payload) {
-      return ControlesMedicauxService.getControleMedical(payload).then(data => 
+      return ControlesMedicauxService.getControleMedical(payload).then((data) =>
         commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data)
       );
     },
     resetControleMedical({ commit }) {
-      return commit(types.RESET_CURRENT_CONTROLE_MEDICAL)
+      return commit(types.RESET_CURRENT_CONTROLE_MEDICAL);
     },
 
     createControleMedical({ commit, state }, payload) {
       return ControlesMedicauxService.createControleMedical(
         payload || state.active.data
-      ).then(
-        data => {
-          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
-          return data;
-        }
-      );
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
+        return data;
+      });
     },
 
     updateControleMedical({ commit, state }, payload) {
       return ControlesMedicauxService.updateControleMedical(
         state.active.data.id,
         payload || state.active.data
-      ).then(
-        data => {
-          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
-          return data;
-        }
-      )
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
+        return data;
+      });
     },
 
     addJustificatif({ state, commit }, justificatif) {
-      return ControlesMedicauxService.addJustificatif(state.active.id, justificatif).then(
-        data => {
-          commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
-          return data;
-        }
-      );
+      return ControlesMedicauxService.addJustificatif(
+        state.active.id,
+        justificatif
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
+        return data;
+      });
     },
 
     removeJustificatif({ state, commit }, controleMedicalId) {
-      return ControlesMedicauxService.removeJustificatif(controleMedicalId || state.active.id).then(
-        data => {
-          commit(types.REMOVE_JUSTIFICATIF, controleMedicalId || state.active.id)
-          return data
-        }
-      );
+      return ControlesMedicauxService.removeJustificatif(
+        controleMedicalId || state.active.id
+      ).then((data) => {
+        commit(types.REMOVE_JUSTIFICATIF, controleMedicalId || state.active.id);
+        return data;
+      });
     },
-  }
+  },
 };

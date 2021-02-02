@@ -72,7 +72,12 @@
           </button>
         </div>
         <div class="card-body">
-          <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
+          <table
+            id="fonctions"
+            class="table table-sm"
+            cellspacing="0"
+            width="100%"
+          >
             <thead>
               <tr>
                 <th>Tri</th>
@@ -159,13 +164,13 @@ export default {
   },
   methods: {
     coursPrecedent(id) {
-      return id ? this.listeCours.find((f) => f.id === id)?.abreviation : "";
+      return id ? this.listeCours.find((f) => f.id === id)?.abreviation : '';
     },
     grade(id) {
-      return id ? this.listeGrade.find((f) => f.id === id)?.designation : "";
+      return id ? this.listeGrade.find((f) => f.id === id)?.designation : '';
     },
     fonction(id) {
-      return id ? this.listeFonction.find((f) => f.id === id)?.designation : "";
+      return id ? this.listeFonction.find((f) => f.id === id)?.designation : '';
     },
     // newExerciceComptable() {
     // },

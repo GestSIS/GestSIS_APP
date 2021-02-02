@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Contrôles Medicaux
@@ -49,23 +47,50 @@
             no-data-template="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
           >
-            <div slot="accepter" slot-scope="props" class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="accepter" :checked="props.rowData.accepter" disabled>
+            <div
+              slot="accepter"
+              slot-scope="props"
+              class="custom-control custom-checkbox"
+            >
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="accepter"
+                :checked="props.rowData.accepter"
+                disabled
+              />
               <label class="custom-control-label" for="accepter"></label>
             </div>
-            <div slot="en_cours" slot-scope="props" class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="en_cours" :checked="props.rowData.en_cours" disabled>
+            <div
+              slot="en_cours"
+              slot-scope="props"
+              class="custom-control custom-checkbox"
+            >
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="en_cours"
+                :checked="props.rowData.en_cours"
+                disabled
+              />
               <label class="custom-control-label" for="en_cours"></label>
             </div>
             <div slot="doc" slot-scope="props">
-              <button class="btn" v-if="props.rowData.filename" @click="downloadJustificatif(props.rowData)">
-                <font-awesome-icon :icon="['far', 'file-pdf']"/>
+              <button
+                class="btn"
+                v-if="props.rowData.filename"
+                @click="downloadJustificatif(props.rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
             </div>
             <div slot="actions" slot-scope="props">
               <router-link
                 tag="button"
-                :to="{name:'controle-medical', params:{'id':props.rowData.id}}"
+                :to="{
+                  name: 'controle-medical',
+                  params: { id: props.rowData.id },
+                }"
                 class="btn btn-outline-primary border-0"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
@@ -100,21 +125,26 @@ import _ from 'lodash';
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadMedecins = store.dispatch('fetchMedecins');
-  let loadControlesMedicauxTypes = store.dispatch('fetchControlesMedicauxTypes');
+  let loadControlesMedicauxTypes = store.dispatch(
+    'fetchControlesMedicauxTypes'
+  );
   let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
-  Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControlesMedicaux]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadSapeurs,
+    loadMedecins,
+    loadControlesMedicauxTypes,
+    loadControlesMedicaux,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
   name: 'controles-medicaux',
   components: {
     Vuetable,
-    ExerciceComptable
+    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -135,17 +165,17 @@ export default {
         {
           title: 'Sapeur',
           name: 'sapeur',
-          sortField: 'sapeur'
+          sortField: 'sapeur',
         },
         {
           title: 'Age',
           name: 'age',
-          sortField: 'age'
+          sortField: 'age',
         },
         {
           title: 'Type',
           name: 'type',
-          sortField: 'type'
+          sortField: 'type',
         },
         {
           title: 'Medecin',
@@ -155,7 +185,7 @@ export default {
         {
           title: 'Consultation',
           name: 'consultation',
-          sortField: 'consultation'
+          sortField: 'consultation',
         },
         {
           title: 'Validité',
@@ -165,57 +195,63 @@ export default {
         {
           title: 'Designation',
           name: 'designation',
-          sortField: 'designation'
+          sortField: 'designation',
         },
         {
           title: 'Accepter',
           name: 'accepter',
           sortField: 'accepter',
-          dataClass: 'text-center'
+          dataClass: 'text-center',
         },
         {
           title: 'En cours',
           name: 'en_cours',
           sortField: 'en_cours',
-          dataClass: 'text-center'
+          dataClass: 'text-center',
         },
         {
           title: 'Doc',
           name: 'doc',
           sortField: 'filename',
-          dataClass: 'text-center'
+          dataClass: 'text-center',
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'text-center'
-        }
-      ]
+          dataClass: 'text-center',
+        },
+      ],
     };
   },
   computed: {
     ...mapState({
-      listeControlesMedicaux: state => state.controleMedical.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeControlesMedicaux: (state) => state.controleMedical.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
     computedData() {
       const now = Date.now();
-      return this.listeControlesMedicaux.map(s => {
+      return this.listeControlesMedicaux.map((s) => {
         const sapeur = this.getSapeur(s.sapeur_id);
-        var age = Math.floor(((now - new Date(sapeur.date_naissance).getTime()) / 1000 / (60 * 60 * 24))/365.25);
+        var age = Math.floor(
+          (now - new Date(sapeur.date_naissance).getTime()) /
+            1000 /
+            (60 * 60 * 24) /
+            365.25
+        );
         return {
           ...s,
           sapeur: `${sapeur.nom} ${sapeur.prenom}`,
           age,
-          type: this.getControleMedicalType(s.controle_medical_type_id).designation,
-          medecin: this.getMedecin(s.medecin_id).designation
+          type: this.getControleMedicalType(s.controle_medical_type_id)
+            .designation,
+          medecin: this.getMedecin(s.medecin_id).designation,
         };
       });
-    }
+    },
   },
   methods: {
-    downloadJustificatif({id, filename}) {
+    downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
     },
     dataManager(sortOrder) {
@@ -233,7 +269,7 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
@@ -243,11 +279,11 @@ export default {
         1: '', //'A saisir',
         2: '', //'En attente de validation',
         3: '', //'A imputer',
-        4: 'table-success' //'Imputée'
+        4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

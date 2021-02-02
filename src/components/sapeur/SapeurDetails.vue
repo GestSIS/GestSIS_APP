@@ -157,13 +157,15 @@ export default {
         component: 'ModalSapeur',
         size: 2,
         callback: (sapeurId) => {
-          this.$store.dispatch('selectSapeur', sapeurId)
-          .then(() => {
-            this.$router.push({ name: 'sapeurs-details', params: { id: sapeurId } })
-          })
+          this.$store.dispatch('selectSapeur', sapeurId).then(() => {
+            this.$router.push({
+              name: 'sapeurs-details',
+              params: { id: sapeurId },
+            });
+          });
           //TODO
         },
-      })
+      });
       // this.activeTab = tabList.GENERAL;
     },
   },

@@ -4,7 +4,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Exercices comptables</h3>
-      <button type="button" class="btn btn-primary" @click="newExerciceComptable">
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="newExerciceComptable"
+      >
         Ajouter un exercice comptable
       </button>
     </div>
@@ -28,7 +32,13 @@
             <td>{{ e.fin }}</td>
             <td class="text-center">
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="en_cours" :checked="e.boucle" disabled>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="en_cours"
+                  :checked="e.boucle"
+                  disabled
+                />
                 <label class="custom-control-label" for="en_cours"></label>
               </div>
             </td>
@@ -64,7 +74,7 @@ import store from '@/store/index';
 
 async function loadData(_, next) {
   const loadExerciceComptable = store.dispatch('fetchExercicesComptables');
-  
+
   Promise.all([loadExerciceComptable]).then(() => {
     next();
   });
@@ -78,22 +88,18 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  mounted() {
-  },
+  mounted() {},
   computed: {
     ...mapState({
-      listeExerciceComptable: state => state.exerciceComptable.liste,
-      activeExerciceComptableId: state => state.exerciceComptable.activeId
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },
   methods: {
-    newExerciceComptable() {
-    },
-    save() {
-    },
+    newExerciceComptable() {},
+    save() {},
   },
-  watch: {
-  }
+  watch: {},
 };
 </script>
 

@@ -279,9 +279,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Type d'intervention</h3>
-          <button type="button" class="btn btn-primary">
-            Ajouter un type
-          </button>
+          <button type="button" class="btn btn-primary">Ajouter un type</button>
         </div>
         <div class="card-body">
           <table id="type-intervention" class="table table-sm">
@@ -409,19 +407,26 @@ export default {
   mounted() {},
   computed: {
     ...mapState({
-      listeVehicule: (state) => state.vehicule.liste.sort((a, b) => a.tri - b.tri),
-      listeMateriel: (state) => state.materiel.liste.sort((a, b) => a.tri - b.tri),
-      listeTelephone: (state) => state.telephone.liste.sort((a, b) => a.tri - b.tri),
-      listeMission: (state) => state.mission.liste.sort((a, b) => a.tri - b.tri),
-      listeTraitement: (state) => state.interventionTraitement.liste.sort((a, b) => a.tri - b.tri),
-      listeStat: (state) => state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
-      listeType: (state) => state.typeIntervention.liste.sort((a, b) => a.tri - b.tri),
+      listeVehicule: (state) =>
+        state.vehicule.liste.sort((a, b) => a.tri - b.tri),
+      listeMateriel: (state) =>
+        state.materiel.liste.sort((a, b) => a.tri - b.tri),
+      listeTelephone: (state) =>
+        state.telephone.liste.sort((a, b) => a.tri - b.tri),
+      listeMission: (state) =>
+        state.mission.liste.sort((a, b) => a.tri - b.tri),
+      listeTraitement: (state) =>
+        state.interventionTraitement.liste.sort((a, b) => a.tri - b.tri),
+      listeStat: (state) =>
+        state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
+      listeType: (state) =>
+        state.typeIntervention.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
     statistique(id) {
-      return id ? this.listeStat.find((s) => s.id === id)?.designation : "";
-    }
+      return id ? this.listeStat.find((s) => s.id === id)?.designation : '';
+    },
     // newExerciceComptable() {
     // },
     // save() {

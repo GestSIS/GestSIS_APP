@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              A propos
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">A propos</li>
           </ol>
         </nav>
       </div>
@@ -52,8 +48,8 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 export default {
   name: 'about',
   components: {
-    ExerciceComptable
-  }
+    ExerciceComptable,
+  },
 };
 </script>
 

@@ -14,7 +14,7 @@
               <font-awesome-icon
                 class="text-danger"
                 v-if="permis.type.toLowerCase() === 'c1'"
-                style="font-size:1.7em"
+                style="font-size: 1.7em"
                 :icon="['fab', 'gripfire']"
               />
               <img
@@ -36,7 +36,7 @@
                   class="form-control"
                   v-model="permis.date"
                   :class="{
-                    'is-invalid': isInvalid(permis.permis_type_id)
+                    'is-invalid': isInvalid(permis.permis_type_id),
                   }"
                 />
                 <div class="input-group-append">
@@ -67,11 +67,11 @@ export default {
     return {
       publicPath: process.env.BASE_URL,
       permisData: {},
-      errors: {}
+      errors: {},
     };
   },
   computed: {
-    ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId'])
+    ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId']),
   },
   mounted() {
     if (this.listPermisType.length === 0) {
@@ -98,26 +98,26 @@ export default {
       this.$store.dispatch('fetchSapeurPermis', id).then(() => {
         this.initPermisData();
       });
-    }
+    },
   },
   methods: {
     initPermisData() {
       this.permisData = {};
       this.errors = {};
 
-      this.listPermisType.forEach(p => {
+      this.listPermisType.forEach((p) => {
         this.permisData[p.id] = {
           permis_type_id: p.id,
           type: p.type,
           date: null,
-          id: null
+          id: null,
         };
       });
-      this.activeSapeurPermis.forEach(p => {
+      this.activeSapeurPermis.forEach((p) => {
         this.permisData[p.permis_type_id] = {
           ...this.permisData[p.permis_type_id],
           date: p.date,
-          id: p.id
+          id: p.id,
         };
         this.permisData[p.permis_type_id].date = p.date;
       });
@@ -125,13 +125,13 @@ export default {
     saveSuccessfull(permis_type_id) {
       this.errors = {
         ...this.errors,
-        [permis_type_id]: undefined
+        [permis_type_id]: undefined,
       };
     },
     saveError(permis_type_id, error) {
       this.errors = {
         ...this.errors,
-        [permis_type_id]: error
+        [permis_type_id]: error,
       };
     },
     supprimerPermis(permis_type_id) {
@@ -139,39 +139,40 @@ export default {
         ...this.permisData,
         [permis_type_id]: {
           ...this.permisData[permis_type_id],
-          date: ''
-        }
+          date: '',
+        },
       };
     },
     savePermis() {
-      Object.values(this.permisData).forEach(p => {
+      Object.values(this.permisData).forEach((p) => {
         //New one
         if (p.id === null && p.date !== null) {
           this.$store
             .dispatch('addPermis', {
               permis_type_id: p.permis_type_id,
-              date: p.date
+              date: p.date,
             })
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err));
+            .catch((err) => this.saveError(p.permis_type_id, err));
         }
         //Removed
         else if (p.id !== null && (p.date === null || p.date === '')) {
           this.$store
             .dispatch('removePermis', p.id)
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err));
+            .catch((err) => this.saveError(p.permis_type_id, err));
         }
         //Edited
         else if (
           p.id !== null &&
           p.date !==
-            this.activeSapeurPermis.filter(permis => permis.id === p.id)[0].date
+            this.activeSapeurPermis.filter((permis) => permis.id === p.id)[0]
+              .date
         ) {
           this.$store
             .dispatch('editPermis', { id: p.id, date: p.date })
             .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch(err => this.saveError(p.permis_type_id, err));
+            .catch((err) => this.saveError(p.permis_type_id, err));
         } else {
           //Remove potential error messages
           this.saveSuccessfull(p.permis_type_id);
@@ -180,8 +181,8 @@ export default {
     },
     isInvalid(key) {
       return this.errors[key] !== undefined;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -55,11 +55,11 @@ export default {
   name: 'SapeurPromotion',
   computed: {
     ...mapState({
-      listGrades: state => state.grade.liste,
-      activeSapeurId: state => state.sapeur.active.id,
-      activeSapeurGrades: state => state.sapeur.active.grades
+      listGrades: (state) => state.grade.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurGrades: (state) => state.sapeur.active.grades,
     }),
-    ...mapGetters(['getGrade'])
+    ...mapGetters(['getGrade']),
   },
   mounted() {
     if (this.listGrades.length === 0) {
@@ -72,7 +72,7 @@ export default {
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurGrades', id);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -85,15 +85,15 @@ export default {
         'updateActiveGrade',
         Object.assign(
           {},
-          this.activeSapeurGrades.filter(f => f.id === grade_id)[0]
+          this.activeSapeurGrades.filter((f) => f.id === grade_id)[0]
         )
       );
       this.SHOW_MODAL('ModalPromotion');
     },
     supprimerGrade(grade_id) {
       this.$store.dispatch('removeGrade', grade_id);
-    }
-  }
+    },
+  },
 };
 </script>
 

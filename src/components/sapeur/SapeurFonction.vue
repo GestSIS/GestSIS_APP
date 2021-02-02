@@ -56,11 +56,11 @@ export default {
   name: 'SapeurFonction',
   computed: {
     ...mapState({
-      listeFonctions: state => state.fonction.liste,
-      activeSapeurId: state => state.sapeur.active.id,
-      activeSapeurFonctions: state => state.sapeur.active.fonctions
+      listeFonctions: (state) => state.fonction.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
     }),
-    ...mapGetters(['getFonction'])
+    ...mapGetters(['getFonction']),
   },
   mounted() {
     if (this.listeFonctions.length === 0) {
@@ -71,7 +71,7 @@ export default {
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurFonctions', id);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -84,15 +84,15 @@ export default {
         'updateActiveFonction',
         Object.assign(
           {},
-          this.activeSapeurFonctions.filter(f => f.id === fonction_id)[0]
+          this.activeSapeurFonctions.filter((f) => f.id === fonction_id)[0]
         )
       );
       this.SHOW_MODAL('ModalFonction');
     },
     supprimerFonction(fonction_id) {
       this.$store.dispatch('removeFonction', fonction_id);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -131,14 +131,15 @@
                         class="custom-control-input"
                         :id="s.id"
                         :checked="
-                          quittances.filter(q => q.sapeur_id === parseInt(s.id))
-                            .length === 1
+                          quittances.filter(
+                            (q) => q.sapeur_id === parseInt(s.id)
+                          ).length === 1
                         "
                       />
                       <label
                         class="custom-control-label"
                         :for="s.id"
-                        @click="e => editQuittance(e, s.id)"
+                        @click="(e) => editQuittance(e, s.id)"
                       ></label>
                     </div>
                   </td>
@@ -148,7 +149,7 @@
                     :class="{
                       'bg-secondary': computedPresences[s.id][i] === 1,
                       'bg-primary': computedPresences[s.id][i] === 2,
-                      'bg-success': computedPresences[s.id][i] === 3
+                      'bg-success': computedPresences[s.id][i] === 3,
                     }"
                     class="pr-3 pl-3"
                   ></td>
@@ -158,7 +159,7 @@
                     v-for="p in sortedPresences(s.id)"
                     :key="p.id"
                     :class="{
-                      'alert-success': !!p.piquet === true
+                      'alert-success': !!p.piquet === true,
                     }"
                   >
                     <td :colspan="2 + columns.length * 4">
@@ -198,45 +199,45 @@ export default {
   data() {
     return {
       columns: [],
-      toggles: {}
+      toggles: {},
     };
   },
   computed: {
     ...mapGetters(['getSapeur', 'getPhaseType']),
     ...mapState({
-      id: state => state.intervention.active.id,
-      data: state => state.intervention.active.data,
-      quittances: state => state.intervention.active.quittances,
-      presences: state => state.intervention.active.sapeurs,
-      phases: state => state.intervention.active.phases
+      id: (state) => state.intervention.active.id,
+      data: (state) => state.intervention.active.data,
+      quittances: (state) => state.intervention.active.quittances,
+      presences: (state) => state.intervention.active.sapeurs,
+      phases: (state) => state.intervention.active.phases,
     }),
     listSapeurs() {
       return Array.from(
         new Set([
-          ...this.presences.map(s => s.sapeur_id),
-          ...this.quittances.map(s => s.sapeur_id)
+          ...this.presences.map((s) => s.sapeur_id),
+          ...this.quittances.map((s) => s.sapeur_id),
         ])
-      ).map(id => this.getSapeur(id));
+      ).map((id) => this.getSapeur(id));
     },
     sortedSapeurs() {
       return [
         ...Object.keys(this.computedPresences)
-          .map(s => parseInt(s))
+          .map((s) => parseInt(s))
           .map(this.getSapeur)
-          .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom)
+          .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom),
       ];
     },
     computedPresences() {
       let temp = [];
       this.listSapeurs.forEach(
-        s =>
+        (s) =>
           (temp = {
             ...temp,
-            [s.id]: this.computeSapeur(s.id)
+            [s.id]: this.computeSapeur(s.id),
           })
       );
       return temp;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchPhaseTypes');
@@ -274,7 +275,7 @@ export default {
   filters: {
     datePresence(d) {
       return d.slice(-8, -3);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -292,8 +293,8 @@ export default {
           mode: 'add',
           id: this.data.id,
           min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin
-        }
+          max: this.data.date_fin + ' ' + this.data.heure_fin,
+        },
       });
     },
     editPresence(presence) {
@@ -307,8 +308,8 @@ export default {
           sapeurs: [clone.sapeur_id],
           presence: clone,
           min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin
-        }
+          max: this.data.date_fin + ' ' + this.data.heure_fin,
+        },
       });
     },
     removePresence(id) {
@@ -321,8 +322,8 @@ export default {
         callback: () => {},
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin
-        }
+          max: this.data.date_fin + ' ' + this.data.heure_fin,
+        },
       });
     },
     editPhase(phase) {
@@ -334,8 +335,8 @@ export default {
         callback: () => {},
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin
-        }
+          max: this.data.date_fin + ' ' + this.data.heure_fin,
+        },
       });
     },
     removePhase(id) {
@@ -343,7 +344,7 @@ export default {
     },
     editQuittance(e, id) {
       let quittances = this.quittances.filter(
-        q => q.sapeur_id === parseInt(id)
+        (q) => q.sapeur_id === parseInt(id)
       );
       if (quittances.length === 1) {
         //remove quittance
@@ -358,8 +359,8 @@ export default {
       let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
 
       this.presences
-        .filter(s => s.sapeur_id === id)
-        .forEach(q => {
+        .filter((s) => s.sapeur_id === id)
+        .forEach((q) => {
           let diff = ((new Date(q.debut) - start) / 3600000) * 4;
           //Durée de la présence en quart d'heures
           let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000) * 4;
@@ -377,7 +378,7 @@ export default {
             }
             res = {
               ...res,
-              [diff + i]: code
+              [diff + i]: code,
             };
           }
         });
@@ -385,7 +386,7 @@ export default {
     },
     getPhaseTypeAt(date) {
       let res = this.phases
-        .filter(p => new Date(p.debut) <= date)
+        .filter((p) => new Date(p.debut) <= date)
         .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut));
       if (res.length > 0) {
         return res[0].phase_type_id;
@@ -395,15 +396,15 @@ export default {
     expandSap(id) {
       this.toggles = {
         ...this.toggles,
-        [id]: !this.toggles[id]
+        [id]: !this.toggles[id],
       };
     },
     sortedPresences(id) {
       return this.presences
-        .filter(p => p.sapeur_id === id)
+        .filter((p) => p.sapeur_id === id)
         .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
-    }
-  }
+    },
+  },
 };
 </script>
 

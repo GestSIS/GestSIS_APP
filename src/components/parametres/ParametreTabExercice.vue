@@ -177,8 +177,10 @@ export default {
   mounted() {},
   computed: {
     ...mapState({
-      listeExcuse: (state) => state.excuseType.liste.sort((a, b) => a.tri - b.tri),
-      listeCategorie: (state) => state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
+      listeExcuse: (state) =>
+        state.excuseType.liste.sort((a, b) => a.tri - b.tri),
+      listeCategorie: (state) =>
+        state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

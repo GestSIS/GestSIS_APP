@@ -21,8 +21,9 @@
                 v-for="civilite in listeCivilites"
                 :value="civilite.id"
                 :key="civilite.id"
-                >{{ civilite.designation }}</option
               >
+                {{ civilite.designation }}
+              </option>
             </select>
           </div>
           <!-- NOM -->
@@ -92,8 +93,9 @@
                 v-for="localite in listLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-                >{{ localite.npa + ' ' + localite.designation }}</option
               >
+                {{ localite.npa + ' ' + localite.designation }}
+              </option>
             </select>
           </div>
           <!-- N° AVS -->
@@ -295,7 +297,7 @@ export default {
   name: 'SapeurTabGeneral',
   components: {
     SapeurMutations,
-    SapeurTelephones
+    SapeurTelephones,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -305,7 +307,7 @@ export default {
   },
   data() {
     return {
-      errorsData: {}
+      errorsData: {},
     };
   },
   mounted() {
@@ -326,22 +328,22 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCivilites: state => state.baseData.civilites,
-      listeFonctions: state => state.fonction.liste,
-      listGrades: state => state.grade.liste
+      listeCivilites: (state) => state.baseData.civilites,
+      listeFonctions: (state) => state.fonction.liste,
+      listGrades: (state) => state.grade.liste,
     }),
     ...mapGetters([
       'activeSapeur',
       'activeSapeurId',
       'listLocalitesSis',
-      'getLocalite'
-    ])
+      'getLocalite',
+    ]),
   },
   watch: {
     activeSapeurId(id) {
       this.errorsData = {};
       this.$store.dispatch('fetchSapeurMutations', id);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
@@ -357,7 +359,7 @@ export default {
         'email',
         'date_naissance',
         'suffixe',
-        'remarque'
+        'remarque',
       ];
       let saveSapeur = Object.assign({}, this.activeSapeur);
       for (let key in Object.keys(saveSapeur)) {
@@ -370,7 +372,7 @@ export default {
         .then(() => {
           this.errorsData = {};
         })
-        .catch(err => {
+        .catch((err) => {
           this.errorsData = err;
         });
     },
@@ -379,7 +381,7 @@ export default {
         .dispatch('saveActiveSapeur', {
           profession: this.activeSapeur.profession,
           employeur: this.activeSapeur.employeur,
-          lieu_de_travail: this.activeSapeur.lieu_de_travail
+          lieu_de_travail: this.activeSapeur.lieu_de_travail,
         })
         .then(() => {
           // console.log('Save sapeur Success')
@@ -387,8 +389,8 @@ export default {
         .catch(() => {
           // console.log('Save sapeur Error')
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

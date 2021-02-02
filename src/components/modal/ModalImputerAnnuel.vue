@@ -118,39 +118,39 @@ export default {
     return {
       phase: 1,
       ecritures: [],
-      successMessageVisibility: true
+      successMessageVisibility: true,
     };
   },
   computed: {
     ...mapState({
-      fraisAnnuel: state => state.comptabilite.frais.annuels,
-      indemnitesAnnuel: state => state.comptabilite.indemnites.annuels
+      fraisAnnuel: (state) => state.comptabilite.frais.annuels,
+      indemnitesAnnuel: (state) => state.comptabilite.indemnites.annuels,
     }),
     ...mapGetters(['getFonction', 'getCompte', 'getSapeur']),
     listDisplay() {
       let svm = this;
       return [
-        ...this.fraisAnnuel.map(f => ({
+        ...this.fraisAnnuel.map((f) => ({
           ...f,
-          type: 'Frais'
+          type: 'Frais',
         })),
-        ...this.indemnitesAnnuel.map(f => ({
+        ...this.indemnitesAnnuel.map((f) => ({
           ...f,
-          type: 'Indemnite'
-        }))
+          type: 'Indemnite',
+        })),
       ]
-        .map(c => ({
+        .map((c) => ({
           ...c,
-          ...[svm.getFonction(c.fonction_id)].map(f => ({
+          ...[svm.getFonction(c.fonction_id)].map((f) => ({
             fonction: f.nom,
-            tri: f.tri
+            tri: f.tri,
           }))[0],
           compte: [svm.getCompte(c.compte_id)].map(
-            c => `${c.numero} ${c.designation}`
-          )[0]
+            (c) => `${c.numero} ${c.designation}`
+          )[0],
         }))
         .sort((c1, c2) => c2.tri - c1.tri);
-    }
+    },
   },
   mounted() {
     //TODO
@@ -162,14 +162,14 @@ export default {
       this.HIDE_MODAL();
     },
     imputer() {
-      this.$store.dispatch('imputerAnnuel').then(data => {
+      this.$store.dispatch('imputerAnnuel').then((data) => {
         this.phase = 2;
         this.ecritures = [...data.frais, ...data.indemnites].sort(
           (e1, e2) => e2.sapeur_id - e1.sapeur_id
         );
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

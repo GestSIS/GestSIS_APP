@@ -7,33 +7,33 @@ export default {
     indemnites: {
       exercices: [],
       interventions: [],
-      annuels: []
+      annuels: [],
     },
     amendes: [],
     listeFraisAnnuels: [],
     listeIndemnitesAnnuels: [],
     frais: {
-      annuels: []
+      annuels: [],
     },
     ecritures: {
-      annuels: []
+      annuels: [],
     },
     active: {
       compteId: null,
-      ecritures: []
-    }
+      ecritures: [],
+    },
   },
   mutations: {
     [types.UPDATE_INDEMNITES_TYPES](state, payload) {
       state.indemnites = {
         ...state.indemnites,
-        ...payload
+        ...payload,
       };
     },
     [types.UPDATE_FRAIS_TYPES](state, payload) {
       state.frais = {
         ...state.frais,
-        ...payload
+        ...payload,
       };
     },
     [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
@@ -50,14 +50,14 @@ export default {
     },
     [types.SELECT_CURRENT_COMPTE](state, payload) {
       state.active.compteId = payload;
-    }
+    },
   },
   getters: {
-    getCompte: state => id => state.comptes.filter(c => c.id === id)[0]
+    getCompte: (state) => (id) => state.comptes.filter((c) => c.id === id)[0],
   },
   actions: {
     fetchComptes({ commit }) {
-      return ComptabiliteService.getComptes().then(data =>
+      return ComptabiliteService.getComptes().then((data) =>
         commit(types.UPDATE_COMPTES_LISTE, data)
       );
     },
@@ -69,38 +69,38 @@ export default {
       return ComptabiliteService.getEcritureForCompte(
         state.active.compteId,
         getters.currentExerciceComptableId
-      ).then(data => {
+      ).then((data) => {
         return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data);
       });
     },
     fetchIndemnitesTypes({ commit }) {
-      return ComptabiliteService.getIndemniteTypes().then(data =>
+      return ComptabiliteService.getIndemniteTypes().then((data) =>
         commit(types.UPDATE_INDEMNITES_TYPES, data)
       );
     },
     fetchFraisTypes({ commit }) {
-      return ComptabiliteService.getFraisTypes().then(data =>
+      return ComptabiliteService.getFraisTypes().then((data) =>
         commit(types.UPDATE_FRAIS_TYPES, data)
       );
     },
     fetchEcrituresAnnuels({ commit, getters }) {
       return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
+      ).then((data) => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
     },
-    fetchAmendes({commit, getters }) {
+    fetchAmendes({ commit, getters }) {
       return ComptabiliteService.getAmendesForExerciceComptable(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_ECRITURES_AMENDES, data));
+      ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
     imputerExercice({ commit }, payload) {
       return ComptabiliteService.imputerExercice(
         payload.exercice_id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload.exercice_id,
-          statut: data.statut
+          statut: data.statut,
         });
         return data;
       });
@@ -109,10 +109,10 @@ export default {
       return ComptabiliteService.imputerIntervention(
         payload.intervention_id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload.intervention_id,
-          statut: data.statut
+          statut: data.statut,
         });
         return data;
       });
@@ -120,24 +120,32 @@ export default {
     imputerAnnuel({ commit, getters }) {
       return ComptabiliteService.imputerAnnuel(
         getters.currentExerciceComptableId
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
           ...data.indemnites,
-          ...data.frais
+          ...data.frais,
         ]);
         return data;
       });
     },
     genererAmendesAnnuels({ commit }, exerciceComptableId) {
-      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId).then(data =>
-        commit(types.UPDATE_ECRITURES_AMENDES, data)
-      );
+      return ComptabiliteService.genererAmendesAnnuels(
+        exerciceComptableId
+      ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
-    genererAmendesPourSapeur({ commit }, { exerciceComptableId, sapeurId, tarifs }) {
-      return ComptabiliteService.genererAmendesAnnuels(exerciceComptableId, sapeurId, tarifs).then(//data =>
+    genererAmendesPourSapeur(
+      { commit },
+      { exerciceComptableId, sapeurId, tarifs }
+    ) {
+      return ComptabiliteService.genererAmendesAnnuels(
+        exerciceComptableId,
+        sapeurId,
+        tarifs
+      )
+        .then //data =>
         // commit(types.UPDATE_COURS_LISTE, data)
         //TODO
-      );
-    }
-  }
+        ();
+    },
+  },
 };

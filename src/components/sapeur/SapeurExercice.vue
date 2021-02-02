@@ -29,25 +29,53 @@
             <td>{{ e.communications }}</td>
             <td>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="convoque" :checked="e.convoque" disabled>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="convoque"
+                  :checked="e.convoque"
+                  disabled
+                />
                 <label class="custom-control-label" for="convoque"></label>
               </div>
             </td>
             <td>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="present" :checked="e.present" disabled>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="present"
+                  :checked="e.present"
+                  disabled
+                />
                 <label class="custom-control-label" for="present"></label>
               </div>
             </td>
             <td>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="excuse" :checked="e.excuse_type_id" disabled>
-                <label class="custom-control-label" for="excuse">{{ e.excuse_type_id ? getExcuseType(e.excuse_type_id).designation : "" }}</label>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="excuse"
+                  :checked="e.excuse_type_id"
+                  disabled
+                />
+                <label class="custom-control-label" for="excuse">{{
+                  e.excuse_type_id
+                    ? getExcuseType(e.excuse_type_id).designation
+                    : ''
+                }}</label>
               </div>
             </td>
             <td>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="amende" :checked="e.amende_id" disabled>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="amende"
+                  :checked="e.amende_id"
+                  disabled
+                />
                 <label class="custom-control-label" for="amende"></label>
               </div>
             </td>
@@ -66,23 +94,23 @@ export default {
   name: 'SapeurExercice',
   computed: {
     ...mapState({
-      activeSapeurId: state => state.sapeur.active.id,
-      activeSapeurExercice: state => state.sapeur.active.exercices,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurExercice: (state) => state.sapeur.active.exercices,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getLocalite', 'getExerciceCategorie', 'getExcuseType']),
     exerciceDisplay() {
-      return this.activeSapeurExercice.map(exercice => {
+      return this.activeSapeurExercice.map((exercice) => {
         let localite = this.getLocalite(exercice.localite_id);
         return {
           ...exercice,
           categorie: this.getExerciceCategorie(exercice.exercice_categorie_id)
             .designation,
           localite: `${localite.npa} ${localite.designation}`,
-          heure: exercice.heure.substr(0, 5)
+          heure: exercice.heure.substr(0, 5),
         };
       });
-    }
+    },
   },
   mounted() {
     //TODO: Load before any display
@@ -97,8 +125,8 @@ export default {
     },
     currentExerciceComptableId() {
       this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
-    }
-  }
+    },
+  },
 };
 </script>
 

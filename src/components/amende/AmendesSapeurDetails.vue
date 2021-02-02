@@ -42,21 +42,21 @@ export default {
   props: {
     rowData: {
       type: Object,
-      required: true
+      required: true,
     },
     rowIndex: {
-      type: Number
+      type: Number,
     },
     options: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       data: {},
       loading: true,
       columns: [],
-      amendes: []
+      amendes: [],
     };
   },
   mounted() {
@@ -64,13 +64,13 @@ export default {
     this.columns = this.rowData.columns;
     this.amendes = this.rowData.amendes;
     this.loading = false;
-    },
+  },
   methods: {
     computeColumn(column, amende) {
-      let formatter = column.formatter || (a => a);
+      let formatter = column.formatter || ((a) => a);
       return formatter(amende[column.field]);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -34,13 +34,13 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'SapeurBanque',
   computed: {
-    ...mapGetters(['activeSapeur', 'activeSapeurId'])
+    ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },
   methods: {
     save() {
       this.$store
         .dispatch('saveActiveSapeur', {
-          iban: this.activeSapeur.iban
+          iban: this.activeSapeur.iban,
         })
         .then(() => {
           // console.log('Save sapeur Success')
@@ -48,13 +48,13 @@ export default {
         .catch(() => {
           // console.log('Save sapeur Error')
         });
-    }
+    },
   },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeur', id);
-    }
-  }
+    },
+  },
 };
 </script>
 
