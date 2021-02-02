@@ -52,7 +52,7 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'SapeurTabPromotion',
+  name: 'SapeurPromotion',
   computed: {
     ...mapState({
       listGrades: state => state.grade.liste,

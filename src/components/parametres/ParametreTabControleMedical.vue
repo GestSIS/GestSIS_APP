@@ -5,50 +5,37 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Excuses type</h3>
+          <h3 class="card-title">Médecins</h3>
           <button type="button" class="btn btn-primary">
-            Ajouter une excuse
+            Ajouter un médecin
           </button>
         </div>
         <div class="card-body">
           <table id="excuses-types" class="table table-sm">
             <thead>
               <tr>
-                <th>Tri</th>
-                <th>Abréviation</th>
                 <th>Désignation</th>
-                <th class="text-center">Amende</th>
+                <th>Address</th>
+                <th>Localité</th>
                 <th class="text-center">Actif</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="e in listeExcuse" :key="e.id">
-                <td>{{ e.tri }}</td>
-                <td>{{ e.abreviation }}</td>
-                <td>{{ e.designation }}</td>
-                <td class="text-center">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="amende"
-                      :checked="e.amende"
-                      disabled
-                    />
-                    <label class="custom-control-label" for="amende"></label>
-                  </div>
-                </td>
+              <tr v-for="m in listeMedecin" :key="m.id">
+                <td>{{ m.designation }}</td>
+                <td>{{ m.address }}</td>
+                <td>{{ m.localite_id }}</td>
                 <td class="text-center">
                   <div class="custom-control custom-checkbox">
                     <input
                       type="checkbox"
                       class="custom-control-input"
                       id="status"
-                      :checked="e.status"
+                      :checked="m.status"
                       disabled
                     />
-                    <label class="custom-control-label" for="amende"></label>
+                    <label class="custom-control-label" for="status"></label>
                   </div>
                 </td>
                 <td>
@@ -80,9 +67,9 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Catégories</h3>
+          <h3 class="card-title">Contrôles médicaux types</h3>
           <button type="button" class="btn btn-primary">
-            Ajouter une catégorie
+            Ajouter une nouveau type
           </button>
         </div>
         <div class="card-body">
@@ -91,39 +78,26 @@
               <tr>
                 <th>Tri</th>
                 <th>Désignation</th>
-                <th>Durée de base [min]</th>
-                <th class="text-center">Amendable</th>
-                <th class="text-center">Actif</th>
+                <th>Validité [ans]</th>
+                <th class="text-center">Expirable</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="c in listeCategorie" :key="c.id">
-                <td>{{ c.tri }}</td>
-                <td>{{ c.designation }}</td>
-                <td>{{ c.duree_base }}</td>
+              <tr v-for="t in listeType" :key="t.id">
+                <td>{{ t.tri }}</td>
+                <td>{{ t.designation }}</td>
+                <td>{{ t.duree_validite }}</td>
                 <td class="text-center">
                   <div class="custom-control custom-checkbox">
                     <input
                       type="checkbox"
                       class="custom-control-input"
-                      id="amendable"
-                      :checked="c.amendable"
+                      id="expirable"
+                      :checked="t.expirable"
                       disabled
                     />
-                    <label class="custom-control-label" for="amendable"></label>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="status"
-                      :checked="c.status"
-                      disabled
-                    />
-                    <label class="custom-control-label" for="amende"></label>
+                    <label class="custom-control-label" for="expirable"></label>
                   </div>
                 </td>
                 <td>
@@ -158,10 +132,10 @@ import { mapState } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  const loadExcuses = store.dispatch('fetchExcuseTypes');
-  const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadMedecin = store.dispatch('fetchMedecins');
+  const loadType = store.dispatch('fetchControlesMedicauxTypes');
 
-  Promise.all([loadExcuses, loadCategories]).then(() => {
+  Promise.all([loadMedecin, loadType]).then(() => {
     next();
   });
 }
@@ -177,8 +151,8 @@ export default {
   mounted() {},
   computed: {
     ...mapState({
-      listeExcuse: (state) => state.excuseType.liste.sort((a, b) => a.tri - b.tri),
-      listeCategorie: (state) => state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
+      listeMedecin: (state) => state.medecin.liste.sort((a, b) => a.tri - b.tri),
+      listeType: (state) => state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

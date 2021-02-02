@@ -36,7 +36,7 @@
           :class="{ 'is-invalid': errors['fonction_id'] }"
           :disabled="(activeFonction.id || 0) !== 0"
         >
-          <option v-for="f in listFonctions" :key="f.id" :value="f.id">
+          <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
             {{ f.nom }}
           </option>
         </select>
@@ -77,13 +77,13 @@ export default {
   },
   computed: {
     ...mapState({
-      listFonctions: state => state.fonction.liste,
+      listeFonctions: state => state.fonction.liste,
       activeSapeurId: state => state.sapeur.active.id
     }),
     ...mapGetters(['activeFonction'])
   },
   mounted() {
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
   },

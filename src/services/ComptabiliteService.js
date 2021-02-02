@@ -46,6 +46,8 @@ export default {
     return Api.api().post('/generer-amendes/' + exerciceComptableId);
   },
   genererAmendesPourSapeur(exerciceComptableId, sapeurId) {
-    return Api.api().post('/generer-amendes/' + exerciceComptableId + '/sapeur/' + sapeurId);
-  }
+    return Api.api().post(
+      '/generer-amendes/' + exerciceComptableId + '/sapeur/' + sapeurId
+    );
+  },
 };

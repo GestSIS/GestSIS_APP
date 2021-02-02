@@ -32,7 +32,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'SapeurTabBanque',
+  name: 'SapeurBanque',
   computed: {
     ...mapGetters(['activeSapeur', 'activeSapeurId'])
   },

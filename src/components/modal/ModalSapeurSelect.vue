@@ -247,7 +247,7 @@ export default {
       listGroupes: (state) => state.groupe.liste,
       listGrades: (state) => state.grade.liste,
       listCivilites: (state) => state.baseData.civilites,
-      listFonctions: (state) => state.fonction.liste,
+      listeFonctions: (state) => state.fonction.liste,
       listSapeurs: (state) => state.sapeur.liste,
     }),
     ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
@@ -257,7 +257,7 @@ export default {
         return this.flattenedTree;
       } else if (this.groupBy === 'fonction') {
         let liste = [];
-        this.listFonctions.forEach((fonction) => {
+        this.listeFonctions.forEach((fonction) => {
           let expanded = svm.expanded[fonction.id];
           liste = [
             ...liste,

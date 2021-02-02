@@ -248,7 +248,7 @@
                 class="custom-select"
                 disabled
               >
-                <option v-for="f in listFonctions" :key="f.id" :value="f.id">
+                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
                   {{ f.nom }}
                 </option>
               </select>
@@ -318,7 +318,7 @@ export default {
     if (this.listGrades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
 
@@ -327,7 +327,7 @@ export default {
   computed: {
     ...mapState({
       listeCivilites: state => state.baseData.civilites,
-      listFonctions: state => state.fonction.liste,
+      listeFonctions: state => state.fonction.liste,
       listGrades: state => state.grade.liste
     }),
     ...mapGetters([

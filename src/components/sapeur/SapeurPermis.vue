@@ -62,7 +62,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'SapeurTabPermis',
+  name: 'SapeurPermis',
   data() {
     return {
       publicPath: process.env.BASE_URL,

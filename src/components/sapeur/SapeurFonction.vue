@@ -53,17 +53,17 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'SapeurTabFonction',
+  name: 'SapeurFonction',
   computed: {
     ...mapState({
-      listFonctions: state => state.fonction.liste,
+      listeFonctions: state => state.fonction.liste,
       activeSapeurId: state => state.sapeur.active.id,
       activeSapeurFonctions: state => state.sapeur.active.fonctions
     }),
     ...mapGetters(['getFonction'])
   },
   mounted() {
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
     this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);

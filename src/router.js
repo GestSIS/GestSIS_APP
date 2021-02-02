@@ -108,7 +108,7 @@ const router = new Router({
           path: 'sapeur',
           name: 'param-sapeur',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabSapeur.vue'),
         },
         {
           path: 'exercice',
@@ -126,19 +126,19 @@ const router = new Router({
           path: 'frais',
           name: 'param-frais',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabFrais.vue'),
         },
         {
           path: 'controle-medical',
           name: 'param-controle-medical',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
           path: 'droits',
           name: 'param-droits',
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabDroits.vue'),
         },
       ],
     },

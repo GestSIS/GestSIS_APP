@@ -30,7 +30,7 @@
 import { mapGetters, mapState } from 'vuex';
 
 export default {
-  name: 'SapeurTabOrganisation',
+  name: 'SapeurOrganisation',
   computed: {
     ...mapState({
       listGroupes: state => state.groupe.liste,

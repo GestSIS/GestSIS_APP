@@ -63,7 +63,7 @@
 import { mapGetters, mapState } from 'vuex';
 
 export default {
-  name: 'SapeurTabExercice',
+  name: 'SapeurExercice',
   computed: {
     ...mapState({
       activeSapeurId: state => state.sapeur.active.id,

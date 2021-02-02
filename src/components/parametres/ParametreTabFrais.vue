@@ -3,25 +3,25 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Exercices comptables</h3>
-      <button type="button" class="btn btn-primary" @click="newExerciceComptable">
-        Ajouter un exercice comptable
+      <h3 class="card-title">Frais</h3>
+      <button type="button" class="btn btn-primary">
+        TODO What to do ???
       </button>
     </div>
     <div class="card-body">
-      <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
+      <table id="sap-cours" class="table" cellspacing="0" width="100%">
         <thead>
           <tr>
-            <th>Année</th>
-            <th>Désignation</th>
-            <th>Début</th>
-            <th>Fin</th>
+            <th data-field="date">Année</th>
+            <th data-field="designation">Désignation</th>
+            <th data-field="lieu">Début</th>
+            <th class="text-center">Fin</th>
             <th class="text-center">Bouclé</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="e in listeExerciceComptable" :key="e.id">
+          <!-- <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>
             <td>{{ e.debut }}</td>
@@ -33,7 +33,6 @@
               </div>
             </td>
             <td>
-              <!-- TODO Implement those 2 buttons -->
               <div class="d-flex justify-content-center">
                 <button
                   type="button"
@@ -51,7 +50,7 @@
                 </button>
               </div>
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </div>
@@ -60,37 +59,22 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
-
-async function loadData(_, next) {
-  const loadExerciceComptable = store.dispatch('fetchExercicesComptables');
-  
-  Promise.all([loadExerciceComptable]).then(() => {
-    next();
-  });
-}
 
 export default {
-  name: 'ParametreTabExerciceComptable',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
+  name: 'ParametreTabFrais',
+  computed: {
+    ...mapState({
+      // listeExerciceComptable: state => state.exerciceComptable.liste,
+      // activeExerciceComptableId: state => state.exerciceComptable.activeId
+    }),
   },
   mounted() {
   },
-  computed: {
-    ...mapState({
-      listeExerciceComptable: state => state.exerciceComptable.liste,
-      activeExerciceComptableId: state => state.exerciceComptable.activeId
-    }),
-  },
   methods: {
-    newExerciceComptable() {
-    },
-    save() {
-    },
+    // newExerciceComptable() {
+    // },
+    // save() {
+    // },
   },
   watch: {
   }

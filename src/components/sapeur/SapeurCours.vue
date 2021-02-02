@@ -52,7 +52,7 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'SapeurTabCours',
+  name: 'SapeurCours',
   computed: {
     ...mapState({
       activeSapeurCours: state => state.sapeur.active.cours,

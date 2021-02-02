@@ -103,7 +103,7 @@
               :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="f in listFonctions" :key="f.id" :value="f.id"
+              <option v-for="f in listeFonctions" :key="f.id" :value="f.id"
                 >{{ f.nom }}
               </option>
             </select>
@@ -167,7 +167,7 @@ export default {
   computed: {
     ...mapState({
       listGrades: state => state.grade.liste,
-      listFonctions: state => state.fonction.liste,
+      listeFonctions: state => state.fonction.liste,
       listCours: state => state.cours.liste,
       activeSapeurId: state => state.sapeur.active.id,
       activeSapeurFonctions: state => state.sapeur.active.fonctions,
@@ -192,7 +192,7 @@ export default {
     if (this.listCours.length === 0) {
       this.$store.dispatch('fetchCours');
     }
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
     if (this.listGrades.length === 0) {

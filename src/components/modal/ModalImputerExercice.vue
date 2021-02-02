@@ -158,7 +158,7 @@ export default {
   computed: {
     ...mapState({
       listeIndemnitesTypes: (state) => state.comptabilite.indemnites.exercices,
-      listFonctions: (state) => state.fonction.liste,
+      listeFonctions: (state) => state.fonction.liste,
       listComptes: (state) => state.comptabilite.comptes,
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
@@ -167,7 +167,7 @@ export default {
     },
   },
   mounted() {
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
   },

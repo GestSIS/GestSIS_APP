@@ -10,7 +10,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'SapeurTabMateriel',
+  name: 'SapeurMateriel',
   data() {
     return {
       publicPath: process.env.BASE_URL
