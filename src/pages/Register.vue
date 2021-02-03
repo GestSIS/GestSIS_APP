@@ -25,7 +25,7 @@
         type="email"
         id="inputEmail"
         class="form-control"
-        placeholder="Email address"
+        placeholder="Adresse email"
         required=""
         autocomplete="off"
         :class="{ 'is-invalid': error.email }"

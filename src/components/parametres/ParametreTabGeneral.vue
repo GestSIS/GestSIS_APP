@@ -13,74 +13,75 @@
         <div class="card-body">
           <div>TODO Info générales</div>
           <div>
-            TODO
+            <h5>Paramètres Statique pour admin du système</h5>
             <ul>
               <li>Type de téléphone</li>
-              <li>Nombre de numéro max par sapeur</li>
-              <li>Liste des cours spécifique au SIS</li>
+              <li>Civilites</li>
+              <li>Localites et communes</li>
+              <li>Stat fédéral</li>
+              <li>Permis</li>
+              <li>Unites</li>
             </ul>
           </div>
           <div>
+            <h5>Sapeur</h5>
+            <ul>
+              <li>Cours</li>
+              <li>Fonctions</li>
+              <li>Grades</li>
+              <li>Nombre de numéro max par sapeur</li>
+            </ul>
+          </div>
+          <div>
+            <h5>Exercices comptables</h5>
             <ul>
               <li>Exercices comptables</li>
               <li>Ajouter, supprimer, clôturer</li>
             </ul>
           </div>
           <div>
-            TODO
+            <h5>Exercices</h5>
             <ul>
               <li>Excuses types</li>
-              <li>Type d'exercice avec amendable ou non</li>
+              <li>Catégorie d'exercice - &gt;  amendable ou non</li>
             </ul>
           </div>
           <div>
-            TODO
+            <h5>Intervention</h5>
             <ul>
               <li>Véhicules</li>
               <li>Matériel</li>
               <li>Missions type</li>
               <li>Annuaire de téléphones</li>
-              <li>Catégorie intervention</li>
-              <li>Stat fédéral -> Dans section admin</li>
+              <li>Type d'intervention</li>
+              <li>Stat d'intervention</li>
+              <!-- <li>Stat fédéral -&gt; Dans section admin</li> -->
             </ul>
           </div>
           <div>
-            TODO
+            <h5>Compatbilité</h5>
             <ul>
               <li>Liste des Comptes</li>
-              <li>Type de frais pour exercices</li>
-              <li>Type de frais pour interventions</li>
-              <li>Catégories de revenus</li>
-              <li>Exercices comptabes</li>
+              <li>Indemnités/Soldes pour exercices</li>
+              <li>Indemnités/Soldes pour intervention</li>
+              <li>Frais annuels</li>
+              <li>Indemnités annuels</li>
               <li>Coordonnées bancaire du SIS pour ISO20022</li>
             </ul>
           </div>
           <div>
-            TODO
+            <h5>Controles médicaux</h5>
             <ul>
               <li>Médecins</li>
               <li>Type de contrôles</li>
             </ul>
           </div>
           <div>
-            TODO
+            <h5>Droits et rôles</h5>
             <ul>
-              <li>Droits et rôles</li>
-              <li>Rôle et droits liés aux rôles</li>
-            </ul>
-          </div>
-          <div>
-            <p>TODO Nouvelle application ?</p>
-            <p>
-              Les données suivantes sont celles correspondantes à l'application
-              GestSIS 1.0
-            </p>
-            <ul>
-              <li>Localités et communes</li>
-              <li>Cours cantonaux</li>
-              <li>Fonctions</li>
-              <li>Grades</li>
-              <li>Stat fédéral</li>
+              <li>Gestion des accès -&gt; comptes</li>
+              <li>Rôles</li>
+              <li>Droits</li>
             </ul>
           </div>
         </div>

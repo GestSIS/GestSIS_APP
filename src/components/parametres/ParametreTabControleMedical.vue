@@ -15,7 +15,7 @@
             <thead>
               <tr>
                 <th>Désignation</th>
-                <th>Address</th>
+                <th>Adresse</th>
                 <th>Localité</th>
                 <th class="text-center">Actif</th>
                 <th class="text-center">Actions</th>
@@ -24,7 +24,7 @@
             <tbody>
               <tr v-for="m in listeMedecin" :key="m.id">
                 <td>{{ m.designation }}</td>
-                <td>{{ m.address }}</td>
+                <td>{{ m.adresse }}</td>
                 <td>{{ m.localite_id }}</td>
                 <td class="text-center">
                   <div class="custom-control custom-checkbox">
@@ -152,7 +152,7 @@ export default {
   computed: {
     ...mapState({
       listeMedecin: (state) =>
-        state.medecin.liste.sort((a, b) => a.tri - b.tri),
+        state.medecin.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
       listeType: (state) =>
         state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
     }),

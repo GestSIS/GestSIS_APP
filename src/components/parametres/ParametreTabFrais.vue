@@ -1,73 +1,311 @@
 <template>
-  <!-- general form elements -->
-  <div class="card card-primary card-outline">
-    <!-- /.card-header -->
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Frais</h3>
-      <button type="button" class="btn btn-primary">TODO What to do ???</button>
+  <div class="row">
+    <div class="col-sm-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Frais annuels</h3>
+          <button type="button" class="btn btn-primary">
+            Ajouter un type de frais annuel
+          </button>
+        </div>
+        <div class="card-body">
+          <table id="frais-annuels" class="table table-sm">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th>Fonction</th>
+                <th>Montant</th>
+                <th>Quantité</th>
+                <th>Unité</th>
+                <th>Compte</th>
+                <th>Catégorie d'écriture</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="f in listeFraisAnnuel" :key="f.id">
+                <td>{{ f.designation }}</td>
+                <td>{{ fonction(f.fonction_id) }}</td>
+                <td>{{ f.montant }}</td>
+                <td>{{ f.quantite }}</td>
+                <td>{{ unite(f.type_unite_id) }}</td>
+                <td>{{ compte(f.compte_id) }}</td>
+                <td>{{ f.ecriture_categorie_id }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <table id="sap-cours" class="table" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th data-field="date">Année</th>
-            <th data-field="designation">Désignation</th>
-            <th data-field="lieu">Début</th>
-            <th class="text-center">Fin</th>
-            <th class="text-center">Bouclé</th>
-            <th class="text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- <tr v-for="e in listeExerciceComptable" :key="e.id">
-            <td>{{ e.annee }}</td>
-            <td>{{ e.designation }}</td>
-            <td>{{ e.debut }}</td>
-            <td>{{ e.fin }}</td>
-            <td class="text-center">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="en_cours" :checked="e.boucle" disabled>
-                <label class="custom-control-label" for="en_cours"></label>
-              </div>
-            </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
-            </td>
-          </tr> -->
-        </tbody>
-      </table>
+    <div class="col-sm-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Indemnités annuels</h3>
+          <button type="button" class="btn btn-primary">
+            Ajouter une indemnité
+          </button>
+        </div>
+        <div class="card-body">
+          <table id="indemnites-anuelles" class="table table-sm">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th>Fonction</th>
+                <th>Montant</th>
+                <th>Quantité</th>
+                <th>Unité</th>
+                <th>Compte</th>
+                <th>Catégorie d'écriture</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="i in listeIndemniteAnnuel" :key="i.id">
+                <td>{{ i.designation }}</td>
+                <td>{{ fonction(i.fonction_id) }}</td>
+                <td>{{ i.montant }}</td>
+                <td>{{ i.quantite }}</td>
+                <td>{{ unite(i.type_unite_id) }}</td>
+                <td>{{ compte(i.compte_id) }}</td>
+                <td>{{ i.ecriture_categorie_id }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Indemnités exercice</h3>
+          <button type="button" class="btn btn-primary">
+            Ajouter une indemnité
+          </button>
+        </div>
+        <div class="card-body">
+          <table id="indemnites-anuelles" class="table table-sm">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th>Solde</th>
+                <th>Solde min</th>
+                <th>Pour</th>
+                <th>Unité</th>
+                <th>Indemnité</th>
+                <th>Compte</th>
+                <th>Par fonction</th>
+                <th>Catégorie</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="i in listeIndemniteExercice" :key="i.id">
+                <td>{{ i.designation }}</td>
+                <td>{{ i.solde }}</td>
+                <td>{{ i.solde_min }}</td>
+                <td>{{ i.solde_min_pour }}</td>
+                <td>{{ unite(i.type_unite_id) }}</td>
+                <td>{{ i.indemnite }}</td>
+                <td>{{ compte(i.compte_id) }}</td>
+                <td class="text-center">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="par_fonction"
+                      :checked="i.par_fonction"
+                      disabled
+                    />
+                    <label class="custom-control-label" for="par_fonction"></label>
+                  </div>
+                </td>
+                <td>{{ i.ecriture_categorie_id }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-12">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Indemnités intervention</h3>
+          <button type="button" class="btn btn-primary">
+            Ajouter une indemnité
+          </button>
+        </div>
+        <div class="card-body">
+          <table id="indemnites-anuelles" class="table table-sm">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th>Solde</th>
+                <th>Solde min</th>
+                <th>Pour</th>
+                <th>Unité</th>
+                <th>Taux week-end</th>
+                <th>Taux nuit</th>
+                <th>Compte</th>
+                <th>Phase ???</th>
+                <th>Catégorie d'écriture</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="i in listeIndemniteIntervention" :key="i.id">
+                <td>{{ i.designation }}</td>
+                <td>{{ i.solde }}</td>
+                <td>{{ i.solde_min }}</td>
+                <td>{{ i.solde_min_pour }}</td>
+                <td>{{ unite(i.type_unite_id) }}</td>
+                <td>{{ i.taux_weekend }}</td>
+                <td>{{ i.taux_nuit }}</td>
+                <td>{{ compte(i.compte_id) }}</td>
+                <td>{{ i.phase_id }}</td>
+                <td>{{ i.ecriture_categorie_id }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      disabled
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import store from '@/store/index';
+
+async function loadData(_, next) {
+  const loadFrais = store.dispatch('fetchFraisTypes');
+  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadComptes = store.dispatch('fetchComptes');
+  const loadUnites = store.dispatch('fetchUnites');
+
+  Promise.all([loadFrais, loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(() => {
+    next();
+  });
+}
 
 export default {
-  name: 'ParametreTabFrais',
-  computed: {
-    ...mapState({
-      // listeExerciceComptable: state => state.exerciceComptable.liste,
-      // activeExerciceComptableId: state => state.exerciceComptable.activeId
-    }),
+  name: 'ParametreTabExercice',
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
   mounted() {},
+  computed: {
+    ...mapState({
+      listeFraisAnnuel: (state) =>
+        state.comptabilite.frais.annuels.sort((a, b) => a.tri - b.tri),
+      listeIndemniteAnnuel: (state) =>
+        state.comptabilite.indemnites.annuels.sort((a, b) => a.tri - b.tri),
+      listeIndemniteExercice: (state) =>
+        state.comptabilite.indemnites.exercices.sort((a, b) => a.tri - b.tri),
+      listeIndemniteIntervention: (state) =>
+        state.comptabilite.indemnites.interventions.sort((a, b) => a.tri - b.tri),
+      listeFonction: (state) => state.fonction.liste,
+      listeCompte: (state) => state.comptabilite.comptes,
+      listeUnite: (state) => state.comptabilite.unites,
+    }),
+  },
   methods: {
+    fonction(id) {
+      return id ? this.listeFonction.find((f) => f.id === id)?.abreviation : '';
+    },
+    compte(id) {
+      if (!id) {
+        return '';
+      }
+      const compte = this.listeCompte.find((f) => f.id === id);
+      return `${compte?.numero} ${compte?.designation}`;
+    },
+    unite(id) {
+      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+    }
     // newExerciceComptable() {
     // },
     // save() {

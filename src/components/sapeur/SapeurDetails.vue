@@ -36,16 +36,19 @@
         </div>
       </div>
     </div>
-    <nav class="nav nav-tabs mb-3">
-      <button
-        v-for="tab in Object.keys(tabList)"
-        :key="tab"
-        class="btn btn-link nav-item nav-link"
-        :class="{ active: activeTab === tabList[tab] }"
-        @click="selectTab(tabList[tab])"
-      >
-        {{ tabList[tab] }}
-      </button>
+    <nav >
+      <ul class="nav nav-tabs mb-3">
+        <li v-for="tab in Object.keys(tabList)" :key="tab" class="nav-item">
+          <a
+            class="nav-link"
+            :class="{ active: activeTab === tabList[tab] }"
+            @click="e => selectTab(e, tabList[tab])"
+            href="/#"
+          >
+            {{ tabList[tab] }}
+          </a>
+        </li>
+      </ul>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="tab-sapeur-details">
@@ -149,7 +152,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    selectTab(tab) {
+    selectTab(e, tab) {
+      e.preventDefault();
       this.activeTab = tab;
     },
     addSapeur() {
