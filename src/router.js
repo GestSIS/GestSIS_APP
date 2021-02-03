@@ -141,7 +141,7 @@ const router = new Router({
             import('@/components/parametres/ParametreTabDroits.vue'),
         },
         {
-          path: '/',
+          path: '',
           name: 'param-general',
           component: () =>
             import('@/components/parametres/ParametreTabGeneral.vue'),
