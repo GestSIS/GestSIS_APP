@@ -23,6 +23,15 @@
           </a>
           <a
             class="nav-link"
+            :class="{ active: tab === 'categorie' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'categorie'"
+          >
+            Catégories
+          </a>
+          <a
+            class="nav-link"
             :class="{ active: tab === 'frais-annuel' }"
             href="#"
             role="tab"
@@ -60,6 +69,7 @@
     </div>
     <div class="col-sm-12 col-xl-9">
       <parametre-compte v-if="tab === 'compte'" />
+      <parametre-ecriture-categorie v-if="tab === 'categorie'" />
       <parametre-frais-annuel v-if="tab === 'frais-annuel'" />
       <parametre-indemnite-annuel v-if="tab === 'indemnite-annuel'" />
       <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
@@ -74,6 +84,7 @@
 import store from '@/store/index';
 
 import ParametreCompte from './ParametreCompte.vue';
+import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
 import ParametreFraisAnnuel from './ParametreFraisAnnuel.vue';
 import ParametreIndemniteAnnuel from './ParametreIndemniteAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
@@ -85,6 +96,7 @@ async function loadData(_, next) {
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
+  const loadCategories = store.dispatch('fetchEcritureCategories');
 
   Promise.all([
     loadFrais,
@@ -92,6 +104,7 @@ async function loadData(_, next) {
     loadFonctions,
     loadComptes,
     loadUnites,
+    loadCategories
   ]).then(() => {
     next();
   });
@@ -101,6 +114,7 @@ export default {
   name: 'ParametreTabFrais',
   components: {
     ParametreCompte,
+    ParametreEcritureCategorie,
     ParametreFraisAnnuel,
     ParametreIndemniteAnnuel,
     ParametreIndemniteExercice,

@@ -123,7 +123,7 @@
               v-model="activeExerciceData.localite_id"
             >
               <option
-                v-for="localite in listLocalitesSis"
+                v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
                 >{{ localite.npa + ' ' + localite.designation }}</option
@@ -181,14 +181,13 @@ export default {
   computed: {
     ...mapState({
       currentExerciceComptableId: state => state.exerciceComptable.activeId,
+      listeCategories: state => state.exerciceCategorie.liste,
       activeExerciceId: state => state.exercice.active.id,
       activeExerciceData: state => state.exercice.active.data,
       activeExerciceSapeurs: state => state.exercice.active.sapeurs
     }),
     ...mapGetters([
-      'listLocalitesSis',
-      'listExerciceCategories',
-      'getExerciceCategorie'
+      'listeLocalitesSis',
     ]),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id;
@@ -222,6 +221,9 @@ export default {
     );
   },
   methods: {
+    getExerciceCategorie(id) {
+      return this.listeCategories.find(c => c.id === id)
+    },
     save() {
       if (this.newMode) {
         this.$store

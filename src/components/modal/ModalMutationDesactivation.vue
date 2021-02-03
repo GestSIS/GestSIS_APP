@@ -150,7 +150,7 @@ export default {
         state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
     ...mapGetters([
-      'listLocalitesSis',
+      'listeLocalitesSis',
       'getGroupe',
       'getFonction',
       'getExerciceCategorie',
@@ -178,7 +178,7 @@ export default {
     },
   },
   mounted() {
-    if (this.listLocalitesSis.length === 0) {
+    if (this.listeLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
 

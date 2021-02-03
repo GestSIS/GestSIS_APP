@@ -3,28 +3,28 @@ import LocaliteService from '../../services/LocaliteService';
 
 export default {
   state: {
-    liste: []
+    liste: [],
   },
   mutations: {
     [types.UPDATE_LOCALITE_LISTE](state, payload) {
       state.liste = payload;
-    }
+    },
   },
   getters: {
-    listLocalites: state => state.liste,
-    listLocalitesSis: state => state.liste,
-    getLocalite: state => localite_id =>
-      state.liste.filter(l => l.id === localite_id)[0]
+    listLocalites: (state) => state.liste,
+    listeLocalitesSis: (state) => state.liste,
+    getLocalite: (state) => (localite_id) =>
+      state.liste.filter((l) => l.id === localite_id)[0],
   },
   actions: {
     fetchLocalites({ commit, state }) {
       if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
-        return LocaliteService.getLocalites().then(data =>
+        return LocaliteService.getLocalites().then((data) =>
           commit(types.UPDATE_LOCALITE_LISTE, data)
         );
       }
-    }
-  }
+    },
+  },
 };

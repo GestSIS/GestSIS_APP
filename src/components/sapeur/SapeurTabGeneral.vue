@@ -90,7 +90,7 @@
               v-model="activeSapeur.localite_id"
             >
               <option
-                v-for="localite in listLocalitesSis"
+                v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
               >
@@ -314,7 +314,7 @@ export default {
     if (this.listeCivilites.length === 0) {
       this.$store.dispatch('fetchCivilites');
     }
-    if (this.listLocalitesSis.length === 0) {
+    if (this.listeLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
     if (this.listGrades.length === 0) {
@@ -335,7 +335,7 @@ export default {
     ...mapGetters([
       'activeSapeur',
       'activeSapeurId',
-      'listLocalitesSis',
+      'listeLocalitesSis',
       'getLocalite',
     ]),
   },

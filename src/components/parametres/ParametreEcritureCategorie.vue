@@ -13,9 +13,6 @@
           <tr>
             <th>Tri</th>
             <th>Désignation</th>
-            <th>Durée de base [min]</th>
-            <th class="text-center">Amendable</th>
-            <th class="text-center">Actif</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -23,31 +20,6 @@
           <tr v-for="c in listeCategorie" :key="c.id">
             <td>{{ c.tri }}</td>
             <td>{{ c.designation }}</td>
-            <td>{{ c.duree_base }}</td>
-            <td class="text-center">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="amendable"
-                  :checked="c.amendable"
-                  disabled
-                />
-                <label class="custom-control-label" for="amendable"></label>
-              </div>
-            </td>
-            <td class="text-center">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="status"
-                  :checked="c.status"
-                  disabled
-                />
-                <label class="custom-control-label" for="amende"></label>
-              </div>
-            </td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
@@ -78,7 +50,7 @@ import { mapState } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadCategories = store.dispatch('fetchEcritureCategories');
 
   Promise.all([loadCategories]).then(() => {
     next();
@@ -86,17 +58,17 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreExerciceCategorie',
+  name: 'ParametreEcritureCategorie',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  computed: {
+  computed: { 
     ...mapState({
       listeCategorie: (state) =>
-        state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
+        state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

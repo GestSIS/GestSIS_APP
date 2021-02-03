@@ -143,7 +143,7 @@
               v-model="activeInterventionData.localite_id"
             >
               <option
-                v-for="localite in listLocalitesSis"
+                v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
               >
@@ -368,7 +368,7 @@ export default {
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters([
-      'listLocalitesSis',
+      'listeLocalitesSis',
       'exerciceComptableDebut',
       'exerciceComptableFin',
     ]),

@@ -86,7 +86,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreTabExercice',
+  name: 'ParametreExcuseType',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },

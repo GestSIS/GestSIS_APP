@@ -92,7 +92,7 @@
             v-model="sapeur.localite_id"
           >
             <option
-              v-for="localite in listLocalitesSis"
+              v-for="localite in listeLocalitesSis"
               :key="localite.id"
               :value="localite.id"
             >
@@ -243,7 +243,7 @@ export default {
     ...mapState({
       listeCivilites: (state) => state.baseData.civilites,
     }),
-    ...mapGetters(['listLocalitesSis', 'getLocalite']),
+    ...mapGetters(['listeLocalitesSis', 'getLocalite']),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

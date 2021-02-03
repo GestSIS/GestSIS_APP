@@ -3,28 +3,28 @@ import ExerciceCategorieService from '../../services/ExerciceCategorieService';
 
 export default {
   state: {
-    liste: []
+    liste: [],
   },
   mutations: {
     [types.UPDATE_EXERCICE_CATEGORIE_LISTE](state, payload) {
-      state.liste = payload;
-    }
+      state.liste = payload
+        .slice(0)
+        .sort((c1, c2) => c1.designation > c2.designation);
+    },
   },
   getters: {
-    listExerciceCategories: state =>
-      state.liste.slice(0).sort((c1, c2) => c1.designation > c2.designation),
-    getExerciceCategorie: state => categorie_id =>
-      state.liste.filter(c => c.id === categorie_id)[0]
+    getExerciceCategorie: (state) => (categorie_id) =>
+      state.liste.find((c) => c.id === categorie_id),
   },
   actions: {
     fetchExerciceCategories({ commit, state }) {
       if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
-        return ExerciceCategorieService.getCategories().then(data =>
+        return ExerciceCategorieService.getCategories().then((data) =>
           commit(types.UPDATE_EXERCICE_CATEGORIE_LISTE, data)
         );
       }
-    }
-  }
+    },
+  },
 };

@@ -35,7 +35,7 @@
             <td>{{ i.taux_nuit }}</td>
             <td>{{ compte(i.compte_id) }}</td>
             <td>{{ i.phase_id }}</td>
-            <td>{{ i.ecriture_categorie_id }}</td>
+            <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
@@ -71,7 +71,13 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([loadFrais, loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(() => {
+  Promise.all([
+    loadFrais,
+    loadIndemnites,
+    loadFonctions,
+    loadComptes,
+    loadUnites,
+  ]).then(() => {
     next();
   });
 }
@@ -87,10 +93,13 @@ export default {
   computed: {
     ...mapState({
       listeIndemniteIntervention: (state) =>
-        state.comptabilite.indemnites.interventions.sort((a, b) => a.tri - b.tri),
+        state.comptabilite.indemnites.interventions.sort(
+          (a, b) => a.tri - b.tri
+        ),
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.comptabilite.comptes,
       listeUnite: (state) => state.comptabilite.unites,
+      listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
   },
   methods: {
@@ -106,7 +115,12 @@ export default {
     },
     unite(id) {
       return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
-    }
+    },
+    categorie(id) {
+      return id
+        ? this.listeCategorie.find((c) => c.id === id)?.designation
+        : '';
+    },
     // newExerciceComptable() {
     // },
     // save() {

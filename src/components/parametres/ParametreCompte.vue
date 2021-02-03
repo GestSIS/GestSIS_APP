@@ -74,7 +74,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreIndemniteAnnuel',
+  name: 'ParametreCompte',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
