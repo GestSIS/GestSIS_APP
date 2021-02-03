@@ -95,13 +95,13 @@ import { mapState } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  let loadFonction = store.dispatch('fetchFonctions');
-  let loadCours = store.dispatch('fetchCours');
-  let loadGrade = store.dispatch('fetchGrades');
+  // let loadFonction = store.dispatch('fetchFonctions');
+  // let loadCours = store.dispatch('fetchCours');
+  // let loadGrade = store.dispatch('fetchGrades');
 
-  Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
+  // Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
     next();
-  });
+  // });
 }
 
 export default {

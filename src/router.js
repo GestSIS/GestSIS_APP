@@ -99,6 +99,12 @@ const router = new Router({
       component: () => import('@/pages/Configuration.vue'),
       children: [
         {
+          path: '',
+          name: 'param-general',
+          component: () =>
+            import('@/components/parametres/ParametreTabGeneral.vue'),
+        },
+        {
           path: 'exercice-comptable',
           name: 'param-exercice-comptable',
           component: () =>
@@ -139,12 +145,6 @@ const router = new Router({
           name: 'param-droits',
           component: () =>
             import('@/components/parametres/ParametreTabDroits.vue'),
-        },
-        {
-          path: '',
-          name: 'param-general',
-          component: () =>
-            import('@/components/parametres/ParametreTabGeneral.vue'),
         },
       ],
     },

@@ -114,7 +114,7 @@
         </li>
         <li class="nav-item">
           <router-link
-            :to="{ name: 'configuration' }"
+            :to="{ name: 'param-general' }"
             class="nav-link internal-link"
           >
             <font-awesome-icon icon="sliders-h" />
