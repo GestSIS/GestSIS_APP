@@ -84,7 +84,7 @@
                 <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
             </div>
-            <div slot="actions" slot-scope="props">
+            <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
                 :to="{

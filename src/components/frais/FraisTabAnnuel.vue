@@ -25,7 +25,7 @@
           no-data-template="Aucun écriture à afficher"
           :detail-row-component="detailRow"
         >
-          <div slot="details" slot-scope="props">
+          <div slot="details" slot-scope="props" class="d-flex">
             <button
               class="btn btn-link border-0"
               @click="toggleDetails(props.rowData.id)"
@@ -40,7 +40,7 @@
               />
             </button>
           </div>
-          <div slot="actions" slot-scope="props">
+          <div slot="actions" slot-scope="props" class="d-flex">
             <button
               class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 3"

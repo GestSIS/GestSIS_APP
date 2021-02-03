@@ -100,7 +100,7 @@
             Coming soon!
           </p>
           <table
-            class="table"
+            class="table table-sm"
             v-if="groupBy === 'groupe' || groupBy === 'fonction'"
           >
             <thead>

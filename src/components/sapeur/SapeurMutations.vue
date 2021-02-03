@@ -7,7 +7,7 @@
     <!-- form start -->
     <form role="form">
       <div class="card-body">
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Incorporation</th>

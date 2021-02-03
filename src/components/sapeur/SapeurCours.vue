@@ -9,7 +9,7 @@
       </button>
     </div>
     <div class="card-body">
-      <table id="sap-cours" class="table" cellspacing="0" width="100%">
+      <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th data-field="date">Date</th>

@@ -11,7 +11,7 @@
           </button>
         </div>
         <div class="card-body">
-          <table class="table">
+          <table class="table table-sm">
             <thead>
               <tr>
                 <th>Début</th>
@@ -69,7 +69,7 @@
             <span class="badge badge-success mr-2">Piquet</span>
           </div>
           <div class="table-wrapper" ref="wrapper">
-            <table class="table table-bordered">
+            <table class="table table-sm table-bordered">
               <thead>
                 <tr>
                   <th rowspan="2">Sapeurs</th>

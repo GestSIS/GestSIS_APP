@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table">
+    <table class="table table-sm">
       <tr>
         <th>Nom</th>
         <th>Localité</th>

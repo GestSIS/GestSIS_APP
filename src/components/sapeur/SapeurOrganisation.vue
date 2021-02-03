@@ -6,7 +6,7 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-      <table id="sap-groupe" class="table">
+      <table id="sap-groupe" class="table table-sm">
         <thead>
           <tr>
             <th data-field="groupe">Groupe</th>

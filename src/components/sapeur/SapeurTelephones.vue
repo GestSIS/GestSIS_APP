@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table class="table">
+      <table class="table table-sm">
         <thead>
           <tr>
             <th :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
@@ -37,14 +37,14 @@
             </td>
             <td>
               <input
-                class="form-control"
+                class="form-control form-control-sm"
                 type="text"
                 v-model="t.numero"
                 placeholder="..."
               />
             </td>
             <td>
-              <select class="custom-select" v-model="t.telephone_type_id">
+              <select class="custom-select custom-select-sm" v-model="t.telephone_type_id">
                 <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
                   {{ t.type }}
                 </option>

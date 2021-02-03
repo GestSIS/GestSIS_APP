@@ -25,7 +25,7 @@
       </div>
       <div v-if="phase === 1" class="row">
         <div class="col-12">
-          <table class="table" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
             <thead>
               <tr>
                 <th>Fonction</th>
@@ -70,7 +70,7 @@
           </button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Sapeur</th>

@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="card-body">
-      <table class="table">
+      <table class="table table-sm">
         <tbody>
           <tr v-for="permis in permisData" :key="permis.permis_type_id">
             <td class="text-right">

@@ -189,7 +189,7 @@
             no-data-template="Aucune intervention à afficher"
             @vuetable:row-clicked="selectIntervention"
           >
-            <div slot="details" slot-scope="props">
+            <div slot="details" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-link border-0"
                 @click="toggleDetails(props.rowData.id)"
@@ -204,7 +204,7 @@
                 />
               </button>
             </div>
-            <div slot="actions" slot-scope="props">
+            <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
                 :to="'/interventions/' + props.rowData.id"

@@ -10,7 +10,7 @@
         </button>
       </div>
       <div class="card-body">
-        <table id="int-materiel" class="table" cellspacing="0" width="100%">
+        <table id="int-materiel" class="table table-sm" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th>Matériel</th>

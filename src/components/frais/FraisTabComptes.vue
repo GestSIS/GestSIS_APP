@@ -36,7 +36,7 @@
           <!--          </button>-->
         </div>
         <!--        <div class="card-body">-->
-        <!--          <table id="sap-promotions" class="table" cellspacing="0" width="100%">-->
+        <!--          <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">-->
         <!--            <thead>-->
         <!--              <tr>-->
         <!--                <th>Nom Prénom</th>-->
@@ -59,7 +59,7 @@
           no-data-template="Aucune écriture à afficher"
           :data-manager="dataManager"
         >
-          <!--          <div slot="actions" slot-scope="props">-->
+          <!--          <div slot="actions" slot-scope="props" class="d-flex">-->
           <!--              <button-->
           <!--                class="btn btn-outline-primary border-0"-->
           <!--                v-if="props.rowData.statut === 3"-->

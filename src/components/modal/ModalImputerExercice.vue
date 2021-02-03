@@ -18,7 +18,7 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table class="table" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -68,7 +68,7 @@
           </table>
         </div>
         <div class="col-4" v-if="activeIndemniteHasFonction">
-          <table class="table">
+          <table class="table table-sm">
             <thead>
               <tr>
                 <th>Fonction</th>
@@ -103,7 +103,7 @@
           </button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Fonction</th>

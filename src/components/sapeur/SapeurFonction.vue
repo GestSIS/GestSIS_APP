@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="card-body">
-      <table id="sap-fonctions" class="table" cellspacing="0" width="100%">
+      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Début</th>

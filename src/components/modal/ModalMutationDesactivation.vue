@@ -24,7 +24,7 @@
           </small>
         </div>
       </form>
-      <table class="table" id="mutation-desactivation-table">
+      <table class="table table-sm" id="mutation-desactivation-table">
         <thead>
           <tr>
             <th>Sel</th>

@@ -36,7 +36,7 @@
             </button>
           </div>
           <div class="card-body">
-            <table id="int-appels" class="table">
+            <table id="int-appels" class="table table-sm">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -86,7 +86,7 @@
             </button>
           </div>
           <div class="card-body">
-            <table id="int-materiel" class="table">
+            <table id="int-materiel" class="table table-sm">
               <thead>
                 <tr>
                   <th>Date</th>
