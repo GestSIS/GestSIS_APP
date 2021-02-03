@@ -17,49 +17,52 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav>
-          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'comptes' }"
-              role="tab"
-              @click.prevent="activeTab = 'comptes'"
-            >
-              Comptes
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'exercices' }"
-              role="tab"
-              @click.prevent="activeTab = 'exercices'"
-            >
-              Exercices
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'interventions' }"
-              role="tab"
-              @click.prevent="activeTab = 'interventions'"
-            >
-              Interventions
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'annuel' }"
-              role="tab"
-              @click.prevent="activeTab = 'annuel'"
-            >
-              Indemnités et Frais annuels
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'sapeurs' }"
-              role="tab"
-              @click.prevent="activeTab = 'sapeurs'"
-            >
-              Sapeurs
-            </button>
-          </div>
+        <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'comptes' }"
+            role="tab"
+            @click.prevent="activeTab = 'comptes'"
+            href="#"
+          >
+            Comptes
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'exercices' }"
+            role="tab"
+            @click.prevent="activeTab = 'exercices'"
+            href="#"
+          >
+            Exercices
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'interventions' }"
+            role="tab"
+            @click.prevent="activeTab = 'interventions'"
+            href="#"
+          >
+            Interventions
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'annuel' }"
+            role="tab"
+            @click.prevent="activeTab = 'annuel'"
+            href="#"
+          >
+            Indemnités et Frais annuels
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'sapeurs' }"
+            role="tab"
+            @click.prevent="activeTab = 'sapeurs'"
+            href="#"
+          >
+            Sapeurs
+          </a>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">

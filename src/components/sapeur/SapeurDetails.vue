@@ -36,19 +36,18 @@
         </div>
       </div>
     </div>
-    <nav >
-      <ul class="nav nav-tabs mb-3">
-        <li v-for="tab in Object.keys(tabList)" :key="tab" class="nav-item">
-          <a
-            class="nav-link"
-            :class="{ active: activeTab === tabList[tab] }"
-            @click="e => selectTab(e, tabList[tab])"
-            href="/#"
-          >
-            {{ tabList[tab] }}
-          </a>
-        </li>
-      </ul>
+    <nav>
+      <nav class="nav nav-tabs mb-3">
+        <a
+          v-for="tab in Object.keys(tabList)" :key="tab"
+          class="nav-item nav-link"
+          :class="{ active: activeTab === tabList[tab] }"
+          @click.prevent="selectTab(tabList[tab])"
+          href="#"
+        >
+          {{ tabList[tab] }}
+        </a>
+      </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="tab-sapeur-details">
@@ -74,7 +73,7 @@
 import { mapMutations } from 'vuex';
 import store from '@/store/index';
 
-//TODO Add Mat
+//TODO Implémenter Matériel personnel
 const tabList = {
   GENERAL: 'General',
   FONCTION: 'Fonctions',
@@ -152,8 +151,7 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    selectTab(e, tab) {
-      e.preventDefault();
+    selectTab(tab) {
       this.activeTab = tab;
     },
     addSapeur() {

@@ -5,14 +5,10 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/"> Accueil </router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/exercices">
-                Exercices
-              </router-link>
+              <router-link tag="a" to="/exercices"> Exercices </router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               {{ breadcrumbFinal }}
@@ -26,27 +22,30 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav v-if="!newMode">
-          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: !tabPresence }"
-              role="tab"
-              href="#"
-              @click.prevent="tabPresence = false"
-            >
-              Informations
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: tabPresence }"
-              role="tab"
-              href="#"
-              @click.prevent="tabPresence = true"
-            >
-              Présences
-            </button>
-          </div>
+        <nav
+          v-if="!newMode"
+          class="nav nav-tabs mb-3"
+          id="nav-tab"
+          role="tablist"
+        >
+          <a
+            class="nav-item nav-link"
+            :class="{ active: !tabPresence }"
+            role="tab"
+            href="#"
+            @click.prevent="tabPresence = false"
+          >
+            Informations
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: tabPresence }"
+            role="tab"
+            href="#"
+            @click.prevent="tabPresence = true"
+          >
+            Présences
+          </a>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
@@ -74,18 +73,18 @@ export default {
   components: {
     ExerciceTabSapeurs,
     ExerciceTabGeneral,
-    ExerciceComptable
+    ExerciceComptable,
   },
   data() {
     return {
       tabPresence: true,
-      loading: true
+      loading: true,
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapGetters(['activeExerciceData']),
@@ -94,7 +93,7 @@ export default {
     },
     breadcrumbFinal() {
       return this.newMode ? 'Nouveau' : this.activeExerciceData.designation;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchListeSapeur');
@@ -123,8 +122,8 @@ export default {
       this.$store.dispatch('selectExercice', id);
       this.$store.dispatch('fetchExercice', id);
       this.$store.dispatch('fetchExerciceSapeurs', id);
-    }
-  }
+    },
+  },
 };
 </script>
 
