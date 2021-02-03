@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter une numéro
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter une numéro</button>
     </div>
     <div class="card-body">
       <table id="telephones" class="table table-sm">
@@ -54,9 +52,7 @@ import store from '@/store/index';
 async function loadData(_, next) {
   const loadAppel = store.dispatch('fetchTelephones');
 
-  Promise.all([
-    loadAppel,
-  ]).then(() => {
+  Promise.all([loadAppel]).then(() => {
     next();
   });
 }

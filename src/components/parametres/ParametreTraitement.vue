@@ -52,9 +52,7 @@ import store from '@/store/index';
 async function loadData(_, next) {
   const loadTraitement = store.dispatch('fetchInterventionTraitements');
 
-  Promise.all([
-    loadTraitement,
-  ]).then(() => {
+  Promise.all([loadTraitement]).then(() => {
     next();
   });
 }

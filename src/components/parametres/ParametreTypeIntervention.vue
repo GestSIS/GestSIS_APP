@@ -105,10 +105,7 @@ async function loadData(_, next) {
   const loadStatIntervention = store.dispatch('fetchStatInterventions');
   const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
 
-  Promise.all([
-    loadStatIntervention,
-    loadTypeIntervention,
-  ]).then(() => {
+  Promise.all([loadStatIntervention, loadTypeIntervention]).then(() => {
     next();
   });
 }

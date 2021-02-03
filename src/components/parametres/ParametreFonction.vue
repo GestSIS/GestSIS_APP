@@ -8,12 +8,7 @@
       </button>
     </div>
     <div class="card-body">
-      <table
-        id="fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Tri</th>

@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Véhicules</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter un véhicule
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter un véhicule</button>
     </div>
     <div class="card-body">
       <table id="vehicules" class="table table-sm">
@@ -38,7 +36,7 @@
             <td>{{ v.designation }}</td>
             <td>{{ v.forfait }}</td>
             <td>{{ v.unite }}</td>
-            <td>{{ v.type_unite_id }}</td>
+            <td>{{ unite(v.type_unite_id) }}</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
@@ -71,9 +69,7 @@ import store from '@/store/index';
 async function loadData(_, next) {
   const loadVehicule = store.dispatch('fetchVehicules');
 
-  Promise.all([
-    loadVehicule,
-  ]).then(() => {
+  Promise.all([loadVehicule]).then(() => {
     next();
   });
 }
@@ -88,11 +84,15 @@ export default {
   },
   computed: {
     ...mapState({
+      listeUnite: (state) => state.comptabilite.unites,
       listeVehicule: (state) =>
         state.vehicule.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
+    unite(id) {
+      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+    },
     // newExerciceComptable() {
     // },
     // save() {

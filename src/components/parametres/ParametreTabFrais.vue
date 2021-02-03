@@ -104,7 +104,7 @@ async function loadData(_, next) {
     loadFonctions,
     loadComptes,
     loadUnites,
-    loadCategories
+    loadCategories,
   ]).then(() => {
     next();
   });
@@ -127,7 +127,7 @@ export default {
     loadData(routeTo, next);
   },
   data() {
-    return {tab:'compte'}
+    return { tab: 'compte' };
   },
   methods: {
     // newExerciceComptable() {

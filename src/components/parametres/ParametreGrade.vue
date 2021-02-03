@@ -3,17 +3,10 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Grades</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter un grade
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter un grade</button>
     </div>
     <div class="card-body">
-      <table
-        id="fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Tri</th>
@@ -28,7 +21,7 @@
             <td>{{ f.tri }}</td>
             <td>{{ f.designation }}</td>
             <td>{{ f.abreviation }}</td>
-            <td>{{ f.groupe }}</td>
+            <td>{{ groupe(f.groupe) }}</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
@@ -76,10 +69,18 @@ export default {
   },
   computed: {
     ...mapState({
-      listeGrade: (state) => state.grade.liste.sort((a, b) => a.tri - b.tri),
+      listeGrade: (state) => state.grade.liste.sort((a, b) => b.tri - a.tri),
     }),
   },
   methods: {
+    groupe(groupe) {
+      const gradeGroupe = {
+        1: 'Officier',
+        2: 'Sous-Officier',
+        3: 'Spécialiste',
+      };
+      return gradeGroupe[groupe];
+    },
     // newExerciceComptable() {
     // },
     // save() {

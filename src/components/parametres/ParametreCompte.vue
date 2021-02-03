@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Comptes</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter un compte
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter un compte</button>
     </div>
     <div class="card-body">
       <table id="indemnites-anuelles" class="table table-sm">
@@ -68,7 +66,13 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([loadFrais, loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(() => {
+  Promise.all([
+    loadFrais,
+    loadIndemnites,
+    loadFonctions,
+    loadComptes,
+    loadUnites,
+  ]).then(() => {
     next();
   });
 }

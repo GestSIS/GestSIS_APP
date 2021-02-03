@@ -42,7 +42,7 @@
             <h5>Exercices</h5>
             <ul>
               <li>Excuses types</li>
-              <li>Catégorie d'exercice - &gt;  amendable ou non</li>
+              <li>Catégorie d'exercice - &gt; amendable ou non</li>
             </ul>
           </div>
           <div>
@@ -99,7 +99,7 @@ async function loadData(_, next) {
   // let loadGrade = store.dispatch('fetchGrades');
 
   // Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
-    next();
+  next();
   // });
 }
 

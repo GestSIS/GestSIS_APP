@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mission</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter une mission
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter une mission</button>
     </div>
     <div class="card-body">
       <table id="missions" class="table table-sm">
@@ -50,9 +48,7 @@ import store from '@/store/index';
 async function loadData(_, next) {
   const loadMission = store.dispatch('fetchMissions');
 
-  Promise.all([
-    loadMission,
-  ]).then(() => {
+  Promise.all([loadMission]).then(() => {
     next();
   });
 }

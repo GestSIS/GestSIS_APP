@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter un cours
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter un cours</button>
     </div>
     <div class="card-body">
       <table id="cours" class="table table-sm" cellspacing="0" width="100%">

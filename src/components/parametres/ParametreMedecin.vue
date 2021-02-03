@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Médecins</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter un médecin
-      </button>
+      <button type="button" class="btn btn-primary">Ajouter un médecin</button>
     </div>
     <div class="card-body">
       <table id="excuses-types" class="table table-sm">
@@ -83,15 +81,19 @@ export default {
   computed: {
     ...mapState({
       listeMedecin: (state) =>
-        state.medecin.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
+        state.medecin.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        ),
       listeLocalite: (state) =>
-        state.localite.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
+        state.localite.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        ),
     }),
   },
   methods: {
     localite(id) {
       return id ? this.listeLocalite.find((l) => l.id === id)?.designation : '';
-    }
+    },
     // newExerciceComptable() {
     // },
     // save() {

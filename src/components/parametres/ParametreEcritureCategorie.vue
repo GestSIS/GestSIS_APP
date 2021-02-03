@@ -65,7 +65,7 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  computed: { 
+  computed: {
     ...mapState({
       listeCategorie: (state) =>
         state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
