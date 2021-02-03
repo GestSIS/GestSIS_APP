@@ -11,7 +11,6 @@
           </button>
         </div>
         <div class="card-body">
-          <div>TODO Info générales</div>
           <div>
             <h5>Paramètres Statique pour admin du système</h5>
             <ul>
@@ -105,14 +104,13 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreTabSapeur',
+  name: 'ParametreTabGeneral',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  mounted() {},
   computed: {
     ...mapState({
       listeFonction: (state) =>
@@ -127,7 +125,6 @@ export default {
     // save() {
     // },
   },
-  watch: {},
 };
 </script>
 
