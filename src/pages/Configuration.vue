@@ -76,7 +76,7 @@
             tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <span>Frais</span>
+            <span>Comptabilité</span>
           </router-link>
           <router-link
             :to="{ name: 'param-controle-medical' }"

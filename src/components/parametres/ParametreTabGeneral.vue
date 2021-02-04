@@ -6,9 +6,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">General</h3>
-          <button type="button" class="btn btn-primary">
-            Ajouter un cours
-          </button>
+          <button type="button" class="btn btn-primary">TODO</button>
         </div>
         <div class="card-body">
           <div>

@@ -33,32 +33,19 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+const components = Object.fromEntries(
+  require
+    .context('@/components/modal/', true, /\.(js|vue)$/i)
+    .keys()
+    .map((key) => {
+      const name = key.match(/\w+/)[0];
+      return [name, () => import(`./modal/${name}`)];
+    })
+);
+
 export default {
   name: 'AppModal',
-  components: {
-    ModalConfirmation: () => import(`@/components/modal/ModalConfirmation`),
-    ModalCours: () => import(`@/components/modal/ModalCours`),
-    ModalFonction: () => import(`@/components/modal/ModalFonction`),
-    ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
-    ModalMutation: () => import(`@/components/modal/ModalMutation`),
-    ModalExcuse: () => import(`@/components/modal/ModalExcuse`),
-    ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`),
-    ModalMateriel: () => import(`@/components/modal/ModalMateriel`),
-    ModalMission: () => import(`@/components/modal/ModalMission`),
-    ModalAppel: () => import(`@/components/modal/ModalAppel`),
-    ModalPresence: () => import(`@/components/modal/ModalPresence`),
-    ModalPhase: () => import(`@/components/modal/ModalPhase`),
-    ModalSapeur: () => import(`@/components/modal/ModalSapeur`),
-    ModalImputerExercice: () =>
-      import(`@/components/modal/ModalImputerExercice`),
-    ModalImputerIntervention: () =>
-      import(`@/components/modal/ModalImputerIntervention`),
-    ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`),
-    ModalRapportIntervention: () =>
-      import(`@/components/modal/ModalRapportIntervention`),
-    ModalMutationDesactivation: () =>
-      import(`@/components/modal/ModalMutationDesactivation`),
-  },
+  components: components,
   data() {
     return {
       component: null,

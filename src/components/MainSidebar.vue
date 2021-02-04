@@ -70,7 +70,7 @@
         <li class="nav-item">
           <router-link :to="{ name: 'frais' }" class="nav-link internal-link">
             <font-awesome-icon icon="calculator" />
-            <span>Frais</span>
+            <span>Comptabilité</span>
           </router-link>
         </li>
         <li class="nav-item">

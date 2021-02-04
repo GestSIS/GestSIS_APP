@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Médecins</h3>
-      <button type="button" class="btn btn-primary">Ajouter un médecin</button>
+      <button type="button" class="btn btn-primary" @click="ajoutMedecin">
+        Ajouter un médecin
+      </button>
     </div>
     <div class="card-body">
       <table id="excuses-types" class="table table-sm">
@@ -26,11 +28,14 @@
                 <input
                   type="checkbox"
                   class="custom-control-input"
-                  id="status"
-                  :checked="m.status"
+                  :id="`actif-${m.id}`"
+                  :checked="m.actif"
                   disabled
                 />
-                <label class="custom-control-label" for="status"></label>
+                <label
+                  class="custom-control-label"
+                  :for="`actif-${m.id}`"
+                ></label>
               </div>
             </td>
             <td>
@@ -38,7 +43,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateMedecin(m)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -59,7 +64,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -91,6 +96,13 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutMedecin() {
+      this.SHOW_MODAL({ component: 'ModalMedecin', data: {} });
+    },
+    updateMedecin(medecin) {
+      this.SHOW_MODAL({ component: 'ModalMedecin', data: { ...medecin } });
+    },
     localite(id) {
       return id ? this.listeLocalite.find((l) => l.id === id)?.designation : '';
     },

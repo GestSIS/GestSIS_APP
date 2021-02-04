@@ -6,7 +6,7 @@ export default {
     modalComponent: null,
     modalCallback: null,
     modalSize: 0,
-    modalData: null
+    modalData: null,
   },
   mutations: {
     [types.SHOW_MODAL](state, payload) {
@@ -18,13 +18,13 @@ export default {
         state.modalData = 0;
       } else {
         state.modalComponent = payload.component;
-        state.modalCallback = payload.callback || function() {};
-        state.modalSize = payload.size || 0;
-        state.modalData = payload.data || 0;
+        state.modalCallback = payload.callback || function () {};
+        state.modalSize = payload?.size ?? 0;
+        state.modalData = payload?.data ?? 0;
       }
     },
     [types.HIDE_MODAL](state) {
       state.modalVisible = false;
-    }
-  }
+    },
+  },
 };
