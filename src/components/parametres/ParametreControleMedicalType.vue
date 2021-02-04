@@ -3,7 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Contrôles médicaux types</h3>
-      <button type="button" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" @click="ajoutType">
         Ajouter une nouveau type
       </button>
     </div>
@@ -40,7 +40,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateType(t)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -87,10 +87,16 @@ export default {
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutType() {
+      this.SHOW_MODAL({ component: 'ModalControleMedicalType', data: {} });
+    },
+    updateType(type) {
+      this.SHOW_MODAL({
+        component: 'ModalControleMedicalType',
+        data: { ...type },
+      });
+    },
   },
 };
 </script>

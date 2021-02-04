@@ -106,10 +106,6 @@ export default {
     localite(id) {
       return id ? this.listeLocalite.find((l) => l.id === id)?.designation : '';
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>
