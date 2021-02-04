@@ -83,17 +83,24 @@
         </select>
       </div>
       <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            id="cours-actif-modal"
-            v-model="activeCours.actif"
-          />
-          <label class="custom-control-label" for="cours-actif-modal"
-            >Actif</label
-          >
-        </div>
+        <label for="validite_debut">Validité début</label>
+        <input
+          type="date"
+          v-model="activeCours.validite_debut"
+          class="form-control"
+          :class="{ 'is-invalid': errors['validite_debut'] }"
+          id="validite_debut"
+        />
+      </div>
+      <div class="form-group">
+        <label for="validite_fin">Validité fin</label>
+        <input
+          type="date"
+          v-model="activeCours.validite_fin"
+          class="form-control"
+          :class="{ 'is-invalid': errors['validite_fin'] }"
+          id="validite_fin"
+        />
       </div>
     </div>
     <div class="modal-footer">

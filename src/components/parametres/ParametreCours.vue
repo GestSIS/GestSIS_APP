@@ -104,7 +104,7 @@ export default {
       return id ? this.listeGrade.find((f) => f.id === id)?.designation : '';
     },
     fonction(id) {
-      return id ? this.listeFonction.find((f) => f.id === id)?.designation : '';
+      return id ? this.listeFonction.find((f) => f.id === id)?.nom : '';
     },
   },
 };
