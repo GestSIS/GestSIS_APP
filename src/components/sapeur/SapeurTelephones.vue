@@ -44,7 +44,10 @@
               />
             </td>
             <td>
-              <select class="custom-select custom-select-sm" v-model="t.telephone_type_id">
+              <select
+                class="custom-select custom-select-sm"
+                v-model="t.telephone_type_id"
+              >
                 <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
                   {{ t.type }}
                 </option>

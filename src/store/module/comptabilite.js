@@ -37,9 +37,6 @@ export default {
         ...payload,
       };
     },
-    [types.UPDATE_UNITES_LISTE](state, payload) {
-      state.unites = payload;
-    },
     [types.UPDATE_ECRITURES_ANNUELS_LISTE](state, payload) {
       state.ecritures.annuels = [...payload];
     },
@@ -60,13 +57,6 @@ export default {
     getCompte: (state) => (id) => state.comptes.find((c) => c.id === id),
   },
   actions: {
-    fetchUnites({ state, commit }) {
-      if (state.unites.length === 0) {
-        return ComptabiliteService.getUnites().then((data) =>
-          commit(types.UPDATE_UNITES_LISTE, data)
-        );
-      }
-    },
     fetchComptes({ commit }) {
       return ComptabiliteService.getComptes().then((data) =>
         commit(types.UPDATE_COMPTES_LISTE, data)

@@ -19,9 +19,6 @@ export default {
   imputerAnnuel(exerciceComptableId) {
     return Api.api().post('/imputation/annuel/' + exerciceComptableId);
   },
-  getUnites() {
-    return Api.api().get('/unites/');
-  },
   getComptes() {
     return Api.api().get('/comptes/');
   },

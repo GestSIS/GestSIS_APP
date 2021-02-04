@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Matériel</h3>
-      <button type="button" class="btn btn-primary">Ajouter du matériel</button>
+      <button type="button" class="btn btn-primary" @click="ajoutMateriel()">
+        Ajouter du matériel
+      </button>
     </div>
     <div class="card-body">
       <table id="materiel" class="table table-sm">
@@ -42,7 +44,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateMateriel(m)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -63,7 +65,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -84,19 +86,22 @@ export default {
   },
   computed: {
     ...mapState({
-      listeUnite: (state) => state.comptabilite.unites,
+      listeUnite: (state) => state.unite.liste,
       listeMateriel: (state) =>
         state.materiel.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
-    unite(id) {
-      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutMateriel() {
+      this.SHOW_MODAL({ component: 'ModalMateriel', data: {} });
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    updateMateriel(materiel) {
+      this.SHOW_MODAL({ component: 'ModalMateriel', data: { ...materiel } });
+    },
+    unite(id) {
+      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '-';
+    },
   },
 };
 </script>

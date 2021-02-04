@@ -91,7 +91,7 @@ export default {
         state.comptabilite.frais.annuels.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.comptabilite.comptes,
-      listeUnite: (state) => state.comptabilite.unites,
+      listeUnite: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
   },

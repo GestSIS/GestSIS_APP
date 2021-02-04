@@ -3,28 +3,55 @@ import TypeInterventionService from '../../services/TypeInterventionService';
 
 export default {
   state: {
-    liste: []
+    liste: [],
   },
   mutations: {
     [types.UPDATE_TYPE_INTERVENTION_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((t1, t2) => t1.designation > t2.designation);
-    }
+    },
+    [types.ADD_TYPE_INTERVENTION](state, type) {
+      state.liste = [...state.liste, type];
+    },
+    [types.UPDATE_TYPE_INTERVENTION](state, type) {
+      state.liste = [...state.liste.map((m) => (m.id === type.id ? type : m))];
+    },
+    [types.REMOVE_TYPE_INTERVENTION](state, typeId) {
+      state.liste = state.liste.filter((m) => m.id != typeId);
+    },
   },
   getters: {
-    getTypeIntervention: state => type_intervention_id =>
-      state.liste.filter(t => t.id === type_intervention_id)[0]
+    getTypeIntervention: (state) => (type_intervention_id) =>
+      state.liste.filter((t) => t.id === type_intervention_id)[0],
   },
   actions: {
     fetchTypeInterventions({ commit, state }) {
       if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
-        return TypeInterventionService.getTypes().then(data =>
+        return TypeInterventionService.getTypes().then((data) =>
           commit(types.UPDATE_TYPE_INTERVENTION_LISTE, data)
         );
       }
-    }
-  }
+    },
+    addTypeIntervention({ commit }, type) {
+      return TypeInterventionService.addType(type).then((data) => {
+        commit(types.ADD_TYPE_INTERVENTION, data);
+        return data;
+      });
+    },
+    updateTypeIntervention({ commit }, type) {
+      return TypeInterventionService.updateType(type).then((data) => {
+        commit(types.UPDATE_TYPE_INTERVENTION, data);
+        return data;
+      });
+    },
+    removeTypeIntervention({ commit }, type) {
+      return TypeInterventionService.removeType(type).then((data) => {
+        commit(types.REMOVE_TYPE_INTERVENTION, data);
+        return data;
+      });
+    },
+  },
 };

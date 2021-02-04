@@ -259,7 +259,7 @@ export default {
     },
 
     supprimerMission(id) {
-      this.$store.dispatch('removeMission', id);
+      this.$store.dispatch('removeInterventionMission', id);
     },
     newMission() {
       let newMission = {
@@ -274,7 +274,7 @@ export default {
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
 
       this.SHOW_MODAL({
-        component: 'ModalMission',
+        component: 'ModalInterventionMission',
         data: { mission: newMission, min, max },
       });
     },
@@ -286,7 +286,7 @@ export default {
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
 
       this.SHOW_MODAL({
-        component: 'ModalMission',
+        component: 'ModalInterventionMission',
         data: {
           mission: cloneMission,
           min,

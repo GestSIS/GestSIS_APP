@@ -244,7 +244,7 @@ export default {
     },
 
     //Materiel
-    addMateriel({ state, commit }, payload) {
+    addInterventionMateriel({ state, commit }, payload) {
       return InterventionService.addMateriel(
         state.active.data.id,
         payload
@@ -253,7 +253,7 @@ export default {
         return data;
       });
     },
-    editMateriel({ state, commit }, payload) {
+    editInterventionMateriel({ state, commit }, payload) {
       return InterventionService.editMateriel(
         state.active.data.id,
         payload
@@ -262,7 +262,7 @@ export default {
         return data;
       });
     },
-    removeMateriel({ state, commit }, payload) {
+    removeInterventionMateriel({ state, commit }, payload) {
       return InterventionService.removeMateriel(
         state.active.data.id,
         payload
@@ -273,7 +273,7 @@ export default {
     },
 
     //Vehicules
-    addVehicules({ state, commit }, payload) {
+    addInterventionVehicules({ state, commit }, payload) {
       return InterventionService.addVehicules(
         state.active.data.id,
         payload
@@ -282,7 +282,7 @@ export default {
         return data;
       });
     },
-    removeVehicules({ state, commit }, payload) {
+    removeInterventionVehicules({ state, commit }, payload) {
       return InterventionService.removeVehicules(
         state.active.data.id,
         payload
@@ -311,7 +311,7 @@ export default {
     },
 
     //Missions
-    addMission({ state, commit }, payload) {
+    addInterventionMission({ state, commit }, payload) {
       return InterventionService.addMission(state.active.data.id, payload).then(
         (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data);
@@ -319,7 +319,7 @@ export default {
         }
       );
     },
-    editMission({ state, commit }, payload) {
+    editInterventionMission({ state, commit }, payload) {
       return InterventionService.editMission(
         state.active.data.id,
         payload
@@ -328,7 +328,7 @@ export default {
         return data;
       });
     },
-    removeMission({ state, commit }, payload) {
+    removeInterventionMission({ state, commit }, payload) {
       return InterventionService.removeMission(
         state.active.data.id,
         payload
@@ -339,7 +339,7 @@ export default {
     },
 
     //Appels
-    addAppel({ state, commit }, payload) {
+    addInterventionAppel({ state, commit }, payload) {
       return InterventionService.addAppel(state.active.data.id, payload).then(
         (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data);
@@ -347,7 +347,7 @@ export default {
         }
       );
     },
-    editAppel({ state, commit }, payload) {
+    editInterventionAppel({ state, commit }, payload) {
       return InterventionService.editAppel(state.active.data.id, payload).then(
         (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data);
@@ -355,7 +355,7 @@ export default {
         }
       );
     },
-    removeAppel({ state, commit }, payload) {
+    removeInterventionAppel({ state, commit }, payload) {
       return InterventionService.removeAppel(
         state.active.data.id,
         payload

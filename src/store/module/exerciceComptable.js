@@ -16,6 +16,17 @@ export default {
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {
       state.activeId = payload;
     },
+    [types.ADD_EXERCICE_COMPTABLE](state, exercice) {
+      state.liste = [...state.liste, exercice];
+    },
+    [types.UPDATE_EXERCICE_COMPTABLE](state, exercice) {
+      state.liste = [
+        ...state.liste.map((m) => (m.id === exercice.id ? exercice : m)),
+      ].sort((e1, e2) => e2.annee - e1.annee);
+    },
+    [types.REMOVE_EXERCICE_COMPTABLE](state, exerciceId) {
+      state.liste = state.liste.filter((m) => m.id != exerciceId);
+    },
   },
   getters: {
     currentExerciceComptableId: (state) => state.activeId,
@@ -38,6 +49,24 @@ export default {
     },
     selectExerciceComptable({ commit }, excuse_type_id) {
       return commit(types.SELECT_EXERCICE_COMPTABLE, excuse_type_id);
+    },
+    addExerciceComptable({ commit }, exercice) {
+      return ExerciceComptableService.addExercice(exercice).then((data) => {
+        commit(types.ADD_EXERCICE_COMPTABLE, data);
+        return data;
+      });
+    },
+    updateExerciceComptable({ commit }, exercice) {
+      return ExerciceComptableService.updateExercice(exercice).then((data) => {
+        commit(types.UPDATE_EXERCICE_COMPTABLE, data);
+        return data;
+      });
+    },
+    removeExerciceComptable({ commit }, exercice) {
+      return ExerciceComptableService.removeExercice(exercice).then((data) => {
+        commit(types.REMOVE_EXERCICE_COMPTABLE, data);
+        return data;
+      });
     },
   },
 };

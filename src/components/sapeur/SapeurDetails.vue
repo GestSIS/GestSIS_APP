@@ -39,7 +39,8 @@
     <nav>
       <nav class="nav nav-tabs mb-3">
         <a
-          v-for="tab in Object.keys(tabList)" :key="tab"
+          v-for="tab in Object.keys(tabList)"
+          :key="tab"
           class="nav-item nav-link"
           :class="{ active: activeTab === tabList[tab] }"
           @click.prevent="selectTab(tabList[tab])"

@@ -16,9 +16,7 @@
         autocomplete="off"
         :class="{ 'is-invalid': error.name }"
       />
-      <div class="invalid-feedback" v-if="error.name">
-        Nom invalide
-      </div>
+      <div class="invalid-feedback" v-if="error.name">Nom invalide</div>
       <label for="inputEmail" class="sr-only">Email</label>
       <input
         v-model="email"
@@ -30,9 +28,7 @@
         autocomplete="off"
         :class="{ 'is-invalid': error.email }"
       />
-      <div class="invalid-feedback" v-if="error.email">
-        Email déjà existant
-      </div>
+      <div class="invalid-feedback" v-if="error.email">Email déjà existant</div>
       <label for="inputPassword" class="sr-only">Mot de passe</label>
       <input
         v-model="password"
@@ -60,16 +56,13 @@
         autocomplete="off"
         :class="{
           'is-invalid':
-            error.password_confirmation || password !== password_confirmation
+            error.password_confirmation || password !== password_confirmation,
         }"
       />
       <div class="invalid-feedback" v-if="error.password_confirmation">
         Mot de passe différent
       </div>
-      <button
-        class="btn btn-lg btn-primary btn-block"
-        type="submit"
-      >
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
         Sign in
       </button>
       <p class="mt-5 mb-3 text-muted">© 2019</p>
@@ -90,7 +83,7 @@ export default {
       email: null,
       password: null,
       password_confirmation: null,
-      error: {}
+      error: {},
     };
   },
   methods: {
@@ -100,7 +93,7 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
-          password_confirmation: this.password_confirmation
+          password_confirmation: this.password_confirmation,
         })
         .then(() => {
           this.error = {};
@@ -108,11 +101,11 @@ export default {
             this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
           );
         })
-        .catch(data => {
+        .catch((data) => {
           this.error = data.error;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

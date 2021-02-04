@@ -48,7 +48,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateExerciceComptable(e)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -88,7 +88,6 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  mounted() {},
   computed: {
     ...mapState({
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
@@ -96,10 +95,17 @@ export default {
     }),
   },
   methods: {
-    newExerciceComptable() {},
-    save() {},
+    ...mapMutations(['SHOW_MODAL']),
+    newExerciceComptable() {
+      this.SHOW_MODAL({ component: 'ModalExerciceComptable', data: {} });
+    },
+    updateExerciceComptable(exercice) {
+      this.SHOW_MODAL({
+        component: 'ModalExerciceComptable',
+        data: { ...exercice },
+      });
+    },
   },
-  watch: {},
 };
 </script>
 

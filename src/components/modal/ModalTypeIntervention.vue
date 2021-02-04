@@ -2,7 +2,8 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }} du matériel
+        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }} un type
+        d'intervention
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -13,7 +14,7 @@
         <label for="tri">Tri</label>
         <input
           type="text"
-          v-model="activeMateriel.tri"
+          v-model="activeTypeIntervention.tri"
           class="form-control"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
@@ -23,58 +24,24 @@
         <label for="designation">Désignation</label>
         <input
           type="text"
-          v-model="activeMateriel.designation"
+          v-model="activeTypeIntervention.designation"
           class="form-control"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="form-group">
-        <label for="forfait">Forfait</label>
-        <input
-          type="text"
-          v-model="activeMateriel.forfait"
-          class="form-control"
-          :class="{ 'is-invalid': errors['forfait'] }"
-          id="forfait"
-        />
-      </div>
-      <div class="form-group">
-        <label for="unite">Unité</label>
-        <input
-          type="text"
-          v-model="activeMateriel.unite"
-          class="form-control"
-          :class="{ 'is-invalid': errors['unite'] }"
-          id="unite"
-        />
-      </div>
-      <div class="form-group">
-        <label for="type_unite_id">Unité type</label>
+        <label for="stat_intervention">Statistique</label>
         <select
-          id="type_unite_id"
-          v-model="activeMateriel.type_unite_id"
+          id="stat_intervention"
+          v-model="activeTypeIntervention.stat_intervention_id"
           class="custom-select"
-          :class="{ 'is-invalid': errors['type_unite_id'] }"
+          :class="{ 'is-invalid': errors['stat_intervention_id'] }"
         >
-          <option :value="0">-</option>
-          <option v-for="u in listeUnite" :key="u.id" :value="u.id">
-            {{ u.unite }}
+          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">
+            {{ s.designation }}
           </option>
         </select>
-      </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            id="medecin-status-modal"
-            v-model="activeMateriel.status"
-          />
-          <label class="custom-control-label" for="medecin-status-modal"
-            >Actif</label
-          >
-        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -82,7 +49,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -92,7 +59,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalTypeIntervention',
   props: {
     data: {
       type: Object,
@@ -101,34 +68,25 @@ export default {
   data() {
     return {
       errors: {},
-      activeMateriel: {
-        actif: 1,
-      },
+      activeTypeIntervention: {},
     };
   },
   computed: {
     ...mapState({
-      listeUnite: (state) => state.unite.liste,
+      listeStatIntervention: (state) => state.statIntervention.liste,
     }),
   },
   mounted() {
-    this.activeMateriel = {
-      ...this.activeMateriel,
+    this.activeTypeIntervention = {
       ...this.data,
     };
-    if (this.data.type_unite_id === null) {
-      this.activeMateriel.type_unite_id = 0;
-    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    localite(localite) {
-      return localite?.designation;
-    },
     save() {
-      if ((this.activeMateriel.id || 0) === 0) {
+      if ((this.activeTypeIntervention.id || 0) === 0) {
         this.$store
-          .dispatch('addMateriel', this.activeMateriel)
+          .dispatch('addTypeIntervention', this.activeTypeIntervention)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -141,7 +99,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMateriel', this.activeMateriel)
+          .dispatch('updateTypeIntervention', this.activeTypeIntervention)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

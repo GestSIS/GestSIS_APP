@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button type="button" class="btn btn-primary">Ajouter une numéro</button>
+      <button type="button" class="btn btn-primary" @click="ajoutTelephone()">
+        Ajouter une numéro
+      </button>
     </div>
     <div class="card-body">
       <table id="telephones" class="table table-sm">
@@ -25,7 +27,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateTelephone(t)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -46,7 +48,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -72,10 +74,13 @@ export default {
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutTelephone() {
+      this.SHOW_MODAL({ component: 'ModalTelephone', data: {} });
+    },
+    updateTelephone(telephone) {
+      this.SHOW_MODAL({ component: 'ModalTelephone', data: { ...telephone } });
+    },
   },
 };
 </script>

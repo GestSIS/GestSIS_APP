@@ -6,7 +6,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Type d'intervention</h3>
-          <button type="button" class="btn btn-primary">Ajouter un type</button>
+          <button type="button" class="btn btn-primary" @click="ajoutType()">
+            Ajouter un type
+          </button>
         </div>
         <div class="card-body">
           <table id="type-intervention" class="table table-sm">
@@ -28,7 +30,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary border-0"
-                      disabled
+                      @click="updateType(t)"
                     >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
@@ -53,7 +55,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Statistiques</h3>
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-primary" @click="ajoutStat()">
             Ajouter un type de statistique
           </button>
         </div>
@@ -75,7 +77,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-primary border-0"
-                      disabled
+                      @click="updateStat(s)"
                     >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
@@ -98,7 +100,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -127,13 +129,29 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutType() {
+      this.SHOW_MODAL({ component: 'ModalTypeIntervention', data: {} });
+    },
+    updateType(type) {
+      this.SHOW_MODAL({
+        component: 'ModalTypeIntervention',
+        data: { ...type },
+      });
+    },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutStat() {
+      this.SHOW_MODAL({ component: 'ModalStatIntervention', data: {} });
+    },
+    updateStat(stat) {
+      this.SHOW_MODAL({
+        component: 'ModalStatIntervention',
+        data: { ...stat },
+      });
+    },
     statistique(id) {
       return id ? this.listeStat.find((s) => s.id === id)?.designation : '';
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>

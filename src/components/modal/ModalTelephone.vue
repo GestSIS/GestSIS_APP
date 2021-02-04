@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission
+        {{ activeTelephone.id ? 'Modifier' : 'Ajouter' }} un téléphone
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -10,13 +10,33 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label for="titre">Titre</label>
+        <label for="tri">Tri</label>
         <input
           type="text"
-          v-model="activeMission.titre"
+          v-model="activeTelephone.tri"
           class="form-control"
-          :class="{ 'is-invalid': errors['titre'] }"
-          id="titre"
+          :class="{ 'is-invalid': errors['tri'] }"
+          id="tri"
+        />
+      </div>
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input
+          type="text"
+          v-model="activeTelephone.nom"
+          class="form-control"
+          :class="{ 'is-invalid': errors['nom'] }"
+          id="nom"
+        />
+      </div>
+      <div class="form-group">
+        <label for="numero">Numéro</label>
+        <input
+          type="text"
+          v-model="activeTelephone.numero"
+          class="form-control"
+          :class="{ 'is-invalid': errors['numero'] }"
+          id="numero"
         />
       </div>
     </div>
@@ -25,7 +45,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeTelephone.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -35,7 +55,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMission',
+  name: 'ModalTelephone',
   props: {
     data: {
       type: Object,
@@ -44,20 +64,20 @@ export default {
   data() {
     return {
       errors: {},
-      activeMission: {},
+      activeTelephone: {},
     };
   },
   mounted() {
-    this.activeMission = {
+    this.activeTelephone = {
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      if ((this.activeMission.id || 0) === 0) {
+      if ((this.activeTelephone.id || 0) === 0) {
         this.$store
-          .dispatch('addMission', this.activeMission)
+          .dispatch('addTelephone', this.activeTelephone)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -70,7 +90,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMission', this.activeMission)
+          .dispatch('updateTelephone', this.activeTelephone)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

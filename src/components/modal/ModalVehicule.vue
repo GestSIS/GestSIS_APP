@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }} du matériel
+        {{ activeVehicule.id ? 'Modifier' : 'Ajouter' }} un véhicule
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -13,7 +13,7 @@
         <label for="tri">Tri</label>
         <input
           type="text"
-          v-model="activeMateriel.tri"
+          v-model="activeVehicule.tri"
           class="form-control"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
@@ -23,7 +23,7 @@
         <label for="designation">Désignation</label>
         <input
           type="text"
-          v-model="activeMateriel.designation"
+          v-model="activeVehicule.designation"
           class="form-control"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
@@ -33,7 +33,7 @@
         <label for="forfait">Forfait</label>
         <input
           type="text"
-          v-model="activeMateriel.forfait"
+          v-model="activeVehicule.forfait"
           class="form-control"
           :class="{ 'is-invalid': errors['forfait'] }"
           id="forfait"
@@ -43,7 +43,7 @@
         <label for="unite">Unité</label>
         <input
           type="text"
-          v-model="activeMateriel.unite"
+          v-model="activeVehicule.unite"
           class="form-control"
           :class="{ 'is-invalid': errors['unite'] }"
           id="unite"
@@ -53,7 +53,7 @@
         <label for="type_unite_id">Unité type</label>
         <select
           id="type_unite_id"
-          v-model="activeMateriel.type_unite_id"
+          v-model="activeVehicule.type_unite_id"
           class="custom-select"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
@@ -69,7 +69,7 @@
             type="checkbox"
             class="custom-control-input"
             id="medecin-status-modal"
-            v-model="activeMateriel.status"
+            v-model="activeVehicule.status"
           />
           <label class="custom-control-label" for="medecin-status-modal"
             >Actif</label
@@ -82,7 +82,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeVehicule.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -92,7 +92,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalVehicule',
   props: {
     data: {
       type: Object,
@@ -101,34 +101,32 @@ export default {
   data() {
     return {
       errors: {},
-      activeMateriel: {
-        actif: 1,
+      activeVehicule: {
+        status: 1,
+        type_unite_id: 0,
       },
     };
+  },
+  mounted() {
+    this.activeVehicule = {
+      ...this.activeVehicule,
+      ...this.data,
+    };
+    if (this.data.type_unite_id === null) {
+      this.activeVehicule.type_unite_id = 0;
+    }
   },
   computed: {
     ...mapState({
       listeUnite: (state) => state.unite.liste,
     }),
   },
-  mounted() {
-    this.activeMateriel = {
-      ...this.activeMateriel,
-      ...this.data,
-    };
-    if (this.data.type_unite_id === null) {
-      this.activeMateriel.type_unite_id = 0;
-    }
-  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    localite(localite) {
-      return localite?.designation;
-    },
     save() {
-      if ((this.activeMateriel.id || 0) === 0) {
+      if ((this.activeVehicule.id || 0) === 0) {
         this.$store
-          .dispatch('addMateriel', this.activeMateriel)
+          .dispatch('addVehicule', this.activeVehicule)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -141,7 +139,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMateriel', this.activeMateriel)
+          .dispatch('updateVehicule', this.activeVehicule)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

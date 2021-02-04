@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission
+        {{ activeTraitement.id ? 'Modifier' : 'Ajouter' }} un traitement
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -10,13 +10,23 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label for="titre">Titre</label>
+        <label for="tri">Tri</label>
         <input
           type="text"
-          v-model="activeMission.titre"
+          v-model="activeTraitement.tri"
           class="form-control"
-          :class="{ 'is-invalid': errors['titre'] }"
-          id="titre"
+          :class="{ 'is-invalid': errors['tri'] }"
+          id="tri"
+        />
+      </div>
+      <div class="form-group">
+        <label for="designation">Désignation</label>
+        <input
+          type="text"
+          v-model="activeTraitement.designation"
+          class="form-control"
+          :class="{ 'is-invalid': errors['designation'] }"
+          id="designation"
         />
       </div>
     </div>
@@ -25,7 +35,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeTraitement.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -35,7 +45,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMission',
+  name: 'ModalInterventionTraitement',
   props: {
     data: {
       type: Object,
@@ -44,20 +54,23 @@ export default {
   data() {
     return {
       errors: {},
-      activeMission: {},
+      activeTraitement: {},
     };
   },
   mounted() {
-    this.activeMission = {
+    this.activeTraitement = {
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    localite(localite) {
+      return localite?.designation;
+    },
     save() {
-      if ((this.activeMission.id || 0) === 0) {
+      if ((this.activeTraitement.id || 0) === 0) {
         this.$store
-          .dispatch('addMission', this.activeMission)
+          .dispatch('addInterventionTraitement', this.activeTraitement)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -70,7 +83,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMission', this.activeMission)
+          .dispatch('updateInterventionTraitement', this.activeTraitement)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

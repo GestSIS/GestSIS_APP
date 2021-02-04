@@ -53,7 +53,7 @@ export default {
     return {
       email: null,
       password: null,
-      error: null
+      error: null,
     };
   },
   methods: {
@@ -66,11 +66,11 @@ export default {
             this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
           );
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

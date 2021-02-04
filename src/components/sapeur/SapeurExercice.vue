@@ -5,7 +5,12 @@
       <h3 class="card-title">Exercices</h3>
     </div>
     <div class="card-body">
-      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
+      <table
+        id="sap-fonctions"
+        class="table table-sm"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th>Date</th>
