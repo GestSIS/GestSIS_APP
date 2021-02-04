@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }} un médecin
+        {{ activeExcuse.id ? 'Modifier' : 'Ajouter' }} une excuse type
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -10,49 +10,57 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
+        <label for="tri">Tri</label>
+        <input
+          type="text"
+          v-model="activeExcuse.tri"
+          class="form-control"
+          :class="{ 'is-invalid': errors['tri'] }"
+          id="tri"
+        />
+      </div>
+      <div class="form-group">
+        <label for="abreviation">Abréviation</label>
+        <input
+          type="text"
+          v-model="activeExcuse.abreviation"
+          class="form-control"
+          :class="{ 'is-invalid': errors['abreviation'] }"
+          id="abreviation"
+        />
+      </div>
+      <div class="form-group">
         <label for="designation">Désignation</label>
         <input
           type="text"
-          v-model="activeMedecin.designation"
+          v-model="activeExcuse.designation"
           class="form-control"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="form-group">
-        <label for="adresse">Adresse</label>
-        <input
-          type="text"
-          v-model="activeMedecin.adresse"
-          class="form-control"
-          :class="{ 'is-invalid': errors['adresse'] }"
-          id="adresse"
-        />
-      </div>
-      <div class="form-group">
-        <label for="localite">Localité</label>
-        <select
-          id="localite"
-          v-model="activeMedecin.localite_id"
-          class="custom-select"
-          :class="{ 'is-invalid': errors['localite_id'] }"
-        >
-          <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
-            {{ localite(l) }}
-          </option>
-        </select>
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="amendable-modal"
+            v-model="activeExcuse.amende"
+          />
+          <label class="custom-control-label" for="amendable-modal"
+            >Amende</label
+          >
+        </div>
       </div>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
           <input
             type="checkbox"
             class="custom-control-input"
-            id="medecin-actif-modal"
-            v-model="activeMedecin.actif"
+            id="status-modal"
+            v-model="activeExcuse.status"
           />
-          <label class="custom-control-label" for="medecin-actif-modal"
-            >Actif</label
-          >
+          <label class="custom-control-label" for="status-modal">Actif</label>
         </div>
       </div>
     </div>
@@ -61,7 +69,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeExcuse.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -71,7 +79,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMedecin',
+  name: 'ModalExcuseType',
   props: {
     data: {
       type: Object,
@@ -80,32 +88,29 @@ export default {
   data() {
     return {
       errors: {},
-      activeMedecin: {
-        actif: 1,
+      activeExcuse: {
+        status: 1,
       },
     };
   },
   computed: {
     ...mapState({
-      listeMedecin: (state) => state.medecin.liste,
-      listeLocalite: (state) => state.localite.liste,
+      listeExcuse: (state) => state.medecin.liste,
     }),
   },
   mounted() {
-    this.activeMedecin = {
-      ...this.activeMedecin,
+    this.activeExcuse = {
+      ...this.activeExcuse,
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    localite(localite) {
-      return localite?.designation;
-    },
     save() {
-      if ((this.activeMedecin.id || 0) === 0) {
+      this.activeExcuse.status = this.activeExcuse.status ? 1 : 0;
+      if ((this.activeExcuse.id || 0) === 0) {
         this.$store
-          .dispatch('addMedecin', this.activeMedecin)
+          .dispatch('addExcuseType', this.activeExcuse)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -118,7 +123,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMedecin', this.activeMedecin)
+          .dispatch('updateExcuseType', this.activeExcuse)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

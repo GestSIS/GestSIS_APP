@@ -91,7 +91,7 @@ export default {
       this.SHOW_MODAL('ModalSapeurCours');
     },
     supprimerCours(fonction_id) {
-      this.$store.dispatch('removeCours', fonction_id);
+      this.$store.dispatch('removeSapeurCours', fonction_id);
     },
   },
 };

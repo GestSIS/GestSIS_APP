@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Excuses type</h3>
-      <button type="button" class="btn btn-primary">Ajouter une excuse</button>
+      <button type="button" class="btn btn-primary" @click="ajoutExcuse()">
+        Ajouter une excuse
+      </button>
     </div>
     <div class="card-body">
       <table id="excuses-types" class="table table-sm">
@@ -51,7 +53,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateExcuse(e)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -72,7 +74,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -98,10 +100,13 @@ export default {
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutExcuse() {
+      this.SHOW_MODAL({ component: 'ModalExcuseType', data: {} });
+    },
+    updateExcuse(excuse) {
+      this.SHOW_MODAL({ component: 'ModalExcuseType', data: { ...excuse } });
+    },
   },
 };
 </script>

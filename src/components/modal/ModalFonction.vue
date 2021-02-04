@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} un cours
+        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une fonction
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>

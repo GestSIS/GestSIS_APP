@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un cours
+        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un grade
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>

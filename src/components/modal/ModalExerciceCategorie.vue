@@ -2,7 +2,8 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }} un médecin
+        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }} une catégorie
+        d'exercice
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -10,49 +11,57 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
+        <label for="tri">Tri</label>
+        <input
+          type="text"
+          v-model="activeCategorie.tri"
+          class="form-control"
+          :class="{ 'is-invalid': errors['tri'] }"
+          id="tri"
+        />
+      </div>
+      <div class="form-group">
         <label for="designation">Désignation</label>
         <input
           type="text"
-          v-model="activeMedecin.designation"
+          v-model="activeCategorie.designation"
           class="form-control"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="form-group">
-        <label for="adresse">Adresse</label>
+        <label for="duree_base">Durée standard</label>
         <input
           type="text"
-          v-model="activeMedecin.adresse"
+          v-model="activeCategorie.duree_base"
           class="form-control"
-          :class="{ 'is-invalid': errors['adresse'] }"
-          id="adresse"
+          :class="{ 'is-invalid': errors['duree_base'] }"
+          id="duree_base"
         />
-      </div>
-      <div class="form-group">
-        <label for="localite">Localité</label>
-        <select
-          id="localite"
-          v-model="activeMedecin.localite_id"
-          class="custom-select"
-          :class="{ 'is-invalid': errors['localite_id'] }"
-        >
-          <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
-            {{ localite(l) }}
-          </option>
-        </select>
       </div>
       <div class="form-group">
         <div class="custom-control custom-checkbox">
           <input
             type="checkbox"
             class="custom-control-input"
-            id="medecin-actif-modal"
-            v-model="activeMedecin.actif"
+            id="amendable-modal"
+            v-model="activeCategorie.amendable"
           />
-          <label class="custom-control-label" for="medecin-actif-modal"
-            >Actif</label
+          <label class="custom-control-label" for="amendable-modal"
+            >Amendable</label
           >
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="status-modal"
+            v-model="activeCategorie.status"
+          />
+          <label class="custom-control-label" for="status-modal">Actif</label>
         </div>
       </div>
     </div>
@@ -61,7 +70,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -71,7 +80,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMedecin',
+  name: 'ModalExerciceCategorie',
   props: {
     data: {
       type: Object,
@@ -80,32 +89,29 @@ export default {
   data() {
     return {
       errors: {},
-      activeMedecin: {
-        actif: 1,
+      activeCategorie: {
+        status: 1,
       },
     };
   },
   computed: {
     ...mapState({
-      listeMedecin: (state) => state.medecin.liste,
-      listeLocalite: (state) => state.localite.liste,
+      listeCategorie: (state) => state.exerciceCategorie.liste,
     }),
   },
   mounted() {
-    this.activeMedecin = {
-      ...this.activeMedecin,
+    this.activeCategorie = {
+      ...this.activeCategorie,
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    localite(localite) {
-      return localite?.designation;
-    },
     save() {
-      if ((this.activeMedecin.id || 0) === 0) {
+      this.activeCategorie.status = this.activeCategorie.status ? 1 : 0;
+      if ((this.activeCategorie.id || 0) === 0) {
         this.$store
-          .dispatch('addMedecin', this.activeMedecin)
+          .dispatch('addExerciceCategorie', this.activeCategorie)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -118,7 +124,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateMedecin', this.activeMedecin)
+          .dispatch('updateExerciceCategorie', this.activeCategorie)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
