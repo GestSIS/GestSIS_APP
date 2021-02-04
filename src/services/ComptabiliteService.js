@@ -16,11 +16,50 @@ export default {
       payload
     );
   },
+  addFraisAnnuel(frais) {
+    return Api.api().post('/frais-annuel-types/', frais);
+  },
+  updateFraisAnnuel(frais) {
+    return Api.api().put(`/frais-annuel-types/${frais.id}`, frais);
+  },
+  removeFraisAnnuel(frais_id) {
+    return Api.api().delete(`/frais-annuel-types/${frais_id}`);
+  },
+  addIndemniteAnnuel(indemnite) {
+    return Api.api().post('/indemnites-annuel-types/', indemnite);
+  },
+  updateIndemniteAnnuel(indemnite) {
+    return Api.api().put(`/indemnites-annuel-types/${indemnite.id}`, indemnite);
+  },
+  removeIndemniteAnnuel(indemnite_id) {
+    return Api.api().delete(`/indemnites-annuel-types/${indemnite_id}`);
+  },
+  addIndemniteExercice(indemnite) {
+    return Api.api().post('/indemnites-exercice-types/', indemnite);
+  },
+  updateIndemniteExercice(indemnite) {
+    return Api.api().put(
+      `/indemnites-exercice-types/${indemnite.id}`,
+      indemnite
+    );
+  },
+  removeIndemniteExercice(indemnite_id) {
+    return Api.api().delete(`/indemnites-exercice-types/${indemnite_id}`);
+  },
+  addIndemniteIntervention(indemnite) {
+    return Api.api().post('/indemnites-intervention-types/', indemnite);
+  },
+  updateIndemniteIntervention(indemnite) {
+    return Api.api().put(
+      `/indemnites-intervention-types/${indemnite.id}`,
+      indemnite
+    );
+  },
+  removeIndemniteIntervention(indemnite_id) {
+    return Api.api().delete(`/indemnites-intervention-types/${indemnite_id}`);
+  },
   imputerAnnuel(exerciceComptableId) {
     return Api.api().post('/imputation/annuel/' + exerciceComptableId);
-  },
-  getComptes() {
-    return Api.api().get('/comptes/');
   },
   getEcritureForCompte(compteId, exerciceComptableId) {
     return Api.api().get(

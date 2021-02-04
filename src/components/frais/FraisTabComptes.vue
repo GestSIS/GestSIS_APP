@@ -19,7 +19,7 @@
               </button>
               <div class="dropdown-menu" :class="{ show: dropdown }">
                 <button
-                  v-for="c in listeComptes"
+                  v-for="c in listeCompte"
                   :key="c.id"
                   @click="selectCompte(c.id)"
                   class="dropdown-item"
@@ -119,15 +119,15 @@ export default {
       ecritures: (state) => state.comptabilite.active.ecritures,
       activeCompteId: (state) => state.comptabilite.active.compteId,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listSapeurs: (state) => state.sapeur.liste,
-      listeComptes: (state) => state.comptabilite.comptes,
+      listeSapeur: (state) => state.sapeur.liste,
+      listeCompte: (state) => state.compte.liste,
     }),
     ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
   },
   mounted() {
     this.loading = true;
 
-    if (this.listSapeurs.length === 0) {
+    if (this.listeSapeur.length === 0) {
       this.$store.dispatch('fetchListeSapeur');
     }
 
@@ -142,7 +142,7 @@ export default {
       this.loading = true;
       this.init();
     },
-    listeComptes(newOne, oldOne) {
+    listeCompte(newOne, oldOne) {
       if (oldOne.length === 0) {
         this.init();
       }
@@ -158,9 +158,9 @@ export default {
       this.dropdown = false;
     },
     init() {
-      if (this.activeCompteId === null && this.listeComptes.length > 0) {
+      if (this.activeCompteId === null && this.listeCompte.length > 0) {
         this.$store
-          .dispatch('selectActiveCompte', this.listeComptes[0].id)
+          .dispatch('selectActiveCompte', this.listeCompte[0].id)
           .then(() => {
             this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
             this.loading = false;

@@ -3,8 +3,8 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Indemnités exercice</h3>
-      <button type="button" class="btn btn-primary">
-        Ajouter une indemnité
+      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
+        Ajouter une indemnite
       </button>
     </div>
     <div class="card-body">
@@ -50,7 +50,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateIndemnite(i)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -104,12 +104,22 @@ export default {
       listeIndemniteExercice: (state) =>
         state.comptabilite.indemnites.exercices.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.comptabilite.comptes,
+      listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutIndemnite() {
+      this.SHOW_MODAL({ component: 'ModalIndemniteExercice', data: {} });
+    },
+    updateIndemnite(indemnite) {
+      this.SHOW_MODAL({
+        component: 'ModalIndemniteExercice',
+        data: { ...indemnite },
+      });
+    },
     fonction(id) {
       return id ? this.listeFonction.find((f) => f.id === id)?.abreviation : '';
     },
@@ -128,10 +138,6 @@ export default {
         ? this.listeCategorie.find((c) => c.id === id)?.designation
         : '';
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>

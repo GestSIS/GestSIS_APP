@@ -3,7 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Frais annuels</h3>
-      <button type="button" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" @click="ajoutFrais">
         Ajouter un type de frais annuel
       </button>
     </div>
@@ -35,7 +35,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateFrais(f)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -90,12 +90,22 @@ export default {
       listeFraisAnnuel: (state) =>
         state.comptabilite.frais.annuels.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.comptabilite.comptes,
+      listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutFrais() {
+      this.SHOW_MODAL({ component: 'ModalFraisAnnuel', data: {} });
+    },
+    updateFrais(frais) {
+      this.SHOW_MODAL({
+        component: 'ModalFraisAnnuel',
+        data: { ...frais },
+      });
+    },
     fonction(id) {
       return id ? this.listeFonction.find((f) => f.id === id)?.abreviation : '';
     },
@@ -114,10 +124,6 @@ export default {
         ? this.listeCategorie.find((c) => c.id === id)?.designation
         : '';
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>

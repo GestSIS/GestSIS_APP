@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Comptes</h3>
-      <button type="button" class="btn btn-primary">Ajouter un compte</button>
+      <button type="button" class="btn btn-primary" @click="ajoutCompte">
+        Ajouter un compte
+      </button>
     </div>
     <div class="card-body">
       <table id="indemnites-anuelles" class="table table-sm">
@@ -36,7 +38,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateCompte(c)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -57,7 +59,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -87,14 +89,17 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCompte: (state) => state.comptabilite.comptes,
+      listeCompte: (state) => state.compte.liste,
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutCompte() {
+      this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
+    },
+    updateCompte(compte) {
+      this.SHOW_MODAL({ component: 'ModalCompte', data: { ...compte } });
+    },
   },
 };
 </script>

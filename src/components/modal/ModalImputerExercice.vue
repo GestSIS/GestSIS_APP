@@ -18,7 +18,11 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table
+            class="table table-sm"
+            @keydown.down="onKeyDown"
+            @keydown.up="onKeyUp"
+          >
             <thead>
               <tr>
                 <th>Designation</th>
@@ -159,7 +163,7 @@ export default {
     ...mapState({
       listeIndemnitesTypes: (state) => state.comptabilite.indemnites.exercices,
       listeFonctions: (state) => state.fonction.liste,
-      listComptes: (state) => state.comptabilite.comptes,
+      listComptes: (state) => state.compte.liste,
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {

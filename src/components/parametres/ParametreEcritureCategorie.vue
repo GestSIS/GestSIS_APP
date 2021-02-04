@@ -3,7 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Catégories</h3>
-      <button type="button" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" @click="ajoutCategorie">
         Ajouter une catégorie
       </button>
     </div>
@@ -25,7 +25,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateCategorie(c)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -72,10 +72,16 @@ export default {
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutCategorie() {
+      this.SHOW_MODAL({ component: 'ModalEcritureCategorie', data: {} });
+    },
+    updateCategorie(categorie) {
+      this.SHOW_MODAL({
+        component: 'ModalEcritureCategorie',
+        data: { ...categorie },
+      });
+    },
   },
 };
 </script>
