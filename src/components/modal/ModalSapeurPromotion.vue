@@ -25,8 +25,8 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
-          <option v-for="g in listGrades" :key="g.id" :value="g.id"
-            >{{ g.designation }}
+          <option v-for="g in listGrades" :key="g.id" :value="g.id">
+            {{ g.designation }}
           </option>
         </select>
       </div>
@@ -56,45 +56,45 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalPromotion',
+  name: 'ModalSapeurPromotion',
   data() {
     return {
-      errors: {}
+      errors: {},
     };
-  },
-  computed: {
-    ...mapState({
-      listGrades: state => state.grade.liste
-    }),
-    ...mapGetters(['activeSapeurId', 'activeGrade'])
   },
   mounted() {
     if (this.listGrades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
   },
+  computed: {
+    ...mapState({
+      listGrades: (state) => state.grade.liste,
+    }),
+    ...mapGetters(['activeSapeurId', 'activeGrade']),
+  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
       if ((this.activeGrade.id || 0) === 0) {
         this.$store
-          .dispatch('addGrade', this.activeGrade)
+          .dispatch('addSapeurGrade', this.activeGrade)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       } else {
         this.$store
-          .dispatch('editGrade', this.activeGrade)
+          .dispatch('editSapeurGrade', this.activeGrade)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

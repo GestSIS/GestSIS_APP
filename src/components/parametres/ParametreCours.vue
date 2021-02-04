@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary">Ajouter un cours</button>
+      <button type="button" class="btn btn-primary" @click="ajoutCours()">
+        Ajouter un cours
+      </button>
     </div>
     <div class="card-body">
       <table id="cours" class="table table-sm" cellspacing="0" width="100%">
@@ -37,7 +39,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateCours(c)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -58,7 +60,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -88,6 +90,13 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutCours() {
+      this.SHOW_MODAL({ component: 'ModalCours', data: {} });
+    },
+    updateCours(cours) {
+      this.SHOW_MODAL({ component: 'ModalCours', data: { ...cours } });
+    },
     coursPrecedent(id) {
       return id ? this.listeCours.find((f) => f.id === id)?.abreviation : '';
     },

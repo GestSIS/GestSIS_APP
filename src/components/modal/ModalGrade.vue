@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} un cours
+        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un cours
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
@@ -13,44 +13,39 @@
         <label for="tri">Tri</label>
         <input
           type="text"
-          v-model="activeFonction.tri"
+          v-model="activeGrade.tri"
           class="form-control"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
       </div>
       <div class="form-group">
-        <label for="nom">Nom</label>
-        <input
-          type="text"
-          v-model="activeFonction.nom"
-          class="form-control"
-          :class="{ 'is-invalid': errors['nom'] }"
-          id="nom"
-        />
-      </div>
-      <div class="form-group">
         <label for="abreviation">Abréviation</label>
         <input
           type="text"
-          v-model="activeFonction.abreviation"
+          v-model="activeGrade.abreviation"
           class="form-control"
           :class="{ 'is-invalid': errors['abreviation'] }"
           id="abreviation"
         />
       </div>
       <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            id="fonction-cumulable-modal"
-            v-model="activeFonction.cumulable"
-          />
-          <label class="custom-control-label" for="fonction-cumulable-modal"
-            >Cumulable</label
-          >
-        </div>
+        <label for="designation">Désignation</label>
+        <input
+          type="text"
+          v-model="activeGrade.designation"
+          class="form-control"
+          :class="{ 'is-invalid': errors['designation'] }"
+          id="designation"
+        />
+      </div>
+      <div class="form-group">
+        <label for="cours-precedent">Grade précédent</label>
+        <select id="groupe" v-model="activeGrade.groupe" class="custom-select">
+          <option value="1">Officier</option>
+          <option value="2">Sous-Officier</option>
+          <option value="3">Spécialiste</option>
+        </select>
       </div>
     </div>
     <div class="modal-footer">
@@ -58,7 +53,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -68,7 +63,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalFonction',
+  name: 'ModalGrade',
   props: {
     data: {
       type: Object,
@@ -77,22 +72,23 @@ export default {
   data() {
     return {
       errors: {},
-      activeFonction: {},
+      activeGrade: {
+        groupe: 1,
+      },
     };
   },
   mounted() {
-    this.activeFonction = {
-      ...this.activeFonction,
+    this.activeGrade = {
+      ...this.activeGrade,
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      //Format back dates to SQL Format
-      if ((this.activeFonction.id || 0) === 0) {
+      if ((this.activeGrade.id || 0) === 0) {
         this.$store
-          .dispatch('addFonction', this.activeFonction)
+          .dispatch('addGrade', this.activeGrade)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -105,7 +101,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateFonction', this.activeFonction)
+          .dispatch('updateGrade', this.activeGrade)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

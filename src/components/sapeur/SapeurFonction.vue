@@ -8,7 +8,12 @@
       </button>
     </div>
     <div class="card-body">
-      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
+      <table
+        id="sap-fonctions"
+        class="table table-sm"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th>Début</th>
@@ -77,7 +82,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     newFonction() {
       this.$store.dispatch('resetActiveFonction');
-      this.SHOW_MODAL('ModalFonction');
+      this.SHOW_MODAL('ModalSapeurFonction');
     },
     editFonction(fonction_id) {
       this.$store.dispatch(
@@ -87,10 +92,10 @@ export default {
           this.activeSapeurFonctions.filter((f) => f.id === fonction_id)[0]
         )
       );
-      this.SHOW_MODAL('ModalFonction');
+      this.SHOW_MODAL('ModalSapeurFonction');
     },
     supprimerFonction(fonction_id) {
-      this.$store.dispatch('removeFonction', fonction_id);
+      this.$store.dispatch('removeSapeurFonction', fonction_id);
     },
   },
 };

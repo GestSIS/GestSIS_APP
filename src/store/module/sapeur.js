@@ -336,7 +336,7 @@ export default {
       );
     },
 
-    addFonction({ state, commit }, payload) {
+    addSapeurFonction({ state, commit }, payload) {
       return SapeurService.addFonction(state.active.id, payload).then(
         (data) => {
           commit(types.ADD_CURRENT_SAPEUR_FONCTION, data);
@@ -344,7 +344,7 @@ export default {
         }
       );
     },
-    editFonction({ state, commit }, payload) {
+    editSapeurFonction({ state, commit }, payload) {
       return SapeurService.editFonction(state.active.id, payload).then(
         (data) => {
           commit(types.EDIT_CURRENT_SAPEUR_FONCTION, data);
@@ -352,7 +352,7 @@ export default {
         }
       );
     },
-    removeFonction({ state, commit }, payload) {
+    removeSapeurFonction({ state, commit }, payload) {
       return SapeurService.removeFonction(state.active.id, payload).then(
         (data) => {
           commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, payload);
@@ -361,7 +361,7 @@ export default {
       );
     },
 
-    addGrade({ state, commit }, payload) {
+    addSapeurGrade({ state, commit }, payload) {
       return SapeurService.addGrade(state.active.data.id, payload).then(
         (data) => {
           commit(types.ADD_CURRENT_SAPEUR_GRADE, data);
@@ -369,7 +369,7 @@ export default {
         }
       );
     },
-    editGrade({ state, commit }, payload) {
+    editSapeurGrade({ state, commit }, payload) {
       return SapeurService.editGrade(state.active.data.id, payload).then(
         (data) => {
           commit(types.EDIT_CURRENT_SAPEUR_GRADE, data);
@@ -377,7 +377,7 @@ export default {
         }
       );
     },
-    removeGrade({ state, commit }, payload) {
+    removeSapeurGrade({ state, commit }, payload) {
       return SapeurService.removeGrade(state.active.data.id, payload).then(
         (data) => {
           commit(types.REMOVE_CURRENT_SAPEUR_GRADE, payload);
@@ -386,7 +386,7 @@ export default {
       );
     },
 
-    addCours({ state, commit }, payload) {
+    addSapeurCours({ state, commit }, payload) {
       return SapeurService.addCours(state.active.data.id, payload).then(
         (data) => {
           commit(types.ADD_CURRENT_SAPEUR_COURS, data);
@@ -394,7 +394,7 @@ export default {
         }
       );
     },
-    editCours({ state, commit }, payload) {
+    editSapeurCours({ state, commit }, payload) {
       return SapeurService.editCours(state.active.data.id, payload).then(
         (data) => {
           commit(types.EDIT_CURRENT_SAPEUR_COURS, data);
@@ -402,7 +402,7 @@ export default {
         }
       );
     },
-    removeCours({ state, commit }, payload) {
+    removeSapeurCours({ state, commit }, payload) {
       return SapeurService.removeCours(state.active.data.id, payload).then(
         (data) => {
           commit(types.REMOVE_CURRENT_SAPEUR_COURS, payload);

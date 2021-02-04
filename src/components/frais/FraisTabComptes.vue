@@ -206,7 +206,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     // editEcriture() {
     //   this.$store.dispatch('resetActiveGrade')
-    //   this.SHOW_MODAL('ModalPromotion')
+    //   this.SHOW_MODAL('ModalSapeurPromotion')
     // },
   },
 };

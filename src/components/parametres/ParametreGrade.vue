@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Grades</h3>
-      <button type="button" class="btn btn-primary">Ajouter un grade</button>
+      <button type="button" class="btn btn-primary" @click="ajoutGrade()">
+        Ajouter un grade
+      </button>
     </div>
     <div class="card-body">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
@@ -17,17 +19,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="f in listeGrade" :key="f.id">
-            <td>{{ f.tri }}</td>
-            <td>{{ f.designation }}</td>
-            <td>{{ f.abreviation }}</td>
-            <td>{{ groupe(f.groupe) }}</td>
+          <tr v-for="g in listeGrade" :key="g.id">
+            <td>{{ g.tri }}</td>
+            <td>{{ g.designation }}</td>
+            <td>{{ g.abreviation }}</td>
+            <td>{{ groupe(g.groupe) }}</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateGrade(g)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -48,7 +50,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -73,6 +75,13 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutGrade() {
+      this.SHOW_MODAL({ component: 'ModalGrade', data: {} });
+    },
+    updateGrade(grade) {
+      this.SHOW_MODAL({ component: 'ModalGrade', data: { ...grade } });
+    },
     groupe(groupe) {
       const gradeGroupe = {
         1: 'Officier',
@@ -81,10 +90,6 @@ export default {
       };
       return gradeGroupe[groupe];
     },
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>

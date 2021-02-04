@@ -9,7 +9,12 @@
       </button>
     </div>
     <div class="card-body">
-      <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">
+      <table
+        id="sap-promotions"
+        class="table table-sm"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th>Date</th>
@@ -78,7 +83,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     newGrade() {
       this.$store.dispatch('resetActiveGrade');
-      this.SHOW_MODAL('ModalPromotion');
+      this.SHOW_MODAL('ModalSapeurPromotion');
     },
     editGrade(grade_id) {
       this.$store.dispatch(
@@ -88,10 +93,10 @@ export default {
           this.activeSapeurGrades.filter((f) => f.id === grade_id)[0]
         )
       );
-      this.SHOW_MODAL('ModalPromotion');
+      this.SHOW_MODAL('ModalSapeurPromotion');
     },
     supprimerGrade(grade_id) {
-      this.$store.dispatch('removeGrade', grade_id);
+      this.$store.dispatch('removeSapeurGrade', grade_id);
     },
   },
 };

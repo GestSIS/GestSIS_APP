@@ -78,7 +78,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     newCours() {
       this.$store.dispatch('resetActiveCours');
-      this.SHOW_MODAL('ModalCours');
+      this.SHOW_MODAL('ModalSapeurCours');
     },
     editCours(cours_id) {
       this.$store.dispatch(
@@ -88,7 +88,7 @@ export default {
           this.activeSapeurCours.filter((c) => c.id === cours_id)[0]
         )
       );
-      this.SHOW_MODAL('ModalCours');
+      this.SHOW_MODAL('ModalSapeurCours');
     },
     supprimerCours(fonction_id) {
       this.$store.dispatch('removeCours', fonction_id);

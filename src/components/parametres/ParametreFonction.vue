@@ -3,7 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button type="button" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" @click="ajoutFonction()">
         Ajouter une fonction
       </button>
     </div>
@@ -21,8 +21,8 @@
         <tbody>
           <tr v-for="f in listeFonction" :key="f.id">
             <td>{{ f.tri }}</td>
-            <td>{{ f.nom }}</td>
             <td>{{ f.abreviation }}</td>
+            <td>{{ f.nom }}</td>
             <td class="text-center">
               <div class="custom-control custom-checkbox">
                 <input
@@ -40,7 +40,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  disabled
+                  @click="updateFonction(f)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -87,10 +87,13 @@ export default {
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    ...mapMutations(['SHOW_MODAL']),
+    ajoutFonction() {
+      this.SHOW_MODAL({ component: 'ModalFonction', data: {} });
+    },
+    updateFonction(fonction) {
+      this.SHOW_MODAL({ component: 'ModalFonction', data: { ...fonction } });
+    },
   },
 };
 </script>
