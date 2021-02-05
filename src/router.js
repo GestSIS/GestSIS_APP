@@ -132,7 +132,7 @@ const router = new Router({
           path: 'frais',
           name: 'param-frais',
           component: () =>
-            import('@/components/parametres/ParametreTabFrais.vue'),
+            import('@/components/parametres/ParametreTabComptabilite.vue'),
         },
         {
           path: 'controle-medical',

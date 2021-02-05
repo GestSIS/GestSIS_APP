@@ -1,12 +1,127 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-12">
+    <div class="col-sm-12 col-xl-6">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline mb-3">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">General</h3>
+          <button type="button" class="btn btn-primary" @click="save()">
+            Enregister
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="nom">Nom du SIS</label>
+            <input
+              type="text"
+              v-model="sisParam.nom"
+              class="form-control"
+              :class="{ 'is-invalid': errors['nom'] }"
+              id="nom"
+            />
+          </div>
+          <div class="row">
+            <div class="col-8 form-group">
+              <label for="district">District</label>
+              <input
+                type="text"
+                v-model="sisParam.district"
+                class="form-control"
+                :class="{ 'is-invalid': errors['district'] }"
+                id="district"
+              />
+            </div>
+            <div class="col-4 form-group">
+              <label for="no_arrondissement">No arrondissement</label>
+              <input
+                type="text"
+                v-model="sisParam.no_arrondissement"
+                class="form-control"
+                :class="{ 'is-invalid': errors['no_arrondissement'] }"
+                id="no_arrondissement"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8 form-group">
+              <label for="rue">Rue</label>
+              <input
+                type="text"
+                v-model="sisParam.rue"
+                class="form-control"
+                :class="{ 'is-invalid': errors['rue'] }"
+                id="rue"
+              />
+            </div>
+            <div class="col-4 form-group">
+              <label for="numero">Numéro</label>
+              <input
+                type="text"
+                v-model="sisParam.numero"
+                class="form-control"
+                :class="{ 'is-invalid': errors['numero'] }"
+                id="numero"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="localite">Localité</label>
+            <select
+              id="localite"
+              v-model="sisParam.localite_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['localite_id'] }"
+            >
+              <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
+                {{ localite(l) }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="localite">Commandant</label>
+            <select
+              id="sapeur_id"
+              v-model="sisParam.sapeur_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['sapeur_id'] }"
+            >
+              <option v-for="s in listeSapeur" :key="s.id" :value="s.id">
+                {{ sapeur(s) }}
+              </option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-6 form-group">
+              <label for="telephone">Téléphone</label>
+              <input
+                type="text"
+                v-model="sisParam.telephone"
+                class="form-control"
+                :class="{ 'is-invalid': errors['telephone'] }"
+                id="telephone"
+              />
+            </div>
+            <div class="col-6 form-group">
+              <label for="email">Email</label>
+              <input
+                type="text"
+                v-model="sisParam.email"
+                class="form-control"
+                :class="{ 'is-invalid': errors['email'] }"
+                id="email"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-6">
       <!-- general form elements -->
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">General</h3>
-          <button type="button" class="btn btn-primary">TODO</button>
+          <h3 class="card-title">TODO</h3>
         </div>
         <div class="card-body">
           <div>
@@ -92,13 +207,13 @@ import { mapState } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  // let loadFonction = store.dispatch('fetchFonctions');
-  // let loadCours = store.dispatch('fetchCours');
-  // let loadGrade = store.dispatch('fetchGrades');
+  let loadLocalites = store.dispatch('fetchLocalites');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  let loadParams = store.dispatch('fetchSisParams');
 
-  // Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
-  next();
-  // });
+  Promise.all([loadLocalites, loadSapeurs, loadParams]).then(() => {
+    next();
+  });
 }
 
 export default {
@@ -109,19 +224,46 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      errors: {},
+      sisParam: {},
+    };
+  },
+  mounted() {
+    this.sisParam = { ...this.params };
+  },
+  watch: {
+    params: (val) => {
+      // this.sisParam = { ...val };
+    },
+  },
   computed: {
     ...mapState({
-      listeFonction: (state) =>
-        state.fonction.liste.sort((a, b) => a.tri - b.tri),
-      listeCours: (state) => state.cours.liste.sort((a, b) => a.tri - b.tri),
-      listeGrade: (state) => state.grade.liste.sort((a, b) => a.tri - b.tri),
+      params: (state) => state.sisParam.params,
+      listeLocalite: (state) => state.localite.liste,
+      listeSapeur: (state) => state.sapeur.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
+    localite(localite) {
+      return localite?.designation;
+    },
+    sapeur(sapeur) {
+      return `${sapeur?.nom} ${sapeur?.prenom}`;
+    },
+    save() {
+      this.$store
+        .dispatch('updateSisParams', this.sisParam)
+        .then(() => {
+          this.errors = {};
+        })
+        .catch((errors) => {
+          this.errors = {
+            ...errors,
+          };
+        });
+    },
   },
 };
 </script>

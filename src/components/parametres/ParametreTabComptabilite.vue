@@ -64,6 +64,14 @@
           >
             Indemnité intervention
           </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'comptabilite' }"
+            href="#"
+            @click.prevent="tab = 'comptabilite'"
+          >
+            AVS et facturation
+          </a>
         </nav>
       </div>
     </div>
@@ -76,6 +84,7 @@
       <parametre-indemnite-intervention
         v-if="tab === 'indemnite-intervention'"
       />
+      <parametre-avs v-if="tab === 'comptabilite'" />
     </div>
   </div>
 </template>
@@ -89,6 +98,7 @@ import ParametreFraisAnnuel from './ParametreFraisAnnuel.vue';
 import ParametreIndemniteAnnuel from './ParametreIndemniteAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
 import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
+import ParametreAvs from './ParametreAvs.vue';
 
 async function loadData(_, next) {
   const loadFrais = store.dispatch('fetchFraisTypes');
@@ -111,7 +121,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreTabFrais',
+  name: 'ParametreTabComptabilite',
   components: {
     ParametreCompte,
     ParametreEcritureCategorie,
@@ -119,6 +129,7 @@ export default {
     ParametreIndemniteAnnuel,
     ParametreIndemniteExercice,
     ParametreIndemniteIntervention,
+    ParametreAvs,
   },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
