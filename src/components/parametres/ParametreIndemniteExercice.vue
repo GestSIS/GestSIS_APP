@@ -112,12 +112,17 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     ajoutIndemnite() {
-      this.SHOW_MODAL({ component: 'ModalIndemniteExercice', data: {} });
+      this.SHOW_MODAL({
+        component: 'ModalIndemniteExercice',
+        data: {},
+        size: 2,
+      });
     },
     updateIndemnite(indemnite) {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',
         data: { ...indemnite },
+        size: 2,
       });
     },
     fonction(id) {

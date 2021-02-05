@@ -85,17 +85,17 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapState({
-      listeMedecin: (state) => state.medecin.liste,
-      listeLocalite: (state) => state.localite.liste,
-    }),
-  },
   mounted() {
     this.activeMedecin = {
       ...this.activeMedecin,
       ...this.data,
     };
+  },
+  computed: {
+    ...mapState({
+      listeMedecin: (state) => state.medecin.liste,
+      listeLocalite: (state) => state.localite.liste,
+    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

@@ -77,7 +77,7 @@ export default {
       state.indemnites.exercices = [...state.indemnites.exercices, indemnite];
     },
     [types.UPDATE_INDEMNITE_EXERCICE](state, indemnite) {
-      state.liste = [
+      state.indemnites.exercices = [
         ...state.indemnites.exercices.map((m) =>
           m.id === indemnite.id ? indemnite : m
         ),

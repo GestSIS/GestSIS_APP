@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
+        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
         exercice
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
@@ -10,47 +10,156 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label for="tri">Tri</label>
-        <input
-          type="text"
-          v-model="activeFonction.tri"
-          class="form-control"
-          :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
-        />
-      </div>
-      <div class="form-group">
-        <label for="nom">Nom</label>
-        <input
-          type="text"
-          v-model="activeFonction.nom"
-          class="form-control"
-          :class="{ 'is-invalid': errors['nom'] }"
-          id="nom"
-        />
-      </div>
-      <div class="form-group">
-        <label for="abreviation">Abréviation</label>
-        <input
-          type="text"
-          v-model="activeFonction.abreviation"
-          class="form-control"
-          :class="{ 'is-invalid': errors['abreviation'] }"
-          id="abreviation"
-        />
-      </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            id="fonction-cumulable-modal"
-            v-model="activeFonction.cumulable"
-          />
-          <label class="custom-control-label" for="fonction-cumulable-modal"
-            >Cumulable</label
-          >
+      <div class="row">
+        <div
+          :class="{
+            'col-6': activeIndemnite.par_fonction,
+            'col-12': !activeIndemnite.par_fonction,
+          }"
+        >
+          <div class="form-group">
+            <label for="designation">Désignation</label>
+            <input
+              type="text"
+              v-model="activeIndemnite.designation"
+              class="form-control"
+              :class="{ 'is-invalid': errors['designation'] }"
+              id="designation"
+            />
+          </div>
+          <div class="form-group">
+            <label for="solde">Solde</label>
+            <input
+              type="text"
+              v-model="activeIndemnite.solde"
+              class="form-control"
+              :class="{ 'is-invalid': errors['solde'] }"
+              id="solde"
+            />
+          </div>
+          <div>
+            <label for="solde_min">Solde min</label>
+            <input
+              type="text"
+              v-model="activeIndemnite.solde_min"
+              class="form-control"
+              :class="{ 'is-invalid': errors['solde_min'] }"
+              id="solde_min"
+            />
+          </div>
+          <div>
+            <label for="solde_min_pour">Pour</label>
+            <input
+              type="text"
+              v-model="activeIndemnite.solde_min_pour"
+              class="form-control"
+              :class="{ 'is-invalid': errors['solde_min_pour'] }"
+              id="solde_min_pour"
+            />
+          </div>
+          <div class="form-group">
+            <label for="unite">Unité</label>
+            <select
+              id="unite"
+              v-model="activeIndemnite.type_unite_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['type_unite_id'] }"
+            >
+              <option v-for="u in listeUnite" :key="u.id" :value="u.id">
+                {{ u.unite }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label for="indemnite">Indemnite</label>
+            <input
+              type="text"
+              v-model="activeIndemnite.indemnite"
+              class="form-control"
+              :class="{ 'is-invalid': errors['indemnite'] }"
+              id="indemnite"
+            />
+          </div>
+          <div class="form-group">
+            <label for="compte">Compte</label>
+            <select
+              id="compte"
+              v-model="activeIndemnite.compte_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['compte_id'] }"
+            >
+              <option v-for="c in listeCompte" :key="c.id" :value="c.id">
+                {{ compte(c) }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="par-fonction-modal"
+                v-model="activeIndemnite.par_fonction"
+              />
+              <label class="custom-control-label" for="par-fonction-modal"
+                >Par fonction</label
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="categorie">Catégorie</label>
+            <select
+              id="categorie"
+              v-model="activeIndemnite.ecriture_categorie_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            >
+              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+                {{ c.designation }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-6" v-if="activeIndemnite.par_fonction">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Fonction</th>
+                <th>Solde</th>
+                <th>Indemnité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="index in activeIndemnite.fonctions.length"
+                :key="index"
+              >
+                <td>
+                  {{
+                    fonction(activeIndemnite.fonctions[index - 1].fonction_id)
+                  }}
+                </td>
+                <td>
+                  <input
+                    class="form-control form-control-sm"
+                    type="text"
+                    @change="(e) => updateSolde(index - 1, e)"
+                    :value="activeIndemnite.fonctions[index - 1].solde"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="form-control form-control-sm"
+                    type="text"
+                    @change="(e) => updateIndemnite(index - 1, e)"
+                    :value="activeIndemnite.fonctions[index - 1].indemnite"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -59,14 +168,14 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalIndemniteExercice',
@@ -78,22 +187,80 @@ export default {
   data() {
     return {
       errors: {},
-      activeFonction: {},
+      activeIndemnite: {
+        fonctions: [],
+      },
     };
   },
   mounted() {
-    this.activeFonction = {
-      ...this.activeFonction,
+    const base = Object.fromEntries(
+      this.data.fonctions.map((f) => [f.fonction_id, f])
+    );
+    const data = Object.fromEntries(
+      this.listeFonction.map((f) => [
+        f.id,
+        { ...f, fonction_id: f.id, solde: 0, indemnite: 0 },
+      ])
+    );
+
+    const objects = {
+      ...data,
+      ...base,
+    };
+    const fonctions = Object.values(objects).sort((a, b) => b.tri - a.tri);
+
+    this.activeIndemnite = {
       ...this.data,
+      fonctions: fonctions,
     };
   },
+  computed: {
+    ...mapState({
+      listeFonction: (state) => state.fonction.liste,
+      listeUnite: (state) => state.unite.liste,
+      listeCompte: (state) => state.compte.liste,
+      listeCategorie: (state) => state.ecritureCategorie.liste,
+    }),
+    parFonction() {
+      return this.activeIndemnite.par_fonction;
+    },
+  },
+  watch: {
+    parFonction: function (val) {
+      this.UPDATE_MODAL_SIZE(val ? 2 : 1);
+    },
+  },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    compte(compte) {
+      return `${compte?.numero} ${compte.designation}`;
+    },
+    fonction(id) {
+      return this.listeFonction.find((f) => f.id === id)?.nom;
+    },
+    updateSolde(index, e) {
+      this.activeIndemnite.fonctions[index].solde = e.target.value;
+    },
+    updateIndemnite(index, e) {
+      this.activeIndemnite.fonctions[index].indemnite = e.target.value;
+    },
     save() {
-      //Format back dates to SQL Format
-      if ((this.activeFonction.id || 0) === 0) {
+      const fonctions = this.activeIndemnite.fonctions
+        .filter((f) => f.solde != 0 || f.indemnite != 0)
+        .map((f) => ({
+          solde: f.solde,
+          indemnite: f.indemnite,
+          fonction_id: f.fonction_id,
+        }));
+
+      let indemnite = {
+        ...this.activeIndemnite,
+        fonctions,
+      };
+
+      if ((indemnite || 0) === 0) {
         this.$store
-          .dispatch('addFonction', this.activeFonction)
+          .dispatch('addIndemniteExercice', indemnite)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -106,7 +273,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateFonction', this.activeFonction)
+          .dispatch('updateIndemniteExercice', indemnite)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

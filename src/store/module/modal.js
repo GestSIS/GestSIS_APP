@@ -26,5 +26,8 @@ export default {
     [types.HIDE_MODAL](state) {
       state.modalVisible = false;
     },
+    [types.UPDATE_MODAL_SIZE](state, payload) {
+      state.modalSize = payload;
+    },
   },
 };
