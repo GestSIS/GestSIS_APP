@@ -99,16 +99,40 @@
             </select>
           </div>
           <!-- N° AVS -->
-          <div class="form-group">
-            <label for="m-sap-avs">N° AVS</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="{ 'is-invalid': errorsData['no_avs'] }"
-              id="m-sap-avs"
-              name="no_avs"
-              v-model="activeSapeur.no_avs"
-            />
+          <div class="row">
+            <div class="form-group col-6">
+              <label for="m-sap-avs">N° AVS</label>
+              <input
+                type="text"
+                class="form-control"
+                :class="{ 'is-invalid': errorsData['no_avs'] }"
+                id="m-sap-avs"
+                name="no_avs"
+                v-model="activeSapeur.no_avs"
+              />
+            </div>
+            <div class="col-6">
+              <label for="m-sap-cotisation_avs">Cotisation AVS</label
+              ><font-awesome-icon
+                class="ml-1"
+                v-tooltip.bottom="
+                  'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
+                "
+                :icon="['far', 'question-circle']"
+              />
+              <div class="custom-control custom-checkbox text-center col-6">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="m-sap-cotisation_avs"
+                  v-model="activeSapeur.cotisation_avs"
+                />
+                <label
+                  class="custom-control-label"
+                  for="m-sap-cotisation_avs"
+                ></label>
+              </div>
+            </div>
           </div>
           <!-- Email -->
           <div class="form-group">
