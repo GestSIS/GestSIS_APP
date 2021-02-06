@@ -68,15 +68,12 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'frais' }" class="nav-link internal-link">
+          <router-link
+            :to="{ name: 'comptabilite-compte' }"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon icon="calculator" />
             <span>Comptabilité</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/amendes" class="nav-link internal-link">
-            <font-awesome-icon icon="hand-holding-usd" />
-            <span>Amendes</span>
           </router-link>
         </li>
         <li class="nav-item">

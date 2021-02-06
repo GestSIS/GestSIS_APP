@@ -76,15 +76,31 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
+import store from '@/store/index';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
+async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
+  let loadComptes = store.dispatch('fetchComptes');
+  Promise.all([loadComptes]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'FraisTabCompte',
   components: {
     Vuetable,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   data() {
     return {

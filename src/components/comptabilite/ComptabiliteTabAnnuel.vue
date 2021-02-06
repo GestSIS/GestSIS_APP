@@ -57,16 +57,34 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import FraisEcritureDetails from '@/components/frais/FraisEcritureDetails';
+import store from '@/store/index';
+import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
+async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
+  let loadComptes = store.dispatch('fetchComptes');
+  let loadFrais = store.dispatch('fetchFraisTypes');
+  let loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  Promise.all([loadComptes, loadFrais, loadIndemnites]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'FraisTabAnnuel',
   components: {
     Vuetable,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {

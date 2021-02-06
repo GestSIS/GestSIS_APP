@@ -73,9 +73,53 @@ const router = new Router({
       component: () => import('@/pages/Interventions.vue'),
     },
     {
-      path: '/frais',
-      name: 'frais',
-      component: () => import('@/pages/Frais.vue'),
+      path: '/comptabilite',
+      name: 'comptabilite',
+      component: () => import('@/pages/Comptabilite.vue'),
+      children: [
+        {
+          path: '',
+          name: 'comptabilite-compte',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
+        },
+        {
+          path: 'comptes',
+          name: 'comptabilite-compte',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
+        },
+        {
+          path: 'exercices',
+          name: 'comptabilite-exercice',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabExercice.vue'),
+        },
+        {
+          path: 'interventions',
+          name: 'comptabilite-intervention',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabIntervention.vue'),
+        },
+        {
+          path: 'annuel',
+          name: 'comptabilite-annuel',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabAnnuel.vue'),
+        },
+        {
+          path: 'sapeurs',
+          name: 'comptabilite-sapeurs',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabSapeur.vue'),
+        },
+        {
+          path: 'amendes',
+          name: 'comptabilite-amendes',
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabAmendes.vue'),
+        },
+      ],
     },
     {
       path: '/controles-medicaux',
@@ -87,11 +131,6 @@ const router = new Router({
       name: 'controle-medical',
       props: true,
       component: () => import('@/pages/ControleMedical.vue'),
-    },
-    {
-      path: '/amendes/',
-      name: 'amendes',
-      component: () => import('@/pages/Amendes.vue'),
     },
     {
       path: '/configuration',

@@ -1,63 +1,47 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item">
-              <router-link tag="a" to="/">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Amendes</li>
-          </ol>
-        </nav>
-      </div>
-      <div class="col-md-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Liste des amendes</h3>
-            <button class="btn btn-primary" @click="generer">
-              Générer les amendes
+  <div class="row">
+    <div class="col-md-12">
+      <!-- /.card-header -->
+      <div class="card card-primary card-outline mb-5">
+        <div class="card-header d-flex justify-content-between">
+          <h3>Liste des amendes</h3>
+          <button class="btn btn-primary" @click="generer">
+            Générer les amendes
+          </button>
+        </div>
+        <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Chargement...</span>
+          </div>
+        </div>
+        <vuetable
+          v-show="!loading"
+          ref="vuetable_amendes_sapeurs"
+          :api-mode="false"
+          :fields="fields"
+          :css="css.table"
+          :data-manager="dataManager"
+          :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          no-data-template="Aucun amende à afficher"
+          :detail-row-component="detailRow"
+        >
+          <div slot="details" slot-scope="props" class="d-flex">
+            <button
+              class="btn btn-link border-0"
+              @click="toggleDetails(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="toggles[props.rowData.id] || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!(toggles[props.rowData.id] || false)"
+                :icon="['fas', 'angle-right']"
+              />
             </button>
           </div>
-          <div class="card-body d-flex justify-content-center" v-if="loading">
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Chargement...</span>
-            </div>
-          </div>
-          <vuetable
-            v-show="!loading"
-            ref="vuetable_amendes_sapeurs"
-            :api-mode="false"
-            :fields="fields"
-            :css="css.table"
-            :data-manager="dataManager"
-            :row-class="onRowClass"
-            detail-row-class="m-td-0"
-            no-data-template="Aucun amende à afficher"
-            :detail-row-component="detailRow"
-          >
-            <div slot="details" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
-            <!-- <div slot="actions" slot-scope="props" class="d-flex">
+          <!-- <div slot="actions" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-outline-primary border-0"
                 v-if="props.rowData.statut === 2"
@@ -66,8 +50,7 @@
                 <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
               </button>
             </div> -->
-          </vuetable>
-        </div>
+        </vuetable>
       </div>
     </div>
   </div>
@@ -75,7 +58,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import AmendesSapeurDetails from '@/components/amende/AmendesSapeurDetails';
+import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
 import ComptabiliteService from '@/services/ComptabiliteService';
 
 import Vuetable from 'vuetable-2';
@@ -83,8 +66,6 @@ import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 import store from '@/store/index';
-
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
@@ -100,7 +81,6 @@ export default {
   name: 'amendes',
   components: {
     Vuetable,
-    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);

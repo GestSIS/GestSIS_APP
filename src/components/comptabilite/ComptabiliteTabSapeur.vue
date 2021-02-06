@@ -57,7 +57,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import FraisEcritureDetails from '@/components/frais/FraisEcritureDetails';
+import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ComptabiliteService from '@/services/ComptabiliteService';
 
 import Vuetable from 'vuetable-2';

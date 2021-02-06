@@ -42,37 +42,37 @@ export default {
   props: {
     rowData: {
       type: Object,
-      required: true
+      required: true,
     },
     rowIndex: {
-      type: Number
+      type: Number,
     },
     options: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       data: {},
       loading: true,
       columns: [],
-      ecritures: []
+      ecritures: [],
     };
   },
   mounted() {
     this.loading = true;
     this.columns = this.rowData.columns;
-    this.rowData.getEcritures().then(ecritures => {
+    this.rowData.getEcritures().then((ecritures) => {
       this.ecritures = ecritures;
       this.loading = false;
     });
   },
   methods: {
     computeColumn(column, ecriture) {
-      let formatter = column.formatter || (a => a);
+      let formatter = column.formatter || ((a) => a);
       return formatter(ecriture[column.field]);
-    }
-  }
+    },
+  },
 };
 </script>
 
