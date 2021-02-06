@@ -16,8 +16,6 @@ export default {
         return SisParamService.getParams().then((data) =>
           commit(types.UPDATE_SIS_PARAMS, data)
         );
-      } else {
-        console.log('ts');
       }
     },
     updateSisParams({ commit }, params) {

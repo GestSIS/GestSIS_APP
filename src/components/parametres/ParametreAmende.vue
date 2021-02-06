@@ -13,7 +13,7 @@
           <label for="compte_id">Compte</label>
           <select
             id="compte_id"
-            v-model="compte_id"
+            v-model="params.compte_id"
             class="custom-select"
             :class="{ 'is-invalid': errors['compte_id_id'] }"
           >
@@ -23,10 +23,10 @@
           </select>
         </div>
         <div class="form-group col-6">
-          <label for="ecriture_categorie_id">Ecriture catégorie</label>
+          <label for="ecriture_categorie_id">Catégorie d'écriture</label>
           <select
             id="ecriture_categorie_id"
-            v-model="ecriture_categorie_id"
+            v-model="params.ecriture_categorie_id"
             class="custom-select"
             :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
           >
@@ -45,14 +45,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(a, index) in amendes" :key="a.id">
+          <tr v-for="(a, index) in params.amendes" :key="a.id">
             <td>{{ index + 1 }}</td>
             <td>
               <input
                 class="form-control form-control-sm"
                 type="text"
                 @change="(e) => updateAmende(index, e)"
-                :value="amendes[index].montant"
+                :value="params.amendes[index].montant"
               />
             </td>
             <td>
@@ -107,16 +107,20 @@ export default {
   data() {
     return {
       errors: {},
-      compte_id: null,
-      ecriture_categorie_id: null,
-      amendes: [],
+      params: {
+        compte_id: null,
+        ecriture_categorie_id: null,
+        amendes: [],
+      },
     };
   },
   mounted() {
     if (this.listeAmende.length > 0) {
-      this.compte_id = this.listeAmende[0]?.compte_id;
-      this.ecriture_categorie_id = this.listeAmende[0]?.ecriture_categorie_id;
-      this.amendes = this.listeAmende.map((a) => ({ montant: a.montant }));
+      this.params.compte_id = this.listeAmende[0]?.compte_id;
+      this.params.ecriture_categorie_id = this.listeAmende[0]?.ecriture_categorie_id;
+      this.params.amendes = this.listeAmende.map((a) => ({
+        montant: a.montant,
+      }));
     }
   },
   computed: {
@@ -129,26 +133,22 @@ export default {
   },
   methods: {
     removeAmende(index) {
-      this.amendes.splice(index, 1);
-      this.amendes = this.amendes;
+      this.params.amendes.splice(index, 1);
+      this.params.amendes = this.params.amendes;
     },
     updateAmende(index, e) {
-      this.amendes[index].montant = e.target.value;
+      this.params.amendes[index].montant = e.target.value;
     },
     addAmende() {
-      this.amendes = [...this.amendes, { montant: 0 }];
+      this.params.amendes = [...this.params.amendes, { montant: 0 }];
     },
     compte(compte) {
       return `${compte.numero} ${compte.designation}`;
     },
     save() {
       this.$store
-        .dispatch('updateAmendes', {
-          compte_id: this.compte_id,
-          ecriture_categorie_id: this.ecriture_categorie_id,
-          amendes: this.amendes,
-        })
-        .then((d) => (this.errors = {}))
+        .dispatch('updateAmendes', this.params)
+        .then(() => (this.errors = {}))
         .catch((e) => (this.errors = { ...e }));
     },
   },

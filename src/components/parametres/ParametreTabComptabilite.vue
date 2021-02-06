@@ -118,6 +118,7 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
   const loadCategories = store.dispatch('fetchEcritureCategories');
+  const loadAvsParams = store.dispatch('fetchAvsParams');
 
   Promise.all([
     loadAmendes,
@@ -127,6 +128,7 @@ async function loadData(_, next) {
     loadComptes,
     loadUnites,
     loadCategories,
+    loadAvsParams,
   ]).then(() => {
     next();
   });
