@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
@@ -38,43 +38,6 @@
               class="form-control"
               :class="{ 'is-invalid': errors['taux_ac'] }"
               id="taux_ac"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="card card-primary card-outline">
-        <!-- /.card-header -->
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Facturation</h3>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="saveFacturation"
-          >
-            Enregistrer
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="iban">IBAN du SIS</label>
-            <input
-              type="text"
-              v-model="activeIndemnite.iban"
-              class="form-control"
-              :class="{ 'is-invalid': errors['iban'] }"
-              id="iban"
-            />
-          </div>
-          <div class="form-group">
-            <label for="bic">BIC</label>
-            <input
-              type="text"
-              v-model="activeIndemnite.bic"
-              class="form-control"
-              :class="{ 'is-invalid': errors['bic'] }"
-              id="bic"
             />
           </div>
         </div>

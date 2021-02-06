@@ -70,7 +70,15 @@
             href="#"
             @click.prevent="tab = 'comptabilite'"
           >
-            AVS et facturation
+            AVS
+          </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'amende' }"
+            href="#"
+            @click.prevent="tab = 'amende'"
+          >
+            Amende
           </a>
         </nav>
       </div>
@@ -85,6 +93,7 @@
         v-if="tab === 'indemnite-intervention'"
       />
       <parametre-avs v-if="tab === 'comptabilite'" />
+      <parametre-amende v-if="tab === 'amende'" />
     </div>
   </div>
 </template>
@@ -99,8 +108,10 @@ import ParametreIndemniteAnnuel from './ParametreIndemniteAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
 import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
 import ParametreAvs from './ParametreAvs.vue';
+import ParametreAmende from './ParametreAmende.vue';
 
 async function loadData(_, next) {
+  const loadAmendes = store.dispatch('fetchAmendes');
   const loadFrais = store.dispatch('fetchFraisTypes');
   const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
   const loadFonctions = store.dispatch('fetchFonctions');
@@ -109,6 +120,7 @@ async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchEcritureCategories');
 
   Promise.all([
+    loadAmendes,
     loadFrais,
     loadIndemnites,
     loadFonctions,
@@ -130,6 +142,7 @@ export default {
     ParametreIndemniteExercice,
     ParametreIndemniteIntervention,
     ParametreAvs,
+    ParametreAmende,
   },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);

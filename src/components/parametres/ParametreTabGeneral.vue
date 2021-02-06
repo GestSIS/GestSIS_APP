@@ -113,6 +113,28 @@
               />
             </div>
           </div>
+          <div class="row">
+            <div class="col-6 form-group">
+              <label for="iban">Iban</label>
+              <input
+                type="text"
+                v-model="sisParam.iban"
+                class="form-control"
+                :class="{ 'is-invalid': errors['iban'] }"
+                id="iban"
+              />
+            </div>
+            <div class="col-6 form-group">
+              <label for="bic">BIC</label>
+              <input
+                type="text"
+                v-model="sisParam.bic"
+                class="form-control"
+                :class="{ 'is-invalid': errors['bic'] }"
+                id="bic"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -124,6 +146,21 @@
           <h3 class="card-title">TODO</h3>
         </div>
         <div class="card-body">
+          <div>
+            <h5>Paramètre SIS</h5>
+            <ul>
+              <li>Nom</li>
+              <li>District</li>
+              <li>N° Département</li>
+              <li>Adresse</li>
+              <li>Localite</li>
+              <li>Téléphone</li>
+              <li>Email</li>
+              <li>Commandant</li>
+              <li>Iban</li>
+              <li>BIC</li>
+            </ul>
+          </div>
           <div>
             <h5>Paramètres Statique pour admin du système</h5>
             <ul>

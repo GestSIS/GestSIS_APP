@@ -90,7 +90,7 @@ async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
   let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadAmendes = store.dispatch('fetchAmendes');
+  let loadAmendes = store.dispatch('fetchAmendesExerciceComptable');
   Promise.all([loadSapeurs, loadAmendes]).then(() => {
     next();
   });
@@ -111,7 +111,7 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchAmendes').then(() => {
+      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
         this.loading = false;
         this.$refs.vuetable_amendes_sapeurs.setData(this.filteredAmendes);
       });
@@ -180,7 +180,7 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      listeAmendes: (state) => state.comptabilite.amendes,
+      listeAmendes: (state) => state.comptabilite.ecritures.amendes,
     }),
     ...mapGetters(['currentExerciceComptableId', 'getSapeur']),
     filteredAmendes() {

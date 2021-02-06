@@ -11,11 +11,9 @@ export default {
     frais: {
       annuels: [],
     },
-    amendes: [],
-    listeFraisAnnuels: [],
-    listeIndemnitesAnnuels: [],
     ecritures: {
       annuels: [],
+      amendes: [],
     },
     active: {
       compteId: null,
@@ -39,7 +37,7 @@ export default {
       state.ecritures.annuels = [...payload];
     },
     [types.UPDATE_ECRITURES_AMENDES](state, payload) {
-      state.amendes = payload;
+      state.ecritures.amendes = payload;
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
       state.active.ecritures = payload;
@@ -135,7 +133,7 @@ export default {
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
     },
-    fetchAmendes({ commit, getters }) {
+    fetchAmendesExerciceComptable({ commit, getters }) {
       return ComptabiliteService.getAmendesForExerciceComptable(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
