@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/"> Accueil </router-link>
+            <router-link tag="a" to="/">Accueil</router-link>
           </li>
           <li class="breadcrumb-item">
             <router-link tag="a" to="/interventions">

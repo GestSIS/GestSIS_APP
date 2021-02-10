@@ -43,8 +43,7 @@
           <div slot="actions" slot-scope="props" class="d-flex">
             <button
               class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 3"
-              @click="imputerExercice(props.rowData.id)"
+              @click="regenererSapeur(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -243,6 +242,9 @@ export default {
             columns: this.ecritureColumns,
           }))
       );
+    },
+    regenererSapeur() {
+      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });

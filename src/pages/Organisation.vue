@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/"> Accueil </router-link>
+            <router-link tag="a" to="/">Accueil</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Organisation
@@ -22,7 +22,7 @@
             <h3>Groupes</h3>
           </div>
           <div class="card-body">
-            <tree :tree="tree" :_types="types" />
+            <tree :tree="groupeTree" :_types="types" />
           </div>
         </div>
       </div>
@@ -81,6 +81,9 @@ export default {
         groupe: {
           icon: ['fas', 'sitemap'],
         },
+        groupeInter: {
+          icon: ['fas', 'sitemap'],
+        },
         fonction: {
           icon: ['fas', 'medal'],
         },
@@ -119,163 +122,6 @@ export default {
           label: 'Groupes',
           children: () => this.groupeTree,
         },
-        // {
-        //   id: 2,
-        //   label: 'Fonctions',
-        //   type: 'fonction',
-        //   children: [
-        //     {
-        //       label: "Organisation d'alarmes",
-        //       type: 'groupe',
-        //       children: [
-        //         {
-        //           type: 'homme',
-        //           label: 'Georges',
-        //         },
-        //         {
-        //           type: 'femme',
-        //           label: 'Louisa',
-        //         },
-        //       ],
-        //     },
-        //     {
-        //       id: 2,
-        //       label: 'Good service (disabled node with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       disabled: true,
-        //       children: [
-        //         { label: 'Prompt attention' },
-        //         { label: 'Professional waiter' },
-        //       ],
-        //     },
-        //     {
-        //       id: 3,
-        //       label: 'Pleasant surroundings (with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       children: [
-        //         {
-        //           label: 'Happy atmosphere (with image)',
-        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-        //         },
-        //         { label: 'Good table presentation' },
-        //         { label: 'Pleasing decor' },
-        //       ],
-        //     },
-        //   ],
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Sans Fonctions',
-        //   type: 'fonction',
-        //   children: [
-        //     {
-        //       label: "Organisation d'alarmes",
-        //       type: 'groupe',
-        //       children: [
-        //         {
-        //           type: 'homme',
-        //           label: 'Georges',
-        //         },
-        //         {
-        //           type: 'femme',
-        //           label: 'Louisa',
-        //         },
-        //       ],
-        //     },
-        //     {
-        //       id: 2,
-        //       label: 'Good service (disabled node with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       disabled: true,
-        //       children: [
-        //         { label: 'Prompt attention' },
-        //         { label: 'Professional waiter' },
-        //       ],
-        //     },
-        //     {
-        //       id: 3,
-        //       label: 'Pleasant surroundings (with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       children: [
-        //         {
-        //           label: 'Happy atmosphere (with image)',
-        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-        //         },
-        //         { label: 'Good table presentation' },
-        //         { label: 'Pleasing decor' },
-        //       ],
-        //     },
-        //   ],
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Cours suivis',
-        //   type: 'cours',
-        //   children: [
-        //     {
-        //       label: "Organisation d'alarmes",
-        //       type: 'groupe',
-        //       children: [
-        //         {
-        //           type: 'homme',
-        //           label: 'Georges',
-        //         },
-        //         {
-        //           type: 'femme',
-        //           label: 'Louisa',
-        //         },
-        //       ],
-        //     },
-        //     {
-        //       id: 2,
-        //       label: 'Good service (disabled node with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       disabled: true,
-        //       children: [
-        //         { label: 'Prompt attention' },
-        //         { label: 'Professional waiter' },
-        //       ],
-        //     },
-        //     {
-        //       id: 3,
-        //       label: 'Pleasant surroundings (with icon)',
-        //       icon: ['fas', 'sitemap'],
-        //       children: [
-        //         {
-        //           label: 'Happy atmosphere (with image)',
-        //           img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-        //         },
-        //         { label: 'Good table presentation' },
-        //         { label: 'Pleasing decor' },
-        //       ],
-        //     },
-        //   ],
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Grade actuel',
-        //   type: 'grade',
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Alphabétique',
-        //   type: 'alphabetique',
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Date de naissance',
-        //   type: 'date',
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Civilité',
-        //   type: 'civilite',
-        // },
-        // {
-        //   id: 2,
-        //   label: 'Exercices',
-        //   type: 'exercice',
-        // },
       ],
     };
   },
@@ -301,7 +147,7 @@ export default {
       };
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
-        type: g.type == 0 ? 'groupe' : 'groupe-inter',
+        type: g.type == 0 ? 'groupe' : 'groupeInter',
         id: `g-${g.id}`,
         children: () => [
           ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),

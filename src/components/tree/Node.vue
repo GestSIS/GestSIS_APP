@@ -2,10 +2,11 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      @click="() => expand(data)"
+      @dblclick="() => expand(data)"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
+        @click="() => expand(data)"
         v-if="computedChildren.length > 0"
         aria-hidden="true"
         role="presentation"
@@ -25,7 +26,7 @@
           class="tree-node-icon"
           :color="data.color"
         />
-        <div>{{ data.label }}</div>
+        <div class="user-select-none">{{ data.label }}</div>
       </div>
     </div>
     <transition-expand>

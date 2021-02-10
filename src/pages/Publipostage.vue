@@ -8,7 +8,7 @@
               <router-link tag="a" to="/">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-              Statistique
+              Publipostage
             </li>
           </ol>
         </nav>
@@ -22,24 +22,10 @@
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>Stats</h3>
+            <h3>Publipostage</h3>
           </div>
           <div class="card-body">
-            <h4>Exercices</h4>
-            <ul>
-              <li>Nb exercices par types</li>
-              <li>Présences et absences par sapeur</li>
-            </ul>
-            <h4>Intervention</h4>
-            <ul>
-              <li>Nb interventions par type</li>
-              <li>Nb heures par type intervention</li>
-              <li>Statistiques de présences sur intervention</li>
-            </ul>
-            <h4>Frais</h4>
-            <ul>
-              <li>Répartition des frais</li>
-            </ul>
+            <h4>TODO</h4>
           </div>
         </div>
       </div>
@@ -51,7 +37,7 @@
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 export default {
-  name: 'statistiques',
+  name: 'publipostage',
   components: {
     ExerciceComptable,
   },

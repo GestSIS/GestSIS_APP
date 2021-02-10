@@ -122,6 +122,16 @@ const router = new Router({
       ],
     },
     {
+      path: '/Publipostage',
+      name: 'publipostage',
+      component: () => import('@/pages/Publipostage.vue'),
+    },
+    {
+      path: '/statistique',
+      name: 'statistique',
+      component: () => import('@/pages/Statistique.vue'),
+    },
+    {
       path: '/controles-medicaux',
       name: 'controles-medicaux',
       component: () => import('@/pages/ControlesMedicaux.vue'),
@@ -186,11 +196,6 @@ const router = new Router({
             import('@/components/parametres/ParametreTabDroits.vue'),
         },
       ],
-    },
-    {
-      path: '/statistique',
-      name: 'statistique',
-      component: () => import('@/pages/Statistique.vue'),
     },
     {
       path: '/about',

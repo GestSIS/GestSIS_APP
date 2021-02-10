@@ -7,10 +7,11 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="d-inline-flex justify-content-between">
-        <div>1. Type de frais</div>
-        <div>2. Final</div>
-      </div>
+      <!-- fieldsets -->
+      <multi-step
+        :steps="['Type de frais', 'Résultat']"
+        :activeIndex="phase - 1"
+      />
       <div v-if="phase === 1" class="row">
         <div
           :class="{
@@ -18,7 +19,11 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table
+            class="table table-sm"
+            @keydown.down="onKeyDown"
+            @keydown.up="onKeyUp"
+          >
             <thead>
               <tr>
                 <th>Designation</th>
@@ -150,9 +155,11 @@
 
 <script>
 import { mapMutations, mapState, mapGetters } from 'vuex';
+import MultiStep from '@/components/MultiStep.vue';
 
 export default {
   name: 'ModalImputerIntervention',
+  components: { MultiStep },
   props: ['data'],
   data() {
     return {

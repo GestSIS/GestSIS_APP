@@ -43,10 +43,17 @@ export default {
           iban: this.activeSapeur.iban,
         })
         .then(() => {
-          // console.log('Save sapeur Success')
+          this.$notify({
+            group: 'succes',
+            title: 'Modification enregistrée',
+          });
         })
         .catch(() => {
-          // console.log('Save sapeur Error')
+          this.$notify({
+            group: 'erreur',
+            title: 'Erreur lors la sauvegarde',
+            text: 'Vérifier que les dates sont valides',
+          });
         });
     },
   },

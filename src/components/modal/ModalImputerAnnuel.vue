@@ -1,12 +1,19 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Imputer l'intervention</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        Imputer indemnités et frais annuels
+      </h5>
       <button type="button" class="close" @click="cancel">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
+      <!--progress bar-->
+      <multi-step
+        :steps="['Type de frais', 'Résultat']"
+        :activeIndex="phase - 1"
+      />
       <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
         <button type="button" class="close" data-dismiss="alert">
           &times;
@@ -19,13 +26,13 @@
           cliquer sur le bouton <strong>Imputer</strong> en bas de la fenêtre.
         </p>
       </div>
-      <div class="d-inline-flex justify-content-between">
-        <div>1. Type de frais</div>
-        <div>2. Final</div>
-      </div>
       <div v-if="phase === 1" class="row">
         <div class="col-12">
-          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table
+            class="table table-sm"
+            @keydown.down="onKeyDown"
+            @keydown.up="onKeyUp"
+          >
             <thead>
               <tr>
                 <th>Fonction</th>
@@ -110,9 +117,11 @@
 
 <script>
 import { mapMutations, mapState, mapGetters } from 'vuex';
+import MultiStep from '@/components/MultiStep.vue';
 
 export default {
   name: 'ModalImputerAnnuel',
+  components: { MultiStep },
   props: ['data'],
   data() {
     return {
