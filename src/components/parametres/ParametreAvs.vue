@@ -31,13 +31,25 @@
             />
           </div>
           <div class="form-group">
-            <label for="franchise">Franchise AVS</label>
+            <label for="franchise_avs">Franchise AVS</label>
             <input
               type="text"
-              v-model="params.franchise"
+              v-model="params.franchise_avs"
               class="form-control"
-              :class="{ 'is-invalid': errors['franchise'] }"
-              id="franchise"
+              :class="{ 'is-invalid': errors['franchise_avs'] }"
+              id="franchise_avs"
+            />
+          </div>
+          <div class="form-group">
+            <label for="franchise_imposition"
+              >Franchise imposition fédéral</label
+            >
+            <input
+              type="text"
+              v-model="params.franchise_imposition"
+              class="form-control"
+              :class="{ 'is-invalid': errors['franchise_imposition'] }"
+              id="franchise_imposition"
             />
           </div>
           <div class="form-group">

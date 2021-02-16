@@ -5,9 +5,11 @@
       <div class="card card-primary card-outline mb-3">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <div class="card-title">
-            <h3 class="card-title">Comptes</h3>
-            <div class="dropdown">
+          <h3 class="card-title">Décomptes</h3>
+          <button @click.prevent="generer" class="btn btn-primary">
+            Générer
+          </button>
+          <!-- <div class="dropdown">
               <button
                 class="ml-1 btn btn-outline-secondary dropdown-toggle"
                 type="button"
@@ -29,45 +31,43 @@
                   {{ c | compte }}
                 </button>
               </div>
-            </div>
-          </div>
+            </div> -->
           <!--          <button type="button" class="btn btn-primary" @click="manageComptes">-->
           <!--            Gestion des comptes-->
           <!--          </button>-->
         </div>
-        <!--        <div class="card-body">-->
-        <!--          <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">-->
-        <!--            <thead>-->
-        <!--              <tr>-->
-        <!--                <th>Nom Prénom</th>-->
-        <!--                <th>Date</th>-->
-        <!--                <th>Heure</th>-->
-        <!--                <th>Designation</th>-->
-        <!--                <th>Type de frais</th>-->
-        <!--                <th class="text-center">Actions</th>-->
-        <!--              </tr>-->
-        <!--            </thead>-->
-        <!--            <tbody></tbody>-->
-        <!--          </table>-->
-        <!--        </div>-->
         <vuetable
           v-show="!loading"
-          ref="vuetable_ecriture_comptes"
+          ref="vuetable_ecriture_decomptes"
           :api-mode="false"
           :fields="fields"
           :css="css.table"
           no-data-template="Aucune écriture à afficher"
           :data-manager="dataManager"
         >
-          <!--          <div slot="actions" slot-scope="props" class="d-flex">-->
-          <!--              <button-->
-          <!--                class="btn btn-outline-primary border-0"-->
-          <!--                v-if="props.rowData.statut === 3"-->
-          <!--                @click="imputerExercice(props.rowData.id)"-->
-          <!--              >-->
-          <!--                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />-->
-          <!--              </button>-->
-          <!--          </div>-->
+          <div
+            slot="deduction"
+            slot-scope="props"
+            class="custom-control custom-checkbox"
+          >
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="deduction"
+              :checked="props.rowData.deduction"
+              disabled
+            />
+            <label class="custom-control-label" for="deduction"></label>
+          </div>
+          <!-- <div slot="actions" slot-scope="props" class="d-flex">
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 3"
+              @click="imputerExercice(props.rowData.id)"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
+          </div> -->
         </vuetable>
       </div>
     </div>
@@ -85,14 +85,14 @@ import _ from 'lodash';
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
-  let loadComptes = store.dispatch('fetchComptes');
-  Promise.all([loadComptes]).then(() => {
+  let loadDecomptes = store.dispatch('fetchDecomptes');
+  Promise.all([loadDecomptes]).then(() => {
     next();
   });
 }
 
 export default {
-  name: 'FraisTabCompte',
+  name: 'FraisTabDecompte',
   components: {
     Vuetable,
   },
@@ -114,14 +114,19 @@ export default {
           sortField: 'designation',
         },
         {
-          title: 'Sapeur',
-          name: 'sapeur',
-          sortField: 'sapeur',
+          title: 'Déductions',
+          name: 'deduction',
+          sortField: 'deduction',
         },
         {
-          title: 'Total',
-          name: 'total',
-          sortField: 'total',
+          title: 'Déductions AVS',
+          name: 'avs_total',
+          sortField: 'avs_total',
+        },
+        {
+          title: 'Déductions AC',
+          name: 'ac_total',
+          sortField: 'ac_total',
         },
         {
           title: 'Actions',
@@ -132,65 +137,31 @@ export default {
   },
   computed: {
     ...mapState({
-      ecritures: (state) => state.imputation.active.ecritures,
-      activeCompteId: (state) => state.imputation.active.compteId,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       listeSapeur: (state) => state.sapeur.liste,
-      listeCompte: (state) => state.compte.liste,
+      listeDecompte: (state) => state.decompte.liste,
     }),
-    ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
+    ...mapGetters(['getSapeur', 'getFonction']),
   },
   mounted() {
     this.loading = true;
-
     if (this.listeSapeur.length === 0) {
       this.$store.dispatch('fetchListeSapeur');
     }
 
-    if (this.activeExerciceComptableId !== null) {
-      this.init();
-    } else {
-      this.$store.dispatch('fetchExercicesComptables');
-    }
+    this.init();
   },
   watch: {
     activeExerciceComptableId() {
       this.loading = true;
-      this.init();
-    },
-    listeCompte(newOne, oldOne) {
-      if (oldOne.length === 0) {
+      store.dispatch('fetchDecomptes').then(() => {
         this.init();
-      }
+      });
     },
   },
   methods: {
-    manageCompte() {
-      //TODO: Manage comptes
-    },
-    selectCompte(id) {
-      this.loading = true;
-      this.$store.dispatch('selectActiveCompte', id).then(this.updateTable);
-      this.dropdown = false;
-    },
     init() {
-      if (this.activeCompteId === null && this.listeCompte.length > 0) {
-        this.$store
-          .dispatch('selectActiveCompte', this.listeCompte[0].id)
-          .then(() => {
-            this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
-            this.loading = false;
-          });
-      } else if (this.activeCompteId !== null) {
-        this.$store.dispatch('fetchEcritureComptes').then(() => {
-          this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
-          this.loading = false;
-        });
-      }
-    },
-    updateTable() {
-      this.loading = true;
-      this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
+      this.$refs.vuetable_ecriture_decomptes.setData(this.computeData());
       this.loading = false;
     },
     dataManager(sortOrder) {
@@ -211,13 +182,7 @@ export default {
       };
     },
     computeData() {
-      let svm = this;
-      return this.ecritures.map((e) => ({
-        ...e,
-        sapeur: [svm.getSapeur(e.sapeur_id)].map(
-          (s) => `${s.nom} ${s.prenom}`
-        )[0],
-      }));
+      return this.listeDecompte;
     },
     ...mapMutations(['SHOW_MODAL']),
     // editEcriture() {

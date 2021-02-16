@@ -23,6 +23,15 @@
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
+            :to="{ name: 'comptabilite-decompte' }"
+          >
+            Décomptes
+          </router-link>
+          <router-link
+            tag="a"
+            class="nav-item nav-link"
+            role="tab"
+            exact-active-class="active"
             :to="{ name: 'comptabilite-compte' }"
           >
             Comptes

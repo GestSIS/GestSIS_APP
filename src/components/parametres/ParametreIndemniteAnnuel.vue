@@ -87,7 +87,7 @@ export default {
   computed: {
     ...mapState({
       listeIndemniteAnnuel: (state) =>
-        state.comptabilite.indemnites.annuels.sort((a, b) => a.tri - b.tri),
+        state.imputation.indemnites.annuels.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,

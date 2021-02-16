@@ -88,7 +88,7 @@ export default {
   computed: {
     ...mapState({
       listeFraisAnnuel: (state) =>
-        state.comptabilite.frais.annuels.sort((a, b) => a.tri - b.tri),
+        state.imputation.frais.annuels.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,

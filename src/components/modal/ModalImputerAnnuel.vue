@@ -132,8 +132,8 @@ export default {
   },
   computed: {
     ...mapState({
-      fraisAnnuel: (state) => state.comptabilite.frais.annuels,
-      indemnitesAnnuel: (state) => state.comptabilite.indemnites.annuels,
+      fraisAnnuel: (state) => state.imputation.frais.annuels,
+      indemnitesAnnuel: (state) => state.imputation.indemnites.annuels,
     }),
     ...mapGetters(['getFonction', 'getCompte', 'getSapeur']),
     listDisplay() {

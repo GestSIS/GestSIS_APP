@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ComptabiliteService from '../../services/ComptabiliteService';
+import ImputationService from '../../services/ImputationService';
 
 export default {
   state: {
@@ -111,7 +111,7 @@ export default {
       return dispatch('fetchEcritureComptes');
     },
     fetchEcritureComptes({ state, getters, commit }) {
-      return ComptabiliteService.getEcritureForCompte(
+      return ImputationService.getEcritureForCompte(
         state.active.compteId,
         getters.currentExerciceComptableId
       ).then((data) => {
@@ -119,27 +119,27 @@ export default {
       });
     },
     fetchIndemnitesTypes({ commit }) {
-      return ComptabiliteService.getIndemniteTypes().then((data) =>
+      return ImputationService.getIndemniteTypes().then((data) =>
         commit(types.UPDATE_INDEMNITES_TYPES, data)
       );
     },
     fetchFraisTypes({ commit }) {
-      return ComptabiliteService.getFraisTypes().then((data) =>
+      return ImputationService.getFraisTypes().then((data) =>
         commit(types.UPDATE_FRAIS_TYPES, data)
       );
     },
     fetchEcrituresAnnuels({ commit, getters }) {
-      return ComptabiliteService.getEcrituresAnnuelsForExerciceComptable(
+      return ImputationService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, data));
     },
     fetchAmendesExerciceComptable({ commit, getters }) {
-      return ComptabiliteService.getAmendesForExerciceComptable(
+      return ImputationService.getAmendesForExerciceComptable(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
     imputerExercice({ commit }, payload) {
-      return ComptabiliteService.imputerExercice(
+      return ImputationService.imputerExercice(
         payload.exercice_id,
         payload
       ).then((data) => {
@@ -151,7 +151,7 @@ export default {
       });
     },
     imputerIntervention({ commit }, payload) {
-      return ComptabiliteService.imputerIntervention(
+      return ImputationService.imputerIntervention(
         payload.intervention_id,
         payload
       ).then((data) => {
@@ -163,7 +163,7 @@ export default {
       });
     },
     imputerAnnuel({ commit, getters }) {
-      return ComptabiliteService.imputerAnnuel(
+      return ImputationService.imputerAnnuel(
         getters.currentExerciceComptableId
       ).then((data) => {
         commit(types.UPDATE_ECRITURES_ANNUELS_LISTE, [
@@ -174,7 +174,7 @@ export default {
       });
     },
     genererAmendesAnnuels({ commit }, exerciceComptableId) {
-      return ComptabiliteService.genererAmendesAnnuels(
+      return ImputationService.genererAmendesAnnuels(
         exerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
@@ -182,7 +182,7 @@ export default {
       { commit },
       { exerciceComptableId, sapeurId, tarifs }
     ) {
-      return ComptabiliteService.genererAmendesAnnuels(
+      return ImputationService.genererAmendesAnnuels(
         exerciceComptableId,
         sapeurId,
         tarifs
@@ -193,55 +193,49 @@ export default {
         ();
     },
     addFraisAnnuel({ commit }, frais) {
-      return ComptabiliteService.addFraisAnnuel(frais).then((data) => {
+      return ImputationService.addFraisAnnuel(frais).then((data) => {
         commit(types.ADD_FRAIS_ANNUEL, data);
         return data;
       });
     },
     updateFraisAnnuel({ commit }, frais) {
-      return ComptabiliteService.updateFraisAnnuel(frais).then((data) => {
+      return ImputationService.updateFraisAnnuel(frais).then((data) => {
         commit(types.UPDATE_FRAIS_ANNUEL, data);
         return data;
       });
     },
     removeFraisAnnuel({ commit }, frais) {
-      return ComptabiliteService.removeFraisAnnuel(frais).then((data) => {
+      return ImputationService.removeFraisAnnuel(frais).then((data) => {
         commit(types.REMOVE_FRAIS_ANNUEL, data);
         return data;
       });
     },
     addIndemniteAnnuel({ commit }, indemnite) {
-      return ComptabiliteService.addIndemniteAnnuel(indemnite).then((data) => {
+      return ImputationService.addIndemniteAnnuel(indemnite).then((data) => {
         commit(types.ADD_INDEMNITE_ANNUEL, data);
         return data;
       });
     },
     updateIndemniteAnnuel({ commit }, indemnite) {
-      return ComptabiliteService.updateIndemniteAnnuel(indemnite).then(
-        (data) => {
-          commit(types.UPDATE_INDEMNITE_ANNUEL, data);
-          return data;
-        }
-      );
+      return ImputationService.updateIndemniteAnnuel(indemnite).then((data) => {
+        commit(types.UPDATE_INDEMNITE_ANNUEL, data);
+        return data;
+      });
     },
     removeIndemniteAnnuel({ commit }, indemnite) {
-      return ComptabiliteService.removeIndemniteAnnuel(indemnite).then(
-        (data) => {
-          commit(types.REMOVE_INDEMNITE_ANNUEL, data);
-          return data;
-        }
-      );
+      return ImputationService.removeIndemniteAnnuel(indemnite).then((data) => {
+        commit(types.REMOVE_INDEMNITE_ANNUEL, data);
+        return data;
+      });
     },
     addIndemniteExercice({ commit }, indemnite) {
-      return ComptabiliteService.addIndemniteExercice(indemnite).then(
-        (data) => {
-          commit(types.ADD_INDEMNITE_EXERCICE, data);
-          return data;
-        }
-      );
+      return ImputationService.addIndemniteExercice(indemnite).then((data) => {
+        commit(types.ADD_INDEMNITE_EXERCICE, data);
+        return data;
+      });
     },
     updateIndemniteExercice({ commit }, indemnite) {
-      return ComptabiliteService.updateIndemniteExercice(indemnite).then(
+      return ImputationService.updateIndemniteExercice(indemnite).then(
         (data) => {
           commit(types.UPDATE_INDEMNITE_EXERCICE, data);
           return data;
@@ -249,7 +243,7 @@ export default {
       );
     },
     removeIndemniteExercice({ commit }, indemnite) {
-      return ComptabiliteService.removeIndemniteExercice(indemnite).then(
+      return ImputationService.removeIndemniteExercice(indemnite).then(
         (data) => {
           commit(types.REMOVE_INDEMNITE_EXERCICE, data);
           return data;
@@ -257,7 +251,7 @@ export default {
       );
     },
     addIndemniteIntervention({ commit }, indemnite) {
-      return ComptabiliteService.addIndemniteIntervention(indemnite).then(
+      return ImputationService.addIndemniteIntervention(indemnite).then(
         (data) => {
           commit(types.ADD_INDEMNITE_INTERVENTION, data);
           return data;
@@ -265,7 +259,7 @@ export default {
       );
     },
     updateIndemniteIntervention({ commit }, indemnite) {
-      return ComptabiliteService.updateIndemniteIntervention(indemnite).then(
+      return ImputationService.updateIndemniteIntervention(indemnite).then(
         (data) => {
           commit(types.UPDATE_INDEMNITE_INTERVENTION, data);
           return data;
@@ -273,7 +267,7 @@ export default {
       );
     },
     removeIndemniteIntervention({ commit }, indemnite) {
-      return ComptabiliteService.removeIndemniteIntervention(indemnite).then(
+      return ImputationService.removeIndemniteIntervention(indemnite).then(
         (data) => {
           commit(types.REMOVE_INDEMNITE_INTERVENTION, data);
           return data;

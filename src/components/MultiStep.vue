@@ -25,6 +25,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.multisteps-form__panel[data-animation='scaleIn'] {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+}
+
+.multisteps-form__panel[data-animation='scaleIn'].js-active {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+  transition-delay: 0s;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
 .multisteps-form__progress {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));

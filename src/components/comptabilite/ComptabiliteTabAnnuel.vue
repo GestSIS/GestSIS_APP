@@ -191,7 +191,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeEcritures: (state) => state.comptabilite.ecritures.annuels,
+      listeEcritures: (state) => state.imputation.ecritures.annuels,
       listeFonctions: (state) => state.fonction.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,

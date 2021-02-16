@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
-import ComptabiliteService from '@/services/ComptabiliteService';
+import ImputationService from '@/services/ImputationService';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
@@ -227,7 +227,7 @@ export default {
         categorie: this.getExerciceCategorie(s.exercice_categorie_id)
           .designation,
         localite: this.getLocalite(s.localite_id).designation,
-        getEcritures: () => ComptabiliteService.getEcrituresForExercice(s.id),
+        getEcritures: () => ImputationService.getEcrituresForExercice(s.id),
         columns: this.ecritureColumns,
       }));
     },

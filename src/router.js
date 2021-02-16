@@ -79,9 +79,9 @@ const router = new Router({
       children: [
         {
           path: '',
-          name: 'comptabilite-compte',
+          name: 'comptabilite-decompte',
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
+            import('@/components/comptabilite/ComptabiliteTabDecomptes.vue'),
         },
         {
           path: 'comptes',

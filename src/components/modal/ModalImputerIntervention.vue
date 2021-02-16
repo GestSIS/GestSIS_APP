@@ -173,7 +173,7 @@ export default {
   computed: {
     ...mapState({
       listeIndemnitesTypes: (state) =>
-        state.comptabilite.indemnites.interventions,
+        state.imputation.indemnites.interventions,
       listeFonctions: (state) => state.fonction.liste,
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),

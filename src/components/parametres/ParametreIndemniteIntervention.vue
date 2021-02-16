@@ -93,9 +93,7 @@ export default {
   computed: {
     ...mapState({
       listeIndemniteIntervention: (state) =>
-        state.comptabilite.indemnites.interventions.sort(
-          (a, b) => a.tri - b.tri
-        ),
+        state.imputation.indemnites.interventions.sort((a, b) => a.tri - b.tri),
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,

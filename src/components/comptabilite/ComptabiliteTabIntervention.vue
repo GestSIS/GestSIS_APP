@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
-import ComptabiliteService from '@/services/ComptabiliteService';
+import ImputationService from '@/services/ImputationService';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
@@ -267,7 +267,7 @@ export default {
           .designation,
         localite: this.getLocalite(i.localite_id).designation,
         getEcritures: () =>
-          ComptabiliteService.getEcrituresForInterventions(i.id),
+          ImputationService.getEcrituresForInterventions(i.id),
         columns: this.ecritureColumns,
       }));
     },

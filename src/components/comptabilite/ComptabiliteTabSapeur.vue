@@ -58,7 +58,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
-import ComptabiliteService from '@/services/ComptabiliteService';
+import ImputationService from '@/services/ImputationService';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
@@ -94,7 +94,7 @@ export default {
     // this.$store.dispatch('fetchInterventionTraitements');
 
     if (this.currentExerciceComptableId || 0 !== 0) {
-      ComptabiliteService.getEcrituresForExerciceComptable(
+      ImputationService.getEcrituresForExerciceComptable(
         this.currentExerciceComptableId
       ).then((data) => {
         this.ecritures = data;

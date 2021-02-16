@@ -69,7 +69,7 @@
         </li>
         <li class="nav-item">
           <router-link
-            :to="{ name: 'comptabilite-compte' }"
+            :to="{ name: 'comptabilite-decompte' }"
             class="nav-link internal-link"
           >
             <font-awesome-icon icon="calculator" />

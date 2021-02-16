@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
-import ComptabiliteService from '@/services/ComptabiliteService';
+import ImputationService from '@/services/ImputationService';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
@@ -160,7 +160,7 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      listeAmendes: (state) => state.comptabilite.ecritures.amendes,
+      listeAmendes: (state) => state.imputation.ecritures.amendes,
     }),
     ...mapGetters(['currentExerciceComptableId', 'getSapeur']),
     filteredAmendes() {
