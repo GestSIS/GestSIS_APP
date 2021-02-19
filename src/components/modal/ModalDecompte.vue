@@ -18,9 +18,10 @@
           id="m-designation"
           name="designation"
           v-model="params.designation"
+          :disabled="this.params.exercice_id || this.params.sapeur_id"
         />
       </div>
-      <div class="form-group">
+      <div class="form-group" v-if="!this.params.exercice_id">
         <label for="m-exercice-comptable-id">Exercice comptable id</label>
         <select
           class="custom-select"
@@ -49,6 +50,19 @@
           v-model="params.date"
         />
       </div>
+      <div class="form-group" v-if="this.params.exercice_id">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="m-sap-cotisation_avs"
+            v-model="params.deduction"
+          />
+          <label class="custom-control-label" for="m-sap-cotisation_avs"
+            >Déduction</label
+          >
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" @click="creer()">Créer</button>
@@ -62,16 +76,18 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'ModalDecompte',
-  props: ['data'],
+  props: ['data', 'callback'],
   data() {
     return {
       errorsData: {},
       mode: 'genererDecompte',
       params: {
-        date: Date.now(),
+        date: new Date().toJSON().slice(0, 10),
         designation: '',
         exercice_comptable_id: null,
         sapeur_id: null,
+        exercice_id: null,
+        deduction: false,
       },
     };
   },
@@ -85,10 +101,13 @@ export default {
   mounted() {
     this.params.exercice_comptable_id = this.activeExerciceComptableId;
     this.params.sapeur_id = this.data?.sapeurId;
-    this.params.designation = `Décompte ${this.data?.sapeur ?? ''}`;
+    this.params.exercice_id = this.data?.exerciceId;
+    this.params.designation = `Décompte ${this.data?.designation ?? ''}`;
 
     this.mode = this.params.sapeur_id
       ? 'genererDecompteSapeur'
+      : this.params.exercice_id
+      ? 'genererDecompteExercice'
       : 'genererDecompteAnnuel';
   },
   methods: {
@@ -104,6 +123,7 @@ export default {
         .dispatch(this.mode, this.params)
         .then(() => {
           this.HIDE_MODAL();
+          this.callback();
         })
         .catch((errors) => {
           this.errorsData = errors;

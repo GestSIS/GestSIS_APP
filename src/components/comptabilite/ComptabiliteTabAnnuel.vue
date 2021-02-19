@@ -42,6 +42,7 @@
           </div>
           <div slot="actions" slot-scope="props" class="d-flex">
             <button
+              title="Regénérer les frais de ce sapeur"
               class="btn btn-outline-primary border-0"
               @click="regenererSapeur(props.rowData.id)"
             >

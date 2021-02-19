@@ -1,6 +1,9 @@
 import Api from '@/http/Request';
 
 export default {
+  getExerciceEcriturePourExerciceComptable(exerciceComptableId) {
+    return Api.api().get('/ecritures/exercices/' + exerciceComptableId);
+  },
   getIndemniteTypes() {
     return Api.api().get('/indemnites-types/');
   },

@@ -3,7 +3,7 @@ import DecompteService from '../../services/DecompteService';
 
 export default {
   state: {
-    liste: null,
+    liste: [],
   },
   mutations: {
     [types.UPDATE_DECOMPTES](state, payload) {

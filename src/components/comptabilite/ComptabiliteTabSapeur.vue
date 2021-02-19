@@ -235,7 +235,7 @@ export default {
             aPayer:
               ecrituresBySapeur
                 .get(s.id)
-                .findIndex((e) => e.decompte_id == null) >= 0,
+                .findIndex((e) => e.decompte_id == null && !e.amende) >= 0,
             total: ecrituresBySapeur
               .get(s.id)
               .reduce((a, b) => a + +b.total, 0),
@@ -253,7 +253,7 @@ export default {
         data: {
           type: 'sapeur',
           sapeurId,
-          sapeur,
+          designation: sapeur,
         },
       });
     },

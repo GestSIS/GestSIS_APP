@@ -49,6 +49,20 @@
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 4"
+              @click="
+                genererDecompteExercice(
+                  props.rowData.id,
+                  props.rowData.designation
+                )
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
           </div>
         </vuetable>
       </div>
@@ -94,20 +108,12 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListeExercice').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_frais_exercices.setData(this.computedData);
-      });
-    },
-    listExercices() {
-      this.loading = true;
-      this.$refs.vuetable_frais_exercices.setData(this.computedData);
-      this.loading = false;
+      this.init();
     },
   },
   mounted() {
-    this.loading = false;
-    this.$refs.vuetable_frais_exercices.setData(this.computedData);
+    this.loading = true;
+    this.init();
   },
   data() {
     let svm = this;
@@ -116,6 +122,7 @@ export default {
       toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
+      exercices: [],
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -215,8 +222,6 @@ export default {
   },
   computed: {
     ...mapState({
-      listExercices: (state) =>
-        state.exercice.liste.filter((e) => e.statut > 2),
       listSapeurs: (state) => state.sapeur.liste,
       localites: (state) => state.localite.liste,
       exerciceCategories: (state) => state.exerciceCategorie.liste,
@@ -225,18 +230,44 @@ export default {
     }),
     ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),
     computedData() {
-      return this.listExercices.map((s) => ({
-        ...s,
-        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-          .designation,
-        localite: this.getLocalite(s.localite_id).designation,
-        getEcritures: () => ImputationService.getEcrituresForExercice(s.id),
-        columns: this.ecritureColumns,
-      }));
+      return this.exercices.map((e) => {
+        let aPayer = e.statut == 4;
+        if (e.statut == 4) {
+          aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
+        }
+        return {
+          ...e,
+          categorie: this.getExerciceCategorie(e.exercice_categorie_id)
+            .designation,
+          localite: this.getLocalite(e.localite_id).designation,
+          aPayer,
+          getEcritures: () => Promise.resolve(e.ecritures),
+          columns: this.ecritureColumns,
+        };
+      });
     },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    init() {
+      ImputationService.getExerciceEcriturePourExerciceComptable(
+        this.currentExerciceComptableId
+      ).then((e) => {
+        this.exercices = [...e];
+        this.$refs.vuetable_frais_exercices.setData(this.computedData);
+        this.loading = false;
+      });
+    },
+    genererDecompteExercice(exerciceId, designation) {
+      this.SHOW_MODAL({
+        component: 'modalDecompte',
+        data: {
+          exerciceId,
+          designation,
+        },
+        callback: () => this.init(),
+      });
+    },
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,
