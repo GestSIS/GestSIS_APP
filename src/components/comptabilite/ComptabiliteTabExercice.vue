@@ -57,7 +57,9 @@
 </template>
 
 <script>
+import store from '@/store/index';
 import { mapState, mapGetters, mapMutations } from 'vuex';
+
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
@@ -65,10 +67,29 @@ import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
+async function loadData(_, next) {
+  const loadExercices = store.dispatch('fetchListeExercice');
+  const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadLocalites = store.dispatch('fetchLocalites');
+
+  Promise.all([loadExercices, loadCategories, loadSapeurs, loadLocalites]).then(
+    () => {
+      next();
+    }
+  );
+}
+
 export default {
   name: 'FraisTabExercice',
   components: {
     Vuetable,
+  },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {
@@ -85,26 +106,8 @@ export default {
     },
   },
   mounted() {
-    if (this.listSapeurs.length === 0) {
-      this.$store.dispatch('fetchListeSapeur');
-    }
-
-    if (this.localites.length === 0) {
-      this.$store.dispatch('fetchLocalites');
-    }
-    if (this.exerciceCategories.length === 0) {
-      this.$store.dispatch('fetchExerciceCategories');
-    }
-
-    if (this.listeExerciceComptable.length === 0) {
-      //console.log('Warning')
-    }
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListeExercice').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_frais_exercices.setData(this.computedData);
-      });
-    }
+    this.loading = false;
+    this.$refs.vuetable_frais_exercices.setData(this.computedData);
   },
   data() {
     let svm = this;
@@ -242,8 +245,6 @@ export default {
       this.$refs.vuetable_frais_exercices.toggleDetailRow(id);
     },
     imputerExercice(exerciceId) {
-      //TODO
-
       this.SHOW_MODAL({
         component: 'ModalImputerExercice',
         data: { id: exerciceId },

@@ -213,6 +213,7 @@ export default {
 
   // Paiements
   UPDATE_DECOMPTES: 'UPDATE_DECOMPTES',
+  ADD_DECOMPTE: 'ADD_DECOMPTE',
 
   // Amendes
   UPDATE_AMENDE_LISTE: 'UPDATE_AMENDE_LISTE',

@@ -158,8 +158,15 @@ export default {
         this.init();
       });
     },
+    listeDecompte() {
+      this.init();
+    },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    generer() {
+      this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
+    },
     init() {
       this.$refs.vuetable_ecriture_decomptes.setData(this.computeData());
       this.loading = false;
@@ -184,7 +191,6 @@ export default {
     computeData() {
       return this.listeDecompte;
     },
-    ...mapMutations(['SHOW_MODAL']),
     // editEcriture() {
     //   this.$store.dispatch('resetActiveGrade')
     //   this.SHOW_MODAL('ModalSapeurPromotion')

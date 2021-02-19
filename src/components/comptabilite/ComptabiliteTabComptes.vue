@@ -83,10 +83,11 @@ import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
 async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
+  const loadExercices = store.dispatch('fetchExercicesComptables');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadComptes = store.dispatch('fetchComptes');
 
-  let loadComptes = store.dispatch('fetchComptes');
-  Promise.all([loadComptes]).then(() => {
+  Promise.all([loadExercices, loadComptes, loadSapeurs]).then(() => {
     next();
   });
 }
@@ -142,16 +143,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-
-    if (this.listeSapeur.length === 0) {
-      this.$store.dispatch('fetchListeSapeur');
-    }
-
-    if (this.activeExerciceComptableId !== null) {
-      this.init();
-    } else {
-      this.$store.dispatch('fetchExercicesComptables');
-    }
+    this.init();
   },
   watch: {
     activeExerciceComptableId() {
@@ -174,19 +166,10 @@ export default {
       this.dropdown = false;
     },
     init() {
-      if (this.activeCompteId === null && this.listeCompte.length > 0) {
-        this.$store
-          .dispatch('selectActiveCompte', this.listeCompte[0].id)
-          .then(() => {
-            this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
-            this.loading = false;
-          });
-      } else if (this.activeCompteId !== null) {
-        this.$store.dispatch('fetchEcritureComptes').then(() => {
-          this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
-          this.loading = false;
-        });
-      }
+      this.$store.dispatch('fetchEcritureComptes').then(() => {
+        this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
+        this.loading = false;
+      });
     },
     updateTable() {
       this.loading = true;

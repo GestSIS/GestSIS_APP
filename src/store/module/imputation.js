@@ -21,6 +21,11 @@ export default {
     },
   },
   mutations: {
+    [types.UPDATE_COMPTE_LISTE](state, payload) {
+      if (state.active.compteId === null && payload.length > 0) {
+        state.active.compteId = payload[0].id;
+      }
+    },
     [types.UPDATE_INDEMNITES_TYPES](state, payload) {
       state.indemnites = {
         ...state.indemnites,
@@ -106,13 +111,13 @@ export default {
     },
   },
   actions: {
-    selectActiveCompte({ commit, dispatch }, payload) {
-      commit(types.SELECT_CURRENT_COMPTE, payload);
-      return dispatch('fetchEcritureComptes');
+    selectActiveCompte({ commit, dispatch }, compteId) {
+      commit(types.SELECT_CURRENT_COMPTE, compteId);
+      return dispatch('fetchEcritureComptes', compteId);
     },
-    fetchEcritureComptes({ state, getters, commit }) {
+    fetchEcritureComptes({ state, getters, commit }, compteId) {
       return ImputationService.getEcritureForCompte(
-        state.active.compteId,
+        compteId ?? state.active.compteId,
         getters.currentExerciceComptableId
       ).then((data) => {
         return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data);

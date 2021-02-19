@@ -4,7 +4,7 @@
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
-          <h3>Liste des amendes</h3>
+          <h3>Amendes</h3>
           <button class="btn btn-primary" @click="generer">
             Générer les amendes
           </button>
@@ -59,7 +59,6 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
-import ImputationService from '@/services/ImputationService';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';

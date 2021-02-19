@@ -65,6 +65,19 @@
               </option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="compte_id">Ecriture catégorie</label>
+            <select
+              id="ecriture_categorie_id"
+              v-model="params.ecriture_categorie_id"
+              class="custom-select"
+              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            >
+              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+                {{ c.designation }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -108,6 +121,7 @@ export default {
   computed: {
     ...mapState({
       listeCompte: (state) => state.compte.liste,
+      listeCategorie: (state) => state.ecritureCategorie.liste,
       avsParams: (state) => state.avsParam.params,
     }),
   },

@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">
+        Paramètres pour le décompte
+      </h5>
+      <button type="button" class="close" @click="close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="m-designation">Désignation</label>
+        <input
+          type="text"
+          class="form-control"
+          :class="{ 'is-invalid': errorsData['designation'] }"
+          id="m-designation"
+          name="designation"
+          v-model="params.designation"
+        />
+      </div>
+      <div class="form-group">
+        <label for="m-exercice-comptable-id">Exercice comptable id</label>
+        <select
+          class="custom-select"
+          id="m-exercice-comptable-id"
+          :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }"
+          name="exercice_comptable_id"
+          v-model="params.exercice_comptable_id"
+        >
+          <option
+            v-for="exercice in listeExerciceComptable"
+            :value="exercice.id"
+            :key="exercice.id"
+          >
+            {{ exercice.designation }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="m-date">Date</label>
+        <input
+          type="date"
+          class="form-control"
+          :class="{ 'is-invalid': errorsData['date'] }"
+          id="m-date"
+          name="date"
+          v-model="params.date"
+        />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" @click="creer()">Créer</button>
+      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations, mapGetters } from 'vuex';
+
+export default {
+  name: 'ModalDecompte',
+  props: ['data'],
+  data() {
+    return {
+      errorsData: {},
+      mode: 'genererDecompte',
+      params: {
+        date: Date.now(),
+        designation: '',
+        exercice_comptable_id: null,
+        sapeur_id: null,
+      },
+    };
+  },
+  computed: {
+    ...mapState({
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeSapeur: (state) => state.sapeur.liste,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+    }),
+  },
+  mounted() {
+    this.params.exercice_comptable_id = this.activeExerciceComptableId;
+    this.params.sapeur_id = this.data?.sapeurId;
+    this.params.designation = `Décompte ${this.data?.sapeur ?? ''}`;
+
+    this.mode = this.params.sapeur_id
+      ? 'genererDecompteSapeur'
+      : 'genererDecompteAnnuel';
+  },
+  methods: {
+    ...mapMutations(['HIDE_MODAL']),
+    close() {
+      this.HIDE_MODAL();
+    },
+    sapeur(id) {
+      return ``;
+    },
+    creer() {
+      this.$store
+        .dispatch(this.mode, this.params)
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((errors) => {
+          this.errorsData = errors;
+        });
+    },
+  },
+};
+</script>
+
+<style scoped></style>

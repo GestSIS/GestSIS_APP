@@ -16,10 +16,10 @@
             <th>Solde min</th>
             <th>Pour</th>
             <th>Unité</th>
+            <th>Phase</th>
             <th>Taux week-end</th>
             <th>Taux nuit</th>
             <th>Compte</th>
-            <th>Phase ???</th>
             <th>Catégorie d'écriture</th>
             <th class="text-center">Actions</th>
           </tr>
@@ -31,10 +31,10 @@
             <td>{{ i.solde_min }}</td>
             <td>{{ i.solde_min_pour }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
+            <td>{{ phase(i.phase_id) }}</td>
             <td>{{ i.taux_weekend }}</td>
             <td>{{ i.taux_nuit }}</td>
             <td>{{ compte(i.compte_id) }}</td>
-            <td>{{ i.phase_id }}</td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td>
               <div class="d-flex justify-content-center">
@@ -70,6 +70,7 @@ async function loadData(_, next) {
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
+  const loadPhases = store.dispatch('fetchPhaseTypes');
 
   Promise.all([
     loadFrais,
@@ -77,6 +78,7 @@ async function loadData(_, next) {
     loadFonctions,
     loadComptes,
     loadUnites,
+    loadPhases,
   ]).then(() => {
     next();
   });
@@ -98,12 +100,16 @@ export default {
       listeCompte: (state) => state.compte.liste,
       listeUnite: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
+      listePhase: (state) => state.phaseType.liste,
     }),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     ajoutIndemnite() {
-      this.SHOW_MODAL({ component: 'ModalIndemniteIntervention', data: {} });
+      this.SHOW_MODAL({
+        component: 'ModalIndemniteIntervention',
+        data: {},
+      });
     },
     updateIndemnite(indemnite) {
       this.SHOW_MODAL({
@@ -123,6 +129,9 @@ export default {
     },
     unite(id) {
       return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+    },
+    phase(id) {
+      return id ? this.listePhase.find((u) => u.id === id)?.designation : '';
     },
     categorie(id) {
       return id

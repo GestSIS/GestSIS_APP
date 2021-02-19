@@ -6,13 +6,22 @@ export default {
       `/decomptes/exercice-comptable/${exerciceComptableId}`
     );
   },
+  creerDecompte(params) {
+    return Api.api().post('decomptes/create', params);
+  },
   downloadDecompteIso20022(decompteId, params) {
     return Api.apiFileDownload().post(
       `/decomptes/${decompteId}/iso20022`,
       params
     );
   },
-  creerDecompte(param) {
-    return Api.api().post('decomptes/create', param);
+  genererDecompteAnnuel(params) {
+    return Api.api().post('decomptes/creer-annuel', params);
+  },
+  genererDecompteSapeur(params) {
+    return Api.api().post('decomptes/creer-sapeur', params);
+  },
+  genererDecompteExercice(params) {
+    return Api.api().post('decomptes/creer-exercice', params);
   },
 };

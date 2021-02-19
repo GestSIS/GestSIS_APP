@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import ParametreCompte from './ParametreCompte.vue';
@@ -119,6 +120,7 @@ async function loadData(_, next) {
   const loadUnites = store.dispatch('fetchUnites');
   const loadCategories = store.dispatch('fetchEcritureCategories');
   const loadAvsParams = store.dispatch('fetchAvsParams');
+  const loadPhases = store.dispatch('fetchPhaseTypes');
 
   Promise.all([
     loadAmendes,
@@ -129,6 +131,7 @@ async function loadData(_, next) {
     loadUnites,
     loadCategories,
     loadAvsParams,
+    loadPhases,
   ]).then(() => {
     next();
   });
@@ -155,12 +158,7 @@ export default {
   data() {
     return { tab: 'compte' };
   },
-  methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
-  },
+  methods: {},
 };
 </script>
 

@@ -4,7 +4,7 @@
     <div class="card card-primary card-outline mb-3">
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Matériel</h3>
+        <h3 class="card-title">Matériel consommable et en prêt</h3>
         <button type="button" class="btn btn-primary" @click="newMateriel">
           Ajouter du matériel
         </button>

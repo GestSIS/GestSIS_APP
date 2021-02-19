@@ -57,7 +57,9 @@
 </template>
 
 <script>
+import store from '@/store/index';
 import { mapState, mapGetters, mapMutations } from 'vuex';
+
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
@@ -65,10 +67,34 @@ import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
+async function loadData(_, next) {
+  const loadInterventions = store.dispatch('fetchListeIntervention');
+  const loadTypes = store.dispatch('fetchTypeInterventions');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  const loadStatFederal = store.dispatch('fetchStatFederals');
+  const loadTraitement = store.dispatch('fetchInterventionTraitements');
+
+  Promise.all([
+    loadInterventions,
+    loadSapeurs,
+    loadTypes,
+    loadLocalites,
+    loadStatFederal,
+    loadTraitement,
+  ]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'FraisTabIntervention',
-  components: {
-    Vuetable,
+  components: { Vuetable },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {
@@ -86,20 +112,12 @@ export default {
   },
   mounted() {
     //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListeSapeur');
 
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchStatFederals');
-    this.$store.dispatch('fetchTypeInterventions');
-    this.$store.dispatch('fetchInterventionTraitements');
     if (this.listeExerciceComptable.length === 0) {
       //console.log('Warning')
-    }
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_frais_interventions.setData(this.computedData);
-      });
+    } else {
+      this.loading = false;
+      this.$refs.vuetable_frais_interventions.setData(this.computedData);
     }
   },
   data() {

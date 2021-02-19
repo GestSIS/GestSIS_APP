@@ -6,8 +6,8 @@ export default {
     liste: [],
     active: {
       id: null,
-      data: {}
-    }
+      data: {},
+    },
   },
   mutations: {
     [types.UPDATE_PHASE_TYPE_LISTE](state, payload) {
@@ -16,16 +16,16 @@ export default {
     [types.UPDATE_CURRENT_PHASE](state, payload) {
       state.active.data = payload;
       state.active.id = payload.id;
-    }
+    },
   },
   getters: {
-    getPhaseType: state => phase_type_id => {
-      return state.liste.filter(t => t.id === phase_type_id)[0];
-    }
+    getPhaseType: (state) => (phase_type_id) => {
+      return state.liste.filter((t) => t.id === phase_type_id)[0];
+    },
   },
   actions: {
     fetchPhaseTypes({ commit }) {
-      return PhaseTypeService.getPhases().then(data =>
+      return PhaseTypeService.getPhases().then((data) =>
         commit(types.UPDATE_PHASE_TYPE_LISTE, data)
       );
     },
@@ -36,8 +36,8 @@ export default {
       return commit(types.UPDATE_CURRENT_PHASE, {
         debut: null,
         id: null,
-        phase_type_id: null
+        phase_type_id: null,
       });
-    }
-  }
+    },
+  },
 };

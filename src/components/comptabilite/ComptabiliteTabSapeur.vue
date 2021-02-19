@@ -3,7 +3,7 @@
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Interventions</h3>
+          <h3 class="card-title">Sapeurs</h3>
           <!--          <button @click.prevent="save" class="btn btn-primary">-->
           <!--            Enregistrer-->
           <!--          </button>-->
@@ -40,6 +40,18 @@
               />
             </button>
           </div>
+          <div slot="actions" slot-scope="props" class="d-flex">
+            <button
+              class="btn btn-outline-primary border-0"
+              @click="
+                genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
+          </div>
           <!-- <div slot="actions" slot-scope="props" class="d-flex">
             <button
               class="btn btn-outline-primary border-0"
@@ -56,7 +68,9 @@
 </template>
 
 <script>
+import store from '@/store/index';
 import { mapState, mapGetters, mapMutations } from 'vuex';
+
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
@@ -64,36 +78,28 @@ import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
 
+async function loadData(_, next) {
+  const loadExercicesComptable = store.dispatch('fetchExercicesComptables');
+  const loadSapeur = store.dispatch('fetchListeSapeur');
+  const loadFonction = store.dispatch('fetchFonctions');
+
+  Promise.all([loadExercicesComptable, loadSapeur, loadFonction]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'FraisTabSapeur',
-  components: {
-    Vuetable,
+  components: { Vuetable },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
-      });
-    },
-    listInterventions() {
-      this.loading = true;
-      this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
-      this.loading = false;
-    },
-  },
-  mounted() {
-    //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListeSapeur');
-    this.$store.dispatch('fetchFonctions');
-
-    // this.$store.dispatch('fetchLocalites');
-    // this.$store.dispatch('fetchStatFederals');
-    // this.$store.dispatch('fetchTypeInterventions');
-    // this.$store.dispatch('fetchInterventionTraitements');
-
-    if (this.currentExerciceComptableId || 0 !== 0) {
       ImputationService.getEcrituresForExerciceComptable(
         this.currentExerciceComptableId
       ).then((data) => {
@@ -101,7 +107,17 @@ export default {
         this.loading = false;
         this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       });
-    }
+    },
+  },
+  mounted() {
+    this.loading = true;
+    ImputationService.getEcrituresForExerciceComptable(
+      this.currentExerciceComptableId
+    ).then((data) => {
+      this.ecritures = data;
+      this.loading = false;
+      this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
+    });
   },
   data() {
     return {
@@ -187,11 +203,9 @@ export default {
   },
   computed: {
     ...mapState({
-      listInterventions: (state) =>
-        state.intervention.liste.filter((e) => e.statut > 1),
-      listeSapeurs: (state) => state.sapeur.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      listeSapeurs: (state) => state.sapeur.liste,
     }),
     ...mapGetters([
       'activeInterventionId',
@@ -204,25 +218,45 @@ export default {
     ]),
     computedData() {
       // Details of ecritures for an intervention will be loaded on the flight
-      let ecrituresBySapeur = this.ecritures.reduce((acc, e) => {
-        acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
-        return acc;
-      }, new Map());
+      let ecrituresBySapeur = this.ecritures
+        .filter((s) => s.sapeur_id)
+        .reduce((acc, e) => {
+          acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
+          return acc;
+        }, new Map());
 
       return this.listeSapeurs
         .filter((s) => ecrituresBySapeur.has(s.id))
-        .map((s) => ({
-          id: s.id,
-          nomPrenom: `${s.nom} ${s.prenom}`,
-          fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
-          total: ecrituresBySapeur.get(s.id).reduce((a, b) => a + +b.total, 0),
-          getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
-          columns: this.ecritureColumns,
-        }));
+        .map((s) => {
+          return {
+            id: s.id,
+            nomPrenom: `${s.nom} ${s.prenom}`,
+            fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
+            aPayer:
+              ecrituresBySapeur
+                .get(s.id)
+                .findIndex((e) => e.decompte_id == null) >= 0,
+            total: ecrituresBySapeur
+              .get(s.id)
+              .reduce((a, b) => a + +b.total, 0),
+            getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
+            columns: this.ecritureColumns,
+          };
+        });
     },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    genererDecompteSapeur(sapeurId, sapeur) {
+      this.SHOW_MODAL({
+        component: 'modalDecompte',
+        data: {
+          type: 'sapeur',
+          sapeurId,
+          sapeur,
+        },
+      });
+    },
     toggleDetails(id) {
       this.toggles = {
         ...this.toggles,

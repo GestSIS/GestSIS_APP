@@ -110,44 +110,12 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
-
-// import InterventionTabGeneral from '@/components/InterventionTabGeneral.vue'
-
 export default {
   name: 'configuration',
   data() {
     return {
       activeTab: 'general',
     };
-  },
-  // props: {
-  //   id: {
-  //     type: String
-  //   }
-  // },
-  computed: {
-    // ...mapGetters(['activeInterventionData', 'activeInterventionId']),
-  },
-  mounted() {
-    // this.$store.dispatch('fetchListeSapeur')
-    // this.$store.dispatch('fetchLocalites')
-    // this.$store.dispatch('fetchInterventionTraitements')
-    // this.$store.dispatch('fetchExercicesComptables')
-    // this.$store.dispatch('fetchTypeInterventions')
-    // this.$store.dispatch('fetchStatFederals')
-    // let id = parseInt(this.id)
-    // let svm = this
-    // if (this.newMode) {
-    //   this.$store
-    //     .dispatch('resetActiveIntervention')
-    //     .then(() => (svm.loading = false))
-    // } else {
-    //   this.$store.dispatch('selectIntervention', id)
-    //   this.$store
-    //     .dispatch('fetchIntervention', id)
-    //     .then(() => (svm.loading = false))
-    // }
   },
 };
 </script>
