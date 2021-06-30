@@ -1,0 +1,330 @@
+<template>
+  <div class="row">
+    <div class="col-sm-12 col-xl-12">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Exercices</h3>
+          <!--          <button @click.prevent="save" class="btn btn-primary">-->
+          <!--            Enregistrer-->
+          <!--          </button>-->
+        </div>
+        <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Chargement...</span>
+          </div>
+        </div>
+        <vuetable
+          v-show="!loading"
+          ref="vuetable_frais_exercices"
+          :api-mode="false"
+          :fields="fields"
+          :css="css.table"
+          :data-manager="dataManager"
+          :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          no-data-template="Aucune écriture à afficher"
+          :detail-row-component="detailRow"
+        >
+          <div slot="details" slot-scope="props" class="d-flex">
+            <button
+              class="btn btn-link border-0"
+              @click="toggleDetails(props.rowData.id)"
+              v-if="props.rowData.statut === 4"
+            >
+              <font-awesome-icon
+                v-if="toggles[props.rowData.id] || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!(toggles[props.rowData.id] || false)"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </div>
+          <div slot="actions" slot-scope="props" class="d-flex">
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 3"
+              @click="imputerExercice(props.rowData.id)"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 4"
+              @click="
+                genererDecompteExercice(
+                  props.rowData.id,
+                  props.rowData.designation
+                )
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
+          </div>
+        </vuetable>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import store from '@/store/index';
+import { mapState, mapGetters, mapMutations } from 'vuex';
+
+import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
+import ImputationService from '@/services/ImputationService';
+
+import Vuetable from 'vuetable-2';
+import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
+import _ from 'lodash';
+
+async function loadData(_, next) {
+  const loadExercices = store.dispatch('fetchListeExercice');
+  const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadLocalites = store.dispatch('fetchLocalites');
+
+  Promise.all([loadExercices, loadCategories, loadSapeurs, loadLocalites]).then(
+    () => {
+      next();
+    }
+  );
+}
+
+export default {
+  name: 'FraisTabExercice',
+  components: {
+    Vuetable,
+  },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.init();
+    },
+  },
+  mounted() {
+    this.loading = true;
+    this.init();
+  },
+  data() {
+    let svm = this;
+    return {
+      css: CssForBootstrap4,
+      toggles: {},
+      detailRow: FraisEcritureDetails,
+      loading: true,
+      exercices: [],
+      ecritureColumns: [
+        {
+          title: 'Sapeur',
+          field: 'sapeur_id',
+          formatter: (field) =>
+            [svm.getSapeur(field)].map((s) => `${s.nom} ${s.prenom}`)[0],
+        },
+        {
+          title: 'Solde',
+          field: 'solde',
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+        {
+          title: 'Indemnité',
+          field: 'indemnite',
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+        {
+          title: 'Amende',
+          field: 'amende',
+          formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+        {
+          title: 'Total',
+          field: 'total',
+          formatter: (total, ecriture) =>
+            ecriture.amende ? (-total).toFixed(2) : total,
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+      ],
+      fields: [
+        {
+          title: '',
+          name: 'details',
+          dataClass: 'align-middle details-width',
+        },
+        {
+          title: 'Date',
+          name: 'date',
+          sortField: 'date',
+        },
+        {
+          title: 'Categorie',
+          name: 'categorie',
+          sortField: 'categorie',
+        },
+        {
+          title: 'Heure',
+          name: 'heure',
+          formatter(value) {
+            return value.slice(0, 5);
+          },
+          sortField: 'heure',
+        },
+        {
+          title: 'Duree',
+          name: 'duree',
+          sortField: 'duree',
+        },
+        {
+          title: 'Localité',
+          name: 'localite',
+          sortField: 'localite',
+        },
+        {
+          title: 'Lieu',
+          name: 'lieu',
+          sortField: 'lieu',
+        },
+        {
+          title: 'Designation',
+          name: 'designation',
+          sortField: 'designation',
+        },
+        {
+          title: 'statut',
+          name: 'statut',
+          sortField: 'statut',
+          formatter(value) {
+            const statuts = {
+              0: 'Annulé',
+              1: 'A saisir',
+              2: 'En attente de validation',
+              3: 'A imputer',
+              4: 'Imputée',
+            };
+            return statuts[value];
+          },
+        },
+        {
+          title: 'Actions',
+          name: 'actions',
+        },
+      ],
+    };
+  },
+  props: {
+    id: {
+      type: String,
+    },
+  },
+  computed: {
+    ...mapState({
+      listSapeurs: (state) => state.sapeur.liste,
+      localites: (state) => state.localite.liste,
+      exerciceCategories: (state) => state.exerciceCategorie.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+    }),
+    ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),
+    computedData() {
+      return this.exercices.map((e) => {
+        let aPayer = e.statut == 4;
+        if (e.statut == 4) {
+          aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
+        }
+        return {
+          ...e,
+          categorie: this.getExerciceCategorie(e.exercice_categorie_id)
+            .designation,
+          localite: this.getLocalite(e.localite_id).designation,
+          aPayer,
+          getEcritures: () => Promise.resolve(e.ecritures),
+          columns: this.ecritureColumns,
+        };
+      });
+    },
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    init() {
+      ImputationService.getExerciceEcriturePourExerciceComptable(
+        this.currentExerciceComptableId
+      ).then((e) => {
+        this.exercices = [...e];
+        this.$refs.vuetable_frais_exercices.setData(this.computedData);
+        this.loading = false;
+      });
+    },
+    genererDecompteExercice(exerciceId, designation) {
+      this.SHOW_MODAL({
+        component: 'modalDecompte',
+        data: {
+          exerciceId,
+          designation,
+        },
+        callback: () => this.init(),
+      });
+    },
+    toggleDetails(id) {
+      this.toggles = {
+        ...this.toggles,
+        [id]: !this.toggles[id],
+      };
+      this.$refs.vuetable_frais_exercices.toggleDetailRow(id);
+    },
+    imputerExercice(exerciceId) {
+      this.SHOW_MODAL({
+        component: 'ModalImputerExercice',
+        data: { id: exerciceId },
+        size: 2,
+      });
+    },
+    dataManager(sortOrder) {
+      if (this.computedData.length < 1) return;
+
+      let local = this.computedData;
+
+      // sortOrder can be empty, so we have to check for that as well
+      if (sortOrder.length > 0) {
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        );
+      }
+
+      return {
+        data: local,
+      };
+    },
+    onRowClass(dataItem) {
+      const statutsClass = {
+        0: '', //'Annulé',
+        1: '', //'A saisir',
+        2: '', //'En attente de validation',
+        3: 'table-warning', //'A imputer',
+        4: 'table-success', //'Imputée'
+      };
+      return statutsClass[dataItem.statut];
+    },
+  },
+};
+</script>
+
+<style>
+.m-td-0 > td {
+  padding: 0 !important;
+}
+</style>

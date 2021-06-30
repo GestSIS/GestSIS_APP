@@ -8,8 +8,8 @@ export default {
       id: 0,
       grade_id: 0,
       date: null,
-      remarque: ''
-    }
+      remarque: '',
+    },
   },
   mutations: {
     [types.UPDATE_GRADE_LISTE](state, payload) {
@@ -17,21 +17,50 @@ export default {
     },
     [types.UPDATE_CURRENT_GRADE](state, payload) {
       state.currentGrade = payload;
-    }
+    },
+    [types.ADD_GRADE](state, grade) {
+      state.liste = [...state.liste, grade];
+    },
+    [types.UPDATE_GRADE](state, grade) {
+      state.liste = [
+        ...state.liste.map((m) => (m.id === grade.id ? grade : m)),
+      ];
+    },
+    [types.REMOVE_GRADE](state, gradeId) {
+      state.liste = state.liste.filter((m) => m.id != gradeId);
+    },
   },
   getters: {
-    getGrade: state => grade_id => {
-      return state.liste.filter(g => g.id === grade_id)[0];
+    getGrade: (state) => (grade_id) => {
+      return state.liste.find((g) => g.id === grade_id);
     },
-    activeGrade: state => {
+    activeGrade: (state) => {
       return state.currentGrade;
-    }
+    },
   },
   actions: {
     fetchGrades({ commit }) {
-      return GradeService.getGrades().then(data =>
+      return GradeService.getGrades().then((data) =>
         commit(types.UPDATE_GRADE_LISTE, data)
       );
+    },
+    addGrade({ commit }, grade) {
+      return GradeService.addGrade(grade).then((data) => {
+        commit(types.ADD_GRADE, data);
+        return data;
+      });
+    },
+    updateGrade({ commit }, grade) {
+      return GradeService.updateGrade(grade).then((data) => {
+        commit(types.UPDATE_GRADE, data);
+        return data;
+      });
+    },
+    removeGrade({ commit }, grade) {
+      return GradeService.removeGrade(grade).then((data) => {
+        commit(types.REMOVE_GRADE, data);
+        return data;
+      });
     },
     updateActiveGrade({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_GRADE, payload);
@@ -41,8 +70,8 @@ export default {
         id: 0,
         grade_id: 0,
         date: null,
-        remarque: ''
+        remarque: '',
       });
-    }
-  }
+    },
+  },
 };

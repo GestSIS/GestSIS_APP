@@ -91,7 +91,7 @@ export default {
   finFonctions(sapeurId, date, fonctionsId) {
     return Api.api().post('/sapeurs/' + sapeurId + '/fin-fonctions/', {
       ids: fonctionsId,
-      date: date
+      date: date,
     });
   },
 
@@ -142,13 +142,13 @@ export default {
   //Groupes
   quitterGroupes(sapeurId, groupesId) {
     return Api.api().post('/sapeurs/' + sapeurId + '/quitter-groupes/', {
-      groupes: groupesId
+      groupes: groupesId,
     });
   },
 
   supprimerConvocation(sapeurId, convocationsIds) {
     return Api.api().post('/sapeurs/' + sapeurId + '/supprimer-convocations', {
-      convocations: convocationsIds
+      convocations: convocationsIds,
     });
-  }
+  },
 };

@@ -68,21 +68,24 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'frais' }" class="nav-link internal-link">
+          <router-link
+            :to="{ name: 'comptabilite-decompte' }"
+            class="nav-link internal-link"
+          >
             <font-awesome-icon icon="calculator" />
-            <span>Frais</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/amendes" class="nav-link internal-link">
-            <font-awesome-icon icon="hand-holding-usd" />
-            <span>Amendes</span>
+            <span>Comptabilité</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/publipostage" class="nav-link internal-link">
             <font-awesome-icon icon="envelope" />
             <span>Publipostage</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/statistique" class="nav-link internal-link">
+            <font-awesome-icon :icon="['far', 'chart-bar']" />
+            <span>Statistiques</span>
           </router-link>
         </li>
         <li class="nav-item">
@@ -108,7 +111,7 @@
         </li>
         <li class="nav-item">
           <router-link
-            :to="{ name: 'configuration' }"
+            :to="{ name: 'param-general' }"
             class="nav-link internal-link"
           >
             <font-awesome-icon icon="sliders-h" />
@@ -135,7 +138,7 @@
 
 <script>
 export default {
-  name: 'MaineSidebar'
+  name: 'MainSidebar',
 };
 </script>
 

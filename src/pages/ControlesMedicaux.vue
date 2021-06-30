@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Contrôles Medicaux
@@ -40,18 +38,59 @@
           </div>
           <vuetable
             v-show="!loading"
-            ref="vuetable_mediaux"
+            ref="vuetable_medicaux"
             :api-mode="false"
             :fields="fields"
             detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
+            no-data-template="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
           >
-            <div slot="actions" slot-scope="props">
+            <div
+              slot="accepter"
+              slot-scope="props"
+              class="custom-control custom-checkbox"
+            >
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="accepter"
+                :checked="props.rowData.accepter"
+                disabled
+              />
+              <label class="custom-control-label" for="accepter"></label>
+            </div>
+            <div
+              slot="en_cours"
+              slot-scope="props"
+              class="custom-control custom-checkbox"
+            >
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="en_cours"
+                :checked="props.rowData.en_cours"
+                disabled
+              />
+              <label class="custom-control-label" for="en_cours"></label>
+            </div>
+            <div slot="doc" slot-scope="props">
+              <button
+                class="btn"
+                v-if="props.rowData.filename"
+                @click="downloadJustificatif(props.rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
+              </button>
+            </div>
+            <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
-                :to="{name:'controle-medical', params:{'id':props.rowData.id}}"
+                :to="{
+                  name: 'controle-medical',
+                  params: { id: props.rowData.id },
+                }"
                 class="btn btn-outline-primary border-0"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
@@ -76,6 +115,7 @@ import { mapGetters, mapState } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ControlesMedicauxService from '@/services/ControlesMedicauxService';
 
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
@@ -85,21 +125,26 @@ import _ from 'lodash';
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadMedecins = store.dispatch('fetchMedecins');
-  let loadControlesMedicauxTypes = store.dispatch('fetchControlesMedicauxTypes');
+  let loadControlesMedicauxTypes = store.dispatch(
+    'fetchControlesMedicauxTypes'
+  );
   let loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
-  Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControlesMedicaux]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadSapeurs,
+    loadMedecins,
+    loadControlesMedicauxTypes,
+    loadControlesMedicaux,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
   name: 'controles-medicaux',
   components: {
     Vuetable,
-    ExerciceComptable
+    ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -108,7 +153,7 @@ export default {
     loadData(routeTo, next);
   },
   mounted() {
-    this.$refs.vuetable_mediaux.setData(this.computedData);
+    this.$refs.vuetable_medicaux.setData(this.computedData);
     this.loading = false;
   },
   data() {
@@ -120,91 +165,94 @@ export default {
         {
           title: 'Sapeur',
           name: 'sapeur',
-          sortField: 'sapeur'
+          sortField: 'sapeur',
         },
         {
           title: 'Age',
           name: 'age',
           sortField: 'age',
-          dataClass: 'align-middle'
         },
         {
           title: 'Type',
-          name: 'type'
+          name: 'type',
+          sortField: 'type',
         },
         {
           title: 'Medecin',
           name: 'medecin',
-          dataClass: 'align-middle'
+          sortField: 'medecin',
         },
         {
           title: 'Consultation',
           name: 'consultation',
           sortField: 'consultation',
-          dataClass: 'align-middle'
         },
         {
           title: 'Validité',
           name: 'validite',
           sortField: 'validite',
-          dataClass: 'align-middle'
         },
         {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle'
         },
         {
           title: 'Accepter',
           name: 'accepter',
           sortField: 'accepter',
-          dataClass: 'align-middle'
+          dataClass: 'text-center',
         },
         {
           title: 'En cours',
           name: 'en_cours',
           sortField: 'en_cours',
-          dataClass: 'align-middle'
+          dataClass: 'text-center',
         },
         {
           title: 'Doc',
           name: 'doc',
-          dataClass: 'align-middle',
-          sortField: 'doc'
+          sortField: 'filename',
+          dataClass: 'text-center',
         },
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle'
-        }
-      ]
+          dataClass: 'text-center',
+        },
+      ],
     };
   },
   computed: {
     ...mapState({
-      listeControlesMedicaux: state => state.controleMedical.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeControlesMedicaux: (state) => state.controleMedical.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
     computedData() {
       const now = Date.now();
-      return this.listeControlesMedicaux.map(s => {
+      return this.listeControlesMedicaux.map((s) => {
         const sapeur = this.getSapeur(s.sapeur_id);
-        var age = Math.floor(((now - new Date(sapeur.date_naissance).getTime()) / 1000 / (60 * 60 * 24))/365.25);
+        var age = Math.floor(
+          (now - new Date(sapeur.date_naissance).getTime()) /
+            1000 /
+            (60 * 60 * 24) /
+            365.25
+        );
         return {
           ...s,
           sapeur: `${sapeur.nom} ${sapeur.prenom}`,
           age,
-          type: this.getControleMedicalType(s.controle_medical_type_id).designation,
-          medecin: this.getMedecin(s.medecin_id).designation
+          type: this.getControleMedicalType(s.controle_medical_type_id)
+            .designation,
+          medecin: this.getMedecin(s.medecin_id).designation,
         };
       });
-    }
+    },
   },
   methods: {
-    validerExercice(id) {
-      this.$store.dispatch('validerExercice', id);
+    downloadJustificatif({ id, filename }) {
+      ControlesMedicauxService.downloadJustificatif(id, filename);
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;
@@ -221,20 +269,21 @@ export default {
       }
 
       return {
-        data: local
+        data: local,
       };
     },
     onRowClass(dataItem) {
+      // TODO: update pour mettre en évidence les contrôles-médicaux voulus
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',
         2: '', //'En attente de validation',
         3: '', //'A imputer',
-        4: 'table-success' //'Imputée'
+        4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    }
-  }
+    },
+  },
 };
 </script>
 

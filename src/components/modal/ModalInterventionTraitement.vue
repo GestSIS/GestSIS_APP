@@ -1,0 +1,102 @@
+<template>
+  <div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeTraitement.id ? 'Modifier' : 'Ajouter' }} un traitement
+      </h5>
+      <button type="button" class="close" @click="HIDE_MODAL()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="tri">Tri</label>
+        <input
+          type="text"
+          v-model="activeTraitement.tri"
+          class="form-control"
+          :class="{ 'is-invalid': errors['tri'] }"
+          id="tri"
+        />
+      </div>
+      <div class="form-group">
+        <label for="designation">Désignation</label>
+        <input
+          type="text"
+          v-model="activeTraitement.designation"
+          class="form-control"
+          :class="{ 'is-invalid': errors['designation'] }"
+          id="designation"
+        />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeTraitement.id ? 'Modifier' : 'Ajouter' }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapMutations } from 'vuex';
+
+export default {
+  name: 'ModalInterventionTraitement',
+  props: {
+    data: {
+      type: Object,
+    },
+  },
+  data() {
+    return {
+      errors: {},
+      activeTraitement: {},
+    };
+  },
+  mounted() {
+    this.activeTraitement = {
+      ...this.data,
+    };
+  },
+  methods: {
+    ...mapMutations(['HIDE_MODAL']),
+    localite(localite) {
+      return localite?.designation;
+    },
+    save() {
+      if ((this.activeTraitement.id || 0) === 0) {
+        this.$store
+          .dispatch('addInterventionTraitement', this.activeTraitement)
+          .then(() => {
+            this.errors = {};
+            this.HIDE_MODAL();
+          })
+          .catch(
+            (errors) =>
+              (this.errors = {
+                ...errors,
+              })
+          );
+      } else {
+        this.$store
+          .dispatch('updateInterventionTraitement', this.activeTraitement)
+          .then(() => {
+            this.errors = {};
+            this.HIDE_MODAL();
+          })
+          .catch((errors) => {
+            this.errors = {
+              ...errors,
+            };
+          });
+      }
+    },
+  },
+};
+</script>
+
+<style scoped></style>

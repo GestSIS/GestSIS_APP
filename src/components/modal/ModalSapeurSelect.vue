@@ -10,9 +10,11 @@
       <div class="row mt-2">
         <div class="col-12">
           <div class="form-group d-flex align-items-center">
-            <label class="mb-0 mr-2" for="group-by">Afficher&nbsp;par</label>
+            <label class="custom-select-label mb-0 mr-2" for="group-by"
+              >Afficher&nbsp;par</label
+            >
             <select class="custom-select" v-model="groupBy" id="group-by">
-              <option value="none">Aucun</option>
+              <option value="none">Alphabétique</option>
               <option value="fonction">Fonction</option>
               <option value="grade">Grade</option>
               <option value="civilite">Civilité</option>
@@ -23,7 +25,7 @@
       </div>
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Sapeur sélectionnés</h6>
+          <h6 class="mb-0">Sapeurs sélectionnés</h6>
           <button
             class="btn btn-outline-danger"
             @click="removeSapeurs"
@@ -33,7 +35,7 @@
           </button>
         </div>
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Sapeur disponibles</h6>
+          <h6 class="mb-0">Sapeurs disponibles</h6>
           <button
             class="btn btn-outline-primary"
             @click="addSapeurs"
@@ -45,7 +47,7 @@
       </div>
       <div class="row">
         <div class="col-6">
-          <table class="table table-striped">
+          <table class="table table-sm table-striped">
             <thead>
               <tr>
                 <th></th>
@@ -100,7 +102,7 @@
             Coming soon!
           </p>
           <table
-            class="table"
+            class="table table-sm"
             v-if="groupBy === 'groupe' || groupBy === 'fonction'"
           >
             <thead>
@@ -158,7 +160,7 @@
               </tr>
             </tbody>
           </table>
-          <table class="table table-striped" v-if="groupBy === 'none'">
+          <table class="table table-sm table-striped" v-if="groupBy === 'none'">
             <thead>
               <tr>
                 <th></th>
@@ -205,9 +207,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="save">
-        Enregistrer
-      </button>
+      <button class="btn btn-outline-primary" @click="save">Enregistrer</button>
       <button class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </div>
@@ -247,7 +247,7 @@ export default {
       listGroupes: (state) => state.groupe.liste,
       listGrades: (state) => state.grade.liste,
       listCivilites: (state) => state.baseData.civilites,
-      listFonctions: (state) => state.fonction.liste,
+      listeFonctions: (state) => state.fonction.liste,
       listSapeurs: (state) => state.sapeur.liste,
     }),
     ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
@@ -257,7 +257,7 @@ export default {
         return this.flattenedTree;
       } else if (this.groupBy === 'fonction') {
         let liste = [];
-        this.listFonctions.forEach((fonction) => {
+        this.listeFonctions.forEach((fonction) => {
           let expanded = svm.expanded[fonction.id];
           liste = [
             ...liste,

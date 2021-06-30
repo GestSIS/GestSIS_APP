@@ -16,7 +16,7 @@
         aria-labelledby="dropdownMenu2"
       >
         <button
-          v-for="e in listExerciceComptable"
+          v-for="e in listeExerciceComptable"
           :key="e.id"
           @click="selectExercice(e.id)"
           class="dropdown-item"
@@ -26,40 +26,47 @@
           {{ e.annee }}
         </button>
         <div class="dropdown-divider"></div>
-        <button class="dropdown-item" type="button">Paramètres</button>
+        <router-link
+          :to="{ name: 'param-exercice-comptable' }"
+          class="dropdown-item"
+          tag="button"
+        >
+          <span>Paramètres</span>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ExerciceComptable',
   computed: {
     ...mapState({
-      listExerciceComptable: state => state.exerciceComptable.liste,
-      currentExerciceComptableId: state => state.exerciceComptable.activeId
+      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getExerciceComptable'])
+    ...mapGetters(['getExerciceComptable']),
   },
   data() {
     return {
-      dropdown: false
+      dropdown: false,
     };
   },
   mounted() {
-    if (this.listExerciceComptable.length === 0) {
+    if (this.listeExerciceComptable.length === 0) {
       this.$store.dispatch('fetchExercicesComptables');
     }
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     selectExercice(id) {
       this.dropdown = false;
       this.$store.dispatch('selectExerciceComptable', id);
-    }
-  }
+    },
+  },
 };
 </script>
 

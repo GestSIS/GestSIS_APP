@@ -30,11 +30,12 @@
           v-model="activeExerciceData.exercice_categorie_id"
         >
           <option
-            v-for="categorie in listExerciceCategories"
+            v-for="categorie in listeCategories"
             :key="categorie.id"
             :value="categorie.id"
-            >{{ categorie.designation }}</option
           >
+            {{ categorie.designation }}
+          </option>
         </select>
       </div>
       <div class="row">
@@ -123,11 +124,12 @@
               v-model="activeExerciceData.localite_id"
             >
               <option
-                v-for="localite in listLocalitesSis"
+                v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-                >{{ localite.npa + ' ' + localite.designation }}</option
               >
+                {{ localite.npa + ' ' + localite.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -180,30 +182,27 @@ export default {
   name: 'ExerciceTabGeneral',
   computed: {
     ...mapState({
-      currentExerciceComptableId: state => state.exerciceComptable.activeId,
-      activeExerciceId: state => state.exercice.active.id,
-      activeExerciceData: state => state.exercice.active.data,
-      activeExerciceSapeurs: state => state.exercice.active.sapeurs
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      listeCategories: (state) => state.exerciceCategorie.liste,
+      activeExerciceId: (state) => state.exercice.active.id,
+      activeExerciceData: (state) => state.exercice.active.data,
+      activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
     }),
-    ...mapGetters([
-      'listLocalitesSis',
-      'listExerciceCategories',
-      'getExerciceCategorie'
-    ]),
+    ...mapGetters(['listeLocalitesSis']),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id;
     },
     exerciceHeure() {
       return this.activeExerciceData.heure;
-    }
+    },
   },
   props: {
-    newMode: Boolean
+    newMode: Boolean,
   },
   data() {
     return {
       errors: {},
-      loading: true
+      loading: true,
     };
   },
   watch: {
@@ -214,7 +213,7 @@ export default {
     },
     exerciceHeure(data) {
       this.activeExerciceData.heure = this.formatHeure(data);
-    }
+    },
   },
   mounted() {
     this.activeExerciceData.heure = this.formatHeure(
@@ -222,20 +221,23 @@ export default {
     );
   },
   methods: {
+    getExerciceCategorie(id) {
+      return this.listeCategories.find((c) => c.id === id);
+    },
     save() {
       if (this.newMode) {
         this.$store
           .dispatch('createExercice', this.activeExerciceData)
-          .then(data => {
+          .then((data) => {
             this.$router.push('/exercices/' + data.id);
             this.errors = {};
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       } else {
         this.$store
           .dispatch('saveActiveExercice', this.activeExerciceData)
           .then(() => (this.errors = {}))
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       }
     },
     formatHeure(value) {
@@ -243,8 +245,8 @@ export default {
         return value.slice(0, 5);
       }
       return value;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Exercices
@@ -20,20 +18,54 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-3">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
-            <h3>Liste des exercices</h3>
+            <h5>Actions</h5>
+          </div>
+          <form class="card-body">
             <router-link
               tag="button"
               to="/exercices/new"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-primary btn-block"
             >
               Ajouter un exercice
             </router-link>
+            <router-link
+              tag="button"
+              :disabled="!selectedId"
+              :to="'/exercices/' + selectedId"
+              class="btn btn-outline-primary btn-block"
+            >
+              Modifier
+            </router-link>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Impressions</h5>
           </div>
-
+          <form class="card-body">
+            <button
+              :disabled="!selectedId"
+              @click="listePresences({ id: selectedId })"
+              class="btn btn-outline-primary btn-block"
+            >
+              Liste de présences
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Filtres</h5>
+          </div>
           <form class="card-body">
             <div class="form-row">
               <div class="form-group col-md-4">
@@ -49,8 +81,9 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                    >{{ loc.designation }}</option
                   >
+                    {{ loc.designation }}
+                  </option>
                 </select>
               </div>
               <div class="form-group col-md-4">
@@ -58,7 +91,8 @@
                   class="custom-select custom-select-sm"
                   id="filterCategorie"
                   @change="
-                    (event) => onFilter('exercice_categorie_id', event.target.value)
+                    (event) =>
+                      onFilter('exercice_categorie_id', event.target.value)
                   "
                 >
                   <option>&lt;Catégorie&gt;</option>
@@ -66,8 +100,9 @@
                     v-for="catgeorie in filteredExercicesCategories"
                     :key="catgeorie.id"
                     :value="catgeorie.id"
-                    >{{ catgeorie.designation }}</option
                   >
+                    {{ catgeorie.designation }}
+                  </option>
                 </select>
               </div>
               <div class="form-group col-md-4">
@@ -88,6 +123,12 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary card-outline mb-5">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Chargement...</span>
@@ -103,8 +144,10 @@
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
+            no-data-template="Aucun exercice/séance à afficher"
+            @vuetable:row-clicked="selectExercice"
           >
-            <div slot="details" slot-scope="props">
+            <div slot="details" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-link border-0"
                 @click="toggleDetails(props.rowData.id)"
@@ -119,7 +162,7 @@
                 />
               </button>
             </div>
-            <div slot="actions" slot-scope="props">
+            <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
                 :to="'/exercices/' + props.rowData.id"
@@ -148,6 +191,8 @@ import store from '@/store/index';
 
 import ExerciceDetails from '@/components/exercice/ExerciceDetails';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+
+import ExerciceService from '@/services/ExerciceService';
 
 import Vuetable from 'vuetable-2';
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
@@ -200,6 +245,7 @@ export default {
   data() {
     return {
       loading: true,
+      selectedId: null,
       filters: {},
       css: CssForBootstrap4,
       toggles: {},
@@ -208,24 +254,21 @@ export default {
         {
           title: '',
           name: 'details',
-          dataClass: 'align-middle details-width',
+          dataClass: 'details-width',
         },
         {
           title: 'Date',
           name: 'date',
           sortField: 'date',
-          dataClass: 'align-middle',
         },
         {
           title: 'Categorie',
           name: 'categorie',
           sortField: 'categorie',
-          dataClass: 'align-middle',
         },
         {
           title: 'Heure',
           name: 'heure',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -233,29 +276,25 @@ export default {
         {
           title: 'Duree',
           name: 'duree',
-          dataClass: 'align-middle',
+          sortField: 'duree',
         },
         {
           title: 'Localité',
           name: 'localite',
           sortField: 'localite',
-          dataClass: 'align-middle',
         },
         {
           title: 'Lieu',
           name: 'lieu',
-          dataClass: 'align-middle',
         },
         {
           title: 'Designation',
           name: 'designation',
           sortField: 'designation',
-          dataClass: 'align-middle',
         },
         {
           title: 'Statut',
           name: 'statut',
-          dataClass: 'align-middle',
           sortField: 'statut',
           formatter(value) {
             const statuts = {
@@ -271,7 +310,6 @@ export default {
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle',
         },
       ],
     };
@@ -296,11 +334,9 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(this.listeExercices.map((i) => i.exercice_categorie_id));
+        this.listeExercices.map((i) => i.exercice_categorie_id)
+      );
       return this.listeCategories.filter((t) => ids.has(t.id));
-    },
-    filteredLocalites() {
-      const ids = new Set(this.listeExercices.map((i) => i.localite_id));
       return this.listeLocalites.filter((t) => ids.has(t.id));
     },
     filteredExercices() {
@@ -326,6 +362,12 @@ export default {
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },
+    selectExercice(row) {
+      this.selectedId = row.data.id;
+    },
+    listePresences({ id }) {
+      ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
+    },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;
 
@@ -345,6 +387,10 @@ export default {
       };
     },
     onRowClass(dataItem) {
+      if (dataItem.id === this.selectedId) {
+        return 'table-primary';
+      }
+
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',

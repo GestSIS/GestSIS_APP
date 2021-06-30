@@ -7,10 +7,10 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="d-inline-flex justify-content-between">
-        <div>1. Type de frais</div>
-        <div>2. Final</div>
-      </div>
+      <multi-step
+        :steps="['Type de frais', 'Résultat']"
+        :activeIndex="phase - 1"
+      />
       <div v-if="phase === 1" class="row">
         <div
           :class="{
@@ -18,7 +18,11 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table class="table" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+          <table
+            class="table table-sm"
+            @keydown.down="onKeyDown"
+            @keydown.up="onKeyUp"
+          >
             <thead>
               <tr>
                 <th>Designation</th>
@@ -68,7 +72,7 @@
           </table>
         </div>
         <div class="col-4" v-if="activeIndemniteHasFonction">
-          <table class="table">
+          <table class="table table-sm">
             <thead>
               <tr>
                 <th>Fonction</th>
@@ -103,7 +107,7 @@
           </button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Fonction</th>
@@ -142,9 +146,11 @@
 
 <script>
 import { mapMutations, mapState, mapGetters } from 'vuex';
+import MultiStep from '@/components/MultiStep.vue';
 
 export default {
   name: 'ModalImputerExercice',
+  components: { MultiStep },
   props: ['data'],
   data() {
     return {
@@ -157,9 +163,9 @@ export default {
   },
   computed: {
     ...mapState({
-      listeIndemnitesTypes: (state) => state.comptabilite.indemnites.exercices,
-      listFonctions: (state) => state.fonction.liste,
-      listComptes: (state) => state.comptabilite.comptes,
+      listeIndemnitesTypes: (state) => state.imputation.indemnites.exercices,
+      listeFonctions: (state) => state.fonction.liste,
+      listComptes: (state) => state.compte.liste,
     }),
     ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {
@@ -167,7 +173,7 @@ export default {
     },
   },
   mounted() {
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
   },

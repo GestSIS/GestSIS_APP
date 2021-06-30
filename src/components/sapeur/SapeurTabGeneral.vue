@@ -21,8 +21,9 @@
                 v-for="civilite in listeCivilites"
                 :value="civilite.id"
                 :key="civilite.id"
-                >{{ civilite.designation }}</option
               >
+                {{ civilite.designation }}
+              </option>
             </select>
           </div>
           <!-- NOM -->
@@ -89,24 +90,49 @@
               v-model="activeSapeur.localite_id"
             >
               <option
-                v-for="localite in listLocalitesSis"
+                v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-                >{{ localite.npa + ' ' + localite.designation }}</option
               >
+                {{ localite.npa + ' ' + localite.designation }}
+              </option>
             </select>
           </div>
           <!-- N° AVS -->
-          <div class="form-group">
-            <label for="m-sap-avs">N° AVS</label>
-            <input
-              type="text"
-              class="form-control"
-              :class="{ 'is-invalid': errorsData['no_avs'] }"
-              id="m-sap-avs"
-              name="no_avs"
-              v-model="activeSapeur.no_avs"
-            />
+          <div class="row">
+            <div class="form-group col-6">
+              <label for="m-sap-avs">N° AVS</label>
+              <input
+                type="text"
+                class="form-control"
+                :class="{ 'is-invalid': errorsData['no_avs'] }"
+                id="m-sap-avs"
+                name="no_avs"
+                v-model="activeSapeur.no_avs"
+              />
+            </div>
+            <div class="col-6">
+              <label for="m-sap-cotisation_avs">Cotisation AVS</label
+              ><font-awesome-icon
+                class="ml-1"
+                v-tooltip.bottom="
+                  'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
+                "
+                :icon="['far', 'question-circle']"
+              />
+              <div class="custom-control custom-checkbox text-center col-6">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="m-sap-cotisation_avs"
+                  v-model="activeSapeur.cotisation_avs"
+                />
+                <label
+                  class="custom-control-label"
+                  for="m-sap-cotisation_avs"
+                ></label>
+              </div>
+            </div>
           </div>
           <!-- Email -->
           <div class="form-group">
@@ -248,7 +274,7 @@
                 class="custom-select"
                 disabled
               >
-                <option v-for="f in listFonctions" :key="f.id" :value="f.id">
+                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
                   {{ f.nom }}
                 </option>
               </select>
@@ -295,7 +321,7 @@ export default {
   name: 'SapeurTabGeneral',
   components: {
     SapeurMutations,
-    SapeurTelephones
+    SapeurTelephones,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -305,20 +331,20 @@ export default {
   },
   data() {
     return {
-      errorsData: {}
+      errorsData: {},
     };
   },
   mounted() {
     if (this.listeCivilites.length === 0) {
       this.$store.dispatch('fetchCivilites');
     }
-    if (this.listLocalitesSis.length === 0) {
+    if (this.listeLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
     if (this.listGrades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
-    if (this.listFonctions.length === 0) {
+    if (this.listeFonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
 
@@ -326,22 +352,22 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCivilites: state => state.baseData.civilites,
-      listFonctions: state => state.fonction.liste,
-      listGrades: state => state.grade.liste
+      listeCivilites: (state) => state.baseData.civilites,
+      listeFonctions: (state) => state.fonction.liste,
+      listGrades: (state) => state.grade.liste,
     }),
     ...mapGetters([
       'activeSapeur',
       'activeSapeurId',
-      'listLocalitesSis',
-      'getLocalite'
-    ])
+      'listeLocalitesSis',
+      'getLocalite',
+    ]),
   },
   watch: {
     activeSapeurId(id) {
       this.errorsData = {};
       this.$store.dispatch('fetchSapeurMutations', id);
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
@@ -357,7 +383,7 @@ export default {
         'email',
         'date_naissance',
         'suffixe',
-        'remarque'
+        'remarque',
       ];
       let saveSapeur = Object.assign({}, this.activeSapeur);
       for (let key in Object.keys(saveSapeur)) {
@@ -370,7 +396,7 @@ export default {
         .then(() => {
           this.errorsData = {};
         })
-        .catch(err => {
+        .catch((err) => {
           this.errorsData = err;
         });
     },
@@ -379,7 +405,7 @@ export default {
         .dispatch('saveActiveSapeur', {
           profession: this.activeSapeur.profession,
           employeur: this.activeSapeur.employeur,
-          lieu_de_travail: this.activeSapeur.lieu_de_travail
+          lieu_de_travail: this.activeSapeur.lieu_de_travail,
         })
         .then(() => {
           // console.log('Save sapeur Success')
@@ -387,8 +413,8 @@ export default {
         .catch(() => {
           // console.log('Save sapeur Error')
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

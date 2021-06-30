@@ -33,53 +33,43 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+const components = Object.fromEntries(
+  require
+    .context('@/components/modal/', true, /\.(js|vue)$/i)
+    .keys()
+    .map((key) => {
+      const name = key.match(/\w+/)[0];
+      return [name, () => import(`./modal/${name}`)];
+    })
+);
+
 export default {
   name: 'AppModal',
-  components: {
-    ModalCours: () => import(`@/components/modal/ModalCours`),
-    ModalFonction: () => import(`@/components/modal/ModalFonction`),
-    ModalPromotion: () => import(`@/components/modal/ModalPromotion`),
-    ModalMutation: () => import(`@/components/modal/ModalMutation`),
-    ModalExcuse: () => import(`@/components/modal/ModalExcuse`),
-    ModalSapeurSelect: () => import(`@/components/modal/ModalSapeurSelect`),
-    ModalMateriel: () => import(`@/components/modal/ModalMateriel`),
-    ModalMission: () => import(`@/components/modal/ModalMission`),
-    ModalAppel: () => import(`@/components/modal/ModalAppel`),
-    ModalPresence: () => import(`@/components/modal/ModalPresence`),
-    ModalPhase: () => import(`@/components/modal/ModalPhase`),
-    ModalSapeur: () => import(`@/components/modal/ModalSapeur`),
-    ModalImputerExercice: () =>
-      import(`@/components/modal/ModalImputerExercice`),
-    ModalImputerIntervention: () =>
-      import(`@/components/modal/ModalImputerIntervention`),
-    ModalImputerAnnuel: () => import(`@/components/modal/ModalImputerAnnuel`),
-    ModalMutationDesactivation: () =>
-      import(`@/components/modal/ModalMutationDesactivation`)
-  },
+  components: components,
   data() {
     return {
-      component: null
+      component: null,
     };
   },
   computed: {
     ...mapState({
-      visible: state => state.modal.modalVisible,
-      modalComponent: state => state.modal.modalComponent,
-      callback: state => state.modal.modalCallback,
-      size: state => state.modal.modalSize,
-      data: state => state.modal.modalData
+      visible: (state) => state.modal.modalVisible,
+      modalComponent: (state) => state.modal.modalComponent,
+      callback: (state) => state.modal.modalCallback,
+      size: (state) => state.modal.modalSize,
+      data: (state) => state.modal.modalData,
     }),
     computedSize() {
       const sizesClass = {
         [-1]: 'modal-sm',
         1: 'modal-lg',
-        2: 'modal-xl'
+        2: 'modal-xl',
       };
       return sizesClass[this.size];
-    }
+    },
   },
   created() {
-    const escapeHandler = e => {
+    const escapeHandler = (e) => {
       if (e.key === 'Escape' && this.visible) {
         this.callback();
         this.HIDE_MODAL();
@@ -92,15 +82,15 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL'])
+    ...mapMutations(['HIDE_MODAL']),
   },
   watch: {
     modalComponent(componentName) {
       if (!componentName) return;
 
       this.component = componentName;
-    }
-  }
+    },
+  },
 };
 </script>
 

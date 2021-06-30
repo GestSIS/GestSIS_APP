@@ -24,7 +24,7 @@
           </small>
         </div>
       </form>
-      <table class="table" id="mutation-desactivation-table">
+      <table class="table table-sm" id="mutation-desactivation-table">
         <thead>
           <tr>
             <th>Sel</th>
@@ -52,7 +52,7 @@
               <input
                 type="checkbox"
                 :checked="exercice.selected"
-                @click="e => selectExercice(e, exercice.id)"
+                @click="(e) => selectExercice(e, exercice.id)"
               />
             </td>
             <td>{{ exercice.date }}</td>
@@ -79,7 +79,7 @@
               <input
                 type="checkbox"
                 :checked="groupe.selected"
-                @click="e => selectGroupe(e, groupe.id)"
+                @click="(e) => selectGroupe(e, groupe.id)"
               />
             </td>
             <td>{{ groupe.designation }}</td>
@@ -106,7 +106,7 @@
               <input
                 type="checkbox"
                 :checked="fonction.selected"
-                @click="e => selectFonction(e, fonction.id)"
+                @click="(e) => selectFonction(e, fonction.id)"
               />
             </td>
             <td>{{ fonction.nom }}</td>
@@ -137,69 +137,69 @@ export default {
       groupes: [],
       fonctions: [],
       mutationDate: null,
-      erreurs: {}
+      erreurs: {},
     };
   },
   computed: {
     ...mapState({
-      activeSapeurId: state => state.sapeur.id,
-      activeSapeurExercice: state => state.sapeur.active.exercices,
-      activeSapeurGroupe: state => state.sapeur.active.groupes,
-      activeSapeurMutations: state => state.sapeur.active.mutations,
-      activeSapeurFonction: state =>
-        state.sapeur.active.fonctions.filter(f => !f.fin)
+      activeSapeurId: (state) => state.sapeur.id,
+      activeSapeurExercice: (state) => state.sapeur.active.exercices,
+      activeSapeurGroupe: (state) => state.sapeur.active.groupes,
+      activeSapeurMutations: (state) => state.sapeur.active.mutations,
+      activeSapeurFonction: (state) =>
+        state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
     ...mapGetters([
-      'listLocalitesSis',
+      'listeLocalitesSis',
       'getGroupe',
       'getFonction',
-      'getExerciceCategorie'
+      'getExerciceCategorie',
     ]),
     exercicesSelectedState() {
       return this.exercices.length
         ? this.exercices
-            .map(e => e.selected)
+            .map((e) => e.selected)
             .reduce((v, e) => (v === e ? v : undefined))
         : true;
     },
     groupesSelectedState() {
       return this.groupes.length
         ? this.groupes
-            .map(g => g.selected)
+            .map((g) => g.selected)
             .reduce((v, g) => (v === g ? v : undefined))
         : true;
     },
     fonctionsSelectedState() {
       return this.fonctions.length
         ? this.fonctions
-            .map(f => f.selected)
+            .map((f) => f.selected)
             .reduce((v, f) => (v === f ? v : undefined))
         : true;
-    }
+    },
   },
   mounted() {
-    if (this.listLocalitesSis.length === 0) {
+    if (this.listeLocalitesSis.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
 
-    this.exercices = this.activeSapeurExercice.map(e => ({
+    this.exercices = this.activeSapeurExercice.map((e) => ({
       ...e,
       info: `${
         this.getExerciceCategorie(e.exercice_categorie_id).designation
       } : ${e.communications}`,
-      selected: true
+      selected: true,
     }));
-    this.groupes = this.activeSapeurGroupe.map(g => ({
+    this.groupes = this.activeSapeurGroupe.map((g) => ({
       ...this.getGroupe(g.groupe_id),
       id: g.id,
-      selected: true
+      selected: true,
     }));
-    this.fonctions = this.activeSapeurFonction.map(f => ({
+    this.fonctions = this.activeSapeurFonction.map((f) => ({
       ...this.getFonction(f.fonction_id),
       debut: f.debut,
       id: f.id,
       info: `Début ${this.formatDate(new Date(f.debut))}`,
-      selected: true
+      selected: true,
     }));
 
     // Récupère la date de la dernière mutation
@@ -224,7 +224,7 @@ export default {
         'septembre',
         'octobre',
         'novembre',
-        'décembre'
+        'décembre',
       ];
 
       var day = date.getDate();
@@ -238,23 +238,23 @@ export default {
         this.fonctions.length > 0 &&
         (!this.mutationDate ||
           this.fonctions.some(
-            f => new Date(f.debut) >= new Date(this.mutationDate)
+            (f) => new Date(f.debut) >= new Date(this.mutationDate)
           ))
       ) {
         this.erreurs = {
           ...this.erreurs,
-          date: 'Date requise'
+          date: 'Date requise',
         };
         return;
       }
 
-      let isSelected = e => e.selected;
-      let mapToId = e => e.id;
+      let isSelected = (e) => e.selected;
+      let mapToId = (e) => e.id;
 
       if (this.fonctions.filter(isSelected).length) {
         this.$store.dispatch('finFonctions', {
           fin: this.mutationDate,
-          ids: this.fonctions.filter(isSelected).map(mapToId)
+          ids: this.fonctions.filter(isSelected).map(mapToId),
         });
       }
       if (this.exercices.filter(isSelected).length) {
@@ -276,28 +276,28 @@ export default {
     selectGroupe(event, groupeId) {
       let state = event.target.checked;
       if (groupeId) {
-        this.groupes.find(g => g.id == groupeId).selected = state;
+        this.groupes.find((g) => g.id == groupeId).selected = state;
       } else {
-        this.groupes.forEach(e => (e.selected = state));
+        this.groupes.forEach((e) => (e.selected = state));
       }
     },
     selectExercice(event, exerciceId) {
       let state = event.target.checked;
       if (exerciceId) {
-        this.exercices.find(g => g.id == exerciceId).selected = state;
+        this.exercices.find((g) => g.id == exerciceId).selected = state;
       } else {
-        this.exercices.forEach(e => (e.selected = state));
+        this.exercices.forEach((e) => (e.selected = state));
       }
     },
     selectFonction(event, fonctionId) {
       let state = event.target.checked;
       if (fonctionId) {
-        this.fonctions.find(g => g.id == fonctionId).selected = state;
+        this.fonctions.find((g) => g.id == fonctionId).selected = state;
       } else {
-        this.fonctions.forEach(e => (e.selected = state));
+        this.fonctions.forEach((e) => (e.selected = state));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -13,8 +13,8 @@ export default {
       quittances: [],
       vehicules: [],
       materiels: [],
-      phases: []
-    }
+      phases: [],
+    },
   },
   mutations: {
     [types.UPDATE_INTERVENTION_LISTE](state, payload) {
@@ -23,17 +23,20 @@ export default {
     [types.ADD_INTERVENTION](state, payload) {
       state.liste = [...state.liste, payload];
       state.active.data = {
-        ...payload
+        ...payload,
       };
       state.active.id = payload.id;
     },
+    [types.REMOVE_INTERVENTION](state, interventionId) {
+      state.liste = [...state.liste.filter((i) => i.id != interventionId)];
+    },
     [types.UPDATE_INTERVENTION_STATUT](state, payload) {
       state.liste = [
-        ...state.liste.filter(e => e.id !== payload.id),
+        ...state.liste.filter((e) => e.id !== payload.id),
         {
-          ...state.liste.filter(e => e.id === payload.id)[0],
-          statut: payload.statut
-        }
+          ...state.liste.filter((e) => e.id === payload.id)[0],
+          statut: payload.statut,
+        },
       ];
     },
     [types.SELECT_CURRENT_INTERVENTION](state, payload) {
@@ -67,109 +70,111 @@ export default {
     //Materiel
     [types.REMOVE_CURRENT_INTERVENTION_MATERIEL](state, payload) {
       state.active.materiels = state.active.materiels.filter(
-        p => p.id !== payload
+        (p) => p.id !== payload
       );
     },
     //Vehicule
     [types.REMOVE_CURRENT_INTERVENTION_VEHICULES](state, payload) {
       state.active.vehicules = state.active.vehicules.filter(
-        p => !payload.includes(p.id)
+        (p) => !payload.includes(p.id)
       );
     },
     //Quittances
     [types.REMOVE_CURRENT_INTERVENTION_QUITTANCES](state, payload) {
       state.active.quittances = state.active.quittances.filter(
-        p => p.id !== payload
+        (p) => p.id !== payload
       );
     },
 
     //Appels
     [types.REMOVE_CURRENT_INTERVENTION_APPEL](state, payload) {
-      state.active.appels = state.active.appels.filter(p => p.id !== payload);
+      state.active.appels = state.active.appels.filter((p) => p.id !== payload);
     },
 
     //Missions
     [types.REMOVE_CURRENT_INTERVENTION_MISSION](state, payload) {
       state.active.missions = state.active.missions.filter(
-        p => p.id !== payload
+        (p) => p.id !== payload
       );
     },
 
     //Sapeurs
     [types.REMOVE_CURRENT_INTERVENTION_SAPEUR](state, payload) {
-      state.active.sapeurs = state.active.sapeurs.filter(p => p.id !== payload);
+      state.active.sapeurs = state.active.sapeurs.filter(
+        (p) => p.id !== payload
+      );
     },
     [types.EDIT_CURRENT_INTERVENTION_SAPEUR](state, payload) {
       state.active.sapeurs = [
-        ...state.active.sapeurs.filter(p => p.id !== payload.id),
-        payload
+        ...state.active.sapeurs.filter((p) => p.id !== payload.id),
+        payload,
       ];
     },
 
     //Phases
     [types.REMOVE_CURRENT_INTERVENTION_PHASE](state, payload) {
-      state.active.phases = state.active.phases.filter(p => p.id !== payload);
-    }
+      state.active.phases = state.active.phases.filter((p) => p.id !== payload);
+    },
   },
   getters: {
-    listInterventions: state => {
+    listInterventions: (state) => {
       return state.liste
         .slice(0)
         .sort((i1, i2) => new Date(i1.date_debut) - new Date(i2.date_debut));
     },
-    activeInterventionId: state => {
+    activeInterventionId: (state) => {
       return state.active.id;
     },
-    activeInterventionData: state => {
+    activeInterventionData: (state) => {
       return state.active.data;
     },
-    getIntervention: state => intervention_id => {
-      return state.liste.filter(e => e.id === intervention_id)[0];
-    }
+    getIntervention: (state) => (intervention_id) => {
+      return state.liste.filter((e) => e.id === intervention_id)[0];
+    },
   },
   actions: {
     fetchListeIntervention({ getters, commit }) {
       return InterventionService.getInterventions(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_INTERVENTION_LISTE, data));
+      ).then((data) => commit(types.UPDATE_INTERVENTION_LISTE, data));
     },
     fetchIntervention({ commit }, payload) {
-      return InterventionService.getIntervention(payload).then(data =>
+      return InterventionService.getIntervention(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data)
       );
     },
     fetchInterventionSapeurs({ commit }, payload) {
-      return InterventionService.getSapeurs(payload).then(data =>
+      return InterventionService.getSapeurs(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data)
       );
     },
     fetchInterventionQuittances({ commit }, payload) {
-      return InterventionService.getQuittances(payload).then(data =>
+      return InterventionService.getQuittances(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data)
       );
     },
     fetchInterventionMateriels({ commit }, payload) {
-      return InterventionService.getMateriels(payload).then(data =>
+      return InterventionService.getMateriels(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data)
       );
     },
     fetchInterventionVehicules({ commit }, payload) {
-      return InterventionService.getVehicules(payload).then(data =>
+      return InterventionService.getVehicules(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data)
       );
     },
     fetchInterventionAppels({ commit }, payload) {
-      return InterventionService.getAppels(payload).then(data =>
+      return InterventionService.getAppels(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data)
       );
     },
     fetchInterventionMissions({ commit }, payload) {
-      return InterventionService.getMissions(payload).then(data =>
+      return InterventionService.getMissions(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data)
       );
     },
     fetchInterventionPhases({ commit }, payload) {
-      return InterventionService.getPhases(payload).then(data =>
+      return InterventionService.getPhases(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
       );
     },
@@ -200,83 +205,88 @@ export default {
         type_intervention_id: null,
         sapeur_id: null,
         stat_federal_id: null,
-        intervention_traitement_id: null
+        intervention_traitement_id: null,
       });
     },
     createIntervention({ state, commit, getters }) {
       return InterventionService.createIntervention({
         ...state.active.data,
-        exercice_comptable_id: getters.currentExerciceComptableId
-      }).then(async data => {
+        exercice_comptable_id: getters.currentExerciceComptableId,
+      }).then(async (data) => {
         await commit(types.ADD_INTERVENTION, data);
         await commit(types.SELECT_CURRENT_INTERVENTION, data.id);
         await commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data);
         return data;
       });
     },
+    removeIntervention({ commit }, interventionId) {
+      return InterventionService.removeIntervention(interventionId).then(() => {
+        return commit(types.REMOVE_INTERVENTION, interventionId);
+      });
+    },
     saveActiveIntervention({ state, commit }, payload) {
       return InterventionService.saveIntervention(
         state.active.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_DATA, data);
         return data;
       });
     },
     validerIntervention({ commit }, payload) {
-      return InterventionService.validerIntervention(payload).then(data => {
+      return InterventionService.validerIntervention(payload).then((data) => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload,
-          statut: data
+          statut: data,
         });
         return data;
       });
     },
 
     //Materiel
-    addMateriel({ state, commit }, payload) {
+    addInterventionMateriel({ state, commit }, payload) {
       return InterventionService.addMateriel(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data);
         return data;
       });
     },
-    editMateriel({ state, commit }, payload) {
+    editInterventionMateriel({ state, commit }, payload) {
       return InterventionService.editMateriel(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_MATERIELS, data);
         return data;
       });
     },
-    removeMateriel({ state, commit }, payload) {
+    removeInterventionMateriel({ state, commit }, payload) {
       return InterventionService.removeMateriel(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload);
         return data;
       });
     },
 
     //Vehicules
-    addVehicules({ state, commit }, payload) {
+    addInterventionVehicules({ state, commit }, payload) {
       return InterventionService.addVehicules(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_VEHICULES, data);
         return data;
       });
     },
-    removeVehicules({ state, commit }, payload) {
+    removeInterventionVehicules({ state, commit }, payload) {
       return InterventionService.removeVehicules(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_VEHICULES, payload);
         return data;
       });
@@ -285,71 +295,71 @@ export default {
     //Quittances
     addQuittance({ state, commit }, payload) {
       return InterventionService.addQuittances(state.active.data.id, [
-        payload
-      ]).then(data => {
+        payload,
+      ]).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_QUITTANCES, data);
         return data;
       });
     },
     removeQuittance({ state, commit }, payload) {
       return InterventionService.removeQuittances(state.active.data.id, [
-        payload
-      ]).then(data => {
+        payload,
+      ]).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_QUITTANCES, payload);
         return data;
       });
     },
 
     //Missions
-    addMission({ state, commit }, payload) {
+    addInterventionMission({ state, commit }, payload) {
       return InterventionService.addMission(state.active.data.id, payload).then(
-        data => {
+        (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data);
           return data;
         }
       );
     },
-    editMission({ state, commit }, payload) {
+    editInterventionMission({ state, commit }, payload) {
       return InterventionService.editMission(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data);
         return data;
       });
     },
-    removeMission({ state, commit }, payload) {
+    removeInterventionMission({ state, commit }, payload) {
       return InterventionService.removeMission(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_MISSION, payload);
         return data;
       });
     },
 
     //Appels
-    addAppel({ state, commit }, payload) {
+    addInterventionAppel({ state, commit }, payload) {
       return InterventionService.addAppel(state.active.data.id, payload).then(
-        data => {
+        (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data);
           return data;
         }
       );
     },
-    editAppel({ state, commit }, payload) {
+    editInterventionAppel({ state, commit }, payload) {
       return InterventionService.editAppel(state.active.data.id, payload).then(
-        data => {
+        (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_APPELS, data);
           return data;
         }
       );
     },
-    removeAppel({ state, commit }, payload) {
+    removeInterventionAppel({ state, commit }, payload) {
       return InterventionService.removeAppel(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_APPEL, payload);
         return data;
       });
@@ -357,32 +367,32 @@ export default {
 
     addPresences({ state, commit }, payload) {
       return InterventionService.addSapeurs(state.active.data.id, {
-        sapeurs: payload
-      }).then(async data => {
+        sapeurs: payload,
+      }).then(async (data) => {
         await commit(types.UPDATE_CURRENT_INTERVENTION_SAPEURS, data.sapeurs);
         await commit(types.UPDATE_INTERVENTION_STATUT, {
           id: state.active.id,
-          statut: data.statut
+          statut: data.statut,
         });
         return data;
       });
     },
     editPresence({ state, commit }, payload) {
       return InterventionService.editSapeurs(state.active.data.id, {
-        sapeurs: [payload]
-      }).then(data => {
+        sapeurs: [payload],
+      }).then((data) => {
         commit(types.EDIT_CURRENT_INTERVENTION_SAPEUR, payload);
         return data;
       });
     },
     removePresence({ state, commit }, payload) {
       return InterventionService.removeSapeurs(state.active.data.id, {
-        sapeurs: [payload]
-      }).then(async data => {
+        sapeurs: [payload],
+      }).then(async (data) => {
         await commit(types.REMOVE_CURRENT_INTERVENTION_SAPEUR, payload);
         await commit(types.UPDATE_INTERVENTION_STATUT, {
           id: state.active.id,
-          statut: data
+          statut: data,
         });
         return data;
       });
@@ -391,7 +401,7 @@ export default {
     //Phases
     addPhase({ state, commit }, payload) {
       return InterventionService.addPhase(state.active.data.id, payload).then(
-        data => {
+        (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data);
           return data;
         }
@@ -399,7 +409,7 @@ export default {
     },
     editPhase({ state, commit }, payload) {
       return InterventionService.editPhase(state.active.data.id, payload).then(
-        data => {
+        (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data);
           return data;
         }
@@ -409,10 +419,10 @@ export default {
       return InterventionService.removePhase(
         state.active.data.id,
         payload
-      ).then(data => {
+      ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_PHASE, payload);
         return data;
       });
-    }
-  }
+    },
+  },
 };

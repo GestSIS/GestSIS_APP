@@ -5,12 +5,10 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/">Accueil</router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'exercices' }">
+              <router-link tag="a" :to="{ name: 'controles-medicaux' }">
                 Controles médicaux
               </router-link>
             </li>
@@ -53,15 +51,16 @@
                 class="custom-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
-                style="width: 100%;"
+                style="width: 100%"
                 v-model="controleMedical.sapeur_id"
               >
                 <option
                   v-for="sapeur in listeSapeurs"
                   :key="sapeur.id"
                   :value="sapeur.id"
-                  >{{ sapeur.nom }} {{ sapeur.prenom }}</option
                 >
+                  {{ sapeur.nom }} {{ sapeur.prenom }}
+                </option>
               </select>
             </div>
             <!-- MEDECIN -->
@@ -71,15 +70,16 @@
                 class="custom-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
-                style="width: 100%;"
+                style="width: 100%"
                 v-model="controleMedical.medecin_id"
               >
                 <option
                   v-for="medecin in listeMedecins"
                   :key="medecin.id"
                   :value="medecin.id"
-                  >{{ medecin.designation }}</option
                 >
+                  {{ medecin.designation }}
+                </option>
               </select>
             </div>
             <!-- TYPE -->
@@ -89,15 +89,16 @@
                 class="custom-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
-                style="width: 100%;"
+                style="width: 100%"
                 v-model="controleMedical.controle_medical_type_id"
               >
                 <option
                   v-for="t in listeControlesTypes"
                   :key="t.id"
                   :value="t.id"
-                  >{{ t.designation }}</option
                 >
+                  {{ t.designation }}
+                </option>
               </select>
             </div>
             <!-- ACCEPTER -->
@@ -308,7 +309,7 @@ export default {
         (prev.filename !== next.filename && next.filename)
       ) {
         this.displayJustificatif();
-      } else {
+      } else if (!next.filename) {
         this.pdfData = null;
       }
     },
@@ -358,26 +359,17 @@ export default {
   },
   methods: {
     downloadJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
-        (response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          // link.target = '_blank' // If we want to open it in another tab
-          // console.log(response);
-          link.setAttribute('download', 'file.pdf');
-          // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-          link.click();
-          window.URL.revokeObjectURL(url);
-        }
+      ControlesMedicauxService.downloadJustificatif(
+        this.controleMedical.id,
+        this.controleMedical.filename
       );
     },
     displayJustificatif() {
-      ControlesMedicauxService.getJustificatif(this.controleMedical.id).then(
-        (response) => {
-          this.pdfData = response.data;
-        }
-      );
+      ControlesMedicauxService.downloadJustificatif(
+        this.controleMedical.id
+      ).then((response) => {
+        this.pdfData = response.data;
+      });
     },
     save() {
       if (this.modeAjout) {

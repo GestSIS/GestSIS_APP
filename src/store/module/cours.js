@@ -14,8 +14,8 @@ export default {
       precedent_id: 0,
       date: null,
       date_fonction: null,
-      date_grade: null
-    }
+      date_grade: null,
+    },
   },
   mutations: {
     [types.UPDATE_COURS_LISTE](state, payload) {
@@ -23,16 +23,46 @@ export default {
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
       state.active = payload;
-    }
+    },
+    [types.ADD_COURS](state, cours) {
+      state.liste = [...state.liste, cours];
+    },
+    [types.UPDATE_COURS](state, cours) {
+      state.liste = [
+        ...state.liste.map((m) => (m.id === cours.id ? cours : m)),
+      ];
+    },
+    [types.REMOVE_COURS](state, coursId) {
+      state.liste = state.liste.filter((m) => m.id != coursId);
+    },
   },
   getters: {
-    getCours: state => cours_id => state.liste.filter(c => c.id === cours_id)[0]
+    getCours: (state) => (cours_id) =>
+      state.liste.find((c) => c.id === cours_id),
   },
   actions: {
     fetchCours({ commit }) {
-      return CoursService.getCours().then(data =>
+      return CoursService.getCours().then((data) =>
         commit(types.UPDATE_COURS_LISTE, data)
       );
+    },
+    addCours({ commit }, cours) {
+      return CoursService.addCours(cours).then((data) => {
+        commit(types.ADD_COURS, data);
+        return data;
+      });
+    },
+    updateCours({ commit }, cours) {
+      return CoursService.updateCours(cours).then((data) => {
+        commit(types.UPDATE_COURS, data);
+        return data;
+      });
+    },
+    removeCours({ commit }, cours) {
+      return CoursService.removeCours(cours).then((data) => {
+        commit(types.REMOVE_COURS, data);
+        return data;
+      });
     },
     updateActiveCours({ commit }, payload) {
       return commit(types.UPDATE_CURRENT_COURS, payload);
@@ -48,8 +78,8 @@ export default {
         precedent_id: 0,
         date: null,
         date_fonction: null,
-        date_grade: null
+        date_grade: null,
       });
-    }
-  }
+    },
+  },
 };

@@ -36,8 +36,8 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['phase_type_id'] }"
         >
-          <option v-for="p in listePhaseType" :key="p.id" :value="p.id"
-            >{{ p.designation }}
+          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">
+            {{ p.designation }}
           </option>
         </select>
       </div>
@@ -64,20 +64,20 @@ export default {
       errors: {},
       format: 'yyyy-MM-dd HH:mm',
       min: null,
-      max: null
+      max: null,
     };
   },
   props: {
     data: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   computed: {
     ...mapState({
-      activeSapeurId: state => state.sapeur.active.id,
-      listePhaseType: state => state.phaseType.liste,
-      activePhase: state => state.phaseType.active.data
-    })
+      activeSapeurId: (state) => state.sapeur.active.id,
+      listePhaseType: (state) => state.phaseType.liste,
+      activePhase: (state) => state.phaseType.active.data,
+    }),
   },
   mounted() {
     this.min = DateTime.fromSQL(this.data.min).toISO();
@@ -103,27 +103,27 @@ export default {
         this.$store
           .dispatch('addPhase', {
             ...this.activePhase,
-            debut2: undefined
+            debut2: undefined,
           })
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editPhase', {
             ...this.activePhase,
-            debut2: undefined
+            debut2: undefined,
           })
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

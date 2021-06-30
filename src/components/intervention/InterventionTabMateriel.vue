@@ -4,13 +4,18 @@
     <div class="card card-primary card-outline mb-3">
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Matériel</h3>
+        <h3 class="card-title">Matériel consommable et en prêt</h3>
         <button type="button" class="btn btn-primary" @click="newMateriel">
           Ajouter du matériel
         </button>
       </div>
       <div class="card-body">
-        <table id="int-materiel" class="table" cellspacing="0" width="100%">
+        <table
+          id="int-materiel"
+          class="table table-sm"
+          cellspacing="0"
+          width="100%"
+        >
           <thead>
             <tr>
               <th>Matériel</th>
@@ -56,10 +61,10 @@ export default {
   computed: {
     ...mapGetters(['getMateriel']),
     ...mapState({
-      listMateriels: state => state.materiel.liste,
-      materiels: state => state.intervention.active.materiels,
-      activeInterventionId: state => state.intervention.active.id
-    })
+      listMateriels: (state) => state.materiel.liste,
+      materiels: (state) => state.intervention.active.materiels,
+      activeInterventionId: (state) => state.intervention.active.id,
+    }),
   },
   mounted() {
     if (this.listMateriels.length === 0) {
@@ -80,19 +85,19 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     newMateriel() {
       this.$store.dispatch('resetActiveMateriel');
-      this.SHOW_MODAL('ModalMateriel');
+      this.SHOW_MODAL('ModalInterventionMateriel');
     },
     editMateriel(grade_id) {
       this.$store.dispatch(
         'updateActiveMateriel',
-        Object.assign({}, this.materiels.filter(m => m.id === grade_id)[0])
+        Object.assign({}, this.materiels.filter((m) => m.id === grade_id)[0])
       );
-      this.SHOW_MODAL('ModalMateriel');
+      this.SHOW_MODAL('ModalInterventionMateriel');
     },
     supprimerMateriel(grade_id) {
-      this.$store.dispatch('removeMateriel', grade_id);
-    }
-  }
+      this.$store.dispatch('removeInterventionMateriel', grade_id);
+    },
+  },
 };
 </script>
 

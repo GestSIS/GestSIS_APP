@@ -3,20 +3,20 @@
     <form class="text-center form-signin" _lpchecked="1">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
+      <h1 class="h3 mb-3 font-weight-normal">Veuillez-vous connectez</h1>
+      <label for="inputEmail" class="sr-only">Adresse email</label>
       <input
         v-model="email"
         type="email"
         id="inputEmail"
         class="form-control"
-        placeholder="Email address"
+        placeholder="Adresse email"
         required=""
         autofocus=""
         autocomplete="off"
         :class="{ 'is-invalid': error }"
       />
-      <label for="inputPassword" class="sr-only">Password</label>
+      <label for="inputPassword" class="sr-only">Mot de passe</label>
       <input
         v-model="password"
         type="password"
@@ -53,7 +53,7 @@ export default {
     return {
       email: null,
       password: null,
-      error: null
+      error: null,
     };
   },
   methods: {
@@ -66,11 +66,11 @@ export default {
             this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
           );
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -36,30 +36,33 @@
         </div>
       </div>
     </div>
-    <nav class="nav nav-tabs mb-3">
-      <button
-        v-for="tab in Object.keys(tabList)"
-        :key="tab"
-        class="btn btn-link nav-item nav-link"
-        :class="{ active: activeTab === tabList[tab] }"
-        @click="selectTab(tabList[tab])"
-      >
-        {{ tabList[tab] }}
-      </button>
+    <nav>
+      <nav class="nav nav-tabs mb-3">
+        <a
+          v-for="tab in Object.keys(tabList)"
+          :key="tab"
+          class="nav-item nav-link"
+          :class="{ active: activeTab === tabList[tab] }"
+          @click.prevent="selectTab(tabList[tab])"
+          href="#"
+        >
+          {{ tabList[tab] }}
+        </a>
+      </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="tab-sapeur-details">
         <div class="row">
           <div class="col-12">
             <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
-            <SapeurTabFonction v-if="activeTab === tabList.FONCTION" />
-            <SapeurTabCours v-if="activeTab === tabList.COURS" />
-            <SapeurTabPromotion v-if="activeTab === tabList.PROMOTION" />
-            <SapeurTabMateriel v-if="activeTab === tabList.MATERIAL" />
-            <SapeurTabOrganisation v-if="activeTab === tabList.ORGANISATION" />
-            <SapeurTabPermis v-if="activeTab === tabList.PERMIS" />
-            <SapeurTabBanque v-if="activeTab === tabList.BANQUE" />
-            <SapeurTabExercice v-if="activeTab === tabList.EXERCICE" />
+            <SapeurFonction v-if="activeTab === tabList.FONCTION" />
+            <SapeurCours v-if="activeTab === tabList.COURS" />
+            <SapeurPromotion v-if="activeTab === tabList.PROMOTION" />
+            <SapeurMateriel v-if="activeTab === tabList.MATERIAL" />
+            <SapeurOrganisation v-if="activeTab === tabList.ORGANISATION" />
+            <SapeurPermis v-if="activeTab === tabList.PERMIS" />
+            <SapeurBanque v-if="activeTab === tabList.BANQUE" />
+            <SapeurExercice v-if="activeTab === tabList.EXERCICE" />
           </div>
         </div>
       </div>
@@ -71,7 +74,7 @@
 import { mapMutations } from 'vuex';
 import store from '@/store/index';
 
-//TODO Add Mat
+//TODO Implémenter Matériel personnel
 const tabList = {
   GENERAL: 'General',
   FONCTION: 'Fonctions',
@@ -85,14 +88,14 @@ const tabList = {
 };
 
 import SapeurTabGeneral from '@/components/sapeur/SapeurTabGeneral';
-import SapeurTabFonction from '@/components/sapeur/SapeurTabFonction';
-import SapeurTabCours from '@/components/sapeur/SapeurTabCours';
-import SapeurTabPromotion from '@/components/sapeur/SapeurTabPromotion';
-import SapeurTabMateriel from '@/components/sapeur/SapeurTabMateriel';
-import SapeurTabOrganisation from '@/components/sapeur/SapeurTabOrganisation';
-import SapeurTabPermis from '@/components/sapeur/SapeurTabPermis';
-import SapeurTabBanque from '@/components/sapeur/SapeurTabBanque';
-import SapeurTabExercice from '@/components/sapeur/SapeurTabExercice';
+import SapeurFonction from '@/components/sapeur/SapeurFonction';
+import SapeurCours from '@/components/sapeur/SapeurCours';
+import SapeurPromotion from '@/components/sapeur/SapeurPromotion';
+import SapeurMateriel from '@/components/sapeur/SapeurMateriel';
+import SapeurOrganisation from '@/components/sapeur/SapeurOrganisation';
+import SapeurPermis from '@/components/sapeur/SapeurPermis';
+import SapeurBanque from '@/components/sapeur/SapeurBanque';
+import SapeurExercice from '@/components/sapeur/SapeurExercice';
 
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
@@ -115,14 +118,14 @@ export default {
   name: 'SapeurDetails',
   components: {
     SapeurTabGeneral,
-    SapeurTabFonction,
-    SapeurTabCours,
-    SapeurTabPromotion,
-    SapeurTabMateriel,
-    SapeurTabOrganisation,
-    SapeurTabPermis,
-    SapeurTabBanque,
-    SapeurTabExercice,
+    SapeurFonction,
+    SapeurCours,
+    SapeurPromotion,
+    SapeurMateriel,
+    SapeurOrganisation,
+    SapeurPermis,
+    SapeurBanque,
+    SapeurExercice,
   },
   data() {
     return {
@@ -157,13 +160,15 @@ export default {
         component: 'ModalSapeur',
         size: 2,
         callback: (sapeurId) => {
-          this.$store.dispatch('selectSapeur', sapeurId)
-          .then(() => {
-            this.$router.push({ name: 'sapeurs-details', params: { id: sapeurId } })
-          })
+          this.$store.dispatch('selectSapeur', sapeurId).then(() => {
+            this.$router.push({
+              name: 'sapeurs-details',
+              params: { id: sapeurId },
+            });
+          });
           //TODO
         },
-      })
+      });
       // this.activeTab = tabList.GENERAL;
     },
   },

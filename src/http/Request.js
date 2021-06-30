@@ -14,32 +14,32 @@ const request = {
 
   setAccessToken: (token) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Sis-Id'] = `hs`;
   },
 
-  apiFileDownload() {
+  apiFileDownload(filename) {
     let api = axios.create({
       baseURL: API_URL,
       responseType: 'arraybuffer',
       headers: {
-        Accept: 'application/pdf',
+        'Accept': 'application/pdf',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
     });
-
-    //TODO Choose where to extract this part of code to make it more general for pdf download
-    //     .then((response) => {
-    //       // const url = window.URL.createObjectURL(new Blob([response.data]));
-    //       // const link = document.createElement('a');
-    //       // link.href = url;
-    //       // // link.target = '_blank' // If we want to open it in another tab
-    //       // console.log(response);
-    //       // link.setAttribute('download', 'file.pdf')
-    //       // // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-    //       // link.click();
-    //       // window.URL.revokeObjectURL(url);
-    //       return response.data
-    //     });
+    if (filename) {
+      api.interceptors.response.use((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        // link.target = '_blank' // If we want to open it in another tab
+        link.setAttribute('download', filename);
+        // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
+        link.click();
+        window.URL.revokeObjectURL(url);
+        return response.data;
+      });
+    }
 
     return api;
   },
@@ -48,7 +48,7 @@ const request = {
     let api = axios.create({
       baseURL: API_URL,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -94,7 +94,7 @@ const request = {
     let auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },

@@ -4,9 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">
-              Accueil
-            </router-link>
+            <router-link tag="a" to="/">Accueil</router-link>
           </li>
           <li class="breadcrumb-item">
             <router-link tag="a" to="/interventions">
@@ -24,49 +22,57 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav v-if="!newMode">
-          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'general' }"
-              role="tab"
-              @click.prevent="activeTab = 'general'"
-            >
-              Informations
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'resume' }"
-              role="tab"
-              @click.prevent="activeTab = 'resume'"
-            >
-              Résumé
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'sapeurs' }"
-              role="tab"
-              @click.prevent="activeTab = 'sapeurs'"
-            >
-              Sapeurs
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'journal' }"
-              role="tab"
-              @click.prevent="activeTab = 'journal'"
-            >
-              Journal
-            </button>
-            <button
-              class="btn btn-link nav-item nav-link"
-              :class="{ active: activeTab === 'mat-veh' }"
-              role="tab"
-              @click.prevent="activeTab = 'mat-veh'"
-            >
-              Matériels &amp; Véhicules
-            </button>
-          </div>
+        <nav
+          v-if="!newMode"
+          class="nav nav-tabs mb-3"
+          id="nav-tab"
+          role="tablist"
+        >
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'general' }"
+            role="tab"
+            href="#"
+            @click.prevent="activeTab = 'general'"
+          >
+            Informations
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'resume' }"
+            role="tab"
+            href="#"
+            @click.prevent="activeTab = 'resume'"
+          >
+            Résumé
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'sapeurs' }"
+            role="tab"
+            href="#"
+            @click.prevent="activeTab = 'sapeurs'"
+          >
+            Sapeurs
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'journal' }"
+            role="tab"
+            href="#"
+            @click.prevent="activeTab = 'journal'"
+          >
+            Journal
+          </a>
+          <a
+            class="nav-item nav-link"
+            :class="{ active: activeTab === 'mat-veh' }"
+            role="tab"
+            href="#"
+            @click.prevent="activeTab = 'mat-veh'"
+          >
+            Matériels &amp; Véhicules
+          </a>
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div
@@ -93,9 +99,7 @@
               <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
             </div>
           </div>
-          <div v-else>
-            Loading
-          </div>
+          <div v-else>Loading</div>
         </div>
       </div>
     </div>
@@ -122,18 +126,18 @@ export default {
     InterventionTabMateriel,
     InterventionTabVehicule,
     InterventionTabJournal,
-    ExerciceComptable
+    ExerciceComptable,
   },
   data() {
     return {
       activeTab: 'general',
-      loading: true
+      loading: true,
     };
   },
   props: {
     id: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     ...mapGetters(['activeInterventionData', 'activeInterventionId']),
@@ -142,7 +146,7 @@ export default {
     },
     breadcrumbFinal() {
       return this.newMode ? 'Nouveau' : this.activeInterventionData.objet;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch('fetchListeSapeur');
@@ -180,8 +184,8 @@ export default {
           .dispatch('resetActiveIntervention')
           .then(() => (svm.loading = false));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,106 +1,133 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Saisie d'un cours</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un médecin
+      </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body"></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="annee">Année</label>
+        <input
+          type="text"
+          v-model="activeExercice.annee"
+          class="form-control"
+          :class="{ 'is-invalid': errors['annee'] }"
+          id="annee"
+        />
+      </div>
+      <div class="form-group">
+        <label for="designation">Désignation</label>
+        <input
+          type="text"
+          v-model="activeExercice.designation"
+          class="form-control"
+          :class="{ 'is-invalid': errors['designation'] }"
+          id="designation"
+        />
+      </div>
+      <div class="form-group">
+        <label for="debut">Début</label>
+        <input
+          type="date"
+          v-model="activeExercice.debut"
+          class="form-control"
+          :class="{ 'is-invalid': errors['debut'] }"
+          id="debut"
+        />
+      </div>
+      <div class="form-group">
+        <label for="fin">Fin</label>
+        <input
+          type="date"
+          v-model="activeExercice.fin"
+          class="form-control"
+          :class="{ 'is-invalid': errors['fin'] }"
+          id="fin"
+        />
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="exercice-comptable-boucle-modal"
+            v-model="activeExercice.boucle"
+          />
+          <label
+            class="custom-control-label"
+            for="exercice-comptable-boucle-modal"
+            >Bouclé</label
+          >
+        </div>
+      </div>
+    </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Close
+        Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ addMode ? 'Ajouter' : 'Modifier' }}
+        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalExerciceComptable',
-  computed: {
-    ...mapGetters(['listExerciceComptable', 'activeExerciceComptableId']),
-    addMode() {
-      return (this.activeCours.id || 0) === 0;
+  name: 'ModalExercice',
+  props: {
+    data: {
+      type: Object,
     },
-    activeCoursId() {
-      return this.activeCours.cours_id;
-    },
-    activesFonctions() {
-      return this.activeSapeurFonctions.filter(f => f.fin === null);
-    }
+  },
+  data() {
+    return {
+      errors: {},
+      activeExercice: {},
+    };
   },
   mounted() {
-    if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-    }
-
-    if (this.listCours.length === 0) {
-      this.$store.dispatch('fetchCours');
-    }
-    if (this.listFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
+    this.activeExercice = {
+      ...this.data,
+    };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      let saveData = Object.assign({}, this.activeCours);
-      Object.keys(saveData).map(key => {
-        saveData[key] =
-          saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
-      });
-
-      if (this.addMode) {
-        this.$store.dispatch('addCours', saveData).then(() => {
-          this.HIDE_MODAL();
-          this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-        });
-      } else {
-        this.$store.dispatch('editCours', saveData).then(() => {
-          this.HIDE_MODAL();
-          this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-        });
-      }
-    },
-    dateChange() {
-      this.activeCours.date_grade = this.activeCours.date;
-      this.activeCours.date_fonction = this.activeCours.date;
-    }
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id);
-    },
-    activeCoursId: function(cours_id) {
-      let cours = this.listCours.filter(c => c.id === cours_id)[0];
-      this.activeCours.fonction_id = cours.fonction_id || 0;
-      this.activeCours.grade_id = cours.grade_id || 0;
-      this.activeCours.precedent_id = cours.precedent_id || 0;
-      this.activeCours.fonction_sapeur_id = 0;
-
-      if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.getFonction(this.activeCours.fonction_id);
-        if (fonction.cumulable === 0) {
-          let fonctions = this.activesFonctions.filter(
-            f => this.getFonction(f.fonction_id).cumulable === 0
+      if ((this.activeExercice.id || 0) === 0) {
+        this.$store
+          .dispatch('addExerciceComptable', this.activeExercice)
+          .then(() => {
+            this.errors = {};
+            this.HIDE_MODAL();
+          })
+          .catch(
+            (errors) =>
+              (this.errors = {
+                ...errors,
+              })
           );
-          if (fonctions.length > 0) {
-            this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;
-          }
-        }
+      } else {
+        this.$store
+          .dispatch('updateExerciceComptable', this.activeExercice)
+          .then(() => {
+            this.errors = {};
+            this.HIDE_MODAL();
+          })
+          .catch((errors) => {
+            this.errors = {
+              ...errors,
+            };
+          });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

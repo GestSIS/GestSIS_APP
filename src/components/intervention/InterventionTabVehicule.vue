@@ -10,7 +10,7 @@
         </button>
       </div>
       <div class="card-body">
-        <table id="int-vehicules" class="table">
+        <table id="int-vehicules" class="table table-sm">
           <thead>
             <tr>
               <th>Véhicule</th>
@@ -19,7 +19,7 @@
           </thead>
           <tbody id="vehicules">
             <tr
-              v-for="v in listVehicules.filter(item => item.status === 1)"
+              v-for="v in listVehicules.filter((item) => item.status === 1)"
               :key="v.id"
             >
               <td>{{ v.designation }}</td>
@@ -54,16 +54,16 @@ export default {
   name: 'InterventionTabVehicules',
   data() {
     return {
-      vehicules: {}
+      vehicules: {},
     };
   },
   computed: {
     ...mapGetters(['getVehicule']),
     ...mapState({
-      listVehicules: state => state.vehicule.liste,
-      interventionVehicules: state => state.intervention.active.vehicules,
-      activeInterventionId: state => state.intervention.active.id
-    })
+      listVehicules: (state) => state.vehicule.liste,
+      interventionVehicules: (state) => state.intervention.active.vehicules,
+      activeInterventionId: (state) => state.intervention.active.id,
+    }),
   },
   mounted() {
     if (this.listVehicules.length === 0) {
@@ -85,32 +85,32 @@ export default {
   watch: {
     interventionVehicules(value) {
       this.updateVehicules(value);
-    }
+    },
   },
   methods: {
     save() {
-      let vehiculesIds = this.interventionVehicules.map(v => v.vehicule_id);
+      let vehiculesIds = this.interventionVehicules.map((v) => v.vehicule_id);
       let ids = Object.keys(this.vehicules)
-        .filter(item => this.vehicules[item])
-        .map(x => parseInt(x));
+        .filter((item) => this.vehicules[item])
+        .map((x) => parseInt(x));
 
       //New One
-      let newOne = ids.filter(item => !vehiculesIds.includes(item));
+      let newOne = ids.filter((item) => !vehiculesIds.includes(item));
 
       //Removed
-      let removed = vehiculesIds.filter(item => !ids.includes(item));
+      let removed = vehiculesIds.filter((item) => !ids.includes(item));
       let removedIds = removed.map(
-        vehicule_id =>
+        (vehicule_id) =>
           this.interventionVehicules
-            .filter(v => v.vehicule_id === vehicule_id)
-            .map(v => v.id)[0]
+            .filter((v) => v.vehicule_id === vehicule_id)
+            .map((v) => v.id)[0]
       );
 
       if (removedIds.length > 0) {
-        this.$store.dispatch('removeVehicules', removedIds);
+        this.$store.dispatch('removeInterventionVehicules', removedIds);
       }
       if (newOne.length > 0) {
-        this.$store.dispatch('addVehicules', newOne);
+        this.$store.dispatch('addInterventionVehicules', newOne);
       }
     },
     updateVehicules(value) {
@@ -118,10 +118,10 @@ export default {
       let svm = this;
 
       value.forEach(
-        v => (svm.vehicules = { ...svm.vehicules, [v.vehicule_id]: true })
+        (v) => (svm.vehicules = { ...svm.vehicules, [v.vehicule_id]: true })
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

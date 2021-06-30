@@ -26,7 +26,11 @@ const TokenService = {
   },
 
   saveAccessToken(accessToken) {
-    localStorage.setItem(TOKEN_KEY, accessToken);
+    if (accessToken === null || accessToken === 'null') {
+      this.removeAccessToken();
+    } else {
+      localStorage.setItem(TOKEN_KEY, accessToken);
+    }
   },
 
   removeAccessToken() {
@@ -38,12 +42,16 @@ const TokenService = {
   },
 
   saveRefreshToken(refreshToken) {
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    if (refreshToken === null || refreshToken === 'null') {
+      this.removeRefreshToken;
+    } else {
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    }
   },
 
   removeRefreshToken() {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
-  }
+  },
 };
 
 export { TokenService };

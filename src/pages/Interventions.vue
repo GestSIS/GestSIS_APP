@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">
-                Accueil
-              </router-link>
+              <router-link tag="a" to="/">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Interventions
@@ -20,18 +18,60 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-3">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
-            <h3>Liste des interventions</h3>
+            <h5>Actions</h5>
+          </div>
+          <form class="card-body">
             <router-link
               tag="button"
               to="/interventions/new"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-primary btn-block"
             >
               Ajouter une intervention
             </router-link>
+            <router-link
+              tag="button"
+              :disabled="!selectedId"
+              :to="'/interventions/' + selectedId"
+              class="btn btn-outline-primary btn-block"
+            >
+              Modifier
+            </router-link>
+            <button
+              :disabled="!canDelete"
+              @click="supprimerIntervention(selectedId)"
+              class="btn btn-outline-primary btn-block"
+            >
+              Supprimer
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Impressions</h5>
+          </div>
+          <form class="card-body">
+            <button
+              :disabled="!selectedId"
+              @click="rapportIntervention"
+              class="btn btn-outline-primary btn-block"
+            >
+              Rapport d'intervention
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Filtres</h5>
           </div>
           <form class="card-body">
             <div class="form-row">
@@ -48,11 +88,12 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                    >{{ loc.designation }}</option
                   >
+                    {{ loc.designation }}
+                  </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
                   class="custom-select custom-select-sm"
                   id="filterType"
@@ -66,11 +107,12 @@
                     v-for="type in filteredInterventionsTypes"
                     :key="type.id"
                     :value="type.id"
-                    >{{ type.designation }}</option
                   >
+                    {{ type.designation }}
+                  </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
                   class="custom-select custom-select-sm"
                   id="filterStatistique"
@@ -83,11 +125,12 @@
                     v-for="stat in filteredStatFederal"
                     :key="stat.id"
                     :value="stat.id"
-                    >{{ stat.designation }}</option
                   >
+                    {{ stat.designation }}
+                  </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
                   class="custom-select custom-select-sm"
                   id="filterTraitement"
@@ -101,11 +144,12 @@
                     v-for="traitement in listeTraitement"
                     :key="traitement.id"
                     :value="traitement.id"
-                    >{{ traitement.designation }}</option
                   >
+                    {{ traitement.designation }}
+                  </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
                   class="custom-select custom-select-sm"
                   id="filterEtendue"
@@ -122,6 +166,13 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-5">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Chargement...</span>
@@ -135,8 +186,10 @@
             :css="css.table"
             :data-manager="dataManager"
             :row-class="onRowClass"
+            no-data-template="Aucune intervention à afficher"
+            @vuetable:row-clicked="selectIntervention"
           >
-            <div slot="details" slot-scope="props">
+            <div slot="details" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-link border-0"
                 @click="toggleDetails(props.rowData.id)"
@@ -151,7 +204,7 @@
                 />
               </button>
             </div>
-            <div slot="actions" slot-scope="props">
+            <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
                 :to="'/interventions/' + props.rowData.id"
@@ -175,7 +228,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -237,9 +290,11 @@ export default {
   },
   data() {
     const self = this;
+
     return {
       css: CssForBootstrap4,
       toggles: [],
+      selectedId: null,
       fields: [
         // {
         //   title: '',
@@ -255,7 +310,6 @@ export default {
         {
           title: 'Heure',
           name: 'heure_debut',
-          dataClass: 'align-middle',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -272,7 +326,6 @@ export default {
         {
           title: 'Localité',
           name: 'localite_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getLocalite(value).designation;
           },
@@ -286,7 +339,6 @@ export default {
         {
           title: 'Stat fédéral',
           name: 'stat_federal_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getStatFederal(value).designation;
           },
@@ -295,7 +347,6 @@ export default {
         {
           title: 'Traitement',
           name: 'intervention_traitement_id',
-          dataClass: 'align-middle',
           formatter(value) {
             return self.getInterventionTraitement(value).designation;
           },
@@ -304,7 +355,6 @@ export default {
         {
           title: 'Étendue',
           name: 'degre',
-          dataClass: 'align-middle',
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
@@ -319,7 +369,6 @@ export default {
         {
           title: 'Statut',
           name: 'statut',
-          dataClass: 'align-middle',
           formatter(value) {
             const statuts = {
               0: 'A saisir',
@@ -334,7 +383,6 @@ export default {
         {
           title: 'Actions',
           name: 'actions',
-          dataClass: 'align-middle',
         },
       ],
       loading: true,
@@ -376,24 +424,66 @@ export default {
       return this.listeStatFederal.filter((t) => ids.has(t.id));
     },
     filteredInterventions() {
-      return this.listeInterventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(([key, value]) => (x) => x[key] === value)
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
+      const self = this;
+      return this.listeInterventions
+        .filter(
+          Object.entries(this.filters)
+            .filter(([, val]) => val)
+            .map(([key, value]) => (x) => x[key] === value)
+            .reduce(
+              (f, g) => (x) => f(x) && g(x),
+              () => true
+            )
+        )
+        .map((i) => {
+          if (i.id == self.selectedId) {
+            return { ...i, 'row-class': 'bg-primary' };
+          } else {
+            return i;
+          }
+        });
+    },
+    canDelete() {
+      return (
+        this.selectedId &&
+        this.listeInterventions.filter(
+          (i) => i.id == this.selectedId && i.statut < 3
+        ).length > 0
       );
     },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     toggleDetails(id) {
       this.toggles[id] = !this.toggles[id];
       this.$refs.vuetable.toggleDetailRow(id);
     },
+    supprimerIntervention(id) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: "Voulez-vous vraiment supprimer l'intervention ?",
+          question:
+            "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+        },
+        callback: () => {
+          this.$store.dispatch('removeIntervention', this.selectedId);
+        },
+      });
+    },
     validerIntervention(id) {
       this.$store.dispatch('validerIntervention', id);
+    },
+    rapportIntervention() {
+      this.SHOW_MODAL({
+        component: 'ModalRapportIntervention',
+        size: 1,
+        data: { interventionId: this.selectedId },
+      });
+      //TODO: imprimer le rapport d'intervention -> modal
+    },
+    selectIntervention(row) {
+      this.selectedId = row.data.id;
     },
     dataManager(sortOrder) {
       if (this.filteredInterventions.length < 1) return;
@@ -417,9 +507,12 @@ export default {
       this.filters = { ...this.filters, [key]: parseInt(value) };
     },
     onRowClass(dataItem) {
+      if (dataItem.id === this.selectedId) {
+        return 'table-primary';
+      }
       const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'En attente de validation',
+        0: '', // 'A saisir',
+        1: '', // 'En attente de validation',
         2: '', // 'Validée',
         3: 'table-success', //'Imputée'
       };

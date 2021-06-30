@@ -2,10 +2,11 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      @click="() => expand(data)"
+      @dblclick="() => expand(data)"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
+        @click="() => expand(data)"
         v-if="computedChildren.length > 0"
         aria-hidden="true"
         role="presentation"
@@ -18,8 +19,14 @@
       </svg>
       <div class="tree-node-content">
         <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
-        <font-awesome-icon v-else-if="data.icon" :icon="data.icon" size="lg" class="tree-node-icon" />
-        <div>{{ data.label }}</div>
+        <font-awesome-icon
+          v-else-if="data.icon"
+          :icon="data.icon"
+          size="lg"
+          class="tree-node-icon"
+          :color="data.color"
+        />
+        <div class="user-select-none">{{ data.label }}</div>
       </div>
     </div>
     <transition-expand>
@@ -74,10 +81,14 @@ export default {
       };
     },
     computedChildren() {
-      return Array.isArray(this.node.children) ? this.node.children : (typeof this.node.children === "function") ? this.node.children() : [];
+      return Array.isArray(this.node.children)
+        ? this.node.children
+        : typeof this.node.children === 'function'
+        ? this.node.children()
+        : [];
     },
     lazyChildren() {
-      const children = this.computedChildren
+      const children = this.computedChildren;
       return this.computed ? children : [];
     },
   },
@@ -85,7 +96,7 @@ export default {
     async expand() {
       if (!this.computed) {
         this.computed = true;
-        await this.$nextTick()  
+        await this.$nextTick();
       }
       this.expanded = !this.expanded;
     },

@@ -7,7 +7,7 @@
     <!-- form start -->
     <form role="form">
       <div class="card-body">
-        <table class="table">
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Incorporation</th>
@@ -79,14 +79,14 @@ export default {
   computed: {
     ...mapGetters(['getLocalite']),
     ...mapState({
-      mutations: state => state.sapeur.active.mutations
+      mutations: (state) => state.sapeur.active.mutations,
     }),
     finServiceButtonState() {
       return (
         this.mutations.length > 0 &&
         (this.mutations[this.mutations.length - 1].sortie || '') === ''
       );
-    }
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
@@ -96,7 +96,7 @@ export default {
     editMutation(mutationId) {
       this.$store.dispatch(
         'updateActiveMutation',
-        Object.assign({}, this.mutations.filter(m => m.id === mutationId)[0])
+        Object.assign({}, this.mutations.filter((m) => m.id === mutationId)[0])
       );
       this.SHOW_MODAL('ModalMutation');
     },
@@ -105,7 +105,7 @@ export default {
         'updateActiveMutation',
         Object.assign(
           { action: 'finService' },
-          this.mutations.filter(m => !m.sortie)[0]
+          this.mutations.filter((m) => !m.sortie)[0]
         )
       );
       this.SHOW_MODAL('ModalMutation');
@@ -113,8 +113,8 @@ export default {
     incorporation() {
       this.$store.dispatch('resetActiveMutation');
       this.SHOW_MODAL('ModalMutation');
-    }
-  }
+    },
+  },
 };
 </script>
 
