@@ -334,13 +334,9 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(
         this.listeExercices.map((i) => i.exercice_categorie_id)
       );
       return this.listeCategories.filter((t) => ids.has(t.id));
-    },
-    filteredLocalites() {
-      const ids = new Set(this.listeExercices.map((i) => i.localite_id));
       return this.listeLocalites.filter((t) => ids.has(t.id));
     },
     filteredExercices() {

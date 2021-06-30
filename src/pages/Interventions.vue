@@ -304,6 +304,7 @@ export default {
         {
           title: 'Date',
           name: 'date_debut',
+          dataClass: 'align-middle',
           sortField: 'date_debut',
         },
         {
@@ -333,7 +334,7 @@ export default {
         {
           title: 'Lieu',
           name: 'lieu',
-          sortField: 'lieu',
+          dataClass: 'align-middle',
         },
         {
           title: 'Stat fédéral',
