@@ -70,7 +70,7 @@ export default {
   methods: {
     computeColumn(column, ecriture) {
       let formatter = column.formatter || ((a) => a);
-      return formatter(ecriture[column.field]);
+      return formatter(ecriture[column.field], ecriture);
     },
   },
 };

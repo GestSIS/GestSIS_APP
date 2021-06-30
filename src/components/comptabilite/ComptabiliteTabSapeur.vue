@@ -150,6 +150,13 @@ export default {
           className: 'text-right',
         },
         {
+          title: 'Amende',
+          field: 'amende',
+          formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+        {
           title: 'Quantité',
           field: 'quantite',
           headerClassName: 'text-center',
@@ -238,7 +245,7 @@ export default {
                 .findIndex((e) => e.decompte_id == null && !e.amende) >= 0,
             total: ecrituresBySapeur
               .get(s.id)
-              .reduce((a, b) => a + +b.total, 0),
+              .reduce((a, b) => a + (b.amende ? -b.total : +b.total), 0),
             getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
             columns: this.ecritureColumns,
           };

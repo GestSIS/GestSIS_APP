@@ -143,8 +143,17 @@ export default {
           className: 'text-right',
         },
         {
+          title: 'Amende',
+          field: 'amende',
+          formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
+          headerClassName: 'text-center',
+          className: 'text-right',
+        },
+        {
           title: 'Total',
           field: 'total',
+          formatter: (total, ecriture) =>
+            ecriture.amende ? (-total).toFixed(2) : total,
           headerClassName: 'text-center',
           className: 'text-right',
         },

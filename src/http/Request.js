@@ -14,6 +14,7 @@ const request = {
 
   setAccessToken: (token) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Sis-Id'] = `hs`;
   },
 
   apiFileDownload(filename) {
@@ -21,7 +22,7 @@ const request = {
       baseURL: API_URL,
       responseType: 'arraybuffer',
       headers: {
-        Accept: 'application/pdf',
+        'Accept': 'application/pdf',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -47,7 +48,7 @@ const request = {
     let api = axios.create({
       baseURL: API_URL,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -93,7 +94,7 @@ const request = {
     let auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
