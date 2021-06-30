@@ -110,7 +110,6 @@ export default {
     },
   },
   mounted() {
-<<<<<<< HEAD:src/components/comptabilite/ComptabiliteTabSapeur.vue
     this.loading = true;
     ImputationService.getEcrituresForExerciceComptable(
       this.currentExerciceComptableId
@@ -119,26 +118,6 @@ export default {
       this.loading = false;
       this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
     });
-=======
-    //TODO Fetch only if neccessary
-    this.$store.dispatch('fetchListeSapeur');
-    this.$store.dispatch('fetchFonctions');
-
-    // this.$store.dispatch('fetchLocalites');
-    // this.$store.dispatch('fetchStatFederals');
-    // this.$store.dispatch('fetchTypeInterventions');
-    // this.$store.dispatch('fetchInterventionTraitements');
-
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      ComptabiliteService.getEcrituresForExerciceComptable(
-        this.currentExerciceComptableId
-      ).then(data => {
-        this.ecritures = data;
-        this.loading = false;
-        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
-      });
-    }
->>>>>>> af58aaa4d3fc18217069e0685c7c9fd04aff1b10:src/components/frais/FraisTabSapeur.vue
   },
   data() {
     return {
