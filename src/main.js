@@ -6,6 +6,7 @@ import store from './store/index';
 import { TokenService } from './services/StorageService';
 
 import Default from './layouts/Default';
+import Empty from './layouts/Empty';
 import NoSidebar from './layouts/NoSidebar';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -25,6 +26,7 @@ import 'vue-datetime/dist/vue-datetime.css';
 
 Vue.component('datetime', Datetime);
 Vue.component('default-layout', Default);
+Vue.component('empty-layout', Empty);
 Vue.component('no-sidebar-layout', NoSidebar);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('vue-timepicker', VueTimepicker);
@@ -47,21 +49,46 @@ Vue.filter('compte', function (compte) {
   return compte.numero + ' - ' + compte.designation;
 });
 
+router.beforeEach((to, from, next) => {
+  if (store.state.auth.sis.liste.length <= 0) {
+    console.log("if statement")
+    store.dispatch("loadSisListe").then(() => {
+      console.log("loaded sis")
+      const user = TokenService.getUser();
+      const accessToken = TokenService.getAccessToken();
+      const refreshToken = TokenService.getRefreshToken();
+      if (accessToken !== null && refreshToken !== null) {
+        store.commit(types.AUTH_SUCCESSFULL, {
+          user,
+          accessToken,
+          refreshToken,
+        });
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
 new Vue({
   router,
   store,
   created() {
+    console.log("Created !")
     // TODO might be improved by checking that token is still valid when launching app
-    const user = TokenService.getUser();
-    const accessToken = TokenService.getAccessToken();
-    const refreshToken = TokenService.getRefreshToken();
-    if (accessToken !== null && refreshToken !== null) {
-      this.$store.commit(types.AUTH_SUCCESSFULL, {
-        user,
-        accessToken,
-        refreshToken,
-      });
-    }
+    // const user = TokenService.getUser();
+    // const accessToken = TokenService.getAccessToken();
+    // const refreshToken = TokenService.getRefreshToken();
+    // await this.$store.dispatch("loadSisListe").then(() => {
+    //   if (accessToken !== null && refreshToken !== null) {
+    //     return this.$store.commit(types.AUTH_SUCCESSFULL, {
+    //       user,
+    //       accessToken,
+    //       refreshToken,
+    //     });
+    //   }
+    // })
   },
   render: (h) => h(App),
 }).$mount('#app');

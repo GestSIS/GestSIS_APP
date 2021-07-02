@@ -18,6 +18,21 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active = {
+        id: 0,
+        cours_id: 0,
+        fonction_id: 0,
+        fonction_sapeur_id: 0,
+        grade_id: 0,
+        localite_id: 0,
+        precedent_id: 0,
+        date: null,
+        date_fonction: null,
+        date_grade: null,
+      };
+    },
     [types.UPDATE_COURS_LISTE](state, payload) {
       state.liste = payload;
     },

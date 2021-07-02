@@ -21,6 +21,24 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.indemnites = {
+        exercices: [],
+        interventions: [],
+        annuels: [],
+      };
+      state.frais = {
+        annuels: [],
+      };
+      state.ecritures = {
+        annuels: [],
+        amendes: [],
+      };
+      state.active = {
+        compteId: null,
+        ecritures: [],
+      };
+    },
     [types.UPDATE_COMPTE_LISTE](state, payload) {
       if (state.active.compteId === null && payload.length > 0) {
         state.active.compteId = payload[0].id;

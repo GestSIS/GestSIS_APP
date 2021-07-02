@@ -12,6 +12,15 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.currentGrade = {
+        id: 0,
+        grade_id: 0,
+        date: null,
+        remarque: '',
+      };
+    },
     [types.UPDATE_GRADE_LISTE](state, payload) {
       state.liste = payload;
     },

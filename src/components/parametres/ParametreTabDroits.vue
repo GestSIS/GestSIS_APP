@@ -6,28 +6,23 @@
       <h3 class="card-title">Droits</h3>
       <button type="button" class="btn btn-primary">TODO What to do ???</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th data-field="date">Année</th>
             <th data-field="designation">Désignation</th>
-            <th data-field="lieu">Début</th>
-            <th class="text-center">Fin</th>
-            <th class="text-center">Bouclé</th>
-            <th class="text-center">Action</th>
+            <th v-for="p in permissions" :key="p.id" class="text-center">{{ p.nom }}</th>
           </tr>
         </thead>
         <tbody>
-          <!-- <tr v-for="e in listeExerciceComptable" :key="e.id">
-            <td>{{ e.annee }}</td>
-            <td>{{ e.designation }}</td>
-            <td>{{ e.debut }}</td>
-            <td>{{ e.fin }}</td>
-            <td class="text-center">
+          <tr v-for="r in formattedRoles" :key="r.id">
+            <td>{{ r.nom }}</td>
+            <td>{{ r.description }}</td>
+            <td v-for="p in permissions" :key="p.id" class="text-center">
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="en_cours" :checked="e.boucle" disabled>
-                <label class="custom-control-label" for="en_cours"></label>
+                <input type="checkbox" class="custom-control-input" :id="p.id+'-'+r.id" :checked="r.permissions.includes(p.id)" disabled>
+                <label class="custom-control-label" :for="p.id+'-'+r.id"></label>
               </div>
             </td>
             <td>
@@ -48,7 +43,7 @@
                 </button>
               </div>
             </td>
-          </tr> -->
+          </tr>
         </tbody>
       </table>
     </div>
@@ -57,14 +52,41 @@
 
 <script>
 import { mapState } from 'vuex';
+import store from '@/store/index';
+
+async function loadData(_, next) {
+  const loadPermissions = store.dispatch('fetchPermissions');
+  const loadRoles = store.dispatch('fetchRoles');
+
+  Promise.all([
+    loadPermissions,
+    loadRoles,
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'ParametreTabDroits',
   computed: {
     ...mapState({
+      permissions: state => state.auth.permissions,
+      roles: state => state.auth.roles
       // listeExerciceComptable: state => state.exerciceComptable.liste,
       // activeExerciceComptableId: state => state.exerciceComptable.activeId
     }),
+    formattedRoles() {
+      return this.roles.map(r => ({
+        ...r,
+        permissions: r.permission_roles.map(p => p.permission_id)
+      }))
+    }
+  },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
   mounted() {},
   methods: {

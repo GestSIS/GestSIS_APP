@@ -10,6 +10,12 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.active = {
+        id: null,
+        data: {},
+      };
+    },
     [types.UPDATE_PHASE_TYPE_LISTE](state, payload) {
       state.liste = payload;
     },

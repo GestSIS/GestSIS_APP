@@ -12,6 +12,17 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active = {
+        id: 0,
+        localite_id: 0,
+        incorporation: null,
+        sortie: null,
+        motif: '',
+        action: '',
+      };
+    },
     [types.UPDATE_CURRENT_MUTATION](state, payload) {
       state.active = payload;
     },

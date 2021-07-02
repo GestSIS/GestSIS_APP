@@ -7,6 +7,10 @@ export default {
     listeWithSapeurs: []
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.listeWithSapeurs = [];
+    },
     [types.UPDATE_GROUPE_LISTE](state, payload) {
       state.liste = payload;
     },

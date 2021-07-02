@@ -63,7 +63,7 @@ export default {
         .then(() => {
           this.error = null;
           this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
+            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
           );
         })
         .catch((error) => {

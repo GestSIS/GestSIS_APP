@@ -9,5 +9,17 @@ export default {
   },
   refreshToken(payload) {
     return Api.auth().post('refresh-token', { token: payload });
-  }
+  },
+  sisListe() {
+    return Api.auth().get('sis');
+  },
+  getPermissions() {
+    return Api.auth().get('permissions');
+  },
+  getRoles() {
+    return Api.auth().get('roles');
+  },
+  getUsers() {
+    return Api.auth().get('users');
+  },
 };

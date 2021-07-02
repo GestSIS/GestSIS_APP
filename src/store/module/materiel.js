@@ -11,6 +11,14 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active = {
+        id: null,
+        materiel_id: null,
+        quantite: 0,
+      };
+    },
     [types.UPDATE_MATERIEL_LISTE](state, payload) {
       state.liste = payload;
     },

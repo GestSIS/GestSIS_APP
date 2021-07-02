@@ -17,6 +17,20 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active = {
+        id: 0,
+        sapeurs: [],
+        data: {},
+        missions: [],
+        appels: [],
+        quittances: [],
+        vehicules: [],
+        materiels: [],
+        phases: [],
+      };
+    },
     [types.UPDATE_INTERVENTION_LISTE](state, payload) {
       state.liste = payload;
     },

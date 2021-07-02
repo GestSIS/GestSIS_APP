@@ -3,7 +3,7 @@
     <div class="sidebar-header bg-dark">
       <span class="brand-text font-weight-light">GestSIS</span>
     </div>
-
+    <sis-selection />
     <!--    <hr class="bg-secondary" />-->
     <!--    &lt;!&ndash; Sidebar user panel (optional) &ndash;&gt;-->
     <!--    <div class="sidebar-user">-->
@@ -110,6 +110,12 @@
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/utilisateurs" class="nav-link internal-link">
+            <font-awesome-icon icon="user" />
+            <span>Utilisateurs</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link
             :to="{ name: 'param-general' }"
             class="nav-link internal-link"
@@ -137,8 +143,14 @@
 </template>
 
 <script>
+import SisSelection from '@/components/sis/SisSelection.vue';
+// import SisSelection from './sis/SisSelection.vue';
+
 export default {
   name: 'MainSidebar',
+  components: {
+    SisSelection,
+  },
 };
 </script>
 

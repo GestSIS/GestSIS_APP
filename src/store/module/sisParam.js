@@ -6,6 +6,9 @@ export default {
     params: null,
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.params = null;
+    },
     [types.UPDATE_SIS_PARAMS](state, payload) {
       state.params = payload;
     },

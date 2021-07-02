@@ -6,6 +6,9 @@ export default {
     liste: [],
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+    },
     [types.UPDATE_STAT_INTERVENTION_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
