@@ -3,7 +3,7 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Droits</h3>
+      <h3 class="card-title">Rôles</h3>
       <button type="button" class="btn btn-primary">TODO What to do ???</button>
     </div>
     <div class="card-body table-responsive">
@@ -67,7 +67,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'ParametreTabDroits',
+  name: 'ParametreTabRoles',
   computed: {
     ...mapState({
       permissions: state => state.auth.permissions,

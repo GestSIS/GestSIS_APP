@@ -157,9 +157,9 @@ const router = new Router({
     },
     {
       path: '/utilisateurs',
-      name: 'utilisateur',
+      name: 'users',
       props: true,
-      component: () => import('@/pages/Utilisateur.vue'),
+      component: () => import('@/pages/Utilisateurs.vue'),
     },
     {
       path: '/configuration',
@@ -169,7 +169,7 @@ const router = new Router({
         {
           path: '',
           name: 'param-general',
-          meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
+          meta: { },
           component: () =>
             import('@/components/parametres/ParametreTabGeneral.vue'),
         },
@@ -210,10 +210,10 @@ const router = new Router({
             import('@/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
-          path: 'droits',
-          name: 'param-droits',
+          path: 'roles',
+          name: 'param-roles',
           component: () =>
-            import('@/components/parametres/ParametreTabDroits.vue'),
+            import('@/components/parametres/ParametreTabRole.vue'),
         },
       ],
     },

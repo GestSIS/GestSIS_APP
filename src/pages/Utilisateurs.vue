@@ -23,13 +23,12 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
-            <router-link
-              tag="button"
-              :to="{name: 'utilisateur'}"
+            <button
+              @click="invite"
               class="btn btn-outline-primary"
             >
               Inviter
-            </router-link>
+            </button>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
@@ -44,6 +43,7 @@
                 <th>Sapeur</th>
                 <th>Email</th>
                 <th>Rôles</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -51,24 +51,20 @@
                 <td>{{ u.name }}</td>
                 <td>{{ formatSapeur(u.email) }}</td>
                 <td>{{ u.email }}</td>
-                <td><span v-for="r in u.user_roles" :key="r.id" class="badge badge-primary">{{ formatRole(r.role_id) }}</span></td>
+                <td><span v-for="r in u.user_roles" :key="r.id" class="badge badge-primary mr-1">{{ formatRole(r.role_id) }}</span></td>
                 <!-- <td>{{ u }}</td> -->
+                <td>
+                  <div class="d-flex">
+                    <button
+                      class="btn btn-outline-primary border-0"
+                      @click="edit(u)"
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
-            <div
-              slot="accepter"
-              slot-scope="props"
-              class="custom-control custom-checkbox"
-            >
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="accepter"
-                :checked="props.rowData.accepter"
-                disabled
-              />
-              <label class="custom-control-label" for="accepter"></label>
-            </div>
           </table>
         </div>
       </div>
@@ -77,7 +73,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 // import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -152,45 +148,22 @@ export default {
     // },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     formatRole(id) {
+      console.log("Format role "+id)
       return (this.roles.find((r) => r.id === id) || {nom:''}).nom
     },
     formatSapeur(email) {
       const sapeur = this.sapeurs.find((s) => s.email === email);
       return sapeur ? sapeur.nom + " " + sapeur.prenom : '-';
     },
-    // downloadJustificatif({ id, filename }) {
-    //   ControlesMedicauxService.downloadJustificatif(id, filename);
-    // },
-    // dataManager(sortOrder) {
-    //   if (this.computedData.length < 1) return;
-
-    //   let local = this.computedData;
-
-    //   // sortOrder can be empty, so we have to check for that as well
-    //   if (sortOrder.length > 0) {
-    //     local = _.orderBy(
-    //       local,
-    //       sortOrder[0].sortField,
-    //       sortOrder[0].direction
-    //     );
-    //   }
-
-    //   return {
-    //     data: local,
-    //   };
-    // },
-    // onRowClass(dataItem) {
-    //   // TODO: update pour mettre en évidence les contrôles-médicaux voulus
-    //   const statutsClass = {
-    //     0: 'text-danger', //'Annulé',
-    //     1: '', //'A saisir',
-    //     2: '', //'En attente de validation',
-    //     3: '', //'A imputer',
-    //     4: 'table-success', //'Imputée'
-    //   };
-    //   return statutsClass[dataItem.statut];
-    // },
+    invite() {
+      //TODO: Show modal
+      this.SHOW_MODAL({ component: 'ModalRegisterToken' });
+    },
+    edit(user) {
+      this.SHOW_MODAL({ component: 'ModalUserRole', data: { ...user, roles: user.user_roles.map(r => r.role_id) } });
+    }
   },
 };
 </script>

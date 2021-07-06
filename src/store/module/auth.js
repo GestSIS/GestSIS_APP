@@ -50,6 +50,18 @@ export default {
         Api.setSisKey(sis.api_key);
       }
     },
+    [types.UPDATE_USER_ROLE](state, payload) {
+      state.users = state.users.map(u => {
+        if (u.id === payload.user_id) {
+          return {
+            ...u,
+            user_roles: payload.roles
+          };
+        } else {
+          return u;
+        }
+      })
+    },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
       console.log("Refresh token");
       TokenService.saveAccessToken(payload.accessToken);
@@ -147,6 +159,14 @@ export default {
         return Promise.resolve();
       }
     },
+    newRegisterToken({}, token) {
+      return AuthService.newRegisterToken(token).then(t => t.data)
+    },
+    updateUserRoles({ commit, state }, user) {
+      return AuthService.updateUserRoles(user).then(data => {
+        return commit(types.UPDATE_USER_ROLE ,{user_id:user.id, roles: data.data});
+      });
+    },
     refreshToken({ commit, state }) {
       const callback = () => {
         const p = AuthService.refreshToken(TokenService.getRefreshToken());
@@ -191,7 +211,7 @@ export default {
     },
     fetchUsers({ commit }) {
       return AuthService.getUsers().then((users) => {
-        return commit(types.AUTH_USERS_LISTE, users)
+        return commit(types.AUTH_USERS_LISTE, users.data)
       });
     },
   }

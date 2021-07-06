@@ -89,7 +89,7 @@
             <span>Contrôles médicaux</span>
           </router-link>
           <router-link
-            :to="{ name: 'param-droits' }"
+            :to="{ name: 'param-roles' }"
             class="nav-item nav-link"
             active-class="active"
             role="tab"

@@ -110,7 +110,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/utilisateurs" class="nav-link internal-link">
+          <router-link :to="{ name: 'users' }" class="nav-link internal-link">
             <font-awesome-icon icon="user" />
             <span>Utilisateurs</span>
           </router-link>
