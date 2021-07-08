@@ -23,10 +23,7 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
-            <button
-              @click="invite"
-              class="btn btn-outline-primary"
-            >
+            <button @click="invite" class="btn btn-outline-primary">
               Inviter
             </button>
           </div>
@@ -51,7 +48,14 @@
                 <td>{{ u.name }}</td>
                 <td>{{ formatSapeur(u.email) }}</td>
                 <td>{{ u.email }}</td>
-                <td><span v-for="r in u.user_roles" :key="r.id" class="badge badge-primary mr-1">{{ formatRole(r.role_id) }}</span></td>
+                <td>
+                  <span
+                    v-for="r in u.user_roles"
+                    :key="r.id"
+                    class="badge badge-primary mr-1"
+                    >{{ formatRole(r.role_id) }}</span
+                  >
+                </td>
                 <!-- <td>{{ u }}</td> -->
                 <td>
                   <div class="d-flex">
@@ -82,12 +86,7 @@ function loadData(routeTo, next) {
   let loadRoles = store.dispatch('fetchRoles');
   let loadSapeurs = store.dispatch('fetchListeSapeur');
 
-  Promise.all([
-    loadUsers,
-    loadPermissions,
-    loadRoles,
-    loadSapeurs
-  ]).then(() => {
+  Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(() => {
     next();
   });
 }
@@ -144,19 +143,21 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     formatRole(id) {
-      console.log("Format role "+id)
-      return (this.roles.find((r) => r.id === id) || {nom:''}).nom
+      return (this.roles.find((r) => r.id === id) || { nom: '' }).nom;
     },
     formatSapeur(email) {
       const sapeur = this.sapeurs.find((s) => s.email === email);
-      return sapeur ? sapeur.nom + " " + sapeur.prenom : '-';
+      return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '-';
     },
     invite() {
       this.SHOW_MODAL({ component: 'ModalRegisterToken' });
     },
     edit(user) {
-      this.SHOW_MODAL({ component: 'ModalUserRole', data: { ...user, roles: user.user_roles.map(r => r.role_id) } });
-    }
+      this.SHOW_MODAL({
+        component: 'ModalUserRole',
+        data: { ...user, roles: user.user_roles.map((r) => r.role_id) },
+      });
+    },
   },
 };
 </script>

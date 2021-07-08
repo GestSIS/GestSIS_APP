@@ -51,9 +51,7 @@ Vue.filter('compte', function (compte) {
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {
-    console.log("if statement")
-    store.dispatch("loadSisListe").then(() => {
-      console.log("loaded sis")
+    store.dispatch('loadSisListe').then(() => {
       const user = TokenService.getUser();
       const accessToken = TokenService.getAccessToken();
       const refreshToken = TokenService.getRefreshToken();
@@ -75,12 +73,12 @@ new Vue({
   router,
   store,
   created() {
-    console.log("Created !")
+    // console.log('Created !')
     // TODO might be improved by checking that token is still valid when launching app
     // const user = TokenService.getUser();
     // const accessToken = TokenService.getAccessToken();
     // const refreshToken = TokenService.getRefreshToken();
-    // await this.$store.dispatch("loadSisListe").then(() => {
+    // await this.$store.dispatch('loadSisListe').then(() => {
     //   if (accessToken !== null && refreshToken !== null) {
     //     return this.$store.commit(types.AUTH_SUCCESSFULL, {
     //       user,
