@@ -16,6 +16,15 @@ export default {
   updateUserRoles(user) {
     return Api.auth().post('users/' + user.id + "/roles", { roles: user.roles });
   },
+  createRole(role) {
+    return Api.auth().post('roles/', role);
+  },
+  updateRole(role) {
+    return Api.auth().put('roles/' + role.id, role);
+  },
+  deleteRole(roleId) {
+    return Api.auth().delete('roles/' + roleId);
+  },
   sisListe() {
     return Api.auth().get('sis');
   },

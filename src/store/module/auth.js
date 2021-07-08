@@ -50,6 +50,18 @@ export default {
         Api.setSisKey(sis.api_key);
       }
     },
+    [types.UPDATE_ROLE](state, payload) {
+      state.roles = state.roles.map(r => {
+        if (r.id == payload.id) {
+          return payload;
+        } else {
+          return r;
+        }
+      });
+    },
+    [types.NEW_ROLE](state, payload) {
+      state.roles = [...state.roles, payload];
+    },
     [types.UPDATE_USER_ROLE](state, payload) {
       state.users = state.users.map(u => {
         if (u.id === payload.user_id) {
@@ -61,6 +73,9 @@ export default {
           return u;
         }
       })
+    },
+    [types.DELETE_ROLE](state, roleId) {
+      state.roles = state.roles.filter(r => r.id != roleId);
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
       console.log("Refresh token");
@@ -165,6 +180,21 @@ export default {
     updateUserRoles({ commit, state }, user) {
       return AuthService.updateUserRoles(user).then(data => {
         return commit(types.UPDATE_USER_ROLE ,{user_id:user.id, roles: data.data});
+      });
+    },
+    updateRole({ commit }, role) {
+      return AuthService.updateRole(role).then(role => {
+        return commit(types.UPDATE_ROLE, role.data);
+      });
+    },
+    createRole({ commit }, role) {
+      return AuthService.createRole(role).then(role => {
+        return commit(types.NEW_ROLE, role.data);
+      });
+    },
+    deleteRole({ commit }, roleId) {
+      return AuthService.deleteRole(roleId).then(() => {
+        return commit(types.DELETE_ROLE, roleId);
       });
     },
     refreshToken({ commit, state }) {

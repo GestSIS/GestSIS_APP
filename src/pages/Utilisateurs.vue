@@ -73,14 +73,8 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
-
-// import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
-// import ControlesMedicauxService from '@/services/ControlesMedicauxService';
-
-// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
-import _ from 'lodash';
 
 function loadData(routeTo, next) {
   let loadUsers = store.dispatch('fetchUsers');
@@ -158,7 +152,6 @@ export default {
       return sapeur ? sapeur.nom + " " + sapeur.prenom : '-';
     },
     invite() {
-      //TODO: Show modal
       this.SHOW_MODAL({ component: 'ModalRegisterToken' });
     },
     edit(user) {

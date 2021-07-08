@@ -68,10 +68,10 @@
           <input
             type="checkbox"
             class="custom-control-input"
-            id="medecin-status-modal"
+            id="vehicule-status-modal"
             v-model="activeVehicule.status"
           />
-          <label class="custom-control-label" for="medecin-status-modal"
+          <label class="custom-control-label" for="vehicule-status-modal"
             >Actif</label
           >
         </div>
