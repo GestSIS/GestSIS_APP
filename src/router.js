@@ -21,6 +21,13 @@ const router = new Router({
         import(/* webpackChunkName: "about" */ '@/pages/Login.vue'),
     },
     {
+      path: '/confirmation',
+      name: 'confirmation',
+      meta: { layout: 'no-sidebar', public: true },
+      component: () =>
+        import(/* webpackChunkName: "about" */ '@/pages/Confirmation.vue'),
+    },
+    {
       path: '/register',
       name: 'register',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },

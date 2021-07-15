@@ -155,6 +155,11 @@ export default {
         return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
+    confirmation({}, token) {
+      return AuthService.confirmation(token).then(data => {
+        data.data;
+      });
+    },
     logout({ commit }) {
       return Promise.resolve(commit(types.AUTH_LOGOUT));
     },

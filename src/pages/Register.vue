@@ -77,7 +77,7 @@
       <button class="btn btn-lg btn-primary btn-block mt-5" type="submit">
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© {{ new Date().getFullYear() }}</p>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
       <router-link to="/login" class="btn btn-link is-active"
         >Se connecter</router-link

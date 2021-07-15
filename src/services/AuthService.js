@@ -7,6 +7,9 @@ export default {
   register(credentials) {
     return Api.auth().post('/register', credentials);
   },
+  confirmation(token) {
+    return Api.auth().post('/confirmer-email', { token });
+  },
   newRegisterToken(tokenInfo) {
     return Api.auth().post('/register-token', tokenInfo);
   },
