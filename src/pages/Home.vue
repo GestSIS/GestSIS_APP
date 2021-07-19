@@ -1,12 +1,18 @@
 <template>
   <div class="columns">
-    <p>Bienvenue sur GestSIS</p>
-
     <div class="album text-muted">
       <div class="container">
         <h2 id="C1">Accèder à WebGestSIS</h2>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
+          <div
+            class="card col-md-3 col-sm-6 col-xs-12"
+            v-if="availableSisListe.length <= 0"
+          >
+            <div class="align-vertical">
+              <p>Vous n'avez actuellement aucun droit pour aucun SIS, demandez des droits à votre SIS.</p>
+            </div>
+          </div>
           <div
             class="card col-md-3 col-sm-6 col-xs-12"
             v-for="sis in availableSisListe"

@@ -46,7 +46,7 @@
             <tbody>
               <tr v-for="u in users" :key="u.id">
                 <td>{{ u.name }}</td>
-                <td>{{ formatSapeur(u.email) }}</td>
+                <td>{{ formatSapeur(u) }}</td>
                 <td>{{ u.email }}</td>
                 <td>
                   <span
@@ -145,8 +145,12 @@ export default {
     formatRole(id) {
       return (this.roles.find((r) => r.id === id) || { nom: '' }).nom;
     },
-    formatSapeur(email) {
-      const sapeur = this.sapeurs.find((s) => s.email === email);
+    formatSapeur(user) {
+      if (!user.sapeur.length > 0) {
+        return '-';
+      }
+      const sapeurId = user.sapeur[0].sapeur_id;
+      const sapeur = this.sapeurs.find((s) => s.id === sapeurId);
       return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '-';
     },
     invite() {
