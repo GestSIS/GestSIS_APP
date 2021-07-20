@@ -114,17 +114,22 @@ export default {
           sortField: 'designation',
         },
         {
+          title: 'Total',
+          name: 'total',
+          sortField: 'total',
+        },
+        {
           title: 'Déductions',
           name: 'deduction',
           sortField: 'deduction',
         },
         {
-          title: 'Déductions AVS',
+          title: 'Charges AVS',
           name: 'avs_total',
           sortField: 'avs_total',
         },
         {
-          title: 'Déductions AC',
+          title: 'Charges AC',
           name: 'ac_total',
           sortField: 'ac_total',
         },
