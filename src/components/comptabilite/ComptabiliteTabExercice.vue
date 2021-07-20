@@ -6,8 +6,8 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body">
-          <button class="btn btn-outline-primary btn-block">Imputer</button>
-          <button class="btn btn-outline-primary btn-block">
+          <button class="btn btn-outline-primary btn-block" disabled>Imputer</button>
+          <button class="btn btn-outline-primary btn-block" disabled>
             Créer un décompte
           </button>
         </div>
@@ -188,7 +188,7 @@ export default {
       detailRow: FraisEcritureDetails,
       loading: true,
       exercices: [],
-      filters: [],
+      filters: {},
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -301,8 +301,9 @@ export default {
       this.init();
     },
     filteredExercices(data) {
-      this.loading = false;
+      this.loading = true;
       this.$refs.vuetable_frais_exercices.setData(data);
+      this.loading = false;
     },
   },
   computed: {

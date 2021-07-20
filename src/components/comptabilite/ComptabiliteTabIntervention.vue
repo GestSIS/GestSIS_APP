@@ -1,5 +1,116 @@
 <template>
   <div class="row">
+    
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block" disabled>Imputer</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-8">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterLocalite"
+                @change="
+                  (event) => onFilter('localite_id', event.target.value)
+                "
+              >
+                <option>&lt;Localité&gt;</option>
+                <option
+                  v-for="loc in filteredLocalites"
+                  :key="loc.id"
+                  :value="loc.id"
+                >
+                  {{ loc.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterType"
+                @change="
+                  (event) =>
+                    onFilter('type_intervention_id', event.target.value)
+                "
+              >
+                <option>&lt;Type&gt;</option>
+                <option
+                  v-for="type in filteredTypesIntervention"
+                  :key="type.id"
+                  :value="type.id"
+                >
+                  {{ type.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterStatistique"
+                @change="
+                  (event) => onFilter('stat_federal_id', event.target.value)
+                "
+              >
+                <option>&lt;Statistique fédérale&gt;</option>
+                <option
+                  v-for="stat in filteredStatFederal"
+                  :key="stat.id"
+                  :value="stat.id"
+                >
+                  {{ stat.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterTraitement"
+                @change="
+                  (event) =>
+                    onFilter('intervention_traitement_id', event.target.value)
+                "
+              >
+                <option>&lt;Traitement&gt;</option>
+                <option
+                  v-for="traitement in traitements"
+                  :key="traitement.id"
+                  :value="traitement.id"
+                >
+                  {{ traitement.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterEtendue"
+                @change="
+                  (event) => onFilter('degre', parseInt(event.target.value))
+                "
+              >
+                <option>&lt;Etendue&gt;</option>
+                <option value="1">Fausse alarme</option>
+                <option value="2">Petite</option>
+                <option value="3">Moyenne</option>
+                <option value="4">Grande</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
@@ -96,28 +207,14 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-        this.$refs.vuetable_frais_interventions.setData(this.computedData);
-      });
-    },
-    listInterventions() {
-      this.loading = true;
-      this.$refs.vuetable_frais_interventions.setData(this.computedData);
-      this.loading = false;
-    },
-  },
   mounted() {
     //TODO Fetch only if neccessary
 
-    if (this.listeExerciceComptable.length === 0) {
+    if (this.exercicesComptable.length === 0) {
       //console.log('Warning')
     } else {
       this.loading = false;
-      this.$refs.vuetable_frais_interventions.setData(this.computedData);
+      this.$refs.vuetable_frais_interventions.setData(this.filteredInterventions);
     }
   },
   data() {
@@ -127,6 +224,7 @@ export default {
       toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
+      filters: {},
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -263,12 +361,30 @@ export default {
       type: String,
     },
   },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchListeIntervention');
+    },
+    filteredInterventions(data) {
+      this.loading = true;
+      this.$refs.vuetable_frais_interventions.setData(data);
+      this.loading = false;
+    },
+  },
   computed: {
     ...mapState({
-      listInterventions: (state) =>
+      interventions: (state) =>
         state.intervention.liste.filter((e) => e.statut > 1),
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      typesIntervention: (state) => state.typeIntervention.liste,
+      statsFederal: (state) => state.statFederal.liste,
+      traitements: (state) => state.interventionTraitement.liste,
+      localites: (state) =>
+        state.localite.liste.sort((a, b) =>
+          a.designation.localeCompare(b.designation)
+        ),
     }),
     ...mapGetters([
       'activeInterventionId',
@@ -279,7 +395,7 @@ export default {
       'getSapeur',
     ]),
     computedData() {
-      return this.listInterventions.map((i) => ({
+      return this.interventions.map((i) => ({
         ...i,
         type_intervention: this.getTypeIntervention(i.type_intervention_id)
           .designation,
@@ -288,6 +404,42 @@ export default {
           ImputationService.getEcrituresForInterventions(i.id),
         columns: this.ecritureColumns,
       }));
+    },
+    filteredTypesIntervention() {
+      const ids = new Set(
+        this.interventions.map((i) => i.type_intervention_id)
+      );
+      return this.typesIntervention.filter((t) => ids.has(t.id));
+    },
+    filteredLocalites() {
+      const ids = new Set(this.interventions.map((i) => i.localite_id));
+      return this.localites.filter((t) => ids.has(t.id));
+    },
+    filteredStatFederal() {
+      const ids = new Set(
+        this.interventions.map((i) => i.stat_federal_id)
+      );
+      return this.statsFederal.filter((t) => ids.has(t.id));
+    },
+    filteredInterventions() {
+      const self = this;
+      return this.computedData
+        .filter(
+          Object.entries(this.filters)
+            .filter(([, val]) => val)
+            .map(([key, value]) => (x) => x[key] === value)
+            .reduce(
+              (f, g) => (x) => f(x) && g(x),
+              () => true
+            )
+        )
+        .map((i) => {
+          if (i.id == self.selectedId) {
+            return { ...i, 'row-class': 'bg-primary' };
+          } else {
+            return i;
+          }
+        });
     },
   },
   methods: {
@@ -334,6 +486,9 @@ export default {
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };
