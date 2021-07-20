@@ -1,5 +1,23 @@
 <template>
   <div class="row">
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block" @click="generer">
+            Nouveau
+          </button>
+          <button class="btn btn-outline-primary btn-block" :disabled="!selectedId" @click="supprimer(selectedId)">
+            Fichier de paiement (ISO20022)
+          </button>
+          <button class="btn btn-outline-danger btn-block" :disabled="!selectedId" @click="supprimer(selectedId)">
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
@@ -7,68 +25,47 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
           <button @click.prevent="generer" class="btn btn-primary">
-            Générer
+            Nouveau
           </button>
-          <!-- <div class="dropdown">
-              <button
-                class="ml-1 btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                @click="dropdown = !dropdown"
-                v-if="activeCompteId !== null"
-              >
-                {{ getCompte(activeCompteId) | compte }}
-              </button>
-              <div class="dropdown-menu" :class="{ show: dropdown }">
-                <button
-                  v-for="c in listeCompte"
-                  :key="c.id"
-                  @click="selectCompte(c.id)"
-                  class="dropdown-item"
-                  :class="{ active: activeCompteId === c.id }"
-                  type="button"
-                >
-                  {{ c | compte }}
-                </button>
-              </div>
-            </div> -->
-          <!--          <button type="button" class="btn btn-primary" @click="manageComptes">-->
-          <!--            Gestion des comptes-->
-          <!--          </button>-->
         </div>
-        <vuetable
-          v-show="!loading"
-          ref="vuetable_ecriture_decomptes"
-          :api-mode="false"
+        <base-table
           :fields="fields"
-          :css="css.table"
-          no-data-template="Aucune écriture à afficher"
-          :data-manager="dataManager"
+          :data="decomptes"
+          :selectable="true"
+          selectKey="id"
+          noData="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
+          @selected="selected"
         >
-          <div
-            slot="deduction"
-            slot-scope="props"
-            class="custom-control custom-checkbox"
-          >
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="deduction"
-              :checked="props.rowData.deduction"
-              disabled
-            />
-            <label class="custom-control-label" for="deduction"></label>
-          </div>
-          <!-- <div slot="actions" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 3"
-              @click="imputerExercice(props.rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </div> -->
-        </vuetable>
+          <template v-slot:checkbox="{ key, value, rowData }">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                :id="key+'-'+rowData.id"
+                :checked="value"
+                disabled
+              />
+              <label class="custom-control-label" :for="key+'-'+rowData.id"></label>
+            </div>
+          </template>
+          <template v-slot:actions>
+            <div class="d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimer"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </div>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -78,15 +75,14 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(routeTo, next) {
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
   await store.dispatch('fetchExercicesComptables');
 
   let loadDecomptes = store.dispatch('fetchDecomptes');
-  Promise.all([loadDecomptes]).then(() => {
+  Promise.all([loadDecomptes, loadSapeurs]).then(() => {
     next();
   });
 }
@@ -94,7 +90,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'FraisTabDecompte',
   components: {
-    Vuetable,
+    BaseTable
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -106,106 +102,79 @@ export default {
     return {
       dropdown: false,
       loading: true,
-      css: CssForBootstrap4,
+      selectedId: 0,
       fields: [
         {
           title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
+          key: 'designation',
+          sortKey: 'designation',
+        },
+        {
+          title: 'Date',
+          key: 'date',
+          sortKey: 'date',
         },
         {
           title: 'Total',
-          name: 'total',
-          sortField: 'total',
+          key: 'total',
+          sortKey: 'total',
         },
         {
           title: 'Déductions',
-          name: 'deduction',
-          sortField: 'deduction',
+          key: 'deduction',
+          sortKey: 'deduction',
+          slot: 'checkbox'
         },
         {
           title: 'Charges AVS',
-          name: 'avs_total',
-          sortField: 'avs_total',
+          key: 'avs_total',
+          sortKey: 'avs_total',
         },
         {
           title: 'Charges AC',
-          name: 'ac_total',
-          sortField: 'ac_total',
+          key: 'ac_total',
+          sortKey: 'ac_total',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          titleClass: 'text-center',
+          key: 'actions',
+          slot: 'actions'
         },
       ],
     };
   },
+  watch: {
+    decomptes() {
+      this.loading = false;
+    },
+    activeExerciceComptableId() {
+      this.loading = true;
+      store.dispatch('fetchDecomptes');
+    },
+  },
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listeSapeur: (state) => state.sapeur.liste,
-      listeDecompte: (state) => state.decompte.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      decomptes: (state) => state.decompte.liste,
     }),
     ...mapGetters(['getSapeur', 'getFonction']),
   },
-  mounted() {
-    this.loading = true;
-    if (this.listeSapeur.length === 0) {
-      this.$store.dispatch('fetchListeSapeur');
-    }
-
-    this.init();
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      store.dispatch('fetchDecomptes').then(() => {
-        this.init();
-      });
-    },
-    listeDecompte() {
-      this.init();
-    },
-  },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    selected(row){
+      this.selectedId = row.id;
+    },
+    supprimer(row) {
+      console.log(row);
+    },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
     },
-    init() {
-      this.$refs.vuetable_ecriture_decomptes.setData(this.computeData());
-      this.loading = false;
-    },
-    dataManager(sortOrder) {
-      let local = this.computeData();
-      if (local.length < 1) return;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
-    },
-    computeData() {
-      return this.listeDecompte;
-    },
-    // editEcriture() {
-    //   this.$store.dispatch('resetActiveGrade')
-    //   this.SHOW_MODAL('ModalSapeurPromotion')
-    // },
   },
 };
 </script>
 
 <style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
 </style>

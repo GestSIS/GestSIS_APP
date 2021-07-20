@@ -187,7 +187,7 @@
             :data-manager="dataManager"
             :row-class="onRowClass"
             no-data-template="Aucune intervention à afficher"
-            @vuetable:row-clicked="selectIntervention"
+            @vuetable:row-clicked="select"
           >
             <div slot="details" slot-scope="props" class="d-flex">
               <button
@@ -458,6 +458,9 @@ export default {
       this.toggles[id] = !this.toggles[id];
       this.$refs.vuetable.toggleDetailRow(id);
     },
+    select(row) {
+      this.selectedId = row.data.id;
+    },
     supprimerIntervention(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
@@ -481,9 +484,6 @@ export default {
         data: { interventionId: this.selectedId },
       });
       //TODO: imprimer le rapport d'intervention -> modal
-    },
-    selectIntervention(row) {
-      this.selectedId = row.data.id;
     },
     dataManager(sortOrder) {
       if (this.filteredInterventions.length < 1) return;

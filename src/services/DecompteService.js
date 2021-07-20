@@ -17,11 +17,14 @@ export default {
   },
   genererDecompteAnnuel(params) {
     return Api.api().post('decomptes/creer-annuel', params);
+    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
   },
   genererDecompteSapeur(params) {
     return Api.api().post('decomptes/creer-sapeur', params);
+    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
   },
   genererDecompteExercice(params) {
     return Api.api().post('decomptes/creer-exercice', params);
+    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
   },
 };
