@@ -1,12 +1,83 @@
 <template>
   <div class="row">
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block">Imputer</button>
+          <button class="btn btn-outline-primary btn-block">
+            Créer un décompte
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-8">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterLocalite"
+                @change="
+                  (event) => onFilter('localite_id', event.target.value)
+                "
+              >
+                <option>&lt;Localité&gt;</option>
+                <option
+                  v-for="loc in filteredLocalites"
+                  :key="loc.id"
+                  :value="loc.id"
+                >
+                  {{ loc.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterCategorie"
+                @change="
+                  (event) =>
+                    onFilter('exercice_categorie_id', event.target.value)
+                "
+              >
+                <option>&lt;Catégorie&gt;</option>
+                <option
+                  v-for="catgeorie in filteredCategories"
+                  :key="catgeorie.id"
+                  :value="catgeorie.id"
+                >
+                  {{ catgeorie.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <select
+                class="custom-select custom-select-sm"
+                id="filterStatus"
+                @change="
+                  (event) => onFilter('statut', parseInt(event.target.value))
+                "
+              >
+                <option value="-1">&lt;Statut&gt;</option>
+                <option value="3">A imputer</option>
+                <option value="4">Imputée</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Exercices</h3>
-          <!--          <button @click.prevent="save" class="btn btn-primary">-->
-          <!--            Enregistrer-->
-          <!--          </button>-->
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -105,12 +176,6 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-  },
   mounted() {
     this.loading = true;
     this.init();
@@ -123,6 +188,7 @@ export default {
       detailRow: FraisEcritureDetails,
       loading: true,
       exercices: [],
+      filters: [],
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -229,11 +295,21 @@ export default {
       type: String,
     },
   },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.init();
+    },
+    filteredExercices(data) {
+      this.loading = false;
+      this.$refs.vuetable_frais_exercices.setData(data);
+    },
+  },
   computed: {
     ...mapState({
       listSapeurs: (state) => state.sapeur.liste,
       localites: (state) => state.localite.liste,
-      exerciceCategories: (state) => state.exerciceCategorie.liste,
+      categories: (state) => state.exerciceCategorie.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -254,6 +330,25 @@ export default {
           columns: this.ecritureColumns,
         };
       });
+    },
+    filteredExercices() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(([key, value]) => (x) => x[key] === value)
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredLocalites() {
+      const ids = new Set(this.exercices.map((i) => i.localite_id));
+      return this.localites.filter((t) => ids.has(t.id));
+    },
+    filteredCategories() {
+      const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
+      return this.categories.filter((t) => ids.has(t.id));
     },
   },
   methods: {
@@ -318,6 +413,9 @@ export default {
         4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };
