@@ -10,7 +10,7 @@
             v-if="availableSisListe.length <= 0"
           >
             <div class="align-vertical">
-              <p>Vous n'avez actuellement aucun droit pour aucun SIS, demandez des droits à votre SIS.</p>
+              <p>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
             </div>
           </div>
           <div

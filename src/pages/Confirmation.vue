@@ -18,7 +18,9 @@
       >
         Accueil
       </button>
-      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
+      <p class="mt-5 mb-3 text-muted">
+        © GestSIS {{ new Date().getFullYear() }}
+      </p>
     </form>
   </div>
 </template>
@@ -42,7 +44,6 @@ export default {
       this.$store
         .dispatch('confirmation', token)
         .then(() => {
-          console.log("then call")
           this.error = null;
           this.success = true;
           this.interval = setInterval(() => {
@@ -72,7 +73,7 @@ export default {
           ? this.$route.query.redirect
           : { name: 'accueil' }
       );
-    }
+    },
   },
 };
 </script>
