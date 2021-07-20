@@ -13,6 +13,16 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.currentFonction = {
+        id: 0,
+        fonction_id: 0,
+        debut: null,
+        fin: null,
+        remarque: '',
+      };
+    },
     [types.UPDATE_FONCTION_LISTE](state, payload) {
       state.liste = payload;
     },

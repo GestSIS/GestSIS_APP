@@ -10,6 +10,11 @@ export default {
     },
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active.id = null;
+      state.active.data = {};
+    },
     [types.UPDATE_CONTROLE_MEDICAUX_LISTE](state, payload) {
       state.liste = payload;
     },

@@ -3,72 +3,76 @@
     <form class="text-center form-signin" _lpchecked="1">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 font-weight-normal">Veuillez-vous connectez</h1>
-      <label for="inputEmail" class="sr-only">Adresse email</label>
-      <input
-        v-model="email"
-        type="email"
-        id="inputEmail"
-        class="form-control"
-        placeholder="Adresse email"
-        required=""
-        autofocus=""
-        autocomplete="off"
-        :class="{ 'is-invalid': error }"
-      />
-      <label for="inputPassword" class="sr-only">Mot de passe</label>
-      <input
-        v-model="password"
-        type="password"
-        id="inputPassword"
-        class="form-control"
-        placeholder="Password"
-        required=""
-        autocomplete="off"
-        :class="{ 'is-invalid': error }"
-      />
-      <div class="invalid-feedback" v-if="error">
-        Informations de connexion invalides
+      <h1 class="h1 mb-3 font-weight-normal">Confirmation de votre email</h1>
+      <h2 class="h3 mb-3" v-if="success">
+        Email validé avec succès, vous allez être redirigé dans
+        {{ sec }} secondes
+      </h2>
+      <div class="h3 mb-3" v-if="error">
+        {{ error }}
       </div>
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
-        @click="login"
+        @click="redirect"
       >
-        Sign in
+        Accueil
       </button>
-      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
-
-      <router-link to="/register" class="btn btn-link is-active"
-        >S'enregistrer</router-link
-      >
+      <p class="mt-5 mb-3 text-muted">
+        © GestSIS {{ new Date().getFullYear() }}
+      </p>
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'register',
+  name: 'confirmation',
   data() {
     return {
-      email: null,
-      password: null,
       error: null,
+      success: null,
+      sec: 10,
+      interval: null,
     };
   },
-  methods: {
-    login() {
+  mounted() {
+    const token = this.$route.query.token;
+    if (!token) {
+      this.$router.push({ name: 'accueil' });
+    } else {
       this.$store
-        .dispatch('login', { email: this.email, password: this.password })
+        .dispatch('confirmation', token)
         .then(() => {
           this.error = null;
-          this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
-          );
+          this.success = true;
+          this.interval = setInterval(() => {
+            this.sec -= 1;
+            if (this.sec <= 0) {
+              clearInterval(this.interval);
+              this.$router.push(
+                this.$route.query.redirect
+                  ? this.$route.query.redirect
+                  : { name: 'accueil' }
+              );
+            }
+          }, 1000);
         })
-        .catch((error) => {
+        .catch(({ error }) => {
           this.error = error;
         });
+    }
+  },
+  unmounted() {
+    clearInterval(this.interval);
+  },
+  methods: {
+    redirect() {
+      this.$router.push(
+        this.$route.query.redirect
+          ? this.$route.query.redirect
+          : { name: 'accueil' }
+      );
     },
   },
 };

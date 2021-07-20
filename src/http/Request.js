@@ -14,7 +14,10 @@ const request = {
 
   setAccessToken: (token) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    axios.defaults.headers.common['Sis-Id'] = `hs`;
+  },
+  
+  setSisKey: (sis_key) => {
+    axios.defaults.headers.common['Sis-Id'] = sis_key;
   },
 
   apiFileDownload(filename) {

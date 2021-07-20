@@ -43,9 +43,7 @@
       <div class="invalid-feedback" v-if="error.password">
         Taille minimum: 8
       </div>
-      <label for="inputPasswordConfirmation" class="sr-only"
-        >Confirmation</label
-      >
+      <label for="inputPasswordConfirmation" class="sr-only">Confirmation</label>
       <input
         v-model="password_confirmation"
         type="password"
@@ -62,10 +60,24 @@
       <div class="invalid-feedback" v-if="error.password_confirmation">
         Mot de passe différent
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
+      <button class="btn btn-link" type="button" @click.prevent="avance=!avance">Avancé</button>
+      <transition-expand>
+        <div v-show="avance">
+          <label for="inputToken" class="sr-only">Jeton d'enregistrement</label>
+          <input
+            v-model="token"
+            type="text"
+            id="inputToken"
+            class="form-control"
+            placeholder="Jeton (optionnel)"
+            autocomplete="off"
+          />
+        </div>
+      </transition-expand>
+      <button class="btn btn-lg btn-primary btn-block mt-5" type="submit">
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© 2019</p>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
       <router-link to="/login" class="btn btn-link is-active"
         >Se connecter</router-link
@@ -75,14 +87,21 @@
 </template>
 
 <script>
+import TransitionExpand from '@/components/transition/TransitionExpand.vue';
+
 export default {
   name: 'register',
+  components: {
+    TransitionExpand,
+  },
   data() {
     return {
+      avance: false,
       name: null,
       email: null,
       password: null,
       password_confirmation: null,
+      token: '',
       error: {},
     };
   },
@@ -94,11 +113,12 @@ export default {
           email: this.email,
           password: this.password,
           password_confirmation: this.password_confirmation,
+          token: this.token || null,
         })
         .then(() => {
           this.error = {};
           this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'sapeurs'
+            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
           );
         })
         .catch((data) => {

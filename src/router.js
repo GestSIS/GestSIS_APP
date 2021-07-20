@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Public from './pages/Public';
 import Home from './pages/Home';
 
 import { TokenService } from './services/StorageService';
@@ -20,6 +21,13 @@ const router = new Router({
         import(/* webpackChunkName: "about" */ '@/pages/Login.vue'),
     },
     {
+      path: '/confirmation',
+      name: 'confirmation',
+      meta: { layout: 'no-sidebar', public: true },
+      component: () =>
+        import(/* webpackChunkName: "about" */ '@/pages/Confirmation.vue'),
+    },
+    {
       path: '/register',
       name: 'register',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
@@ -28,8 +36,20 @@ const router = new Router({
     },
     {
       path: '/',
-      name: 'home',
-      meta: { layout: 'no-sidebar', public: true },
+      name: 'public',
+      meta: { layout: 'empty', public: true },
+      component: Public,
+    },
+    {
+      path: '/home',
+      name: 'public',
+      meta: { layout: 'empty', public: true },
+      component: Public,
+    },
+    {
+      path: '/accueil',
+      name: 'accueil',
+      meta: { layout: 'no-sidebar'},
       component: Home,
     },
     {
@@ -143,6 +163,12 @@ const router = new Router({
       component: () => import('@/pages/ControleMedical.vue'),
     },
     {
+      path: '/utilisateurs',
+      name: 'users',
+      props: true,
+      component: () => import('@/pages/Utilisateurs.vue'),
+    },
+    {
       path: '/configuration',
       name: 'configuration',
       component: () => import('@/pages/Configuration.vue'),
@@ -150,6 +176,7 @@ const router = new Router({
         {
           path: '',
           name: 'param-general',
+          meta: { },
           component: () =>
             import('@/components/parametres/ParametreTabGeneral.vue'),
         },
@@ -190,10 +217,10 @@ const router = new Router({
             import('@/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
-          path: 'droits',
-          name: 'param-droits',
+          path: 'roles',
+          name: 'param-roles',
           component: () =>
-            import('@/components/parametres/ParametreTabDroits.vue'),
+            import('@/components/parametres/ParametreTabRole.vue'),
         },
       ],
     },
@@ -206,6 +233,8 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  NProgress.start();
+
   const isPublic = to.matched.some((record) => record.meta.public);
   const onlyWhenLoggedOut = to.matched.some(
     (record) => record.meta.onlyWhenLoggedOut
@@ -214,21 +243,19 @@ router.beforeEach((to, from, next) => {
 
   if (!isPublic && !loggedIn) {
     return next({
-      path: '/login',
+      name: 'login',
       query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
     });
   }
 
   // Do not allow user to visit login page or register page if they are logged in
   if (loggedIn && onlyWhenLoggedOut) {
-    return next('/');
+    return next({
+      name: 'accueil',
+      query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
+    });
   }
 
-  next();
-});
-
-router.beforeEach((routeTo, routeFrom, next) => {
-  NProgress.start();
   next();
 });
 

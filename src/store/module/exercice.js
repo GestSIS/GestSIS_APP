@@ -11,6 +11,14 @@ export default {
     }
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.active = {
+        id: 0,
+        sapeurs: [],
+        data: {}
+      };
+    },
     [types.UPDATE_EXERCICE_LISTE](state, payload) {
       state.liste = payload
         .slice(0)

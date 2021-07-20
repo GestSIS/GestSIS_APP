@@ -33,6 +33,7 @@ import {
   faScroll,
   faCar,
   faBirthdayCake,
+  faCopy
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -89,5 +90,6 @@ library.add(
   faCar,
   faBirthdayCake,
   faFilePdf,
-  faChartBar
+  faChartBar,
+  faCopy
 );

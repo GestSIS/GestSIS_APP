@@ -6,6 +6,9 @@ export default {
     liste: [],
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+    },
     [types.UPDATE_TELEPHONE_LISTE](state, payload) {
       state.liste = payload;
     },

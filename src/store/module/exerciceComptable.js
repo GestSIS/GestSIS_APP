@@ -7,6 +7,10 @@ export default {
     activeId: null,
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.liste = [];
+      state.activeId = null;
+    },
     [types.UPDATE_EXERCICE_COMPTABLE_LISTE](state, payload) {
       state.liste = payload;
       if ((state.activeId || 0) === 0) {
