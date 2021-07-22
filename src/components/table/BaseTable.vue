@@ -2,7 +2,12 @@
   <table class="table table-sm mb-0">
     <thead>
       <tr>
-        <th v-for="f in fields" :key="f.key" @click="sort(f)" :class="f.titleClass">
+        <th
+          v-for="f in fields"
+          :key="f.key"
+          @click="sort(f)"
+          :class="f.titleClass"
+        >
           {{ f.title }}
         </th>
       </tr>
@@ -18,7 +23,10 @@
         :class="r.rowClass"
       >
         <td v-for="f in fields" :key="f.key">
-          <slot :name="f.slot" v-bind="{ key: f.key, value: r[f.key], rowData: r }">
+          <slot
+            :name="f.slot"
+            v-bind="{ key: f.key, value: r[f.key], rowData: r }"
+          >
             {{ r[f.key] }}
           </slot>
         </td>
@@ -65,6 +73,17 @@ export default {
       },
       selected: null,
     };
+  },
+  watch: {
+    data(val) {
+      if (this.selected) {
+        // Watcher pour déselectionner l'élément actif en cas de suppression
+        const selectedKey = this.selected[this.selectKey];
+        if (val.filter((e) => e[this.selectKey] === selectedKey).length <= 0) {
+          this.$emit('selected', null);
+        }
+      }
+    },
   },
   methods: {
     sort(field) {

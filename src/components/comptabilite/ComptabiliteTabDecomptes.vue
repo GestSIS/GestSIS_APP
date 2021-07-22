@@ -9,10 +9,18 @@
           <button class="btn btn-outline-primary btn-block" @click="generer">
             Nouveau
           </button>
-          <button class="btn btn-outline-primary btn-block" :disabled="!selectedId" @click="iso20022Decompte(selectedId)">
+          <button
+            class="btn btn-outline-primary btn-block"
+            :disabled="!selectedId"
+            @click="iso20022Decompte(selectedId)"
+          >
             Fichier de paiement (ISO20022)
           </button>
-          <button class="btn btn-outline-danger btn-block" :disabled="!selectedId" @click="supprimer(selectedId)">
+          <button
+            class="btn btn-outline-danger btn-block"
+            :disabled="!selectedId"
+            @click="supprimer(selectedId)"
+          >
             Supprimer
           </button>
         </div>
@@ -41,25 +49,25 @@
               <input
                 type="checkbox"
                 class="custom-control-input"
-                :id="key+'-'+rowData.id"
+                :id="key + '-' + rowData.id"
                 :checked="value"
                 disabled
               />
-              <label class="custom-control-label" :for="key+'-'+rowData.id"></label>
+              <label
+                class="custom-control-label"
+                :for="key + '-' + rowData.id"
+              ></label>
             </div>
           </template>
-          <template v-slot:actions>
+          <template v-slot:actions="{ value }">
             <div class="d-flex justify-content-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-              >
+              <button type="button" class="btn btn-outline-primary border-0">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
                 type="button"
                 class="btn btn-outline-danger border-0"
-                @click="supprimer"
+                @click="supprimer(value)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -91,7 +99,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'FraisTabDecompte',
   components: {
-    BaseTable
+    BaseTable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -124,7 +132,7 @@ export default {
           title: 'Déductions',
           key: 'deduction',
           sortKey: 'deduction',
-          slot: 'checkbox'
+          slot: 'checkbox',
         },
         {
           title: 'Charges AVS',
@@ -139,8 +147,8 @@ export default {
         {
           title: 'Actions',
           titleClass: 'text-center',
-          key: 'actions',
-          slot: 'actions'
+          key: 'id',
+          slot: 'actions',
         },
       ],
     };
@@ -164,15 +172,28 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    selected(row){
-      this.selectedId = row.id;
+    selected(row) {
+      this.selectedId = row?.id || null;
     },
-    supprimer(row) {
-      // console.log(row);
+    supprimer(decompteId) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce décompte ?',
+          question:
+            "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
+        },
+        callback: () => {
+          this.$store.dispatch('removeDecompte', decompteId);
+        },
+      });
     },
     iso20022Decompte(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id === decompteId)
-      DecompteService.downloadIso20022PourDecompte(decompteId, `decompte_${decompte.date}.xml`)
+      const decompte = this.decomptes.find((d) => d.id === decompteId);
+      DecompteService.downloadIso20022PourDecompte(
+        decompteId,
+        `decompte_${decompte.date}.xml`
+      );
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });

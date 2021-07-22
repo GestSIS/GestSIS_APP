@@ -15,12 +15,20 @@ export default {
     [types.ADD_DECOMPTE](state, payload) {
       state.liste = [...state.liste, payload];
     },
+    [types.REMOVE_DECOMPTE](state, decompteId) {
+      state.liste = state.liste.filter((d) => d.id !== decompteId);
+    },
   },
   actions: {
     fetchDecomptes({ getters, commit }) {
       return DecompteService.getDecomptes(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_DECOMPTES, data));
+    },
+    removeDecompte({ commit }, decompteId) {
+      return DecompteService.removeDecompte(decompteId).then(() => {
+        commit(types.REMOVE_DECOMPTE, decompteId);
+      });
     },
     genererDecompteAnnuel({ commit }, params) {
       return DecompteService.genererDecompteAnnuel(params).then((data) =>

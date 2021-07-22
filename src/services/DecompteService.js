@@ -9,6 +9,9 @@ export default {
   creerDecompte(params) {
     return Api.api().post('decomptes/create', params);
   },
+  removeDecompte(decompteId) {
+    return Api.api().delete(`decomptes/${decompteId}`);
+  },
   downloadDecompteIso20022(decompteId, params) {
     return Api.apiFileDownload().post(
       `/decomptes/${decompteId}/iso20022`,
