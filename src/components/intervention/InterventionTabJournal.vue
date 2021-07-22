@@ -47,6 +47,9 @@
                 </tr>
               </thead>
               <tbody id="appels">
+                <tr v-if="appels.length <= 0">
+                  <td colspan="5">Aucun appel</td>
+                </tr>
                 <tr v-for="a in appels" :key="a.id">
                   <td>{{ a.date | time }}</td>
                   <td>{{ a.numero }}</td>
@@ -86,7 +89,7 @@
             </button>
           </div>
           <div class="card-body">
-            <table id="int-materiel" class="table table-sm">
+            <table id="int-mission" class="table table-sm">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -97,7 +100,10 @@
                   <th class="text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody id="materiels">
+              <tbody id="missions">
+                <tr v-if="missions.length <= 0">
+                  <td colspan="6">Aucune mission</td>
+                </tr>
                 <tr v-for="m in missions" :key="m.id">
                   <td>{{ m.debut | time }}</td>
                   <td>{{ m.titre }}</td>
