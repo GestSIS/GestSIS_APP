@@ -24,6 +24,9 @@
             </tr>
           </thead>
           <tbody id="materiels">
+            <tr v-if="materiels.length <= 0">
+              <td colspan="3">Aucun matériel ajouté.</td>
+            </tr>
             <tr v-for="m in materiels" :key="m.id">
               <td>{{ getMateriel(m.materiel_id).designation }}</td>
               <td>{{ m.quantite }}</td>

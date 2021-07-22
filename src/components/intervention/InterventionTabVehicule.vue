@@ -18,8 +18,11 @@
             </tr>
           </thead>
           <tbody id="vehicules">
+            <tr v-if="vehicules.length <= 0">
+              <td colspan="2">Aucun véhicule de disponible pour votre SIS, ajoutez-en dans <em>configuration</em>.</td>
+            </tr>
             <tr
-              v-for="v in listVehicules.filter((item) => item.status === 1)"
+              v-for="v in vehicules"
               :key="v.id"
             >
               <td>{{ v.designation }}</td>
@@ -30,7 +33,7 @@
                       type="checkbox"
                       class="custom-control-input"
                       :id="'v-' + v.id"
-                      v-model="vehicules[v.id]"
+                      v-model="selected[v.id]"
                     />
                     <label
                       class="custom-control-label"
@@ -54,33 +57,30 @@ export default {
   name: 'InterventionTabVehicules',
   data() {
     return {
-      vehicules: {},
+      selected: {},
     };
   },
   computed: {
     ...mapGetters(['getVehicule']),
     ...mapState({
-      listVehicules: (state) => state.vehicule.liste,
+      vehicules: (state) => state.vehicule.liste.filter((v) => v.status === 1 || state.intervention.active.vehicules.find((vi) =>vi.vehicule_id === v.id)),
       interventionVehicules: (state) => state.intervention.active.vehicules,
       activeInterventionId: (state) => state.intervention.active.id,
     }),
   },
   mounted() {
-    if (this.listVehicules.length === 0) {
+    if (this.vehicules.length === 0) {
       this.$store.dispatch('fetchVehicules').then(() => {
         this.$store
           .dispatch('fetchInterventionVehicules', this.activeInterventionId)
           .then(() => this.updateVehicules(this.interventionVehicules));
       });
-    } else if (this.interventionVehicules.length === 0) {
-      this.$store
-        .dispatch('fetchInterventionVehicules', this.activeInterventionId)
-        .then(() => {
-          this.updateVehicules(this.interventionVehicules);
-        });
-    } else {
-      this.updateVehicules(this.interventionVehicules);
     }
+    this.$store
+      .dispatch('fetchInterventionVehicules', this.activeInterventionId)
+      .then(() => {
+        this.updateVehicules(this.interventionVehicules);
+      });
   },
   watch: {
     interventionVehicules(value) {
@@ -90,8 +90,8 @@ export default {
   methods: {
     save() {
       let vehiculesIds = this.interventionVehicules.map((v) => v.vehicule_id);
-      let ids = Object.keys(this.vehicules)
-        .filter((item) => this.vehicules[item])
+      let ids = Object.keys(this.selected)
+        .filter((item) => this.selected[item])
         .map((x) => parseInt(x));
 
       //New One
@@ -114,11 +114,11 @@ export default {
       }
     },
     updateVehicules(value) {
-      this.vehicules = {};
+      this.selected = {};
       let svm = this;
 
       value.forEach(
-        (v) => (svm.vehicules = { ...svm.vehicules, [v.vehicule_id]: true })
+        (v) => (svm.selected = { ...svm.selected, [v.vehicule_id]: true })
       );
     },
   },
