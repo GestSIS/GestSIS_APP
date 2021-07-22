@@ -14,7 +14,7 @@
           type="checkbox"
           class="custom-control-input"
           id="infoGeneral"
-          v-model="infoGeneral"
+          v-model="params.infoGeneral"
         />
         <label class="custom-control-label" for="infoGeneral">
           Informations générales
@@ -25,7 +25,7 @@
           type="checkbox"
           class="custom-control-input"
           id="description"
-          v-model="description"
+          v-model="params.description"
         />
         <label class="custom-control-label" for="description">
           Description de l'intervention
@@ -36,7 +36,7 @@
           type="checkbox"
           class="custom-control-input"
           id="groupes"
-          v-model="groupes"
+          v-model="params.groupes"
         />
         <label class="custom-control-label" for="groupes">
           Groupes alarmés
@@ -47,7 +47,7 @@
           type="checkbox"
           class="custom-control-input"
           id="presences"
-          v-model="presences"
+          v-model="params.presences"
         />
         <label class="custom-control-label" for="presences">
           Détails des présences des sapeurs
@@ -58,7 +58,7 @@
           type="checkbox"
           class="custom-control-input"
           id="montants"
-          v-model="montants"
+          v-model="params.montants"
         />
         <label class="custom-control-label" for="montants">
           Informations financières (montant)
@@ -69,7 +69,7 @@
           type="checkbox"
           class="custom-control-input"
           id="vehicules"
-          v-model="vehicules"
+          v-model="params.vehicules"
         />
         <label class="custom-control-label" for="vehicules">
           Véhicules mobilisé
@@ -80,7 +80,7 @@
           type="checkbox"
           class="custom-control-input"
           id="materiel"
-          v-model="materiel"
+          v-model="params.materiel"
         />
         <label class="custom-control-label" for="materiel">
           Matériel utilisé
@@ -91,7 +91,7 @@
           type="checkbox"
           class="custom-control-input"
           id="absents"
-          v-model="absents"
+          v-model="params.absents"
         />
         <label class="custom-control-label" for="absents">
           Sapeurs non-présent
@@ -102,7 +102,7 @@
           type="checkbox"
           class="custom-control-input"
           id="status"
-          v-model="status"
+          v-model="params.status"
         />
         <label class="custom-control-label" for="status">
           Indication du traitement du rapport
@@ -113,7 +113,7 @@
           type="checkbox"
           class="custom-control-input"
           id="missions"
-          v-model="missions"
+          v-model="params.missions"
         />
         <label class="custom-control-label" for="missions">
           Missions de l'intervention
@@ -124,7 +124,7 @@
           type="checkbox"
           class="custom-control-input"
           id="appels"
-          v-model="appels"
+          v-model="params.appels"
         />
         <label class="custom-control-label" for="appels">
           Appels durant l'intervention
@@ -135,32 +135,35 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activePhase.id ? 'Modifier' : 'Ajouter' }}
+      <button type="button" class="btn btn-primary" @click="generer()">
+        Générer
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import { DateTime } from 'luxon';
+import { mapMutations } from 'vuex';
+
+import InterventionService from '@/services/InterventionService';
 
 export default {
   name: 'ModalRapportIntervention',
   data() {
     return {
-      infoGeneral: true,
-      description: true,
-      groupes: true,
-      presences: true,
-      montants: true,
-      vehicules: true,
-      materiel: true,
-      absents: true,
-      status: true,
-      missions: true,
-      appels: true,
+      params: {
+        infoGeneral: true,
+        description: true,
+        groupes: true,
+        presences: true,
+        montants: true,
+        vehicules: true,
+        materiel: true,
+        absents: true,
+        status: true,
+        missions: true,
+        appels: true,
+      }
     };
   },
   props: {
@@ -168,45 +171,12 @@ export default {
       type: Object,
     },
   },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      listePhaseType: (state) => state.phaseType.liste,
-      activePhase: (state) => state.phaseType.active.data,
-    }),
-  },
   mounted() {},
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
-      if (!(this.activePhase.debut === null && this.activePhase.id)) {
-        this.activePhase.debut = DateTime.fromISO(
-          this.activePhase.debut2
-        ).toFormat(this.format);
-      }
-      if ((this.activePhase.id || 0) === 0) {
-        this.$store
-          .dispatch('addPhase', {
-            ...this.activePhase,
-            debut2: undefined,
-          })
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => (this.errors = errors));
-      } else {
-        this.$store
-          .dispatch('editPhase', {
-            ...this.activePhase,
-            debut2: undefined,
-          })
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => (this.errors = errors));
-      }
+    generer() {
+      InterventionService.downloadRapport(this.data.interventionId, this.params, 'intervention.pdf');
+      this.HIDE_MODAL();
     },
   },
 };

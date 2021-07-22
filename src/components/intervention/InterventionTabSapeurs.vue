@@ -106,6 +106,11 @@
                   ></th>
                 </tr>
               </thead>
+              <tbody v-if="sortedSapeurs.length <= 0">
+                <tr>
+                  <td colspan="2">Aucun sapeur présent pour l'instant</td>
+                </tr>
+              </tbody>
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
                   <th class="ml-0 pl-0">

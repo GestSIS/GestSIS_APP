@@ -213,7 +213,7 @@ export default {
       return this.ecritures.map((e) => ({
         ...e,
         sapeur: [svm.getSapeur(e.sapeur_id)].map(
-          (s) => `${s.nom} ${s.prenom}`
+          (s) => s ? `${s.nom} ${s.prenom}` : ''
         )[0],
       }));
     },

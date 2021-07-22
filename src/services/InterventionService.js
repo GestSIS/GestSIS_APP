@@ -162,4 +162,9 @@ export default {
       data: { phases: [phaseId] },
     });
   },
+
+  // Rapport d'intervention
+  downloadRapport(interventionId, params) {
+    return Api.api().delete('/interventions/' + interventionId + '/rapport/', { data :params });
+  }
 };

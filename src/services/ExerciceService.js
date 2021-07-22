@@ -37,4 +37,9 @@ export default {
       `/exercices/${exerciceId}/liste-presence/`
     );
   },
+  downloadListAppel(exerciceId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/exercices/${exerciceId}/liste-appel/`
+    );
+  },
 };
