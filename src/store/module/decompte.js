@@ -26,16 +26,22 @@ export default {
       return DecompteService.genererDecompteAnnuel(params).then((data) =>
         commit(types.ADD_DECOMPTE, data)
       );
+      // TODO: Refresh data en cas de succès afin d'avoir des données à jour
+      // Update les écritures afin de refresh l'interface
     },
     genererDecompteSapeur({ commit }, params) {
       return DecompteService.genererDecompteSapeur(params).then((data) =>
         commit(types.ADD_DECOMPTE, data)
       );
+      // TODO: Refresh data en cas de succès afin d'avoir des données à jour
+      // Update les écritures afin de refresh l'interface
     },
     genererDecompteExercice({ commit }, params) {
       return DecompteService.genererDecompteExercice(params).then((data) =>
         commit(types.ADD_DECOMPTE, data)
       );
+      // TODO: Refresh data en cas de succès afin d'avoir des données à jour
+      // Update les écritures afin de refresh l'interface
     },
     fetchPaiementsPourDecompte({ state, commit }, decompteId) {},
     //     updateAvsParams({ commit }, params) {

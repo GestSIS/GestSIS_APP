@@ -1,5 +1,29 @@
 <template>
   <div class="row">
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block" disabled>
+            Créer un décompte individuel
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Impressions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block" disabled>
+            Résumé des frais
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">

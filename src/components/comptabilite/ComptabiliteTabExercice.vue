@@ -157,8 +157,9 @@ async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchExerciceCategories');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
+  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
 
-  Promise.all([loadExercices, loadCategories, loadSapeurs, loadLocalites]).then(
+  Promise.all([loadExercices, loadCategories, loadSapeurs, loadLocalites, loadIndemnites]).then(
     () => {
       next();
     }

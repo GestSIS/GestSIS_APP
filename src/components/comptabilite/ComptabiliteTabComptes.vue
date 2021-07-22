@@ -1,5 +1,20 @@
 <template>
   <div class="row">
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline-primary btn-block">
+            Justificatif pour un compte
+          </button>
+          <button class="btn btn-outline-primary btn-block">
+            Justificatif complet
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">

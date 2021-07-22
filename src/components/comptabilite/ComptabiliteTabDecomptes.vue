@@ -9,7 +9,7 @@
           <button class="btn btn-outline-primary btn-block" @click="generer">
             Nouveau
           </button>
-          <button class="btn btn-outline-primary btn-block" :disabled="!selectedId" @click="supprimer(selectedId)">
+          <button class="btn btn-outline-primary btn-block" :disabled="!selectedId" @click="iso20022Decompte(selectedId)">
             Fichier de paiement (ISO20022)
           </button>
           <button class="btn btn-outline-danger btn-block" :disabled="!selectedId" @click="supprimer(selectedId)">
@@ -74,6 +74,7 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
+import DecompteService from '@/services/DecompteService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 
@@ -167,7 +168,11 @@ export default {
       this.selectedId = row.id;
     },
     supprimer(row) {
-      console.log(row);
+      // console.log(row);
+    },
+    iso20022Decompte(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id === decompteId)
+      DecompteService.downloadIso20022PourDecompte(decompteId, `decompte_${decompte.date}.xml`)
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });

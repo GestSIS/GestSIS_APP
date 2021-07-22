@@ -17,14 +17,21 @@ export default {
   },
   genererDecompteAnnuel(params) {
     return Api.api().post('decomptes/creer-annuel', params);
-    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
   },
   genererDecompteSapeur(params) {
     return Api.api().post('decomptes/creer-sapeur', params);
-    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
   },
   genererDecompteExercice(params) {
     return Api.api().post('decomptes/creer-exercice', params);
-    // TODO: Refresh data en cas de succès afin d'avoir des données à jour
+  },
+  downloadIso20022PourDecompte(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/iso20022/`
+    );
+  },
+  downloadIso20022PourPaiement(paiementId, filename) {
+    return Api.apiFileDownload(filename).get(
+    `/paiements/${paiementId}/iso20022/`
+  );
   },
 };
