@@ -10,7 +10,13 @@ export default {
   updateCompte(compte) {
     return Api.api().put(`/comptes/${compte.id}`, compte);
   },
-  removeCompte(compte_id) {
-    return Api.api().delete(`/comptes/${compte_id}`);
+  removeCompte(compteId) {
+    return Api.api().delete(`/comptes/${compteId}`);
   },
+  downloadJustificatifIndividuel(filename, exerciceComptableId, compteId) {
+    return Api.apiFileDownload(filename).get(`/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`);
+  },
+  downloadJustificatifComplet(filename, exerciceComptableId) {
+    return Api.apiFileDownload(filename).get(`/exercices-comptable/${exerciceComptableId}/justificatif`);
+  }
 };

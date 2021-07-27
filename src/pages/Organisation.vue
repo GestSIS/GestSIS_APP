@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Groupes</h3>
@@ -26,13 +26,14 @@
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-4">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Infos complémentaires</h3>
-            <button class="btn btn-outline-primary">Save</button>
           </div>
-          <div class="card-body"></div>
+          <div class="card-body">
+            <button class="btn btn-primary">Ajouter sapeur</button>
+          </div>
         </div>
       </div>
     </div>
@@ -80,9 +81,11 @@ export default {
         },
         groupe: {
           icon: ['fas', 'sitemap'],
+          color: '#2c3e50'
         },
         groupeInter: {
-          icon: ['fas', 'sitemap'],
+          icon: ['fas', 'fire'],
+          color: '#f39c12'
         },
         fonction: {
           icon: ['fas', 'medal'],
