@@ -143,15 +143,15 @@ export default {
       return sapeur.nom + ' ' + sapeur.prenom;
     },
     manageSapeurs() {
-      let data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
+      const data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
       let svm = this;
-      let callback = (newSap, removedSap) => {
-        if (newSap === null || newSap === undefined) {
+      let callback = ({ajoute, supprime}) => {
+        if (ajoute === null || ajoute === undefined) {
           return;
         }
 
         return new Promise((resolve, reject) => {
-          let newSapeurs = newSap.map((s) => ({
+          let newSapeurs = ajoute.map((s) => ({
             convoque: false,
             present: false,
             remplace: false,
@@ -160,7 +160,7 @@ export default {
             amende: false,
           }));
 
-          let removedSapeurs = removedSap.map(
+          let removedSapeurs = supprime.map(
             (id) =>
               svm.activeExerciceSapeurs.filter((s) => s.sapeur_id === id)[0].id
           );

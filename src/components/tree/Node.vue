@@ -2,11 +2,12 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      @dblclick="() => expand(data)"
+      :class="{'table-primary' : active == node}"
+      @dblclick="() => expand(data)" @click="select(node)"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        @click="() => expand(data)"
+        @click.prevent="() => expand(data)"
         v-if="computedChildren.length > 0"
         aria-hidden="true"
         role="presentation"
@@ -22,7 +23,7 @@
         <font-awesome-icon
           v-else-if="data.icon"
           :icon="data.icon"
-          size="lg"
+          size="xs"
           class="tree-node-icon"
           :color="data.color"
         />
@@ -33,10 +34,12 @@
       <div v-show="expanded && data.children" class="tree-node-children">
         <node
           v-for="item in lazyChildren"
-          :key="item.id"
+          :key="item.key"
           :node="item"
           :_types="_types"
           class="tree-node--parent"
+          :select="select"
+          :active="active"
         />
       </div>
     </transition-expand>
@@ -66,6 +69,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    select: {
+      type: Function,
+      required: true,
+      default: () => {},
+    },
+    active: {
+      type: Object,
+      required: false,
+    }
   },
   data() {
     return {

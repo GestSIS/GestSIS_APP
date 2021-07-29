@@ -6,6 +6,8 @@
       :node="item"
       :_types="_types"
       :is-root="true"
+      :select="select"
+      :active="active"
     ></node>
   </div>
 </template>
@@ -27,6 +29,24 @@ export default {
     tree: {
       type: Array,
       required: true,
+    },
+    selectable: {
+      type: Boolean,
+      required: false,
+      default: () => false,
+    },
+  },
+  data() {
+    return {
+      active: null,
+    };
+  },
+  methods: {
+    select(elem) {
+      if (this.selectable) {
+        this.active = elem;
+        this.$emit("selected", elem);
+      }
     },
   },
 };
