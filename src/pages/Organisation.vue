@@ -20,7 +20,7 @@
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Groupes</h3>
-            <button class="btn btn-outline-primary">Modifier</button>
+            <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
             <tree
@@ -35,11 +35,17 @@
       <div class="col-md-4">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
-            <h3>Infos complémentaires</h3>
+            <h3>Actions</h3>
           </div>
           <div class="card-body">
             <button
-              class="btn btn-primary"
+              class="btn btn-primary mb-2 mr-2"
+              @click="modifierGroupes"
+            >
+              Modifier les groupes
+            </button>
+            <button
+              class="btn btn-primary mb-2"
               :disabled="
                 !(
                   active &&
@@ -157,6 +163,9 @@ export default {
     selected(elem) {
       this.active = elem;
     },
+    modifierGroupes() {
+      //TODO:
+    },
     addSapeurs(node) {
       if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
         return;
@@ -178,7 +187,7 @@ export default {
 
       this.SHOW_MODAL({
         component: 'ModalSapeurSelect',
-        size: 3,
+        size: 2,
         callback,
         data,
       });

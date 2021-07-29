@@ -24,6 +24,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="activeSapeurGrades.length <= 0">
+            <td colspan="4">Aucun grade</td>
+          </tr>
           <tr v-for="g in activeSapeurGrades" :key="g.id">
             <td>{{ g.date }}</td>
             <td>{{ getGrade(g.grade_id).designation }}</td>

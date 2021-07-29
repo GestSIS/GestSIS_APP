@@ -26,6 +26,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="exerciceDisplay.length <= 0">
+            <td colspan="9">Aucun exercice à afficher</td>
+          </tr>
           <tr v-for="e in exerciceDisplay" :key="e.id">
             <td>{{ e.date }}</td>
             <td>{{ e.heure }}</td>

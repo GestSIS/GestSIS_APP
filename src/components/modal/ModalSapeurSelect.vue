@@ -25,7 +25,7 @@
       </div>
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Sapeurs sélectionnés</h6>
+          <h6 class="mb-0">Sapeurs sélectionnés ({{chosenSapeurs.length}})</h6>
           <button
             class="btn btn-outline-danger"
             @click="removeSapeurs"
@@ -56,6 +56,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="chosenSapeurs.length <= 0">
+                <td colspan="3">Aucun sapeur sélection</td>
+              </tr>
               <tr
                 v-for="item in chosenSapeurs.map(getSapeur)"
                 :key="item.id"
