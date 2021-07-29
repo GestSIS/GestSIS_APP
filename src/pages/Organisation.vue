@@ -48,7 +48,7 @@
               "
               @click="addSapeurs(active)"
             >
-              Ajouter sapeurs
+              Ajouter/enlever des sapeurs
             </button>
           </div>
         </div>
