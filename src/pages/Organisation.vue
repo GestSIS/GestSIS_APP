@@ -119,7 +119,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste,
+      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       sapeurs: (state) => state.sapeur.liste,
     }),
     groupeTree() {

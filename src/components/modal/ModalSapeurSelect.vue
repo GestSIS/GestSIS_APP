@@ -246,7 +246,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste,
+      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       grades: (state) => state.grade.liste,
       civilites: (state) => state.baseData.civilites,
       fonctions: (state) => state.fonction.liste,
