@@ -1,17 +1,27 @@
 <template>
-    <div>
-       <hr class="bg-secondary" />
-       <!-- Sidebar user panel (optional) -->
-        <div class="info">
-            <div class="input-group mb-3">
-                <!-- <div class="input-group-prepend">
+  <div>
+    <hr class="bg-secondary" />
+    <div class="info">
+      <div class="input-group mb-3">
+        <!-- <div class="input-group-prepend">
                     <label class="input-group-text" for="inputGroupSelect01">Options</label>
                 </div> -->
-                <select class="custom-select" id="inputGroupSelect01">
-                    <option v-for="sis in availableSisListe" :key="sis.id">{{ sis.nom }}</option>
-                </select>
-            </div>
-            <!-- <a href="#" class="d-block">
+        <select
+          class="custom-select"
+          id="inputGroupSelect01"
+          @change="selectSis($event)"
+          v-model="sisId"
+        >
+          <option
+            v-for="sis in availableSisListe"
+            :key="sis.id"
+            :value="sis.id"
+          >
+            {{ sis.nom }}
+          </option>
+        </select>
+      </div>
+      <!-- <a href="#" class="d-block">
              &lt;!&ndash; @if(!empty($user_details['nom']))
              {{ $user_details['prenom'] }} {{ $user_details['nom'] }}
              @else
@@ -19,8 +29,8 @@
              @endif&ndash;&gt;
              John Doe
             </a> -->
-        </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -28,12 +38,34 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'SisSelection',
+  data() {
+    return {
+      sisId: null,
+    };
+  },
+  mounted() {
+    this.sisId = this.activeSisId;
+  },
+  watch: {
+    activeSisId() {
+      this.sisId = this.activeSisId;
+    },
+  },
   computed: {
-    ...mapGetters([
-        'activeSisData',
-        'availableSisListe'
-    ])
-  }
+    ...mapGetters(['availableSisListe']),
+    ...mapState({
+      activeSisId: (state) => state.auth.sis.activeId,
+      listeSis: (state) => state.auth.sis.liste,
+    }),
+  },
+  methods: {
+    selectSis(event) {
+      const sis = this.listeSis.find((s) => s.id == event.target.value);
+      this.$store.dispatch('selectSis', sis).then(() => {
+        this.$router.push({ name: 'dashboard' });
+      });
+    },
+  },
 };
 </script>
 

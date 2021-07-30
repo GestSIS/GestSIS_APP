@@ -7,7 +7,7 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div v-for="m in modules" :key="m" class="col-6 col-sm-4 col-md-3 p-1">
+          <div v-for="m in modules" :key="m.name" class="col-6 col-sm-4 col-md-3 p-1">
             <router-link tag="button" :to="m.to" class="card text-white bg-primary btn-block">
               <div class="card-body">
                 <div class="d-flex justify-content-center flex-column align-items-center">
@@ -107,6 +107,7 @@ export default {
   },
   computed: {
     ...mapState({
+      listeSis: (state) => state.auth.sis.liste,
       sisId: (state) => state.auth.sis.activeId,
       sisKey: (state) => state.auth.sis.activeKey,
       sis: (state) =>
