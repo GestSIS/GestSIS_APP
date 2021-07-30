@@ -164,7 +164,12 @@ export default {
       this.active = elem;
     },
     modifierGroupes() {
-      //TODO:
+      const data = [];
+      this.SHOW_MODAL({
+        component: 'ModalGroupeEdition',
+        size: 1,
+        data,
+      });
     },
     addSapeurs(node) {
       if (!(node.type == 'groupe' || node.type == 'groupeInter')) {

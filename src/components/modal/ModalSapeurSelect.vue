@@ -19,6 +19,10 @@
               <option value="grade">Grade</option>
               <option value="civilite">Civilité</option>
               <option value="groupe">Groupes</option>
+              <!-- TODO: Ajouter d'autres options -->
+              <!-- TODO: Ajouter option permis -->
+              <!-- TODO: Ajouter option Date incorporation -->
+              <!-- TODO: Ajouter option Date naissance -->
             </select>
           </div>
         </div>

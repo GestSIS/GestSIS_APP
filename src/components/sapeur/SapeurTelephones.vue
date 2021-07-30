@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tr v-if="telephones.length <= 0">
-          <td colspan="5">Aucun téléphone enregistré</td>
+          <td colspan="5">Aucun numéro enregistré</td>
         </tr>
         <draggable tag="tbody" v-model="telephones">
           <tr v-for="t in telephones" :key="t.id">

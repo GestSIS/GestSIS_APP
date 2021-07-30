@@ -53,6 +53,11 @@ const router = new Router({
       component: Home,
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/pages/Dashboard.vue'),
+    },
+    {
       path: '/sapeurs',
       name: 'sapeurs',
       component: () => import('@/pages/Sapeurs.vue'),

@@ -10,7 +10,7 @@
         </a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <router-link to="/" class="nav-link">
+        <router-link :to="{name:'accueil'}" class="nav-link">
           Accueil
         </router-link>
       </li>
