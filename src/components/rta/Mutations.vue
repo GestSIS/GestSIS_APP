@@ -16,24 +16,36 @@
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
+            <th></th>
             <th>Nom Prénom</th>
             <th>Date naissance</th>
             <th>Localité</th>
             <th>Fonction</th>
             <th v-for="i in nbNumero" :key="'num-' + i">Numéro {{ i }}</th>
             <th v-for="i in nbGroupes" :key="'grp' + i">Grp{{ i }}</th>
-            <th>Code</th>
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="e in mutations"
-            :key="e.id"
+            :key="e.sapeur_id"
             :class="{
               'table-success': e.statut == 'ajout',
               'table-danger': e.statut == 'supprime',
             }"
           >
+            <td class="text-center">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  :id="'select-'+e.sapeur_id"
+                  v-model="unselected[e.sapeur_id]"
+                  :false-value="true" :true-value="undefined"
+                />
+                <label class="custom-control-label" :for="'select-'+e.sapeur_id"></label>
+              </div>
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
@@ -102,18 +114,6 @@
               v-for="g in nbGroupes - e.groupes.length"
               :key="'g-comp-' + g"
             ></td>
-            <td class="text-center">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="en_cours"
-                  :checked="e.boucle"
-                  disabled
-                />
-                <label class="custom-control-label" for="en_cours"></label>
-              </div>
-            </td>
             <td>
               <!-- TODO Implement those 2 buttons -->
               <div class="d-flex justify-content-center">
@@ -148,9 +148,11 @@
 import { mapState } from 'vuex';
 
 export default {
+  name: "Mutations",
   data() {
     return {
       maxNbNumero: 3,
+      unselected: {}
     };
   },
   mounted() {
