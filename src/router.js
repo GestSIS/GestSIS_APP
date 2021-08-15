@@ -230,6 +230,32 @@ const router = new Router({
       ],
     },
     {
+      path: '/rta',
+      name: 'rta',
+      component: () => import('@/pages/Rta.vue'),
+      redirect: { name: 'rta-mutations' },
+      children: [
+        {
+          path: 'mutations',
+          name: 'rta-mutations',
+          component: () =>
+            import('@/components/rta/Mutations.vue'),
+        },
+        {
+          path: 'reference',
+          name: 'rta-reference',
+          component: () =>
+            import('@/components/rta/Reference.vue'),
+        },
+        {
+          path: 'gestsis',
+          name: 'rta-gestsis',
+          component: () =>
+            import('@/components/rta/GestSis.vue'),
+        },
+      ],
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('@/pages/About.vue'),

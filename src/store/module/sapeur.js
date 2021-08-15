@@ -302,7 +302,7 @@ export default {
       });
     },
 
-    addTelephone({ state, commit }, telephone) {
+    addTelephoneSapeur({ state, commit }, telephone) {
       return SapeurService.addTelephone(state.active.id, telephone).then(
         (data) => {
           commit(types.ADD_CURRENT_SAPEUR_TELEPHONE, data);
@@ -311,7 +311,7 @@ export default {
       );
     },
 
-    editTelephone({ state, commit }, telephone) {
+    editTelephoneSapeur({ state, commit }, telephone) {
       return SapeurService.editTelephone(state.active.id, telephone).then(
         (data) => {
           commit(types.EDIT_CURRENT_SAPEUR_TELEPHONE, data);
@@ -319,7 +319,7 @@ export default {
         }
       );
     },
-    removeTelephone({ state, commit }, telephoneId) {
+    removeTelephoneSapeur({ state, commit }, telephoneId) {
       return SapeurService.removeTelephone(
         state.active.id,
         telephoneId

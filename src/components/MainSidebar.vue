@@ -127,7 +127,7 @@
         <li class="nav-item">
           <router-link to="/rta" class="nav-link internal-link">
             <font-awesome-icon icon="globe-europe" />
-            <span>Exportation -> RTA</span>
+            <span>Exportation RTA</span>
           </router-link>
         </li>
         <li class="nav-item">

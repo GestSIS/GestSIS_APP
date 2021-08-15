@@ -146,18 +146,18 @@ export default {
       this.activeSapeurTelephones.forEach((t) => {
         //Suppression des numéros supprimé
         if (this.telephones.filter((t2) => t2.id === t.id).length === 0) {
-          this.$store.dispatch('removeTelephone', t.id);
+          this.$store.dispatch('removeTelephoneSapeur', t.id);
         }
       });
 
       this.telephones.forEach((t) => {
         //Numéros modifiés
         if (t.id !== null) {
-          this.$store.dispatch('editTelephone', t);
+          this.$store.dispatch('editTelephoneSapeur', t);
         }
         //Nouveaux numéros
         else {
-          this.$store.dispatch('addTelephone', t);
+          this.$store.dispatch('addTelephoneSapeur', t);
         }
       });
     },
