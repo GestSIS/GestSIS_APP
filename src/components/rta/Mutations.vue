@@ -114,33 +114,18 @@
               v-for="g in nbGroupes - e.groupes.length"
               :key="'g-comp-' + g"
             ></td>
-            <td>
-              <!-- TODO Implement those 2 buttons -->
-              <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-primary border-0">
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div>
+    <!-- <div>
       <h1>Reference</h1>
       {{ reference }}
       <h1>Actuel</h1>
       {{ actuel }}
       <h1>Mutations</h1>
       {{ mutations }}
-    </div>
+    </div> -->
   </div>
 </template>
 
