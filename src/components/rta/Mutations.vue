@@ -4,13 +4,13 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mutations</h3>
-      <!-- <button
+      <button
         type="button"
         class="btn btn-primary"
-        disabled
+        @click="mutate"
       >
-        TODO
-      </button> -->
+        Mutate
+      </button>
     </div>
     <div class="card-body">
       <table class="table table-sm" cellspacing="0">
@@ -284,6 +284,14 @@ export default {
 
       return [...ajoutes, ...modifies, ...supprimes];
     },
+  },
+  methods: {
+    mutate() {
+      const unselected = new Set(Object.entries(this.unselected).filter(data => data[1]).map(data => parseInt(data[0])));
+      const mutations = this.mutations.filter(m => !unselected.has(m.sapeur_id));
+      
+      //TODO: Mutate here
+    }
   },
 };
 </script>
