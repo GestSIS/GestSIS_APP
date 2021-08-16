@@ -90,7 +90,7 @@
               {{ n }}
             </td>
             <td
-              v-for="n in maxNbNumero - e.numeros.length - 1"
+              v-for="n in nbNumero - e.numeros.length"
               :key="'n-comp-' + n"
             ></td>
             <td
