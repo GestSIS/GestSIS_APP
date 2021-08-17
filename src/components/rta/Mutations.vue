@@ -4,15 +4,54 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mutations</h3>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="mutate"
-      >
-        Mutate
-      </button>
     </div>
     <div class="card-body">
+      <div class="form-inline mb-3">
+        <div class="form-group">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              :class="{ 'is-invalid': errorsData.username }"
+              id="m-user"
+              name="username"
+              placeholder="Utilisateur"
+              v-model="username"
+            />
+          </div>
+        </div>
+        <div class="form-group mx-sm-3">
+          <div class="input-group">
+            <input
+              type="password"
+              class="form-control"
+              :class="{ 'is-invalid': errorsData.password }"
+              id="m-password"
+              name="password"
+              placeholder="Mot de passe"
+              v-model="password"
+            />
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" @click="mutate">
+          Mutate
+        </button>
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <label for="m-communication"></label>
+          <textarea
+            type="text"
+            rows="2"
+            class="form-control"
+            :class="{ 'is-invalid': errorsData['communication'] }"
+            id="m-communication"
+            name="communication"
+            placeholder="Communication"
+            v-model="communication"
+          />
+        </div>
+      </div>
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
@@ -26,11 +65,18 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!mutations.length">
+            <td></td>
+            <td colspan="4">
+              Aucun changement détecté entre la base RTA et les données
+              actuelles.
+            </td>
+          </tr>
           <tr
             v-for="e in mutations"
             :key="e.sapeur_id"
             :class="{
-              'table-success': e.statut == 'ajout',
+              'table-success': e.statut == 'ajoute',
               'table-danger': e.statut == 'supprime',
             }"
           >
@@ -39,11 +85,15 @@
                 <input
                   type="checkbox"
                   class="custom-control-input"
-                  :id="'select-'+e.sapeur_id"
+                  :id="'select-' + e.sapeur_id"
                   v-model="unselected[e.sapeur_id]"
-                  :false-value="true" :true-value="undefined"
+                  :false-value="true"
+                  :true-value="undefined"
                 />
-                <label class="custom-control-label" :for="'select-'+e.sapeur_id"></label>
+                <label
+                  class="custom-control-label"
+                  :for="'select-' + e.sapeur_id"
+                ></label>
               </div>
             </td>
             <td
@@ -130,14 +180,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
-  name: "Mutations",
+  name: 'Mutations',
   data() {
     return {
       maxNbNumero: 3,
-      unselected: {}
+      unselected: {},
+      username: '',
+      password: '',
+      communication: '',
+      errorsData: {},
     };
   },
   mounted() {
@@ -196,7 +250,7 @@ export default {
         .filter((s) => !referenceIds.has(s.sapeur_id))
         .map((s) => ({
           ...s,
-          statut: 'ajout',
+          statut: 'ajoute',
           changements: {},
         }));
       const supprimes = this.reference
@@ -286,12 +340,54 @@ export default {
     },
   },
   methods: {
+    ...mapGetters(['activeSisData']),
     mutate() {
-      const unselected = new Set(Object.entries(this.unselected).filter(data => data[1]).map(data => parseInt(data[0])));
-      const mutations = this.mutations.filter(m => !unselected.has(m.sapeur_id));
-      
-      //TODO: Mutate here
-    }
+      if (!this.password) {
+        this.errorsData.password = 'Mot de passe invalide';
+      } else {
+        delete this.errorsData.password;
+      }
+      if (!this.username) {
+        this.errorsData.username = "Nom d'utilisateur invalide";
+      } else {
+        delete this.errorsData.username;
+      }
+      this.errorsData = { ...this.errorsData };
+
+      if (this.errorsData.username || this.errorsData.password) {
+        return;
+      }
+
+      const unselected = new Set(
+        Object.entries(this.unselected)
+          .filter((data) => data[1])
+          .map((data) => parseInt(data[0]))
+      );
+      const mutations = this.mutations.filter(
+        (m) => !unselected.has(m.sapeur_id)
+      );
+
+      const sis = this.activeSisData().nom;
+
+      const data = {
+        sis,
+        username: this.username,
+        password: this.password,
+        communication: this.communication || '-',
+        ajoutes: mutations.filter((m) => m.statut === 'ajoute'),
+        modifies: mutations.filter((m) => m.statut === 'modifie'),
+        supprimes: mutations.filter((m) => m.statut === 'supprime'),
+      };
+
+      this.$store
+        .dispatch('updateReferenceRta', data)
+        .then((res) => {
+          //TODO:
+        })
+        .catch((error) => {
+          this.errorsData = { ...error };
+        });
+    },
   },
 };
 </script>

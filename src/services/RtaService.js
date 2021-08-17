@@ -7,7 +7,7 @@ export default {
   getReferenceGestSis() {
     return Api.api().get('/rta-gestsis/');
   },
-  updatereference(data) {
+  updateReference(data) {
     return Api.api().post('/rta/', data);
   },
 };
