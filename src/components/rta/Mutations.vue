@@ -168,14 +168,14 @@
         </tbody>
       </table>
     </div>
-    <!-- <div>
+    <div>
       <h1>Reference</h1>
       {{ reference }}
       <h1>Actuel</h1>
       {{ actuel }}
       <h1>Mutations</h1>
       {{ mutations }}
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -205,7 +205,7 @@ export default {
   },
   computed: {
     ...mapState({
-      reference: (state) => state.rta.reference,
+      reference: (state) => state.rta.reference.map(f => ({...f, fonction: f?.fonction || ''} )),
       actuel: (state) =>
         state.rta.actuel
           .map((s) => ({
@@ -213,7 +213,7 @@ export default {
             localite: state.localite.liste.find((l) => l.id == s.localite_id)
               ?.designation,
             fonction: state.fonction.liste.find((f) => f.id == s.fonction_id)
-              ?.nom,
+              ?.nom || '',
             sapeur_id: s.id,
             numeros: s.telephones.map((t) => t.numero),
             telephones: null,
@@ -238,8 +238,6 @@ export default {
       return numCount.length > 0 ? Math.max(...numCount) : 0;
     },
     mutations() {
-      // TODO: Compute modified values
-
       const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
       const actuelIds = new Set(this.actuel.map((s) => s.sapeur_id));
       const potentielModifieIds = new Set(
@@ -263,6 +261,8 @@ export default {
       const modifies = this.actuel
         .filter((s) => potentielModifieIds.has(s.sapeur_id))
         .map((s) => {
+          let modifie = false;
+
           const reference = this.reference.find(
             (s2) => s2.sapeur_id == s.sapeur_id
           );
@@ -278,6 +278,7 @@ export default {
           fields.forEach((f) => {
             if (s[f] != reference[f]) {
               changements[f] = true;
+              modifie = true;
             }
           });
 
@@ -298,8 +299,12 @@ export default {
           const groupesModifie = s.groupes.filter(
             (g) =>
               groupesReference.has(g.no) &&
-              groupesReference.get(g.no) === g.description
+              groupesReference.get(g.no) !== g.description
           );
+
+          if(groupesAjoute.length > 0 || groupesSupprime.length > 0 || groupesModifie.length > 0){
+            modifie = true;
+          }
 
           changements = {
             ...changements,
@@ -326,15 +331,21 @@ export default {
             ...reference.numeros.slice(s.numeros.length),
           ];
 
+          if(numerosAjoute > numeros.length || numerosSupprime > numeros.length || numerosModifie.length > 0){
+            modifie = true;
+          }
+
           changements = {
             ...changements,
+            modifie,
             numerosAjoute,
             numerosModifie,
             numerosSupprime,
           };
 
           return { ...s, groupes, numeros, statut: 'modifie', changements };
-        });
+        })
+        .filter((m) => m.modifie);
 
       return [...ajoutes, ...modifies, ...supprimes];
     },
@@ -379,10 +390,11 @@ export default {
         supprimes: mutations.filter((m) => m.statut === 'supprime'),
       };
 
+      this.loading = true;
       this.$store
         .dispatch('updateReferenceRta', data)
         .then((res) => {
-          //TODO:
+          
         })
         .catch((error) => {
           this.errorsData = { ...error };
