@@ -331,7 +331,7 @@ export default {
             ...reference.numeros.slice(s.numeros.length),
           ];
 
-          if(numerosAjoute > numeros.length || numerosSupprime > numeros.length || numerosModifie.length > 0){
+          if(numerosAjoute < numeros.length || numerosSupprime < numeros.length || numerosModifie.length > 0){
             modifie = true;
           }
 
@@ -345,7 +345,7 @@ export default {
 
           return { ...s, groupes, numeros, statut: 'modifie', changements };
         })
-        .filter((m) => m.modifie);
+        .filter((m) => m.changements.modifie);
 
       return [...ajoutes, ...modifies, ...supprimes];
     },
@@ -386,7 +386,8 @@ export default {
         password: this.password,
         communication: this.communication || '-',
         ajoutes: mutations.filter((m) => m.statut === 'ajoute'),
-        modifies: mutations.filter((m) => m.statut === 'modifie'),
+        modifies: mutations.filter((m) => m.statut === 'modifie')
+          .map(s=> ({...s, numeros: s.numeros.slice(0, Math.min(s.changements.numerosAjoute, s.changements.numerosSupprime))})),
         supprimes: mutations.filter((m) => m.statut === 'supprime'),
       };
 
@@ -394,7 +395,7 @@ export default {
       this.$store
         .dispatch('updateReferenceRta', data)
         .then((res) => {
-          
+          this.$awn.success('Mutation transmise avec succès')
         })
         .catch((error) => {
           this.errorsData = { ...error };
