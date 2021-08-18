@@ -9,7 +9,7 @@
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
-            <th></th>
+            <!-- <th></th> -->
             <th>Nom Prénom</th>
             <th>Date naissance</th>
             <th>Localité</th>
@@ -34,7 +34,7 @@
               'table-danger': e.statut == 'supprime',
             }"
           >
-            <td class="text-center">
+            <!-- <td class="text-center">
               <div class="custom-control custom-checkbox">
                 <input
                   type="checkbox"
@@ -49,7 +49,7 @@
                   :for="'select-' + e.sapeur_id"
                 ></label>
               </div>
-            </td>
+            </td> -->
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,

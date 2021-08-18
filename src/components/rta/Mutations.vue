@@ -168,14 +168,6 @@
         </tbody>
       </table>
     </div>
-    <div>
-      <h1>Reference</h1>
-      {{ reference }}
-      <h1>Actuel</h1>
-      {{ actuel }}
-      <h1>Mutations</h1>
-      {{ mutations }}
-    </div>
   </div>
 </template>
 
