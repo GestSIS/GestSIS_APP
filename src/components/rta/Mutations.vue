@@ -205,15 +205,17 @@ export default {
   },
   computed: {
     ...mapState({
-      reference: (state) => state.rta.reference.map(f => ({...f, fonction: f?.fonction || ''} )),
+      reference: (state) =>
+        state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
       actuel: (state) =>
         state.rta.actuel
           .map((s) => ({
             ...s,
             localite: state.localite.liste.find((l) => l.id == s.localite_id)
               ?.designation,
-            fonction: state.fonction.liste.find((f) => f.id == s.fonction_id)
-              ?.nom || '',
+            fonction:
+              state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
+              '',
             sapeur_id: s.id,
             numeros: s.telephones.map((t) => t.numero),
             telephones: null,
@@ -302,7 +304,11 @@ export default {
               groupesReference.get(g.no) !== g.description
           );
 
-          if(groupesAjoute.length > 0 || groupesSupprime.length > 0 || groupesModifie.length > 0){
+          if (
+            groupesAjoute.length > 0 ||
+            groupesSupprime.length > 0 ||
+            groupesModifie.length > 0
+          ) {
             modifie = true;
           }
 
@@ -331,7 +337,11 @@ export default {
             ...reference.numeros.slice(s.numeros.length),
           ];
 
-          if(numerosAjoute < numeros.length || numerosSupprime < numeros.length || numerosModifie.length > 0){
+          if (
+            numerosAjoute < numeros.length ||
+            numerosSupprime < numeros.length ||
+            numerosModifie.length > 0
+          ) {
             modifie = true;
           }
 
@@ -386,19 +396,30 @@ export default {
         password: this.password,
         communication: this.communication || '-',
         ajoutes: mutations.filter((m) => m.statut === 'ajoute'),
-        modifies: mutations.filter((m) => m.statut === 'modifie')
-          .map(s=> ({...s, numeros: s.numeros.slice(0, Math.min(s.changements.numerosAjoute, s.changements.numerosSupprime))})),
+        modifies: mutations
+          .filter((m) => m.statut === 'modifie')
+          .map((s) => ({
+            ...s,
+            numeros: s.numeros.slice(
+              0,
+              Math.min(
+                s.changements.numerosAjoute,
+                s.changements.numerosSupprime
+              )
+            ),
+          })),
         supprimes: mutations.filter((m) => m.statut === 'supprime'),
       };
 
       this.loading = true;
       this.$store
         .dispatch('updateReferenceRta', data)
-        .then((res) => {
-          this.$awn.success('Mutation transmise avec succès')
+        .then((_) => {
+          this.$awn.success('Mutation transmise avec succès');
         })
         .catch((error) => {
           this.errorsData = { ...error };
+          this.$awn.error(error.message);
         });
     },
   },
