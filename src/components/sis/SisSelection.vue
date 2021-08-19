@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
     <hr class="bg-secondary" />
     <div class="info">
@@ -22,6 +23,21 @@
         </select>
       </div>
       <!-- <a href="#" class="d-block">
+=======
+    <div>
+       <hr class="bg-secondary" />
+       <!-- Sidebar user panel (optional) -->
+        <div class="info">
+            <div class="input-group mb-3">
+                <!-- <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                </div> -->
+                <select class="custom-select" id="inputGroupSelect01">
+                    <option v-for="sis in availableSisListe" :key="sis.id">{{ sis.nom }}</option>
+                </select>
+            </div>
+            <!-- <a href="#" class="d-block">
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
              &lt;!&ndash; @if(!empty($user_details['nom']))
              {{ $user_details['prenom'] }} {{ $user_details['nom'] }}
              @else
@@ -29,8 +45,13 @@
              @endif&ndash;&gt;
              John Doe
             </a> -->
+<<<<<<< HEAD
     </div>
   </div>
+=======
+        </div>
+    </div>
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
 </template>
 
 <script>
@@ -38,6 +59,7 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'SisSelection',
+<<<<<<< HEAD
   data() {
     return {
       sisId: null,
@@ -66,6 +88,14 @@ export default {
       });
     },
   },
+=======
+  computed: {
+    ...mapGetters([
+        'activeSisData',
+        'availableSisListe'
+    ])
+  }
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
 };
 </script>
 
