@@ -1,5 +1,26 @@
 <template>
   <div class="row">
+    <div class="col-sm-12 col-xl-4">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body">
+          <button
+            class="btn btn-outline-primary btn-block"
+            @click="justificatifIndividuel(activeCompteId)"
+          >
+            Justificatif du compte
+          </button>
+          <button
+            class="btn btn-outline-primary btn-block"
+            @click="justificatifComplet"
+          >
+            Justificatif complet
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
@@ -19,7 +40,7 @@
               </button>
               <div class="dropdown-menu" :class="{ show: dropdown }">
                 <button
-                  v-for="c in listeCompte"
+                  v-for="c in comptes"
                   :key="c.id"
                   @click="selectCompte(c.id)"
                   class="dropdown-item"
@@ -77,6 +98,8 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
+
+import CompteService from '@/services/CompteService.js';
 
 import Vuetable from 'vuetable-2';
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
@@ -136,8 +159,8 @@ export default {
       ecritures: (state) => state.imputation.active.ecritures,
       activeCompteId: (state) => state.imputation.active.compteId,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listeSapeur: (state) => state.sapeur.liste,
-      listeCompte: (state) => state.compte.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      comptes: (state) => state.compte.liste,
     }),
     ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
   },
@@ -150,13 +173,37 @@ export default {
       this.loading = true;
       this.init();
     },
-    listeCompte(newOne, oldOne) {
+    comptes(newOne, oldOne) {
       if (oldOne.length === 0) {
         this.init();
       }
     },
   },
   methods: {
+    formatedDate() {
+      var today = new Date();
+      return new Date(today.getTime() - (today.getTimezoneOffset() * 60000 ))
+                          .toISOString()
+                          .split("T")[0];
+    },
+    justificatifIndividuel(compteId) {
+      const compte = this.getCompte(this.activeCompteId);
+      const filename = `${this.formatedDate()}_justificatif-compte-${compte.numero}.pdf`;
+
+      CompteService.downloadJustificatifIndividuel(
+        filename,
+        this.activeExerciceComptableId,
+        compteId
+      );
+    },
+    justificatifComplet() {
+      const filename = `${this.formatedDate()}_justificatif-complet.pdf`;
+      
+      CompteService.downloadJustificatifComplet(
+        filename,
+        this.activeExerciceComptableId
+      );
+    },
     manageCompte() {
       //TODO: Manage comptes
     },
@@ -197,8 +244,8 @@ export default {
       let svm = this;
       return this.ecritures.map((e) => ({
         ...e,
-        sapeur: [svm.getSapeur(e.sapeur_id)].map(
-          (s) => `${s.nom} ${s.prenom}`
+        sapeur: [svm.getSapeur(e.sapeur_id)].map((s) =>
+          s ? `${s.nom} ${s.prenom}` : ''
         )[0],
       }));
     },

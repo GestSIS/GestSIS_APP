@@ -19,13 +19,19 @@
               <option value="grade">Grade</option>
               <option value="civilite">Civilité</option>
               <option value="groupe">Groupes</option>
+              <!-- TODO: Ajouter d'autres options -->
+              <!-- TODO: Ajouter option permis -->
+              <!-- TODO: Ajouter option Date incorporation -->
+              <!-- TODO: Ajouter option Date naissance -->
             </select>
           </div>
         </div>
       </div>
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Sapeurs sélectionnés</h6>
+          <h6 class="mb-0">
+            Sapeurs sélectionnés ({{ chosenSapeurs.length }})
+          </h6>
           <button
             class="btn btn-outline-danger"
             @click="removeSapeurs"
@@ -56,6 +62,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="chosenSapeurs.length <= 0">
+                <td colspan="3">Aucun sapeur sélectioné</td>
+              </tr>
               <tr
                 v-for="item in chosenSapeurs.map(getSapeur)"
                 :key="item.id"
@@ -96,14 +105,20 @@
             v-if="
               groupBy !== 'groupe' &&
               groupBy !== 'none' &&
-              groupBy !== 'fonction'
+              groupBy !== 'fonction' &&
+              groupBy !== 'civilite'
             "
           >
             Coming soon!
           </p>
           <table
             class="table table-sm"
-            v-if="groupBy === 'groupe' || groupBy === 'fonction'"
+            v-if="
+              groupBy === 'groupe' ||
+              groupBy === 'fonction' ||
+              groupBy === 'grade' ||
+              groupBy === 'civilite'
+            "
           >
             <thead>
               <tr>
@@ -112,8 +127,11 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="listeSapeurSelect.length <= 0">
+                <td colspan="2">Aucun sapeur ne possède de fonction</td>
+              </tr>
               <tr
-                v-for="item in listSapeurSelect"
+                v-for="item in listeSapeurSelect"
                 :key="item.parent_id + '-' + item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
@@ -232,7 +250,17 @@ export default {
   mounted() {
     this.chosenSapeurs = this.data.slice(0);
 
-    this.$store.dispatch('fetchGroupesSapeurs').then(() => {
+    if (this.grades.length <= 0) {
+      this.$store.dispatch('fetchGrades')
+    }
+    if (this.fonctions.length <= 0) {
+      this.$store.dispatch('fetchFonctions')
+    }
+    if (this.civilites.length <= 0) {
+      this.$store.dispatch('fetchCivilites')
+    }
+
+    this.$store.dispatch('fetchGroupes').then(() => {
       let svm = this;
       let recursive = (item) => {
         svm.expanded = { ...svm.expanded, [item.id]: false };
@@ -243,62 +271,30 @@ export default {
   },
   computed: {
     ...mapState({
-      //TODO Refactor names
-      listGroupes: (state) => state.groupe.liste,
-      listGrades: (state) => state.grade.liste,
-      listCivilites: (state) => state.baseData.civilites,
-      listeFonctions: (state) => state.fonction.liste,
-      listSapeurs: (state) => state.sapeur.liste,
+      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      grades: (state) => state.grade.liste,
+      civilites: (state) => state.baseData.civilites,
+      fonctions: (state) => state.fonction.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      civilites: (state) => state.baseData.civilites,
     }),
     ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
-    listSapeurSelect() {
-      let svm = this;
+    listeSapeurSelect() {
       if (this.groupBy === 'groupe') {
-        return this.flattenedTree;
+        return this.flattenedSapeurGroupe;
       } else if (this.groupBy === 'fonction') {
-        let liste = [];
-        this.listeFonctions.forEach((fonction) => {
-          let expanded = svm.expanded[fonction.id];
-          liste = [
-            ...liste,
-            {
-              designation: fonction.nom,
-              level: 0,
-              leaf: false,
-              id: fonction.id,
-              expanded: expanded,
-              parent_id: 0,
-              empty: !svm.listSapeurs
-                .map((s) => ({ ...s, sapeur_id: s.id }))
-                .filter(svm.filtreSapeur())
-                .filter((s) => s.fonction_id === fonction.id).length,
-            },
-          ];
-          if (expanded) {
-            liste = [
-              ...liste,
-              ...svm.listSapeurs
-                .map((s) => ({ ...s, sapeur_id: s.id }))
-                .filter(svm.filtreSapeur())
-                .filter((s) => s.fonction_id === fonction.id)
-                .map((sapeur) => ({
-                  designation: `${sapeur.nom} ${sapeur.prenom}`,
-                  level: 1,
-                  leaf: true,
-                  id: sapeur.id,
-                  parent_id: sapeur.fonction_id,
-                })),
-            ];
-          }
-        });
-        return liste;
+        return this.flattenedSapeurGeneric(this.fonctions, 'fonction_id', 'nom');
+      } else if (this.groupBy === 'grade') {
+        return this.flattenedSapeurGeneric(this.grades, 'fonction_id', 'designation');
+      } else if (this.groupBy === 'civilite') {
+        return this.flattenedSapeurGeneric(this.civilites, 'civilite_id', 'designation');
       }
       return [];
     },
-    flattenedTree() {
+    flattenedSapeurGroupe() {
       let flattened = [];
-      let svm = this;
-      let recursive = function (groupe, level) {
+      const svm = this;
+      const recursive = function (groupe, level) {
         let expanded = svm.expanded[groupe.id];
         let flaten = [
           {
@@ -342,7 +338,7 @@ export default {
       return flattened;
     },
     availableSapeurs() {
-      return this.listSapeurs
+      return this.sapeurs
         .slice(0)
         .filter((s) => !this.chosenSapeurs.includes(s.id))
         .map((s) => s.id);
@@ -362,24 +358,66 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    flattenedSapeurGeneric(relation, key, displayKey) {
+      let liste = [];
+      const svm = this;
+      relation.forEach((elem) => {
+        let expanded = svm.expanded[elem.id];
+        liste = [
+          ...liste,
+          {
+            designation: elem[displayKey],
+            level: 0,
+            leaf: false,
+            id: elem.id,
+            expanded: expanded,
+            parent_id: 0,
+            empty: !svm.sapeurs
+              .map((s) => ({ ...s, sapeur_id: s.id }))
+              .filter(svm.filtreSapeur())
+              .filter((s) => s[key] === elem.id).length,
+          },
+        ];
+        if (expanded) {
+          liste = [
+            ...liste,
+            ...svm.sapeurs
+              .map((s) => ({ ...s, sapeur_id: s.id }))
+              .filter(svm.filtreSapeur())
+              .filter((s) => s[key] === elem.id)
+              .map((sapeur) => ({
+                designation: `${sapeur.nom} ${sapeur.prenom}`,
+                level: 1,
+                leaf: true,
+                id: sapeur.id,
+                parent_id: sapeur[key],
+              })),
+          ];
+        }
+      });
+      return liste;
+    },
     close() {
       this.callback(null);
       this.HIDE_MODAL();
     },
     save() {
-      //Sapeurs ajoutés
-      let newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
+      // Sapeurs ajoutés
+      const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
+      // Sapeurs supprimés
+      const removedSap = this.data.filter(
+        (s) => !this.chosenSapeurs.includes(s)
+      );
+      // Sapeurs tous
+      const sapeurs = this.chosenSapeurs;
 
-      //Sapeurs supprimés
-      let removedSap = this.data.filter((s) => !this.chosenSapeurs.includes(s));
-
-      let svm = this;
-      this.callback(newSap, removedSap)
+      const svm = this;
+      this.callback({ ajoute: newSap, supprime: removedSap, tous: sapeurs })
         .then(() => {
-          this.HIDE_MODAL();
+          svm.HIDE_MODAL();
         })
         .catch((errorMessage) => {
-          // console.error(errorMessage);
+          console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },
@@ -437,7 +475,7 @@ export default {
         });
         groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
       } else if (this.groupBy === 'fonction') {
-        svm.listSapeurs
+        svm.sapeurs
           .map((s) => ({ ...s, sapeur_id: s.id }))
           .filter(this.filtreSapeur())
           .filter((s) => s.fonction_id === groupe.id)

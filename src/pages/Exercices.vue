@@ -57,6 +57,13 @@
             >
               Liste de présences
             </button>
+            <button
+              :disabled="!selectedId"
+              @click="listeAppel({ id: selectedId })"
+              class="btn btn-outline-primary btn-block"
+            >
+              Liste d'appel
+            </button>
           </form>
         </div>
       </div>
@@ -230,7 +237,7 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;
-        this.$refs.vuetable_exercices.setData(this.computedData);
+        this.$refs.vuetable_exercices.setData(this.filteredExercices);
       });
     },
     filteredExercices(data) {
@@ -369,6 +376,9 @@ export default {
     },
     listePresences({ id }) {
       ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
+    },
+    listeAppel({ id }) {
+      ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
     },
     dataManager(sortOrder) {
       if (this.computedData.length < 1) return;

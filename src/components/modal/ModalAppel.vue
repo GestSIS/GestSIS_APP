@@ -130,7 +130,7 @@ export default {
 
       if ((this.activeAppel.id || 0) === 0) {
         this.$store
-          .dispatch('addAppel', this.activeAppel)
+          .dispatch('addInterventionAppel', this.activeAppel)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -147,7 +147,7 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('editAppel', { ...this.activeAppel, date2: undefined })
+          .dispatch('editInterventionAppel', { ...this.activeAppel, date2: undefined })
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

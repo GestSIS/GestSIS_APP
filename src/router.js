@@ -53,6 +53,11 @@ const router = new Router({
       component: Home,
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/pages/Dashboard.vue'),
+    },
+    {
       path: '/sapeurs',
       name: 'sapeurs',
       component: () => import('@/pages/Sapeurs.vue'),
@@ -219,8 +224,39 @@ const router = new Router({
         {
           path: 'roles',
           name: 'param-roles',
+<<<<<<< HEAD
           component: () =>
             import('@/components/parametres/ParametreTabRole.vue'),
+        },
+      ],
+    },
+    {
+      path: '/rta',
+      name: 'rta',
+      component: () => import('@/pages/Rta.vue'),
+      redirect: { name: 'rta-mutations' },
+      children: [
+        {
+          path: 'mutations',
+          name: 'rta-mutations',
+          component: () =>
+            import('@/components/rta/Mutations.vue'),
+        },
+        {
+          path: 'reference',
+          name: 'rta-reference',
+          component: () =>
+            import('@/components/rta/Reference.vue'),
+        },
+        {
+          path: 'gestsis',
+          name: 'rta-gestsis',
+          component: () =>
+            import('@/components/rta/GestSis.vue'),
+=======
+          component: () =>
+            import('@/components/parametres/ParametreTabRole.vue'),
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
         },
       ],
     },

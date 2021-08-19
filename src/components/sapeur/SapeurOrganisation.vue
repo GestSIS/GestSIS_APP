@@ -14,6 +14,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="groupeDisplay.length <= 0">
+            <td colspan="4">Incorporé dans aucun groupe</td>
+          </tr>
           <tr v-for="g in groupeDisplay" :key="g.id">
             <td>
               {{ g.no }}

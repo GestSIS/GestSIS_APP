@@ -7,6 +7,7 @@ export default {
     active: {
       id: 0,
       sapeurs: [],
+      groupes: [],
       data: {},
       missions: [],
       appels: [],
@@ -22,6 +23,7 @@ export default {
       state.active = {
         id: 0,
         sapeurs: [],
+        groupes: [],
         data: {},
         missions: [],
         appels: [],
@@ -62,6 +64,9 @@ export default {
     [types.UPDATE_CURRENT_INTERVENTION_SAPEURS](state, payload) {
       state.active.sapeurs = payload;
     },
+    [types.UPDATE_CURRENT_INTERVENTION_GROUPES](state, payload) {
+      state.active.groupes = payload;
+    },
     [types.UPDATE_CURRENT_INTERVENTION_QUITTANCES](state, payload) {
       state.active.quittances = payload;
     },
@@ -93,25 +98,28 @@ export default {
         (p) => !payload.includes(p.id)
       );
     },
+    //Groupe
+    [types.REMOVE_CURRENT_INTERVENTION_GROUPES](state, payload) {
+      state.active.groupes = state.active.groupes.filter(
+        (p) => !payload.includes(p.id)
+      );
+    },
     //Quittances
     [types.REMOVE_CURRENT_INTERVENTION_QUITTANCES](state, payload) {
       state.active.quittances = state.active.quittances.filter(
         (p) => p.id !== payload
       );
     },
-
     //Appels
     [types.REMOVE_CURRENT_INTERVENTION_APPEL](state, payload) {
       state.active.appels = state.active.appels.filter((p) => p.id !== payload);
     },
-
     //Missions
     [types.REMOVE_CURRENT_INTERVENTION_MISSION](state, payload) {
       state.active.missions = state.active.missions.filter(
         (p) => p.id !== payload
       );
     },
-
     //Sapeurs
     [types.REMOVE_CURRENT_INTERVENTION_SAPEUR](state, payload) {
       state.active.sapeurs = state.active.sapeurs.filter(
@@ -124,7 +132,6 @@ export default {
         payload,
       ];
     },
-
     //Phases
     [types.REMOVE_CURRENT_INTERVENTION_PHASE](state, payload) {
       state.active.phases = state.active.phases.filter((p) => p.id !== payload);
@@ -190,6 +197,11 @@ export default {
     fetchInterventionPhases({ commit }, payload) {
       return InterventionService.getPhases(payload).then((data) =>
         commit(types.UPDATE_CURRENT_INTERVENTION_PHASES, data)
+      );
+    },
+    fetchInterventionGroupes({ commit }, payload) {
+      return InterventionService.getGroupes(payload).then((data) =>
+        commit(types.UPDATE_CURRENT_INTERVENTION_GROUPES, data)
       );
     },
     selectIntervention({ commit }, payload) {
@@ -282,6 +294,26 @@ export default {
         payload
       ).then((data) => {
         commit(types.REMOVE_CURRENT_INTERVENTION_MATERIEL, payload);
+        return data;
+      });
+    },
+
+    //Groupes
+    addInterventionGroupes({ state, commit }, payload) {
+      return InterventionService.addGroupes(
+        state.active.data.id,
+        payload
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_INTERVENTION_GROUPES, data);
+        return data;
+      });
+    },
+    removeInterventionGroupes({ state, commit }, payload) {
+      return InterventionService.removeGroupes(
+        state.active.data.id,
+        payload
+      ).then((data) => {
+        commit(types.REMOVE_CURRENT_INTERVENTION_GROUPES, payload);
         return data;
       });
     },

@@ -2,7 +2,13 @@
   <div class="columns">
     <div class="album text-muted">
       <div class="container">
+<<<<<<< HEAD
+        <div class="row mt-5">
+          <h2 id="C1">Vos SIS</h2>
+        </div>
+=======
         <h2 id="C1">Accèder à WebGestSIS</h2>
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
           <div
@@ -19,11 +25,18 @@
             :key="sis.id"
           >
             <div class="align-vertical">
+<<<<<<< HEAD
+							<button class="btn btn-link" @click="connectToSis(sis)">
+                <img class="img-fetch" :src="require('@/assets/sis/'+sis.api_key+'.jpg')" />
+							</button>
+						</div>
+=======
               <button @click="connectToSis(sis)" class="btn btn-primary">
                 <!-- <img class="img-fetch" src="images/1.jpg" alt="SIS Haute-Sorne" /> -->
                 {{ sis.nom }}
               </button>
             </div>
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
           </div>
         </div>
       </div>
@@ -62,7 +75,11 @@ export default {
   methods: {
     connectToSis(sis) {
       this.$store.dispatch('selectSis', sis).then(() => {
+<<<<<<< HEAD
+        this.$router.push({ name: 'dashboard' });
+=======
         this.$router.push({ name: 'about' });
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
       });
     },
   },
@@ -70,4 +87,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+<<<<<<< HEAD
+.img-fetch{
+  height: auto;
+  max-height: 220px;
+  width: 100%;
+  display: block;
+}
+
+.align-vertical{
+  margin: auto;
+}
+=======
+>>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
 </style>

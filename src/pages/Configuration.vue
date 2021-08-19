@@ -112,11 +112,6 @@
 <script>
 export default {
   name: 'configuration',
-  data() {
-    return {
-      activeTab: 'general',
-    };
-  },
 };
 </script>
 

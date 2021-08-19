@@ -18,6 +18,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="mutations.length <= 0">
+              <td colspan="5">Aucune mutation</td>
+            </tr>
             <tr v-for="m in mutations" :key="m.id">
               <td>{{ m.incorporation }}</td>
               <td>{{ m.sortie }}</td>

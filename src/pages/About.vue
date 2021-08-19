@@ -29,12 +29,7 @@
               secours.
             </p>
             <p>Auteur : Bastien Wermeille</p>
-            <p>
-              Ce projet a été réalisé dans le cadre de mon Travail de Bachelor à
-              la He-Arc à Neuchâtel.
-            </p>
-            <img src="@/assets/he_arc.png" class="img-fluid" />
-            <p>© GestSIS 2019 - Tous droits réservés</p>
+            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
           </div>
         </div>
       </div>

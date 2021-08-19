@@ -16,23 +16,47 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Groupes</h3>
-          </div>
-          <div class="card-body">
-            <tree :tree="groupeTree" :_types="types" />
-          </div>
-        </div>
-      </div>
       <div class="col-md-8">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
-            <h3>Infos complémentaires</h3>
-            <button class="btn btn-outline-primary">Save</button>
+            <h3>Groupes</h3>
+            <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
-          <div class="card-body"></div>
+          <div class="card-body">
+            <tree
+              :tree="groupeTree"
+              :_types="types"
+              :selectable="true"
+              @selected="selected"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-primary card-outline">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Actions</h3>
+          </div>
+          <div class="card-body">
+            <button
+              class="btn btn-primary mb-2 mr-2"
+              @click="modifierGroupes"
+            >
+              Modifier les groupes
+            </button>
+            <button
+              class="btn btn-primary mb-2"
+              :disabled="
+                !(
+                  active &&
+                  (active.type == 'groupe' || active.type == 'groupeInter')
+                )
+              "
+              @click="addSapeurs(active)"
+            >
+              Ajouter/enlever des sapeurs
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -40,7 +64,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import Tree from '@/components/tree/Tree.vue';
@@ -48,7 +72,7 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadGroupes = store.dispatch('fetchGroupesSapeurs');
+  let loadGroupes = store.dispatch('fetchGroupes');
 
   Promise.all([loadSapeurs, loadGroupes]).then(() => {
     next();
@@ -56,7 +80,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'groups',
+  name: 'groupes',
   components: {
     Tree,
     ExerciceComptable,
@@ -69,6 +93,7 @@ export default {
   },
   data() {
     return {
+      active: null,
       types: {
         homme: {
           icon: ['fas', 'mars'],
@@ -80,40 +105,13 @@ export default {
         },
         groupe: {
           icon: ['fas', 'sitemap'],
+          color: '#2c3e50',
         },
         groupeInter: {
-          icon: ['fas', 'sitemap'],
+          icon: ['fas', 'fire'],
+          color: '#f39c12',
         },
-        fonction: {
-          icon: ['fas', 'medal'],
-        },
-        cours: {
-          icon: ['fas', 'book'],
-        },
-        grade: {
-          icon: ['fas', 'award'],
-        },
-        alphabetique: {
-          icon: ['fas', 'sort-alpha-up-alt'],
-        },
-        civilite: {
-          icon: ['fas', 'user'],
-        },
-        date: {
-          icon: ['fas', 'birthday-cake'],
-        },
-        exercice: {
-          icon: ['fas', 'calendar-alt'],
-        },
-        excuse: {
-          icon: ['fas', 'scroll'],
-        },
-        intervention: {
-          icon: ['fas', 'fire-extinguisher'],
-        },
-        permis: {
-          icon: ['fas', 'car'],
-        },
+        // fonction: {icon: ['fas', 'medal'],},cours: {icon: ['fas', 'book'],},grade: {icon: ['fas', 'award'],},alphabetique: {icon: ['fas', 'sort-alpha-up-alt'],},civilite: {icon: ['fas', 'user'],},date: {icon: ['fas', 'birthday-cake'],},exercice: {icon: ['fas', 'calendar-alt'],},excuse: {icon: ['fas', 'scroll'],},intervention: {icon: ['fas', 'fire-extinguisher'],},permis: {icon: ['fas', 'car'],},
       },
       tree: [
         {
@@ -127,7 +125,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: (state) => state.groupe.listeWithSapeurs,
+      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       sapeurs: (state) => state.sapeur.liste,
     }),
     groupeTree() {
@@ -140,7 +138,8 @@ export default {
           id: s.sapeur_id,
         };
         return {
-          id: `s-${s.sapeur_id}`,
+          id: s.sapeur_id,
+          key: `s-${s.sapeur_id}`,
           label: `${sapeur.nom} ${sapeur.prenom}`,
           type: sapeur.civilite_id === 1 ? 'homme' : 'femme',
         };
@@ -148,18 +147,56 @@ export default {
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupeInter',
-        id: `g-${g.id}`,
+        id: g.id,
+        key: `g-${g.id}`,
         children: () => [
-          ...this.groups.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeurs.map(sapeurMapping),
+          ...this.groupes.filter(groupFilter(g.id)).map(groupeMapping),
+          ...g.sapeur_ids.map(sapeurMapping),
         ],
       });
 
-      return this.groups.filter(groupFilter(null)).map(groupeMapping);
+      return this.groupes.filter(groupFilter(null)).map(groupeMapping);
     },
   },
   methods: {
-    name() {},
+    ...mapMutations(['SHOW_MODAL']),
+    selected(elem) {
+      this.active = elem;
+    },
+    modifierGroupes() {
+      const data = [];
+      this.SHOW_MODAL({
+        component: 'ModalGroupeEdition',
+        size: 1,
+        data,
+      });
+    },
+    addSapeurs(node) {
+      if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
+        return;
+      }
+      const groupe = this.groupes.find((g) => g.id == node.id);
+      const data = groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0);
+
+      const svm = this;
+      const callback = (res) => {
+        if (!res) {
+          return;
+        }
+        const { tous } = res;
+        return svm.$store.dispatch('updateGroupeSapeurs', {
+          groupeId: node.id,
+          sapeurIds: tous,
+        });
+      };
+
+      this.SHOW_MODAL({
+        component: 'ModalSapeurSelect',
+        size: 2,
+        callback,
+        data,
+      });
+    },
   },
 };
 </script>

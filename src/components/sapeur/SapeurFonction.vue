@@ -24,6 +24,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="activeSapeurFonctions.length <= 0">
+            <td colspan="5">Aucune fonction</td>
+          </tr>
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
             <td>{{ f.debut }}</td>
             <td>{{ f.fin }}</td>

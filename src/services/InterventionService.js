@@ -12,6 +12,9 @@ export default {
   getSapeurs(interventionId) {
     return Api.api().get('/interventions/' + interventionId + '/sapeurs');
   },
+  getGroupes(interventionId) {
+    return Api.api().get('/interventions/' + interventionId + '/groupes');
+  },
   getQuittances(interventionId) {
     return Api.api().get('/interventions/' + interventionId + '/quittances');
   },
@@ -74,6 +77,21 @@ export default {
       '/interventions/' + interventionId + '/vehicules/',
       {
         data: { vehicules: vehiculesId },
+      }
+    );
+  },
+  
+  //Groupes
+  addGroupes(interventionId, groupesData) {
+    return Api.api().post('/interventions/' + interventionId + '/groupes/', {
+      groupes: groupesData,
+    });
+  },
+  removeGroupes(interventionId, groupesId) {
+    return Api.api().delete(
+      '/interventions/' + interventionId + '/groupes/',
+      {
+        data: { groupes: groupesId },
       }
     );
   },
@@ -162,4 +180,10 @@ export default {
       data: { phases: [phaseId] },
     });
   },
+
+  // Rapport d'intervention
+  downloadRapport(interventionId, params) {
+    //TODO: Change api into apiDownload
+    return Api.api().post('/interventions/' + interventionId + '/rapport/', params);
+  }
 };

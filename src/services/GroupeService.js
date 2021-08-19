@@ -4,7 +4,16 @@ export default {
   getGroupes() {
     return Api.api().get('/groupes/');
   },
-  getGroupesSapeurs() {
-    return Api.api().get('/groupes-sapeurs');
-  }
+  createGroupe(data) {
+    return Api.api().post('/groupes', data);
+  },
+  updateGroupe(groupeId, data) {
+    return Api.api().post(`/groupes/${groupeId}`, data);
+  },
+  deleteGroupe(groupeId) {
+    return Api.api().delete(`/groupes/${groupeId}`);
+  },
+  updateGroupeSapeurs(groupeId, data) {
+    return Api.api().post(`/groupes/${groupeId}/sapeurs`, data);
+  },
 };

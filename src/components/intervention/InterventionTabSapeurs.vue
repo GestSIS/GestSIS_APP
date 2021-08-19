@@ -1,6 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-md-12 col-xl-12">
+    <InterventionTabGroupe />
+    <div class="col-xs-12 col-md-6">
       <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
         <!-- /.card-header -->
@@ -20,6 +21,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="phases.length <= 0">
+                <td colspan="3">Erreur, une phase est nécessaire pour chaque intervention, veuillez contacter l'administrateur du système.</td>
+              </tr>
               <tr v-for="phase in phases" :key="phase.id">
                 <td>
                   {{
@@ -106,6 +110,11 @@
                   ></th>
                 </tr>
               </thead>
+              <tbody v-if="sortedSapeurs.length <= 0">
+                <tr>
+                  <td colspan="2">Aucun sapeur présent pour l'instant</td>
+                </tr>
+              </tbody>
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
                   <th class="ml-0 pl-0">
@@ -193,9 +202,13 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
+import InterventionTabGroupe from '@/components/intervention/InterventionTabGroupe.vue';
 
 export default {
   name: 'InterventionTabSapeurs',
+  components: {
+    InterventionTabGroupe,
+  },
   data() {
     return {
       columns: [],
