@@ -33,7 +33,13 @@ Vue.component('vue-timepicker', VueTimepicker);
 
 Vue.config.productionTip = false;
 
-Vue.use(VueAWN, {});
+Vue.use(VueAWN, {
+  labels: {
+    success: 'Succès',
+    warning: 'Attention',
+    alert: 'Erreur',
+  }
+});
 Vue.use(Tooltip);
 Vue.use(Datetime);
 Vue.use(Notifications);
