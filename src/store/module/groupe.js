@@ -8,10 +8,6 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
-<<<<<<< HEAD
-=======
-      state.listeWithSapeurs = [];
->>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
     },
     [types.UPDATE_GROUPE_LISTE](state, payload) {
       state.liste = payload;

@@ -224,7 +224,6 @@ const router = new Router({
         {
           path: 'roles',
           name: 'param-roles',
-<<<<<<< HEAD
           component: () =>
             import('@/components/parametres/ParametreTabRole.vue'),
         },
@@ -253,10 +252,6 @@ const router = new Router({
           name: 'rta-gestsis',
           component: () =>
             import('@/components/rta/GestSis.vue'),
-=======
-          component: () =>
-            import('@/components/parametres/ParametreTabRole.vue'),
->>>>>>> 14fe52e213d21035b15ba37d25fbe5f51445e80e
         },
       ],
     },
