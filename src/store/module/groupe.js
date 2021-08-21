@@ -11,6 +11,8 @@ export default {
     },
     [types.UPDATE_GROUPE_LISTE](state, payload) {
       state.liste = payload;
+      state.liste.sort((g1, g2) => g1.tri - g2.tri);
+      state.liste = [...state.liste];
     },
     [types.CREATE_GROUPE](state, payload) {
       state.liste = [...liste, payload];
@@ -19,6 +21,8 @@ export default {
       state.liste = [
         ...state.liste.map((g) => (g.id === groupe.id ? groupe : g)),
       ];
+      state.liste.sort((g1, g2) => g1.tri - g2.tri);
+      state.liste = [...state.liste];
     },
     [types.DELETE_GROUPE](state, groupeId) {
       state.liste = state.liste.filter((g) => g.id != groupeId);

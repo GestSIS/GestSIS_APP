@@ -8,7 +8,7 @@ export default {
     return Api.api().post('/groupes', data);
   },
   updateGroupe(groupeId, data) {
-    return Api.api().post(`/groupes/${groupeId}`, data);
+    return Api.api().put(`/groupes/${groupeId}`, data);
   },
   deleteGroupe(groupeId) {
     return Api.api().delete(`/groupes/${groupeId}`);

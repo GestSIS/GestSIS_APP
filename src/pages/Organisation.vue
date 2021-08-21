@@ -23,12 +23,8 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <tree
-              :tree="groupeTree"
-              :_types="types"
-              :selectable="true"
-              @selected="selected"
-            />
+            <groupe-affichage v-if="!editMode" @selected="selected" />
+            <groupe-edition v-else @selected="selected" />
           </div>
         </div>
       </div>
@@ -38,11 +34,8 @@
             <h3>Actions</h3>
           </div>
           <div class="card-body">
-            <button
-              class="btn btn-primary mb-2 mr-2"
-              @click="modifierGroupes"
-            >
-              Modifier les groupes
+            <button class="btn btn-primary mb-2 mr-2" @click="modifierGroupes">
+              {{ editMode ? 'Mode affichage' : 'Mode édition' }}
             </button>
             <button
               class="btn btn-primary mb-2"
@@ -67,7 +60,8 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import Tree from '@/components/tree/Tree.vue';
+import GroupeAffichage from '@/components/groupe/GroupeAffichage.vue';
+import GroupeEdition from '@/components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
@@ -82,7 +76,8 @@ async function loadData(routeTo, next) {
 export default {
   name: 'groupes',
   components: {
-    Tree,
+    GroupeAffichage,
+    GroupeEdition,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -94,33 +89,7 @@ export default {
   data() {
     return {
       active: null,
-      types: {
-        homme: {
-          icon: ['fas', 'mars'],
-          color: '#3498db',
-        },
-        femme: {
-          icon: ['fas', 'venus'],
-          color: '#9b59b6',
-        },
-        groupe: {
-          icon: ['fas', 'sitemap'],
-          color: '#2c3e50',
-        },
-        groupeInter: {
-          icon: ['fas', 'fire'],
-          color: '#f39c12',
-        },
-        // fonction: {icon: ['fas', 'medal'],},cours: {icon: ['fas', 'book'],},grade: {icon: ['fas', 'award'],},alphabetique: {icon: ['fas', 'sort-alpha-up-alt'],},civilite: {icon: ['fas', 'user'],},date: {icon: ['fas', 'birthday-cake'],},exercice: {icon: ['fas', 'calendar-alt'],},excuse: {icon: ['fas', 'scroll'],},intervention: {icon: ['fas', 'fire-extinguisher'],},permis: {icon: ['fas', 'car'],},
-      },
-      tree: [
-        {
-          id: 'g',
-          type: 'groupe',
-          label: 'Groupes',
-          children: () => this.groupeTree,
-        },
-      ],
+      editMode: false,
     };
   },
   computed: {
@@ -128,35 +97,6 @@ export default {
       groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       sapeurs: (state) => state.sapeur.liste,
     }),
-    groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
-      const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
-          nom: 'Ancien',
-          prenom: 'Sapeur',
-          civilite: 1,
-          id: s.sapeur_id,
-        };
-        return {
-          id: s.sapeur_id,
-          key: `s-${s.sapeur_id}`,
-          label: `${sapeur.nom} ${sapeur.prenom}`,
-          type: sapeur.civilite_id === 1 ? 'homme' : 'femme',
-        };
-      };
-      const groupeMapping = (g) => ({
-        label: g.no ? `${g.no} ${g.designation}` : g.designation,
-        type: g.type == 0 ? 'groupe' : 'groupeInter',
-        id: g.id,
-        key: `g-${g.id}`,
-        children: () => [
-          ...this.groupes.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeur_ids.map(sapeurMapping),
-        ],
-      });
-
-      return this.groupes.filter(groupFilter(null)).map(groupeMapping);
-    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -164,12 +104,13 @@ export default {
       this.active = elem;
     },
     modifierGroupes() {
-      const data = [];
-      this.SHOW_MODAL({
-        component: 'ModalGroupeEdition',
-        size: 1,
-        data,
-      });
+      this.editMode = !this.editMode;
+      // const data = [];
+      // this.SHOW_MODAL({
+      //   component: 'ModalGroupeEdition',
+      //   size: 1,
+      //   data,
+      // });
     },
     addSapeurs(node) {
       if (!(node.type == 'groupe' || node.type == 'groupeInter')) {

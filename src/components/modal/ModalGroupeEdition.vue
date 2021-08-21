@@ -19,14 +19,13 @@
               :tree="groupeTree"
               :_types="types"
               :selectable="true"
-              @selected="selected">
+              @selected="selected">1
           </editable-tree>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="save">Enregistrer</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button class="btn btn-outline-secondary" @click="close">Fermer</button>
     </div>
   </div>
 </template>

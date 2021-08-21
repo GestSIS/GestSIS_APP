@@ -11,7 +11,12 @@
       :is-first="index == 0"
       :is-first-of-level="index == 0"
       :is-last="index + 1 == tree.length"
-    ></editable-node>
+      :is-last-of-level="index + 1 == tree.length"
+    >
+    <template #default="props">
+      <slot v-bind:node="props.node"></slot>
+    </template>
+    </editable-node>
   </div>
 </template>
 

@@ -27,11 +27,8 @@
           class="tree-node-icon"
           :color="data.color"
         />
-        <div class="user-select-none">{{ data.label }}</div>
-        <button class="btn btn-sm" @click.prevent="gauche" v-if="!isRoot">←</button>
-        <button class="btn btn-sm" @click.prevent="droite" v-if="!isFirstOfLevel">→</button>
-        <button class="btn btn-sm" @click.prevent="haut" v-if="!isFirst">↑</button>
-        <button class="btn btn-sm" @click.prevent="bas" v-if="!isLast">↓</button>
+        <div class="user-select-none">{{ data.label }} {{ data.tri }}</div>
+        <slot name:default v-bind:node="{isRoot, isFirst, isFirstOfLevel, isLast, isLastOfLevel, data:node }"></slot>
       </div>
     </div>
     <transition-expand>
@@ -47,7 +44,12 @@
           :isFirst="isFirst && index == 0"
           :isFirstOfLevel="index == 0"
           :isLast="isLast && index + 1 == node.children.length"
-        />
+          :isLastOfLevel="index + 1 == node.children.length"
+        >
+        <template #default="props">
+          <slot name:default v-bind:node="props.node"></slot>
+        </template>
+        </editable-node>
       </div>
     </transition-expand>
   </div>
@@ -88,6 +90,10 @@ export default {
       required: true,
       type: Boolean,
     },
+    isLastOfLevel: {
+      required: true,
+      type: Boolean,
+    },
     select: {
       type: Function,
       required: true,
@@ -116,10 +122,6 @@ export default {
     expand() {
       this.expanded = !this.expanded;
     },
-    gauche(){},
-    droite(){},
-    haut(){},
-    bas(){},
   },
 };
 </script>
