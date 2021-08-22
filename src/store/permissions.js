@@ -27,8 +27,10 @@ export default {
     MODIFICATION: 'organisation.modification',
     CONFIG: 'organisation.config',
   },
-  CONTROLE_MEDICAL:
-      {TOUT: 'controle_medical.tout', CONFIG: 'controle_medical.config'},
+  CONTROLE_MEDICAL: {
+    TOUT: 'controle_medical.tout',
+    CONFIG: 'controle_medical.config'
+  },
   SIS: {
     CONFIG: 'sis.config',
   },

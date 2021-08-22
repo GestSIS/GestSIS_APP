@@ -78,7 +78,7 @@ export default {
         },
         {
           to: { name: 'exercices' },
-          icon: "['fas', 'calendar-alt']",
+          icon: ['fas', 'calendar-alt'],
           nom: 'Exercices & Séances',
           permission: permissions.EXERCICE.PRESENCE,
         },
@@ -101,7 +101,7 @@ export default {
         },
         {
           to: '/statistique',
-          icon: "['far', 'chart-bar']",
+          icon: ['far', 'chart-bar'],
           nom: 'Statistiques',
         },
         {
