@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Public from './pages/Public';
-import Home from './pages/Home';
+import Public from '@/pages/Public';
+import Home from '@/pages/Home';
 
-import { TokenService } from './services/StorageService';
+import { TokenService } from '@/services/StorageService';
 
 import NProgress from 'nprogress';
 

@@ -5,7 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">Sapeurs</li>
           </ol>
