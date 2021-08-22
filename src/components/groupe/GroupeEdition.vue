@@ -3,6 +3,7 @@
     :tree="groupeTree"
     :_types="types"
     :selectable="true"
+    :active="active"
     @selected="selected"
   >
     <template v-slot:default="{ node }">
@@ -181,6 +182,7 @@ export default {
       const groupe = this.groupes.find((g) => g.id == node.data.id);
 
       if(node.isLastOfLevel) {
+        // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
         // On change pere_id uniquement
         const parent = this.groupes.find((g) => g.id == groupe.pere_id);
         const groupesOfSameLevelAsParent = this.groupes

@@ -37,103 +37,10 @@
         role="menu"
         data-accordion="false"
       >
-        <li class="nav-item">
-          <router-link :to="{ name: 'sapeurs' }" class="nav-link internal-link">
-            <font-awesome-icon icon="user" />
-            <span>Sapeurs</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'interventions' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="fire-extinguisher" />
-            <span>Interventions</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'exercices' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon :icon="['fas', 'calendar-alt']" />
-            <span>Exercices &amp; Séances</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/organisation" class="nav-link internal-link">
-            <font-awesome-icon icon="sitemap" />
-            <span>Organisation</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'comptabilite-decompte' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="calculator" />
-            <span>Comptabilité</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/publipostage" class="nav-link internal-link">
-            <font-awesome-icon icon="envelope" />
-            <span>Publipostage</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/statistique" class="nav-link internal-link">
-            <font-awesome-icon :icon="['far', 'chart-bar']" />
-            <span>Statistiques</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/matériel" class="nav-link internal-link">
-            <font-awesome-icon icon="toolbox" />
-            <span>Matériel personel</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'controles-medicaux' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="file-medical-alt" />
-            <span>Contrôles médicaux</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/impressions" class="nav-link internal-link">
-            <font-awesome-icon icon="sitemap" />
-            <span>Impressions</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'users' }" class="nav-link internal-link">
-            <font-awesome-icon icon="user" />
-            <span>Utilisateurs</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'param-general' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="sliders-h" />
-            <span>Configuration</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/rta" class="nav-link internal-link">
-            <font-awesome-icon icon="globe-europe" />
-            <span>Exportation RTA</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'about' }" class="nav-link internal-link">
-            <font-awesome-icon icon="info-circle" />
-            <span>A propos</span>
+        <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
+          <router-link :to="link.to" class="nav-link internal-link">
+            <font-awesome-icon :icon="link.icon" />
+            <span>{{ link.nom }}</span>
           </router-link>
         </li>
       </ul>
@@ -144,12 +51,111 @@
 
 <script>
 import SisSelection from '@/components/sis/SisSelection.vue';
-// import SisSelection from './sis/SisSelection.vue';
+import permissions from '@/store/permissions.js';
+
+import { mapState } from 'vuex';
 
 export default {
   name: 'MainSidebar',
   components: {
     SisSelection,
+  },
+  data() {
+    console.log(permissions);
+    return {
+      links: [
+        {
+          to: { name: 'sapeurs' },
+          icon: 'user',
+          nom: 'Sapeurs',
+          permission: permissions.SAPEUR.LECTURE,
+        },
+        {
+          to: { name: 'interventions' },
+          icon: 'fire-extinguisher',
+          nom: 'Interventions',
+          permission: permissions.INTERVENTION.LECTURE,
+        },
+        {
+          to: { name: 'exercices' },
+          icon: "['fas', 'calendar-alt']",
+          nom: 'Exercices & Séances',
+          permission: permissions.EXERCICE.PRESENCE,
+        },
+        {
+          to: '/organisation',
+          icon: 'sitemap',
+          nom: 'Organisation',
+          permission: permissions.ORGANISATION.MODIFICATION,
+        },
+        {
+          to: { name: 'comptabilite-decompte' },
+          icon: 'calculator',
+          nom: 'Comptabilité',
+          permission: permissions.COMPTABILITE.TOUT,
+        },
+        {
+          to: '/publipostage',
+          icon: 'envelope',
+          nom: 'Publipostage',
+        },
+        {
+          to: '/statistique',
+          icon: "['far', 'chart-bar']",
+          nom: 'Statistiques',
+        },
+        {
+          to: '/matériel',
+          icon: 'toolbox',
+          nom: 'Matériel personel',
+        },
+        {
+          to: { name: 'controles-medicaux' },
+          icon: 'file-medical-alt',
+          nom: 'Contrôles médicaux',
+          permission: permissions.CONTROLE_MEDICAL.TOUT,
+        },
+        {
+          to: '/impressions',
+          icon: 'sitemap',
+          nom: 'Impressions',
+        },
+        {
+          to: { name: 'users' },
+          icon: 'user',
+          nom: 'Utilisateurs',
+          permission: permissions.ADMIN.TOUT,
+        },
+        {
+          to: { name: 'param-general' },
+          icon: 'sliders-h',
+          nom: 'Configuration',
+          //TODO: See what to do here
+          permission: permissions.SIS.CONFIG,
+        },
+        {
+          to: '/rta',
+          icon: 'globe-europe',
+          nom: 'Exportation RTA',
+          permission: permissions.ORGANISATION.TOUT,
+        },
+        {
+          to: { name: 'about' },
+          icon: 'info-circle',
+          nom: 'A propos',
+        },
+      ],
+    };
+  },
+  computed: {
+    ...mapState({
+      perms: (state) => state.auth.sis.permissions,
+    }),
+    filteredLinks() {
+      return this.links.filter(
+        (l) => !l.permission || this.perms.includes(l.permission)
+      );
+    },
   },
 };
 </script>

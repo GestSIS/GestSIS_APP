@@ -1,4 +1,5 @@
 import types from '../mutationTypes';
+import permissions from '../permissions';
 
 import { TokenService } from '../../services/StorageService';
 import AuthService from '../../services/AuthService';

@@ -6,16 +6,16 @@
       :node="item"
       :_types="_types"
       :select="select"
-      :active="active"
+      :active="localActive"
       :is-root="true"
       :is-first="index == 0"
       :is-first-of-level="index == 0"
       :is-last="index + 1 == tree.length"
       :is-last-of-level="index + 1 == tree.length"
     >
-    <template #default="props">
-      <slot v-bind:node="props.node"></slot>
-    </template>
+      <template #default="props">
+        <slot v-bind:node="props.node"></slot>
+      </template>
     </editable-node>
   </div>
 </template>
@@ -43,17 +43,30 @@ export default {
       required: false,
       default: () => false,
     },
+    active: {
+      type: Object,
+      required: false,
+      default: () => null,
+    },
   },
   data() {
     return {
-      active: null,
+      localActive: null,
     };
+  },
+  mounted () {
+    this.localActive = this.active?.data;
+  },
+  watch: {
+    active(newValue, _) {
+      this.localActive = newValue.data;
+    }
   },
   methods: {
     select(elem) {
       if (this.selectable) {
-        this.active = elem;
-        this.$emit("selected", elem);
+        this.localActive = elem.data;
+        this.$emit('selected', elem);
       }
     },
   },

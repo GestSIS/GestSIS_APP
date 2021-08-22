@@ -2,8 +2,9 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      :class="{'table-primary' : active && active.key == node.key}"
-      @dblclick="expand" @click="select(node)"
+      :class="{ 'table-primary': active && active.key == node.key }"
+      @dblclick="expand"
+      @click.prevent="handleClick"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
@@ -28,7 +29,17 @@
           :color="data.color"
         />
         <div class="user-select-none">{{ data.label }} {{ data.tri }}</div>
-        <slot name:default v-bind:node="{isRoot, isFirst, isFirstOfLevel, isLast, isLastOfLevel, data:node }"></slot>
+        <slot
+          name:default
+          v-bind:node="{
+            isRoot,
+            isFirst,
+            isFirstOfLevel,
+            isLast,
+            isLastOfLevel,
+            data: node,
+          }"
+        ></slot>
       </div>
     </div>
     <transition-expand>
@@ -46,9 +57,9 @@
           :isLast="isLast && index + 1 == node.children.length"
           :isLastOfLevel="index + 1 == node.children.length"
         >
-        <template #default="props">
-          <slot name:default v-bind:node="props.node"></slot>
-        </template>
+          <template #default="props">
+            <slot name:default v-bind:node="props.node"></slot>
+          </template>
         </editable-node>
       </div>
     </transition-expand>
@@ -102,7 +113,7 @@ export default {
     active: {
       type: Object,
       required: false,
-    }
+    },
   },
   data() {
     return {
@@ -121,6 +132,16 @@ export default {
   methods: {
     expand() {
       this.expanded = !this.expanded;
+    },
+    handleClick() {
+      this.select({
+        isRoot: this.isRoot,
+        isFirst: this.isFirst,
+        isFirstOfLevel: this.isFirstOfLevel,
+        isLast: this.isLast,
+        isLastOfLevel: this.isLastOfLevel,
+        data: this.node,
+      });
     },
   },
 };
