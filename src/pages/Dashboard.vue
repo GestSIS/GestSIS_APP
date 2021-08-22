@@ -7,7 +7,7 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div v-for="m in modules" :key="m.name" class="col-6 col-sm-4 col-md-3 p-1">
+          <div v-for="m in filteredLinks" :key="m.nom" class="col-6 col-sm-4 col-md-3 p-1">
             <router-link tag="button" :to="m.to" class="card text-white bg-primary btn-block">
               <div class="card-body">
                 <div class="d-flex justify-content-center flex-column align-items-center">
@@ -31,7 +31,7 @@ import links from '@/router/menu.js';
 export default {
   data() {
     return {
-      modules: [...links],
+      links,
     };
   },
   created() {
@@ -50,8 +50,14 @@ export default {
       sisKey: (state) => state.auth.sis.activeKey,
       sis: (state) =>
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
+      perms: (state) => state.auth.sis.permissions,
     }),
     ...mapGetters(['availableSisListe']),
+    filteredLinks() {
+      return this.links.filter(
+        (l) => !l.permission || this.perms.includes(l.permission)
+      );
+    },
   },
 };
 </script>

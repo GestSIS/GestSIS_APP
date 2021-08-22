@@ -215,7 +215,7 @@
               <button
                 class="btn btn-outline-primary border-0"
                 @click="validerIntervention(props.rowData.id)"
-                v-if="props.rowData.statut === 1"
+                v-if="hasValidationPermission && props.rowData.statut === 1"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
@@ -230,6 +230,7 @@
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
+import permissions from '@/store/permissions.js';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
@@ -399,6 +400,8 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
+      hasValidationPermission: (state) => 
+        state.auth.sis.permissions.includes(permissions.INTERVENTION.VALIDATION)
     }),
     ...mapGetters([
       'currentExerciceComptableId',
