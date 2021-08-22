@@ -61,7 +61,6 @@ export default {
     SisSelection,
   },
   data() {
-    console.log(permissions);
     return {
       links: [
         {
