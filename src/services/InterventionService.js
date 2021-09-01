@@ -183,7 +183,6 @@ export default {
 
   // Rapport d'intervention
   downloadRapport(interventionId, params) {
-    //TODO: Change api into apiDownload
-    return Api.api().post('/interventions/' + interventionId + '/rapport/', params);
+    return Api.apiFileDownload('rapport.pdf').post('/interventions/' + interventionId + '/rapport/', params);
   }
 };

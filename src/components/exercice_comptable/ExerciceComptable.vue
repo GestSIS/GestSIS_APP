@@ -25,8 +25,9 @@
         >
           {{ e.annee }}
         </button>
-        <div class="dropdown-divider"></div>
+        <div class="dropdown-divider" v-if="hasConfigPermission"></div>
         <router-link
+          v-if="hasConfigPermission"
           :to="{ name: 'param-exercice-comptable' }"
           class="dropdown-item"
           tag="button"
@@ -40,6 +41,7 @@
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ExerciceComptable',
@@ -47,6 +49,8 @@ export default {
     ...mapState({
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasConfigPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),
     }),
     ...mapGetters(['getExerciceComptable']),
   },

@@ -392,8 +392,9 @@ export default {
           .filter((m) => m.statut === 'modifie')
           .map((s) => ({
             ...s,
-            groupes: s.groupes
-              .filter(g => !s.changements.groupesSupprime.includes(g.no)),
+            groupes: s.groupes.filter(
+              (g) => !s.changements.groupesSupprime.includes(g.no)
+            ),
             numeros: s.numeros.slice(
               0,
               Math.min(

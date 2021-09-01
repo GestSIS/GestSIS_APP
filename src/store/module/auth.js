@@ -23,6 +23,11 @@ export default {
       allPermissions: {},
     }
   },
+  getters: {
+    activePermissions: state => {
+      return state.sis.permissions;
+    }
+  },
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.roles = [];

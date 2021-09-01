@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un médecin
+        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
       </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>

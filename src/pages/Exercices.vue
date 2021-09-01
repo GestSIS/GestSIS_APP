@@ -180,7 +180,7 @@
               <button
                 class="btn btn-outline-primary border-0"
                 @click="validerExercice(props.rowData.id)"
-                v-if="props.rowData.statut === 2"
+                v-if="hasValidationPermission && props.rowData.statut === 2"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
@@ -195,6 +195,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import store from '@/store/index';
+import permissions from '@/store/permissions.js';
 
 import ExerciceDetails from '@/components/exercice/ExerciceDetails';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -330,6 +331,8 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasValidationPermission: (state) => 
+        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION)
     }),
     ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
