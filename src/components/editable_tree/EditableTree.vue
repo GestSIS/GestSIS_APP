@@ -2,6 +2,7 @@
   <div class="tree">
     <editable-node
       v-for="(item, index) in tree"
+      ref="node"
       :key="item.id"
       :node="item"
       :_types="_types"
@@ -54,15 +55,21 @@ export default {
       localActive: null,
     };
   },
-  mounted () {
+  mounted() {
     this.localActive = this.active?.data;
   },
   watch: {
     active(newValue, _) {
       this.localActive = newValue.data;
-    }
+    },
   },
   methods: {
+    contract() {
+      this.$refs.node.forEach((node) => node.expand(false));
+    },
+    expand() {
+      this.$refs.node.forEach((node) => node.expand(true));
+    },
     select(elem) {
       if (this.selectable) {
         this.localActive = elem.data;

@@ -23,8 +23,12 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <groupe-affichage v-if="!editMode" @selected="selected" />
-            <groupe-edition v-else @selected="selected" />
+            <groupe-affichage v-if="false" @selected="selected" />
+            <groupe-edition
+              :editMode="editMode"
+              @selected="selected"
+              ref="groupeEdition"
+            />
           </div>
         </div>
       </div>
@@ -33,16 +37,71 @@
           <div class="card-header d-flex justify-content-between">
             <h3>Actions</h3>
           </div>
-          <div class="card-body">
-            <button class="btn btn-primary mb-2 mr-2" @click="modifierGroupes">
+          <div class="card-body pb-2">
+            <button class="btn btn-primary" @click="expand">
+              Tout développer
+            </button>
+            <button class="btn btn-primary" @click="contract">
+              Tout réduire
+            </button>
+            <button class="btn btn-primary" @click="modifierGroupes">
               {{ editMode ? 'Mode affichage' : 'Mode édition' }}
             </button>
+          </div>
+          <div v-if="editMode" class="card-body pt-0">
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveLeft,
+                'btn-secondary': !canMoveLeft,
+              }"
+              @click.prevent="left"
+              :disabled="!canMoveLeft"
+            >
+              ←
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveRight,
+                'btn-secondary': !canMoveRight,
+              }"
+              @click.prevent="right"
+              :disabled="!canMoveRight"
+            >
+              →
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveUp,
+                'btn-secondary': !canMoveUp,
+              }"
+              @click.prevent="up"
+              :disabled="!canMoveUp"
+            >
+              ↑
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveDown,
+                'btn-secondary': !canMoveDown,
+              }"
+              @click.prevent="down"
+              :disabled="!canMoveDown"
+            >
+              ↓
+            </button>
+          </div>
+          <div v-else class="card-body pt-0">
             <button
               class="btn btn-primary mb-2"
               :disabled="
                 !(
                   active &&
-                  (active.type == 'groupe' || active.type == 'groupeInter')
+                  (active.data.type == 'groupe' ||
+                    active.data.type == 'groupeInter')
                 )
               "
               @click="addSapeurs(active)"
@@ -90,6 +149,7 @@ export default {
     return {
       active: null,
       editMode: false,
+      groupesTypes: ['groupe', 'groupeInter'],
     };
   },
   computed: {
@@ -97,11 +157,59 @@ export default {
       groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       sapeurs: (state) => state.sapeur.liste,
     }),
+    canMoveDown() {
+      return (
+        (this.groupesTypes.includes(this.active.data.type) &&
+          !this.active?.isLast) ||
+        false
+      );
+    },
+    canMoveUp() {
+      return (
+        (this.groupesTypes.includes(this.active.data.type) &&
+          !this.active.isFirst) ||
+        false
+      );
+    },
+    canMoveLeft() {
+      return (
+        (this.groupesTypes.includes(this.active.data.type) &&
+          !this.active?.isRoot) ||
+        false
+      );
+    },
+    canMoveRight() {
+      return (
+        (this.groupesTypes.includes(this.active.data.type) &&
+          !this.active?.isFirstOfLevel) ||
+        false
+      );
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    contract() {
+      //TODO: next
+      this.$refs.groupeEdition.contract();
+    },
+    expand() {
+      //TODO: next
+      this.$refs.groupeEdition.expand();
+    },
     selected(elem) {
       this.active = elem;
+    },
+    up() {
+      this.$refs.groupeEdition.up(this.active);
+    },
+    down() {
+      this.$refs.groupeEdition.down(this.active);
+    },
+    right() {
+      this.$refs.groupeEdition.right(this.active);
+    },
+    left() {
+      this.$refs.groupeEdition.left(this.active);
     },
     modifierGroupes() {
       this.editMode = !this.editMode;
@@ -112,6 +220,7 @@ export default {
       //   data,
       // });
     },
+
     addSapeurs(node) {
       if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
         return;

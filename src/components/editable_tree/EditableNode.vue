@@ -3,13 +3,13 @@
     <div
       class="tree-node-header focusable hoverable"
       :class="{ 'table-primary': active && active.key == node.key }"
-      @dblclick="expand"
+      @dblclick="expanded = !expanded"
       @click.prevent="handleClick"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        @click.prevent="expand"
-        v-if="node.children.length > 0"
+        @click.prevent="expanded = !expanded"
+        v-if="node.children && node.children.length > 0"
         aria-hidden="true"
         role="presentation"
         focusable="false"
@@ -43,9 +43,10 @@
       </div>
     </div>
     <transition-expand>
-      <div v-show="expanded && data.children" class="tree-node-children">
+      <div v-show="expanded && node.children" class="tree-node-children">
         <editable-node
           v-for="(item, index) in node.children"
+          ref="node"
           :key="item.key"
           :node="item"
           :_types="_types"
@@ -117,7 +118,7 @@ export default {
   },
   data() {
     return {
-      expanded: true,
+      expanded: false,
       computed: true,
     };
   },
@@ -130,8 +131,11 @@ export default {
     },
   },
   methods: {
-    expand() {
-      this.expanded = !this.expanded;
+    expand(expanded) {
+      this.expanded = expanded;
+      if (this.$refs.node) {
+        this.$refs.node.forEach((node) => node.expand(expanded));
+      }
     },
     handleClick() {
       this.select({
