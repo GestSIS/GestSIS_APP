@@ -28,7 +28,7 @@
           class="tree-node-icon"
           :color="data.color"
         />
-        <div class="user-select-none">{{ data.label }} {{ data.tri }}</div>
+        <div class="user-select-none">{{ data.label }}</div>
         <slot
           name:default
           v-bind:node="{

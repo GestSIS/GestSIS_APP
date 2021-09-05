@@ -44,7 +44,7 @@
             <button class="btn btn-primary" @click="contract">
               Tout réduire
             </button>
-            <button class="btn btn-primary" @click="modifierGroupes">
+            <button class="btn btn-primary" @click="editMode = !editMode">
               {{ editMode ? 'Mode affichage' : 'Mode édition' }}
             </button>
           </div>
@@ -99,7 +99,7 @@
               class="btn btn-primary mb-2"
               :disabled="
                 !(
-                  active &&
+                  !!active &&
                   (active.data.type == 'groupe' ||
                     active.data.type == 'groupeInter')
                 )
@@ -108,6 +108,75 @@
             >
               Ajouter/enlever des sapeurs
             </button>
+          </div>
+        </div>
+        <div
+          class="card card-primary card-outline mt-2"
+          v-if="editMode && active && groupesTypes.includes(active.data.type)"
+        >
+          <div class="card-header d-flex justify-content-between">
+            <h3>Modifier</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="abreviation">No</label>
+              <input
+                type="text"
+                v-model="groupeEdit.no"
+                class="form-control"
+                :class="{ 'is-invalid': errors['no'] }"
+                id="no"
+              />
+            </div>
+            <div class="form-group">
+              <label for="abreviation">Nom</label>
+              <input
+                type="text"
+                v-model="groupeEdit.designation"
+                class="form-control"
+                :class="{ 'is-invalid': errors['designation'] }"
+                id="designation"
+              />
+            </div>
+            <div class="form-group">
+              <label for="abreviation">Info</label>
+              <input
+                type="text"
+                v-model="groupeEdit.info"
+                class="form-control"
+                :class="{ 'is-invalid': errors['info'] }"
+                id="info"
+              />
+            </div>
+            <div class="form-group">
+              <label for="cours-precedent">Groupe parent</label>
+              <select
+                id="pere_id"
+                v-model="groupeEdit.pere_id"
+                class="custom-select"
+              >
+                <option :value="null">-</option>
+                <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
+                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="type"
+                  v-model="groupeEdit.type"
+                  :true-value="1"
+                  :false-value="0"
+                />
+                <label class="custom-control-label" for="type"
+                  >Groupe d'alarme</label
+                >
+              </div>
+            </div>
+            <button class="btn btn-primary" @click="save">Modifier</button>
           </div>
         </div>
       </div>
@@ -148,8 +217,10 @@ export default {
   data() {
     return {
       active: null,
+      groupeEdit: {},
       editMode: false,
       groupesTypes: ['groupe', 'groupeInter'],
+      errors: {},
     };
   },
   computed: {
@@ -157,30 +228,44 @@ export default {
       groupes: (state) => state.groupe.liste.filter((g) => g.actif),
       sapeurs: (state) => state.sapeur.liste,
     }),
+    filteredGroupes() {
+      const activeId = this.active?.data?.id || 0;
+      if (activeId) {
+        const rec = (groupeId) => {
+          // Retourne la liste des ids des groupes enfants
+          const children = this.groupes.filter((g) => g.pere_id == groupeId);
+          return children.flatMap((g) => [g.id, ...rec(g.id)]);
+        };
+        const filteredIds = new Set([activeId, ...rec(activeId)]);
+        return this.groupes.filter((g) => !filteredIds.has(g.id));
+      } else {
+        return [];
+      }
+    },
     canMoveDown() {
       return (
-        (this.groupesTypes.includes(this.active.data.type) &&
+        (this.groupesTypes.includes(this.active?.data?.type) &&
           !this.active?.isLast) ||
         false
       );
     },
     canMoveUp() {
       return (
-        (this.groupesTypes.includes(this.active.data.type) &&
-          !this.active.isFirst) ||
+        (this.groupesTypes.includes(this.active?.data?.type) &&
+          !this.active?.isFirst) ||
         false
       );
     },
     canMoveLeft() {
       return (
-        (this.groupesTypes.includes(this.active.data.type) &&
+        (this.groupesTypes.includes(this.active?.data?.type) &&
           !this.active?.isRoot) ||
         false
       );
     },
     canMoveRight() {
       return (
-        (this.groupesTypes.includes(this.active.data.type) &&
+        (this.groupesTypes.includes(this.active?.data?.type) &&
           !this.active?.isFirstOfLevel) ||
         false
       );
@@ -189,15 +274,36 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     contract() {
-      //TODO: next
       this.$refs.groupeEdition.contract();
     },
     expand() {
-      //TODO: next
       this.$refs.groupeEdition.expand();
     },
     selected(elem) {
       this.active = elem;
+      if (this.groupesTypes.includes(elem.data.type)) {
+        this.groupeEdit = { ...this.groupes.find((g) => g.id == elem.data.id) };
+      } else {
+        this.groupeEdit = {};
+      }
+    },
+    save() {
+      this.$store
+        .dispatch('updateGroupe', {
+          groupeId: this.groupeEdit.id,
+          data: {
+            ...this.groupeEdit,
+          },
+        })
+        .then(() => {
+          this.$awn.success('Groupe modifié avec succès');
+        })
+        .catch((errors) => {
+          this.errorsData = { ...errors };
+          this.$awn.alert(
+            error.message || 'Erreur lors de la modification du groupe'
+          );
+        });
     },
     up() {
       this.$refs.groupeEdition.up(this.active);
@@ -211,16 +317,6 @@ export default {
     left() {
       this.$refs.groupeEdition.left(this.active);
     },
-    modifierGroupes() {
-      this.editMode = !this.editMode;
-      // const data = [];
-      // this.SHOW_MODAL({
-      //   component: 'ModalGroupeEdition',
-      //   size: 1,
-      //   data,
-      // });
-    },
-
     addSapeurs(node) {
       if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
         return;
