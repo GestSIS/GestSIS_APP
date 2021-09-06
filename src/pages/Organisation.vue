@@ -318,10 +318,11 @@ export default {
       this.$refs.groupeEdition.left(this.active);
     },
     addSapeurs(node) {
-      if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
+      if (!this.groupesTypes.includes(node.data.type)) {
         return;
       }
-      const groupe = this.groupes.find((g) => g.id == node.id);
+      const id = node.data.id;
+      const groupe = this.groupes.find((g) => g.id == id);
       const data = groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0);
 
       const svm = this;
@@ -331,7 +332,7 @@ export default {
         }
         const { tous } = res;
         return svm.$store.dispatch('updateGroupeSapeurs', {
-          groupeId: node.id,
+          groupeId: id,
           sapeurIds: tous,
         });
       };
