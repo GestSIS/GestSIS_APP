@@ -63,21 +63,22 @@
           <div v-if="!editMode" class="card-body pt-0">
             <button
               class="btn btn-primary mb-2"
-              :disabled="
-                !(
-                  !!active &&
-                  (active.data.type == 'groupe' ||
-                    active.data.type == 'groupeInter')
-                )
-              "
+              :disabled="!activeIsGroupe"
               @click="addSapeurs(active)"
             >
               Ajouter/enlever des sapeurs
             </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
-            <button class="btn btn-primary mb-2" @click="addGroupe">
+            <button class="btn btn-primary d-block mb-2" @click="addGroupe">
               Ajouter un groupe
+            </button>
+            <button
+              class="btn btn-primary d-block mb-2"
+              :disabled="!activeIsGroupe"
+              @click="deleteGroupe"
+            >
+              Supprimer
             </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
@@ -250,6 +251,14 @@ export default {
         return [];
       }
     },
+    activeIsGroupe() {
+      return (
+        (!!this.active &&
+          (this.active.data.type == 'groupe' ||
+            this.active.data.type == 'groupeInter')) ||
+        false
+      );
+    },
     canMoveDown() {
       return (
         (this.groupesTypes.includes(this.active?.data?.type) &&
@@ -324,6 +333,25 @@ export default {
     },
     left() {
       this.$refs.groupeEdition.left(this.active);
+    },
+    deleteGroupe() {
+      if (this.activeIsGroupe) {
+        this.SHOW_MODAL({
+          component: 'ModalConfirmation',
+          data: {
+            title: 'Voulez-vous vraiment supprimer ce groupe ?',
+            question:
+              "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+          },
+          callback: () => {
+            this.$store.dispatch('deleteGroupe', this.active.data.id);
+          },
+        });
+      } else {
+        svm.$awn.warning(
+          'Sélectionnez un groupe afin de pouvoir le supprimer.'
+        );
+      }
     },
     addGroupe() {
       this.SHOW_MODAL({
