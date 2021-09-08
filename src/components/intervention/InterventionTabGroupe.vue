@@ -19,25 +19,29 @@
           </thead>
           <tbody id="groupes">
             <tr v-if="groupes.length <= 0">
-              <td colspan="2">Aucun groupe de disponible pour votre SIS, ajoutez-en dans <em>organisation</em>.</td>
+              <td colspan="2">
+                Aucun groupe de disponible pour votre SIS, ajoutez-en dans
+                <em>organisation</em>.
+              </td>
             </tr>
-            <tr
-              v-for="v in groupes"
-              :key="v.id"
-            >
-              <td>{{ v.designation }}</td>
+            <tr v-for="g in groupes" :key="g.id">
+              <td>
+                <label :for="'g-' + g.id">{{
+                  (g.no ? g.no + ' ' : '') + g.designation
+                }}</label>
+              </td>
               <td>
                 <div class="form-group">
                   <div class="custom-control custom-checkbox">
                     <input
                       type="checkbox"
                       class="custom-control-input"
-                      :id="'v-' + v.id"
-                      v-model="selected[v.id]"
+                      :id="'g-' + g.id"
+                      v-model="selected[g.no]"
                     />
                     <label
                       class="custom-control-label"
-                      :for="'v-' + v.id"
+                      :for="'g-' + g.id"
                     ></label>
                   </div>
                 </div>
@@ -63,14 +67,24 @@ export default {
   computed: {
     ...mapGetters(['getGroupe']),
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => (g.actif === 1 && g.type === 1) || state.intervention.active.groupes.find((gi) =>gi.groupe_id === g.id)),
+      groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
       interventionGroupes: (state) => state.intervention.active.groupes,
       activeInterventionId: (state) => state.intervention.active.id,
     }),
+    filteredGroupes() {
+      const nos = new Set(this.interventionGroupes.map((g) => g.no));
+      return [
+        ...this.interventionGroupes,
+        ...this.groupes.filter((g) => !nos.has(g.no)),
+      ];
+    },
+    additionalGroupes() {
+      return 0;
+    },
   },
   mounted() {
     if (this.groupes.length === 0) {
-      this.$store.dispatch('fetchGroupes')
+      this.$store.dispatch('fetchGroupes');
     }
     this.$store
       .dispatch('fetchInterventionGroupes', this.activeInterventionId)
@@ -85,37 +99,37 @@ export default {
   },
   methods: {
     save() {
-      let groupesIds = this.interventionGroupes.map((v) => v.groupe_id);
-      let ids = Object.keys(this.selected)
+      let groupesNo = this.interventionGroupes.map((g) => g.no);
+      let nos = Object.keys(this.selected)
         .filter((item) => this.selected[item])
         .map((x) => parseInt(x));
 
       //New One
-      let newOne = ids.filter((item) => !groupesIds.includes(item));
+      let newOnes = nos.filter((item) => !groupesNo.includes(item));
 
       //Removed
-      let removed = groupesIds.filter((item) => !ids.includes(item));
-      let removedIds = removed.map(
-        (groupe_id) =>
-          this.interventionGroupes
-            .filter((v) => v.groupe_id === groupe_id)
-            .map((v) => v.id)[0]
-      );
+      let removed = groupesNo.filter((item) => !nos.includes(item));
+      let removedIds = [
+        ...this.interventionGroupes
+          .filter((g) => removed.includes(g.no))
+          .map((g) => g.id),
+      ];
 
       if (removedIds.length > 0) {
         this.$store.dispatch('removeInterventionGroupes', removedIds);
       }
-      if (newOne.length > 0) {
-        this.$store.dispatch('addInterventionGroupes', newOne);
+
+      if (newOnes.length > 0) {
+        this.$store.dispatch('addInterventionGroupes', [
+          ...this.groupes.filter((g) => newOnes.includes(g.no)),
+        ]);
       }
     },
     updateGroupes(value) {
       this.selected = {};
       let svm = this;
 
-      value.forEach(
-        (v) => (svm.selected = { ...svm.selected, [v.groupe_id]: true })
-      );
+      value.forEach((v) => (svm.selected = { ...svm.selected, [v.no]: true }));
     },
   },
 };

@@ -157,16 +157,6 @@
               />
             </div>
             <div class="form-group">
-              <label for="abreviation">Info</label>
-              <input
-                type="text"
-                v-model="groupeEdit.info"
-                class="form-control"
-                :class="{ 'is-invalid': errors['info'] }"
-                id="info"
-              />
-            </div>
-            <div class="form-group">
               <label for="cours-precedent">Groupe parent</label>
               <select
                 id="pere_id"
@@ -243,7 +233,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
       sapeurs: (state) => state.sapeur.liste,
     }),
     filteredGroupes() {

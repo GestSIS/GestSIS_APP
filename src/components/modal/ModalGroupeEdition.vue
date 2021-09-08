@@ -16,10 +16,11 @@
       <div class="row mb-2">
         <div class="col-12">
           <editable-tree
-              :tree="groupeTree"
-              :_types="types"
-              :selectable="true"
-              @selected="selected">1
+            :tree="groupeTree"
+            :_types="types"
+            :selectable="true"
+            @selected="selected"
+            >1
           </editable-tree>
         </div>
       </div>
@@ -70,7 +71,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
     }),
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
@@ -100,28 +101,26 @@ export default {
         data,
       });
     },
-      close() {
+    close() {
       this.HIDE_MODAL();
     },
     save() {
-  //     // Sapeurs ajoutés
-  //     const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
-  //     // Sapeurs supprimés
-  //     const removedSap = this.data.filter((s) => !this.chosenSapeurs.includes(s));
-  //     // Sapeurs tous
-  //     const sapeurs = this.chosenSapeurs;
-
-  //     const svm = this;
-  //     this.callback({ajoute: newSap, supprime: removedSap, tous: sapeurs})
-  //       .then(() => {
-  //         svm.HIDE_MODAL();
-  //       })
-  //       .catch((errorMessage) => {
-  //         console.error(errorMessage);
-  //         svm.$awn.warning(errorMessage);
-  //       });
+      //     // Sapeurs ajoutés
+      //     const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
+      //     // Sapeurs supprimés
+      //     const removedSap = this.data.filter((s) => !this.chosenSapeurs.includes(s));
+      //     // Sapeurs tous
+      //     const sapeurs = this.chosenSapeurs;
+      //     const svm = this;
+      //     this.callback({ajoute: newSap, supprime: removedSap, tous: sapeurs})
+      //       .then(() => {
+      //         svm.HIDE_MODAL();
+      //       })
+      //       .catch((errorMessage) => {
+      //         console.error(errorMessage);
+      //         svm.$awn.warning(errorMessage);
+      //       });
     },
-  
   },
 
   // mounted() {
@@ -138,7 +137,7 @@ export default {
   // },
   // computed: {
   //   ...mapState({
-  //     groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+  //     groupes: (state) => state.groupe.liste.
   //     grades: (state) => state.grade.liste,
   //     civilites: (state) => state.baseData.civilites,
   //     fonctions: (state) => state.fonction.liste,

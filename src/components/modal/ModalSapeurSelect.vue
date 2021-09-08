@@ -273,7 +273,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
       grades: (state) => state.grade.liste,
       civilites: (state) => state.baseData.civilites,
       fonctions: (state) => state.fonction.liste,

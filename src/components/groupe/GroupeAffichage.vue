@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
       sapeurs: (state) => state.sapeur.liste,
     }),
     groupeTree() {

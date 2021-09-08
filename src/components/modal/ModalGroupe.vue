@@ -28,16 +28,6 @@
         />
       </div>
       <div class="form-group">
-        <label for="abreviation">Info</label>
-        <input
-          type="text"
-          v-model="groupe.info"
-          class="form-control"
-          :class="{ 'is-invalid': errors['info'] }"
-          id="info"
-        />
-      </div>
-      <div class="form-group">
         <label for="cours-precedent">Groupe parent</label>
         <select id="pere_id" v-model="groupe.pere_id" class="custom-select">
           <option :value="null">-</option>
