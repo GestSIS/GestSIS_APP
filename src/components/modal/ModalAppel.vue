@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter du appel</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
+      </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -29,7 +31,7 @@
       <div class="form-group">
         <autocomplete
           v-model="activeAppel.nom"
-          :items="listTelephones.map(t => t.nom)"
+          :items="listTelephones.map((t) => t.nom)"
           :error="!!errors['nom']"
           title="Correspondant"
         />
@@ -74,12 +76,12 @@ import Autocomplete from '@/components/Autocomplete';
 export default {
   name: 'ModalAppel',
   components: {
-    Autocomplete
+    Autocomplete,
   },
   props: {
     data: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -87,27 +89,27 @@ export default {
       activeAppel: {},
       format: 'yyyy-MM-dd HH:mm',
       min: null,
-      max: null
+      max: null,
     };
   },
   computed: {
     ...mapState({
-      listTelephones: state => state.telephone.liste,
-      activeInterventionId: state => state.intervention.active.id
+      listTelephones: (state) => state.telephone.liste,
+      activeInterventionId: (state) => state.intervention.active.id,
     }),
     responsable() {
       return this.activeAppel.nom;
-    }
+    },
   },
   watch: {
     responsable(value) {
       let result = this.listTelephones.filter(
-        t => value.localeCompare(t.nom) === 0
+        (t) => value.localeCompare(t.nom) === 0
       );
       if (result.length > 0) {
         this.activeAppel.numero = result[0].numero;
       }
-    }
+    },
   },
   mounted() {
     if (this.listTelephones.length === 0) {
@@ -136,35 +138,38 @@ export default {
             this.HIDE_MODAL();
           })
           .catch(
-            errors =>
+            (errors) =>
               (this.errors = {
                 ...errors,
                 date: errors['appels.0.date'],
                 nom: errors['appels.0.nom'],
                 numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire']
+                commentaire: errors['appels.0.commentaire'],
               })
           );
       } else {
         this.$store
-          .dispatch('editInterventionAppel', { ...this.activeAppel, date2: undefined })
+          .dispatch('editInterventionAppel', {
+            ...this.activeAppel,
+            date2: undefined,
+          })
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
           .catch(
-            errors =>
+            (errors) =>
               (this.errors = {
                 ...errors,
                 date: errors['appels.0.date'],
                 nom: errors['appels.0.nom'],
                 numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire']
+                commentaire: errors['appels.0.commentaire'],
               })
           );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -38,17 +38,50 @@
             <h3>Actions</h3>
           </div>
           <div class="card-body pb-2">
-            <button class="btn btn-primary" @click="expand">
-              Tout développer
+            <button
+              class="btn btn-info mr-1"
+              @click="expand"
+              v-tooltip.top="'Tout développer'"
+            >
+              <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
-            <button class="btn btn-primary" @click="contract">
-              Tout réduire
+            <button
+              class="btn btn-info mr-1"
+              @click="contract"
+              v-tooltip.top="'Tout réduire'"
+            >
+              <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
-            <button class="btn btn-primary" @click="editMode = !editMode">
-              {{ editMode ? 'Mode affichage' : 'Mode édition' }}
+            <button
+              class="btn btn-info mr-1"
+              @click="editMode = !editMode"
+              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
+            >
+              <font-awesome-icon :icon="['far', editMode ? 'eye' : 'edit']" />
+            </button>
+          </div>
+          <div v-if="!editMode" class="card-body pt-0">
+            <button
+              class="btn btn-primary mb-2"
+              :disabled="
+                !(
+                  !!active &&
+                  (active.data.type == 'groupe' ||
+                    active.data.type == 'groupeInter')
+                )
+              "
+              @click="addSapeurs(active)"
+            >
+              Ajouter/enlever des sapeurs
             </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
+            <button class="btn btn-primary mb-2" @click="addGroupe">
+              Ajouter un groupe
+            </button>
+          </div>
+          <div v-if="editMode" class="card-body pt-0">
+            <h3>Réorganiser le groupe</h3>
             <button
               class="btn btn-sm"
               :class="{
@@ -94,21 +127,6 @@
               ↓
             </button>
           </div>
-          <div v-else class="card-body pt-0">
-            <button
-              class="btn btn-primary mb-2"
-              :disabled="
-                !(
-                  !!active &&
-                  (active.data.type == 'groupe' ||
-                    active.data.type == 'groupeInter')
-                )
-              "
-              @click="addSapeurs(active)"
-            >
-              Ajouter/enlever des sapeurs
-            </button>
-          </div>
         </div>
         <div
           class="card card-primary card-outline mt-2"
@@ -121,7 +139,7 @@
             <div class="form-group">
               <label for="abreviation">No</label>
               <input
-                type="text"
+                type="number"
                 v-model="groupeEdit.no"
                 class="form-control"
                 :class="{ 'is-invalid': errors['no'] }"
@@ -202,7 +220,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'groupes',
+  name: 'organisation',
   components: {
     GroupeAffichage,
     GroupeEdition,
@@ -316,6 +334,11 @@ export default {
     },
     left() {
       this.$refs.groupeEdition.left(this.active);
+    },
+    addGroupe() {
+      this.SHOW_MODAL({
+        component: 'ModalGroupe',
+      });
     },
     addSapeurs(node) {
       if (!this.groupesTypes.includes(node.data.type)) {

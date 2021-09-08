@@ -15,7 +15,9 @@ export default {
       state.liste = [...state.liste];
     },
     [types.CREATE_GROUPE](state, payload) {
-      state.liste = [...liste, payload];
+      state.liste = [...state.liste, payload];
+      state.liste.sort((g1, g2) => g1.tri - g2.tri);
+      state.liste = [...state.liste];
     },
     [types.UPDATE_GROUPE](state, groupe) {
       state.liste = [
@@ -57,9 +59,9 @@ export default {
       );
     },
     createGroupe({ commit }, data) {
-      return GroupeService.createGroupe(data).then(data =>
+      return GroupeService.createGroupe(data).then(data =>{
         commit(types.CREATE_GROUPE, data)
-      );
+      });
     },
     updateGroupe({ commit }, { groupeId, data }) {
       return GroupeService.updateGroupe(groupeId, data).then(data =>
