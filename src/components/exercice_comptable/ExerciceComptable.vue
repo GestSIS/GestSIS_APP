@@ -1,27 +1,23 @@
 <template>
-  <div class="exercice-comptable" v-if="currentExerciceComptableId">
-    <div class="dropdown">
-      Exercice comptable
-      <button
-        class="ml-1 btn btn-outline-secondary dropdown-toggle"
-        type="button"
-        data-toggle="dropdown"
-        @click="dropdown = !dropdown"
-      >
-        {{ getExerciceComptable(currentExerciceComptableId).annee }}
-      </button>
-      <div
-        class="dropdown-menu"
-        :class="{ show: dropdown }"
-        aria-labelledby="dropdownMenu2"
-      >
+  <div
+    class="exercice-comptable d-flex align-items-center"
+    v-if="currentExerciceComptableId"
+  >
+    <span>Exercice comptable</span>
+    <dropdown
+      :title="getExerciceComptable(currentExerciceComptableId).annee"
+      menuClass="dropdown-menu-right"
+      buttonClass="ml-1 btn btn-outline-secondary"
+      ref="dropdown"
+    >
+      <template #default>
         <button
           v-for="e in listeExerciceComptable"
           :key="e.id"
           @click="selectExercice(e.id)"
           class="dropdown-item"
           :class="{ active: currentExerciceComptableId === e.id }"
-          type="button"
+          :type="getExerciceComptable(currentExerciceComptableId).annee"
         >
           {{ e.annee }}
         </button>
@@ -34,17 +30,21 @@
         >
           <span>Paramètres</span>
         </router-link>
-      </div>
-    </div>
+      </template>
+    </dropdown>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
+import Dropdown from '@/components/base/Dropdown.vue';
 
 export default {
   name: 'ExerciceComptable',
+  components: {
+    Dropdown,
+  },
   computed: {
     ...mapState({
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
@@ -54,11 +54,6 @@ export default {
     }),
     ...mapGetters(['getExerciceComptable']),
   },
-  data() {
-    return {
-      dropdown: false,
-    };
-  },
   mounted() {
     if (this.listeExerciceComptable.length === 0) {
       this.$store.dispatch('fetchExercicesComptables');
@@ -67,6 +62,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     selectExercice(id) {
+      this.$refs.dropdown.close();
       this.dropdown = false;
       this.$store.dispatch('selectExerciceComptable', id);
     },
