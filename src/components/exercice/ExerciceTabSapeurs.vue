@@ -145,7 +145,11 @@ export default {
     manageSapeurs() {
       const data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
       let svm = this;
-      let callback = ({ ajoute, supprime }) => {
+      let callback = (param) => {
+        if (!param) {
+          return;
+        }
+        const { ajoute, supprime } = param;
         if (ajoute === null || ajoute === undefined) {
           return;
         }
