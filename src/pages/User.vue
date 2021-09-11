@@ -18,7 +18,6 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Utiliser un jeton</h3>
@@ -41,12 +40,11 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-md-12">
-        <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>Fonctionalitées</h3>
+            <h3>TODO: Fonctionalitées</h3>
           </div>
           <div class="card-body">
             <h4>Dans le future</h4>
@@ -62,7 +60,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

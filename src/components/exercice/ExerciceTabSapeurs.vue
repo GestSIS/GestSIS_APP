@@ -140,12 +140,12 @@ export default {
     },
     sapeurNomPrenom(sapeur_id) {
       let sapeur = this.getSapeur(sapeur_id);
-      return sapeur.nom + ' ' + sapeur.prenom;
+      return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...';
     },
     manageSapeurs() {
       const data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
       let svm = this;
-      let callback = ({ajoute, supprime}) => {
+      let callback = ({ ajoute, supprime }) => {
         if (ajoute === null || ajoute === undefined) {
           return;
         }
