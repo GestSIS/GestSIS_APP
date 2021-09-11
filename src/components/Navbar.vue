@@ -33,6 +33,7 @@
         </template>
         <template #default>
           <button class="dropdown-item" @click="parametres">Paramètres</button>
+          <div class="dropdown-divider"></div>
           <button class="dropdown-item" @click="logout">Déconnexion</button>
         </template>
       </dropdown>

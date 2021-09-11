@@ -49,11 +49,6 @@
             <h3>Fonctionalitées</h3>
           </div>
           <div class="card-body">
-            <h4>Token</h4>
-            <ul>
-              <li>Ajouter un token</li>
-              <li>TODO:</li>
-            </ul>
             <h4>Dans le future</h4>
             <ul>
               <li>Supprimer ses accès pour un SIS</li>
@@ -76,7 +71,7 @@ export default {
   name: 'utilisateur',
   data() {
     return {
-      token: '',
+      jeton: '',
     };
   },
   methods: {
