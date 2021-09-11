@@ -169,6 +169,17 @@ export default {
     logout({ commit }) {
       return Promise.resolve(commit(types.AUTH_LOGOUT));
     },
+    useToken({ commit }, token){
+      return AuthService.useToken(token).then(({message, accessToken})=>{
+        // update new access token
+        commit(types.AUTH_SUCCESSFULL, {
+          accessToken,
+          refreshToken: TokenService.getRefreshToken(),
+          user: TokenService.getUser(),
+        })
+        return message
+      })
+    },
     selectSis({ commit }, sis) {
       commit(types.AUTH_SELECT_SIS, sis)
       return Promise.resolve(commit(types.CLEAR_CACHE));

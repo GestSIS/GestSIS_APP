@@ -5,7 +5,7 @@
   >
     <span>Exercice comptable</span>
     <dropdown
-      :title="getExerciceComptable(currentExerciceComptableId).annee"
+      :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
       menuClass="dropdown-menu-right"
       buttonClass="ml-1 btn btn-outline-secondary"
       ref="dropdown"

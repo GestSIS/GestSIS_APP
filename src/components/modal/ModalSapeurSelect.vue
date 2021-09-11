@@ -236,6 +236,11 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
+//TODO:
+// - Par cours
+// - Date anniversaire
+// - Permis de conduire
+
 export default {
   name: 'ModalSapeurSelect',
   props: ['callback', 'data'],

@@ -26,12 +26,13 @@
         type="li"
         buttonClass="btn btn-link"
         menuClass="dropdown-menu-right"
+        ref="dropdown"
       >
         <template #title>
           <font-awesome-icon :icon="['fas', 'user']" />
         </template>
         <template #default>
-          <a class="dropdown-item" href="#">Paramètres</a>
+          <button class="dropdown-item" @click="parametres">Paramètres</button>
           <button class="dropdown-item" @click="logout">Déconnexion</button>
         </template>
       </dropdown>
@@ -48,6 +49,10 @@ export default {
     Dropdown,
   },
   methods: {
+    parametres() {
+      this.$refs.dropdown.close();
+      this.$router.push({ name: 'utilisateur' });
+    },
     logout() {
       this.$store.dispatch('logout').then(() => {
         this.$router.push('/');

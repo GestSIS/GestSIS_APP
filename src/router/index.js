@@ -75,6 +75,12 @@ const router = new Router({
       component: Home,
     },
     {
+      path: '/utilisateur',
+      name: 'utilisateur',
+      meta: { layout: 'no-sidebar'},
+      component: () => import('@/pages/User.vue'),
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/pages/Dashboard.vue'),
