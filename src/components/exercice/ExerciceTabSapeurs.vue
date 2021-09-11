@@ -112,18 +112,31 @@
       <button class="btn btn-outline-primary" @click="manageSapeurs">
         Gérer la liste des sapeurs
       </button>
+      <button
+        class="btn btn-outline-primary ml-2"
+        @click="validate"
+        :disabled="!canValidate"
+        v-if="hasValidationPermission"
+      >
+        Valider
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ExerciceTabSapeurs',
   computed: {
     ...mapState({
       listeExcuseTypes: (state) => state.excuseType.liste,
+      hasValidationPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.VALIDATION
+        ),
     }),
     ...mapGetters([
       'activeExerciceId',
@@ -132,11 +145,33 @@ export default {
       'getSapeur',
       'getExcuseType',
     ]),
+    canValidate() {
+      return this.activeExerciceData.statut == 2;
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     save() {
-      this.$store.dispatch('editSapeurs', this.activeExerciceSapeurs);
+      this.$store
+        .dispatch('editSapeurs', this.activeExerciceSapeurs)
+        .then((res) =>
+          this.$awn.success(res?.message || 'Modifications enregistrées')
+        )
+        .catch((err) =>
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+        );
+    },
+    validate() {
+      this.$store
+        .dispatch('validerExercice', this.activeExerciceId)
+        .then((res) =>
+          this.$awn.success(res?.message || 'Exercice validé avec succès.')
+        )
+        .catch((err) =>
+          this.$awn.alert(
+            err?.message || "Erreur lors de la validation de l'exercice."
+          )
+        );
     },
     sapeurNomPrenom(sapeur_id) {
       let sapeur = this.getSapeur(sapeur_id);

@@ -138,29 +138,12 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
+    <!-- <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline">
-        <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">TODO</h3>
+          <h3 class="card-title">TODO:</h3>
         </div>
         <div class="card-body">
-          <div>
-            <h5>Paramètre SIS</h5>
-            <ul>
-              <li>Nom</li>
-              <li>District</li>
-              <li>N° Département</li>
-              <li>Adresse</li>
-              <li>Localite</li>
-              <li>Téléphone</li>
-              <li>Email</li>
-              <li>Commandant</li>
-              <li>Iban</li>
-              <li>BIC</li>
-            </ul>
-          </div>
           <div>
             <h5>Paramètres Statique pour admin du système</h5>
             <ul>
@@ -175,67 +158,12 @@
           <div>
             <h5>Sapeur</h5>
             <ul>
-              <li>Cours</li>
-              <li>Fonctions</li>
-              <li>Grades</li>
               <li>Nombre de numéro max par sapeur</li>
-            </ul>
-          </div>
-          <div>
-            <h5>Exercices comptables</h5>
-            <ul>
-              <li>Exercices comptables</li>
-              <li>Ajouter, supprimer, clôturer</li>
-            </ul>
-          </div>
-          <div>
-            <h5>Exercices</h5>
-            <ul>
-              <li>Excuses types</li>
-              <li>Catégorie d'exercice - &gt; amendable ou non</li>
-            </ul>
-          </div>
-          <div>
-            <h5>Intervention</h5>
-            <ul>
-              <li>Véhicules</li>
-              <li>Matériel</li>
-              <li>Missions type</li>
-              <li>Annuaire de téléphones</li>
-              <li>Type d'intervention</li>
-              <li>Stat d'intervention</li>
-              <!-- <li>Stat fédéral -&gt; Dans section admin</li> -->
-            </ul>
-          </div>
-          <div>
-            <h5>Compatbilité</h5>
-            <ul>
-              <li>Liste des Comptes</li>
-              <li>Indemnités/Soldes pour exercices</li>
-              <li>Indemnités/Soldes pour intervention</li>
-              <li>Frais annuels</li>
-              <li>Indemnités annuels</li>
-              <li>Coordonnées bancaire du SIS pour ISO20022</li>
-            </ul>
-          </div>
-          <div>
-            <h5>Controles médicaux</h5>
-            <ul>
-              <li>Médecins</li>
-              <li>Type de contrôles</li>
-            </ul>
-          </div>
-          <div>
-            <h5>Droits et rôles</h5>
-            <ul>
-              <li>Gestion des accès -&gt; comptes</li>
-              <li>Rôles</li>
-              <li>Droits</li>
             </ul>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -269,11 +197,6 @@ export default {
   },
   mounted() {
     this.sisParam = { ...this.params };
-  },
-  watch: {
-    params: (val) => {
-      // this.sisParam = { ...val };
-    },
   },
   computed: {
     ...mapState({

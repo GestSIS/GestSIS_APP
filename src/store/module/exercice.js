@@ -24,19 +24,22 @@ export default {
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
-    [types.UPDATE_EXERCICE_STATUT](state, payload) {
+    [types.UPDATE_EXERCICE_STATUT](state, {id, statut}) {
       state.liste = [
         ...state.liste.map(e => {
-          if (e.id !== payload.id) {
+          if (e.id !== id) {
             return e;
           } else {
             return {
               ...e,
-              statut: payload.statut
+              statut: statut
             }
           }
         })
       ]
+      if(state.active.id == id) {
+        state.active.data.statut = statut;
+      }
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
@@ -143,7 +146,11 @@ export default {
       return ExerciceService.editSapeurs(state.active.data.id, {
         sapeurs: payload
       }).then(async data => {
-        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data);
+        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data.sapeurs);
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: state.active.data.id,
+          statut: data.statut
+        });
         return data;
       });
     },

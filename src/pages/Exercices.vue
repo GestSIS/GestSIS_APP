@@ -5,7 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }"
+                >Accueil</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Exercices
@@ -180,7 +182,7 @@
               <button
                 class="btn btn-outline-primary border-0"
                 @click="validerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut === 2"
+                v-if="hasValidationPermission && props.rowData.statut == 2"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
@@ -331,8 +333,8 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasValidationPermission: (state) => 
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION)
+      hasValidationPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
     ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
@@ -344,7 +346,9 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(this.listeExercices.map((i) => i.exercice_categorie_id));
+      const ids = new Set(
+        this.listeExercices.map((i) => i.exercice_categorie_id)
+      );
       return this.listeCategories.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
@@ -355,7 +359,11 @@ export default {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0)
-          .map(([key, value]) => (x) => x[key] === value)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
             () => true
