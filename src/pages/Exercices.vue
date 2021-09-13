@@ -152,10 +152,10 @@
             detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
-            :row-class="onRowClass"
             no-data-template="Aucun exercice/séance à afficher"
             @vuetable:row-clicked="selectExercice"
           >
+            <!-- :row-class="onRowClass" -->
             <div slot="details" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-link border-0"
@@ -188,6 +188,54 @@
               </button>
             </div>
           </vuetable>
+          <base-table
+            v-show="!loading"
+            ref="basetable_exercices"
+            :selectable="true"
+            selectKey="id"
+            :fields="fieldsBase"
+            :detail-row-component="detailRow"
+            detail-row-class="m-td-0"
+            :css="css.table"
+            :data-manager="dataManager"
+            row-selected-class="table-primary"
+            no-data="Aucun exercice/séance à afficher"
+            :data="computedData"
+            @vuetable:row-clicked="selectExercice"
+          >
+            <!-- :row-class="onRowClass" -->
+            <div slot="details" slot-scope="props" class="d-flex">
+              <button
+                class="btn btn-link border-0"
+                @click="props.actions.toggleDetailRow(props.rowData.id)"
+              >
+                <font-awesome-icon
+                  v-if="toggles[props.rowData.id] || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!(toggles[props.rowData.id] || false)"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div>
+            <div slot="actions" slot-scope="props" class="d-flex">
+              <router-link
+                tag="button"
+                :to="'/exercices/' + props.rowData.id"
+                class="btn btn-outline-primary border-0"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </router-link>
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut == 2"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
+            </div>
+          </base-table>
         </div>
       </div>
     </div>
@@ -205,6 +253,8 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 import ExerciceService from '@/services/ExerciceService';
 
 import Vuetable from 'vuetable-2';
+import BaseTable from '@/components/table/BaseTable.vue';
+
 // import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
 import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
 import _ from 'lodash';
@@ -227,6 +277,7 @@ export default {
   name: 'exercices',
   components: {
     Vuetable,
+    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -322,6 +373,70 @@ export default {
           name: 'actions',
         },
       ],
+      fieldsBase: [
+        {
+          title: '',
+          key: 'details',
+          slot: 'details',
+          dataClass: 'details-width',
+        },
+        {
+          title: 'Date',
+          key: 'date',
+          sortField: 'date',
+        },
+        {
+          title: 'Categorie',
+          key: 'categorie',
+          sortField: 'categorie',
+        },
+        {
+          title: 'Heure',
+          key: 'heure',
+          formatter(value) {
+            return value.slice(0, 5);
+          },
+        },
+        {
+          title: 'Duree',
+          key: 'duree',
+          sortField: 'duree',
+        },
+        {
+          title: 'Localité',
+          key: 'localite',
+          sortField: 'localite',
+        },
+        {
+          title: 'Lieu',
+          key: 'lieu',
+        },
+        {
+          title: 'Designation',
+          key: 'designation',
+          sortField: 'designation',
+        },
+        {
+          title: 'Statut',
+          key: 'statut',
+          sortField: 'statut',
+          formatter(value) {
+            const statuts = {
+              0: 'Annulé',
+              1: 'A saisir',
+              2: 'En attente de validation',
+              3: 'A imputer',
+              4: 'Imputée',
+            };
+            return statuts[value];
+          },
+        },
+        {
+          title: 'Actions',
+          key: 'actions',
+          slot: 'actions',
+        },
+      ],
     };
   },
   computed: {
@@ -409,9 +524,9 @@ export default {
         data: local,
       };
     },
-    onRowClass(dataItem) {
-      if (dataItem.id === this.selectedId) {
-        return 'table-primary';
+    onRowClass({ dataItem, isSelected }) {
+      if (isSelected) {
+        return '';
       }
 
       const statutsClass = {

@@ -5,7 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }"
+                >Accueil</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Contrôles Medicaux
@@ -41,7 +43,6 @@
             ref="vuetable_medicaux"
             :api-mode="false"
             :fields="fields"
-            detail-row-class="m-td-0"
             :css="css.table"
             :data-manager="dataManager"
             no-data-template="Aucun contrôle médical à afficher"

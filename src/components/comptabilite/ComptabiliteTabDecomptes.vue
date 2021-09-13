@@ -41,7 +41,7 @@
           :data="decomptes"
           :selectable="true"
           selectKey="id"
-          noData="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
+          no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
           @selected="selected"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
