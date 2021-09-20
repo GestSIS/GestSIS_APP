@@ -127,7 +127,6 @@ export default {
       }
     },
   },
-
   computed: {
     computedData() {
       const sorted = [...this.data];
@@ -136,7 +135,7 @@ export default {
       const key = this.sorted.key;
       sorted.sort((a, b) => {
         const res = func(a[key]) < func(b[key]);
-        return this.sorted.asc ? res : !res;
+        return this.sorted.asc ? !res : res;
       });
       return sorted;
     },
@@ -155,7 +154,7 @@ export default {
         if (this.sorted.key === field.sortKey) {
           this.sorted.asc = !this.sorted.asc;
         } else {
-          (this.sorted.key = field.sortKey), (this.sorted.asc = true);
+          this.sorted = { ...this.sorted, key: field.sortKey, asc: true };
           //TODO: Ajout support pour custom function of sort
         }
       }
