@@ -23,7 +23,9 @@
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',
             rowClass,
-            r.rowClass,
+            typeof rowClass === 'function'
+              ? rowClass(r, selected == r[selectKey])
+              : rowClass,
           ]"
         >
           <td v-for="f in fields" :key="f.key">
@@ -86,7 +88,7 @@ export default {
       default: () => '',
     },
     rowClass: {
-      type: String || Function,
+      type: [String, Function],
       default: () => '',
     },
     rowSelectedClass: {

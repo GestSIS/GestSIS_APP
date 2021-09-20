@@ -156,8 +156,8 @@
             no-data="Aucun exercice/séance à afficher"
             :data="computedData"
             @vuetable:row-clicked="selectExercice"
+            :row-class="onRowClass"
           >
-            <!-- :row-class="onRowClass" -->
             <div slot="details" slot-scope="props" class="d-flex">
               <button
                 class="btn btn-link border-0"
@@ -405,7 +405,7 @@ export default {
         data: local,
       };
     },
-    onRowClass({ dataItem, isSelected }) {
+    onRowClass(dataItem, isSelected) {
       if (isSelected) {
         return '';
       }
