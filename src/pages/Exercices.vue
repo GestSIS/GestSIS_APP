@@ -143,51 +143,6 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <vuetable
-            v-show="!loading"
-            ref="vuetable_exercices"
-            :api-mode="false"
-            :fields="fields"
-            :detail-row-component="detailRow"
-            detail-row-class="m-td-0"
-            :css="css.table"
-            :data-manager="dataManager"
-            no-data-template="Aucun exercice/séance à afficher"
-            @vuetable:row-clicked="selectExercice"
-          >
-            <!-- :row-class="onRowClass" -->
-            <div slot="details" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="'/exercices/' + props.rowData.id"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut == 2"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
-          </vuetable>
           <base-table
             v-show="!loading"
             ref="basetable_exercices"
@@ -196,7 +151,6 @@
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
-            :css="css.table"
             :data-manager="dataManager"
             row-selected-class="table-primary"
             no-data="Aucun exercice/séance à afficher"
@@ -252,12 +206,7 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 
 import ExerciceService from '@/services/ExerciceService';
 
-import Vuetable from 'vuetable-2';
 import BaseTable from '@/components/table/BaseTable.vue';
-
-// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
 
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
@@ -276,7 +225,6 @@ async function loadData(routeTo, next) {
 export default {
   name: 'exercices',
   components: {
-    Vuetable,
     BaseTable,
     ExerciceComptable,
   },
@@ -291,16 +239,10 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;
-        this.$refs.vuetable_exercices.setData(this.filteredExercices);
       });
-    },
-    filteredExercices(data) {
-      this.loading = false;
-      this.$refs.vuetable_exercices.setData(data);
     },
   },
   mounted() {
-    this.$refs.vuetable_exercices.setData(this.filteredExercices);
     this.loading = false;
   },
   data() {
@@ -308,71 +250,8 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      css: CssForBootstrap4,
       toggles: {},
       detailRow: ExerciceDetails,
-      fields: [
-        {
-          title: '',
-          name: 'details',
-          dataClass: 'details-width',
-        },
-        {
-          title: 'Date',
-          name: 'date',
-          sortField: 'date',
-        },
-        {
-          title: 'Categorie',
-          name: 'categorie',
-          sortField: 'categorie',
-        },
-        {
-          title: 'Heure',
-          name: 'heure',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
-        },
-        {
-          title: 'Duree',
-          name: 'duree',
-          sortField: 'duree',
-        },
-        {
-          title: 'Localité',
-          name: 'localite',
-          sortField: 'localite',
-        },
-        {
-          title: 'Lieu',
-          name: 'lieu',
-        },
-        {
-          title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
-        },
-        {
-          title: 'Statut',
-          name: 'statut',
-          sortField: 'statut',
-          formatter(value) {
-            const statuts = {
-              0: 'Annulé',
-              1: 'A saisir',
-              2: 'En attente de validation',
-              3: 'A imputer',
-              4: 'Imputée',
-            };
-            return statuts[value];
-          },
-        },
-        {
-          title: 'Actions',
-          name: 'actions',
-        },
-      ],
       fieldsBase: [
         {
           title: '',
@@ -383,16 +262,17 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortField: 'date',
+          sortKey: 'date',
         },
         {
           title: 'Categorie',
           key: 'categorie',
-          sortField: 'categorie',
+          sortKey: 'categorie',
         },
         {
           title: 'Heure',
           key: 'heure',
+          sortKey: 'heure',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -400,26 +280,27 @@ export default {
         {
           title: 'Duree',
           key: 'duree',
-          sortField: 'duree',
+          sortKey: 'duree',
         },
         {
           title: 'Localité',
           key: 'localite',
-          sortField: 'localite',
+          sortKey: 'localite',
         },
         {
           title: 'Lieu',
           key: 'lieu',
+          sortKey: 'lieu',
         },
         {
           title: 'Designation',
           key: 'designation',
-          sortField: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'Statut',
           key: 'statut',
-          sortField: 'statut',
+          sortKey: 'statut',
           formatter(value) {
             const statuts = {
               0: 'Annulé',

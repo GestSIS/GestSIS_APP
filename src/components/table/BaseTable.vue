@@ -31,7 +31,7 @@
               :name="f.slot"
               v-bind="{ key: f.key, value: r[f.key], actions, rowData: r }"
             >
-              {{ r[f.key] }}
+              {{ (f.formatter || defaultFormatter)(r[f.key]) }}
             </slot>
           </td>
         </tr>
@@ -95,7 +95,7 @@ export default {
     },
     detailRowComponent: {
       type: Object,
-      default: () => '',
+      default: () => {},
     },
     detailRowClass: {
       type: String,
@@ -111,6 +111,7 @@ export default {
       },
       selected: null,
       detailsRowVisibility: {},
+      defaultFormatter: (e) => e,
     };
   },
   watch: {
