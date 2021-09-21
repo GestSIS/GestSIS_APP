@@ -18,7 +18,10 @@
           <h3 class="card-title">Impressions</h3>
         </div>
         <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" disabled>
+          <button
+            class="btn btn-outline-primary btn-block"
+            :disabled="!selected"
+          >
             Résumé des frais
           </button>
         </div>
@@ -37,29 +40,30 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_frais_sapeurs"
-          :api-mode="false"
+          :selectable="true"
+          selectKey="id"
           :fields="fields"
-          :css="css.table"
-          :data-manager="dataManager"
-          :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data-template="Aucune écriture à afficher"
           :detail-row-component="detailRow"
+          detail-row-class="m-td-0"
+          row-selected-class="table-primary"
+          no-data="Aucun exercice/séance à afficher"
+          :data="computedData"
+          @selected="select"
+          :row-class="onRowClass"
         >
           <div slot="details" slot-scope="props" class="d-flex">
             <button
               class="btn btn-link border-0"
-              @click="toggleDetails(props.rowData.id)"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
             >
               <font-awesome-icon
-                v-if="toggles[props.rowData.id] || false"
+                v-if="props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-down']"
               />
               <font-awesome-icon
-                v-if="!(toggles[props.rowData.id] || false)"
+                v-if="!props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-right']"
               />
             </button>
@@ -76,16 +80,7 @@
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </div>
-          <!-- <div slot="actions" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 2"
-              @click="imputerIntervention(props.rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </div> -->
-        </vuetable>
+        </base-table>
       </div>
     </div>
   </div>
@@ -98,9 +93,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadExercicesComptable = store.dispatch('fetchExercicesComptables');
@@ -114,7 +107,7 @@ async function loadData(_, next) {
 
 export default {
   name: 'FraisTabSapeur',
-  components: { Vuetable },
+  components: { BaseTable },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -129,7 +122,6 @@ export default {
       ).then((data) => {
         this.ecritures = data;
         this.loading = false;
-        this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
       });
     },
   },
@@ -140,16 +132,14 @@ export default {
     ).then((data) => {
       this.ecritures = data;
       this.loading = false;
-      this.$refs.vuetable_frais_sapeurs.setData(this.computedData);
     });
   },
   data() {
     return {
-      css: CssForBootstrap4,
-      toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
       ecritures: [],
+      selected: null,
       ecritureColumns: [
         {
           title: 'Ecriture',
@@ -202,27 +192,29 @@ export default {
       fields: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
           dataClass: 'details-width',
+          slot: 'details',
         },
         {
           title: 'Sapeur',
-          name: 'nomPrenom',
+          key: 'nomPrenom',
           sortField: 'nomPrenom',
         },
         {
           title: 'Fonction',
-          name: 'fonction',
+          key: 'fonction',
           sortField: 'fonction',
         },
         {
           title: 'Total',
-          name: 'total',
+          key: 'total',
           sortField: 'total',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -288,30 +280,8 @@ export default {
         },
       });
     },
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_frais_sapeurs.toggleDetailRow(id);
-    },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
+    select(id) {
+      this.selected = id;
     },
     onRowClass(dataItem) {
       const statutsClass = {

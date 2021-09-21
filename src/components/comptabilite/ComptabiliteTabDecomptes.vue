@@ -12,6 +12,13 @@
           <button
             class="btn btn-outline-primary btn-block"
             :disabled="!selectedId"
+            @click="impression(selectedId)"
+          >
+            Impression
+          </button>
+          <button
+            class="btn btn-outline-primary btn-block"
+            :disabled="!selectedId"
             @click="iso20022Decompte(selectedId)"
           >
             Fichier de paiement (ISO20022)
@@ -43,6 +50,7 @@
           selectKey="id"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
           @selected="selected"
+          row-selected-class="table-primary"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
             <div class="custom-control custom-checkbox">
@@ -188,12 +196,31 @@ export default {
         },
       });
     },
+    impression(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id === decompteId);
+      DecompteService.downloadDecompte(
+        decompteId,
+        `decompte_${decompte.date}.xml`
+      ).catch((err) => {
+        console.log(err.data);
+        this.$awn.alert(
+          err?.data?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
     iso20022Decompte(decompteId) {
       const decompte = this.decomptes.find((d) => d.id === decompteId);
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
         `decompte_${decompte.date}.xml`
-      );
+      ).catch((err) => {
+        console.log(err.data);
+        this.$awn.alert(
+          err?.data?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });

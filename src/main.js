@@ -52,7 +52,7 @@ Vue.filter('sapeur', function (sapeur) {
 
 Vue.filter('compte', function (compte) {
   if (!compte) return '';
-  return compte.numero + ' - ' + compte.designation;
+  return compte?.numero + ' - ' + compte?.designation;
 });
 
 router.beforeEach((to, from, next) => {

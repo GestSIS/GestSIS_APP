@@ -148,15 +148,14 @@
             ref="basetable_exercices"
             :selectable="true"
             selectKey="id"
+            row-selected-class="table-primary"
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
-            :data-manager="dataManager"
-            row-selected-class="table-primary"
             no-data="Aucun exercice/séance à afficher"
             :data="computedData"
-            @vuetable:row-clicked="selectExercice"
             :row-class="onRowClass"
+            @selected="selectExercice"
           >
             <div slot="details" slot-scope="props" class="d-flex">
               <button
@@ -164,11 +163,11 @@
                 @click="props.actions.toggleDetailRow(props.rowData.id)"
               >
                 <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
+                  v-if="props.status.detailRowVisible || false"
                   :icon="['fas', 'angle-down']"
                 />
                 <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
+                  v-if="!props.status.detailRowVisible || false"
                   :icon="['fas', 'angle-right']"
                 />
               </button>
@@ -250,7 +249,6 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      toggles: {},
       detailRow: ExerciceDetails,
       fieldsBase: [
         {
@@ -368,42 +366,17 @@ export default {
     },
   },
   methods: {
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_exercices.toggleDetailRow(id);
-    },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },
     selectExercice(row) {
-      this.selectedId = row.data.id;
+      this.selectedId = row?.id;
     },
     listePresences({ id }) {
       ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
     },
     listeAppel({ id }) {
       ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
-    },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

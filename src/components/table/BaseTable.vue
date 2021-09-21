@@ -28,10 +28,19 @@
               : rowClass,
           ]"
         >
-          <td v-for="f in fields" :key="f.key">
+          <td v-for="f in fields" :key="f.key" :class="f.columnClass">
             <slot
               :name="f.slot"
-              v-bind="{ key: f.key, value: r[f.key], actions, rowData: r }"
+              v-bind="{
+                key: f.key,
+                value: r[f.key],
+                actions,
+                status: {
+                  selected: selected == r[selectKey],
+                  detailRowVisible: detailsRowVisibility[r.id],
+                },
+                rowData: r,
+              }"
             >
               {{ (f.formatter || defaultFormatter)(r[f.key]) }}
             </slot>

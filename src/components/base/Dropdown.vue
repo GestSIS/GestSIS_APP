@@ -1,5 +1,5 @@
 <template>
-  <component :is="type" class="nav-item dropdown">
+  <component :is="tag" class="nav-item dropdown">
     <button
       class="nav-link dropdown-toggle"
       :class="buttonClass"
@@ -18,7 +18,7 @@
 <script>
 export default {
   props: {
-    type: {
+    tag: {
       type: String,
       default: () => 'div',
     },

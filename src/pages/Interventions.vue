@@ -5,7 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }"
+                >Accueil</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Interventions
@@ -178,32 +180,17 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <vuetable
-            ref="vuetable"
+          <base-table
             :class="{ 'd-none': loading }"
-            :api-mode="false"
             :fields="fields"
-            :css="css.table"
-            :data-manager="dataManager"
             :row-class="onRowClass"
-            no-data-template="Aucune intervention à afficher"
-            @vuetable:row-clicked="select"
+            no-data="Aucune intervention à afficher"
+            :data="filteredInterventions"
+            @selected="select"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
           >
-            <div slot="details" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
             <div slot="actions" slot-scope="props" class="d-flex">
               <router-link
                 tag="button"
@@ -220,7 +207,7 @@
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
             </div>
-          </vuetable>
+          </base-table>
         </div>
       </div>
     </div>
@@ -234,9 +221,7 @@ import permissions from '@/store/permissions.js';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
@@ -263,7 +248,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'interventions',
   components: {
-    Vuetable,
+    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -277,85 +262,74 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchListeIntervention').then(() => {
         this.loading = false;
-        this.$refs.vuetable.setData(this.filteredInterventions);
       });
-    },
-    filteredInterventions(data) {
-      this.loading = false;
-      this.$refs.vuetable.setData(data);
     },
   },
   mounted() {
     this.loading = false;
-    this.$refs.vuetable.setData(this.filteredInterventions);
   },
   data() {
     const self = this;
 
     return {
-      css: CssForBootstrap4,
-      toggles: [],
+      loading: true,
+      filters: {},
       selectedId: null,
       fields: [
-        // {
-        //   title: '',
-        //   name: 'details',
-        //   dataClass: 'align-middle'
-        // },
         {
           title: 'Date',
-          name: 'date_debut',
+          key: 'date_debut',
           dataClass: 'align-middle',
-          sortField: 'date_debut',
+          sortKey: 'date_debut',
         },
         {
           title: 'Heure',
-          name: 'heure_debut',
+          key: 'heure_debut',
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortField: 'heure_debut',
+          sortKey: 'heure_debut',
         },
         {
           title: "Type d'intervention",
-          name: 'type_intervention_id',
+          key: 'type_intervention_id',
           formatter(value) {
             return self.getTypeIntervention(value).designation;
           },
-          sortField: 'type_intervention_id',
+          sortKey: 'type_intervention_id',
         },
         {
           title: 'Localité',
-          name: 'localite_id',
+          key: 'localite_id',
           formatter(value) {
             return self.getLocalite(value).designation;
           },
-          sortField: 'localite_id',
+          sortKey: 'localite_id',
         },
         {
           title: 'Lieu',
-          name: 'lieu',
+          key: 'lieu',
           dataClass: 'align-middle',
         },
         {
           title: 'Stat fédéral',
-          name: 'stat_federal_id',
+          key: 'stat_federal_id',
           formatter(value) {
             return self.getStatFederal(value).designation;
           },
-          sortField: 'stat_federal_id',
+          sortKey: 'stat_federal_id',
         },
         {
           title: 'Traitement',
-          name: 'intervention_traitement_id',
+          key: 'intervention_traitement_id',
           formatter(value) {
             return self.getInterventionTraitement(value).designation;
           },
-          sortField: 'intervention_traitement_id',
+          sortKey: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
-          name: 'degre',
+          key: 'degre',
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
@@ -365,11 +339,11 @@ export default {
             };
             return degre[value];
           },
-          sortField: 'degre',
+          sortKey: 'degre',
         },
         {
           title: 'Statut',
-          name: 'statut',
+          key: 'statut',
           formatter(value) {
             const statuts = {
               0: 'A saisir',
@@ -379,15 +353,14 @@ export default {
             };
             return statuts[value];
           },
-          sortField: 'statut',
+          sortKey: 'statut',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
-      loading: true,
-      filters: {},
     };
   },
   computed: {
@@ -400,8 +373,10 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      hasValidationPermission: (state) => 
-        state.auth.sis.permissions.includes(permissions.INTERVENTION.VALIDATION)
+      hasValidationPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.VALIDATION
+        ),
     }),
     ...mapGetters([
       'currentExerciceComptableId',
@@ -432,7 +407,11 @@ export default {
         .filter(
           Object.entries(this.filters)
             .filter(([, val]) => val)
-            .map(([key, value]) => (x) => x[key] === value)
+            .map(
+              ([key, value]) =>
+                (x) =>
+                  x[key] === value
+            )
             .reduce(
               (f, g) => (x) => f(x) && g(x),
               () => true
@@ -457,12 +436,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    toggleDetails(id) {
-      this.toggles[id] = !this.toggles[id];
-      this.$refs.vuetable.toggleDetailRow(id);
-    },
     select(row) {
-      this.selectedId = row.data.id;
+      this.selectedId = row?.id;
     },
     supprimerIntervention(id) {
       this.SHOW_MODAL({
@@ -488,30 +463,12 @@ export default {
       });
       //TODO: imprimer le rapport d'intervention -> modal
     },
-    dataManager(sortOrder) {
-      if (this.filteredInterventions.length < 1) return;
-
-      let local = this.filteredInterventions;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
-    },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
     },
-    onRowClass(dataItem) {
-      if (dataItem.id === this.selectedId) {
-        return 'table-primary';
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
       }
       const statutsClass = {
         0: '', // 'A saisir',

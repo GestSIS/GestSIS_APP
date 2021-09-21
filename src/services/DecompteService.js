@@ -12,12 +12,6 @@ export default {
   removeDecompte(decompteId) {
     return Api.api().delete(`decomptes/${decompteId}`);
   },
-  downloadDecompteIso20022(decompteId, params) {
-    return Api.apiFileDownload().post(
-      `/decomptes/${decompteId}/iso20022`,
-      params
-    );
-  },
   genererDecompteAnnuel(params) {
     return Api.api().post('decomptes/creer-annuel', params);
   },
@@ -26,6 +20,11 @@ export default {
   },
   genererDecompteExercice(params) {
     return Api.api().post('decomptes/creer-exercice', params);
+  },
+  downloadDecompte(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/print/`
+    );
   },
   downloadIso20022PourDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(

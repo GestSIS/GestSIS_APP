@@ -23,13 +23,23 @@ const request = {
   apiFileDownload(filename) {
     let api = axios.create({
       baseURL: API_URL,
-      responseType: 'arraybuffer',
+      responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format 
       headers: {
         'Accept': 'application/pdf',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
     });
+    
+    api.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      function (error) {
+        throw error.response.data
+      }
+    );
+
     if (filename) {
       api.interceptors.response.use((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));

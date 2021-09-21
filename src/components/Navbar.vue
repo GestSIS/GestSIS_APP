@@ -23,7 +23,7 @@
     </ul>
     <ul class="navbar-nav">
       <dropdown
-        type="li"
+        tag="li"
         buttonClass="btn btn-link"
         menuClass="dropdown-menu-right"
         ref="dropdown"

@@ -14,43 +14,35 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_amendes_sapeurs"
-          :api-mode="false"
           :fields="fields"
-          :css="css.table"
-          :data-manager="dataManager"
           :row-class="onRowClass"
           detail-row-class="m-td-0"
-          no-data-template="Aucun amende à afficher"
+          no-data="Aucun amende à afficher"
           :detail-row-component="detailRow"
+          :data="filteredAmendes"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
         >
           <div slot="details" slot-scope="props" class="d-flex">
             <button
               class="btn btn-link border-0"
-              @click="toggleDetails(props.rowData.id)"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
             >
               <font-awesome-icon
-                v-if="toggles[props.rowData.id] || false"
+                v-if="props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-down']"
               />
               <font-awesome-icon
-                v-if="!(toggles[props.rowData.id] || false)"
+                v-if="!props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-right']"
               />
             </button>
           </div>
-          <!-- <div slot="actions" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 2"
-                @click="imputerIntervention(props.rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </div> -->
-        </vuetable>
+        </base-table>
       </div>
     </div>
   </div>
@@ -60,9 +52,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 import store from '@/store/index';
 
@@ -79,7 +69,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'amendes',
   components: {
-    Vuetable,
+    BaseTable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -92,24 +82,17 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
         this.loading = false;
-        this.$refs.vuetable_amendes_sapeurs.setData(this.filteredAmendes);
       });
-    },
-    filteredAmendes(data) {
-      this.loading = false;
-      this.$refs.vuetable_amendes_sapeurs.setData(data);
     },
   },
   mounted() {
     this.loading = false;
-    this.$refs.vuetable_amendes_sapeurs.setData(this.filteredAmendes);
   },
   data() {
-    const self = this;
     return {
-      css: CssForBootstrap4,
-      toggles: [],
       detailRow: AmendesSapeurDetails,
+      loading: true,
+      filters: {},
       amendeColumns: [
         {
           title: 'Exercice',
@@ -127,30 +110,30 @@ export default {
       fields: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
+          slot: 'details',
         },
         {
           title: 'Sapeur',
-          name: 'sapeur',
-          sortField: 'sapeur',
+          key: 'sapeur',
+          sortKey: 'sapeur',
         },
         {
           title: 'Nombre',
-          name: 'nb',
-          sortField: 'nb',
+          key: 'nb',
+          sortKey: 'nb',
         },
         {
           title: 'Montant',
-          name: 'total',
-          sortField: 'total',
+          key: 'total',
+          sortKey: 'total',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
-      loading: true,
-      filters: {},
     };
   },
   computed: {
@@ -166,7 +149,11 @@ export default {
       const amendes = this.listeAmendes.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
-          .map(([key, value]) => (x) => x[key] === value)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
             () => true
@@ -190,38 +177,22 @@ export default {
     },
   },
   methods: {
+    selected(id) {
+      this.selectedId = id;
+    },
     generer() {
       this.$store.dispatch(
         'genererAmendesAnnuels',
         this.currentExerciceComptableId
       );
     },
-    toggleDetails(id) {
-      this.toggles[id] = !this.toggles[id];
-      this.$refs.vuetable_amendes_sapeurs.toggleDetailRow(id);
-    },
-    dataManager(sortOrder) {
-      if (this.filteredAmendes.length < 1) return;
-
-      let local = this.filteredAmendes;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
-    },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
     },
-    onRowClass(dataItem) {
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
+      }
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'En attente de validation',

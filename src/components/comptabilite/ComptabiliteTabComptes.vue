@@ -28,17 +28,13 @@
         <div class="card-header d-flex justify-content-between">
           <div class="card-title">
             <h3 class="card-title">Comptes</h3>
-            <div class="dropdown">
-              <button
-                class="ml-1 btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                @click="dropdown = !dropdown"
-                v-if="activeCompteId !== null"
-              >
-                {{ getCompte(activeCompteId) | compte }}
-              </button>
-              <div class="dropdown-menu" :class="{ show: dropdown }">
+            <dropdown
+              buttonClass="ml-1 btn btn-outline-secondary dropdown-toggle"
+              menuClass="dropdown-menu"
+              ref="dropdown"
+              :title="formatCompte(getCompte(activeCompteId))"
+            >
+              <template #default>
                 <button
                   v-for="c in comptes"
                   :key="c.id"
@@ -47,49 +43,23 @@
                   :class="{ active: activeCompteId === c.id }"
                   type="button"
                 >
-                  {{ c | compte }}
+                  {{ formatCompte(c) }}
                 </button>
-              </div>
-            </div>
+              </template>
+            </dropdown>
           </div>
-          <!--          <button type="button" class="btn btn-primary" @click="manageComptes">-->
-          <!--            Gestion des comptes-->
-          <!--          </button>-->
         </div>
-        <!--        <div class="card-body">-->
-        <!--          <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">-->
-        <!--            <thead>-->
-        <!--              <tr>-->
-        <!--                <th>Nom Prénom</th>-->
-        <!--                <th>Date</th>-->
-        <!--                <th>Heure</th>-->
-        <!--                <th>Designation</th>-->
-        <!--                <th>Type de frais</th>-->
-        <!--                <th class="text-center">Actions</th>-->
-        <!--              </tr>-->
-        <!--            </thead>-->
-        <!--            <tbody></tbody>-->
-        <!--          </table>-->
-        <!--        </div>-->
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_ecriture_comptes"
-          :api-mode="false"
           :fields="fields"
-          :css="css.table"
-          no-data-template="Aucune écriture à afficher"
-          :data-manager="dataManager"
+          no-data="Aucune écriture à afficher"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
+          :data="computedData"
         >
-          <!--          <div slot="actions" slot-scope="props" class="d-flex">-->
-          <!--              <button-->
-          <!--                class="btn btn-outline-primary border-0"-->
-          <!--                v-if="props.rowData.statut === 3"-->
-          <!--                @click="imputerExercice(props.rowData.id)"-->
-          <!--              >-->
-          <!--                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />-->
-          <!--              </button>-->
-          <!--          </div>-->
-        </vuetable>
+        </base-table>
       </div>
     </div>
   </div>
@@ -101,9 +71,8 @@ import store from '@/store/index';
 
 import CompteService from '@/services/CompteService.js';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
+import Dropdown from '@/components/base/Dropdown.vue';
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchExercicesComptables');
@@ -118,7 +87,8 @@ async function loadData(routeTo, next) {
 export default {
   name: 'FraisTabCompte',
   components: {
-    Vuetable,
+    BaseTable,
+    Dropdown,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -130,26 +100,27 @@ export default {
     return {
       dropdown: false,
       loading: true,
-      css: CssForBootstrap4,
+      selectedId: null,
       fields: [
         {
           title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'Sapeur',
-          name: 'sapeur',
-          sortField: 'sapeur',
+          key: 'sapeur',
+          sortKey: 'sapeur',
         },
         {
           title: 'Total',
-          name: 'total',
-          sortField: 'total',
+          key: 'total',
+          sortKey: 'total',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -163,6 +134,15 @@ export default {
       comptes: (state) => state.compte.liste,
     }),
     ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
+    computedData() {
+      let svm = this;
+      return this.ecritures.map((e) => ({
+        ...e,
+        sapeur: [svm.getSapeur(e.sapeur_id)].map((s) =>
+          s ? `${s.nom} ${s.prenom}` : ''
+        )[0],
+      }));
+    },
   },
   mounted() {
     this.loading = true;
@@ -180,15 +160,24 @@ export default {
     },
   },
   methods: {
+    formatCompte(compte) {
+      if (!compte) return '';
+      return compte?.numero + ' - ' + compte?.designation;
+    },
+    selected(id) {
+      this.selectedId = id;
+    },
     formatedDate() {
       var today = new Date();
-      return new Date(today.getTime() - (today.getTimezoneOffset() * 60000 ))
-                          .toISOString()
-                          .split("T")[0];
+      return new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+        .toISOString()
+        .split('T')[0];
     },
     justificatifIndividuel(compteId) {
       const compte = this.getCompte(this.activeCompteId);
-      const filename = `${this.formatedDate()}_justificatif-compte-${compte.numero}.pdf`;
+      const filename = `${this.formatedDate()}_justificatif-compte-${
+        compte.numero
+      }.pdf`;
 
       CompteService.downloadJustificatifIndividuel(
         filename,
@@ -198,62 +187,25 @@ export default {
     },
     justificatifComplet() {
       const filename = `${this.formatedDate()}_justificatif-complet.pdf`;
-      
+
       CompteService.downloadJustificatifComplet(
         filename,
         this.activeExerciceComptableId
       );
     },
-    manageCompte() {
-      //TODO: Manage comptes
-    },
     selectCompte(id) {
-      this.loading = true;
-      this.$store.dispatch('selectActiveCompte', id).then(this.updateTable);
+      this.$refs.dropdown.close();
+      this.selectedId = null;
+      this.$store.dispatch('selectActiveCompte', id).then(() => {});
       this.dropdown = false;
     },
     init() {
       this.$store.dispatch('fetchEcritureComptes').then(() => {
-        this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
         this.loading = false;
+        this.selectedId = null;
       });
     },
-    updateTable() {
-      this.loading = true;
-      this.$refs.vuetable_ecriture_comptes.setData(this.computeData());
-      this.loading = false;
-    },
-    dataManager(sortOrder) {
-      let local = this.computeData();
-      if (local.length < 1) return;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
-    },
-    computeData() {
-      let svm = this;
-      return this.ecritures.map((e) => ({
-        ...e,
-        sapeur: [svm.getSapeur(e.sapeur_id)].map((s) =>
-          s ? `${s.nom} ${s.prenom}` : ''
-        )[0],
-      }));
-    },
     ...mapMutations(['SHOW_MODAL']),
-    // editEcriture() {
-    //   this.$store.dispatch('resetActiveGrade')
-    //   this.SHOW_MODAL('ModalSapeurPromotion')
-    // },
   },
 };
 </script>

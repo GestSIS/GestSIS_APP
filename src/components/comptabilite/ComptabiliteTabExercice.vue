@@ -6,7 +6,9 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" disabled>Imputer</button>
+          <button class="btn btn-outline-primary btn-block" disabled>
+            Imputer
+          </button>
           <button class="btn btn-outline-primary btn-block" disabled>
             Créer un décompte
           </button>
@@ -24,9 +26,7 @@
               <select
                 class="custom-select custom-select-sm"
                 id="filterLocalite"
-                @change="
-                  (event) => onFilter('localite_id', event.target.value)
-                "
+                @change="(event) => onFilter('localite_id', event.target.value)"
               >
                 <option>&lt;Localité&gt;</option>
                 <option
@@ -84,30 +84,31 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_frais_exercices"
-          :api-mode="false"
           :fields="fields"
-          :css="css.table"
-          :data-manager="dataManager"
           :row-class="onRowClass"
           detail-row-class="m-td-0"
-          no-data-template="Aucune écriture à afficher"
+          no-data="Aucune écriture à afficher"
           :detail-row-component="detailRow"
+          :data="filteredExercices"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
         >
           <div slot="details" slot-scope="props" class="d-flex">
             <button
               class="btn btn-link border-0"
-              @click="toggleDetails(props.rowData.id)"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
               v-if="props.rowData.statut === 4"
             >
               <font-awesome-icon
-                v-if="toggles[props.rowData.id] || false"
+                v-if="props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-down']"
               />
               <font-awesome-icon
-                v-if="!(toggles[props.rowData.id] || false)"
+                v-if="!props.status.detailRowVisible || false"
                 :icon="['fas', 'angle-right']"
               />
             </button>
@@ -135,7 +136,7 @@
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </div>
-        </vuetable>
+        </base-table>
       </div>
     </div>
   </div>
@@ -148,9 +149,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
@@ -159,17 +158,21 @@ async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
 
-  Promise.all([loadExercices, loadCategories, loadSapeurs, loadLocalites, loadIndemnites]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadExercices,
+    loadCategories,
+    loadSapeurs,
+    loadLocalites,
+    loadIndemnites,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
   name: 'FraisTabExercice',
   components: {
-    Vuetable,
+    BaseTable,
   },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
@@ -184,12 +187,11 @@ export default {
   data() {
     let svm = this;
     return {
-      css: CssForBootstrap4,
-      toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
       exercices: [],
       filters: {},
+      selectedId: null,
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -228,51 +230,52 @@ export default {
       fields: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
+          slot: 'details',
           dataClass: 'align-middle details-width',
         },
         {
           title: 'Date',
-          name: 'date',
-          sortField: 'date',
+          key: 'date',
+          sortKey: 'date',
         },
         {
           title: 'Categorie',
-          name: 'categorie',
-          sortField: 'categorie',
+          key: 'categorie',
+          sortKey: 'categorie',
         },
         {
           title: 'Heure',
-          name: 'heure',
+          key: 'heure',
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortField: 'heure',
+          sortKey: 'heure',
         },
         {
           title: 'Duree',
-          name: 'duree',
-          sortField: 'duree',
+          key: 'duree',
+          sortKey: 'duree',
         },
         {
           title: 'Localité',
-          name: 'localite',
-          sortField: 'localite',
+          key: 'localite',
+          sortKey: 'localite',
         },
         {
           title: 'Lieu',
-          name: 'lieu',
-          sortField: 'lieu',
+          key: 'lieu',
+          sortKey: 'lieu',
         },
         {
           title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'statut',
-          name: 'statut',
-          sortField: 'statut',
+          key: 'statut',
+          sortKey: 'statut',
           formatter(value) {
             const statuts = {
               0: 'Annulé',
@@ -286,7 +289,8 @@ export default {
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -300,11 +304,6 @@ export default {
     currentExerciceComptableId() {
       this.loading = true;
       this.init();
-    },
-    filteredExercices(data) {
-      this.loading = true;
-      this.$refs.vuetable_frais_exercices.setData(data);
-      this.loading = false;
     },
   },
   computed: {
@@ -337,7 +336,11 @@ export default {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0)
-          .map(([key, value]) => (x) => x[key] === value)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
             () => true
@@ -359,10 +362,13 @@ export default {
       ImputationService.getExerciceEcriturePourExerciceComptable(
         this.currentExerciceComptableId
       ).then((e) => {
+        this.selectedId = null;
         this.exercices = [...e];
-        this.$refs.vuetable_frais_exercices.setData(this.computedData);
         this.loading = false;
       });
+    },
+    selected(id) {
+      this.selectedId = id;
     },
     genererDecompteExercice(exerciceId, designation) {
       this.SHOW_MODAL({
@@ -374,13 +380,6 @@ export default {
         callback: () => this.init(),
       });
     },
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_frais_exercices.toggleDetailRow(id);
-    },
     imputerExercice(exerciceId) {
       this.SHOW_MODAL({
         component: 'ModalImputerExercice',
@@ -388,25 +387,11 @@ export default {
         size: 2,
       });
     },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
       }
 
-      return {
-        data: local,
-      };
-    },
-    onRowClass(dataItem) {
       const statutsClass = {
         0: '', //'Annulé',
         1: '', //'A saisir',
