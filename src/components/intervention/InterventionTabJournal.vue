@@ -14,7 +14,7 @@
                 <div class="timeline-panel-controls">
                   <div class="controls"></div>
                   <div class="timestamp">
-                    <small class="text-muted">{{ e.date | time }}</small>
+                    <small class="text-muted">{{ formatTime(e.date) }}</small>
                   </div>
                 </div>
               </div>
@@ -51,7 +51,7 @@
                   <td colspan="5">Aucun appel</td>
                 </tr>
                 <tr v-for="a in appels" :key="a.id">
-                  <td>{{ a.date | time }}</td>
+                  <td>{{ formatTime(a.date) }}</td>
                   <td>{{ a.numero }}</td>
                   <td>{{ a.nom }}</td>
                   <td>{{ a.commentaire }}</td>
@@ -105,10 +105,10 @@
                   <td colspan="6">Aucune mission</td>
                 </tr>
                 <tr v-for="m in missions" :key="m.id">
-                  <td>{{ m.debut | time }}</td>
+                  <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
-                  <td>{{ getSapeur(m.sapeur_id) | sapeur }}</td>
-                  <td>{{ m.fin | time }}</td>
+                  <td>{{ formatTime(getSapeur(m.sapeur_id)) }}</td>
+                  <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
@@ -309,10 +309,8 @@ export default {
       };
       return icons[type];
     },
-  },
-  filters: {
-    time(value) {
-      let date = new Date(value);
+    formatTime(time) {
+      let date = new Date(time);
       return date.getHours() + ':' + date.getMinutes();
     },
   },

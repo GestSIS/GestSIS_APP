@@ -29,39 +29,39 @@ const degre = [
   { id: 1, type: 'Fausse-alarme' },
   { id: 2, type: 'Petite' },
   { id: 3, type: 'Moyenne' },
-  { id: 4, type: 'Grande' }
+  { id: 4, type: 'Grande' },
 ];
 
 export default {
   name: 'InterventionTabResume',
   props: {
     newMode: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
       errors: {},
-      degre
+      degre,
     };
   },
   computed: {
     ...mapState({
-      activeInterventionId: state => state.intervention.active.id,
-      activeInterventionData: state => state.intervention.active.data
-    })
+      activeInterventionId: (state) => state.intervention.active.id,
+      activeInterventionData: (state) => state.intervention.active.data,
+    }),
   },
   methods: {
     save() {
       this.$store
         .dispatch('saveActiveIntervention', {
           id: this.activeInterventionData.id,
-          description: this.activeInterventionData.description
+          description: this.activeInterventionData.description,
         })
         .then(() => (this.errors = {}))
-        .catch(errors => (this.errors = errors));
-    }
-  }
+        .catch((errors) => (this.errors = errors));
+    },
+  },
 };
 </script>
 

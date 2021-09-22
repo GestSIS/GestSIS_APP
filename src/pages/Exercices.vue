@@ -149,45 +149,49 @@
             :selectable="true"
             selectKey="id"
             row-selected-class="table-primary"
+            @selected="selectExercice"
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
             no-data="Aucun exercice/séance à afficher"
             :data="computedData"
             :row-class="onRowClass"
-            @selected="selectExercice"
           >
-            <div slot="details" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="props.actions.toggleDetailRow(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="'/exercices/' + props.rowData.id"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut == 2"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
+            <template v-slot:details="props">
+              <div class="d-flex">
+                <button
+                  class="btn btn-link border-0"
+                  @click="props.actions.toggleDetailRow(props.rowData.id)"
+                >
+                  <font-awesome-icon
+                    v-if="props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-down']"
+                  />
+                  <font-awesome-icon
+                    v-if="!props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-right']"
+                  />
+                </button>
+              </div>
+            </template>
+            <template v-slot:actions="props">
+              <div class="d-flex">
+                <router-link
+                  tag="button"
+                  :to="'/exercices/' + props.rowData.id"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="validerExercice(props.rowData.id)"
+                  v-if="hasValidationPermission && props.rowData.statut == 2"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+              </div>
+            </template>
           </base-table>
         </div>
       </div>

@@ -191,22 +191,24 @@
             selectKey="id"
             row-selected-class="table-primary"
           >
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="'/interventions/' + props.rowData.id"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="validerIntervention(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut === 1"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
+            <template v-slot:actions="props">
+              <div class="d-flex">
+                <router-link
+                  tag="button"
+                  :to="'/interventions/' + props.rowData.id"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="validerIntervention(props.rowData.id)"
+                  v-if="hasValidationPermission && props.rowData.statut === 1"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+              </div>
+            </template>
           </base-table>
         </div>
       </div>

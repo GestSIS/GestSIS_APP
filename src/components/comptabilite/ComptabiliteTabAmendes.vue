@@ -27,21 +27,23 @@
           selectKey="id"
           row-selected-class="table-primary"
         >
-          <div slot="details" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </div>
+          <template v-slot:details="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-link border-0"
+                @click="props.actions.toggleDetailRow(props.rowData.id)"
+              >
+                <font-awesome-icon
+                  v-if="props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div>
+          </template>
         </base-table>
       </div>
     </div>

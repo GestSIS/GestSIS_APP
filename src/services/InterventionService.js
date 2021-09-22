@@ -80,7 +80,7 @@ export default {
       }
     );
   },
-  
+
   //Groupes
   addGroupes(interventionId, groupesData) {
     return Api.api().post('/interventions/' + interventionId + '/groupes/', {
@@ -88,12 +88,9 @@ export default {
     });
   },
   removeGroupes(interventionId, groupesId) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/groupes/',
-      {
-        data: { groupes: groupesId },
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/groupes/', {
+      data: { groupes: groupesId },
+    });
   },
 
   //Quittances
@@ -183,6 +180,9 @@ export default {
 
   // Rapport d'intervention
   downloadRapport(interventionId, params) {
-    return Api.apiFileDownload('rapport.pdf').post('/interventions/' + interventionId + '/rapport/', params);
-  }
+    return Api.apiFileDownload('rapport.pdf').post(
+      '/interventions/' + interventionId + '/rapport/',
+      params
+    );
+  },
 };

@@ -12,7 +12,10 @@
             v-if="availableSisListe.length <= 0"
           >
             <div class="align-vertical">
-              <p>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
+              <p>
+                Vous n'avez actuellement aucun droit, demandez des droits à
+                votre SIS.
+              </p>
             </div>
           </div>
           <div
@@ -21,10 +24,13 @@
             :key="sis.id"
           >
             <div class="align-vertical">
-							<button class="btn btn-link" @click="connectToSis(sis)">
-                <img class="img-fetch" :src="require('@/assets/sis/'+sis.api_key+'.jpg')" />
-							</button>
-						</div>
+              <button class="btn btn-link" @click="connectToSis(sis)">
+                <img
+                  class="img-fetch"
+                  :src="require('@/assets/sis/' + sis.api_key + '.jpg')"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -71,14 +77,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.img-fetch{
+.img-fetch {
   height: auto;
   max-height: 220px;
   width: 100%;
   display: block;
 }
 
-.align-vertical{
+.align-vertical {
   margin: auto;
 }
 </style>

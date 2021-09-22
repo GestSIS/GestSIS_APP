@@ -51,14 +51,14 @@ export default {
   props: {
     rowData: {
       type: Object,
-      required: true
+      required: true,
     },
     rowIndex: {
-      type: Number
+      type: Number,
     },
     options: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -67,18 +67,18 @@ export default {
       present: 0,
       remplace: 0,
       excuse: 0,
-      amende: 0
+      amende: 0,
     };
   },
   mounted() {
-    ExerciceService.getSapeurs(this.rowData.id).then(data => {
-      this.convoque = data.filter(s => s.convoque).length;
-      this.present = data.filter(s => s.present).length;
-      this.remplace = data.filter(s => s.remplace).length;
-      this.excuse = data.filter(s => s.excuse_type_id).length;
-      this.amende = data.filter(s => s.amende).length;
+    ExerciceService.getSapeurs(this.rowData.id).then((data) => {
+      this.convoque = data.filter((s) => s.convoque).length;
+      this.present = data.filter((s) => s.present).length;
+      this.remplace = data.filter((s) => s.remplace).length;
+      this.excuse = data.filter((s) => s.excuse_type_id).length;
+      this.amende = data.filter((s) => s.amende).length;
     });
-  }
+  },
 };
 </script>
 

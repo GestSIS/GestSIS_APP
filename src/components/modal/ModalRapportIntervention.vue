@@ -163,7 +163,7 @@ export default {
         status: true,
         missions: true,
         appels: true,
-      }
+      },
     };
   },
   props: {
@@ -175,7 +175,11 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     generer() {
-      InterventionService.downloadRapport(this.data.interventionId, this.params, 'intervention.pdf');
+      InterventionService.downloadRapport(
+        this.data.interventionId,
+        this.params,
+        'intervention.pdf'
+      );
       this.HIDE_MODAL();
     },
   },

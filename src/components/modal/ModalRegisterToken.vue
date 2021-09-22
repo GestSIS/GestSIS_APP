@@ -52,7 +52,11 @@
       </div>
     </div>
     <div class="modal-body" v-if="step === 2">
-      <p>Votre token a été généré avec succès, vous pouvez le transmettre à votre contact qui pourra alors l'utiliser lors de la création d'un nouveau compte.</p>
+      <p>
+        Votre token a été généré avec succès, vous pouvez le transmettre à votre
+        contact qui pourra alors l'utiliser lors de la création d'un nouveau
+        compte.
+      </p>
       <p>Ce compte aura dès lors accès au rôles précédemment défini.</p>
       <div class="form-group">
         <div class="input-group mb-3">
@@ -65,7 +69,11 @@
             ref="displayedToken"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" title="Copier dans le press-papier" @click="copyToClipboard">
+            <button
+              class="btn btn-outline-secondary"
+              title="Copier dans le press-papier"
+              @click="copyToClipboard"
+            >
               <font-awesome-icon :icon="['fas', 'copy']" />
             </button>
           </div>
@@ -76,7 +84,12 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         {{ step == 1 ? 'Annuler' : 'Fermer' }}
       </button>
-      <button type="button" class="btn btn-primary" @click="save()" v-if="step===1">
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+        v-if="step === 1"
+      >
         Créer
       </button>
     </div>
@@ -97,7 +110,7 @@ export default {
         validite: null,
         email: '',
         roles: [],
-        token: ''
+        token: '',
       },
     };
   },
@@ -120,7 +133,7 @@ export default {
       copyText.select();
       copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
-      document.execCommand("copy");
+      document.execCommand('copy');
     },
     save() {
       if (this.token.roles.length <= 0) {

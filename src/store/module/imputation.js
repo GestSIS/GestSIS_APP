@@ -197,9 +197,9 @@ export default {
       });
     },
     genererAmendesAnnuels({ commit }, exerciceComptableId) {
-      return ImputationService.genererAmendesAnnuels(
-        exerciceComptableId
-      ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
+      return ImputationService.genererAmendesAnnuels(exerciceComptableId).then(
+        (data) => commit(types.UPDATE_ECRITURES_AMENDES, data)
+      );
     },
     genererAmendesPourSapeur(
       { commit },

@@ -117,7 +117,8 @@ export default {
   mounted() {
     if (this.listeAmende.length > 0) {
       this.params.compte_id = this.listeAmende[0]?.compte_id;
-      this.params.ecriture_categorie_id = this.listeAmende[0]?.ecriture_categorie_id;
+      this.params.ecriture_categorie_id =
+        this.listeAmende[0]?.ecriture_categorie_id;
       this.params.amendes = this.listeAmende.map((a) => ({
         montant: a.montant,
       }));

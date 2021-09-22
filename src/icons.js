@@ -34,7 +34,7 @@ import {
   faCar,
   faBirthdayCake,
   faCopy,
-  faFire
+  faFire,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -98,5 +98,5 @@ library.add(
   faFire,
   faPlusSquare,
   faMinusSquare,
-  faEye,
+  faEye
 );

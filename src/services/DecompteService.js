@@ -22,9 +22,7 @@ export default {
     return Api.api().post('decomptes/creer-exercice', params);
   },
   downloadDecompte(decompteId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/decomptes/${decompteId}/print/`
-    );
+    return Api.apiFileDownload(filename).get(`/decomptes/${decompteId}/print/`);
   },
   downloadIso20022PourDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
@@ -33,7 +31,7 @@ export default {
   },
   downloadIso20022PourPaiement(paiementId, filename) {
     return Api.apiFileDownload(filename).get(
-    `/paiements/${paiementId}/iso20022/`
-  );
+      `/paiements/${paiementId}/iso20022/`
+    );
   },
 };

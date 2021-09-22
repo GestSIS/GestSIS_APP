@@ -11,8 +11,7 @@
           </li>
         </ol>
       </div>
-      <div class="col-md-4 d-flex justify-content-end">
-      </div>
+      <div class="col-md-4 d-flex justify-content-end"></div>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -60,7 +59,7 @@
 
 <script>
 export default {
-  name: 'rta'
+  name: 'rta',
 };
 </script>
 

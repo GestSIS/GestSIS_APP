@@ -34,8 +34,8 @@ export default {
       state.liste.filter((e) => e.id === exercice_id)[0],
   },
   actions: {
-    fetchExcuseTypes({ commit, state}) {
-      if(state.liste.length == 0){
+    fetchExcuseTypes({ commit, state }) {
+      if (state.liste.length == 0) {
         return ExcuseTypeService.getExcuses().then((data) =>
           commit(types.UPDATE_EXCUSE_TYPE_LISTE, data)
         );

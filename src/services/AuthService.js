@@ -7,7 +7,7 @@ export default {
   register(credentials) {
     return Api.auth().post('/register', credentials);
   },
-  useToken(token){
+  useToken(token) {
     return Api.auth().post('/use-token', { token });
   },
   confirmation(token) {
@@ -20,7 +20,9 @@ export default {
     return Api.auth().post('refresh-token', { token: payload });
   },
   updateUserRoles(user) {
-    return Api.auth().post('users/' + user.id + "/roles", { roles: user.roles });
+    return Api.auth().post('users/' + user.id + '/roles', {
+      roles: user.roles,
+    });
   },
   createRole(role) {
     return Api.auth().post('roles/', role);

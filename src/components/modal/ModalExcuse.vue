@@ -34,8 +34,8 @@ export default {
   props: ['callback'],
   computed: {
     ...mapState({
-      listeExcuseTypes: state => state.excuseType.liste
-    })
+      listeExcuseTypes: (state) => state.excuseType.liste,
+    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -46,8 +46,8 @@ export default {
     close() {
       this.callback(null);
       this.HIDE_MODAL();
-    }
-  }
+    },
+  },
 };
 </script>
 

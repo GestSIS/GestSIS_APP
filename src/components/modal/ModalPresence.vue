@@ -98,7 +98,7 @@
                 type="time"
                 class="form-control"
                 :class="{
-                  'is-invalid': errors['heure_fin']
+                  'is-invalid': errors['heure_fin'],
                 }"
                 id="m-int-heure_fin"
                 name="heure_fin"
@@ -118,7 +118,7 @@
               v-model="selectedSapeurs[s.id]"
             />
             <label class="custom-control-label" :for="'sp' + s.id">{{
-              s | sapeur
+              formatSapeur(s)
             }}</label>
           </div>
         </li>
@@ -147,11 +147,11 @@ export default {
   name: 'ModalPresence',
   props: {
     data: {
-      type: Object
+      type: Object,
     },
     callback: {
-      type: Function
-    }
+      type: Function,
+    },
   },
   data() {
     return {
@@ -162,12 +162,12 @@ export default {
       heure_fin: null,
       errors: {},
       selectedSapeurs: {},
-      piquet: false
+      piquet: false,
     };
   },
   computed: {
     ...mapState({
-      listSapeurs: state => state.sapeur.liste.filter(s => s.actif)
+      listSapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
     }),
     ...mapGetters(['getSapeur']),
     heureDebut() {
@@ -197,16 +197,16 @@ export default {
     },
     nbSelectedSapeurs() {
       return Object.keys(this.selectedSapeurs).filter(
-        s => this.selectedSapeurs[s]
+        (s) => this.selectedSapeurs[s]
       ).length;
-    }
+    },
   },
   mounted() {
     this.editMode = this.data.mode === 'edit';
 
     if (this.editMode) {
       this.data.sapeurs.forEach(
-        s => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
+        (s) => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
       );
       this.piquet = this.data.presence.piquet;
       this.date_debut = this.data.presence.debut.slice(0, 10);
@@ -228,7 +228,7 @@ export default {
           ...this.data.presence,
           debut,
           fin,
-          piquet: this.piquet
+          piquet: this.piquet,
         };
         this.$store
           .dispatch('editPresence', presence)
@@ -236,7 +236,7 @@ export default {
             this.callback();
             this.HIDE_MODAL();
           })
-          .catch(error => {
+          .catch((error) => {
             let debut = error['sapeurs.0.debut'];
             let fin = error['sapeurs.0.fin'];
             this.errors = {
@@ -244,17 +244,17 @@ export default {
               date_debut: debut,
               date_fin: fin,
               heure_debut: debut,
-              heure_fin: fin
+              heure_fin: fin,
             };
           });
       } else {
         let presences = [];
         Object.keys(this.selectedSapeurs)
-          .filter(s => this.selectedSapeurs[s])
-          .forEach(s => {
+          .filter((s) => this.selectedSapeurs[s])
+          .forEach((s) => {
             presences = [
               ...presences,
-              { sapeur_id: s, debut, fin, piquet: this.piquet }
+              { sapeur_id: s, debut, fin, piquet: this.piquet },
             ];
           });
         this.$store
@@ -263,7 +263,7 @@ export default {
             this.callback();
             this.HIDE_MODAL();
           })
-          .catch(error => {
+          .catch((error) => {
             let debut = error['sapeurs.0.debut'];
             let fin = error['sapeurs.0.fin'];
             this.errors = {
@@ -271,12 +271,16 @@ export default {
               date_debut: debut,
               date_fin: fin,
               heure_debut: debut,
-              heure_fin: fin
+              heure_fin: fin,
             };
           });
       }
-    }
-  }
+    },
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
+    },
+  },
 };
 </script>
 

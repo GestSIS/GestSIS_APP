@@ -48,49 +48,50 @@
             selectKey="id"
             row-selected-class="table-primary"
             @selected="selected"
-          >
-            <div
-              slot="checkbox"
-              slot-scope="props"
-              class="custom-control custom-checkbox"
-            >
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                :id="props.key"
-                :checked="props.rowData[props.key]"
-                disabled
-              />
-              <label class="custom-control-label" :for="props.key"></label>
-            </div>
-            <div slot="doc" slot-scope="props">
-              <button
-                class="btn"
-                v-if="props.rowData.filename"
-                @click="downloadJustificatif(props.rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'file-pdf']" />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="{
-                  name: 'controle-medical',
-                  params: { id: props.rowData.id },
-                }"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 2"
-              >
-                <!-- @click="aa(props.rowData.id)" -->
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
+            ><template v-slot:checkbox="props">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  :id="props.key"
+                  :checked="props.rowData[props.key]"
+                  disabled
+                />
+                <label class="custom-control-label" :for="props.key"></label>
+              </div>
+            </template>
+            <template v-slot:doc="props">
+              <div>
+                <button
+                  class="btn"
+                  v-if="props.rowData.filename"
+                  @click="downloadJustificatif(props.rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+              </div>
+            </template>
+            <template v-slot:actions="props">
+              <div class="d-flex">
+                <router-link
+                  tag="button"
+                  :to="{
+                    name: 'controle-medical',
+                    params: { id: props.rowData.id },
+                  }"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+                <button
+                  class="btn btn-outline-primary border-0"
+                  v-if="props.rowData.statut === 2"
+                >
+                  <!-- @click="aa(props.rowData.id)" -->
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+              </div>
+            </template>
           </base-table>
         </div>
       </div>

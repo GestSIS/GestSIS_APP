@@ -11,24 +11,24 @@ import NProgress from 'nprogress';
 
 Vue.use(Router);
 
-const permissionGuard = (permission)=>{
+const permissionGuard = (permission) => {
   return  function(to, from, next) {
     try {
       const permissions = store.state.auth.sis.permissions;
       if (permissions.includes(permission)) {
-        next()
+        next();
       }
     } catch (e) {
       //TODO: Check if logged in, if NOT so redirect to login
 
       // Otherwise, redirect to dashboard
       next({
-        name: "dashboard", // back to safety route //
-        query: { redirectFrom: to.fullPath }
-      })
+        name: 'dashboard', // back to safety route //
+        query: { redirectFrom: to.fullPath },
+      });
     }
-  }
-}
+  };
+};
 
 
 const router = new Router({
@@ -40,23 +40,23 @@ const router = new Router({
       name: 'login',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
       component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Login.vue'),
-      },
-      {
-        path: '/confirmation',
-        name: 'confirmation',
-        meta: { layout: 'no-sidebar', public: true },
-        component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Confirmation.vue'),
-      },
-      {
-        path: '/register',
-        name: 'register',
-        meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
-        component: () =>
-        import(/* webpackChunkName: "about" */ '@/pages/Register.vue'),
-      },
-      {
+        import('@/pages/Login.vue'),
+    },
+    {
+      path: '/confirmation',
+      name: 'confirmation',
+      meta: { layout: 'no-sidebar', public: true },
+      component: () =>
+        import('@/pages/Confirmation.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register',
+      meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
+      component: () =>
+        import('@/pages/Register.vue'),
+    },
+    {
       path: '/',
       name: 'public',
       meta: { layout: 'empty', public: true },
@@ -71,13 +71,13 @@ const router = new Router({
     {
       path: '/accueil',
       name: 'accueil',
-      meta: { layout: 'no-sidebar'},
+      meta: { layout: 'no-sidebar' },
       component: Home,
     },
     {
       path: '/utilisateur',
       name: 'utilisateur',
-      meta: { layout: 'no-sidebar'},
+      meta: { layout: 'no-sidebar' },
       component: () => import('@/pages/User.vue'),
     },
     {
@@ -143,49 +143,49 @@ const router = new Router({
           name: 'comptabilite-decompte',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabDecomptes.vue'),
+            import('@/components/comptabilite/ComptabiliteTabDecomptes.vue'),
         },
         {
           path: 'comptes',
           name: 'comptabilite-compte',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
+            import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
         },
         {
           path: 'exercices',
           name: 'comptabilite-exercice',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabExercice.vue'),
+            import('@/components/comptabilite/ComptabiliteTabExercice.vue'),
         },
         {
           path: 'interventions',
           name: 'comptabilite-intervention',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabIntervention.vue'),
+            import('@/components/comptabilite/ComptabiliteTabIntervention.vue'),
         },
         {
           path: 'annuel',
           name: 'comptabilite-annuel',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabAnnuel.vue'),
+            import('@/components/comptabilite/ComptabiliteTabAnnuel.vue'),
         },
         {
           path: 'sapeurs',
           name: 'comptabilite-sapeurs',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabSapeur.vue'),
+            import('@/components/comptabilite/ComptabiliteTabSapeur.vue'),
         },
         {
           path: 'amendes',
           name: 'comptabilite-amendes',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-          import('@/components/comptabilite/ComptabiliteTabAmendes.vue'),
+            import('@/components/comptabilite/ComptabiliteTabAmendes.vue'),
         },
       ],
     },
@@ -229,58 +229,58 @@ const router = new Router({
           path: '',
           name: 'param-general',
           beforeEnter: permissionGuard(permissions.SIS.CONFIG),
-          meta: { },
+          meta: {},
           component: () =>
-          import('@/components/parametres/ParametreTabGeneral.vue'),
+            import('@/components/parametres/ParametreTabGeneral.vue'),
         },
         {
           path: 'exercice-comptable',
           name: 'param-exercice-comptable',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
         },
         {
           path: 'sapeur',
           name: 'param-sapeur',
           beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabSapeur.vue'),
+            import('@/components/parametres/ParametreTabSapeur.vue'),
         },
         {
           path: 'exercice',
           name: 'param-exercice',
           beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabExercice.vue'),
+            import('@/components/parametres/ParametreTabExercice.vue'),
         },
         {
           path: 'intervention',
           name: 'param-intervention',
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabIntervention.vue'),
+            import('@/components/parametres/ParametreTabIntervention.vue'),
         },
         {
           path: 'frais',
           name: 'param-frais',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabComptabilite.vue'),
+            import('@/components/parametres/ParametreTabComptabilite.vue'),
         },
         {
           path: 'controle-medical',
           name: 'param-controle-medical',
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabControleMedical.vue'),
+            import('@/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
           path: 'roles',
           name: 'param-roles',
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),
           component: () =>
-          import('@/components/parametres/ParametreTabRole.vue'),
+            import('@/components/parametres/ParametreTabRole.vue'),
         },
       ],
     },
@@ -295,22 +295,19 @@ const router = new Router({
           path: 'mutations',
           name: 'rta-mutations',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () =>
-          import('@/components/rta/Mutations.vue'),
+          component: () => import('@/components/rta/Mutations.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () =>
-          import('@/components/rta/Reference.vue'),
+          component: () => import('@/components/rta/Reference.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () =>
-          import('@/components/rta/GestSis.vue'),
+          component: () => import('@/components/rta/GestSis.vue'),
         },
       ],
     },

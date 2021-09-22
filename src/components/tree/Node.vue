@@ -2,8 +2,9 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      :class="{'table-primary' : active && active.key == node.key}"
-      @dblclick="() => expand(data)" @click="select(node)"
+      :class="{ 'table-primary': active && active.key == node.key }"
+      @dblclick="() => expand(data)"
+      @click="select(node)"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
@@ -77,7 +78,7 @@ export default {
     active: {
       type: Object,
       required: false,
-    }
+    },
   },
   data() {
     return {

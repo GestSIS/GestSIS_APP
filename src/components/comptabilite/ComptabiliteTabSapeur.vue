@@ -53,33 +53,39 @@
           @selected="select"
           :row-class="onRowClass"
         >
-          <div slot="details" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </div>
-          <div slot="actions" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-outline-primary border-0"
-              @click="
-                genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
-              "
-              title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </div>
+          <template v-slot:details="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-link border-0"
+                @click="props.actions.toggleDetailRow(props.rowData.id)"
+              >
+                <font-awesome-icon
+                  v-if="props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div> </template
+          ><template v-slot:actions="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="
+                  genererDecompteSapeur(
+                    props.rowData.id,
+                    props.rowData.nomPrenom
+                  )
+                "
+                title="Décompte sapeur"
+                :disabled="!props.rowData.aPayer"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </div>
+          </template>
         </base-table>
       </div>
     </div>

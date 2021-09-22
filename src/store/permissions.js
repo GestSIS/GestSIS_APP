@@ -29,10 +29,10 @@ export default {
   },
   CONTROLE_MEDICAL: {
     TOUT: 'controle_medical.tout',
-    CONFIG: 'controle_medical.config'
+    CONFIG: 'controle_medical.config',
   },
   SIS: {
     CONFIG: 'sis.config',
   },
-  ADMIN: {TOUT: 'admin.tout'}
+  ADMIN: { TOUT: 'admin.tout' },
 };

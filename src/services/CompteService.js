@@ -14,9 +14,13 @@ export default {
     return Api.api().delete(`/comptes/${compteId}`);
   },
   downloadJustificatifIndividuel(filename, exerciceComptableId, compteId) {
-    return Api.apiFileDownload(filename).get(`/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`);
+    return Api.apiFileDownload(filename).get(
+      `/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`
+    );
   },
   downloadJustificatifComplet(filename, exerciceComptableId) {
-    return Api.apiFileDownload(filename).get(`/exercices-comptable/${exerciceComptableId}/justificatif`);
-  }
+    return Api.apiFileDownload(filename).get(
+      `/exercices-comptable/${exerciceComptableId}/justificatif`
+    );
+  },
 };

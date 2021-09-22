@@ -7,8 +7,8 @@ export default {
     active: {
       id: 0,
       sapeurs: [],
-      data: {}
-    }
+      data: {},
+    },
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
@@ -16,7 +16,7 @@ export default {
       state.active = {
         id: 0,
         sapeurs: [],
-        data: {}
+        data: {},
       };
     },
     [types.UPDATE_EXERCICE_LISTE](state, payload) {
@@ -24,20 +24,20 @@ export default {
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
-    [types.UPDATE_EXERCICE_STATUT](state, {id, statut}) {
+    [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
       state.liste = [
-        ...state.liste.map(e => {
+        ...state.liste.map((e) => {
           if (e.id !== id) {
             return e;
           } else {
             return {
               ...e,
-              statut: statut
-            }
+              statut: statut,
+            };
           }
-        })
-      ]
-      if(state.active.id == id) {
+        }),
+      ];
+      if (state.active.id == id) {
         state.active.data.statut = statut;
       }
     },
@@ -55,31 +55,31 @@ export default {
     },
     [types.REMOVE_CURRENT_EXERCICE_SAPEURS](state, payload) {
       state.active.sapeurs = state.active.sapeurs.filter(
-        p => !payload.includes(p.id)
+        (p) => !payload.includes(p.id)
       );
-    }
+    },
   },
   getters: {
-    activeExerciceId: state => state.active.id,
-    activeExerciceSapeurs: state => state.active.sapeurs,
-    activeExerciceData: state => state.active.data,
-    getExercice: state => exercice_id => {
-      return state.liste.filter(e => e.id === exercice_id)[0];
-    }
+    activeExerciceId: (state) => state.active.id,
+    activeExerciceSapeurs: (state) => state.active.sapeurs,
+    activeExerciceData: (state) => state.active.data,
+    getExercice: (state) => (exercice_id) => {
+      return state.liste.filter((e) => e.id === exercice_id)[0];
+    },
   },
   actions: {
     fetchListeExercice({ getters, commit }) {
       return ExerciceService.getExercices(
         getters.currentExerciceComptableId
-      ).then(data => commit(types.UPDATE_EXERCICE_LISTE, data));
+      ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
     fetchExercice({ commit }, payload) {
-      return ExerciceService.getExercice(payload).then(data =>
+      return ExerciceService.getExercice(payload).then((data) =>
         commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
       );
     },
     fetchExerciceSapeurs({ commit }, payload) {
-      return ExerciceService.getSapeurs(payload).then(data =>
+      return ExerciceService.getSapeurs(payload).then((data) =>
         commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
       );
     },
@@ -100,14 +100,14 @@ export default {
         communications: '',
         designation: '',
         duree: null,
-        status: 0
+        status: 0,
       });
     },
     createExercice({ state, commit, getters }) {
       return ExerciceService.createExercice({
         ...state.active.data,
-        exercice_comptable_id: getters.currentExerciceComptableId
-      }).then(async data => {
+        exercice_comptable_id: getters.currentExerciceComptableId,
+      }).then(async (data) => {
         await commit(types.ADD_EXERCICE, data);
         await commit(types.SELECT_CURRENT_EXERCICE, data.id);
         await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
@@ -115,7 +115,7 @@ export default {
       });
     },
     validerExercice({ commit }, payload) {
-      return ExerciceService.validerExercice(payload).then(async data => {
+      return ExerciceService.validerExercice(payload).then(async (data) => {
         await commit(types.UPDATE_EXERCICE_STATUT, data);
         return data;
       });
@@ -124,7 +124,7 @@ export default {
       return ExerciceService.saveExercice(
         state.active.id,
         state.active.data
-      ).then(async data => {
+      ).then(async (data) => {
         await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
         return data;
       });
@@ -132,39 +132,39 @@ export default {
 
     addSapeurs({ state, commit }, payload) {
       return ExerciceService.addSapeurs(state.active.data.id, {
-        sapeurs: payload
-      }).then(async data => {
+        sapeurs: payload,
+      }).then(async (data) => {
         await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data.sapeurs);
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: state.active.data.id,
-          statut: data.statut
+          statut: data.statut,
         });
         return data;
       });
     },
     editSapeurs({ state, commit }, payload) {
       return ExerciceService.editSapeurs(state.active.data.id, {
-        sapeurs: payload
-      }).then(async data => {
+        sapeurs: payload,
+      }).then(async (data) => {
         await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data.sapeurs);
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: state.active.data.id,
-          statut: data.statut
+          statut: data.statut,
         });
         return data;
       });
     },
     removeSapeurs({ state, commit }, payload) {
       return ExerciceService.removeSapeurs(state.active.data.id, {
-        sapeurs: payload
-      }).then(async data => {
+        sapeurs: payload,
+      }).then(async (data) => {
         await commit(types.REMOVE_CURRENT_EXERCICE_SAPEURS, payload);
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: state.active.data.id,
-          statut: data
+          statut: data,
         });
         return data;
       });
-    }
-  }
+    },
+  },
 };
