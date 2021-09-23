@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-4">
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
@@ -9,6 +9,22 @@
           <button class="btn btn-outline-primary btn-block" @click="generer">
             Nouveau
           </button>
+          <button
+            class="btn btn-outline-danger btn-block"
+            :disabled="!selectedId"
+            @click="supprimer(selectedId)"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Impressions</h3>
+        </div>
+        <div class="card-body">
           <button
             class="btn btn-outline-primary btn-block"
             :disabled="!selectedId"
@@ -22,13 +38,6 @@
             @click="iso20022Decompte(selectedId)"
           >
             Fichier de paiement (ISO20022)
-          </button>
-          <button
-            class="btn btn-outline-danger btn-block"
-            :disabled="!selectedId"
-            @click="supprimer(selectedId)"
-          >
-            Supprimer
           </button>
         </div>
       </div>

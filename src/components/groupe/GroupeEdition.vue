@@ -147,7 +147,7 @@ export default {
     close() {
       this.HIDE_MODAL();
     },
-    left: function (node) {
+    left(node) {
       const groupe = this.groupes.find((g) => g.id == node.data.id);
 
       // On ne change que pere_id
@@ -160,7 +160,7 @@ export default {
         },
       });
     },
-    right: function (node) {
+    right(node) {
       const groupe = this.groupes.find((g) => g.id == node.data.id);
 
       // On ne change que pere_id
@@ -176,7 +176,7 @@ export default {
         },
       });
     },
-    up: function (node) {
+    up(node) {
       const groupe = this.groupes.find((g) => g.id == node.data.id);
 
       if (node.isFirstOfLevel) {
@@ -218,17 +218,23 @@ export default {
         });
       }
     },
-    down: function (node) {
+    down(node) {
       const groupe = this.groupes.find((g) => g.id == node.data.id);
 
       if (node.isLastOfLevel) {
         // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
         // On change pere_id uniquement
-        const parent = this.groupes.find((g) => g.id == groupe.pere_id);
-        const groupesOfSameLevelAsParent = this.groupes
-          .filter((g) => g.pere_id === parent.pere_id)
-          .filter((g) => g.tri > parent.tri);
-        const nextParentGroupe = groupesOfSameLevelAsParent[0];
+        let nextParentGroupe = null;
+        let groupeId = groupe.pere_id;
+        while (!nextParentGroupe) {
+          const parent = this.groupes.find((g) => g.id == groupeId);
+          const groupesOfSameLevelAsParent = this.groupes
+            .filter((g) => g.pere_id === parent.pere_id)
+            .filter((g) => g.tri > parent.tri);
+          nextParentGroupe = groupesOfSameLevelAsParent[0];
+          groupeId = parent.pere_id;
+        }
+
         this.$store.dispatch('updateGroupe', {
           groupeId: groupe.id,
           data: {

@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-4">
+    <div class="col-12 col-md-4 col-xl-3">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-xl-8">
+    <div class="col-12 col-md-8 col-xl-9">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Filtres</h3>
