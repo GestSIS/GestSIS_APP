@@ -113,7 +113,9 @@ export default {
     this.min = DateTime.fromSQL(this.data.min).toISO();
     this.max = DateTime.fromSQL(this.data.max).toISO();
 
-    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date).toISO();
+    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date)
+      .toISO()
+      .slice(0, 16);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
