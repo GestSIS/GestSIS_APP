@@ -11,22 +11,15 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="heure">Heure</label>
-        <!--        <input-->
-        <!--          type="datetime-local"-->
-        <!--          v-model="activeAppel.date"-->
-        <!--          class="form-control"-->
-        <!--          :class="{ 'is-invalid': errors['date'] }"-->
-        <!--          id="heure"-->
-        <!--        />-->
-        <datetime
+        <input
+          type="datetime-local"
           v-model="activeAppel.date2"
-          :format="format"
-          type="datetime"
-          :input-class="{ 'form-control': true, 'is-invalid': errors['date'] }"
+          class="form-control"
+          :class="{ 'is-invalid': errors['date'] }"
           id="heure"
-          :min-datetime="min"
-          :max-datetime="max"
-        ></datetime>
+          :min="min"
+          :max="max"
+        />
       </div>
       <div class="form-group">
         <autocomplete

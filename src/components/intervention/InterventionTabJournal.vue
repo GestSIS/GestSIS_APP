@@ -107,7 +107,7 @@
                 <tr v-for="m in missions" :key="m.id">
                   <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
-                  <td>{{ formatTime(getSapeur(m.sapeur_id)) }}</td>
+                  <td>{{ formatSapeur(getSapeur(m.sapeur_id)) }}</td>
                   <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
                   <td>
@@ -311,7 +311,11 @@ export default {
     },
     formatTime(time) {
       let date = new Date(time);
-      return date.getHours() + ':' + date.getMinutes();
+      return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2);
+    },
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
     },
   },
 };
