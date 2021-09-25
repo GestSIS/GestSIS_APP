@@ -9,22 +9,15 @@
     <div class="modal-body">
       <div class="form-group">
         <label for="debut">Début</label>
-        <datetime
+        <input
+          type="datetime-local"
           v-model="activeMission.debut2"
-          :format="format"
-          type="datetime"
-          :input-class="{ 'form-control': true, 'is-invalid': errors['debut'] }"
+          class="form-control"
+          :class="{ 'is-invalid': errors['debut'] }"
           id="debut"
-          :min-datetime="min"
-          :max-datetime="max"
-        ></datetime>
-        <!--        <input-->
-        <!--          type="datetime-local"-->
-        <!--          v-model="activeMission.debut"-->
-        <!--          class="form-control"-->
-        <!--          :class="{ 'is-invalid': errors['debut'] }"-->
-        <!--          id="debut"-->
-        <!--        />-->
+          :min="min"
+          :max="max"
+        />
       </div>
       <div class="form-group">
         <autocomplete
@@ -43,28 +36,21 @@
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
           <option v-for="s in listSapeurs" :key="s.id" :value="s.id">
-            {{ s | sapeur }}
+            {{ formatSapeur(s) }}
           </option>
         </select>
       </div>
       <div class="form-group">
         <label for="fin">Quittance</label>
-        <datetime
+        <input
+          type="datetime-local"
           v-model="activeMission.fin2"
-          :format="format"
-          type="datetime"
-          :input-class="{ 'form-control': true, 'is-invalid': errors['fin'] }"
+          class="form-control"
+          :class="{ 'is-invalid': errors['fin'] }"
           id="fin"
-          :min-datetime="activeMission.debut2 || min"
-          :max-datetime="max"
-        ></datetime>
-        <!--        <input-->
-        <!--          type="datetime-local"-->
-        <!--          v-model="activeMission.fin2"-->
-        <!--          class="form-control"-->
-        <!--          :class="{ 'is-invalid': errors['fin'] }"-->
-        <!--          id="fin"-->
-        <!--        />-->
+          :min="activeMission.debut2 || min"
+          :max="max"
+        />
       </div>
       <div class="form-group">
         <label for="resume">Résumé</label>
@@ -125,13 +111,15 @@ export default {
     }
     this.activeMission = this.data.mission;
 
-    this.min = DateTime.fromSQL(this.data.min).toISO();
-    this.max = DateTime.fromSQL(this.data.max).toISO();
+    this.min = DateTime.fromSQL(this.data.min).toISO().slice(0, 16);
+    this.max = DateTime.fromSQL(this.data.max).toISO().slice(0, 16);
 
-    this.activeMission.debut2 = DateTime.fromSQL(
-      this.activeMission.debut
-    ).toISO();
-    this.activeMission.fin2 = DateTime.fromSQL(this.activeMission.fin).toISO();
+    this.activeMission.debut2 = DateTime.fromSQL(this.activeMission.debut)
+      .toISO()
+      .slice(0, 16);
+    this.activeMission.fin2 = DateTime.fromSQL(this.activeMission.fin)
+      .toISO()
+      .slice(0, 16);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -179,6 +167,10 @@ export default {
               })
           );
       }
+    },
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
     },
   },
 };

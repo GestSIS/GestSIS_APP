@@ -133,10 +133,12 @@
               <tr
                 v-for="item in listeSapeurSelect"
                 :key="item.parent_id + '-' + item.id"
+                class="clickable"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
                   'text-muted': item.empty,
                 }"
+                @dblclick="toggleGroupe(item.id)"
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
                   <font-awesome-icon
@@ -234,6 +236,11 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
+//TODO:
+// - Par cours
+// - Date anniversaire
+// - Permis de conduire
+
 export default {
   name: 'ModalSapeurSelect',
   props: ['callback', 'data'],
@@ -251,13 +258,13 @@ export default {
     this.chosenSapeurs = this.data.slice(0);
 
     if (this.grades.length <= 0) {
-      this.$store.dispatch('fetchGrades')
+      this.$store.dispatch('fetchGrades');
     }
     if (this.fonctions.length <= 0) {
-      this.$store.dispatch('fetchFonctions')
+      this.$store.dispatch('fetchFonctions');
     }
     if (this.civilites.length <= 0) {
-      this.$store.dispatch('fetchCivilites')
+      this.$store.dispatch('fetchCivilites');
     }
 
     this.$store.dispatch('fetchGroupes').then(() => {
@@ -271,7 +278,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
       grades: (state) => state.grade.liste,
       civilites: (state) => state.baseData.civilites,
       fonctions: (state) => state.fonction.liste,
@@ -283,11 +290,23 @@ export default {
       if (this.groupBy === 'groupe') {
         return this.flattenedSapeurGroupe;
       } else if (this.groupBy === 'fonction') {
-        return this.flattenedSapeurGeneric(this.fonctions, 'fonction_id', 'nom');
+        return this.flattenedSapeurGeneric(
+          this.fonctions,
+          'fonction_id',
+          'nom'
+        );
       } else if (this.groupBy === 'grade') {
-        return this.flattenedSapeurGeneric(this.grades, 'fonction_id', 'designation');
+        return this.flattenedSapeurGeneric(
+          this.grades,
+          'fonction_id',
+          'designation'
+        );
       } else if (this.groupBy === 'civilite') {
-        return this.flattenedSapeurGeneric(this.civilites, 'civilite_id', 'designation');
+        return this.flattenedSapeurGeneric(
+          this.civilites,
+          'civilite_id',
+          'designation'
+        );
       }
       return [];
     },
@@ -533,4 +552,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.clickable {
+  cursor: pointer;
+}
+</style>

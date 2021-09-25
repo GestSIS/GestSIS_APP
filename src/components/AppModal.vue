@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       component: null,
+      escapeHandler: null,
     };
   },
   computed: {
@@ -69,17 +70,17 @@ export default {
     },
   },
   created() {
-    const escapeHandler = (e) => {
+    this.escapeHandler = (e) => {
       if (e.key === 'Escape' && this.visible) {
         this.callback();
         this.HIDE_MODAL();
       }
     };
 
-    document.addEventListener('keydown', escapeHandler);
-    this.$once('hook:destroyed', () => {
-      document.removeEventListener('keydown', escapeHandler);
-    });
+    document.addEventListener('keydown', this.escapeHandler);
+  },
+  unmount() {
+    document.removeEventListener('keydown', this.escapeHandler);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

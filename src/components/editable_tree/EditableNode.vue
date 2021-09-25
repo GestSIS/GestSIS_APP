@@ -2,13 +2,14 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      :class="{'table-primary' : active && active.key == node.key}"
-      @dblclick="expand" @click="select(node)"
+      :class="{ 'table-primary': active && active.key == node.key }"
+      @dblclick="expanded = !expanded"
+      @click.prevent="handleClick"
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        @click.prevent="expand"
-        v-if="node.children.length > 0"
+        @click.prevent="expanded = !expanded"
+        v-if="node.children && node.children.length > 0"
         aria-hidden="true"
         role="presentation"
         focusable="false"
@@ -28,16 +29,24 @@
           :color="data.color"
         />
         <div class="user-select-none">{{ data.label }}</div>
-        <button class="btn btn-sm" @click.prevent="gauche" v-if="!isRoot">←</button>
-        <button class="btn btn-sm" @click.prevent="droite" v-if="!isFirstOfLevel">→</button>
-        <button class="btn btn-sm" @click.prevent="haut" v-if="!isFirst">↑</button>
-        <button class="btn btn-sm" @click.prevent="bas" v-if="!isLast">↓</button>
+        <slot
+          name:default
+          v-bind:node="{
+            isRoot,
+            isFirst,
+            isFirstOfLevel,
+            isLast,
+            isLastOfLevel,
+            data: node,
+          }"
+        ></slot>
       </div>
     </div>
     <transition-expand>
-      <div v-show="expanded && data.children" class="tree-node-children">
+      <div v-show="expanded && node.children" class="tree-node-children">
         <editable-node
           v-for="(item, index) in node.children"
+          ref="node"
           :key="item.key"
           :node="item"
           :_types="_types"
@@ -47,7 +56,12 @@
           :isFirst="isFirst && index == 0"
           :isFirstOfLevel="index == 0"
           :isLast="isLast && index + 1 == node.children.length"
-        />
+          :isLastOfLevel="index + 1 == node.children.length"
+        >
+          <template #default="props">
+            <slot name:default v-bind:node="props.node"></slot>
+          </template>
+        </editable-node>
       </div>
     </transition-expand>
   </div>
@@ -88,6 +102,10 @@ export default {
       required: true,
       type: Boolean,
     },
+    isLastOfLevel: {
+      required: true,
+      type: Boolean,
+    },
     select: {
       type: Function,
       required: true,
@@ -96,11 +114,11 @@ export default {
     active: {
       type: Object,
       required: false,
-    }
+    },
   },
   data() {
     return {
-      expanded: true,
+      expanded: false,
       computed: true,
     };
   },
@@ -113,13 +131,22 @@ export default {
     },
   },
   methods: {
-    expand() {
-      this.expanded = !this.expanded;
+    expand(expanded) {
+      this.expanded = expanded;
+      if (this.$refs.node) {
+        this.$refs.node.forEach((node) => node.expand(expanded));
+      }
     },
-    gauche(){},
-    droite(){},
-    haut(){},
-    bas(){},
+    handleClick() {
+      this.select({
+        isRoot: this.isRoot,
+        isFirst: this.isFirst,
+        isFirstOfLevel: this.isFirstOfLevel,
+        isLast: this.isLast,
+        isLastOfLevel: this.isLastOfLevel,
+        data: this.node,
+      });
+    },
   },
 };
 </script>

@@ -5,7 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }"
+                >Accueil</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Contrôles Medicaux
@@ -36,74 +38,61 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <vuetable
+          <base-table
             v-show="!loading"
-            ref="vuetable_medicaux"
-            :api-mode="false"
             :fields="fields"
-            detail-row-class="m-td-0"
-            :css="css.table"
-            :data-manager="dataManager"
-            no-data-template="Aucun contrôle médical à afficher"
+            no-data="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
-          >
-            <div
-              slot="accepter"
-              slot-scope="props"
-              class="custom-control custom-checkbox"
-            >
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="accepter"
-                :checked="props.rowData.accepter"
-                disabled
-              />
-              <label class="custom-control-label" for="accepter"></label>
-            </div>
-            <div
-              slot="en_cours"
-              slot-scope="props"
-              class="custom-control custom-checkbox"
-            >
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="en_cours"
-                :checked="props.rowData.en_cours"
-                disabled
-              />
-              <label class="custom-control-label" for="en_cours"></label>
-            </div>
-            <div slot="doc" slot-scope="props">
-              <button
-                class="btn"
-                v-if="props.rowData.filename"
-                @click="downloadJustificatif(props.rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'file-pdf']" />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="{
-                  name: 'controle-medical',
-                  params: { id: props.rowData.id },
-                }"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 2"
-              >
-                <!-- @click="aa(props.rowData.id)" -->
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
-          </vuetable>
+            :data="computedData"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
+            @selected="selected"
+            ><template v-slot:checkbox="props">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  :id="props.key"
+                  :checked="props.rowData[props.key]"
+                  disabled
+                />
+                <label class="custom-control-label" :for="props.key"></label>
+              </div>
+            </template>
+            <template v-slot:doc="props">
+              <div>
+                <button
+                  class="btn"
+                  v-if="props.rowData.filename"
+                  @click="downloadJustificatif(props.rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+              </div>
+            </template>
+            <template v-slot:actions="props">
+              <div class="d-flex">
+                <router-link
+                  tag="button"
+                  :to="{
+                    name: 'controle-medical',
+                    params: { id: props.rowData.id },
+                  }"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+                <button
+                  class="btn btn-outline-primary border-0"
+                  v-if="props.rowData.statut === 2"
+                >
+                  <!-- @click="aa(props.rowData.id)" -->
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+              </div>
+            </template>
+          </base-table>
         </div>
       </div>
     </div>
@@ -117,10 +106,7 @@ import store from '@/store/index';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 import ControlesMedicauxService from '@/services/ControlesMedicauxService';
 
-import Vuetable from 'vuetable-2';
-// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -143,7 +129,7 @@ function loadData(routeTo, next) {
 export default {
   name: 'controles-medicaux',
   components: {
-    Vuetable,
+    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -153,72 +139,74 @@ export default {
     loadData(routeTo, next);
   },
   mounted() {
-    this.$refs.vuetable_medicaux.setData(this.computedData);
     this.loading = false;
   },
   data() {
     return {
-      css: CssForBootstrap4,
-      toggles: {},
       loading: true,
+      selectedId: null,
       fields: [
         {
           title: 'Sapeur',
-          name: 'sapeur',
-          sortField: 'sapeur',
+          key: 'sapeur',
+          sortKey: 'sapeur',
         },
         {
           title: 'Age',
-          name: 'age',
-          sortField: 'age',
+          key: 'age',
+          sortKey: 'age',
         },
         {
           title: 'Type',
-          name: 'type',
-          sortField: 'type',
+          key: 'type',
+          sortKey: 'type',
         },
         {
           title: 'Medecin',
-          name: 'medecin',
-          sortField: 'medecin',
+          key: 'medecin',
+          sortKey: 'medecin',
         },
         {
           title: 'Consultation',
-          name: 'consultation',
-          sortField: 'consultation',
+          key: 'consultation',
+          sortKey: 'consultation',
         },
         {
           title: 'Validité',
-          name: 'validite',
-          sortField: 'validite',
+          key: 'validite',
+          sortKey: 'validite',
         },
         {
           title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'Accepter',
-          name: 'accepter',
-          sortField: 'accepter',
-          dataClass: 'text-center',
+          key: 'accepter',
+          sortKey: 'accepter',
+          columnClass: 'text-center',
+          slot: 'checkbox',
         },
         {
           title: 'En cours',
-          name: 'en_cours',
-          sortField: 'en_cours',
-          dataClass: 'text-center',
+          key: 'en_cours',
+          sortKey: 'en_cours',
+          columnClass: 'text-center',
+          slot: 'checkbox',
         },
         {
           title: 'Doc',
-          name: 'doc',
-          sortField: 'filename',
-          dataClass: 'text-center',
+          key: 'doc',
+          sortKey: 'filename',
+          slot: 'doc',
+          columnClass: 'text-center',
         },
         {
           title: 'Actions',
-          name: 'actions',
-          dataClass: 'text-center',
+          key: 'actions',
+          slot: 'actions',
+          columnClass: 'text-center',
         },
       ],
     };
@@ -251,37 +239,27 @@ export default {
     },
   },
   methods: {
+    selected(id) {
+      this.selectedId = id;
+    },
     downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
     },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
       }
 
-      return {
-        data: local,
-      };
-    },
-    onRowClass(dataItem) {
       // TODO: update pour mettre en évidence les contrôles-médicaux voulus
-      const statutsClass = {
-        0: 'text-danger', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'En attente de validation',
-        3: '', //'A imputer',
-        4: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
+      // const statutsClass = {
+      //   0: 'text-danger', //'Annulé',
+      //   1: '', //'A saisir',
+      //   2: '', //'En attente de validation',
+      //   3: '', //'A imputer',
+      //   4: 'table-success', //'Imputée'
+      // };
+      // return statutsClass[dataItem.statut];
+      return '';
     },
   },
 };

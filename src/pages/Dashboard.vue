@@ -7,13 +7,28 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div v-for="m in modules" :key="m.name" class="col-6 col-sm-4 col-md-3 p-1">
-            <router-link tag="button" :to="m.to" class="card text-white bg-primary btn-block">
+          <div
+            v-for="m in filteredLinks"
+            :key="m.nom"
+            class="col-6 col-sm-4 col-md-3 p-1"
+          >
+            <router-link
+              tag="button"
+              :to="m.to"
+              class="card text-white bg-primary btn-block"
+            >
               <div class="card-body">
-                <div class="d-flex justify-content-center flex-column align-items-center">
-                  <font-awesome-icon :icon="m.icon" size="2x"/>
-                  <h3 class="h4 card-title mt-3">{{ m.name }}</h3>
-                  {{ m.nom }}
+                <div
+                  class="
+                    d-flex
+                    justify-content-center
+                    flex-column
+                    align-items-center
+                  "
+                >
+                  <font-awesome-icon :icon="m.icon" size="2x" />
+                  <h3 class="h4 card-title mt-3">{{ m.nom }}</h3>
+                  {{ m.label }}
                 </div>
               </div>
             </router-link>
@@ -26,74 +41,12 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import links from '@/router/menu.js';
 
 export default {
   data() {
     return {
-      modules: [
-        {
-          to: { name: 'sapeurs' },
-          name: 'Sapeurs',
-          icon: 'user',
-        },
-        {
-          to: { name: 'interventions' },
-          icon: 'fire-extinguisher',
-          name: 'Interventions',
-        },
-        {
-          to: { name: 'exercices' },
-          icon: ['fas', 'calendar-alt'],
-          name: 'Exercices & Séances',
-        },
-        {
-          to: '/organisation',
-          icon: 'sitemap',
-          name: 'Organisation',
-        },
-        {
-          to: { name: 'comptabilite-decompte' },
-          icon: 'calculator',
-          name: 'Comptabilité',
-        },
-        { to: '/publipostage', icon: 'envelope', name: 'Publipostage' },
-        {
-          to: '/statistique',
-          icon: ['far', 'chart-bar'],
-          name: 'Statistiques',
-          actif: false,
-        },
-        {
-          to: '/matériel',
-          icon: 'toolbox',
-          name: 'Matériel personel',
-          actif: false,
-        },
-        {
-          to: { name: 'controles-medicaux' },
-          icon: 'file-medical-alt',
-          name: 'Contrôles médicaux',
-        },
-        {
-          to: '/impressions',
-          icon: 'sitemap',
-          name: 'Impressions',
-          actif: false,
-        },
-        { to: { name: 'users' }, icon: 'user', name: 'Utilisateurs' },
-        {
-          to: { name: 'param-general' },
-          icon: 'sliders-h',
-          name: 'Configuration',
-        },
-        {
-          to: '/rta',
-          icon: 'globe-europe',
-          name: 'Exportation RTA',
-          actif: false,
-        },
-        { to: { name: 'about' }, icon: 'info-circle', name: 'A propos' },
-      ],
+      links,
     };
   },
   created() {
@@ -112,8 +65,14 @@ export default {
       sisKey: (state) => state.auth.sis.activeKey,
       sis: (state) =>
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
+      perms: (state) => state.auth.sis.permissions,
     }),
     ...mapGetters(['availableSisListe']),
+    filteredLinks() {
+      return this.links.filter(
+        (l) => !l.permission || this.perms.includes(l.permission)
+      );
+    },
   },
 };
 </script>

@@ -12,11 +12,9 @@ const TokenService = {
   getUser() {
     return JSON.parse(localStorage.getItem(USER_KEY));
   },
-
   saveUser(accessToken) {
     localStorage.setItem(USER_KEY, JSON.stringify(accessToken));
   },
-
   removeUser() {
     localStorage.removeItem(USER_KEY);
   },
@@ -24,7 +22,6 @@ const TokenService = {
   getAccessToken() {
     return localStorage.getItem(TOKEN_KEY);
   },
-
   saveAccessToken(accessToken) {
     if (accessToken === null || accessToken === 'null') {
       this.removeAccessToken();
@@ -32,7 +29,6 @@ const TokenService = {
       localStorage.setItem(TOKEN_KEY, accessToken);
     }
   },
-
   removeAccessToken() {
     localStorage.removeItem(TOKEN_KEY);
   },
@@ -40,7 +36,6 @@ const TokenService = {
   getRefreshToken() {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   },
-
   saveRefreshToken(refreshToken) {
     if (refreshToken === null || refreshToken === 'null') {
       this.removeRefreshToken;
@@ -48,7 +43,6 @@ const TokenService = {
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     }
   },
-
   removeRefreshToken() {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   },

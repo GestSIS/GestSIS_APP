@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Notifications from 'vue-notification';
 import App from './App.vue';
-import router from './router';
+import router from './router/index';
 import store from './store/index';
 import { TokenService } from './services/StorageService';
 
@@ -52,7 +52,7 @@ Vue.filter('sapeur', function (sapeur) {
 
 Vue.filter('compte', function (compte) {
   if (!compte) return '';
-  return compte.numero + ' - ' + compte.designation;
+  return compte?.numero + ' - ' + compte?.designation;
 });
 
 router.beforeEach((to, from, next) => {

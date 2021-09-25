@@ -320,13 +320,11 @@ export default {
       );
     },
     removeTelephoneSapeur({ state, commit }, telephoneId) {
-      return SapeurService.removeTelephone(
-        state.active.id,
-        telephoneId
-      ).then((data) =>
-        commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, telephoneId).then(
-          () => data
-        )
+      return SapeurService.removeTelephone(state.active.id, telephoneId).then(
+        (data) =>
+          commit(types.REMOVE_CURRENT_SAPEUR_TELEPHONE, telephoneId).then(
+            () => data
+          )
       );
     },
 

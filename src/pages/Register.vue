@@ -43,7 +43,9 @@
       <div class="invalid-feedback" v-if="error.password">
         Taille minimum: 8
       </div>
-      <label for="inputPasswordConfirmation" class="sr-only">Confirmation</label>
+      <label for="inputPasswordConfirmation" class="sr-only"
+        >Confirmation</label
+      >
       <input
         v-model="password_confirmation"
         type="password"
@@ -60,7 +62,13 @@
       <div class="invalid-feedback" v-if="error.password_confirmation">
         Mot de passe différent
       </div>
-      <button class="btn btn-link" type="button" @click.prevent="avance=!avance">Avancé</button>
+      <button
+        class="btn btn-link"
+        type="button"
+        @click.prevent="avance = !avance"
+      >
+        Avancé
+      </button>
       <transition-expand>
         <div v-show="avance">
           <label for="inputToken" class="sr-only">Jeton d'enregistrement</label>
@@ -77,7 +85,9 @@
       <button class="btn btn-lg btn-primary btn-block mt-5" type="submit">
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
+      <p class="mt-5 mb-3 text-muted">
+        © GestSIS {{ new Date().getFullYear() }}
+      </p>
 
       <router-link to="/login" class="btn btn-link is-active"
         >Se connecter</router-link

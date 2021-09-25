@@ -4,7 +4,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Rôles</h3>
-      <button type="button" class="btn btn-primary" @click="newRole">Nouveau rôle</button>
+      <button type="button" class="btn btn-primary" @click="newRole">
+        Nouveau rôle
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
@@ -106,7 +108,7 @@ export default {
     },
     remove(role) {
       this.$store.dispatch('deleteRole', role.id);
-    }
+    },
   },
 };
 </script>

@@ -4,15 +4,14 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">Accueil</router-link>
+            <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Mutations RTA
           </li>
         </ol>
       </div>
-      <div class="col-md-4 d-flex justify-content-end">
-      </div>
+      <div class="col-md-4 d-flex justify-content-end"></div>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -60,7 +59,7 @@
 
 <script>
 export default {
-  name: 'rta'
+  name: 'rta',
 };
 </script>
 

@@ -15,7 +15,7 @@ const request = {
   setAccessToken: (token) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   },
-  
+
   setSisKey: (sis_key) => {
     axios.defaults.headers.common['Sis-Id'] = sis_key;
   },
@@ -23,13 +23,23 @@ const request = {
   apiFileDownload(filename) {
     let api = axios.create({
       baseURL: API_URL,
-      responseType: 'arraybuffer',
+      responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
       headers: {
-        'Accept': 'application/pdf',
+        Accept: 'application/pdf',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
     });
+
+    api.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      function (error) {
+        throw error.response.data;
+      }
+    );
+
     if (filename) {
       api.interceptors.response.use((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -51,7 +61,7 @@ const request = {
     let api = axios.create({
       baseURL: API_URL,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -97,7 +107,7 @@ const request = {
     let auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },

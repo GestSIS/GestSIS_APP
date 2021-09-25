@@ -4,7 +4,7 @@ import camelCase from 'lodash/camelCase';
 const requireModule = require.context('.', false, /\.js$/);
 const modules = {};
 
-requireModule.keys().forEach(fileName => {
+requireModule.keys().forEach((fileName) => {
   if (fileName === './index.js') return;
   // filter fullstops and extension
   // and return a camel-case name for the file
@@ -12,7 +12,7 @@ requireModule.keys().forEach(fileName => {
   // create a dynamic object with all modules
   modules[moduleName] = {
     // add namespace here
-    ...requireModule(fileName).default
+    ...requireModule(fileName).default,
     // if you have exported the object with name in the module `js` file
     // e.g., export const name = {};
     // uncomment this line and comment the above

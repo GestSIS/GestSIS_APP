@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">Modification des rôles de <em>{{ user.name }}</em></h5>
+      <h5 class="modal-title">
+        Modification des rôles de <em>{{ user.name }}</em>
+      </h5>
       <button type="button" class="close" @click="HIDE_MODAL()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -46,11 +48,11 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalUserRole',
-  props:{
+  props: {
     data: {
       type: Object,
       required: true,
-    }
+    },
   },
   data() {
     return {

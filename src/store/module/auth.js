@@ -1,9 +1,10 @@
 import types from '../mutationTypes';
+import permissions from '../permissions';
 
 import { TokenService } from '../../services/StorageService';
 import AuthService from '../../services/AuthService';
 import Api from '../../http/Request';
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
 export default {
   state: {
@@ -20,7 +21,12 @@ export default {
       permissions: [],
       available: [],
       allPermissions: {},
-    }
+    },
+  },
+  getters: {
+    activePermissions: (state) => {
+      return state.sis.permissions;
+    },
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
@@ -35,14 +41,16 @@ export default {
       Api.setAccessToken(payload.accessToken);
 
       state.user = payload.user;
-      
+
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.filter(sis => sis.api_key == firstSisKey)[0];
+        const sis = state.sis.liste.filter(
+          (sis) => sis.api_key == firstSisKey
+        )[0];
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
@@ -51,7 +59,7 @@ export default {
       }
     },
     [types.UPDATE_ROLE](state, payload) {
-      state.roles = state.roles.map(r => {
+      state.roles = state.roles.map((r) => {
         if (r.id == payload.id) {
           return payload;
         } else {
@@ -63,35 +71,37 @@ export default {
       state.roles = [...state.roles, payload];
     },
     [types.UPDATE_USER_ROLE](state, payload) {
-      state.users = state.users.map(u => {
+      state.users = state.users.map((u) => {
         if (u.id === payload.user_id) {
           return {
             ...u,
-            user_roles: payload.roles
+            user_roles: payload.roles,
           };
         } else {
           return u;
         }
-      })
+      });
     },
     [types.DELETE_ROLE](state, roleId) {
-      state.roles = state.roles.filter(r => r.id != roleId);
+      state.roles = state.roles.filter((r) => r.id != roleId);
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
       // console.log("Refresh token");
       TokenService.saveAccessToken(payload.accessToken);
       TokenService.saveRefreshToken(payload.refreshToken);
       Api.setAccessToken(payload.accessToken);
-      
+
       state.refreshTokenPromise = payload;
-      
+
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.filter(sis => sis.api_key == firstSisKey)[0];
+        const sis = state.sis.liste.filter(
+          (sis) => sis.api_key == firstSisKey
+        )[0];
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
@@ -103,14 +113,14 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
-      
+
       state.user = null;
       state.sis.activeId = null;
       state.sis.activeKey = null;
       state.sis.permissions = [];
       state.sis.available = [];
       state.sis.allPermissions = {};
-      
+
       //location.reload();
     },
     [types.AUTH_SIS_LISTE](state, payload) {
@@ -131,69 +141,84 @@ export default {
       state.sis.permissions = state.sis.allPermissions[sis.api_key];
 
       Api.setSisKey(sis.api_key);
-    }
+    },
   },
   getters: {
-    isLoggedIn: state => !!state.user,
-    activeSisData: state => {
-      return state.sis.liste.filter(sis => sis.api_key == state.sis.activeKey)[0];
+    isLoggedIn: (state) => !!state.user,
+    activeSisData: (state) => {
+      return state.sis.liste.filter(
+        (sis) => sis.api_key == state.sis.activeKey
+      )[0];
     },
-    availableSisListe: state => {
-      return state.sis.liste.filter(sis => 
+    availableSisListe: (state) => {
+      return state.sis.liste.filter((sis) =>
         state.sis.available.includes(sis.api_key)
       );
-    }
+    },
   },
   actions: {
     login({ commit }, payload) {
-      return AuthService.login(payload).then(data => {
+      return AuthService.login(payload).then((data) => {
         return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
     register({ commit }, credentials) {
-      return AuthService.register(credentials).then(data => {
+      return AuthService.register(credentials).then((data) => {
         return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
     confirmation({}, token) {
-      return AuthService.confirmation(token).then(data => {
+      return AuthService.confirmation(token).then((data) => {
         data.data;
       });
     },
     logout({ commit }) {
       return Promise.resolve(commit(types.AUTH_LOGOUT));
     },
+    useToken({ commit }, token) {
+      return AuthService.useToken(token).then(({ message, accessToken }) => {
+        // update new access token
+        commit(types.AUTH_SUCCESSFULL, {
+          accessToken,
+          refreshToken: TokenService.getRefreshToken(),
+          user: TokenService.getUser(),
+        });
+        return message;
+      });
+    },
     selectSis({ commit }, sis) {
-      commit(types.AUTH_SELECT_SIS, sis)
+      commit(types.AUTH_SELECT_SIS, sis);
       return Promise.resolve(commit(types.CLEAR_CACHE));
     },
     loadSisListe({ commit, state }) {
       if (state.sis.liste.length <= 0) {
         // console.log("load sis vuex")
-        return AuthService.sisListe()
-        .then((sis)=> {
+        return AuthService.sisListe().then((sis) => {
           // console.log("call commit")
           return commit(types.AUTH_SIS_LISTE, sis.data);
-        })
+        });
       } else {
         return Promise.resolve();
       }
     },
     newRegisterToken({}, token) {
-      return AuthService.newRegisterToken(token).then(t => t.data)
+      return AuthService.newRegisterToken(token).then((t) => t.data);
     },
     updateUserRoles({ commit, state }, user) {
-      return AuthService.updateUserRoles(user).then(data => {
-        return commit(types.UPDATE_USER_ROLE ,{user_id:user.id, roles: data.data});
+      return AuthService.updateUserRoles(user).then((data) => {
+        return commit(types.UPDATE_USER_ROLE, {
+          user_id: user.id,
+          roles: data.data,
+        });
       });
     },
     updateRole({ commit }, role) {
-      return AuthService.updateRole(role).then(role => {
+      return AuthService.updateRole(role).then((role) => {
         return commit(types.UPDATE_ROLE, role.data);
       });
     },
     createRole({ commit }, role) {
-      return AuthService.createRole(role).then(role => {
+      return AuthService.createRole(role).then((role) => {
         return commit(types.NEW_ROLE, role.data);
       });
     },
@@ -205,26 +230,29 @@ export default {
     refreshToken({ commit, state }) {
       const callback = () => {
         const p = AuthService.refreshToken(TokenService.getRefreshToken());
-        
+
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
-        p.then(data => {
+        p.then((data) => {
           commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
-        }).catch(e => {
-          commit(types.AUTH_LOGOUT)
-          //TODO: Redirect to home page or login page
-          return e;
-        }).then(() => {
-          return state.refreshTokenPromise;
-        });
-      }
+        })
+          .catch((e) => {
+            commit(types.AUTH_LOGOUT);
+            //TODO: Redirect to home page or login page
+            return e;
+          })
+          .then(() => {
+            return state.refreshTokenPromise;
+          });
+      };
       if (!state.refreshTokenPromise) {
         if (state.sis.liste.length == 0) {
           // Charge la liste des SIS
           AuthService.sisListe()
-          .then((sis)=> {
-            return commit(types.AUTH_SIS_LISTE, sis.data);
-          }).then(callback)
+            .then((sis) => {
+              return commit(types.AUTH_SIS_LISTE, sis.data);
+            })
+            .then(callback);
         } else {
           callback();
         }
@@ -235,19 +263,19 @@ export default {
     fetchPermissions({ state, commit }) {
       if (state.permissions.length <= 0) {
         return AuthService.getPermissions().then((permissions) => {
-          return commit(types.AUTH_PERMISSIONS_LISTE, permissions)
-        })
+          return commit(types.AUTH_PERMISSIONS_LISTE, permissions);
+        });
       }
     },
     fetchRoles({ commit }) {
       return AuthService.getRoles().then((roles) => {
-        return commit(types.AUTH_ROLES_LISTE, roles)
+        return commit(types.AUTH_ROLES_LISTE, roles);
       });
     },
     fetchUsers({ commit }) {
       return AuthService.getUsers().then((users) => {
-        return commit(types.AUTH_USERS_LISTE, users.data)
+        return commit(types.AUTH_USERS_LISTE, users.data);
       });
     },
-  }
+  },
 };

@@ -199,9 +199,7 @@ export default {
         }
 
         // Modifie
-        const actuel = this.actuel.find(
-          (s2) => s2.sapeur_id == s.sapeur_id
-        );
+        const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
         const fields = [
           'nom',
           'prenom',
@@ -219,18 +217,17 @@ export default {
 
         // Groupes
         const actuelGroupes = new Set(actuel.groupes.map((g) => g.no));
-        
+
         const groupesSupprime = s.groupes
           .map((g) => g.no)
           .filter((g) => !actuelGroupes.has(g));
-        
+
         const groupesActuel = new Map(
           actuel.groupes.map((g) => [g.no, g.description])
         );
         const groupesModifie = s.groupes.filter(
           (g) =>
-            groupesActuel.has(g.no) &&
-            groupesActuel.get(g.no) !== g.description
+            groupesActuel.has(g.no) && groupesActuel.get(g.no) !== g.description
         );
 
         changements = {
@@ -240,9 +237,7 @@ export default {
           groupesSupprime,
         };
 
-        const groupes = [
-          ...s.groupes,
-        ];
+        const groupes = [...s.groupes];
 
         // Numéros
         const numerosAjoute = s.numeros.length;
@@ -266,5 +261,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,59 +1,58 @@
 <template>
-  <div class="exercice-comptable" v-if="currentExerciceComptableId">
-    <div class="dropdown">
-      Exercice comptable
-      <button
-        class="ml-1 btn btn-outline-secondary dropdown-toggle"
-        type="button"
-        data-toggle="dropdown"
-        @click="dropdown = !dropdown"
-      >
-        {{ getExerciceComptable(currentExerciceComptableId).annee }}
-      </button>
-      <div
-        class="dropdown-menu"
-        :class="{ show: dropdown }"
-        aria-labelledby="dropdownMenu2"
-      >
+  <div
+    class="exercice-comptable d-flex align-items-center"
+    v-if="currentExerciceComptableId"
+  >
+    <span>Exercice comptable</span>
+    <dropdown
+      :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
+      menuClass="dropdown-menu-right"
+      buttonClass="ml-1 btn btn-outline-secondary"
+      ref="dropdown"
+    >
+      <template #default>
         <button
           v-for="e in listeExerciceComptable"
           :key="e.id"
           @click="selectExercice(e.id)"
           class="dropdown-item"
           :class="{ active: currentExerciceComptableId === e.id }"
-          type="button"
+          :type="getExerciceComptable(currentExerciceComptableId).annee"
         >
           {{ e.annee }}
         </button>
-        <div class="dropdown-divider"></div>
+        <div class="dropdown-divider" v-if="hasConfigPermission"></div>
         <router-link
+          v-if="hasConfigPermission"
           :to="{ name: 'param-exercice-comptable' }"
           class="dropdown-item"
           tag="button"
         >
           <span>Paramètres</span>
         </router-link>
-      </div>
-    </div>
+      </template>
+    </dropdown>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
+import Dropdown from '@/components/base/Dropdown.vue';
 
 export default {
   name: 'ExerciceComptable',
+  components: {
+    Dropdown,
+  },
   computed: {
     ...mapState({
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasConfigPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),
     }),
     ...mapGetters(['getExerciceComptable']),
-  },
-  data() {
-    return {
-      dropdown: false,
-    };
   },
   mounted() {
     if (this.listeExerciceComptable.length === 0) {
@@ -63,6 +62,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     selectExercice(id) {
+      this.$refs.dropdown.close();
       this.dropdown = false;
       this.$store.dispatch('selectExerciceComptable', id);
     },

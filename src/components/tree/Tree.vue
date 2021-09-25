@@ -45,7 +45,7 @@ export default {
     select(elem) {
       if (this.selectable) {
         this.active = elem;
-        this.$emit("selected", elem);
+        this.$emit('selected', elem);
       }
     },
   },

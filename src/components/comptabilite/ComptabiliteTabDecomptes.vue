@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-4">
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
@@ -10,18 +10,34 @@
             Nouveau
           </button>
           <button
-            class="btn btn-outline-primary btn-block"
-            :disabled="!selectedId"
-            @click="iso20022Decompte(selectedId)"
-          >
-            Fichier de paiement (ISO20022)
-          </button>
-          <button
             class="btn btn-outline-danger btn-block"
             :disabled="!selectedId"
             @click="supprimer(selectedId)"
           >
             Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Impressions</h3>
+        </div>
+        <div class="card-body">
+          <button
+            class="btn btn-outline-primary btn-block"
+            :disabled="!selectedId"
+            @click="impression(selectedId)"
+          >
+            Impression
+          </button>
+          <button
+            class="btn btn-outline-primary btn-block"
+            :disabled="!selectedId"
+            @click="iso20022Decompte(selectedId)"
+          >
+            Fichier de paiement (ISO20022)
           </button>
         </div>
       </div>
@@ -41,8 +57,9 @@
           :data="decomptes"
           :selectable="true"
           selectKey="id"
-          noData="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
+          no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
           @selected="selected"
+          row-selected-class="table-primary"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
             <div class="custom-control custom-checkbox">
@@ -188,12 +205,29 @@ export default {
         },
       });
     },
+    impression(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id === decompteId);
+      DecompteService.downloadDecompte(
+        decompteId,
+        `decompte_${decompte.date}.xml`
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.data?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
     iso20022Decompte(decompteId) {
       const decompte = this.decomptes.find((d) => d.id === decompteId);
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
         `decompte_${decompte.date}.xml`
-      );
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.data?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
@@ -202,5 +236,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

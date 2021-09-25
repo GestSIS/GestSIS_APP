@@ -1,17 +1,18 @@
 <template>
   <div class="row">
-    
-    <div class="col-sm-12 col-xl-4">
+    <div class="col-12 col-md-4 col-xl-3">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" disabled>Imputer</button>
+          <button class="btn btn-outline-primary btn-block" disabled>
+            Imputer
+          </button>
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-xl-8">
+    <div class="col-12 col-md-8 col-xl-9">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Filtres</h3>
@@ -22,9 +23,7 @@
               <select
                 class="custom-select custom-select-sm"
                 id="filterLocalite"
-                @change="
-                  (event) => onFilter('localite_id', event.target.value)
-                "
+                @change="(event) => onFilter('localite_id', event.target.value)"
               >
                 <option>&lt;Localité&gt;</option>
                 <option
@@ -124,44 +123,48 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_frais_interventions"
-          :api-mode="false"
           :fields="fields"
-          :css="css.table"
-          :data-manager="dataManager"
           :row-class="onRowClass"
           detail-row-class="m-td-0"
-          no-data-template="Aucune écriture à afficher"
+          no-data="Aucune écriture à afficher"
           :detail-row-component="detailRow"
+          :data="filteredInterventions"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
         >
-          <div slot="details" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-link border-0"
-              @click="toggleDetails(props.rowData.id)"
-              v-if="props.rowData.statut === 3"
-            >
-              <font-awesome-icon
-                v-if="toggles[props.rowData.id] || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!(toggles[props.rowData.id] || false)"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </div>
-          <div slot="actions" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 2"
-              @click="imputerIntervention(props.rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </div>
-        </vuetable>
+          <template v-slot:details="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-link border-0"
+                @click="props.actions.toggleDetailRow(props.rowData.id)"
+                v-if="props.rowData.statut === 3"
+              >
+                <font-awesome-icon
+                  v-if="props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div> </template
+          ><template v-slot:actions="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-outline-primary border-0"
+                v-if="props.rowData.statut === 2"
+                @click="imputerIntervention(props.rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </div>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -174,9 +177,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadInterventions = store.dispatch('fetchListeIntervention');
@@ -200,7 +201,7 @@ async function loadData(_, next) {
 
 export default {
   name: 'FraisTabIntervention',
-  components: { Vuetable },
+  components: { BaseTable },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -209,22 +210,19 @@ export default {
   },
   mounted() {
     //TODO Fetch only if neccessary
-
     if (this.exercicesComptable.length === 0) {
       //console.log('Warning')
     } else {
       this.loading = false;
-      this.$refs.vuetable_frais_interventions.setData(this.filteredInterventions);
     }
   },
   data() {
     let svm = this;
     return {
-      css: CssForBootstrap4,
-      toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
       filters: {},
+      selectedId: null,
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -272,58 +270,59 @@ export default {
       fields: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
+          slot: 'details',
         },
         {
           title: 'Date',
-          name: 'date_debut',
-          sortField: 'date_debut',
+          key: 'date_debut',
+          sortKey: 'date_debut',
         },
         {
           title: 'Heure',
-          name: 'heure_debut',
+          key: 'heure_debut',
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortField: 'heure_debut',
+          sortKey: 'heure_debut',
         },
         {
           title: "Type d'intervention",
-          name: 'type_intervention',
-          sortField: 'type_intervention',
+          key: 'type_intervention',
+          sortKey: 'type_intervention',
         },
         {
           title: 'Localité',
-          name: 'localite_id',
+          key: 'localite_id',
           formatter(value) {
             return svm.getLocalite(value).designation;
           },
-          sortField: 'localite_id',
+          sortKey: 'localite_id',
         },
         {
           title: 'Lieu',
-          name: 'lieu',
-          sortField: 'lieu',
+          key: 'lieu',
+          sortKey: 'lieu',
         },
         {
           title: 'Stat fédéral',
-          name: 'stat_federal_id',
+          key: 'stat_federal_id',
           formatter(value) {
             return svm.getStatFederal(value).designation;
           },
-          sortField: 'stat_federal_id',
+          sortKey: 'stat_federal_id',
         },
         {
           title: 'Traitement',
-          name: 'intervention_traitement_id',
+          key: 'intervention_traitement_id',
           formatter(value) {
             return svm.getInterventionTraitement(value).designation;
           },
-          sortField: 'intervention_traitement_id',
+          sortKey: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
-          name: 'degre',
+          key: 'degre',
           formatter(value) {
             const degre = {
               1: 'Fausse-alarme',
@@ -333,11 +332,11 @@ export default {
             };
             return degre[value];
           },
-          sortField: 'degre',
+          sortKey: 'degre',
         },
         {
           title: 'Statut',
-          name: 'statut',
+          key: 'statut',
           formatter(value) {
             const statuts = {
               0: 'A saisir',
@@ -347,11 +346,12 @@ export default {
             };
             return statuts[value];
           },
-          sortField: 'statut',
+          sortKey: 'statut',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -363,13 +363,7 @@ export default {
   },
   watch: {
     currentExerciceComptableId() {
-      this.loading = true;
       this.$store.dispatch('fetchListeIntervention');
-    },
-    filteredInterventions(data) {
-      this.loading = true;
-      this.$refs.vuetable_frais_interventions.setData(data);
-      this.loading = false;
     },
   },
   computed: {
@@ -416,9 +410,7 @@ export default {
       return this.localites.filter((t) => ids.has(t.id));
     },
     filteredStatFederal() {
-      const ids = new Set(
-        this.interventions.map((i) => i.stat_federal_id)
-      );
+      const ids = new Set(this.interventions.map((i) => i.stat_federal_id));
       return this.statsFederal.filter((t) => ids.has(t.id));
     },
     filteredInterventions() {
@@ -427,7 +419,11 @@ export default {
         .filter(
           Object.entries(this.filters)
             .filter(([, val]) => val)
-            .map(([key, value]) => (x) => x[key] === value)
+            .map(
+              ([key, value]) =>
+                (x) =>
+                  x[key] === value
+            )
             .reduce(
               (f, g) => (x) => f(x) && g(x),
               () => true
@@ -444,41 +440,21 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_frais_interventions.toggleDetailRow(id);
+    selected(id) {
+      this.selectedId = id;
     },
     imputerIntervention(interventionId) {
-      //TODO
-
       this.SHOW_MODAL({
         component: 'ModalImputerIntervention',
         data: { id: interventionId },
         size: 2,
       });
     },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
       }
 
-      return {
-        data: local,
-      };
-    },
-    onRowClass(dataItem) {
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'A valider',

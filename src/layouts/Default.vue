@@ -36,8 +36,8 @@ export default {
   components: {
     Navbar,
     MainSidebar,
-    AppModal
-  }
+    AppModal,
+  },
 };
 </script>
 

@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item">
-            <router-link tag="a" to="/">Accueil</router-link>
+            <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Organisation
@@ -23,11 +23,11 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <tree
-              :tree="groupeTree"
-              :_types="types"
-              :selectable="true"
+            <groupe-affichage v-if="false" @selected="selected" />
+            <groupe-edition
+              :editMode="editMode"
               @selected="selected"
+              ref="groupeEdition"
             />
           </div>
         </div>
@@ -37,25 +37,155 @@
           <div class="card-header d-flex justify-content-between">
             <h3>Actions</h3>
           </div>
-          <div class="card-body">
+          <div class="card-body pb-2">
             <button
-              class="btn btn-primary mb-2 mr-2"
-              @click="modifierGroupes"
+              class="btn btn-info mr-1"
+              @click="expand"
+              v-tooltip.top="'Tout développer'"
             >
-              Modifier les groupes
+              <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
             <button
+              class="btn btn-info mr-1"
+              @click="contract"
+              v-tooltip.top="'Tout réduire'"
+            >
+              <font-awesome-icon :icon="['far', 'minus-square']" />
+            </button>
+            <button
+              class="btn btn-info mr-1"
+              @click="editMode = !editMode"
+              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
+            >
+              <font-awesome-icon :icon="['far', editMode ? 'eye' : 'edit']" />
+            </button>
+          </div>
+          <div v-if="!editMode" class="card-body pt-0">
+            <button
               class="btn btn-primary mb-2"
-              :disabled="
-                !(
-                  active &&
-                  (active.type == 'groupe' || active.type == 'groupeInter')
-                )
-              "
+              :disabled="!activeIsGroupe"
               @click="addSapeurs(active)"
             >
               Ajouter/enlever des sapeurs
             </button>
+          </div>
+          <div v-if="editMode" class="card-body pt-0">
+            <button class="btn btn-primary d-block mb-2" @click="addGroupe">
+              Ajouter un groupe
+            </button>
+            <button
+              class="btn btn-primary d-block mb-2"
+              :disabled="!activeIsGroupe"
+              @click="deleteGroupe"
+            >
+              Supprimer
+            </button>
+          </div>
+          <div v-if="editMode" class="card-body pt-0">
+            <h3>Réorganiser le groupe</h3>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveLeft,
+                'btn-secondary': !canMoveLeft,
+              }"
+              @click.prevent="left"
+              :disabled="!canMoveLeft"
+            >
+              ←
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveRight,
+                'btn-secondary': !canMoveRight,
+              }"
+              @click.prevent="right"
+              :disabled="!canMoveRight"
+            >
+              →
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveUp,
+                'btn-secondary': !canMoveUp,
+              }"
+              @click.prevent="up"
+              :disabled="!canMoveUp"
+            >
+              ↑
+            </button>
+            <button
+              class="btn btn-sm"
+              :class="{
+                'btn-primary': canMoveDown,
+                'btn-secondary': !canMoveDown,
+              }"
+              @click.prevent="down"
+              :disabled="!canMoveDown"
+            >
+              ↓
+            </button>
+          </div>
+        </div>
+        <div
+          class="card card-primary card-outline mt-2"
+          v-if="editMode && active && groupesTypes.includes(active.data.type)"
+        >
+          <div class="card-header d-flex justify-content-between">
+            <h3>Modifier</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="abreviation">No</label>
+              <input
+                type="number"
+                v-model="groupeEdit.no"
+                class="form-control"
+                :class="{ 'is-invalid': errors['no'] }"
+                id="no"
+              />
+            </div>
+            <div class="form-group">
+              <label for="abreviation">Nom</label>
+              <input
+                type="text"
+                v-model="groupeEdit.designation"
+                class="form-control"
+                :class="{ 'is-invalid': errors['designation'] }"
+                id="designation"
+              />
+            </div>
+            <div class="form-group">
+              <label for="cours-precedent">Groupe parent</label>
+              <select
+                id="pere_id"
+                v-model="groupeEdit.pere_id"
+                class="custom-select"
+              >
+                <option :value="null">-</option>
+                <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
+                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="type"
+                  v-model="groupeEdit.type"
+                  :true-value="1"
+                  :false-value="0"
+                />
+                <label class="custom-control-label" for="type"
+                  >Groupe d'alarme</label
+                >
+              </div>
+            </div>
+            <button class="btn btn-primary" @click="save">Modifier</button>
           </div>
         </div>
       </div>
@@ -67,7 +197,8 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import Tree from '@/components/tree/Tree.vue';
+import GroupeAffichage from '@/components/groupe/GroupeAffichage.vue';
+import GroupeEdition from '@/components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
@@ -80,9 +211,10 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'groupes',
+  name: 'organisation',
   components: {
-    Tree,
+    GroupeAffichage,
+    GroupeEdition,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -94,88 +226,144 @@ export default {
   data() {
     return {
       active: null,
-      types: {
-        homme: {
-          icon: ['fas', 'mars'],
-          color: '#3498db',
-        },
-        femme: {
-          icon: ['fas', 'venus'],
-          color: '#9b59b6',
-        },
-        groupe: {
-          icon: ['fas', 'sitemap'],
-          color: '#2c3e50',
-        },
-        groupeInter: {
-          icon: ['fas', 'fire'],
-          color: '#f39c12',
-        },
-        // fonction: {icon: ['fas', 'medal'],},cours: {icon: ['fas', 'book'],},grade: {icon: ['fas', 'award'],},alphabetique: {icon: ['fas', 'sort-alpha-up-alt'],},civilite: {icon: ['fas', 'user'],},date: {icon: ['fas', 'birthday-cake'],},exercice: {icon: ['fas', 'calendar-alt'],},excuse: {icon: ['fas', 'scroll'],},intervention: {icon: ['fas', 'fire-extinguisher'],},permis: {icon: ['fas', 'car'],},
-      },
-      tree: [
-        {
-          id: 'g',
-          type: 'groupe',
-          label: 'Groupes',
-          children: () => this.groupeTree,
-        },
-      ],
+      groupeEdit: {},
+      editMode: false,
+      groupesTypes: ['groupe', 'groupeInter'],
+      errors: {},
     };
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.actif),
+      groupes: (state) => state.groupe.liste,
       sapeurs: (state) => state.sapeur.liste,
     }),
-    groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
-      const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
-          nom: 'Ancien',
-          prenom: 'Sapeur',
-          civilite: 1,
-          id: s.sapeur_id,
+    filteredGroupes() {
+      const activeId = this.active?.data?.id || 0;
+      if (activeId) {
+        const rec = (groupeId) => {
+          // Retourne la liste des ids des groupes enfants
+          const children = this.groupes.filter((g) => g.pere_id == groupeId);
+          return children.flatMap((g) => [g.id, ...rec(g.id)]);
         };
-        return {
-          id: s.sapeur_id,
-          key: `s-${s.sapeur_id}`,
-          label: `${sapeur.nom} ${sapeur.prenom}`,
-          type: sapeur.civilite_id === 1 ? 'homme' : 'femme',
-        };
-      };
-      const groupeMapping = (g) => ({
-        label: g.no ? `${g.no} ${g.designation}` : g.designation,
-        type: g.type == 0 ? 'groupe' : 'groupeInter',
-        id: g.id,
-        key: `g-${g.id}`,
-        children: () => [
-          ...this.groupes.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeur_ids.map(sapeurMapping),
-        ],
-      });
-
-      return this.groupes.filter(groupFilter(null)).map(groupeMapping);
+        const filteredIds = new Set([activeId, ...rec(activeId)]);
+        return this.groupes.filter((g) => !filteredIds.has(g.id));
+      } else {
+        return [];
+      }
+    },
+    activeIsGroupe() {
+      return (
+        (!!this.active &&
+          (this.active.data.type == 'groupe' ||
+            this.active.data.type == 'groupeInter')) ||
+        false
+      );
+    },
+    canMoveDown() {
+      return (
+        (this.groupesTypes.includes(this.active?.data?.type) &&
+          !this.active?.isLast) ||
+        false
+      );
+    },
+    canMoveUp() {
+      return (
+        (this.groupesTypes.includes(this.active?.data?.type) &&
+          !this.active?.isFirst) ||
+        false
+      );
+    },
+    canMoveLeft() {
+      return (
+        (this.groupesTypes.includes(this.active?.data?.type) &&
+          !this.active?.isRoot) ||
+        false
+      );
+    },
+    canMoveRight() {
+      return (
+        (this.groupesTypes.includes(this.active?.data?.type) &&
+          !this.active?.isFirstOfLevel) ||
+        false
+      );
     },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    contract() {
+      this.$refs.groupeEdition.contract();
+    },
+    expand() {
+      this.$refs.groupeEdition.expand();
+    },
     selected(elem) {
       this.active = elem;
+      if (this.groupesTypes.includes(elem.data.type)) {
+        this.groupeEdit = { ...this.groupes.find((g) => g.id == elem.data.id) };
+      } else {
+        this.groupeEdit = {};
+      }
     },
-    modifierGroupes() {
-      const data = [];
+    save() {
+      this.$store
+        .dispatch('updateGroupe', {
+          groupeId: this.groupeEdit.id,
+          data: {
+            ...this.groupeEdit,
+          },
+        })
+        .then(() => {
+          this.$awn.success('Groupe modifié avec succès');
+        })
+        .catch((errors) => {
+          this.errorsData = { ...errors };
+          this.$awn.alert(
+            error.message || 'Erreur lors de la modification du groupe'
+          );
+        });
+    },
+    up() {
+      this.$refs.groupeEdition.up(this.active);
+    },
+    down() {
+      this.$refs.groupeEdition.down(this.active);
+    },
+    right() {
+      this.$refs.groupeEdition.right(this.active);
+    },
+    left() {
+      this.$refs.groupeEdition.left(this.active);
+    },
+    deleteGroupe() {
+      if (this.activeIsGroupe) {
+        this.SHOW_MODAL({
+          component: 'ModalConfirmation',
+          data: {
+            title: 'Voulez-vous vraiment supprimer ce groupe ?',
+            question:
+              "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+          },
+          callback: () => {
+            this.$store.dispatch('deleteGroupe', this.active.data.id);
+          },
+        });
+      } else {
+        svm.$awn.warning(
+          'Sélectionnez un groupe afin de pouvoir le supprimer.'
+        );
+      }
+    },
+    addGroupe() {
       this.SHOW_MODAL({
-        component: 'ModalGroupeEdition',
-        size: 1,
-        data,
+        component: 'ModalGroupe',
       });
     },
     addSapeurs(node) {
-      if (!(node.type == 'groupe' || node.type == 'groupeInter')) {
+      if (!this.groupesTypes.includes(node.data.type)) {
         return;
       }
-      const groupe = this.groupes.find((g) => g.id == node.id);
+      const id = node.data.id;
+      const groupe = this.groupes.find((g) => g.id == id);
       const data = groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0);
 
       const svm = this;
@@ -185,7 +373,7 @@ export default {
         }
         const { tous } = res;
         return svm.$store.dispatch('updateGroupeSapeurs', {
-          groupeId: node.id,
+          groupeId: id,
           sapeurIds: tous,
         });
       };

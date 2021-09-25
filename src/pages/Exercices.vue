@@ -5,7 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
-              <router-link tag="a" to="/">Accueil</router-link>
+              <router-link tag="a" :to="{ name: 'accueil' }"
+                >Accueil</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               Exercices
@@ -141,51 +143,56 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <vuetable
+          <base-table
             v-show="!loading"
-            ref="vuetable_exercices"
-            :api-mode="false"
-            :fields="fields"
+            ref="basetable_exercices"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
+            @selected="selectExercice"
+            :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
-            :css="css.table"
-            :data-manager="dataManager"
+            no-data="Aucun exercice/séance à afficher"
+            :data="computedData"
             :row-class="onRowClass"
-            no-data-template="Aucun exercice/séance à afficher"
-            @vuetable:row-clicked="selectExercice"
           >
-            <div slot="details" slot-scope="props" class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="toggleDetails(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="toggles[props.rowData.id] || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!(toggles[props.rowData.id] || false)"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
-            <div slot="actions" slot-scope="props" class="d-flex">
-              <router-link
-                tag="button"
-                :to="'/exercices/' + props.rowData.id"
-                class="btn btn-outline-primary border-0"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </router-link>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
-                v-if="props.rowData.statut === 2"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-            </div>
-          </vuetable>
+            <template v-slot:details="props">
+              <div class="d-flex">
+                <button
+                  class="btn btn-link border-0"
+                  @click="props.actions.toggleDetailRow(props.rowData.id)"
+                >
+                  <font-awesome-icon
+                    v-if="props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-down']"
+                  />
+                  <font-awesome-icon
+                    v-if="!props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-right']"
+                  />
+                </button>
+              </div>
+            </template>
+            <template v-slot:actions="props">
+              <div class="d-flex">
+                <router-link
+                  tag="button"
+                  :to="'/exercices/' + props.rowData.id"
+                  class="btn btn-outline-primary border-0"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </router-link>
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="validerExercice(props.rowData.id)"
+                  v-if="hasValidationPermission && props.rowData.statut == 2"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+              </div>
+            </template>
+          </base-table>
         </div>
       </div>
     </div>
@@ -195,16 +202,14 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import store from '@/store/index';
+import permissions from '@/store/permissions.js';
 
 import ExerciceDetails from '@/components/exercice/ExerciceDetails';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 import ExerciceService from '@/services/ExerciceService';
 
-import Vuetable from 'vuetable-2';
-// import VuetableRowHeader from 'vuetable-2/src/components/VuetableRowHeader.vue'
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
@@ -223,7 +228,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'exercices',
   components: {
-    Vuetable,
+    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -237,16 +242,10 @@ export default {
       this.loading = true;
       this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;
-        this.$refs.vuetable_exercices.setData(this.filteredExercices);
       });
-    },
-    filteredExercices(data) {
-      this.loading = false;
-      this.$refs.vuetable_exercices.setData(data);
     },
   },
   mounted() {
-    this.$refs.vuetable_exercices.setData(this.filteredExercices);
     this.loading = false;
   },
   data() {
@@ -254,55 +253,56 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      css: CssForBootstrap4,
-      toggles: {},
       detailRow: ExerciceDetails,
-      fields: [
+      fieldsBase: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
+          slot: 'details',
           dataClass: 'details-width',
         },
         {
           title: 'Date',
-          name: 'date',
-          sortField: 'date',
+          key: 'date',
+          sortKey: 'date',
         },
         {
           title: 'Categorie',
-          name: 'categorie',
-          sortField: 'categorie',
+          key: 'categorie',
+          sortKey: 'categorie',
         },
         {
           title: 'Heure',
-          name: 'heure',
+          key: 'heure',
+          sortKey: 'heure',
           formatter(value) {
             return value.slice(0, 5);
           },
         },
         {
           title: 'Duree',
-          name: 'duree',
-          sortField: 'duree',
+          key: 'duree',
+          sortKey: 'duree',
         },
         {
           title: 'Localité',
-          name: 'localite',
-          sortField: 'localite',
+          key: 'localite',
+          sortKey: 'localite',
         },
         {
           title: 'Lieu',
-          name: 'lieu',
+          key: 'lieu',
+          sortKey: 'lieu',
         },
         {
           title: 'Designation',
-          name: 'designation',
-          sortField: 'designation',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'Statut',
-          name: 'statut',
-          sortField: 'statut',
+          key: 'statut',
+          sortKey: 'statut',
           formatter(value) {
             const statuts = {
               0: 'Annulé',
@@ -316,7 +316,8 @@ export default {
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -330,6 +331,8 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasValidationPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
     ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
@@ -341,7 +344,9 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(this.listeExercices.map((i) => i.exercice_categorie_id));
+      const ids = new Set(
+        this.listeExercices.map((i) => i.exercice_categorie_id)
+      );
       return this.listeCategories.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
@@ -352,7 +357,11 @@ export default {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0)
-          .map(([key, value]) => (x) => x[key] === value)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
             () => true
@@ -361,18 +370,11 @@ export default {
     },
   },
   methods: {
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_exercices.toggleDetailRow(id);
-    },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },
     selectExercice(row) {
-      this.selectedId = row.data.id;
+      this.selectedId = row?.id;
     },
     listePresences({ id }) {
       ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
@@ -380,27 +382,9 @@ export default {
     listeAppel({ id }) {
       ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
     },
-    dataManager(sortOrder) {
-      if (this.computedData.length < 1) return;
-
-      let local = this.computedData;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
-      }
-
-      return {
-        data: local,
-      };
-    },
-    onRowClass(dataItem) {
-      if (dataItem.id === this.selectedId) {
-        return 'table-primary';
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return '';
       }
 
       const statutsClass = {

@@ -22,7 +22,10 @@
             </thead>
             <tbody>
               <tr v-if="phases.length <= 0">
-                <td colspan="3">Erreur, une phase est nécessaire pour chaque intervention, veuillez contacter l'administrateur du système.</td>
+                <td colspan="3">
+                  Erreur, une phase est nécessaire pour chaque intervention,
+                  veuillez contacter l'administrateur du système.
+                </td>
               </tr>
               <tr v-for="phase in phases" :key="phase.id">
                 <td>
@@ -131,7 +134,7 @@
                         :icon="['fas', 'angle-right']"
                       />
                     </button>
-                    {{ s | sapeur }}
+                    {{ formatSapeur(s) }}
                   </th>
                   <td class="text-center">
                     <div class="custom-control custom-checkbox d-inline">
@@ -172,8 +175,8 @@
                     }"
                   >
                     <td :colspan="2 + columns.length * 4">
-                      {{ p.debut | datePresence }} -
-                      {{ p.fin | datePresence }}
+                      {{ formatDatePresence(p.debut) }} -
+                      {{ formatDatePresence(p.fin) }}
                       <button
                         type="button"
                         class="btn btn-outline-primary border-0 ml-2"
@@ -285,13 +288,15 @@ export default {
       this.$refs.wrapper.attachEvent('onmousewheel', this.scrollHorizontally);
     }
   },
-  filters: {
-    datePresence(d) {
-      return d.slice(-8, -3);
-    },
-  },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
+    },
+    formatDatePresence(d) {
+      return d.slice(-8, -3);
+    },
     scrollHorizontally(e) {
       e = window.event || e;
       var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));

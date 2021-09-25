@@ -89,7 +89,7 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ getSapeur(ecriture.sapeur_id) | sapeur }}</td>
+              <td>{{ formatSapeur(getSapeur(ecriture.sapeur_id)) }}</td>
               <td>{{ ecriture.designation }}</td>
               <td class="text-right">{{ ecriture.tarif }}</td>
               <td class="text-right">{{ ecriture.quantite }}</td>
@@ -166,6 +166,10 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
+    },
     cancel() {
       //TODO Cancel depending on state
       this.HIDE_MODAL();

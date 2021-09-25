@@ -2,16 +2,22 @@
   <div class="tree">
     <editable-node
       v-for="(item, index) in tree"
+      ref="node"
       :key="item.id"
       :node="item"
       :_types="_types"
       :select="select"
-      :active="active"
+      :active="localActive"
       :is-root="true"
       :is-first="index == 0"
       :is-first-of-level="index == 0"
       :is-last="index + 1 == tree.length"
-    ></editable-node>
+      :is-last-of-level="index + 1 == tree.length"
+    >
+      <template #default="props">
+        <slot v-bind:node="props.node"></slot>
+      </template>
+    </editable-node>
   </div>
 </template>
 
@@ -38,17 +44,36 @@ export default {
       required: false,
       default: () => false,
     },
+    active: {
+      type: Object,
+      required: false,
+      default: () => null,
+    },
   },
   data() {
     return {
-      active: null,
+      localActive: null,
     };
   },
+  mounted() {
+    this.localActive = this.active?.data;
+  },
+  watch: {
+    active(newValue, _) {
+      this.localActive = newValue.data;
+    },
+  },
   methods: {
+    contract() {
+      this.$refs.node.forEach((node) => node.expand(false));
+    },
+    expand() {
+      this.$refs.node.forEach((node) => node.expand(true));
+    },
     select(elem) {
       if (this.selectable) {
-        this.active = elem;
-        this.$emit("selected", elem);
+        this.localActive = elem.data;
+        this.$emit('selected', elem);
       }
     },
   },

@@ -38,9 +38,9 @@
           class="custom-select"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listeLocalitesSis" :key="l.id" :value="l.id">{{
-            l.designation
-          }}</option>
+          <option v-for="l in listeLocalitesSis" :key="l.id" :value="l.id">
+            {{ l.designation }}
+          </option>
         </select>
       </div>
       <div class="form-group">
@@ -77,13 +77,13 @@ export default {
       mutationInitiale: {},
       groupes: [],
       exercices: [],
-      fonctions: []
+      fonctions: [],
     };
   },
   computed: {
     ...mapState({
-      activeSapeurId: state => state.sapeur.active.id,
-      activeMutation: state => state.mutation.active
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeMutation: (state) => state.mutation.active,
     }),
     ...mapGetters(['listeLocalitesSis']),
     finDeService() {
@@ -95,7 +95,7 @@ export default {
       }
 
       return this.activeMutation.id ? 'Modifier' : 'Ajouter';
-    }
+    },
   },
   mounted() {
     if (this.finDeService) {
@@ -113,13 +113,13 @@ export default {
 
     this.$store
       .dispatch('fetchSapeurExercices', this.activeSapeurId)
-      .then(data => (this.exercices = data));
+      .then((data) => (this.exercices = data));
     this.$store
       .dispatch('fetchSapeurGroupes', this.activeSapeurId)
-      .then(data => (this.groupes = data));
+      .then((data) => (this.groupes = data));
     this.$store
       .dispatch('fetchSapeurFonctions', this.activeSapeurId)
-      .then(data => (this.fonctions = data));
+      .then((data) => (this.fonctions = data));
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
@@ -131,7 +131,7 @@ export default {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       } else {
         this.$store
           .dispatch('editMutation', this.activeMutation)
@@ -152,10 +152,10 @@ export default {
               this.HIDE_MODAL();
             }
           })
-          .catch(errors => (this.errors = errors));
+          .catch((errors) => (this.errors = errors));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

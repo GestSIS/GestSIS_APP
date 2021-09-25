@@ -20,13 +20,13 @@
           :minute-step="15"
           :disabled="activePhase.debut === null && activePhase.id"
         ></datetime>
-        <!--        <input-->
-        <!--          type="date"-->
-        <!--          v-model="activePhase.debut"-->
-        <!--          class="form-control"-->
-        <!--          :class="{ 'is-invalid': errors['debut'] }"-->
-        <!--          id="cours-date"-->
-        <!--        />-->
+        <!-- <input
+          type="datetime-local"
+          v-model="activePhase.debut2"
+          class="form-control"
+          :class="{ 'is-invalid': errors['debut'] }"
+          id="cours-date"
+        /> -->
       </div>
       <div class="form-group">
         <label for="phase_type">Type</label>

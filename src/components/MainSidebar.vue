@@ -37,103 +37,10 @@
         role="menu"
         data-accordion="false"
       >
-        <li class="nav-item">
-          <router-link :to="{ name: 'sapeurs' }" class="nav-link internal-link">
-            <font-awesome-icon icon="user" />
-            <span>Sapeurs</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'interventions' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="fire-extinguisher" />
-            <span>Interventions</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'exercices' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon :icon="['fas', 'calendar-alt']" />
-            <span>Exercices &amp; Séances</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/organisation" class="nav-link internal-link">
-            <font-awesome-icon icon="sitemap" />
-            <span>Organisation</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'comptabilite-decompte' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="calculator" />
-            <span>Comptabilité</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/publipostage" class="nav-link internal-link">
-            <font-awesome-icon icon="envelope" />
-            <span>Publipostage</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/statistique" class="nav-link internal-link">
-            <font-awesome-icon :icon="['far', 'chart-bar']" />
-            <span>Statistiques</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/matériel" class="nav-link internal-link">
-            <font-awesome-icon icon="toolbox" />
-            <span>Matériel personel</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'controles-medicaux' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="file-medical-alt" />
-            <span>Contrôles médicaux</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/impressions" class="nav-link internal-link">
-            <font-awesome-icon icon="sitemap" />
-            <span>Impressions</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'users' }" class="nav-link internal-link">
-            <font-awesome-icon icon="user" />
-            <span>Utilisateurs</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'param-general' }"
-            class="nav-link internal-link"
-          >
-            <font-awesome-icon icon="sliders-h" />
-            <span>Configuration</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/rta" class="nav-link internal-link">
-            <font-awesome-icon icon="globe-europe" />
-            <span>Exportation RTA</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'about' }" class="nav-link internal-link">
-            <font-awesome-icon icon="info-circle" />
-            <span>A propos</span>
+        <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
+          <router-link :to="link.to" class="nav-link internal-link">
+            <font-awesome-icon :icon="link.icon" />
+            <span>{{ link.nom }}</span>
           </router-link>
         </li>
       </ul>
@@ -144,12 +51,29 @@
 
 <script>
 import SisSelection from '@/components/sis/SisSelection.vue';
-// import SisSelection from './sis/SisSelection.vue';
+import links from '@/router/menu.js';
+
+import { mapState } from 'vuex';
 
 export default {
   name: 'MainSidebar',
   components: {
     SisSelection,
+  },
+  data() {
+    return {
+      links,
+    };
+  },
+  computed: {
+    ...mapState({
+      perms: (state) => state.auth.sis.permissions,
+    }),
+    filteredLinks() {
+      return this.links.filter(
+        (l) => !l.permission || this.perms.includes(l.permission)
+      );
+    },
   },
 };
 </script>

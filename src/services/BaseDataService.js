@@ -9,5 +9,5 @@ export default {
   },
   getTelephones() {
     return Api.api().get('/telephone-types/');
-  }
+  },
 };

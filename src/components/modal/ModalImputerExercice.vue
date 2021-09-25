@@ -51,7 +51,7 @@
                 <td>{{ indemnite.solde_min }}</td>
                 <td>{{ indemnite.solde_min_pour }}</td>
                 <td>{{ indemnite.unite_id }}</td>
-                <td>{{ getCompte(indemnite.compte_id) | compte }}</td>
+                <td>{{ formatCompte(getCompte(indemnite.compte_id)) }}</td>
                 <td>
                   <div class="custom-control custom-checkbox">
                     <input
@@ -118,7 +118,7 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ getSapeur(ecriture.sapeur_id) | sapeur }}</td>
+              <td>{{ formatSapeur(getSapeur(ecriture.sapeur_id)) }}</td>
               <td>{{ ecriture.solde }}</td>
               <td>{{ ecriture.indemnite }}</td>
               <td>{{ ecriture.total }}</td>
@@ -218,6 +218,14 @@ export default {
           ? 1
           : --this.activeIndemniteIndex % this.listeIndemnitesTypes.length
       );
+    },
+    formatSapeur(sapeur) {
+      if (!sapeur) return '';
+      return sapeur.nom + ' ' + sapeur.prenom;
+    },
+    formatCompte(compte) {
+      if (!compte) return '';
+      return compte?.numero + ' - ' + compte?.designation;
     },
   },
 };

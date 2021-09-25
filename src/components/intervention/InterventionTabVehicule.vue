@@ -19,12 +19,12 @@
           </thead>
           <tbody id="vehicules">
             <tr v-if="vehicules.length <= 0">
-              <td colspan="2">Aucun véhicule de disponible pour votre SIS, ajoutez-en dans <em>configuration</em>.</td>
+              <td colspan="2">
+                Aucun véhicule de disponible pour votre SIS, ajoutez-en dans
+                <em>configuration</em>.
+              </td>
             </tr>
-            <tr
-              v-for="v in vehicules"
-              :key="v.id"
-            >
+            <tr v-for="v in vehicules" :key="v.id">
               <td>{{ v.designation }}</td>
               <td>
                 <div class="form-group">
@@ -63,7 +63,14 @@ export default {
   computed: {
     ...mapGetters(['getVehicule']),
     ...mapState({
-      vehicules: (state) => state.vehicule.liste.filter((v) => v.status === 1 || state.intervention.active.vehicules.find((vi) =>vi.vehicule_id === v.id)),
+      vehicules: (state) =>
+        state.vehicule.liste.filter(
+          (v) =>
+            v.status === 1 ||
+            state.intervention.active.vehicules.find(
+              (vi) => vi.vehicule_id === v.id
+            )
+        ),
       interventionVehicules: (state) => state.intervention.active.vehicules,
       activeInterventionId: (state) => state.intervention.active.id,
     }),

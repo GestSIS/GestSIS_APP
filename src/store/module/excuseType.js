@@ -34,10 +34,12 @@ export default {
       state.liste.filter((e) => e.id === exercice_id)[0],
   },
   actions: {
-    fetchExcuseTypes({ commit }) {
-      return ExcuseTypeService.getExcuses().then((data) =>
-        commit(types.UPDATE_EXCUSE_TYPE_LISTE, data)
-      );
+    fetchExcuseTypes({ commit, state }) {
+      if (state.liste.length == 0) {
+        return ExcuseTypeService.getExcuses().then((data) =>
+          commit(types.UPDATE_EXCUSE_TYPE_LISTE, data)
+        );
+      }
     },
     selectExcuseType({ commit }, excuse_excuse_id) {
       return commit(types.SELECT_EXCUSE_TYPE, excuse_excuse_id);

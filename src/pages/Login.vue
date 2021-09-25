@@ -37,7 +37,9 @@
       >
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
+      <p class="mt-5 mb-3 text-muted">
+        © GestSIS {{ new Date().getFullYear() }}
+      </p>
 
       <router-link to="/register" class="btn btn-link is-active"
         >S'enregistrer</router-link

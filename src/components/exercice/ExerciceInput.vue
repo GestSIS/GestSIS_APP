@@ -28,8 +28,8 @@ export default {
     ...mapGetters(['currentExercice', 'currentExerciceId']),
     sapeurs() {
       return [];
-    }
-  }
+    },
+  },
 };
 </script>
 

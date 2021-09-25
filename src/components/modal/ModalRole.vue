@@ -47,7 +47,10 @@
             permission.nom
           }}</label>
         </div>
-        <div class="invalid-feedback" :class="{ 'd-block': errors['permissions'] }">
+        <div
+          class="invalid-feedback"
+          :class="{ 'd-block': errors['permissions'] }"
+        >
           {{ errors['permissions'] }}
         </div>
       </div>

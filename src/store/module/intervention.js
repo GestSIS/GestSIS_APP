@@ -300,13 +300,12 @@ export default {
 
     //Groupes
     addInterventionGroupes({ state, commit }, payload) {
-      return InterventionService.addGroupes(
-        state.active.data.id,
-        payload
-      ).then((data) => {
-        commit(types.UPDATE_CURRENT_INTERVENTION_GROUPES, data);
-        return data;
-      });
+      return InterventionService.addGroupes(state.active.data.id, payload).then(
+        (data) => {
+          commit(types.UPDATE_CURRENT_INTERVENTION_GROUPES, data);
+          return data;
+        }
+      );
     },
     removeInterventionGroupes({ state, commit }, payload) {
       return InterventionService.removeGroupes(

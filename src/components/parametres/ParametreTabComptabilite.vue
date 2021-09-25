@@ -99,7 +99,6 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import ParametreCompte from './ParametreCompte.vue';

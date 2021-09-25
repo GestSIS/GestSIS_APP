@@ -13,43 +13,48 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <vuetable
+        <base-table
           v-show="!loading"
-          ref="vuetable_frais_annuels"
-          :api-mode="false"
+          :data="computedData"
           :fields="fields"
-          :css="css.table"
-          :data-manager="dataManager"
           :row-class="onRowClass"
+          no-data="Aucune écriture à afficher"
           detail-row-class="m-td-0"
-          no-data-template="Aucune écriture à afficher"
           :detail-row-component="detailRow"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
         >
-          <div slot="details" slot-scope="props" class="d-flex">
-            <button
-              class="btn btn-link border-0"
-              @click="toggleDetails(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="toggles[props.rowData.id] || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!(toggles[props.rowData.id] || false)"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </div>
-          <div slot="actions" slot-scope="props" class="d-flex">
-            <button
-              title="Regénérer les frais de ce sapeur"
-              class="btn btn-outline-primary border-0"
-              @click="regenererSapeur(props.rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </div>
-        </vuetable>
+          <template v-slot:details="props">
+            <div class="d-flex">
+              <button
+                class="btn btn-link border-0"
+                @click="props.actions.toggleDetailRow(props.rowData.id)"
+              >
+                <font-awesome-icon
+                  v-if="props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-down']"
+                />
+                <font-awesome-icon
+                  v-if="!props.status.detailRowVisible || false"
+                  :icon="['fas', 'angle-right']"
+                />
+              </button>
+            </div>
+          </template>
+          <template v-slot:actions="props">
+            <div class="d-flex">
+              <button
+                title="Regénérer les frais de ce sapeur"
+                class="btn btn-outline-primary border-0"
+                @click="regenererSapeur(props.rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </div>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -60,9 +65,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import store from '@/store/index';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 
-import Vuetable from 'vuetable-2';
-import CssForBootstrap4 from '@/assets/vuetableCssConfig.js';
-import _ from 'lodash';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
@@ -78,7 +81,7 @@ async function loadData(routeTo, next) {
 export default {
   name: 'FraisTabAnnuel',
   components: {
-    Vuetable,
+    BaseTable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -90,14 +93,9 @@ export default {
     currentExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
+        this.selectedId = null;
         this.loading = false;
-        this.$refs.vuetable_frais_annuels.setData(this.computeData());
       });
-    },
-    listeEcritures() {
-      this.loading = true;
-      this.$refs.vuetable_frais_annuels.setData(this.computeData());
-      this.loading = false;
     },
   },
   mounted() {
@@ -112,17 +110,16 @@ export default {
     if (this.currentExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false;
-        this.$refs.vuetable_frais_annuels.setData(this.computeData());
+        this.selectedId = null;
       });
     }
   },
   data() {
     let svm = this;
     return {
-      css: CssForBootstrap4,
-      toggles: {},
       detailRow: FraisEcritureDetails,
       loading: true,
+      selectedId: null,
       ecritureColumns: [
         {
           title: 'Designation',
@@ -160,27 +157,29 @@ export default {
       fields: [
         {
           title: '',
-          name: 'details',
+          key: 'details',
+          slot: 'details',
           dataClass: 'details-width',
         },
         {
           title: 'Sapeur',
-          name: 'nomPrenom',
-          sortField: 'nomPrenom',
+          key: 'nomPrenom',
+          sortKey: 'nomPrenom',
         },
         {
           title: 'Fonction',
-          name: 'fonction',
-          sortField: 'fonction',
+          key: 'fonction',
+          sortKey: 'fonction',
         },
         {
           title: 'Total',
-          name: 'total',
-          sortField: 'montant',
+          key: 'total',
+          sortKey: 'montant',
         },
         {
           title: 'Actions',
-          name: 'actions',
+          key: 'actions',
+          slot: 'actions',
         },
       ],
     };
@@ -198,10 +197,7 @@ export default {
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte']),
-  },
-  methods: {
-    ...mapMutations(['SHOW_MODAL']),
-    computeData() {
+    computedData() {
       //Group by sapeur ID
       return (
         Object.entries(
@@ -225,9 +221,9 @@ export default {
             return {
               ...e,
               ...sapeur,
-              nomPrenom: sapeur.nom + ' ' + sapeur.prenom,
-              fonction: sapeur.fonction_id
-                ? this.getFonction(sapeur.fonction_id).nom
+              nomPrenom: sapeur?.nom + ' ' + sapeur?.prenom,
+              fonction: sapeur?.fonction_id
+                ? this.getFonction(sapeur?.fonction_id).nom
                 : '',
             };
           })
@@ -244,37 +240,22 @@ export default {
           }))
       );
     },
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    selected(id) {
+      this.selectedId = id;
+    },
     regenererSapeur() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
     },
-    toggleDetails(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-      this.$refs.vuetable_frais_annuels.toggleDetailRow(id);
-    },
-    dataManager(sortOrder) {
-      let local = this.computeData();
-      if (local.length < 1) return;
-
-      // sortOrder can be empty, so we have to check for that as well
-      if (sortOrder.length > 0) {
-        local = _.orderBy(
-          local,
-          sortOrder[0].sortField,
-          sortOrder[0].direction
-        );
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return;
       }
-
-      return {
-        data: local,
-      };
-    },
-    onRowClass(dataItem) {
       const statutsClass = {
         0: 'text-danger', //'inactif',
         1: '', //'Actif',
