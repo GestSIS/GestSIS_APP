@@ -69,7 +69,7 @@ export default {
       return sizesClass[this.size];
     },
   },
-  created() {
+  mounted() {
     this.escapeHandler = (e) => {
       if (e.key === 'Escape' && this.visible) {
         this.callback();
@@ -79,7 +79,7 @@ export default {
 
     document.addEventListener('keydown', this.escapeHandler);
   },
-  unmount() {
+  unmounted() {
     document.removeEventListener('keydown', this.escapeHandler);
   },
   methods: {
