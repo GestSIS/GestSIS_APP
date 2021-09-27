@@ -5,7 +5,7 @@ const links = [
     to: { name: 'sapeurs' },
     icon: 'user',
     nom: 'Sapeurs',
-    permission: permissions.SAPEUR.LECTURE,
+    permission: permissions.SAPEUR.MODIFICATION,
   },
   {
     to: { name: 'interventions' },
@@ -35,6 +35,7 @@ const links = [
     to: '/publipostage',
     icon: 'envelope',
     nom: 'Publipostage',
+    permission: permissions.SAPEUR.LECTURE,
   },
   {
     to: '/statistique',
