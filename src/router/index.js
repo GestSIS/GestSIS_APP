@@ -193,6 +193,7 @@ const router = new Router({
       path: '/Publipostage',
       name: 'publipostage',
       component: () => import('@/pages/Publipostage.vue'),
+      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
     },
     {
       path: '/statistique',
