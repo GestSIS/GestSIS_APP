@@ -27,7 +27,10 @@
             <h3>Publipostage</h3>
           </div>
           <div class="card-body">
-            <h4>TODO</h4>
+            <p>Télécharger fichier Excel pour publipostage.</p>
+            <button class="btn btn-primary" @click="publipostage">
+              Fichier Excel
+            </button>
           </div>
         </div>
       </div>
@@ -37,11 +40,17 @@
 
 <script>
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import PublipostageService from '@/services/PublipostageService';
 
 export default {
   name: 'publipostage',
   components: {
     ExerciceComptable,
+  },
+  methods: {
+    publipostage() {
+      PublipostageService.downloadExcel({});
+    },
   },
 };
 </script>
