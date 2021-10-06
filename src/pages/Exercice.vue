@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-white">
             <li class="breadcrumb-item">
@@ -18,7 +18,7 @@
           </ol>
         </nav>
       </div>
-      <div class="col-md-6 d-flex justify-content-end">
+      <div class="col-sm-6 d-flex justify-content-end">
         <exercice-comptable />
       </div>
     </div>

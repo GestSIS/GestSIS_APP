@@ -11,7 +11,7 @@
           </li>
         </ol>
       </div>
-      <div class="col-md-6 d-flex justify-content-end">
+      <div class="col-sm-6 d-flex justify-content-end">
         <exercice-comptable />
       </div>
     </div>
