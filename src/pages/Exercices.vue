@@ -324,9 +324,9 @@ export default {
   },
   computed: {
     ...mapState({
-      listeExercices: (state) => state.exercice.liste,
-      listeCategories: (state) => state.exerciceCategorie.liste,
-      listeLocalites: (state) =>
+      exercices: (state) => state.exercice.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+      localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
@@ -336,7 +336,7 @@ export default {
     }),
     ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
     computedData() {
-      return this.listeExercices.map((s) => ({
+      return this.exercices.map((s) => ({
         ...s,
         categorie: this.getExerciceCategorie(s.exercice_categorie_id)
           .designation,
@@ -344,14 +344,12 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(
-        this.listeExercices.map((i) => i.exercice_categorie_id)
-      );
-      return this.listeCategories.filter((t) => ids.has(t.id));
+      const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
+      return this.categories.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
-      const ids = new Set(this.listeExercices.map((i) => i.localite_id));
-      return this.listeLocalites.filter((t) => ids.has(t.id));
+      const ids = new Set(this.exercices.map((i) => i.localite_id));
+      return this.localites.filter((t) => ids.has(t.id));
     },
     filteredExercices() {
       return this.computedData.filter(

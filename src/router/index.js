@@ -199,6 +199,36 @@ const router = new Router({
       path: '/statistique',
       name: 'statistique',
       component: () => import('@/pages/Statistique.vue'),
+      children: [
+        {
+          path: '',
+          name: 'stat-dashboard',
+          meta: {},
+          component: () =>
+            import('@/components/statistique/StatDashboard.vue'),
+        },
+        {
+          path: 'exercice',
+          name: 'stat-exercice-simple',
+          meta: {},
+          component: () =>
+            import('@/components/statistique/StatExercice.vue'),
+        },
+        {
+          path: 'exercice-presence',
+          name: 'stat-exercice-presence',
+          meta: {},
+          component: () =>
+            import('@/components/statistique/StatExercicePresence.vue'),
+        },
+        {
+          path: 'intervention',
+          name: 'stat-intervention',
+          meta: {},
+          component: () =>
+            import('@/components/statistique/StatIntervention.vue'),
+        }
+      ]
     },
     {
       path: '/controles-medicaux',

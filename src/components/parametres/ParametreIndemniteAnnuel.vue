@@ -2,7 +2,7 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Indemnités annuels</h3>
+      <h3 class="card-title">Indemnités annuel</h3>
       <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
         Ajouter une indemnité
       </button>
