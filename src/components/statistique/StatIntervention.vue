@@ -14,11 +14,7 @@
             />
             <label class="custom-control-label" for="switch"
               >Afficher les
-              {{
-                displayKey == 'type_intervention_id'
-                  ? 'types'
-                  : 'statistiques fédéral'
-              }}
+              {{ groupingLabel.toLowerCase() }}
               sans intervention</label
             >
           </div>
@@ -30,12 +26,15 @@
                 <th>
                   <select
                     class="custom-select custom-select-sm"
-                    id="validationCustom04"
+                    id="select-categorie"
                     v-model="displayKey"
                   >
-                    <option value="type_intervention_id">Type</option>
-                    <option value="stat_federal_id">
-                      Statistiques fédéral
+                    <option
+                      v-for="(label, key) in grouping"
+                      :key="key"
+                      :value="key"
+                    >
+                      {{ label }}
                     </option>
                   </select>
                 </th>
@@ -55,13 +54,19 @@
                 </td>
               </tr>
             </tbody>
+            <thead>
+              <tr>
+                <th>Total :</th>
+                <th class="text-center">{{ interventions.length }}</th>
+              </tr>
+            </thead>
           </table>
-          <h4>TODO:</h4>
+          <!-- <h4>TODO:</h4>
           <ul>
             <li>Graphique d'un simple tableau</li>
             <li>Exporter dans Excel</li>
             <li>Répartition des interventions durant l'année -> graph</li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>
@@ -76,10 +81,13 @@ async function loadData(_, next) {
   const loadInterventions = store.dispatch('fetchListeIntervention');
   const loadTypes = store.dispatch('fetchTypeInterventions');
   const loadStats = store.dispatch('fetchStatFederals');
+  const loadTraitements = store.dispatch('fetchInterventionTraitements');
 
-  Promise.all([loadInterventions, loadTypes, loadStats]).then(() => {
-    next();
-  });
+  Promise.all([loadInterventions, loadTypes, loadStats, loadTraitements]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {
@@ -87,7 +95,12 @@ export default {
   data() {
     return {
       allCategories: false,
-      displayKey: 'type_intervention_id', // Ou 'stat_federal_id'
+      displayKey: 'type_intervention_id',
+      grouping: {
+        type_intervention_id: 'Types',
+        stat_federal_id: 'Statistiques fédéral',
+        intervention_traitement_id: 'Traitements',
+      },
     };
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -105,6 +118,7 @@ export default {
     ...mapState({
       interventions: (state) => state.intervention.liste,
       types: (state) => state.typeIntervention.liste,
+      traitements: (state) => state.interventionTraitement.liste,
       statsFederal: (state) => state.statFederal.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -113,10 +127,16 @@ export default {
         .map((e) => e[this.displayKey])
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
     },
+    groupingLabel() {
+      return this.grouping[this.displayKey];
+    },
     groupingData() {
-      return this.displayKey == 'type_intervention_id'
-        ? this.types
-        : this.statsFederal;
+      const mapping = {
+        type_intervention_id: this.types,
+        stat_federal_id: this.statsFederal,
+        intervention_traitement_id: this.traitements,
+      };
+      return mapping[this.displayKey];
     },
   },
 };
