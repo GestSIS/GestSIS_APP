@@ -54,13 +54,19 @@
                 </td>
               </tr>
             </tbody>
+            <thead>
+              <tr>
+                <th colspan="2">Total :</th>
+                <th class="text-center">{{ exercices.length }}</th>
+              </tr>
+            </thead>
           </table>
-          <h4>TODO:</h4>
+          <!-- <h4>TODO:</h4>
           <ul>
             <li>Graphique d'un simple tableau</li>
             <li>Exporter dans Excel</li>
             <li>Répartition des exercices durant l'année -> graph</li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>
