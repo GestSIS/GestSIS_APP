@@ -73,5 +73,6 @@ export default {
 <style scoped>
 .exercice-comptable {
   padding: 0.5rem 1rem;
+  padding-right: 0px;
 }
 </style>

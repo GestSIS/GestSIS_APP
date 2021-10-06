@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-12 col-md-12">
+    <div class="col-12 col-md-6">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
