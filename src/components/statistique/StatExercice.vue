@@ -9,10 +9,10 @@
             <input
               type="checkbox"
               class="custom-control-input"
-              id="customSwitch1"
+              id="switch"
               v-model="allCategories"
             />
-            <label class="custom-control-label" for="customSwitch1"
+            <label class="custom-control-label" for="switch"
               >Afficher les catégories sans exercice</label
             >
           </div>
@@ -57,9 +57,7 @@
           </table>
           <h4>TODO:</h4>
           <ul>
-            <li>
-              Graph pour les types d'exercice au lieu de simplement les nombres
-            </li>
+            <li>Graphique d'un simple tableau</li>
             <li>Exporter dans Excel</li>
             <li>Répartition des exercices durant l'année -> graph</li>
           </ul>
