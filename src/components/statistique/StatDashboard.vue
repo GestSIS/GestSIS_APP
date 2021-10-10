@@ -1,7 +1,6 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Dashboard</h3>
@@ -12,20 +11,32 @@
               <li>Nb sapeurs</li>
               <li>Stats cours, fonctions, grades</li>
             </ul> -->
+          <h3>TODO:</h3>
           <h4>Exercices</h4>
           <ul>
-            <li>Nb exercices par types</li>
-            <li>Présences et absences par sapeur</li>
+            <li>1! Présences et absences par sapeur</li>
           </ul>
           <h4>Intervention</h4>
           <ul>
-            <li>Nb interventions par type</li>
+            <li>1! Véhicules &amp; Matériel</li>
             <li>Nb heures par type intervention</li>
             <li>Statistiques de présences sur intervention</li>
           </ul>
           <h4>Frais</h4>
           <ul>
             <li>Répartition des frais</li>
+          </ul>
+
+          <h3>Première version prête</h3>
+          <h4>Exercices</h4>
+          <ul>
+            <li>Stat générale par catégorie</li>
+          </ul>
+          <h4>Intervention</h4>
+          <ul>
+            <li>
+              Stat général pour traitement, type d'intervention et stat fédéral
+            </li>
           </ul>
         </div>
       </div>
