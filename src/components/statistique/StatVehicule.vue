@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-6 col-xl-4">
     <div class="card card-primary card-outline mb-5">
       <div class="card-header d-flex justify-content-between">
         <h3>Stats véhicules pour interventions</h3>
@@ -7,10 +7,10 @@
           <input
             type="checkbox"
             class="custom-control-input"
-            id="switch"
+            id="switch-vehicule"
             v-model="allVehicules"
           />
-          <label class="custom-control-label" for="switch"
+          <label class="custom-control-label" for="switch-vehicule"
             >Afficher les véhicules n'ayant pas effectué d'interventions</label
           >
         </div>

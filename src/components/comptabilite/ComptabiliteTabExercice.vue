@@ -22,54 +22,33 @@
         </div>
         <form class="card-body">
           <div class="form-row">
-            <div class="form-group col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterLocalite"
-                @change="(event) => onFilter('localite_id', event.target.value)"
-              >
-                <option>&lt;Localité&gt;</option>
-                <option
-                  v-for="loc in filteredLocalites"
-                  :key="loc.id"
-                  :value="loc.id"
-                >
-                  {{ loc.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterCategorie"
-                @change="
-                  (event) =>
-                    onFilter('exercice_categorie_id', event.target.value)
-                "
-              >
-                <option>&lt;Catégorie&gt;</option>
-                <option
-                  v-for="catgeorie in filteredCategories"
-                  :key="catgeorie.id"
-                  :value="catgeorie.id"
-                >
-                  {{ catgeorie.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterStatus"
-                @change="
-                  (event) => onFilter('statut', parseInt(event.target.value))
-                "
-              >
-                <option value="-1">&lt;Statut&gt;</option>
-                <option value="3">A imputer</option>
-                <option value="4">Imputée</option>
-              </select>
-            </div>
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Localité&gt;"
+              :options="filteredLocalites"
+              @input="(value) => onFilter('localite_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Catégorie&gt;"
+              :options="filteredCategories"
+              @input="(value) => onFilter('exercice_categorie_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Statut&gt;"
+              :options="[
+                { id: '3', designation: 'A imputer' },
+                { id: '4', designation: 'Imputée' },
+              ]"
+              @input="(value) => onFilter('statut', value)"
+            />
           </div>
         </form>
       </div>

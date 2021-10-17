@@ -24,7 +24,7 @@ async function loadData(_, next) {
 
   // Ajouter ces deux nouvelles interfaces pour les statistiques
   const loadStatVehicules = store.dispatch('fetchMaterielsOccurence');
-  const loadStatMateriel = store.dispatch('fetchVehiculeOccurence');
+  const loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
 
   Promise.all([
     loadInterventions,
@@ -61,8 +61,8 @@ export default {
   watch: {
     activeExerciceComptableId(newValue, _) {
       this.$store.dispatch('fetchListeIntervention');
-      this.$store.dispatch('fetchMaterielOccurence');
-      this.$store.dispatch('fetchVehiculeOccurence');
+      this.$store.dispatch('fetchStatistiqueMateriel');
+      this.$store.dispatch('fetchStatistiqueVehicule');
     },
   },
 };

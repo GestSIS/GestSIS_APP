@@ -14,11 +14,10 @@
           <h3>TODO:</h3>
           <h4>Exercices</h4>
           <ul>
-            <li>1! Présences et absences par sapeur</li>
+            <li>Présences et absences par sapeur</li>
           </ul>
           <h4>Intervention</h4>
           <ul>
-            <li>1! Véhicules &amp; Matériel</li>
             <li>Nb heures par type intervention</li>
             <li>Statistiques de présences sur intervention</li>
           </ul>
@@ -37,6 +36,7 @@
             <li>
               Stat général pour traitement, type d'intervention et stat fédéral
             </li>
+            <li>Véhicules &amp; Matériel</li>
           </ul>
         </div>
       </div>

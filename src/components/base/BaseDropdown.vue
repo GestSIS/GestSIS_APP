@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  name: 'BaseDropdown',
   props: {
     tag: {
       type: String,

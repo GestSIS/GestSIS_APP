@@ -28,7 +28,7 @@
         <div class="card-header d-flex justify-content-between">
           <div class="card-title">
             <h3 class="card-title">Comptes</h3>
-            <dropdown
+            <base-dropdown
               buttonClass="ml-1 btn btn-outline-secondary dropdown-toggle"
               menuClass="dropdown-menu"
               ref="dropdown"
@@ -46,7 +46,7 @@
                   {{ formatCompte(c) }}
                 </button>
               </template>
-            </dropdown>
+            </base-dropdown>
           </div>
         </div>
         <base-table
@@ -72,7 +72,6 @@ import store from '@/store/index';
 import CompteService from '@/services/CompteService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
-import Dropdown from '@/components/base/Dropdown.vue';
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchExercicesComptables');
@@ -88,7 +87,6 @@ export default {
   name: 'FraisTabCompte',
   components: {
     BaseTable,
-    Dropdown,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
