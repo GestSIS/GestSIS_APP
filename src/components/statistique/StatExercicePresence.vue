@@ -1,12 +1,12 @@
 <template>
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-xl-6">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-2">
         <div class="card-header d-flex justify-content-between">
           <h4>Filtres</h4>
         </div>
-        <form class="card-body">
+        <form class="card-body p-2 pb-0">
           <div class="form-row">
             <base-multi-unselect
               wrapperClass="col-md-4"
@@ -36,6 +36,44 @@
         </form>
       </div>
     </div>
+    <div class="col-12 col-xl-6">
+      <!-- /.card-header -->
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h4>Légende</h4>
+        </div>
+        <div class="d-flex mt-2" id="legend-container">
+          <div class="col-6">
+            <table class="table table-sm">
+              <tr>
+                <td class="table-danger">Amende</td>
+              </tr>
+              <tr>
+                <td class="table-secondary">Pour information</td>
+              </tr>
+              <tr>
+                <td class="table-primary">Remplacé</td>
+              </tr>
+              <tr>
+                <td class="table-success">Excusé</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-6" id="legend-excuse">
+            <table class="table table-sm">
+              <tr>
+                <th>Abr</th>
+                <th>Excuse</th>
+              </tr>
+              <tr v-for="excuse in excuses" :key="excuse.id">
+                <td>{{ excuse.abreviation }}</td>
+                <td>{{ excuse.designation }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
@@ -43,10 +81,6 @@
           <h3>Stats Présences aux exercices</h3>
         </div>
         <div class="card-body">
-          <div>
-            <h4>Légende</h4>
-            TODO:
-          </div>
           <table class="table table-sm">
             <thead>
               <tr>
@@ -336,4 +370,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#legend-container {
+  max-height: 140px;
+}
+#legend-excuse {
+  overflow-y: scroll;
+}
 </style>
