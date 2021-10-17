@@ -22,7 +22,7 @@
       </li> -->
     </ul>
     <ul class="navbar-nav">
-      <dropdown
+      <base-dropdown
         tag="li"
         buttonClass="btn btn-link"
         menuClass="dropdown-menu-right"
@@ -36,19 +36,14 @@
           <div class="dropdown-divider"></div>
           <button class="dropdown-item" @click="logout">Déconnexion</button>
         </template>
-      </dropdown>
+      </base-dropdown>
     </ul>
   </nav>
 </template>
 
 <script>
-import Dropdown from '@/components/base/Dropdown.vue';
-
 export default {
   name: 'Navbar',
-  components: {
-    Dropdown,
-  },
   methods: {
     parametres() {
       this.$refs.dropdown.close();

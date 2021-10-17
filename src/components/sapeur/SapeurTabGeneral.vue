@@ -9,29 +9,19 @@
           </button>
         </div>
         <div class="card-body">
-          <div class="form-group">
-            <label for="m-sap-civilite">Civilité</label>
-            <select
-              class="custom-select"
-              id="m-sap-civilite"
-              name="civilite_id"
-              v-model="activeSapeur.civilite_id"
-            >
-              <option
-                v-for="civilite in listeCivilites"
-                :value="civilite.id"
-                :key="civilite.id"
-              >
-                {{ civilite.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            label="Civilité"
+            valueKey="id"
+            displayKey="designation"
+            :options="listeCivilites"
+            v-model="activeSapeur.civilite_id"
+          />
           <!-- NOM -->
           <div class="form-group">
             <label for="m-sap-nom">Nom</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['nom'] }"
               id="m-sap-nom"
               name="nom"
@@ -43,7 +33,7 @@
             <label for="m-sap-prenom">Prénom</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['prenom'] }"
               id="m-sap-prenom"
               name="prenom"
@@ -57,7 +47,7 @@
                 <label for="m-sap-rue">Rue</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['rue'] }"
                   id="m-sap-rue"
                   name="rue"
@@ -70,7 +60,7 @@
                 <label for="m-sap-no-rue">N°</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['no_rue'] }"
                   id="m-sap-no-rue"
                   name="no_rue"
@@ -80,31 +70,21 @@
             </div>
           </div>
           <!-- NPA + LOCALITE -->
-          <div class="form-group">
-            <label for="m-sap-localite">NPA Localité</label>
-            <select
-              class="custom-select required"
-              id="m-sap-localite"
-              name="localite_id"
-              style="width: 100%"
-              v-model="activeSapeur.localite_id"
-            >
-              <option
-                v-for="localite in listeLocalitesSis"
-                :key="localite.id"
-                :value="localite.id"
-              >
-                {{ localite.npa + ' ' + localite.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            label="NPA Localité"
+            valueKey="id"
+            required
+            :options="listeLocalitesSis"
+            :formatter="(l) => l.npa + ' ' + l.designation"
+            v-model="activeSapeur.localite_id"
+          />
           <!-- N° AVS -->
           <div class="row">
             <div class="form-group col-6">
               <label for="m-sap-avs">N° AVS</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['no_avs'] }"
                 id="m-sap-avs"
                 name="no_avs"
@@ -144,7 +124,7 @@
                 </div>
               </div>
               <input
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['email'] }"
                 type="email"
                 id="m-sap-email"
@@ -165,7 +145,7 @@
                     </div>
                   </div>
                   <input
-                    class="form-control"
+                    class="form-control form-control-sm"
                     :class="{ 'is-invalid': errorsData['date_naissance'] }"
                     type="date"
                     id="m-sap-date-naissance"
@@ -187,7 +167,7 @@
                 />
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['suffixe'] }"
                   id="m-sap-suffixe"
                   name="suffixe"
@@ -200,7 +180,7 @@
           <div class="form-group">
             <label for="m-sap-remarques">Remarques</label>
             <textarea
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['remarque'] }"
               rows="3"
               id="m-sap-remarques"
@@ -227,7 +207,7 @@
               <label for="m-sap-profession">Profession</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="m-sap-profession"
                 name="profession"
                 v-model="activeSapeur.profession"
@@ -237,7 +217,7 @@
               <label for="m-sap-employeur">Employeur</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="m-sap-employeur"
                 name="employeur"
                 v-model="activeSapeur.employeur"
@@ -247,7 +227,7 @@
               <label for="m-sap-lieu-travail">Lieu de travail</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="m-sap-lieu-travail"
                 name="lieu_travail"
                 v-model="activeSapeur.lieu_de_travail"

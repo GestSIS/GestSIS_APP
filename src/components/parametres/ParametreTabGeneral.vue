@@ -16,7 +16,7 @@
             <input
               type="text"
               v-model="sisParam.nom"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['nom'] }"
               id="nom"
             />
@@ -27,7 +27,7 @@
               <input
                 type="text"
                 v-model="sisParam.district"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['district'] }"
                 id="district"
               />
@@ -37,7 +37,7 @@
               <input
                 type="text"
                 v-model="sisParam.no_arrondissement"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no_arrondissement'] }"
                 id="no_arrondissement"
               />
@@ -49,7 +49,7 @@
               <input
                 type="text"
                 v-model="sisParam.rue"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['rue'] }"
                 id="rue"
               />
@@ -59,45 +59,33 @@
               <input
                 type="text"
                 v-model="sisParam.numero"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['numero'] }"
                 id="numero"
               />
             </div>
           </div>
-          <div class="form-group">
-            <label for="localite">Localité</label>
-            <select
-              id="localite"
-              v-model="sisParam.localite_id"
-              class="custom-select"
-              :class="{ 'is-invalid': errors['localite_id'] }"
-            >
-              <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
-                {{ localite(l) }}
-              </option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="localite">Commandant</label>
-            <select
-              id="sapeur_id"
-              v-model="sisParam.sapeur_id"
-              class="custom-select"
-              :class="{ 'is-invalid': errors['sapeur_id'] }"
-            >
-              <option v-for="s in listeSapeur" :key="s.id" :value="s.id">
-                {{ sapeur(s) }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            valueKey="id"
+            label="Localité"
+            :formatter="formatLocalite"
+            :options="localites"
+            v-model="sisParam.localite_id"
+          />
+          <base-select
+            valueKey="id"
+            label="Commandant"
+            :formatter="formatSapeur"
+            :options="sapeurs"
+            v-model="sisParam.sapeur_id"
+          />
           <div class="row">
             <div class="col-6 form-group">
               <label for="telephone">Téléphone</label>
               <input
                 type="text"
                 v-model="sisParam.telephone"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['telephone'] }"
                 id="telephone"
               />
@@ -107,7 +95,7 @@
               <input
                 type="text"
                 v-model="sisParam.email"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['email'] }"
                 id="email"
               />
@@ -119,7 +107,7 @@
               <input
                 type="text"
                 v-model="sisParam.iban"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['iban'] }"
                 id="iban"
               />
@@ -129,7 +117,7 @@
               <input
                 type="text"
                 v-model="sisParam.bic"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['bic'] }"
                 id="bic"
               />
@@ -201,15 +189,15 @@ export default {
   computed: {
     ...mapState({
       params: (state) => state.sisParam.params,
-      listeLocalite: (state) => state.localite.liste,
-      listeSapeur: (state) => state.sapeur.liste.sort((a, b) => a.tri - b.tri),
+      localites: (state) => state.localite.liste,
+      sapeurs: (state) => state.sapeur.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
-    localite(localite) {
+    formatLocalite(localite) {
       return localite?.designation;
     },
-    sapeur(sapeur) {
+    formatSapeur(sapeur) {
       return `${sapeur?.nom} ${sapeur?.prenom}`;
     },
     save() {

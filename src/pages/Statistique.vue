@@ -72,6 +72,11 @@ export default {
           permission: permissions.EXERCICE.PRESENCE,
         },
         {
+          to: { name: 'stat-exercice-presence' },
+          name: 'Présences exercices',
+          permission: permissions.EXERCICE.PRESENCE,
+        },
+        {
           to: { name: 'stat-intervention' },
           name: 'Intervention',
           permission: permissions.INTERVENTION.MODIFICATION,

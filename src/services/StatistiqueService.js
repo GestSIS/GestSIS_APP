@@ -7,4 +7,7 @@ export default {
   getMaterielOccurence(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/materiel`);
   },
+  getPresences(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/presence`);
+  },
 };

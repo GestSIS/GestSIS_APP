@@ -19,93 +19,46 @@
         </div>
         <form class="card-body">
           <div class="form-row">
-            <div class="form-group col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterLocalite"
-                @change="(event) => onFilter('localite_id', event.target.value)"
-              >
-                <option>&lt;Localité&gt;</option>
-                <option
-                  v-for="loc in filteredLocalites"
-                  :key="loc.id"
-                  :value="loc.id"
-                >
-                  {{ loc.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterType"
-                @change="
-                  (event) =>
-                    onFilter('type_intervention_id', event.target.value)
-                "
-              >
-                <option>&lt;Type&gt;</option>
-                <option
-                  v-for="type in filteredTypesIntervention"
-                  :key="type.id"
-                  :value="type.id"
-                >
-                  {{ type.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterStatistique"
-                @change="
-                  (event) => onFilter('stat_federal_id', event.target.value)
-                "
-              >
-                <option>&lt;Statistique fédérale&gt;</option>
-                <option
-                  v-for="stat in filteredStatFederal"
-                  :key="stat.id"
-                  :value="stat.id"
-                >
-                  {{ stat.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterTraitement"
-                @change="
-                  (event) =>
-                    onFilter('intervention_traitement_id', event.target.value)
-                "
-              >
-                <option>&lt;Traitement&gt;</option>
-                <option
-                  v-for="traitement in traitements"
-                  :key="traitement.id"
-                  :value="traitement.id"
-                >
-                  {{ traitement.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select
-                class="custom-select custom-select-sm"
-                id="filterEtendue"
-                @change="
-                  (event) => onFilter('degre', parseInt(event.target.value))
-                "
-              >
-                <option>&lt;Etendue&gt;</option>
-                <option value="1">Fausse alarme</option>
-                <option value="2">Petite</option>
-                <option value="3">Moyenne</option>
-                <option value="4">Grande</option>
-              </select>
-            </div>
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Localité&gt;"
+              :options="filteredLocalites"
+              @input="(value) => onFilter('localite_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Type&gt;"
+              :options="filteredTypesIntervention"
+              @input="(value) => onFilter('type_intervention_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Statistique fédérale&gt;"
+              :options="filteredStatFederal"
+              @input="(value) => onFilter('stat_federal_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Traitement&gt;"
+              :options="traitements"
+              @input="(value) => onFilter('intervention_traitement_id', value)"
+            />
+            <base-select
+              wrapperClass="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Etendue&gt;"
+              :options="degres"
+              @input="(value) => onFilter('degre', value)"
+            />
           </div>
         </form>
       </div>
@@ -219,6 +172,12 @@ export default {
   data() {
     let svm = this;
     return {
+      degres: [
+        { id: 1, designation: 'Fausse alarme' },
+        { id: 2, designation: 'Petite' },
+        { id: 3, designation: 'Moyenne' },
+        { id: 4, designation: 'Grande' },
+      ],
       detailRow: FraisEcritureDetails,
       loading: true,
       filters: {},

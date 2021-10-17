@@ -4,7 +4,7 @@
     v-if="currentExerciceComptableId"
   >
     <span>Exercice comptable</span>
-    <dropdown
+    <base-dropdown
       :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
       menuClass="dropdown-menu-right"
       buttonClass="ml-1 btn btn-outline-secondary"
@@ -31,20 +31,16 @@
           <span>Paramètres</span>
         </router-link>
       </template>
-    </dropdown>
+    </base-dropdown>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
-import Dropdown from '@/components/base/Dropdown.vue';
 
 export default {
   name: 'ExerciceComptable',
-  components: {
-    Dropdown,
-  },
   computed: {
     ...mapState({
       listeExerciceComptable: (state) => state.exerciceComptable.liste,

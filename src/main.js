@@ -24,6 +24,13 @@ require('./icons');
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css';
 
+import BaseDropdown from '@/components/base/BaseDropdown.vue';
+import BaseSelect from '@/components/base/BaseSelect.vue';
+import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
+Vue.component('base-dropdown', BaseDropdown);
+Vue.component('base-select', BaseSelect);
+Vue.component('base-multi-unselect', BaseMultiUnselect);
+
 Vue.component('datetime', Datetime);
 Vue.component('default-layout', Default);
 Vue.component('empty-layout', Empty);
