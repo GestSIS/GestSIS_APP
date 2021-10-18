@@ -8,8 +8,13 @@
         Nouveau rôle
       </button>
     </div>
-    <div class="card-body table-responsive">
-      <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
+    <div class="card-body">
+      <table
+        id="sap-cours"
+        class="table table-sm table-responsive"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th data-field="date">Année</th>

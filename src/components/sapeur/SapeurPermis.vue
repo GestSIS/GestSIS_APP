@@ -13,12 +13,14 @@
             <td class="text-right">
               <font-awesome-icon
                 class="text-danger"
-                v-if="permis.type.toLowerCase() === 'c1'"
+                v-if="permis.type.toLowerCase().includes('118')"
                 style="font-size: 1.7em"
                 :icon="['fab', 'gripfire']"
               />
               <img
-                :src="`${publicPath}icons/${permis.type.toLowerCase()}.gif`"
+                :src="`${publicPath}icons/${permis.type
+                  .toLowerCase()
+                  .replace(' ', '_')}.gif`"
               />
             </td>
             <td>

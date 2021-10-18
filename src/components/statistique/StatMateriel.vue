@@ -11,7 +11,8 @@
             v-model="allMateriels"
           />
           <label class="custom-control-label" for="switch-materiel"
-            >Afficher les matériel n'ayant pas effectué d'interventions</label
+            >Afficher le matériel disponible mais pas référencé durant au moins
+            une intervention</label
           >
         </div>
       </div>
