@@ -11,10 +11,10 @@
               <li>Nb sapeurs</li>
               <li>Stats cours, fonctions, grades</li>
             </ul> -->
-          <h3>TODO:</h3>
+          <h3>TODO: Second temps</h3>
           <h4>Exercices</h4>
           <ul>
-            <li>Présences et absences par sapeur</li>
+            <li>Nb heure par sapeur</li>
           </ul>
           <h4>Intervention</h4>
           <ul>
@@ -30,6 +30,7 @@
           <h4>Exercices</h4>
           <ul>
             <li>Stat générale par catégorie</li>
+            <li>Présences et absences par sapeur</li>
           </ul>
           <h4>Intervention</h4>
           <ul>
