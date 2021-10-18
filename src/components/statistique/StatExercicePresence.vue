@@ -258,10 +258,10 @@ export default {
       const filteredPresences = this.presences.filter((p) => {
         const exercice = this.exercices.find((e) => e.id === p.exercice_id);
         return (
-          !unselectedLocaliteExercice.has(exercice.localite_id) &&
-          !unselectedExerciceCategorie.has(exercice.exercice_categorie_id) &&
+          !unselectedLocaliteExercice.has(exercice?.localite_id) &&
+          !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
           !unselectedLocaliteSapeur.has(
-            this.sapeurs.find((s) => s.id === p.sapeur_id).localite_id
+            this.sapeurs.find((s) => s.id === p.sapeur_id)?.localite_id
           )
         );
       });

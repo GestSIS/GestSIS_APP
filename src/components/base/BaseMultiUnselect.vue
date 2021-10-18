@@ -67,9 +67,11 @@ export default {
   },
   watch: {
     options(newValue, oldValue) {
-      const oldOnes = new Set(oldValue);
-      const addedValues = newValue.filter((e) => !oldOnes.has(e));
-      this.model = [...this.model, addedValues];
+      const oldOnes = new Set(this.cachedUnselected);
+      const addedValues = newValue
+        .map((e) => e[this.valueKey])
+        .filter((e) => !oldOnes.has(e));
+      this.model = [...this.model, ...addedValues];
     },
     value(newValue, oldValue) {
       if (oldValue !== newValue) {
