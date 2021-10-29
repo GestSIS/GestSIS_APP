@@ -2,31 +2,37 @@ import Vue from 'vue';
 import Notifications from 'vue-notification';
 import App from './App.vue';
 import router from './router/index';
+import types from './store/mutationTypes';
 import store from './store/index';
 import { TokenService } from './services/StorageService';
 
+// Page layouts
 import Default from './layouts/Default';
 import Empty from './layouts/Empty';
 import NoSidebar from './layouts/NoSidebar';
 
+// External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Tooltip from 'vue-directive-tooltip';
-import VueTimepicker from 'vue2-timepicker';
 import Datetime from 'vue-datetime';
 import VueAWN from 'vue-awesome-notifications';
-import types from './store/mutationTypes';
 
+// External css dependencies
 import 'vue-directive-tooltip/src/css/index.scss';
 import 'nprogress/nprogress.css';
+
+// Css assets
 require('./assets/sass/main.scss');
 require('./icons');
 
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css';
 
+// Base components
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 import BaseSelect from '@/components/base/BaseSelect.vue';
 import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
+
 Vue.component('base-dropdown', BaseDropdown);
 Vue.component('base-select', BaseSelect);
 Vue.component('base-multi-unselect', BaseMultiUnselect);
@@ -36,7 +42,6 @@ Vue.component('default-layout', Default);
 Vue.component('empty-layout', Empty);
 Vue.component('no-sidebar-layout', NoSidebar);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-Vue.component('vue-timepicker', VueTimepicker);
 
 Vue.config.productionTip = false;
 
