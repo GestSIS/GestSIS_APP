@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     saveTelephones() {
-      //TODO Validation de toutes les données
+      //TODO: Validation de toutes les données
 
       this.activeSapeurTelephones.forEach((t) => {
         //Suppression des numéros supprimé

@@ -50,10 +50,12 @@ export default {
     },
   },
   actions: {
-    fetchFonctions({ commit }) {
-      return FonctionService.getFonctions().then((data) =>
-        commit(types.UPDATE_FONCTION_LISTE, data)
-      );
+    fetchFonctions({ commit, state }) {
+      if(state.liste.length <= 0) {
+        return FonctionService.getFonctions().then((data) =>
+          commit(types.UPDATE_FONCTION_LISTE, data)
+        );
+      } else { return Promise.resolve(); }
     },
     addFonction({ commit }, fonction) {
       return FonctionService.addFonction(fonction).then((data) => {

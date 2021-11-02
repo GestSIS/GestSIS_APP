@@ -196,6 +196,16 @@
     <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Photo</h3>
+          <button @click="editPhoto" class="btn btn-primary">Modifier</button>
+        </div>
+        <div class="card-body text-center">
+          <font-awesome-icon v-if="!photo" :icon="['fas', 'user']" size="10x" />
+          <img v-else class="img img-responsive" :src="photo" />
+        </div>
+      </div>
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
           <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">
             Enregistrer
@@ -282,20 +292,11 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
-import store from '@/store/index';
+
+import SapeurService from '../../services/SapeurService';
 
 import SapeurMutations from '@/components/sapeur/SapeurMutations';
 import SapeurTelephones from '@/components/sapeur/SapeurTelephones';
-
-async function loadData(routeTo, next) {
-  let loadTelephones = store.dispatch('fetchTelephones');
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadTelephonesType = store.dispatch('fetchSapeurTelephones');
-
-  Promise.all([loadTelephones, loadLocalites, loadTelephonesType]).then(() => {
-    next();
-  });
-}
 
 export default {
   name: 'SapeurTabGeneral',
@@ -303,15 +304,11 @@ export default {
     SapeurMutations,
     SapeurTelephones,
   },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
   data() {
     return {
       errorsData: {},
+      defaultPhoto: '',
+      photo: null, //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
     };
   },
   mounted() {
@@ -329,6 +326,9 @@ export default {
     }
 
     this.$store.dispatch('fetchSapeurMutations');
+    SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
+      this.photo = photo;
+    });
   },
   computed: {
     ...mapState({
@@ -347,6 +347,9 @@ export default {
     activeSapeurId(id) {
       this.errorsData = {};
       this.$store.dispatch('fetchSapeurMutations', id);
+      SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
+        this.photo = photo;
+      });
     },
   },
   methods: {
@@ -373,10 +376,14 @@ export default {
       }
       this.$store
         .dispatch('saveActiveSapeur', saveSapeur)
-        .then(() => {
+        .then((res) => {
           this.errorsData = {};
+          this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch((err) => {
+          this.$awn.error(
+            err.message || "Erreur lors de l'enregistrement des données"
+          );
           this.errorsData = err;
         });
     },
@@ -387,12 +394,32 @@ export default {
           employeur: this.activeSapeur.employeur,
           lieu_de_travail: this.activeSapeur.lieu_de_travail,
         })
-        .then(() => {
-          // console.log('Save sapeur Success')
+        .then((res) => {
+          this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch(() => {
-          // console.log('Save sapeur Error')
+          this.$awn.error(
+            res.message || "Erreur lors de l'enregistrement des données"
+          );
         });
+    },
+    editPhoto() {
+      this.SHOW_MODAL({
+        component: 'ModalPhotoSapeur',
+        size: 1,
+        data: this.photo,
+        callback: (data) => {
+          if (!data) {
+            return;
+          }
+          return SapeurService.updatePhoto(
+            this.activeSapeurId,
+            data?.blob
+          ).then((res) => {
+            this.photo = data?.image;
+          });
+        },
+      });
     },
   },
 };
