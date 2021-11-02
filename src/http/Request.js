@@ -72,7 +72,7 @@ const request = {
         if (response.data.error !== undefined) {
           throw response.data.error;
         }
-        return response.data.data;
+        return response.data?.data || response.data;
       },
       async (error) => {
         if (error.config && error.response && error.response.status === 401) {

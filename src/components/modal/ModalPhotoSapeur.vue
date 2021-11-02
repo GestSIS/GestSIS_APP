@@ -1,0 +1,121 @@
+<template>
+  <div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ data ? 'Modifier' : 'Ajouter' }} une photo
+      </h5>
+      <button type="button" class="close" @click="HIDE_MODAL()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="photoAjout">Sélectionner une photo</label>
+        <input
+          type="file"
+          class="form-control-file"
+          id="photoAjout"
+          @change="loadFile"
+        />
+      </div>
+      <cropper
+        ref="cropper"
+        class="cropper"
+        :src="img"
+        :canvas="{
+          maxWidth: 128,
+        }"
+        :stencil-props="{
+          aspectRatio: 10 / 12,
+        }"
+        :default-size="defaultSize"
+      >
+      </cropper>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+        :disabled="!img"
+      >
+        {{ data ? 'Modifier' : 'Ajouter' }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapMutations } from 'vuex';
+
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
+
+export default {
+  name: 'ModalPhotoSapeur',
+  props: {
+    data: {
+      type: [Object, String],
+      default: null,
+    },
+    callback: {
+      type: Function,
+      required: true,
+    },
+  },
+  data() {
+    const fr = new FileReader();
+    const self = this;
+    fr.onload = function (e) {
+      self.img = this.result;
+    };
+    return {
+      img: this.data, //'https://images.pexels.com/photos/226746/pexels-photo-226746.jpeg',
+      defaultSize: null,
+      fileReader: fr,
+    };
+  },
+  components: {
+    Cropper,
+  },
+  methods: {
+    ...mapMutations(['HIDE_MODAL']),
+    loadFile(event) {
+      var files = event.target.files || event.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+      this.fileReader.readAsDataURL(files[0]);
+    },
+    save() {
+      const { canvas } = this.$refs.cropper.getResult();
+      const image = canvas.toDataURL();
+      canvas.toBlob((blob) => {
+        this.defaultSize = {
+          width: 128,
+        };
+
+        this.callback({ image, blob })
+          .then((res) => {
+            this.HIDE_MODAL();
+          })
+          .catch((err) => {
+            this.$awn.error(
+              err?.message || "Erreur lors de la modification de l'image"
+            );
+          });
+      }, 'image/jpeg');
+    },
+  },
+};
+</script>
+
+<style scoped>
+.cropper {
+  height: 400px;
+  background: #ddd;
+}
+</style>
