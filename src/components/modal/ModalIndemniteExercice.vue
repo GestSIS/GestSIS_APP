@@ -5,9 +5,7 @@
         {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
         exercice
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -17,7 +15,7 @@
             'col-12': !activeIndemnite.par_fonction,
           }"
         >
-          <div class="form-group">
+          <div class="mb-3">
             <label for="designation">Désignation</label>
             <input
               type="text"
@@ -27,7 +25,7 @@
               id="designation"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="solde">Solde</label>
             <input
               type="text"
@@ -57,12 +55,12 @@
               id="solde_min_pour"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="unite">Unité</label>
             <select
               id="unite"
               v-model="activeIndemnite.type_unite_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
               <option v-for="u in listeUnite" :key="u.id" :value="u.id">
@@ -80,12 +78,12 @@
               id="indemnite"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="compte">Compte</label>
             <select
               id="compte"
               v-model="activeIndemnite.compte_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['compte_id'] }"
             >
               <option v-for="c in listeCompte" :key="c.id" :value="c.id">
@@ -93,26 +91,26 @@
               </option>
             </select>
           </div>
-          <div class="form-group">
-            <div class="custom-control custom-checkbox">
+          <div class="mb-3">
+            <div class="form-check">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 id="par-fonction-modal"
                 v-model="activeIndemnite.par_fonction"
               />
-              <label class="custom-control-label" for="par-fonction-modal"
+              <label class="form-check-label" for="par-fonction-modal"
                 >Par fonction</label
               >
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="mb-3">
             <label for="categorie">Catégorie</label>
             <select
               id="categorie"
               v-model="activeIndemnite.ecriture_categorie_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
               <option v-for="c in listeCategorie" :key="c.id" :value="c.id">

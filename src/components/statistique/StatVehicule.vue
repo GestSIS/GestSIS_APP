@@ -3,14 +3,14 @@
     <div class="card card-primary card-outline mb-5">
       <div class="card-header d-flex justify-content-between">
         <h3>Stats véhicules pour interventions</h3>
-        <div class="custom-control custom-switch mb-2">
+        <div class="form-check form-switch mb-2">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="switch-vehicule"
             v-model="allVehicules"
           />
-          <label class="custom-control-label" for="switch-vehicule"
+          <label class="form-check-label" for="switch-vehicule"
             >Afficher les véhicules n'ayant pas effectué d'interventions</label
           >
         </div>

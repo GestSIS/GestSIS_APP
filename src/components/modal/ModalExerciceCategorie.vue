@@ -5,12 +5,10 @@
         {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }} une catégorie
         d'exercice
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
@@ -20,7 +18,7 @@
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -30,7 +28,7 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="duree_base">Durée standard</label>
         <input
           type="text"
@@ -40,28 +38,28 @@
           id="duree_base"
         />
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="amendable-modal"
             v-model="activeCategorie.amendable"
           />
-          <label class="custom-control-label" for="amendable-modal"
+          <label class="form-check-label" for="amendable-modal"
             >Amendable</label
           >
         </div>
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="status-modal"
             v-model="activeCategorie.status"
           />
-          <label class="custom-control-label" for="status-modal">Actif</label>
+          <label class="form-check-label" for="status-modal">Actif</label>
         </div>
       </div>
     </div>

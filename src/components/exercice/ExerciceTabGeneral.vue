@@ -8,7 +8,7 @@
     </div>
     <div class="card-body">
       <!-- NOM -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="m-exe-des">Designation</label>
         <input
           type="text"
@@ -20,10 +20,10 @@
         />
       </div>
       <!-- CATEGORIE -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="m-sap-cat">Categorie</label>
         <select
-          class="custom-select required"
+          class="form-select required"
           :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
           id="m-sap-cat"
           style="width: 100%"
@@ -41,13 +41,11 @@
       <div class="row">
         <div class="col-6">
           <!-- DATE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-exe-date">Date</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
                 type="date"
@@ -62,13 +60,11 @@
         </div>
         <div class="col-6">
           <!-- HEURE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-exe-heure">Heure</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'clock']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
@@ -85,13 +81,11 @@
       <div class="row">
         <div class="col-6">
           <!-- DUREE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-exe-duree">Durée</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['fas', 'hourglass-end']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['fas', 'hourglass-end']" />
               </div>
               <input
                 type="number"
@@ -103,9 +97,7 @@
                 name="nom"
                 v-model="activeExerciceData.duree"
               />
-              <div class="input-group-append">
-                <span class="input-group-text">min</span>
-              </div>
+              <span class="input-group-text">min</span>
             </div>
           </div>
         </div>
@@ -113,10 +105,10 @@
       <div class="row">
         <div class="col-6">
           <!-- LOCALITE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-sap-localite">Localité</label>
             <select
-              class="custom-select required"
+              class="form-select required"
               :class="{ 'is-invalid': errors['localite_id'] }"
               id="m-sap-localite"
               name="localite_id"
@@ -135,7 +127,7 @@
         </div>
         <div class="col-6">
           <!-- LIEU -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-exe-lieu">Lieu</label>
             <input
               type="text"
@@ -149,7 +141,7 @@
         </div>
       </div>
       <!-- STATUS -->
-      <!--                  <div class="form-group">-->
+      <!--                  <div class="mb-3">-->
       <!--                    <label for="m-exe-status">status</label>-->
       <!--                    <input-->
       <!--                      type="number"-->
@@ -160,7 +152,7 @@
       <!--                    />-->
       <!--                  </div>-->
       <!-- COMMUNICATION -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="m-sap-communication">Communications</label>
         <textarea
           type="text"

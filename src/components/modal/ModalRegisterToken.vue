@@ -2,12 +2,10 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Nouveau jeton d'inscription</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body" v-if="step === 1">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="desc">Description</label>
         <input
           type="text"
@@ -18,7 +16,7 @@
           ref="desc"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Validité</label>
         <input
           type="date"
@@ -28,21 +26,17 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Rôles</label>
-        <div
-          class="custom-control custom-checkbox"
-          v-for="role in roles"
-          :key="role.id"
-        >
+        <div class="form-check" v-for="role in roles" :key="role.id">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             :value="role.id"
             v-model="token.roles"
             :id="'r' + role.id"
           />
-          <label class="custom-control-label" :for="'r' + role.id">{{
+          <label class="form-check-label" :for="'r' + role.id">{{
             role.nom
           }}</label>
         </div>
@@ -58,7 +52,7 @@
         compte.
       </p>
       <p>Ce compte aura dès lors accès au rôles précédemment défini.</p>
-      <div class="form-group">
+      <div class="mb-3">
         <div class="input-group mb-3">
           <input
             type="text"
@@ -68,15 +62,13 @@
             v-model="token.token"
             ref="displayedToken"
           />
-          <div class="input-group-append">
-            <button
-              class="btn btn-outline-secondary"
-              title="Copier dans le press-papier"
-              @click="copyToClipboard"
-            >
-              <font-awesome-icon :icon="['fas', 'copy']" />
-            </button>
-          </div>
+          <button
+            class="btn btn-outline-secondary"
+            title="Copier dans le press-papier"
+            @click="copyToClipboard"
+          >
+            <font-awesome-icon :icon="['fas', 'copy']" />
+          </button>
         </div>
       </div>
     </div>

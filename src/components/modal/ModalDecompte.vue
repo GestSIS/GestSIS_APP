@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Paramètres pour le décompte
       </h5>
-      <button type="button" class="close" @click="close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="m-designation">Désignation</label>
         <input
           type="text"
@@ -21,10 +19,10 @@
           :disabled="this.params.exercice_id || this.params.sapeur_id"
         />
       </div>
-      <div class="form-group" v-if="!this.params.exercice_id">
+      <div class="mb-3" v-if="!this.params.exercice_id">
         <label for="m-exercice-comptable-id">Exercice comptable id</label>
         <select
-          class="custom-select"
+          class="form-select"
           id="m-exercice-comptable-id"
           :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }"
           name="exercice_comptable_id"
@@ -39,7 +37,7 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="m-date">Date</label>
         <input
           type="date"
@@ -50,15 +48,15 @@
           v-model="params.date"
         />
       </div>
-      <div class="form-group" v-if="this.params.exercice_id">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3" v-if="this.params.exercice_id">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="m-sap-cotisation_avs"
             v-model="params.deduction"
           />
-          <label class="custom-control-label" for="m-sap-cotisation_avs"
+          <label class="form-check-label" for="m-sap-cotisation_avs"
             >Déduction</label
           >
         </div>

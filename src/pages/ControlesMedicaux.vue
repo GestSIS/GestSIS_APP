@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -49,15 +49,15 @@
             row-selected-class="table-primary"
             @selected="selected"
             ><template v-slot:checkbox="props">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   :id="props.key"
                   :checked="props.rowData[props.key]"
                   disabled
                 />
-                <label class="custom-control-label" :for="props.key"></label>
+                <label class="form-check-label" :for="props.key"></label>
               </div>
             </template>
             <template v-slot:doc="props">

@@ -5,14 +5,14 @@
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Exercice</h3>
-          <div class="custom-control custom-switch mb-2">
+          <div class="form-check form-switch mb-2">
             <input
               type="checkbox"
-              class="custom-control-input"
+              class="form-check-input"
               id="switch"
               v-model="allCategories"
             />
-            <label class="custom-control-label" for="switch"
+            <label class="form-check-label" for="switch"
               >Afficher les catégories sans exercice</label
             >
           </div>
@@ -35,16 +35,16 @@
               >
                 <td>{{ c.designation }}</td>
                 <td class="text-center">
-                  <div class="custom-control custom-checkbox">
+                  <div class="form-check">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       :id="'amendable' + c.id"
                       :checked="c.amendable"
                       disabled
                     />
                     <label
-                      class="custom-control-label"
+                      class="form-check-label"
                       :for="'amendable' + c.id"
                     ></label>
                   </div>

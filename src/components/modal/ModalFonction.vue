@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une fonction
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="nom">Nom</label>
         <input
           type="text"
@@ -29,7 +27,7 @@
           id="nom"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="abreviation">Abréviation</label>
         <input
           type="text"
@@ -39,15 +37,15 @@
           id="abreviation"
         />
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="fonction-cumulable-modal"
             v-model="activeFonction.cumulable"
           />
-          <label class="custom-control-label" for="fonction-cumulable-modal"
+          <label class="form-check-label" for="fonction-cumulable-modal"
             >Cumulable</label
           >
         </div>

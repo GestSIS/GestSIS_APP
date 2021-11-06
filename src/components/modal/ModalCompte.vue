@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeCompte.id ? 'Modifier' : 'Ajouter' }} un compte
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="numero"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -29,15 +27,15 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="fonction-actif-modal"
             v-model="activeCompte.actif"
           />
-          <label class="custom-control-label" for="fonction-actif-modal"
+          <label class="form-check-label" for="fonction-actif-modal"
             >Actif</label
           >
         </div>

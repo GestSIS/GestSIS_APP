@@ -28,10 +28,8 @@
             </td>
             <td>
               <div class="input-group">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                  </div>
+                <div class="input-group-text">
+                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
                   type="date"
@@ -41,16 +39,14 @@
                     'is-invalid': isInvalid(permis.permis_type_id),
                   }"
                 />
-                <div class="input-group-append">
-                  <button
-                    v-if="(permis.date || '') !== ''"
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    @click="supprimerPermis(permis.permis_type_id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </div>
+                <button
+                  v-if="(permis.date || '') !== ''"
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimerPermis(permis.permis_type_id)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
               </div>
             </td>
           </tr>

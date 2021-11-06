@@ -5,10 +5,8 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
         </div>
-        <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" disabled>
-            Imputer
-          </button>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" disabled>Imputer</button>
         </div>
       </div>
     </div>
@@ -18,7 +16,7 @@
           <h3 class="card-title">Filtres</h3>
         </div>
         <form class="card-body">
-          <div class="form-row">
+          <div class="row">
             <base-select
               wrapperClass="col-md-4"
               valueKey="id"

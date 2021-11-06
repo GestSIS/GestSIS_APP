@@ -31,15 +31,15 @@
             <td>{{ e.debut }}</td>
             <td>{{ e.fin }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="en_cours"
                   :checked="e.boucle"
                   disabled
                 />
-                <label class="custom-control-label" for="en_cours"></label>
+                <label class="form-check-label" for="en_cours"></label>
               </div>
             </td>
             <td>

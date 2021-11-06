@@ -4,26 +4,20 @@
       <h5 class="modal-title">
         Modification des rôles de <em>{{ user.name }}</em>
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Rôles</label>
-        <div
-          class="custom-control custom-checkbox"
-          v-for="role in roles"
-          :key="role.id"
-        >
+        <div class="form-check" v-for="role in roles" :key="role.id">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             :value="role.id"
             v-model="user.roles"
             :id="'r' + role.id"
           />
-          <label class="custom-control-label" :for="'r' + role.id">{{
+          <label class="form-check-label" :for="'r' + role.id">{{
             role.nom
           }}</label>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-12 col-lg-8 ml-auto mr-auto mb-4">
+    <div class="col-12 col-lg-8 ms-auto me-auto mb-4">
       <div class="multisteps-form__progress">
         <button
           v-for="(step, i) in steps"

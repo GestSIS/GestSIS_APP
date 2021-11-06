@@ -39,7 +39,7 @@
                 <td>
                   <button
                     type="button"
-                    class="btn btn-outline-primary border-0 ml-2"
+                    class="btn btn-outline-primary border-0 ms-2"
                     @click="editPhase(phase)"
                   >
                     <font-awesome-icon :icon="['far', 'edit']" />
@@ -71,9 +71,9 @@
         </div>
         <div class="card-body">
           <div class="badge-wrapper">
-            <span class="badge badge-secondary mr-2">Intervention</span>
-            <span class="badge badge-primary mr-2">Entretient</span>
-            <span class="badge badge-success mr-2">Piquet</span>
+            <span class="badge bg-secondary me-2">Intervention</span>
+            <span class="badge bg-primary me-2">Entretient</span>
+            <span class="badge bg-success me-2">Piquet</span>
           </div>
           <div class="table-wrapper" ref="wrapper">
             <table class="table table-sm table-bordered">
@@ -85,7 +85,7 @@
                     colspan="4"
                     v-for="(col, i) in columns"
                     :key="i"
-                    class="text-center pr-3 pl-3"
+                    class="text-center ps-3 pe-3"
                   >
                     {{ col }}h
                   </th>
@@ -94,22 +94,22 @@
                   <th
                     v-for="(col, i) in columns"
                     :key="'1' + i"
-                    class="pr-3 pl-3"
+                    class="ps-3 pe-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'2' + i"
-                    class="pr-3 pl-3"
+                    class="ps-3 pe-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'3' + i"
-                    class="pr-3 pl-3"
+                    class="ps-3 pe-3"
                   ></th>
                   <th
                     v-for="(col, i) in columns"
                     :key="'4' + i"
-                    class="pr-3 pl-3"
+                    class="ps-3 pe-3"
                   ></th>
                 </tr>
               </thead>
@@ -120,7 +120,7 @@
               </tbody>
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
-                  <th class="ml-0 pl-0">
+                  <th class="ms-0 pe-0">
                     <button
                       class="btn btn-link border-0"
                       @click="expandSap(s.id)"
@@ -137,10 +137,10 @@
                     {{ formatSapeur(s) }}
                   </th>
                   <td class="text-center">
-                    <div class="custom-control custom-checkbox d-inline">
+                    <div class="form-check d-inline">
                       <input
                         type="checkbox"
-                        class="custom-control-input"
+                        class="form-check-input"
                         :id="s.id"
                         :checked="
                           quittances.filter(
@@ -149,7 +149,7 @@
                         "
                       />
                       <label
-                        class="custom-control-label"
+                        class="form-check-label"
                         :for="s.id"
                         @click="(e) => editQuittance(e, s.id)"
                       ></label>
@@ -163,7 +163,7 @@
                       'bg-primary': computedPresences[s.id][i] === 2,
                       'bg-success': computedPresences[s.id][i] === 3,
                     }"
-                    class="pr-3 pl-3"
+                    class="ps-3 pe-3"
                   ></td>
                 </tr>
                 <template v-if="toggles[s.id]">
@@ -179,7 +179,7 @@
                       {{ formatDatePresence(p.fin) }}
                       <button
                         type="button"
-                        class="btn btn-outline-primary border-0 ml-2"
+                        class="btn btn-outline-primary border-0 ms-2"
                         @click="editPresence(p)"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />

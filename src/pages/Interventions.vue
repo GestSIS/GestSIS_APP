@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -26,11 +26,11 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Actions</h5>
           </div>
-          <form class="card-body">
+          <form class="card-body d-grid gap-1">
             <router-link
               tag="button"
               to="/interventions/new"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Ajouter une intervention
             </router-link>
@@ -38,14 +38,14 @@
               tag="button"
               :disabled="!selectedId"
               :to="'/interventions/' + selectedId"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Modifier
             </router-link>
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Supprimer
             </button>
@@ -62,7 +62,7 @@
             <button
               :disabled="!selectedId"
               @click="rapportIntervention"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Rapport d'intervention
             </button>
@@ -76,10 +76,10 @@
             <h5>Filtres</h5>
           </div>
           <form class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-4">
+            <div class="row">
+              <div class="mb-3 col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterLocalite"
                   @change="
                     (event) => onFilter('localite_id', event.target.value)
@@ -97,7 +97,7 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterType"
                   @change="
                     (event) =>
@@ -116,7 +116,7 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterStatistique"
                   @change="
                     (event) => onFilter('stat_federal_id', event.target.value)
@@ -134,7 +134,7 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterTraitement"
                   @change="
                     (event) =>
@@ -153,7 +153,7 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterEtendue"
                   @change="
                     (event) => onFilter('degre', parseInt(event.target.value))

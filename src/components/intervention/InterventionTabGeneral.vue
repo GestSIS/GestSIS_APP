@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <div class="row mb-2">
-        <div class="col-auto mr-auto"></div>
+        <div class="col-auto me-auto"></div>
         <div class="col-auto">
           <button @click.prevent="save" class="btn btn-primary">
             Enregistrer
@@ -18,16 +18,14 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-6 col-xl-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-date-debut">Date de début</label>
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                    </div>
+                  <div class="input-group-text">
+                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
-                    class="form-control"
+                    class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_debut'] }"
                     type="date"
                     :min="dateDebutMin"
@@ -40,17 +38,15 @@
               </div>
             </div>
             <div class="col-sm-6 col-xl-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-heure_debut">Heure</label>
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'clock']" />
-                    </div>
+                  <div class="input-group-text">
+                    <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
                     type="time"
-                    class="form-control"
+                    class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['heure_debut'] }"
                     id="m-int-heure_debut"
                     name="heure_debut"
@@ -62,16 +58,14 @@
           </div>
           <div class="row">
             <div class="col-sm-6 col-xl-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-date-fin">Date de fin</label>
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                    </div>
+                  <div class="input-group-text">
+                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
-                    class="form-control"
+                    class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_fin'] }"
                     :min="dateFinMin"
                     :max="dateFinMax"
@@ -84,17 +78,15 @@
               </div>
             </div>
             <div class="col-sm-6 col-xl-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-heure_fin">Heure</label>
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'clock']" />
-                    </div>
+                  <div class="input-group-text">
+                    <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
                     type="time"
-                    class="form-control"
+                    class="form-control form-control-sm"
                     :class="{
                       'is-invalid': errors['heure_fin'],
                     }"
@@ -107,11 +99,11 @@
             </div>
           </div>
           <!-- OBJET -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-objet">Objet</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['objet'] }"
               id="m-int-objet"
               name="objet"
@@ -120,11 +112,11 @@
           </div>
 
           <!-- LIEU -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-lieu">Lieu (Rue, N°)</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
               id="m-int-lieu"
               name="lieu"
@@ -132,10 +124,10 @@
             />
           </div>
           <!-- NPA + LOCALITE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-localite">Localité</label>
             <select
-              class="custom-select required"
+              class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['localite_id'] }"
               id="m-int-localite"
               name="localite_id"
@@ -152,10 +144,10 @@
             </select>
           </div>
           <!-- Chef d'intervention -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-sapeur">Chef d'intervention</label>
             <select
-              class="custom-select required"
+              class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['sapeur_id'] }"
               id="m-int-sapeur"
               name="localite_id"
@@ -182,10 +174,10 @@
         </div>
         <div class="card-body">
           <!-- INTERVENTION TRAITEMENT -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-traitement">Traitement</label>
             <select
-              class="custom-select required"
+              class="form-select form-select-sm required"
               :class="{
                 'is-invalid': errors['intervention_traitement_id'],
               }"
@@ -204,10 +196,10 @@
             </select>
           </div>
           <!-- TYPE D'INTERVENTION -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-type">Type d'intervention</label>
             <select
-              class="custom-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_intervention_id'] }"
               id="m-int-type"
               name="type_intervention_id"
@@ -223,10 +215,10 @@
             </select>
           </div>
           <!-- STAT FEDERAL -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-stat">Statistique fédérale</label>
             <select
-              class="custom-select required"
+              class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['stat_federal_id'] }"
               id="m-int-stat"
               name="stat"
@@ -244,11 +236,11 @@
           </div>
 
           <!-- Sauve personnes -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-save-pers">Nb de personnes sauvées</label>
             <input
               type="number"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_personne'] }"
               id="m-int-save-pers"
               name="sauve_personne"
@@ -257,11 +249,11 @@
             />
           </div>
           <!-- Sauve animaux -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-save-ani">Nb d'animaux sauvés</label>
             <input
               type="number"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_animaux'] }"
               id="m-int-save-ani"
               name="sauve_animaux"
@@ -271,10 +263,10 @@
           </div>
 
           <!-- DEGRE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-degre">Degre</label>
             <select
-              class="custom-select required"
+              class="form-select form-select-sm required"
               :class="{
                 'is-invalid': errors['degre'],
               }"
@@ -301,11 +293,11 @@
           <div class="row">
             <div class="col-sm-12 col-xl-12">
               <!-- Proprio -->
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-save-ani">Propriétaire</label>
                 <textarea
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['proprietaire'] }"
                   id="m-int-proprietaire"
                   name="proprietaire"
@@ -314,11 +306,11 @@
                 ></textarea>
               </div>
               <!-- Responsable -->
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-int-save-ani">Responsable</label>
                 <textarea
                   type="text"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['responsable'] }"
                   id="m-int-responsable"
                   name="responsable"

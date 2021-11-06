@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un grade
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="abreviation">Abréviation</label>
         <input
           type="text"
@@ -29,7 +27,7 @@
           id="abreviation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -39,9 +37,9 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-precedent">Grade précédent</label>
-        <select id="groupe" v-model="activeGrade.groupe" class="custom-select">
+        <select id="groupe" v-model="activeGrade.groupe" class="form-select">
           <option value="1">Officier</option>
           <option value="2">Sous-Officier</option>
           <option value="3">Spécialiste</option>

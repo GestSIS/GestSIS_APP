@@ -11,7 +11,7 @@
           </button>
         </div>
         <div class="card-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="nom">Nom du SIS</label>
             <input
               type="text"
@@ -22,7 +22,7 @@
             />
           </div>
           <div class="row">
-            <div class="col-8 form-group">
+            <div class="col-8 mb-3">
               <label for="district">District</label>
               <input
                 type="text"
@@ -32,7 +32,7 @@
                 id="district"
               />
             </div>
-            <div class="col-4 form-group">
+            <div class="col-4 mb-3">
               <label for="no_arrondissement">No arrondissement</label>
               <input
                 type="text"
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-8 form-group">
+            <div class="col-8 mb-3">
               <label for="rue">Rue</label>
               <input
                 type="text"
@@ -54,7 +54,7 @@
                 id="rue"
               />
             </div>
-            <div class="col-4 form-group">
+            <div class="col-4 mb-3">
               <label for="numero">Numéro</label>
               <input
                 type="text"
@@ -80,7 +80,7 @@
             v-model="sisParam.sapeur_id"
           />
           <div class="row">
-            <div class="col-6 form-group">
+            <div class="col-6 mb-3">
               <label for="telephone">Téléphone</label>
               <input
                 type="text"
@@ -90,7 +90,7 @@
                 id="telephone"
               />
             </div>
-            <div class="col-6 form-group">
+            <div class="col-6 mb-3">
               <label for="email">Email</label>
               <input
                 type="text"
@@ -102,7 +102,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-6 form-group">
+            <div class="col-6 mb-3">
               <label for="iban">Iban</label>
               <input
                 type="text"
@@ -112,7 +112,7 @@
                 id="iban"
               />
             </div>
-            <div class="col-6 form-group">
+            <div class="col-6 mb-3">
               <label for="bic">BIC</label>
               <input
                 type="text"

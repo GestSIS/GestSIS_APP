@@ -25,27 +25,27 @@
             <td>{{ c.designation }}</td>
             <td>{{ c.duree_base }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="amendable"
                   :checked="c.amendable"
                   disabled
                 />
-                <label class="custom-control-label" for="amendable"></label>
+                <label class="form-check-label" for="amendable"></label>
               </div>
             </td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="status"
                   :checked="c.status"
                   disabled
                 />
-                <label class="custom-control-label" for="amende"></label>
+                <label class="form-check-label" for="amende"></label>
               </div>
             </td>
             <td>

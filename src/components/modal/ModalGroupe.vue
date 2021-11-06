@@ -2,12 +2,10 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter un groupe</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="abreviation">No</label>
         <input
           type="number"
@@ -17,7 +15,7 @@
           id="no"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="abreviation">Nom</label>
         <input
           type="text"
@@ -27,26 +25,26 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-precedent">Groupe parent</label>
-        <select id="pere_id" v-model="groupe.pere_id" class="custom-select">
+        <select id="pere_id" v-model="groupe.pere_id" class="form-select">
           <option :value="null">-</option>
           <option v-for="g in groupes" :key="g.id" :value="g.id">
             {{ (g.no ? g.no + ' ' : '') + g.designation }}
           </option>
         </select>
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="modal-type"
             v-model="groupe.type"
             :true-value="1"
             :false-value="0"
           />
-          <label class="custom-control-label" for="modal-type"
+          <label class="form-check-label" for="modal-type"
             >Groupe d'alarme</label
           >
         </div>

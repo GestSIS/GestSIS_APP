@@ -9,12 +9,12 @@
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-6">
+        <div class="mb-3 col-6">
           <label for="compte_id">Compte</label>
           <select
             id="compte_id"
             v-model="params.compte_id"
-            class="custom-select"
+            class="form-select"
             :class="{ 'is-invalid': errors['compte_id_id'] }"
           >
             <option v-for="c in listeCompte" :key="c.id" :value="c.id">
@@ -22,12 +22,12 @@
             </option>
           </select>
         </div>
-        <div class="form-group col-6">
+        <div class="mb-3 col-6">
           <label for="ecriture_categorie_id">Catégorie d'écriture</label>
           <select
             id="ecriture_categorie_id"
             v-model="params.ecriture_categorie_id"
-            class="custom-select"
+            class="form-select"
             :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
           >
             <option v-for="c in listeCategorie" :key="c.id" :value="c.id">

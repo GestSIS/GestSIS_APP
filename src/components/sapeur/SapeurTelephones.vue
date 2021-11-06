@@ -17,7 +17,7 @@
             <th>
               RTA
               <font-awesome-icon
-                class="ml-1"
+                class="ms-1"
                 v-tooltip.bottom="
                   'Cocher pour transmettre à la centrale d\'alarme RTA'
                 "
@@ -48,7 +48,7 @@
             </td>
             <td>
               <select
-                class="custom-select custom-select-sm"
+                class="form-select form-select-sm"
                 v-model="t.telephone_type_id"
               >
                 <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
@@ -57,14 +57,14 @@
               </select>
             </td>
             <td class="align-middle text-center">
-              <div class="custom-control custom-checkbox text-center">
+              <div class="form-check text-center">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   :id="t.priorite"
                   v-model="t.rta"
                 />
-                <label class="custom-control-label" :for="t.priorite"></label>
+                <label class="form-check-label" :for="t.priorite"></label>
               </div>
             </td>
             <td>
@@ -88,7 +88,7 @@
         @click="addTelephone()"
         :disabled="this.telephonesData.length >= 3"
       >
-        <font-awesome-icon class="mr-1" :icon="['fas', 'plus']" />
+        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />
         Ajouter un numéro
       </button>
     </div>

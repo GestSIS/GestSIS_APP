@@ -4,19 +4,18 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ data ? 'Modifier' : 'Ajouter' }} une photo
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label for="photoAjout">Sélectionner une photo</label>
-        <input
-          type="file"
-          class="form-control-file"
-          id="photoAjout"
-          @change="loadFile"
-        />
+      <div class="mb-3">
+        <div class="input-group">
+          <input
+            type="file"
+            class="form-control"
+            id="photoAjout"
+            @change="loadFile"
+          />
+        </div>
       </div>
       <cropper
         ref="cropper"

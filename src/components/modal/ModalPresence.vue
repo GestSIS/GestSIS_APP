@@ -2,31 +2,27 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter des présences</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="piquet"
             v-model="piquet"
           />
-          <label class="custom-control-label" for="piquet">Piquet</label>
+          <label class="form-check-label" for="piquet">Piquet</label>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-6 col-xl-6">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-date-debut">Date de début</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
                 class="form-control"
@@ -42,13 +38,11 @@
           </div>
         </div>
         <div class="col-sm-6 col-xl-6">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-heure_debut">Heure</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'clock']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
@@ -64,13 +58,11 @@
       </div>
       <div class="row">
         <div class="col-sm-6 col-xl-6">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-date-fin">Date de fin</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
                 class="form-control"
@@ -86,13 +78,11 @@
           </div>
         </div>
         <div class="col-sm-6 col-xl-6">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-int-heure_fin">Heure</label>
             <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'clock']" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
@@ -110,14 +100,14 @@
       </div>
       <ul class="list-group" v-if="!editMode">
         <li v-for="s in listSapeurs" :key="s.id" class="list-group-item">
-          <div class="custom-control custom-checkbox">
+          <div class="form-check">
             <input
               type="checkbox"
-              class="custom-control-input"
+              class="form-check-input"
               :id="'sp' + s.id"
               v-model="selectedSapeurs[s.id]"
             />
-            <label class="custom-control-label" :for="'sp' + s.id">{{
+            <label class="form-check-label" :for="'sp' + s.id">{{
               formatSapeur(s)
             }}</label>
           </div>

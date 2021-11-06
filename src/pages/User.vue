@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -23,7 +23,7 @@
             <h3>Utiliser un jeton</h3>
           </div>
           <div class="card-body">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="jeton">Jeton</label>
               <input
                 type="text"

@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }} un médecin
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="adresse">Adresse</label>
         <input
           type="text"
@@ -29,12 +27,12 @@
           id="adresse"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="localite">Localité</label>
         <select
           id="localite"
           v-model="activeMedecin.localite_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
           <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
@@ -42,15 +40,15 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="medecin-actif-modal"
             v-model="activeMedecin.actif"
           />
-          <label class="custom-control-label" for="medecin-actif-modal"
+          <label class="form-check-label" for="medecin-actif-modal"
             >Actif</label
           >
         </div>

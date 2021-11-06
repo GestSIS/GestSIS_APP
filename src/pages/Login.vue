@@ -3,7 +3,7 @@
     <form class="text-center form-signin" _lpchecked="1">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 font-weight-normal">Veuillez-vous connectez</h1>
+      <h1 class="h3 mb-3 fwnormal">Veuillez-vous connectez</h1>
       <label for="inputEmail" class="sr-only">Adresse email</label>
       <input
         v-model="email"

@@ -15,17 +15,17 @@
           <i class="fa fa-bars"></i>
         </a>
       </li>
-      <!-- <li class="nav-item d-none d-sm-inline-block mr-auto">
+      <!-- <li class="nav-item d-none d-sm-inline-block me-auto">
         <router-link :to="{ name: 'accueil' }" class="nav-link">
           Accueil
         </router-link>
       </li> -->
     </ul>
-    <ul class="navbar-nav">
+    <ul class="navbar-nav me-2">
       <base-dropdown
         tag="li"
-        buttonClass="btn btn-link"
-        menuClass="dropdown-menu-right"
+        buttonClass="btn btn-link nav-link"
+        menuClass="dropdown-menu-end"
         ref="dropdown"
       >
         <template #title>

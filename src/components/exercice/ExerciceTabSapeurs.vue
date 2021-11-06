@@ -24,63 +24,56 @@
             {{ sapeurNomPrenom(sap.sapeur_id) }}
           </td>
           <td>
-            <div class="custom-control custom-checkbox text-center">
+            <div class="form-check text-center">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="sap.id + 'convoque'"
                 checked=""
                 v-model="sap.convoque"
               />
-              <label
-                class="custom-control-label"
-                :for="sap.id + 'convoque'"
-              ></label>
             </div>
           </td>
           <td>
-            <div class="custom-control custom-checkbox text-center">
+            <div class="form-check text-center">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="sap.id + 'present'"
                 checked=""
                 v-model="sap.present"
                 @change="selectPresent(sap)"
               />
-              <label
-                class="custom-control-label"
-                :for="sap.id + 'present'"
-              ></label>
+              <label class="form-check-label" :for="sap.id + 'present'"></label>
             </div>
           </td>
           <td>
-            <div class="custom-control custom-checkbox text-center">
+            <div class="form-check text-center">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="sap.id + 'remplace'"
                 checked=""
                 v-model="sap.remplace"
                 @change="selectRemplace(sap)"
               />
               <label
-                class="custom-control-label"
+                class="form-check-label"
                 :for="sap.id + 'remplace'"
               ></label>
             </div>
           </td>
           <td>
-            <div class="custom-control custom-checkbox text-center">
+            <div class="form-check text-center">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="sap.id + 'excuse'"
                 checked=""
                 v-model="sap.excuse_type_id"
                 @change.stop.prevent="selectExcuse(sap)"
               />
-              <label class="custom-control-label" :for="sap.id + 'excuse'">
+              <label class="form-check-label" :for="sap.id + 'excuse'">
                 <span
                   v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
                   >{{ getExcuseType(sap.excuse_type_id).designation }}</span
@@ -89,31 +82,28 @@
             </div>
           </td>
           <td>
-            <div class="custom-control custom-checkbox text-center">
+            <div class="form-check text-center">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="sap.id + 'amende'"
                 checked=""
                 v-model="sap.amende"
                 :disabled="!!(sap.remplace || sap.present)"
               />
-              <label
-                class="custom-control-label"
-                :for="sap.id + 'amende'"
-              ></label>
+              <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <p class="ml-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
+    <p class="ms-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
     <div class="card-footer">
       <button class="btn btn-outline-primary" @click="manageSapeurs">
         Gérer la liste des sapeurs
       </button>
       <button
-        class="btn btn-outline-primary ml-2"
+        class="btn btn-outline-primary ms-2"
         @click="validate"
         :disabled="!canValidate"
         v-if="hasValidationPermission"

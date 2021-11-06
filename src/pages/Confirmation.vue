@@ -3,7 +3,7 @@
     <form class="text-center form-signin" _lpchecked="1">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h1 mb-3 font-weight-normal">Confirmation de votre email</h1>
+      <h1 class="h1 mb-3 fwnormal">Confirmation de votre email</h1>
       <h2 class="h3 mb-3" v-if="success">
         Email validé avec succès, vous allez être redirigé dans
         {{ sec }} secondes

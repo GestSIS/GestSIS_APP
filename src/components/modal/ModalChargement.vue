@@ -4,8 +4,8 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Chargement en cours ...
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()">
+        
       </button>
     </div>
     <div class="modal-body">

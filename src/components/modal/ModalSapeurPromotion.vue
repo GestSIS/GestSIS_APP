@@ -2,27 +2,25 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter une promotion</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-date">Date de la promotion</label>
         <input
           type="date"
           v-model="activeGrade.date"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="grade">Grade</label>
         <select
           id="grade"
           v-model="activeGrade.grade_id"
-          class="custom-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
           <option v-for="g in listGrades" :key="g.id" :value="g.id">
@@ -30,12 +28,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input
           type="text"
           v-model="activeGrade.remarque"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
           id="remarque"
         />

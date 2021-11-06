@@ -27,18 +27,15 @@
             <tr v-for="v in vehicules" :key="v.id">
               <td>{{ v.designation }}</td>
               <td>
-                <div class="form-group">
-                  <div class="custom-control custom-checkbox">
+                <div class="mb-3">
+                  <div class="form-check">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       :id="'v-' + v.id"
                       v-model="selected[v.id]"
                     />
-                    <label
-                      class="custom-control-label"
-                      :for="'v-' + v.id"
-                    ></label>
+                    <label class="form-check-label" :for="'v-' + v.id"></label>
                   </div>
                 </div>
               </td>

@@ -4,48 +4,46 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeCours.id ? 'Modifier' : 'Ajouter' }} un cours
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
           v-model="activeCours.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="abreviation">Abréviation</label>
         <input
           type="text"
           v-model="activeCours.abreviation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
           id="abreviation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
           v-model="activeCours.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-precedent">Cours précédent</label>
         <select
           id="cours-precedent"
           v-model="activeCours.precedent_id"
-          class="custom-select"
+          class="form-select"
         >
           <option value="0">-</option>
           <option v-for="c in listeCours" :key="c.id" :value="c.id">
@@ -53,12 +51,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="grade">Grade</label>
         <select
           id="grade"
           v-model="activeCours.grade_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
           <option value="0">-</option>
@@ -68,12 +66,12 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="fonction">Fonction</label>
         <select
           id="fonction"
           v-model="activeCours.fonction_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
           <option value="0">-</option>
@@ -82,22 +80,22 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="validite_debut">Validité début</label>
         <input
           type="date"
           v-model="activeCours.validite_debut"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite_debut'] }"
           id="validite_debut"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="validite_fin">Validité fin</label>
         <input
           type="date"
           v-model="activeCours.validite_fin"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite_fin'] }"
           id="validite_fin"
         />

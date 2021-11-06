@@ -2,12 +2,10 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter une mission</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="debut">Début</label>
         <input
           type="datetime-local"
@@ -19,7 +17,7 @@
           :max="max"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <autocomplete
           v-model="activeMission.titre"
           :items="listMissions.map((m) => m.titre)"
@@ -27,12 +25,12 @@
           title="Titre"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="mission">Responsable</label>
         <select
           id="mission"
           v-model="activeMission.sapeur_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
           <option v-for="s in listSapeurs" :key="s.id" :value="s.id">
@@ -40,7 +38,7 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="fin">Quittance</label>
         <input
           type="datetime-local"
@@ -52,7 +50,7 @@
           :max="max"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="resume">Résumé</label>
         <textarea
           v-model="activeMission.resume"

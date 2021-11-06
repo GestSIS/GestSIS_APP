@@ -2,17 +2,15 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter du materiel</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="materiel">Matériel</label>
         <select
           id="materiel"
           v-model="activeMateriel.materiel_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['materiel_id'] }"
           :disabled="activeMateriel.id"
         >
@@ -21,7 +19,7 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="remarque">Quantité</label>
         <input
           type="number"

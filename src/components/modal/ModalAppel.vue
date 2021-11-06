@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="heure">Heure</label>
         <input
           type="datetime-local"
@@ -21,7 +19,7 @@
           :max="max"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <autocomplete
           v-model="activeAppel.nom"
           :items="listTelephones.map((t) => t.nom)"
@@ -29,7 +27,7 @@
           title="Correspondant"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
           type="text"
@@ -39,7 +37,7 @@
           id="numero"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="commentaire">Commentaire</label>
         <textarea
           v-model="activeAppel.commentaire"
