@@ -2,9 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Imputer l'exercice</h5>
-      <button type="button" class="close" @click="cancel">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <multi-step
@@ -53,17 +51,17 @@
                 <td>{{ indemnite.unite_id }}</td>
                 <td>{{ formatCompte(getCompte(indemnite.compte_id)) }}</td>
                 <td>
-                  <div class="custom-control custom-checkbox">
+                  <div class="form-check">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
-                      id="customCheck2"
+                      class="form-check-input"
+                      id="checkbox-fonction"
                       :checked="indemnite.par_fonction"
                       disabled=""
                     />
                     <label
-                      class="custom-control-label"
-                      for="customCheck2"
+                      class="form-check-label"
+                      for="checkbox-fonction"
                     ></label>
                   </div>
                 </td>

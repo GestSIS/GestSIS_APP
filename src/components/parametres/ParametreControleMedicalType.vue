@@ -24,15 +24,15 @@
             <td>{{ t.designation }}</td>
             <td>{{ t.duree_validite }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="expirable"
                   :checked="t.expirable"
                   disabled
                 />
-                <label class="custom-control-label" for="expirable"></label>
+                <label class="form-check-label" for="expirable"></label>
               </div>
             </td>
             <td>

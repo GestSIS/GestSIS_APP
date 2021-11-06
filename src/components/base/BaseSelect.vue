@@ -1,8 +1,8 @@
 <template>
-  <div class="form-group" :class="wrapperClass">
+  <div class="mb-3" :class="wrapperClass">
     <label v-if="label" :for="label">{{ label }}</label>
     <select
-      class="custom-select custom-select-sm"
+      class="form-select form-select-sm"
       :id="label"
       v-model="model"
       v-bind="{

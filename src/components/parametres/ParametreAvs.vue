@@ -10,7 +10,7 @@
           </button>
         </div>
         <div class="card-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="taux_avs">Taux AVS</label>
             <input
               type="text"
@@ -20,7 +20,7 @@
               id="taux_avs"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="taux_ac">Taux AC</label>
             <input
               type="text"
@@ -30,7 +30,7 @@
               id="taux_ac"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="franchise_avs">Franchise AVS</label>
             <input
               type="text"
@@ -40,7 +40,7 @@
               id="franchise_avs"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="franchise_imposition"
               >Franchise imposition fédéral</label
             >
@@ -52,12 +52,12 @@
               id="franchise_imposition"
             />
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="compte_id">Compte</label>
             <select
               id="compte_id"
               v-model="params.compte_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['compte_id_id'] }"
             >
               <option v-for="c in listeCompte" :key="c.id" :value="c.id">
@@ -65,12 +65,12 @@
               </option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label for="compte_id">Ecriture catégorie</label>
             <select
               id="ecriture_categorie_id"
               v-model="params.ecriture_categorie_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
               <option v-for="c in listeCategorie" :key="c.id" :value="c.id">

@@ -25,27 +25,27 @@
             <td>{{ e.abreviation }}</td>
             <td>{{ e.designation }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="amende"
                   :checked="e.amende"
                   disabled
                 />
-                <label class="custom-control-label" for="amende"></label>
+                <label class="form-check-label" for="amende"></label>
               </div>
             </td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="status"
                   :checked="e.status"
                   disabled
                 />
-                <label class="custom-control-label" for="amende"></label>
+                <label class="form-check-label" for="amende"></label>
               </div>
             </td>
             <td>

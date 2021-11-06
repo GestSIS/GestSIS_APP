@@ -35,17 +35,17 @@
             }"
           >
             <!-- <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   :id="'select-' + e.sapeur_id"
                   v-model="unselected[e.sapeur_id]"
                   :false-value="true"
                   :true-value="undefined"
                 />
                 <label
-                  class="custom-control-label"
+                  class="form-check-label"
                   :for="'select-' + e.sapeur_id"
                 ></label>
               </div>

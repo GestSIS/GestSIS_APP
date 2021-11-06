@@ -30,16 +30,16 @@
             <td>{{ r.nom }}</td>
             <td>{{ r.description }}</td>
             <td v-for="p in permissions" :key="p.id" class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   :id="p.id + '-' + r.id"
                   :checked="r.permissions.includes(p.id)"
                   disabled
                 />
                 <label
-                  class="custom-control-label"
+                  class="form-check-label"
                   :for="p.id + '-' + r.id"
                 ></label>
               </div>

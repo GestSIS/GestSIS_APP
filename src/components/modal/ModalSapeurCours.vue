@@ -2,28 +2,26 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Saisie d'un cours</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-date">Date du cours</label>
         <input
           type="date"
           v-model="activeCours.date"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
           @change="dateChange"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-name">Cours</label>
         <select
           id="cours-name"
           v-model="activeCours.cours_id"
-          class="custom-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['cours_id'] }"
           :disabled="!addMode"
         >
@@ -33,12 +31,12 @@
           <!-- TODO limiter le nombre de cours -->
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="cours-localite">Localité</label>
         <select
           id="cours-localite"
           v-model="activeCours.localite_id"
-          class="custom-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
           <option v-for="l in listLocalites" :key="l.id" :value="l.id">
@@ -46,12 +44,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group" v-if="addMode">
+      <div class="mb-3" v-if="addMode">
         <label for="cours-precedent">Cours précédent</label>
         <select
           id="cours-precedent"
           v-model="activeCours.precedent_id"
-          class="custom-select"
+          class="form-select form-select-sm"
           disabled
         >
           <option value="0">-</option>
@@ -61,15 +59,15 @@
           <!-- TODO Limiter le nombre de cours -->
         </select>
       </div>
-      <div class="form-group" v-if="addMode">
+      <div class="mb-3" v-if="addMode">
         <label>Grade</label>
       </div>
       <div class="row" v-if="addMode">
         <div class="col-md-8">
-          <div class="form-group">
+          <div class="mb-3">
             <select
               v-model="activeCours.grade_id"
-              class="custom-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['grade_id'] }"
             >
               <option value="0">-</option>
@@ -80,10 +78,10 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <input
               type="date"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_grade'] }"
               v-model="activeCours.date_grade"
             />
@@ -91,15 +89,15 @@
         </div>
       </div>
 
-      <div class="form-group" v-if="addMode">
+      <div class="mb-3" v-if="addMode">
         <label>Fonction</label>
       </div>
       <div class="row" v-if="addMode">
         <div class="col-md-8">
-          <div class="form-group">
+          <div class="mb-3">
             <select
               v-model="activeCours.fonction_id"
-              class="custom-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
@@ -110,24 +108,24 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <input
               type="date"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_fonction'] }"
               v-model="activeCours.date_fonction"
             />
           </div>
         </div>
       </div>
-      <div class="form-group" v-if="addMode">
+      <div class="mb-3" v-if="addMode">
         <label>Fonction remplacé</label>
       </div>
       <div class="row" v-if="addMode">
         <div class="col-md-8">
-          <div class="form-group">
+          <div class="mb-3">
             <select
-              class="custom-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
               v-model="activeCours.fonction_sapeur_id"
             >

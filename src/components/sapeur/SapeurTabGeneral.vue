@@ -17,7 +17,7 @@
             v-model="activeSapeur.civilite_id"
           />
           <!-- NOM -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-sap-nom">Nom</label>
             <input
               type="text"
@@ -29,7 +29,7 @@
             />
           </div>
           <!-- PRENOM -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-sap-prenom">Prénom</label>
             <input
               type="text"
@@ -43,7 +43,7 @@
           <!-- RUE -->
           <div class="row">
             <div class="col-8">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-sap-rue">Rue</label>
                 <input
                   type="text"
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="col-4">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-sap-no-rue">N°</label>
                 <input
                   type="text"
@@ -80,7 +80,7 @@
           />
           <!-- N° AVS -->
           <div class="row">
-            <div class="form-group col-6">
+            <div class="mb-3 col-6">
               <label for="m-sap-avs">N° AVS</label>
               <input
                 type="text"
@@ -94,34 +94,32 @@
             <div class="col-6">
               <label for="m-sap-cotisation_avs">Cotisation AVS</label
               ><font-awesome-icon
-                class="ml-1"
+                class="ms-1"
                 v-tooltip.bottom="
                   'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
                 "
                 :icon="['far', 'question-circle']"
               />
-              <div class="custom-control custom-checkbox text-center col-6">
+              <div class="form-check text-center col-6">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="m-sap-cotisation_avs"
                   v-model="activeSapeur.cotisation_avs"
                 />
                 <label
-                  class="custom-control-label"
+                  class="form-check-label"
                   for="m-sap-cotisation_avs"
                 ></label>
               </div>
             </div>
           </div>
           <!-- Email -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-sap-email">Email</label>
             <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <font-awesome-icon icon="envelope" />
-                </div>
+              <div class="input-group-text">
+                <font-awesome-icon icon="envelope" />
               </div>
               <input
                 class="form-control form-control-sm"
@@ -136,13 +134,11 @@
           <!-- DATE NAISSANCE + SUFFIXE -->
           <div class="row">
             <div class="col-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-sap-date-naissance">Date de naissance</label>
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                    </div>
+                  <div class="input-group-text">
+                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
                     class="form-control form-control-sm"
@@ -156,10 +152,10 @@
               </div>
             </div>
             <div class="col-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <label for="m-sap-suffixe">Suffixe</label>
                 <font-awesome-icon
-                  class="ml-1"
+                  class="ms-1"
                   v-tooltip.bottom="
                     'Permet de différencier deux personnes ayant le même nom et prénom.'
                   "
@@ -177,7 +173,7 @@
             </div>
           </div>
           <!-- REMARQUE -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="m-sap-remarques">Remarques</label>
             <textarea
               class="form-control form-control-sm"
@@ -213,7 +209,7 @@
         </div>
         <form role="form">
           <div class="card-body">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-profession">Profession</label>
               <input
                 type="text"
@@ -223,7 +219,7 @@
                 v-model="activeSapeur.profession"
               />
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-employeur">Employeur</label>
               <input
                 type="text"
@@ -233,7 +229,7 @@
                 v-model="activeSapeur.employeur"
               />
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-lieu-travail">Lieu de travail</label>
               <input
                 type="text"
@@ -256,12 +252,12 @@
         </div>
         <form role="form">
           <div class="card-body">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="mainFonction">Fonction principale</label>
               <select
                 id="mainFonction"
                 v-model="activeSapeur.fonction_id"
-                class="custom-select"
+                class="form-select form-select-sm"
                 disabled
               >
                 <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
@@ -269,12 +265,12 @@
                 </option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="mainGrade">Grade actuel</label>
               <select
                 id="mainGrade"
                 v-model="activeSapeur.grade_id"
-                class="custom-select"
+                class="form-select form-select-sm"
                 disabled
               >
                 <option v-for="g in listGrades" :key="g.id" :value="g.id">

@@ -4,11 +4,9 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Sélectionner une excuse
       </h5>
-      <button type="button" class="close" @click="close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <ul class="list-group list-group-flush">
         <li
           class="list-group-item list-group-item-action"

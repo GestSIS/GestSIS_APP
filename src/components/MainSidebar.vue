@@ -1,7 +1,7 @@
 <template>
   <aside id="sidebar" class="bg-dark">
     <div class="sidebar-header bg-dark">
-      <span class="brand-text font-weight-light">GestSIS</span>
+      <span class="brand-text fwlight">GestSIS</span>
     </div>
     <sis-selection />
     <!--    <hr class="bg-secondary" />-->

@@ -4,14 +4,14 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Suppression des groupes, exercices et fonctions
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <form class="form-inline mb-2" v-if="fonctions.length">
-        <div class="form-group">
+      <form class="row g-3 align-items-center mb-2" v-if="fonctions.length">
+        <div class="col-auto">
           <label for="fin">Date</label>
+        </div>
+        <div class="col-auto">
           <input
             type="date"
             class="form-control mx-sm-3"
@@ -19,7 +19,9 @@
             id="fin"
             v-model="mutationDate"
           />
-          <small class="invalid-feedback" width="inherit" v-if="erreurs.date">
+        </div>
+        <div class="col-auto">
+          <small class="invalid-feedback" v-if="erreurs.date">
             Date requise
           </small>
         </div>

@@ -2,9 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Gérer les groupes</h5>
-      <button type="button" class="close" @click="close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="row mt-2">

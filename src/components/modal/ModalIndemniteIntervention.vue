@@ -5,12 +5,10 @@
         {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
         intervention
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -20,7 +18,7 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="solde">Solde</label>
         <input
           type="text"
@@ -30,7 +28,7 @@
           id="solde"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label class="d-block">Type d'imputation</label>
         <div class="form-check form-check-inline">
           <input
@@ -59,7 +57,7 @@
       </div>
       <div class="container-fluid">
         <div class="row" v-if="imputationType != 'taux'">
-          <div class="form-group col-3">
+          <div class="mb-3 col-3">
             <label for="solde_min">Solde min</label>
             <input
               type="text"
@@ -69,7 +67,7 @@
               id="solde_min"
             />
           </div>
-          <div class="form-group col-2">
+          <div class="mb-3 col-2">
             <label for="solde_min_pour">Pour</label>
             <input
               type="text"
@@ -79,12 +77,12 @@
               id="solde_min_pour"
             />
           </div>
-          <div class="form-group col-7">
+          <div class="mb-3 col-7">
             <label for="unite">Unité</label>
             <select
               id="unite"
               v-model="activeIndemnite.type_unite_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
               <option v-for="u in listeUnite" :key="u.id" :value="u.id">
@@ -92,12 +90,12 @@
               </option>
             </select>
           </div>
-          <div class="form-group col-12">
+          <div class="mb-3 col-12">
             <label for="phase_id">Solde min pour phase</label>
             <select
               id="phase_id"
               v-model="activeIndemnite.phase_id"
-              class="custom-select"
+              class="form-select"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
               <option>toutes les phases</option>
@@ -108,7 +106,7 @@
           </div>
         </div>
         <div class="row" v-if="imputationType == 'taux'">
-          <div class="form-group col-6">
+          <div class="mb-3 col-6">
             <label for="taux_nuit">Taux nuit</label>
             <input
               type="text"
@@ -118,7 +116,7 @@
               id="taux_nuit"
             />
           </div>
-          <div class="form-group col-6">
+          <div class="mb-3 col-6">
             <label for="taux_weekend">Taux weekend</label>
             <input
               type="text"
@@ -128,7 +126,7 @@
               id="taux_weekend"
             />
           </div>
-          <div class="form-group col-6">
+          <div class="mb-3 col-6">
             <label for="debut">Début nuit</label>
             <input
               type="time"
@@ -138,7 +136,7 @@
               id="debut"
             />
           </div>
-          <div class="form-group col-6">
+          <div class="mb-3 col-6">
             <label for="fin">Fin nuit</label>
             <input
               type="time"
@@ -150,12 +148,12 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="compte">Compte</label>
         <select
           id="compte"
           v-model="activeIndemnite.compte_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
           <option v-for="c in listeCompte" :key="c.id" :value="c.id">
@@ -163,12 +161,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="categorie">Catégorie d'écriture</label>
         <select
           id="categorie"
           v-model="activeIndemnite.ecriture_categorie_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
           <option v-for="c in listeCategorie" :key="c.id" :value="c.id">

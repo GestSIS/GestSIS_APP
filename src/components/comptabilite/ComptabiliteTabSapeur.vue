@@ -5,8 +5,8 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
         </div>
-        <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" disabled>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" disabled>
             Créer un décompte individuel
           </button>
         </div>
@@ -17,11 +17,8 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Impressions</h3>
         </div>
-        <div class="card-body">
-          <button
-            class="btn btn-outline-primary btn-block"
-            :disabled="!selected"
-          >
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" :disabled="!selected">
             Résumé des frais
           </button>
         </div>

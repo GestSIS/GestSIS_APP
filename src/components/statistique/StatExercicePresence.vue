@@ -7,7 +7,7 @@
           <h4>Filtres</h4>
         </div>
         <form class="card-body p-2 pb-0">
-          <div class="form-row">
+          <div class="row">
             <base-multi-unselect
               wrapperClass="col-md-4"
               label="Catégorie :"

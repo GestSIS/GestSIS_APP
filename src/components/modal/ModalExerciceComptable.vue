@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="annee">Année</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="annee"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -29,7 +27,7 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="debut">Début</label>
         <input
           type="date"
@@ -39,7 +37,7 @@
           id="debut"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="fin">Fin</label>
         <input
           type="date"
@@ -49,17 +47,15 @@
           id="fin"
         />
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="exercice-comptable-boucle-modal"
             v-model="activeExercice.boucle"
           />
-          <label
-            class="custom-control-label"
-            for="exercice-comptable-boucle-modal"
+          <label class="form-check-label" for="exercice-comptable-boucle-modal"
             >Bouclé</label
           >
         </div>

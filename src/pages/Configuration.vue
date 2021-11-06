@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-        <ol class="breadcrumb bg-white">
+        <ol class="breadcrumb m-3">
           <li class="breadcrumb-item">
             <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
           </li>

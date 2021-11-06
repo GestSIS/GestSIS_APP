@@ -36,39 +36,39 @@
             <td>{{ e.localite }}</td>
             <td>{{ e.communications }}</td>
             <td>
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="convoque"
                   :checked="e.convoque"
                   disabled
                 />
-                <label class="custom-control-label" for="convoque"></label>
+                <label class="form-check-label" for="convoque"></label>
               </div>
             </td>
             <td>
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="present"
                   :checked="e.present"
                   disabled
                 />
-                <label class="custom-control-label" for="present"></label>
+                <label class="form-check-label" for="present"></label>
               </div>
             </td>
             <td>
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="excuse"
                   :checked="e.excuse_type_id"
                   disabled
                 />
-                <label class="custom-control-label" for="excuse">{{
+                <label class="form-check-label" for="excuse">{{
                   e.excuse_type_id
                     ? getExcuseType(e.excuse_type_id).designation
                     : ''
@@ -76,15 +76,15 @@
               </div>
             </td>
             <td>
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="amende"
                   :checked="e.amende_id"
                   disabled
                 />
-                <label class="custom-control-label" for="amende"></label>
+                <label class="form-check-label" for="amende"></label>
               </div>
             </td>
             <!-- <td>0.0</td> -->

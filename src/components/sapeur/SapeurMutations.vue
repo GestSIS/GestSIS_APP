@@ -58,7 +58,7 @@
           @click="finService"
           v-if="finServiceButtonState"
         >
-          <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />
           Fin de service
         </button>
         <button
@@ -67,7 +67,7 @@
           @click="incorporation"
           v-else
         >
-          <font-awesome-icon class="mr-1" :icon="['fas', 'door-closed']" />
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />
           Incorporation
         </button>
       </div>

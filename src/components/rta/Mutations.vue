@@ -6,38 +6,34 @@
       <h3 class="card-title">Mutations</h3>
     </div>
     <div class="card-body">
-      <div class="form-inline mb-3">
-        <div class="form-group">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              :class="{ 'is-invalid': errorsData.username }"
-              id="m-user"
-              name="username"
-              placeholder="Utilisateur"
-              v-model="username"
-            />
-          </div>
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-auto">
+          <input
+            type="text"
+            class="form-control"
+            :class="{ 'is-invalid': errorsData.username }"
+            id="m-user"
+            name="username"
+            placeholder="Utilisateur"
+            v-model="username"
+          />
         </div>
-        <div class="form-group mx-sm-3">
-          <div class="input-group">
-            <input
-              type="password"
-              class="form-control"
-              :class="{ 'is-invalid': errorsData.password }"
-              id="m-password"
-              name="password"
-              placeholder="Mot de passe"
-              v-model="password"
-            />
-          </div>
+        <div class="col-auto mx-sm-3">
+          <input
+            type="password"
+            class="form-control"
+            :class="{ 'is-invalid': errorsData.password }"
+            id="m-password"
+            name="password"
+            placeholder="Mot de passe"
+            v-model="password"
+          />
         </div>
-        <button type="button" class="btn btn-primary" @click="mutate">
+        <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Mutate
         </button>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <div class="input-group">
           <label for="m-communication"></label>
           <textarea
@@ -81,17 +77,17 @@
             }"
           >
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   :id="'select-' + e.sapeur_id"
                   v-model="unselected[e.sapeur_id]"
                   :false-value="true"
                   :true-value="undefined"
                 />
                 <label
-                  class="custom-control-label"
+                  class="form-check-label"
                   :for="'select-' + e.sapeur_id"
                 ></label>
               </div>

@@ -22,15 +22,15 @@
             <td>{{ c.numero }}</td>
             <td>{{ c.designation }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="actif"
                   :checked="c.actif"
                   disabled
                 />
-                <label class="custom-control-label" for="actif"></label>
+                <label class="form-check-label" for="actif"></label>
               </div>
             </td>
             <td>

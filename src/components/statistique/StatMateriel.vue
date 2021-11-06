@@ -3,14 +3,14 @@
     <div class="card card-primary card-outline mb-5">
       <div class="card-header d-flex justify-content-between">
         <h3>Stats matériel pour interventions</h3>
-        <div class="custom-control custom-switch mb-2">
+        <div class="form-check form-switch mb-2">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="switch-materiel"
             v-model="allMateriels"
           />
-          <label class="custom-control-label" for="switch-materiel"
+          <label class="form-check-label" for="switch-materiel"
             >Afficher le matériel disponible mais pas référencé durant au moins
             une intervention</label
           >

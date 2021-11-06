@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-        <ol class="breadcrumb bg-white">
+        <ol class="breadcrumb m-3">
           <li class="breadcrumb-item">
             <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
@@ -39,21 +39,21 @@
           </div>
           <div class="card-body pb-2">
             <button
-              class="btn btn-info mr-1"
+              class="btn btn-info me-1"
               @click="expand"
               v-tooltip.top="'Tout développer'"
             >
               <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
             <button
-              class="btn btn-info mr-1"
+              class="btn btn-info me-1"
               @click="contract"
               v-tooltip.top="'Tout réduire'"
             >
               <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
             <button
-              class="btn btn-info mr-1"
+              class="btn btn-info me-1"
               @click="editMode = !editMode"
               v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
             >
@@ -137,7 +137,7 @@
             <h3>Modifier</h3>
           </div>
           <div class="card-body">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="abreviation">No</label>
               <input
                 type="number"
@@ -147,7 +147,7 @@
                 id="no"
               />
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="abreviation">Nom</label>
               <input
                 type="text"
@@ -157,12 +157,12 @@
                 id="designation"
               />
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="cours-precedent">Groupe parent</label>
               <select
                 id="pere_id"
                 v-model="groupeEdit.pere_id"
-                class="custom-select"
+                class="form-select"
               >
                 <option :value="null">-</option>
                 <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
@@ -170,17 +170,17 @@
                 </option>
               </select>
             </div>
-            <div class="form-group">
-              <div class="custom-control custom-checkbox">
+            <div class="mb-3">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="type"
                   v-model="groupeEdit.type"
                   :true-value="1"
                   :false-value="0"
                 />
-                <label class="custom-control-label" for="type"
+                <label class="form-check-label" for="type"
                   >Groupe d'alarme</label
                 >
               </div>

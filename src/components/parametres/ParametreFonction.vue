@@ -24,15 +24,15 @@
             <td>{{ f.abreviation }}</td>
             <td>{{ f.nom }}</td>
             <td class="text-center">
-              <div class="custom-control custom-checkbox">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="en_cours"
                   :checked="f.cumulable"
                   disabled
                 />
-                <label class="custom-control-label" for="en_cours"></label>
+                <label class="form-check-label" for="en_cours"></label>
               </div>
             </td>
             <td>

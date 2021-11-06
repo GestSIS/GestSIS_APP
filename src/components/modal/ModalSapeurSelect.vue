@@ -2,18 +2,16 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Gérer les sapeurs</h5>
-      <button type="button" class="close" @click="close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="row mt-2">
         <div class="col-12">
-          <div class="form-group d-flex align-items-center">
-            <label class="custom-select-label mb-0 mr-2" for="group-by"
+          <div class="mb-3 d-flex align-items-center">
+            <label class="form-select-label mb-0 me-2" for="group-by"
               >Afficher&nbsp;par</label
             >
-            <select class="custom-select" v-model="groupBy" id="group-by">
+            <select class="form-select" v-model="groupBy" id="group-by">
               <option value="none">Alphabétique</option>
               <option value="fonction">Fonction</option>
               <option value="grade">Grade</option>
@@ -73,15 +71,15 @@
                 }"
               >
                 <td>
-                  <div class="custom-control custom-checkbox d-inline">
+                  <div class="form-check d-inline">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       :id="item.id"
                       v-model="displaySelected[computeId(item)]"
                     />
                     <label
-                      class="custom-control-label"
+                      class="form-check-label"
                       :for="item.id"
                       @click="select(item.id)"
                     ></label>
@@ -142,26 +140,26 @@
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
                   <font-awesome-icon
-                    class="mr-2 ml-2"
+                    class="me-2 ms-2"
                     :icon="['fas', 'angle-down']"
                     v-if="!item.leaf && item.expanded"
                     @click="toggleGroupe(item.id)"
                   />
                   <font-awesome-icon
-                    class="mr-2 ml-2"
+                    class="me-2 ms-2"
                     :icon="['fas', 'angle-right']"
                     v-if="!item.leaf && !item.expanded"
                     @click="toggleGroupe(item.id)"
                   />
-                  <div class="custom-control custom-checkbox d-inline">
+                  <div class="form-check d-inline">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       :id="computeId(item)"
                       v-model="displaySelected[computeId(item)]"
                     />
                     <label
-                      class="custom-control-label"
+                      class="form-check-label"
                       :for="computeId(item)"
                       @click="select(item.id, item.leaf)"
                     ></label>
@@ -197,15 +195,15 @@
                 }"
               >
                 <td>
-                  <div class="custom-control custom-checkbox d-inline">
+                  <div class="form-check d-inline">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       :id="item.id"
                       v-model="displaySelected[item.id]"
                     />
                     <label
-                      class="custom-control-label"
+                      class="form-check-label"
                       :for="item.id"
                       @click="select(item.id)"
                     ></label>

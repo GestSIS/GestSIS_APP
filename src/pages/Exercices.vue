@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -26,11 +26,11 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Actions</h5>
           </div>
-          <form class="card-body">
+          <form class="card-body d-grid gap-2">
             <router-link
               tag="button"
               to="/exercices/new"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Ajouter un exercice
             </router-link>
@@ -38,7 +38,7 @@
               tag="button"
               :disabled="!selectedId"
               :to="'/exercices/' + selectedId"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Modifier
             </router-link>
@@ -51,18 +51,18 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Impressions</h5>
           </div>
-          <form class="card-body">
+          <form class="card-body d-grid gap-2">
             <button
               :disabled="!selectedId"
               @click="listePresences({ id: selectedId })"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Liste de présences
             </button>
             <button
               :disabled="!selectedId"
               @click="listeAppel({ id: selectedId })"
-              class="btn btn-outline-primary btn-block"
+              class="btn btn-outline-primary"
             >
               Liste d'appel
             </button>
@@ -76,10 +76,10 @@
             <h5>Filtres</h5>
           </div>
           <form class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-4">
+            <div class="row">
+              <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterLocalite"
                   @change="
                     (event) => onFilter('localite_id', event.target.value)
@@ -95,9 +95,9 @@
                   </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterCategorie"
                   @change="
                     (event) =>
@@ -106,17 +106,17 @@
                 >
                   <option>&lt;Catégorie&gt;</option>
                   <option
-                    v-for="catgeorie in filteredExercicesCategories"
-                    :key="catgeorie.id"
-                    :value="catgeorie.id"
+                    v-for="categorie in filteredExercicesCategories"
+                    :key="categorie.id"
+                    :value="categorie.id"
                   >
-                    {{ catgeorie.designation }}
+                    {{ categorie.designation }}
                   </option>
                 </select>
               </div>
-              <div class="form-group col-md-4">
+              <div class="col-md-4">
                 <select
-                  class="custom-select custom-select-sm"
+                  class="form-select form-select-sm"
                   id="filterStatus"
                   @change="
                     (event) => onFilter('statut', parseInt(event.target.value))

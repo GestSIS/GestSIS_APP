@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ role.id ? 'Modifier' : 'Ajouter' }} un role
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="nom">Nom</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="nom"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="description">Description</label>
         <input
           type="text"
@@ -29,21 +27,21 @@
           id="description"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Permissions</label>
         <div
-          class="custom-control custom-checkbox"
+          class="form-check"
           v-for="permission in permissions"
           :key="permission.id"
         >
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             :value="permission.id"
             v-model="role.permissions"
             :id="'r' + permission.id"
           />
-          <label class="custom-control-label" :for="'r' + permission.id">{{
+          <label class="form-check-label" :for="'r' + permission.id">{{
             permission.nom
           }}</label>
         </div>

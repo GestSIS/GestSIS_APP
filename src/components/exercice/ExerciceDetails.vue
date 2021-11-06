@@ -1,42 +1,42 @@
 <template>
   <div class="detail-row d-flex">
-    <div class="mr-3">
+    <div class="me-3">
       Convoqué
       <span
         class="badge"
-        :class="{ 'badge-primary': convoque, 'badge-secondary': !convoque }"
+        :class="{ 'bg-primary': convoque, 'bg-secondary': !convoque }"
         >{{ convoque }}</span
       >
     </div>
-    <div class="mr-3">
+    <div class="me-3">
       Présent
       <span
         class="badge"
-        :class="{ 'badge-success': present, 'badge-secondary': !present }"
+        :class="{ 'bg-success': present, 'bg-secondary': !present }"
         >{{ present }}</span
       >
     </div>
-    <div class="mr-3">
+    <div class="me-3">
       Remplacé
       <span
         class="badge"
-        :class="{ 'badge-success': remplace, 'badge-secondary': !remplace }"
+        :class="{ 'bg-success': remplace, 'bg-secondary': !remplace }"
         >{{ remplace }}</span
       >
     </div>
-    <div class="mr-3">
+    <div class="me-3">
       Excusé
       <span
         class="badge"
-        :class="{ 'badge-warning': excuse, 'badge-secondary': !excuse }"
+        :class="{ 'bg-warning': excuse, 'bg-secondary': !excuse }"
         >{{ excuse }}</span
       >
     </div>
-    <div class="mr-3">
+    <div class="me-3">
       Amende
       <span
         class="badge"
-        :class="{ 'badge-danger': amende, 'badge-secondary': !amende }"
+        :class="{ 'bg-danger': amende, 'bg-secondary': !amende }"
         >{{ amende }}</span
       >
     </div>

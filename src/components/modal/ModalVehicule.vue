@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeVehicule.id ? 'Modifier' : 'Ajouter' }} un véhicule
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
@@ -19,7 +17,7 @@
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -29,7 +27,7 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="forfait">Forfait</label>
         <input
           type="text"
@@ -39,7 +37,7 @@
           id="forfait"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="unite">Unité</label>
         <input
           type="text"
@@ -49,12 +47,12 @@
           id="unite"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="type_unite_id">Unité type</label>
         <select
           id="type_unite_id"
           v-model="activeVehicule.type_unite_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
           <option :value="0">-</option>
@@ -63,15 +61,15 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
+      <div class="mb-3">
+        <div class="form-check">
           <input
             type="checkbox"
-            class="custom-control-input"
+            class="form-check-input"
             id="vehicule-status-modal"
             v-model="activeVehicule.status"
           />
-          <label class="custom-control-label" for="vehicule-status-modal"
+          <label class="form-check-label" for="vehicule-status-modal"
             >Actif</label
           >
         </div>

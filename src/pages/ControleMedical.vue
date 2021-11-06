@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -35,7 +35,7 @@
           </div>
           <div class="card-body">
             <!-- NOM -->
-            <div class="form-group" v-if="!modeAjout">
+            <div class="mb-3" v-if="!modeAjout">
               <label for="m-exe-des">Sapeur</label>
               <input
                 type="text"
@@ -47,10 +47,10 @@
                 :value="sapeurName"
               />
             </div>
-            <div class="form-group" v-else>
+            <div class="mb-3" v-else>
               <label for="m-exe-des">Sapeur</label>
               <select
-                class="custom-select required"
+                class="form-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -66,10 +66,10 @@
               </select>
             </div>
             <!-- MEDECIN -->
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-cat">Médecin</label>
               <select
-                class="custom-select required"
+                class="form-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -85,10 +85,10 @@
               </select>
             </div>
             <!-- TYPE -->
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-cat">Type</label>
               <select
-                class="custom-select required"
+                class="form-select required"
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -104,15 +104,15 @@
               </select>
             </div>
             <!-- ACCEPTER -->
-            <div class="form-group">
-              <div class="custom-control custom-checkbox">
+            <div class="mb-3">
+              <div class="form-check">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="m-ctr-accepter"
                   v-model="controleMedical.accepter"
                 />
-                <label class="custom-control-label" for="m-ctr-accepter"
+                <label class="form-check-label" for="m-ctr-accepter"
                   >Accepté</label
                 >
               </div>
@@ -120,13 +120,11 @@
             <div class="row">
               <div class="col-12 col-xl-6">
                 <!-- CONSULTATION -->
-                <div class="form-group">
+                <div class="mb-3">
                   <label for="m-exe-date">Consultation</label>
                   <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                      </div>
+                    <div class="input-group-text">
+                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
                       type="date"
@@ -140,29 +138,33 @@
                 </div>
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(1)">
-                  +1
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(1)">
+                    +1
+                  </button>
+                </div>
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(2)">
-                  +2
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(2)">
+                    +2
+                  </button>
+                </div>
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(5)">
-                  +5
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(5)">
+                    +5
+                  </button>
+                </div>
               </div>
               <div class="col-12 col-xl-6" v-if="expirable">
                 <!-- Validité -->
-                <div class="form-group">
+                <div class="mb-3">
                   <label for="m-exe-date">Validité</label>
                   <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                      </div>
+                    <div class="input-group-text">
+                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
                       type="date"
@@ -176,22 +178,28 @@
                 </div>
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(1)">
-                  +1
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(1)">
+                    +1
+                  </button>
+                </div>
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(2)">
-                  +2
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(2)">
+                    +2
+                  </button>
+                </div>
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <button class="btn btn-primary btn-block" @click="validite(5)">
-                  +5
-                </button>
+                <div class="d-grid" v-if="expirable">
+                  <button class="btn btn-primary" @click="validite(5)">
+                    +5
+                  </button>
+                </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-communication">Désignation</label>
               <textarea
                 type="text"
@@ -212,13 +220,13 @@
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
               <button
-                class="btn btn-outline-primary ml-2"
+                class="btn btn-outline-primary ms-2"
                 @click="downloadJustificatif()"
               >
                 Download
               </button>
               <button
-                class="btn btn-outline-primary ml-2"
+                class="btn btn-outline-primary ms-2"
                 @click="removeJustificatif()"
               >
                 Supprimer
@@ -228,23 +236,20 @@
           <div class="card-body" v-if="!controleMedical.filename">
             <div class="input-group mb-3">
               <p class="w-100">Aucun document</p>
-              <div class="custom-file">
-                <input
-                  type="file"
-                  class="custom-file-input"
-                  id="inputGroupFile01"
-                  aria-describedby="inputGroupFileAddon01"
-                  accept="application/pdf"
-                  ref="file-justificatif"
-                />
-                <label class="custom-file-label" for="inputGroupFile01"
-                  >Choisissez un fichier</label
-                >
-              </div>
+              <input
+                type="file"
+                class="form-control"
+                id="inputGroupFile01"
+                aria-describedby="inputGroupFileAddon01"
+                accept="application/pdf"
+                ref="file-justificatif"
+                @change="onFileChange"
+              />
               <button
-                class="btn btn-outline-primary ml-2"
+                class="btn btn-outline-primary"
                 @click="ajoutJustificatif"
                 v-if="!controleMedical.filename"
+                :disabled="!file"
               >
                 Ajouter
               </button>
@@ -321,6 +326,7 @@ export default {
       errors: {},
       loading: true,
       pdfData: null,
+      file: null,
     };
   },
   props: {
@@ -360,6 +366,11 @@ export default {
     },
   },
   methods: {
+    onFileChange(event) {
+      const files = event.target.files || event.dataTransfer.files;
+      if (!files.length) return;
+      this.file = files[0];
+    },
     downloadJustificatif() {
       ControlesMedicauxService.downloadJustificatif(
         this.controleMedical.id,

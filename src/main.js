@@ -25,6 +25,8 @@ import 'nprogress/nprogress.css';
 require('./assets/sass/main.scss');
 require('./icons');
 
+import bootstrap from 'bootstrap'
+
 // You need a specific loader for CSS files
 import 'vue-datetime/dist/vue-datetime.css';
 

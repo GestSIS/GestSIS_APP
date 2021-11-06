@@ -5,12 +5,10 @@
         {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }} un type
         d'intervention
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           type="text"
@@ -20,7 +18,7 @@
           id="tri"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -30,12 +28,12 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="stat_intervention">Statistique</label>
         <select
           id="stat_intervention"
           v-model="activeTypeIntervention.stat_intervention_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['stat_intervention_id'] }"
         >
           <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">

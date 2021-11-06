@@ -21,10 +21,10 @@
             pour vous aider à gèrer les données de votre SIS.
           </p>
           <p>
-            <button @click="login" class="btn btn-primary mr-1">
+            <button @click="login" class="btn btn-primary me-1">
               Accès GestSIS 2.0
             </button>
-            <button href="#C2" class="btn btn-secondary ml-1">
+            <button href="#C2" class="btn btn-secondary ms-1">
               En savoir plus
             </button>
           </p>

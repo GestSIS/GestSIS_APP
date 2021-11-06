@@ -6,28 +6,28 @@
           <div class="card-body d-flex flex-row-reverse">
             <button
               type="button"
-              class="btn btn-outline-primary ml-2 d-none"
+              class="btn btn-outline-primary ms-2 d-none"
               disabled
             >
               Exporter
             </button>
             <button
               type="button"
-              class="btn btn-outline-primary ml-2 d-none"
+              class="btn btn-outline-primary ms-2 d-none"
               disabled
             >
               Importer
             </button>
             <button
               type="button"
-              class="btn btn-outline-primary ml-2 d-none"
+              class="btn btn-outline-primary ms-2 d-none"
               disabled
             >
               Fiche sapeur
             </button>
             <button
               type="button"
-              class="btn btn-outline-primary ml-2"
+              class="btn btn-outline-primary ms-2"
               @click="addSapeur"
             >
               Ajouter un sapeur

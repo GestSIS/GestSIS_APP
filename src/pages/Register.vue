@@ -3,7 +3,7 @@
     <form class="text-center form-signin" @submit.prevent="login">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 font-weight-normal">Veuillez vous enregistrer</h1>
+      <h1 class="h3 mb-3 fwnormal">Veuillez vous enregistrer</h1>
       <label for="inputEmail" class="sr-only">Nom d'utilisateur</label>
       <input
         v-model="name"

@@ -2,17 +2,15 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Ajouter un sapeur</h5>
-      <button type="button" class="close" @click="close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <!-- CIVILITE -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-civilite">Civilité</label>
           <select
-            class="custom-select"
+            class="form-select"
             id="m-sap-civilite"
             :class="{ 'is-invalid': errorsData['civilite_id'] }"
             name="civilite_id"
@@ -28,7 +26,7 @@
           </select>
         </div>
         <!-- NOM -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-nom">Nom</label>
           <input
             type="text"
@@ -40,7 +38,7 @@
           />
         </div>
         <!-- PRENOM -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-prenom">Prénom</label>
           <input
             type="text"
@@ -54,7 +52,7 @@
         <!-- RUE -->
         <div class="row">
           <div class="col-8">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-rue">Rue</label>
               <input
                 type="text"
@@ -67,7 +65,7 @@
             </div>
           </div>
           <div class="col-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-no-rue">N°</label>
               <input
                 type="text"
@@ -81,10 +79,10 @@
           </div>
         </div>
         <!-- NPA + LOCALITE -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-localite">NPA Localité</label>
           <select
-            class="custom-select required"
+            class="form-select required"
             id="m-sap-localite"
             :class="{ 'is-invalid': errorsData['localite_id'] }"
             name="localite_id"
@@ -101,7 +99,7 @@
           </select>
         </div>
         <!-- N° AVS -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-avs">N° AVS</label>
           <input
             type="text"
@@ -113,13 +111,11 @@
           />
         </div>
         <!-- Email -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-email">Email</label>
           <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <font-awesome-icon icon="envelope" />
-              </div>
+            <div class="input-group-text">
+              <font-awesome-icon icon="envelope" />
             </div>
             <input
               class="form-control"
@@ -134,13 +130,11 @@
         <!-- DATE NAISSANCE + SUFFIXE -->
         <div class="row">
           <div class="col-6">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-date-naissance">Date de naissance</label>
               <div class="input-group">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                  </div>
+                <div class="input-group-text">
+                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
                   class="form-control"
@@ -154,10 +148,10 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="form-group">
+            <div class="mb-3">
               <label for="m-sap-suffixe">Suffixe</label>
               <font-awesome-icon
-                class="ml-1"
+                class="ms-1"
                 v-tooltip.bottom="
                   'Permet de différencier deux personnes ayant le même nom et prénom.'
                 "
@@ -175,13 +169,11 @@
           </div>
         </div>
         <!-- Email -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-email">Date incorporation</label>
           <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'calendar-alt']" />
-              </div>
+            <div class="input-group-text">
+              <font-awesome-icon :icon="['far', 'calendar-alt']" />
             </div>
             <input
               class="form-control"
@@ -194,7 +186,7 @@
           </div>
         </div>
         <!-- REMARQUE -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="m-sap-remarques">Remarques</label>
           <textarea
             class="form-control"

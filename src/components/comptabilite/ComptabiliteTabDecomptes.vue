@@ -5,12 +5,12 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
         </div>
-        <div class="card-body">
-          <button class="btn btn-outline-primary btn-block" @click="generer">
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" @click="generer">
             Nouveau
           </button>
           <button
-            class="btn btn-outline-danger btn-block"
+            class="btn btn-outline-danger"
             :disabled="!selectedId"
             @click="supprimer(selectedId)"
           >
@@ -24,16 +24,16 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Impressions</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body d-grid gap-1">
           <button
-            class="btn btn-outline-primary btn-block"
+            class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="impression(selectedId)"
           >
             Impression
           </button>
           <button
-            class="btn btn-outline-primary btn-block"
+            class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="iso20022Decompte(selectedId)"
           >
@@ -62,16 +62,16 @@
           row-selected-class="table-primary"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
-            <div class="custom-control custom-checkbox">
+            <div class="form-check">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 :id="key + '-' + rowData.id"
                 :checked="value"
                 disabled
               />
               <label
-                class="custom-control-label"
+                class="form-check-label"
                 :for="key + '-' + rowData.id"
               ></label>
             </div>

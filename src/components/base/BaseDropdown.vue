@@ -1,9 +1,10 @@
 <template>
   <component :is="tag" class="nav-item dropdown">
     <button
-      class="nav-link dropdown-toggle"
+      class="dropdown-toggle"
       :class="buttonClass"
       @click="dropdown = !dropdown"
+      data-bs-toggle="dropdown"
     >
       <slot name="title">
         {{ title }}

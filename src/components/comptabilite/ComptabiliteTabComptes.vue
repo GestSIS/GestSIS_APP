@@ -5,17 +5,14 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Actions</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body d-grid gap-1">
           <button
-            class="btn btn-outline-primary btn-block"
+            class="btn btn-outline-primary"
             @click="justificatifIndividuel(activeCompteId)"
           >
             Justificatif du compte
           </button>
-          <button
-            class="btn btn-outline-primary btn-block"
-            @click="justificatifComplet"
-          >
+          <button class="btn btn-outline-primary" @click="justificatifComplet">
             Justificatif complet
           </button>
         </div>
@@ -29,7 +26,7 @@
           <div class="card-title">
             <h3 class="card-title">Comptes</h3>
             <base-dropdown
-              buttonClass="ml-1 btn btn-outline-secondary dropdown-toggle"
+              buttonClass="ms-1 btn btn-outline-secondary dropdown-toggle"
               menuClass="dropdown-menu"
               ref="dropdown"
               :title="formatCompte(getCompte(activeCompteId))"

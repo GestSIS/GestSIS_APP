@@ -12,7 +12,7 @@
         <!-- /.card-header -->
         <div class="card-body">
           <!-- IBAN -->
-          <div class="form-group">
+          <div class="mb-3">
             <label for="f-sap-nom">IBAN</label>
             <input
               type="text"

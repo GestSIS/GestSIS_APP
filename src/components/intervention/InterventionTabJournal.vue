@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-12 col-md-4 col-xl-4 pl-0">
+      <div class="col-sm-12 col-md-4 col-xl-4 ps-0">
         <ul class="timeline">
           <li v-for="e in events" :key="e.i" class="timeline-item">
             <div class="timeline-badge" :class="e.colorClass">

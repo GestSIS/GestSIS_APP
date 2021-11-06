@@ -4,9 +4,7 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Imputer indemnités et frais annuels
       </h5>
-      <button type="button" class="close" @click="cancel">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <!--progress bar-->
@@ -15,7 +13,7 @@
         :activeIndex="phase - 1"
       />
       <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
-        <button type="button" class="close" data-dismiss="alert">
+        <button type="button" class="btn-close" data-dismiss="alert">
           &times;
         </button>
         <h4 class="alert-heading">Aide</h4>

@@ -4,12 +4,10 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ activeFrais.id ? 'Modifier' : 'Ajouter' }} un frais annuel
       </h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           type="text"
@@ -19,12 +17,12 @@
           id="designation"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="fonction">Indemnite</label>
         <select
           id="fonction"
           v-model="activeFrais.fonction_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
           <option v-for="f in listeFonction" :key="f.id" :value="f.id">
@@ -32,7 +30,7 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="montant">Montant</label>
         <input
           type="text"
@@ -42,7 +40,7 @@
           id="montant"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="quantite">Quantité</label>
         <input
           type="text"
@@ -52,12 +50,12 @@
           id="quantite"
         />
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="unite">Unité</label>
         <select
           id="unite"
           v-model="activeFrais.type_unite_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
           <option v-for="u in listeUnite" :key="u.id" :value="u.id">
@@ -65,12 +63,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="compte">Compte</label>
         <select
           id="compte"
           v-model="activeFrais.compte_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
           <option v-for="c in listeCompte" :key="c.id" :value="c.id">
@@ -78,12 +76,12 @@
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="categorie">Catégorie d'écriture</label>
         <select
           id="categorie"
           v-model="activeFrais.ecriture_categorie_id"
-          class="custom-select"
+          class="form-select"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
           <option v-for="c in listeCategorie" :key="c.id" :value="c.id">

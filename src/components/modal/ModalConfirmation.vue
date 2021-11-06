@@ -2,9 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title">{{ data.title }}</h5>
-      <button type="button" class="close" @click="HIDE_MODAL()">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <p>{{ data.question }}</p>

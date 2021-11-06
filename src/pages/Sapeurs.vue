@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -24,44 +24,40 @@
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>
             <div class="card-body px-0">
-              <div class="custom-control custom-radio custom-control-inline">
+              <div class="form-check form-check-inline">
                 <input
                   type="radio"
                   id="statutActif"
                   name="actif"
-                  class="custom-control-input"
+                  class="form-check-input"
                   value="actif"
                   v-model="filter"
                 />
-                <label class="custom-control-label" for="statutActif"
-                  >Actif</label
-                >
+                <label class="form-check-label" for="statutActif">Actif</label>
               </div>
-              <div class="custom-control custom-radio custom-control-inline">
+              <div class="form-check form-check-inline">
                 <input
                   type="radio"
                   id="statutInactif"
                   name="actif"
-                  class="custom-control-input"
+                  class="form-check-input"
                   value="inactif"
                   v-model="filter"
                 />
-                <label class="custom-control-label" for="statutInactif"
+                <label class="form-check-label" for="statutInactif"
                   >Inactif</label
                 >
               </div>
-              <div class="custom-control custom-radio custom-control-inline">
+              <div class="form-check form-check-inline">
                 <input
                   type="radio"
                   id="statutTous"
                   name="actif"
-                  class="custom-control-input"
+                  class="form-check-input"
                   value="all"
                   v-model="filter"
                 />
-                <label class="custom-control-label" for="statutTous"
-                  >Tous</label
-                >
+                <label class="form-check-label" for="statutTous">Tous</label>
               </div>
             </div>
           </div>

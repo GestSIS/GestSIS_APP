@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
+          <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
               <router-link tag="a" :to="{ name: 'accueil' }"
                 >Accueil</router-link
@@ -54,7 +54,7 @@
                   <span
                     v-for="r in u.user_roles"
                     :key="r.id"
-                    class="badge badge-primary mr-1"
+                    class="badge bg-primary me-1"
                     >{{ formatRole(r.role_id) }}</span
                   >
                 </td>
