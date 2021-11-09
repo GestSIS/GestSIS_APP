@@ -24,16 +24,14 @@
             <td>{{ m.adresse }}</td>
             <td>{{ localite(m.localite_id) }}</td>
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="`actif-${m.id}`"
-                  :checked="m.actif"
-                  disabled
-                />
-                <label class="form-check-label" :for="`actif-${m.id}`"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="`actif-${m.id}`"
+                :checked="m.actif"
+                disabled
+              />
+              <label class="form-check-label" :for="`actif-${m.id}`"></label>
             </td>
             <td>
               <div class="d-flex justify-content-center">

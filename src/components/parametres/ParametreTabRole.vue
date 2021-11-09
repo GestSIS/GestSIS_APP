@@ -30,19 +30,14 @@
             <td>{{ r.nom }}</td>
             <td>{{ r.description }}</td>
             <td v-for="p in permissions" :key="p.id" class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="p.id + '-' + r.id"
-                  :checked="r.permissions.includes(p.id)"
-                  disabled
-                />
-                <label
-                  class="form-check-label"
-                  :for="p.id + '-' + r.id"
-                ></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="p.id + '-' + r.id"
+                :checked="r.permissions.includes(p.id)"
+                disabled
+              />
+              <label class="form-check-label" :for="p.id + '-' + r.id"></label>
             </td>
             <td>
               <div class="d-flex justify-content-center">

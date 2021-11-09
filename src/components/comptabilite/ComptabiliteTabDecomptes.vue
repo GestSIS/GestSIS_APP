@@ -62,7 +62,7 @@
           row-selected-class="table-primary"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
-            <div class="form-check">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -147,6 +147,7 @@ export default {
         },
         {
           title: 'Déductions',
+          titleClass: 'text-center',
           key: 'deduction',
           sortKey: 'deduction',
           slot: 'checkbox',

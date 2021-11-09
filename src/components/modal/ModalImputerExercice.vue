@@ -98,11 +98,9 @@
         >
           <button
             type="button"
-            class="close"
+            class="btn-close"
             @click="successMessageVisibility = false"
-          >
-            &times;
-          </button>
+          ></button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
         <table class="table table-sm">

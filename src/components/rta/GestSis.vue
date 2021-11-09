@@ -35,7 +35,6 @@
             }"
           >
             <!-- <td class="text-center">
-              <div class="form-check">
                 <input
                   type="checkbox"
                   class="form-check-input"
@@ -48,7 +47,6 @@
                   class="form-check-label"
                   :for="'select-' + e.sapeur_id"
                 ></label>
-              </div>
             </td> -->
             <td
               :class="{

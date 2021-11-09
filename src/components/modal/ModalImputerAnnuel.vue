@@ -13,9 +13,11 @@
         :activeIndex="phase - 1"
       />
       <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
-        <button type="button" class="btn-close" data-dismiss="alert">
-          &times;
-        </button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
         <h4 class="alert-heading">Aide</h4>
         <p class="mb-0">
           Les frais et indemnités annuels ci-dessous seront imputé
@@ -62,17 +64,12 @@
         </div>
       </div>
       <div v-if="phase === 2">
-        <div
-          class="alert alert-dismissible alert-success"
-          v-if="successMessageVisibility"
-        >
+        <div class="alert alert-dismissible alert-success">
           <button
             type="button"
-            class="close"
-            @click="successMessageVisibility = false"
-          >
-            &times;
-          </button>
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
         <table class="table table-sm">

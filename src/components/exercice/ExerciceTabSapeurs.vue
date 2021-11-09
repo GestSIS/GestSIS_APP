@@ -24,7 +24,7 @@
             {{ sapeurNomPrenom(sap.sapeur_id) }}
           </td>
           <td>
-            <div class="form-check text-center">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -35,7 +35,7 @@
             </div>
           </td>
           <td>
-            <div class="form-check text-center">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -48,7 +48,7 @@
             </div>
           </td>
           <td>
-            <div class="form-check text-center">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -64,7 +64,7 @@
             </div>
           </td>
           <td>
-            <div class="form-check text-center">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -82,7 +82,7 @@
             </div>
           </td>
           <td>
-            <div class="form-check text-center">
+            <div class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"

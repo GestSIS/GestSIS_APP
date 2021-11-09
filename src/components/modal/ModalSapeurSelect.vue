@@ -70,11 +70,11 @@
                   'table-primary': displaySelected[computeId(item)],
                 }"
               >
-                <td>
-                  <div class="form-check d-inline">
+                <td class="text-center">
+                  <div class="form-check d-inline-block ps-0">
                     <input
                       type="checkbox"
-                      class="form-check-input"
+                      class="form-check-input ms-0"
                       :id="item.id"
                       v-model="displaySelected[computeId(item)]"
                     />
@@ -151,7 +151,7 @@
                     v-if="!item.leaf && !item.expanded"
                     @click="toggleGroupe(item.id)"
                   />
-                  <div class="form-check d-inline">
+                  <div class="form-check d-inline-block">
                     <input
                       type="checkbox"
                       class="form-check-input"
@@ -195,7 +195,7 @@
                 }"
               >
                 <td>
-                  <div class="form-check d-inline">
+                  <div class="form-check d-inline-block">
                     <input
                       type="checkbox"
                       class="form-check-input"

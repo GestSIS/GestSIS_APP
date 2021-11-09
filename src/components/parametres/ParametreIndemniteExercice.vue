@@ -33,16 +33,14 @@
             <td>{{ i.indemnite }}</td>
             <td>{{ compte(i.compte_id) }}</td>
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="par_fonction"
-                  :checked="i.par_fonction"
-                  disabled
-                />
-                <label class="form-check-label" for="par_fonction"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="par_fonction"
+                :checked="i.par_fonction"
+                disabled
+              />
+              <label class="form-check-label" for="par_fonction"></label>
             </td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td>

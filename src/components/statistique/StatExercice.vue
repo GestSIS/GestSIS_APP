@@ -35,19 +35,17 @@
               >
                 <td>{{ c.designation }}</td>
                 <td class="text-center">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="'amendable' + c.id"
-                      :checked="c.amendable"
-                      disabled
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'amendable' + c.id"
-                    ></label>
-                  </div>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="'amendable' + c.id"
+                    :checked="c.amendable"
+                    disabled
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="'amendable' + c.id"
+                  ></label>
                 </td>
                 <td class="text-center">
                   {{ categoriesOccurence[c.id] || 0 }}

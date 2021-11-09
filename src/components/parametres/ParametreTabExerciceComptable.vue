@@ -31,16 +31,14 @@
             <td>{{ e.debut }}</td>
             <td>{{ e.fin }}</td>
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="en_cours"
-                  :checked="e.boucle"
-                  disabled
-                />
-                <label class="form-check-label" for="en_cours"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="en_cours"
+                :checked="e.boucle"
+                disabled
+              />
+              <label class="form-check-label" for="en_cours"></label>
             </td>
             <td>
               <!-- TODO Implement those 2 buttons -->
