@@ -18,10 +18,10 @@
             <th>Catégorie</th>
             <th>Localité</th>
             <th>Communication</th>
-            <th>Convoqué</th>
-            <th>Présent</th>
-            <th>Excusé</th>
-            <th>Amende</th>
+            <th class="text-center">Convoqué</th>
+            <th class="text-center">Présent</th>
+            <th class="text-center">Excusé</th>
+            <th class="text-center">Amende</th>
             <!-- <th>Solde</th> -->
           </tr>
         </thead>
@@ -35,57 +35,49 @@
             <td>{{ e.categorie }}</td>
             <td>{{ e.localite }}</td>
             <td>{{ e.communications }}</td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="convoque"
-                  :checked="e.convoque"
-                  disabled
-                />
-                <label class="form-check-label" for="convoque"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="convoque"
+                :checked="e.convoque"
+                disabled
+              />
+              <label class="form-check-label" for="convoque"></label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="present"
-                  :checked="e.present"
-                  disabled
-                />
-                <label class="form-check-label" for="present"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="present"
+                :checked="e.present"
+                disabled
+              />
+              <label class="form-check-label" for="present"></label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="excuse"
-                  :checked="e.excuse_type_id"
-                  disabled
-                />
-                <label class="form-check-label" for="excuse">{{
-                  e.excuse_type_id
-                    ? getExcuseType(e.excuse_type_id).designation
-                    : ''
-                }}</label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="excuse"
+                :checked="e.excuse_type_id"
+                disabled
+              />
+              <label class="form-check-label" for="excuse">{{
+                e.excuse_type_id
+                  ? getExcuseType(e.excuse_type_id).designation
+                  : ''
+              }}</label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="amende"
-                  :checked="e.amende_id"
-                  disabled
-                />
-                <label class="form-check-label" for="amende"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="amende"
+                :checked="e.amende_id"
+                disabled
+              />
+              <label class="form-check-label" for="amende"></label>
             </td>
             <!-- <td>0.0</td> -->
           </tr>

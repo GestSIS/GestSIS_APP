@@ -49,16 +49,14 @@
             row-selected-class="table-primary"
             @selected="selected"
             ><template v-slot:checkbox="props">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="props.key"
-                  :checked="props.rowData[props.key]"
-                  disabled
-                />
-                <label class="form-check-label" :for="props.key"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="props.key"
+                :checked="props.rowData[props.key]"
+                disabled
+              />
+              <label class="form-check-label" :for="props.key"></label>
             </template>
             <template v-slot:doc="props">
               <div>

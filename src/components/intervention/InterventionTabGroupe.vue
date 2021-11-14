@@ -31,16 +31,14 @@
                 }}</label>
               </td>
               <td>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="'g-' + g.id"
-                      v-model="selected[g.no]"
-                    />
-                    <label class="form-check-label" :for="'g-' + g.id"></label>
-                  </div>
+                <div class="mb-3 text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="'g-' + g.id"
+                    v-model="selected[g.no]"
+                  />
+                  <label class="form-check-label" :for="'g-' + g.id"></label>
                 </div>
               </td>
             </tr>

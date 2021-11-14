@@ -2,7 +2,11 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité annuelle
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
+        {{
+          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+        }}
+        type
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
@@ -11,63 +15,24 @@
         <label for="designation">Désignation</label>
         <input
           type="text"
-          v-model="activeIndemnite.designation"
+          v-model="active.designation"
           class="form-control"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="mb-3">
-        <label for="fonction">Indemnite</label>
-        <select
-          id="fonction"
-          v-model="activeIndemnite.fonction_id"
-          class="form-select"
-          :class="{ 'is-invalid': errors['fonction_id'] }"
-        >
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
-            {{ f.nom }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="montant">Montant</label>
-        <input
-          type="text"
-          v-model="activeIndemnite.montant"
-          class="form-control"
-          :class="{ 'is-invalid': errors['montant'] }"
-          id="montant"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="quantite">Quantité</label>
-        <input
-          type="text"
-          v-model="activeIndemnite.quantite"
-          class="form-control"
-          :class="{ 'is-invalid': errors['quantite'] }"
-          id="quantite"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="unite">Unité</label>
-        <select
-          id="unite"
-          v-model="activeIndemnite.type_unite_id"
-          class="form-select"
-          :class="{ 'is-invalid': errors['type_unite_id'] }"
-        >
-          <option v-for="u in listeUnite" :key="u.id" :value="u.id">
-            {{ u.unite }}
-          </option>
+        <label for="compte">Type</label>
+        <select id="type" v-model="active.type" class="form-select">
+          <option value="frais">Frais</option>
+          <option value="indemnite">Indemnité</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="compte">Compte</label>
         <select
           id="compte"
-          v-model="activeIndemnite.compte_id"
+          v-model="active.compte_id"
           class="form-select"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
@@ -80,7 +45,7 @@
         <label for="categorie">Catégorie d'écriture</label>
         <select
           id="categorie"
-          v-model="activeIndemnite.ecriture_categorie_id"
+          v-model="active.ecriture_categorie_id"
           class="form-select"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
@@ -89,23 +54,36 @@
           </option>
         </select>
       </div>
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="fonction-actif-modal"
+            v-model="active.cumulable"
+          />
+          <label class="form-check-label" for="fonction-actif-modal"
+            >Cumulable</label
+          >
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalIndemniteAnnuel',
+  name: 'ModalIndemniteFraisAnnuelType',
   props: {
     data: {
       type: Object,
@@ -114,12 +92,12 @@ export default {
   data() {
     return {
       errors: {},
-      activeIndemnite: {},
+      active: {},
     };
   },
   mounted() {
-    this.activeIndemnite = {
-      ...this.activeIndemnite,
+    this.active = {
+      ...this.active,
       ...this.data,
     };
   },
@@ -135,9 +113,14 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     save() {
       //Format back dates to SQL Format
-      if ((this.activeIndemnite.id || 0) === 0) {
+      if ((this.active.id || 0) === 0) {
         this.$store
-          .dispatch('addIndemniteAnnuel', this.activeIndemnite)
+          .dispatch(
+            this.active.type == 'frais'
+              ? 'addFraisAnnuelType'
+              : 'addIndemniteAnnuelType',
+            this.active
+          )
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -150,7 +133,12 @@ export default {
           );
       } else {
         this.$store
-          .dispatch('updateIndemniteAnnuel', this.activeIndemnite)
+          .dispatch(
+            this.active.type == 'frais'
+              ? 'updateFraisAnnuelType'
+              : 'updateIndemniteAnnuelType',
+            this.active
+          )
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

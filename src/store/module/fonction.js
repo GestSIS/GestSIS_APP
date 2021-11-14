@@ -24,7 +24,7 @@ export default {
       };
     },
     [types.UPDATE_FONCTION_LISTE](state, payload) {
-      state.liste = payload;
+      state.liste = payload.sort((a,b) => b.tri - a.tri);
     },
     [types.UPDATE_CURRENT_FONCTION](state, payload) {
       state.currentFonction = payload;
