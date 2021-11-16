@@ -51,7 +51,7 @@
           :key="'detail-' + r.id"
           :class="r.rowClass"
         >
-          <td :colspan="fields.length">
+          <td :colspan="fields.length" class="p-0">
             <component
               :is="detailRowComponent"
               :class="detailRowClass"

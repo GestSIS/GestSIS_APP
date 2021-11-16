@@ -19,7 +19,7 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
-          detail-row-class="m-td-0"
+          detail-row-class="m-td-0 p-0"
           :detail-row-component="detailRow"
           @selected="selected"
           :selectable="true"

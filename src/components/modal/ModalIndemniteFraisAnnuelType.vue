@@ -23,7 +23,22 @@
       </div>
       <div class="mb-3">
         <label for="compte">Type</label>
-        <select id="type" v-model="active.type" class="form-select">
+        <select
+          v-if="!active.id"
+          id="type"
+          v-model="active.type"
+          class="form-select"
+        >
+          <option value="frais">Frais</option>
+          <option value="indemnite">Indemnité</option>
+        </select>
+        <select
+          v-else
+          id="type"
+          :value="active.type"
+          class="form-select"
+          disabled
+        >
           <option value="frais">Frais</option>
           <option value="indemnite">Indemnité</option>
         </select>

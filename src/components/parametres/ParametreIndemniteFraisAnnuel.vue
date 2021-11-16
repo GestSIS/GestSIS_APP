@@ -181,12 +181,12 @@ export default {
       return [
         ...this.fraisAnnuel.map((f) => ({
           ...f,
-          fonctions: f.fraisAnnuels,
+          fonctions: f.fraisAnnuels || [],
           type: 'frais',
         })),
         ...this.indemnitesAnnuel.map((f) => ({
           ...f,
-          fonctions: f.indemniteAnnuels,
+          fonctions: f.indemniteAnnuels || [],
           type: 'indemnite',
         })),
       ];
@@ -195,11 +195,11 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     montantAnnuelTypePourFonction(type, fonction) {
-      const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
+      const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       return elem?.quantite * elem?.montant || '';
     },
     montantAnnuelTypePourFonctionDetails(type, fonction) {
-      const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
+      const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       if (!elem) {
         return '';
       }

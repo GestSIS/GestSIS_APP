@@ -9,7 +9,7 @@
       </tr>
     </table>
 
-    <table class="table mb-0" v-else>
+    <table class="table table-sm mb-0" v-else>
       <thead>
         <tr>
           <th

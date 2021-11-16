@@ -20,43 +20,66 @@
         ></button>
         <h4 class="alert-heading">Aide</h4>
         <p class="mb-0">
-          Les frais et indemnités annuels ci-dessous seront imputé
-          automatiquement à <strong>tous</strong> les sapeurs selon leur
-          <strong>fonction principale</strong>. Pour effectuer l'imputation,
-          cliquer sur le bouton <strong>Imputer</strong> en bas de la fenêtre.
+          Les frais et indemnités annuels ci-dessous seront imputés
+          automatiquement pour <strong>chaque</strong> sapeur selon ses
+          fonctions. Pour effectuer l'imputation, cliquez sur le bouton
+          <strong>Imputer</strong> en bas de la fenêtre.
         </p>
       </div>
       <div v-if="phase === 1" class="row">
         <div class="col-12">
-          <table
-            class="table table-sm"
-            @keydown.down="onKeyDown"
-            @keydown.up="onKeyUp"
-          >
+          <table id="frais-annuels" class="table table-sm">
             <thead>
               <tr>
-                <th>Fonction</th>
-                <th>Designation</th>
-                <th>Type</th>
+                <th></th>
+                <th
+                  v-for="type in typesAnnuel"
+                  :key="type.id + '-' + type.type"
+                  class="text-center"
+                >
+                  {{ type.designation }}
+                </th>
+              </tr>
+              <tr>
                 <th>Compte</th>
-                <th>Montant</th>
-                <th>Quantite</th>
-                <th>Total</th>
+                <td
+                  v-for="type in typesAnnuel"
+                  :key="type.id + '-' + type.type"
+                  class="text-center"
+                >
+                  {{ compte(type.compte_id) }}
+                </td>
+              </tr>
+              <tr>
+                <th>Cumulable</th>
+                <td
+                  v-for="type in typesAnnuel"
+                  :key="type.id + '-' + type.type"
+                  class="text-center"
+                >
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :checked="type.cumulable"
+                    disabled
+                  />
+                </td>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="charge in listDisplay"
-                :key="charge.id + '-' + charge.type"
-              >
-                <td>{{ charge.fonction }}</td>
-                <td>{{ charge.designation }}</td>
-                <td>{{ charge.type }}</td>
-                <td>{{ charge.compte }}</td>
-                <td class="text-right">{{ charge.montant }}</td>
-                <td class="text-right">{{ parseInt(charge.quantite) }}</td>
-                <td class="text-right">
-                  {{ (charge.montant * charge.quantite).toFixed(2) }}
+              <tr v-for="fonction in filteredFonctions" :key="fonction.id">
+                <td>{{ fonction.nom }}</td>
+                <td
+                  v-for="type in typesAnnuel"
+                  :key="type.id + '-' + type.type"
+                  class="text-end"
+                >
+                  <template v-if="!detailsTypes">
+                    {{ montantAnnuelTypePourFonction(type, fonction) }}
+                  </template>
+                  <template v-if="detailsTypes">
+                    {{ montantAnnuelTypePourFonctionDetails(type, fonction) }}
+                  </template>
                 </td>
               </tr>
             </tbody>
@@ -121,52 +144,66 @@ export default {
   data() {
     return {
       phase: 1,
+      detailsTypes: false,
+      allFonctions: false,
       ecritures: [],
       successMessageVisibility: true,
     };
   },
   computed: {
     ...mapState({
+      fonctions: (state) => state.fonction.liste,
       fraisAnnuel: (state) => state.imputation.frais.annuels,
       indemnitesAnnuel: (state) => state.imputation.indemnites.annuels,
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
     }),
-    ...mapGetters(['getFonction', 'getCompte', 'getSapeur']),
-    listDisplay() {
-      let svm = this;
+    ...mapGetters(['getSapeur']),
+    typesAnnuel() {
       return [
         ...this.fraisAnnuel.map((f) => ({
           ...f,
-          type: 'Frais',
+          fonctions: f.fraisAnnuels || [],
+          type: 'frais',
         })),
         ...this.indemnitesAnnuel.map((f) => ({
           ...f,
-          type: 'Indemnite',
+          fonctions: f.indemniteAnnuels || [],
+          type: 'indemnite',
         })),
-      ]
-        .map((c) => ({
-          ...c,
-          ...[svm.getFonction(c.fonction_id)].map((f) => ({
-            fonction: f.nom,
-            tri: f.tri,
-          }))[0],
-          compte: [svm.getCompte(c.compte_id)].map(
-            (c) => `${c.numero} ${c.designation}`
-          )[0],
-        }))
-        .sort((c1, c2) => c2.tri - c1.tri);
+      ];
     },
-  },
-  mounted() {
-    //TODO
+    filteredFonctions() {
+      const fonctionIds = new Set(
+        this.typesAnnuel.flatMap((t) => t.fonctions.map((f) => f.fonction_id))
+      );
+      return this.fonctions.filter((f) => fonctionIds.has(f.id));
+    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    montantAnnuelTypePourFonction(type, fonction) {
+      const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
+      return elem?.quantite * elem?.montant || '';
+    },
     formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
+      return `${sapeur?.nom} ${sapeur?.prenom}`;
+    },
+    compte(id) {
+      if (!id) {
+        return '';
+      }
+      const compte = this.comptes.find((f) => f.id === id);
+      return `${compte?.numero} ${compte?.designation}`;
+    },
+    unite(id) {
+      return id ? this.unites.find((u) => u.id === id)?.abreviation : '';
+    },
+    categorie(id) {
+      return id ? this.categories.find((c) => c.id === id)?.designation : '';
     },
     cancel() {
-      //TODO Cancel depending on state
       this.HIDE_MODAL();
     },
     imputer() {

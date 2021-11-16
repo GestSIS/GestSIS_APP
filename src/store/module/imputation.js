@@ -119,7 +119,7 @@ export default {
     },
     [types.UPDATE_FRAIS_ANNUEL_TYPE](state, frais) {
       state.frais.annuels = [
-        ...state.frais.annuels.map((m) => (m.id === frais.id ? frais : m)),
+        ...state.frais.annuels.map((m) => (m.id === frais.id ? { ...m, ...frais } : m)),
       ];
     },
     [types.REMOVE_FRAIS_ANNUEL_TYPE](state, fraisId) {
@@ -131,7 +131,7 @@ export default {
     [types.UPDATE_INDEMNITE_ANNUEL_TYPE](state, indemnite) {
       state.indemnites.annuels = [
         ...state.indemnites.annuels.map((m) =>
-          m.id === indemnite.id ? indemnite : m
+          m.id === indemnite.id ? {...m, ...indemnite} : m
         ),
       ];
     },

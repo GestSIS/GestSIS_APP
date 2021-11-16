@@ -58,7 +58,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Impressions</h5>
           </div>
-          <form class="card-body">
+          <form class="card-body d-grid gap-1">
             <button
               :disabled="!selectedId"
               @click="rapportIntervention"
