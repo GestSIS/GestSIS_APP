@@ -383,41 +383,36 @@ export default {
     ...mapGetters(['currentExerciceComptableId']),
     filteredInterventionsTypes() {
       const ids = new Set(
-        this.interventions.map((i) => i.type_intervention_id)
+        this.interventions.map((i) => parseInt(i.type_intervention_id))
       );
       return this.types.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
-      const ids = new Set(this.interventions.map((i) => i.localite_id));
+      const ids = new Set(
+        this.interventions.map((i) => parseInt(i.localite_id))
+      );
       return this.localites.filter((t) => ids.has(t.id));
     },
     filteredStatFederal() {
-      const ids = new Set(this.interventions.map((i) => i.stat_federal_id));
+      const ids = new Set(
+        this.interventions.map((i) => parseInt(i.stat_federal_id))
+      );
       return this.stats.filter((t) => ids.has(t.id));
     },
     filteredInterventions() {
-      const self = this;
-      return this.interventions
-        .filter(
-          Object.entries(this.filters)
-            .filter(([, val]) => val)
-            .map(
-              ([key, value]) =>
-                (x) =>
-                  x[key] === value
-            )
-            .reduce(
-              (f, g) => (x) => f(x) && g(x),
-              () => true
-            )
-        )
-        .map((i) => {
-          if (i.id == self.selectedId) {
-            return { ...i, 'row-class': 'bg-primary' };
-          } else {
-            return i;
-          }
-        });
+      return this.interventions.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] == value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
     },
     canDelete() {
       return (

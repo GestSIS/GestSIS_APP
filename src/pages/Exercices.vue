@@ -154,7 +154,7 @@
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
             no-data="Aucun exercice/séance à afficher"
-            :data="computedData"
+            :data="filteredExercices"
             :row-class="onRowClass"
           >
             <template v-slot:details="props">
@@ -345,11 +345,13 @@ export default {
       }));
     },
     filteredExercicesCategories() {
-      const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
+      const ids = new Set(
+        this.exercices.map((i) => parseInt(i.exercice_categorie_id))
+      );
       return this.categories.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
-      const ids = new Set(this.exercices.map((i) => i.localite_id));
+      const ids = new Set(this.exercices.map((i) => parseInt(i.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
     },
     filteredExercices() {
@@ -359,7 +361,7 @@ export default {
           .map(
             ([key, value]) =>
               (x) =>
-                x[key] === value
+                x[key] == value
           )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
