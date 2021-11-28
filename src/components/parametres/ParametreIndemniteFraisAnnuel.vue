@@ -236,8 +236,10 @@ export default {
           question:
             'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
         },
-        callback: () => {
-          this.$store.dispatch(action, type.id);
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch(action, type.id);
+          }
         },
       });
     },
@@ -283,8 +285,10 @@ export default {
           question:
             'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
         },
-        callback: () => {
-          this.$store.dispatch(action, elem.id);
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch(action, elem.id);
+          }
         },
       });
     },

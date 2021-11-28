@@ -21,7 +21,7 @@
       <tbody>
         <tr v-for="sap in activeExerciceSapeurs" :key="sap.id">
           <td>
-            {{ sapeurNomPrenom(sap.sapeur_id) }}
+            {{ formatSapeur(sap.sapeur_id) }}
           </td>
           <td>
             <div class="text-center">
@@ -76,7 +76,7 @@
               <label class="form-check-label" :for="sap.id + 'excuse'">
                 <span
                   v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-                  >{{ getExcuseType(sap.excuse_type_id).designation }}</span
+                  >{{ formatExcuseType(sap.excuse_type_id) }}</span
                 ></label
               >
             </div>
@@ -122,7 +122,8 @@ export default {
   name: 'ExerciceTabSapeurs',
   computed: {
     ...mapState({
-      listeExcuseTypes: (state) => state.excuseType.liste,
+      excusesTypes: (state) => state.excuseType.liste,
+      sapeurs: (state) => state.sapeur.liste,
       hasValidationPermission: (state) =>
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.VALIDATION
@@ -132,8 +133,6 @@ export default {
       'activeExerciceId',
       'activeExerciceData',
       'activeExerciceSapeurs',
-      'getSapeur',
-      'getExcuseType',
     ]),
     canValidate() {
       return this.activeExerciceData.statut == 2;
@@ -163,9 +162,12 @@ export default {
           )
         );
     },
-    sapeurNomPrenom(sapeur_id) {
-      let sapeur = this.getSapeur(sapeur_id);
+    formatSapeur(sapeur_id) {
+      const sapeur = this.sapeurs.find((s) => s.id == sapeur_id);
       return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...';
+    },
+    formatExcuseType(id) {
+      return this.excusesTypes.find((e) => e.id == id)?.designation;
     },
     manageSapeurs() {
       const data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
@@ -242,15 +244,17 @@ export default {
       sapeur.excuse_type_id = null;
     },
     selectExcuse(sapeur) {
-      if (sapeur.excuse_type_id === true) {
-        sapeur.excuse_type_id === null;
+      if (sapeur.excuse_type_id) {
+        sapeur.excuse_type_id = null;
       }
       let self = this;
       this.SHOW_MODAL({
         component: 'ModalExcuse',
         callback: (excuseTypeId) => {
           if (excuseTypeId !== null && excuseTypeId !== undefined) {
-            let excuseType = self.getExcuseType(excuseTypeId);
+            let excuseType = self.excusesTypes.find(
+              (e) => e.id == excuseTypeId
+            );
             sapeur.present = false;
             sapeur.remplace = false;
             sapeur.amende = excuseType.amende;

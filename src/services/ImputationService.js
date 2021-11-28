@@ -5,10 +5,10 @@ export default {
     return Api.api().get('/ecritures/exercices/' + exerciceComptableId);
   },
   getIndemniteTypes() {
-    return Api.api().get('/indemnites-types/');
+    return Api.api().get('/indemnites-types');
   },
   getFraisTypes() {
-    return Api.api().get('/frais-types/');
+    return Api.api().get('/frais-types');
   },
   imputerExercice(exerciceId, payload) {
     return Api.api().post('/imputation/exercice/' + exerciceId, payload);
@@ -20,7 +20,7 @@ export default {
     );
   },
   addFraisAnnuel(frais) {
-    return Api.api().post('/frais-annuel/', frais);
+    return Api.api().post('/frais-annuel', frais);
   },
   updateFraisAnnuel(frais) {
     return Api.api().put(`/frais-annuel/${frais.id}`, frais);
@@ -29,7 +29,7 @@ export default {
     return Api.api().delete(`/frais-annuel/${frais_id}`);
   },
   addIndemniteAnnuel(indemnite) {
-    return Api.api().post('/indemnites-annuel/', indemnite);
+    return Api.api().post('/indemnites-annuel', indemnite);
   },
   updateIndemniteAnnuel(indemnite) {
     return Api.api().put(`/indemnites-annuel/${indemnite.id}`, indemnite);
@@ -38,7 +38,7 @@ export default {
     return Api.api().delete(`/indemnites-annuel/${indemnite_id}`);
   },
   addFraisAnnuelType(frais) {
-    return Api.api().post('/frais-annuel-types/', frais);
+    return Api.api().post('/frais-annuel-types', frais);
   },
   updateFraisAnnuelType(frais) {
     return Api.api().put(`/frais-annuel-types/${frais.id}`, frais);
@@ -47,7 +47,7 @@ export default {
     return Api.api().delete(`/frais-annuel-types/${frais_id}`);
   },
   addIndemniteAnnuelType(indemnite) {
-    return Api.api().post('/indemnites-annuel-types/', indemnite);
+    return Api.api().post('/indemnites-annuel-types', indemnite);
   },
   updateIndemniteAnnuelType(indemnite) {
     return Api.api().put(`/indemnites-annuel-types/${indemnite.id}`, indemnite);
@@ -56,7 +56,7 @@ export default {
     return Api.api().delete(`/indemnites-annuel-types/${indemnite_id}`);
   },
   addIndemniteExercice(indemnite) {
-    return Api.api().post('/indemnites-exercice-types/', indemnite);
+    return Api.api().post('/indemnites-exercice-types', indemnite);
   },
   updateIndemniteExercice(indemnite) {
     return Api.api().put(
@@ -68,7 +68,7 @@ export default {
     return Api.api().delete(`/indemnites-exercice-types/${indemnite_id}`);
   },
   addIndemniteIntervention(indemnite) {
-    return Api.api().post('/indemnites-intervention-types/', indemnite);
+    return Api.api().post('/indemnites-intervention-types', indemnite);
   },
   updateIndemniteIntervention(indemnite) {
     return Api.api().put(

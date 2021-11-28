@@ -34,7 +34,7 @@ export default {
     return Api.api().get('/interventions/' + interventionId + '/phases');
   },
   createIntervention(interventionData) {
-    return Api.api().post('/interventions/', interventionData);
+    return Api.api().post('/interventions', interventionData);
   },
   removeIntervention(interventionId) {
     return Api.api().delete('/interventions/' + interventionId);
@@ -48,18 +48,18 @@ export default {
 
   //Matériel
   addMateriel(interventionId, materielData) {
-    return Api.api().post('/interventions/' + interventionId + '/materiels/', {
+    return Api.api().post('/interventions/' + interventionId + '/materiels', {
       materiels: [materielData],
     });
   },
   editMateriel(interventionId, materielData) {
-    return Api.api().put('/interventions/' + interventionId + '/materiels/', {
+    return Api.api().put('/interventions/' + interventionId + '/materiels', {
       materiels: [materielData],
     });
   },
   removeMateriel(interventionId, materielId) {
     return Api.api().delete(
-      '/interventions/' + interventionId + '/materiels/',
+      '/interventions/' + interventionId + '/materiels',
       {
         data: { materiels: [materielId] },
       }
@@ -68,13 +68,13 @@ export default {
 
   //Vehicules
   addVehicules(interventionId, vehiculesData) {
-    return Api.api().post('/interventions/' + interventionId + '/vehicules/', {
+    return Api.api().post('/interventions/' + interventionId + '/vehicules', {
       vehicules: vehiculesData,
     });
   },
   removeVehicules(interventionId, vehiculesId) {
     return Api.api().delete(
-      '/interventions/' + interventionId + '/vehicules/',
+      '/interventions/' + interventionId + '/vehicules',
       {
         data: { vehicules: vehiculesId },
       }
@@ -83,25 +83,25 @@ export default {
 
   //Groupes
   addGroupes(interventionId, groupesData) {
-    return Api.api().post('/interventions/' + interventionId + '/groupes/', {
+    return Api.api().post('/interventions/' + interventionId + '/groupes', {
       groupes: groupesData,
     });
   },
   removeGroupes(interventionId, groupesId) {
-    return Api.api().delete('/interventions/' + interventionId + '/groupes/', {
+    return Api.api().delete('/interventions/' + interventionId + '/groupes', {
       data: { groupes: groupesId },
     });
   },
 
   //Quittances
   addQuittances(interventionId, quittancesData) {
-    return Api.api().post('/interventions/' + interventionId + '/quittances/', {
+    return Api.api().post('/interventions/' + interventionId + '/quittances', {
       quittances: quittancesData,
     });
   },
   removeQuittances(interventionId, quittancesId) {
     return Api.api().delete(
-      '/interventions/' + interventionId + '/quittances/',
+      '/interventions/' + interventionId + '/quittances',
       {
         data: { quittances: quittancesId },
       }
@@ -111,69 +111,69 @@ export default {
   //Sapeurs
   addSapeurs(interventionId, sapeursData) {
     return Api.api().post(
-      '/interventions/' + interventionId + '/sapeurs/',
+      '/interventions/' + interventionId + '/sapeurs',
       sapeursData
     );
   },
   editSapeurs(interventionId, sapeursData) {
     return Api.api().put(
-      '/interventions/' + interventionId + '/sapeurs/',
+      '/interventions/' + interventionId + '/sapeurs',
       sapeursData
     );
   },
   removeSapeurs(interventionId, sapeursIds) {
-    return Api.api().delete('/interventions/' + interventionId + '/sapeurs/', {
+    return Api.api().delete('/interventions/' + interventionId + '/sapeurs', {
       data: sapeursIds,
     });
   },
 
   //Appel
   addAppel(interventionId, appelData) {
-    return Api.api().post('/interventions/' + interventionId + '/appels/', {
+    return Api.api().post('/interventions/' + interventionId + '/appels', {
       appels: [appelData],
     });
   },
   editAppel(interventionId, appelData) {
-    return Api.api().put('/interventions/' + interventionId + '/appels/', {
+    return Api.api().put('/interventions/' + interventionId + '/appels', {
       appels: [appelData],
     });
   },
   removeAppel(interventionId, appelId) {
-    return Api.api().delete('/interventions/' + interventionId + '/appels/', {
+    return Api.api().delete('/interventions/' + interventionId + '/appels', {
       data: { appels: [appelId] },
     });
   },
 
   //Mission
   addMission(interventionId, missionData) {
-    return Api.api().post('/interventions/' + interventionId + '/missions/', {
+    return Api.api().post('/interventions/' + interventionId + '/missions', {
       missions: [missionData],
     });
   },
   editMission(interventionId, missionData) {
-    return Api.api().put('/interventions/' + interventionId + '/missions/', {
+    return Api.api().put('/interventions/' + interventionId + '/missions', {
       missions: [missionData],
     });
   },
   removeMission(interventionId, missionId) {
-    return Api.api().delete('/interventions/' + interventionId + '/missions/', {
+    return Api.api().delete('/interventions/' + interventionId + '/missions', {
       data: { missions: [missionId] },
     });
   },
 
   //Phase
   addPhase(interventionId, phaseData) {
-    return Api.api().post('/interventions/' + interventionId + '/phases/', {
+    return Api.api().post('/interventions/' + interventionId + '/phases', {
       phases: [phaseData],
     });
   },
   editPhase(interventionId, phaseData) {
-    return Api.api().put('/interventions/' + interventionId + '/phases/', {
+    return Api.api().put('/interventions/' + interventionId + '/phases', {
       phases: [phaseData],
     });
   },
   removePhase(interventionId, phaseId) {
-    return Api.api().delete('/interventions/' + interventionId + '/phases/', {
+    return Api.api().delete('/interventions/' + interventionId + '/phases', {
       data: { phases: [phaseId] },
     });
   },
@@ -181,7 +181,7 @@ export default {
   // Rapport d'intervention
   downloadRapport(interventionId, params) {
     return Api.apiFileDownload('rapport.pdf').post(
-      '/interventions/' + interventionId + '/rapport/',
+      '/interventions/' + interventionId + '/rapport',
       params
     );
   },

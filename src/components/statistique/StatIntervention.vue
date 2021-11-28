@@ -23,7 +23,7 @@ async function loadData(_, next) {
   const loadMateriels = store.dispatch('fetchMateriels');
 
   // Ajouter ces deux nouvelles interfaces pour les statistiques
-  const loadStatVehicules = store.dispatch('fetchMaterielsOccurence');
+  const loadStatVehicules = store.dispatch('fetchStatistiqueMateriel');
   const loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
 
   Promise.all([

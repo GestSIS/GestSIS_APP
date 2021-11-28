@@ -37,7 +37,7 @@
                   :key="c.id"
                   @click="selectCompte(c.id)"
                   class="dropdown-item"
-                  :class="{ active: activeCompteId === c.id }"
+                  :class="{ active: activeCompteId == c.id }"
                   type="button"
                 >
                   {{ formatCompte(c) }}

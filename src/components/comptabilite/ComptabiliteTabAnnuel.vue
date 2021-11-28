@@ -196,7 +196,7 @@ export default {
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getLocalite', 'getSapeur', 'getFonction', 'getCompte']),
+    ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
     computedData() {
       //Group by sapeur ID
       return (

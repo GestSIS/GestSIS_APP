@@ -144,6 +144,7 @@ export default {
   },
   computed: {
     ...mapState({
+      categories: (state) => state.exerciceCategorie.liste,
       activeSapeurId: (state) => state.sapeur.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
       activeSapeurGroupe: (state) => state.sapeur.active.groupes,
@@ -151,12 +152,7 @@ export default {
       activeSapeurFonction: (state) =>
         state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
-    ...mapGetters([
-      'listeLocalitesSis',
-      'getGroupe',
-      'getFonction',
-      'getExerciceCategorie',
-    ]),
+    ...mapGetters(['listeLocalitesSis', 'getGroupe', 'getFonction']),
     exercicesSelectedState() {
       return this.exercices.length
         ? this.exercices
@@ -187,7 +183,7 @@ export default {
     this.exercices = this.activeSapeurExercice.map((e) => ({
       ...e,
       info: `${
-        this.getExerciceCategorie(e.exercice_categorie_id).designation
+        this.categories.find((c) => c.id == e.exercice_categorie_id).designation
       } : ${e.communications}`,
       selected: true,
     }));

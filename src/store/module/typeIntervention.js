@@ -26,7 +26,7 @@ export default {
   },
   getters: {
     getTypeIntervention: (state) => (type_intervention_id) =>
-      state.liste.filter((t) => t.id === type_intervention_id)[0],
+      state.liste.find((t) => t.id === type_intervention_id),
   },
   actions: {
     fetchTypeInterventions({ commit, state }) {

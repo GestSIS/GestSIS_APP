@@ -343,8 +343,10 @@ export default {
             question:
               "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
           },
-          callback: () => {
-            this.$store.dispatch('deleteGroupe', this.active.data.id);
+          callback: (confirmed) => {
+            if (confirmed) {
+              this.$store.dispatch('deleteGroupe', this.active.data.id);
+            }
           },
         });
       } else {

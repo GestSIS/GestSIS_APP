@@ -125,7 +125,7 @@
 
 <script>
 import store from '@/store/index';
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
@@ -177,8 +177,10 @@ export default {
         {
           title: 'Sapeur',
           field: 'sapeur_id',
-          formatter: (field) =>
-            [svm.getSapeur(field)].map((s) => `${s.nom} ${s.prenom}`)[0],
+          formatter: (sapeurId) => {
+            const sapeur = svm.sapeurs.find((e) => e.id === sapeurId);
+            return `${sapeur.nom} ${sapeur.prenom}`;
+          },
         },
         {
           title: 'Solde',
@@ -289,13 +291,12 @@ export default {
   },
   computed: {
     ...mapState({
-      listSapeurs: (state) => state.sapeur.liste,
+      sapeurs: (state) => state.sapeur.liste,
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getExerciceCategorie', 'getLocalite', 'getSapeur']),
     computedData() {
       return this.exercices.map((e) => {
         let aPayer = e.statut == 4;
@@ -304,9 +305,11 @@ export default {
         }
         return {
           ...e,
-          categorie: this.getExerciceCategorie(e.exercice_categorie_id)
+          categorie: this.categories.find(
+            (c) => c.id == e.exercice_categorie_id
+          )?.designation,
+          localite: this.localites.find((l) => l.id == e.localite_id)
             .designation,
-          localite: this.getLocalite(e.localite_id).designation,
           aPayer,
           getEcritures: () => Promise.resolve(e.ecritures),
           columns: this.ecritureColumns,

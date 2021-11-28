@@ -31,7 +31,7 @@ export default {
   },
   getters: {
     getExcuseType: (state) => (exercice_id) =>
-      state.liste.filter((e) => e.id === exercice_id)[0],
+      state.liste.filter((e) => e.id == exercice_id)[0],
   },
   actions: {
     fetchExcuseTypes({ commit, state }) {

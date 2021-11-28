@@ -2,7 +2,7 @@ import Api from '@/http/Request';
 
 export default {
   getGroupes() {
-    return Api.api().get('/groupes/');
+    return Api.api().get('/groupes');
   },
   createGroupe(data) {
     return Api.api().post('/groupes', data);

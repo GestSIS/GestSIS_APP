@@ -25,12 +25,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="e in materiels.filter(
-                (e) => allMateriels || occurences[e.id]
-              )"
-              :key="e.id"
-            >
+            <tr v-if="filteredMateriel.length <= 0">
+              <td colspan="2">Aucun matériel utilisé</td>
+            </tr>
+            <tr v-for="e in filteredMateriel" :key="e.id">
               <td>{{ e.designation }}</td>
               <td class="text-center">
                 {{ occurences[e.id] || 0 }}
@@ -62,6 +60,11 @@ export default {
       return this.materielsIntervention
         .map((e) => e.materiel_id)
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+    },
+    filteredMateriel() {
+      return this.materiels.filter(
+        (e) => this.allMateriels || this.occurences[e.id]
+      );
     },
   },
 };

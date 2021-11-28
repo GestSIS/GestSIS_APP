@@ -2,7 +2,7 @@ import Api from '@/http/Request';
 
 export default {
   getControlesMedicaux() {
-    return Api.api().get('/controles-medicaux/');
+    return Api.api().get('/controles-medicaux');
   },
   getControleMedical(id) {
     return Api.api().get(`/controles-medicaux/${id}`);
@@ -21,7 +21,7 @@ export default {
     const form = new FormData();
     form.append('justificatif', file);
     return Api.api().post(
-      '/controles-medicaux/' + id + '/justificatif/',
+      '/controles-medicaux/' + id + '/justificatif',
       form,
       {
         headers: {

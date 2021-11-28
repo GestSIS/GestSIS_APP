@@ -334,13 +334,14 @@ export default {
       hasValidationPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
-    ...mapGetters(['activeExerciceId', 'getExerciceCategorie', 'getLocalite']),
+    ...mapGetters(['activeExerciceId']),
     computedData() {
       return this.exercices.map((s) => ({
         ...s,
-        categorie: this.getExerciceCategorie(s.exercice_categorie_id)
-          .designation,
-        localite: this.getLocalite(s.localite_id).designation,
+        categorie: this.categories.find((c) => c.id == s.exercice_categorie_id)
+          ?.designation,
+        localite: this.localites.find((l) => l.id == s.localite_id)
+          ?.designation,
       }));
     },
     filteredExercicesCategories() {

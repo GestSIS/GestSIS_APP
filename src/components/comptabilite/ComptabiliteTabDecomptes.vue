@@ -201,13 +201,15 @@ export default {
           question:
             "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
         },
-        callback: () => {
-          this.$store.dispatch('removeDecompte', decompteId);
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeDecompte', decompteId);
+          }
         },
       });
     },
     impression(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id === decompteId);
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
       DecompteService.downloadDecompte(
         decompteId,
         `decompte_${decompte.date}.xml`
@@ -219,7 +221,7 @@ export default {
       });
     },
     iso20022Decompte(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id === decompteId);
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
         `decompte_${decompte.date}.xml`

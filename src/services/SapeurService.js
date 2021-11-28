@@ -2,7 +2,7 @@ import Api from '@/http/Request';
 
 export default {
   getSapeurs() {
-    return Api.api().get('/sapeurs/');
+    return Api.api().get('/sapeurs');
   },
   getData(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId);
@@ -34,7 +34,7 @@ export default {
     );
   },
   createSapeur(sapeurData) {
-    return Api.api().post('/sapeurs/', sapeurData);
+    return Api.api().post('/sapeurs', sapeurData);
   },
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
@@ -70,7 +70,7 @@ export default {
   //Téléphones
   addTelephone(sapeurId, telephoneData) {
     return Api.api().post(
-      '/sapeurs/' + sapeurId + '/telephones/',
+      '/sapeurs/' + sapeurId + '/telephones',
       telephoneData
     );
   },
@@ -88,7 +88,7 @@ export default {
 
   //Permis
   addPermis(sapeurId, permisData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/permis/', permisData);
+    return Api.api().post('/sapeurs/' + sapeurId + '/permis', permisData);
   },
   editPermis(sapeurId, permisData) {
     return Api.api().put(
@@ -102,7 +102,7 @@ export default {
 
   //Fonctions
   addFonction(sapeurId, fonctionData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions/', fonctionData);
+    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions', fonctionData);
   },
   editFonction(sapeurId, fonctionData) {
     return Api.api().put(
@@ -116,7 +116,7 @@ export default {
     );
   },
   finFonctions(sapeurId, date, fonctionsId) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/fin-fonctions/', {
+    return Api.api().post('/sapeurs/' + sapeurId + '/fin-fonctions', {
       ids: fonctionsId,
       date: date,
     });
@@ -124,7 +124,7 @@ export default {
 
   //Grades
   addGrade(sapeurId, gradeData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/grades/', gradeData);
+    return Api.api().post('/sapeurs/' + sapeurId + '/grades', gradeData);
   },
   editGrade(sapeurId, gradeData) {
     return Api.api().put(
@@ -138,7 +138,7 @@ export default {
 
   //Cours
   addCours(sapeurId, coursData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/cours/', coursData);
+    return Api.api().post('/sapeurs/' + sapeurId + '/cours', coursData);
   },
   editCours(sapeurId, coursData) {
     return Api.api().put(
@@ -152,7 +152,7 @@ export default {
 
   //Mutations
   addMutation(sapeurId, mutationData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/mutations/', mutationData);
+    return Api.api().post('/sapeurs/' + sapeurId + '/mutations', mutationData);
   },
   editMutation(sapeurId, mutationData) {
     return Api.api().put(
@@ -168,7 +168,7 @@ export default {
 
   //Groupes
   quitterGroupes(sapeurId, groupesId) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/quitter-groupes/', {
+    return Api.api().post('/sapeurs/' + sapeurId + '/quitter-groupes', {
       groupes: groupesId,
     });
   },

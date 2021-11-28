@@ -143,7 +143,7 @@
                 >
                   <option>&lt;Traitement&gt;</option>
                   <option
-                    v-for="traitement in listeTraitement"
+                    v-for="traitement in traitements"
                     :key="traitement.id"
                     :value="traitement.id"
                   >
@@ -235,9 +235,9 @@ async function loadData(routeTo, next) {
 
   await store.dispatch('fetchExercicesComptables');
 
-  let loadExercices = store.dispatch('fetchListeIntervention');
+  let loadInterventions = store.dispatch('fetchListeIntervention');
   Promise.all([
-    loadExercices,
+    loadInterventions,
     loadLocalities,
     loadStatFederal,
     loadTypeInterventions,
@@ -295,16 +295,16 @@ export default {
         {
           title: "Type d'intervention",
           key: 'type_intervention_id',
-          formatter(value) {
-            return self.getTypeIntervention(value).designation;
+          formatter(id) {
+            return self.types.find((t) => t.id == id)?.designation;
           },
           sortKey: 'type_intervention_id',
         },
         {
           title: 'Localité',
           key: 'localite_id',
-          formatter(value) {
-            return self.getLocalite(value).designation;
+          formatter(id) {
+            return self.localites.find((l) => l.id == id)?.designation;
           },
           sortKey: 'localite_id',
         },
@@ -316,16 +316,16 @@ export default {
         {
           title: 'Stat fédéral',
           key: 'stat_federal_id',
-          formatter(value) {
-            return self.getStatFederal(value).designation;
+          formatter(id) {
+            return self.stats.find((s) => s.id == id)?.designation;
           },
           sortKey: 'stat_federal_id',
         },
         {
           title: 'Traitement',
           key: 'intervention_traitement_id',
-          formatter(value) {
-            return self.getInterventionTraitement(value).designation;
+          formatter(id) {
+            return self.traitements.find((t) => t.id == id)?.designation;
           },
           sortKey: 'intervention_traitement_id',
         },
@@ -367,11 +367,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listeInterventions: (state) => state.intervention.liste,
-      listeInterventionsTypes: (state) => state.typeIntervention.liste,
-      listeStatFederal: (state) => state.statFederal.liste,
-      listeTraitement: (state) => state.interventionTraitement.liste,
-      listeLocalites: (state) =>
+      interventions: (state) => state.intervention.liste,
+      types: (state) => state.typeIntervention.liste,
+      stats: (state) => state.statFederal.liste,
+      traitements: (state) => state.interventionTraitement.liste,
+      localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
@@ -380,32 +380,24 @@ export default {
           permissions.INTERVENTION.VALIDATION
         ),
     }),
-    ...mapGetters([
-      'currentExerciceComptableId',
-      'getTypeIntervention',
-      'getLocalite',
-      'getStatFederal',
-      'getInterventionTraitement',
-    ]),
+    ...mapGetters(['currentExerciceComptableId']),
     filteredInterventionsTypes() {
       const ids = new Set(
-        this.listeInterventions.map((i) => i.type_intervention_id)
+        this.interventions.map((i) => i.type_intervention_id)
       );
-      return this.listeInterventionsTypes.filter((t) => ids.has(t.id));
+      return this.types.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
-      const ids = new Set(this.listeInterventions.map((i) => i.localite_id));
-      return this.listeLocalites.filter((t) => ids.has(t.id));
+      const ids = new Set(this.interventions.map((i) => i.localite_id));
+      return this.localites.filter((t) => ids.has(t.id));
     },
     filteredStatFederal() {
-      const ids = new Set(
-        this.listeInterventions.map((i) => i.stat_federal_id)
-      );
-      return this.listeStatFederal.filter((t) => ids.has(t.id));
+      const ids = new Set(this.interventions.map((i) => i.stat_federal_id));
+      return this.stats.filter((t) => ids.has(t.id));
     },
     filteredInterventions() {
       const self = this;
-      return this.listeInterventions
+      return this.interventions
         .filter(
           Object.entries(this.filters)
             .filter(([, val]) => val)
@@ -430,7 +422,7 @@ export default {
     canDelete() {
       return (
         this.selectedId &&
-        this.listeInterventions.filter(
+        this.interventions.filter(
           (i) => i.id == this.selectedId && i.statut < 3
         ).length > 0
       );
@@ -449,8 +441,10 @@ export default {
           question:
             "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
         },
-        callback: () => {
-          this.$store.dispatch('removeIntervention', this.selectedId);
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeIntervention', this.selectedId);
+          }
         },
       });
     },
