@@ -55,3 +55,11 @@ module.exports = {
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Deploy
+
+```
+yarn build
+scp -r dist user@example.com:folder
+```
+

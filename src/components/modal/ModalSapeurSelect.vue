@@ -77,12 +77,9 @@
                       class="form-check-input ms-0"
                       :id="item.id"
                       v-model="displaySelected[computeId(item)]"
+                      @click="select(item.id, true)"
                     />
-                    <label
-                      class="form-check-label"
-                      :for="item.id"
-                      @click="select(item.id)"
-                    ></label>
+                    <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
@@ -157,11 +154,11 @@
                       class="form-check-input"
                       :id="computeId(item)"
                       v-model="displaySelected[computeId(item)]"
+                      @click="select(item.id, item.leaf)"
                     />
                     <label
                       class="form-check-label"
                       :for="computeId(item)"
-                      @click="select(item.id, item.leaf)"
                     ></label>
                   </div>
                   {{ item.designation }}
@@ -392,7 +389,7 @@ export default {
             empty: !svm.sapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] === elem.id).length,
+              .filter((s) => s[key] == elem.id).length,
           },
         ];
         if (expanded) {
@@ -401,7 +398,7 @@ export default {
             ...svm.sapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] === elem.id)
+              .filter((s) => s[key] == elem.id)
               .map((sapeur) => ({
                 designation: `${sapeur.nom} ${sapeur.prenom}`,
                 level: 1,
@@ -439,6 +436,7 @@ export default {
         });
     },
     select(id, leaf = true) {
+      console.log(`Select ${id} ${leaf}`);
       if (leaf) {
         this.selectSapeur(id);
       } else {
@@ -454,9 +452,9 @@ export default {
       let selected = state || !this.selectedGroups.includes(id);
       let svm = this;
 
-      //Select groupe itself
+      // Select groupe itself
       let recursiveSearch = (item) => {
-        let found = item.id === id;
+        let found = item.id == id;
         if (found) {
           svm.selectGroupSingle(item, selected, true);
         } else {
@@ -495,7 +493,7 @@ export default {
         svm.sapeurs
           .map((s) => ({ ...s, sapeur_id: s.id }))
           .filter(this.filtreSapeur())
-          .filter((s) => s.fonction_id === groupe.id)
+          .filter((s) => s.fonction_id == groupe.id)
           .forEach((s) => {
             svm.displaySelected = {
               ...svm.displaySelected,
@@ -510,7 +508,7 @@ export default {
     filtreSapeur() {
       let svm = this;
       return (s) =>
-        svm.getSapeur(s.sapeur_id || s).actif === 1 &&
+        svm.getSapeur(s.sapeur_id || s).actif == 1 &&
         !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     sapeurFormatter(s) {
