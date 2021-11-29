@@ -20,10 +20,8 @@
         </thead>
         <tbody>
           <tr v-if="!mutations.length">
-            <td></td>
             <td colspan="4">
-              Aucun sapeur possédant un numéro rta dans GestSIS n'appartient à
-              un groupe d'alarme.
+              Aucun sapeur présent actuellement dans la référence RTA.
             </td>
           </tr>
           <tr

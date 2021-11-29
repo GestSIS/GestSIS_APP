@@ -96,7 +96,7 @@ export default {
     groupeTree() {
       const groupFilter = (pereId) => (g) => g.pere_id == pereId;
       const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
+        const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id) || {
           nom: 'Ancien',
           prenom: 'Sapeur',
           civilite: 1,
@@ -106,7 +106,7 @@ export default {
           id: s.sapeur_id,
           key: `s-${s.sapeur_id}`,
           label: `${sapeur.nom} ${sapeur.prenom}`,
-          type: sapeur.civilite_id === 1 ? 'homme' : 'femme',
+          type: sapeur.civilite_id == 1 ? 'homme' : 'femme',
         };
       };
       const groupeMapping = (g) => ({
@@ -165,7 +165,7 @@ export default {
 
       // On ne change que pere_id
       const groupesOfSameLevel = this.groupes
-        .filter((g) => g.pere_id === groupe.pere_id)
+        .filter((g) => g.pere_id == groupe.pere_id)
         .filter((g) => g.tri < groupe.tri);
       const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
       this.$store.dispatch('updateGroupe', {
@@ -183,7 +183,7 @@ export default {
         // On change pere_id uniquement
         const parent = this.groupes.find((g) => g.id == groupe.pere_id);
         const groupesOfSameLevelAsParent = this.groupes
-          .filter((g) => g.pere_id === parent.pere_id)
+          .filter((g) => g.pere_id == parent.pere_id)
           .filter((g) => g.tri < parent.tri);
         const previousParentGroupe =
           groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
@@ -198,7 +198,7 @@ export default {
         // On échange tri avec l'autre élément adjacent
         const groupeTri = groupe.tri;
         const groupesOfSameLevel = this.groupes
-          .filter((g) => g.pere_id === groupe.pere_id)
+          .filter((g) => g.pere_id == groupe.pere_id)
           .filter((g) => g.tri < groupe.tri);
         const previousGroupe =
           groupesOfSameLevel[groupesOfSameLevel.length - 1];
@@ -229,7 +229,7 @@ export default {
         while (!nextParentGroupe) {
           const parent = this.groupes.find((g) => g.id == groupeId);
           const groupesOfSameLevelAsParent = this.groupes
-            .filter((g) => g.pere_id === parent.pere_id)
+            .filter((g) => g.pere_id == parent.pere_id)
             .filter((g) => g.tri > parent.tri);
           nextParentGroupe = groupesOfSameLevelAsParent[0];
           groupeId = parent.pere_id;
@@ -246,7 +246,7 @@ export default {
         // On échange tri avec l'autre élément adjacent
         const groupeTri = groupe.tri;
         const groupesOfSameLevel = this.groupes
-          .filter((g) => g.pere_id === groupe.pere_id)
+          .filter((g) => g.pere_id == groupe.pere_id)
           .filter((g) => g.tri > groupe.tri);
         const nextGroupe = groupesOfSameLevel[0];
         this.$store.dispatch('updateGroupe', {
