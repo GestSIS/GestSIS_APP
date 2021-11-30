@@ -195,7 +195,7 @@ export default {
       selected: true,
     }));
     this.fonctions = this.activeSapeurFonction.map((f) => ({
-      ...this.fonctions.find((f) => f.id == f.fonction_id),
+      ...this.fonctions.find((e) => e.id == f.fonction_id),
       debut: f.debut,
       id: f.id,
       info: `Début ${this.formatDate(new Date(f.debut))}`,

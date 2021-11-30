@@ -151,6 +151,7 @@ export default {
       data: (state) => state.intervention.active.data,
       missions: (state) => state.intervention.active.missions,
       appels: (state) => state.intervention.active.appels,
+      sapeurs: (state) => state.sapeur.liste,
     }),
     sortedAppels() {
       return this.appels

@@ -135,7 +135,7 @@
                 :key="f.id"
                 :value="f.id"
               >
-                {{ fonctions.find((f) => f.id == f.fonction_id).nom }}
+                {{ fonctions.find((e) => e.id == f.fonction_id).nom }}
               </option>
             </select>
           </div>
@@ -251,7 +251,7 @@ export default {
         if (fonction.cumulable === 0) {
           let fonctions = this.activesFonctions.filter(
             (f) =>
-              this.fonctions.find((f) => f.id == f.fonction_id).cumulable === 0
+              this.fonctions.find((e) => e.id == f.fonction_id).cumulable === 0
           );
           if (fonctions.length > 0) {
             this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;

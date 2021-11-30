@@ -29,7 +29,7 @@
           </tr>
           <tr v-for="g in activeSapeurGrades" :key="g.id">
             <td>{{ g.date }}</td>
-            <td>{{ grades.find((g) => g.id == g.grade_id).designation }}</td>
+            <td>{{ formatGrade(grades.find((e) => e.id == g.grade_id)) }}</td>
             <td>{{ g.remarque }}</td>
             <td>
               <div class="d-flex justify-content-center">
@@ -83,6 +83,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    formatGrade(grade) {
+      return grade?.designation;
+    },
     newGrade() {
       this.$store.dispatch('resetActiveGrade');
       this.SHOW_MODAL('ModalSapeurPromotion');
