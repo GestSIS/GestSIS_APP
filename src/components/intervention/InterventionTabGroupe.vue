@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'InterventionTabGroupes',
@@ -60,7 +60,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getGroupe']),
     ...mapState({
       groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
       interventionGroupes: (state) => state.intervention.active.groupes,

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'InterventionTabVehicules',
@@ -56,7 +56,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getVehicule']),
     ...mapState({
       vehicules: (state) =>
         state.vehicule.liste.filter(
@@ -99,9 +98,8 @@ export default {
       let removed = vehiculesIds.filter((item) => !ids.includes(item));
       let removedIds = removed.map(
         (vehicule_id) =>
-          this.interventionVehicules
-            .filter((v) => v.vehicule_id === vehicule_id)
-            .map((v) => v.id)[0]
+          this.interventionVehicules.find((v) => v.vehicule_id == vehicule_id)
+            ?.id
       );
 
       if (removedIds.length > 0) {

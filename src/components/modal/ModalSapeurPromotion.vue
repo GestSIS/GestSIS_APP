@@ -23,7 +23,7 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
-          <option v-for="g in listGrades" :key="g.id" :value="g.id">
+          <option v-for="g in grades" :key="g.id" :value="g.id">
             {{ g.designation }}
           </option>
         </select>
@@ -61,15 +61,16 @@ export default {
     };
   },
   mounted() {
-    if (this.listGrades.length === 0) {
+    if (this.grades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
   },
   computed: {
     ...mapState({
-      listGrades: (state) => state.grade.liste,
+      grades: (state) => state.grade.liste,
+      activeGrade: (state) => state.grade.active,
     }),
-    ...mapGetters(['activeSapeurId', 'activeGrade']),
+    ...mapGetters(['activeSapeurId']),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

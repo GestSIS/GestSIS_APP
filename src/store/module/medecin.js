@@ -24,9 +24,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != medecinId);
     },
   },
-  getters: {
-    getMedecin: (state) => (id) => state.liste.find((m) => m.id === id),
-  },
   actions: {
     fetchMedecins({ commit }) {
       return MedecinService.getMedecins().then((data) =>

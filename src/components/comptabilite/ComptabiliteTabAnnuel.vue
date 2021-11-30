@@ -100,10 +100,10 @@ export default {
   },
   mounted() {
     this.$store.dispatch('fetchListeSapeur');
-    if (this.listeFonctions.length === 0) {
+    if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
-    if (this.listeExerciceComptable.length === 0) {
+    if (this.exercicesComptable.length === 0) {
       //console.log('Warning')
     }
 
@@ -133,7 +133,7 @@ export default {
         {
           title: 'Compte',
           field: 'compte_id',
-          formatter: (field) => svm.getCompte(field).designation,
+          formatter: (id) => svm.comptes.find((f) => f.id == id)?.designation,
         },
         {
           title: 'Tarif',
@@ -191,17 +191,18 @@ export default {
   },
   computed: {
     ...mapState({
-      listeEcritures: (state) => state.imputation.ecritures.annuels,
-      listeFonctions: (state) => state.fonction.liste,
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      comptes: (state) => state.compte.liste,
+      ecritures: (state) => state.imputation.ecritures.annuels,
+      fonctions: (state) => state.fonction.liste,
+      exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
     computedData() {
       //Group by sapeur ID
       return (
         Object.entries(
-          this.listeEcritures.reduce((reduced, ecriture) => {
+          this.ecritures.reduce((reduced, ecriture) => {
             (reduced[ecriture.sapeur_id] =
               reduced[ecriture.sapeur_id] || []).push(ecriture);
             return reduced;
@@ -217,13 +218,13 @@ export default {
           }))
           // Add sapeur data
           .map((e) => {
-            let sapeur = this.getSapeur(e.id);
+            let sapeur = this.sapeurs.find((s) => s.id == e.id);
             return {
               ...e,
               ...sapeur,
               nomPrenom: sapeur?.nom + ' ' + sapeur?.prenom,
               fonction: sapeur?.fonction_id
-                ? this.getFonction(sapeur?.fonction_id).nom
+                ? this.fonctions.find((f) => f.id == sapeur?.fonction_id).nom
                 : '',
             };
           })

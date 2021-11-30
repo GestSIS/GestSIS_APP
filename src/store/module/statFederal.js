@@ -12,11 +12,6 @@ export default {
         .sort((t1, t2) => t1.designation > t2.designation);
     },
   },
-  getters: {
-    listStatFederal: (state) => state.liste.slice(0),
-    getStatFederal: (state) => (type_intervention_id) =>
-      state.liste.filter((t) => t.id === type_intervention_id)[0],
-  },
   actions: {
     fetchStatFederals({ commit, state }) {
       if (state.liste.length > 0) {

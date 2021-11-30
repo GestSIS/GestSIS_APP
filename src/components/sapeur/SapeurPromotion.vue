@@ -29,7 +29,7 @@
           </tr>
           <tr v-for="g in activeSapeurGrades" :key="g.id">
             <td>{{ g.date }}</td>
-            <td>{{ getGrade(g.grade_id).designation }}</td>
+            <td>{{ grades.find((g) => g.id == g.grade_id).designation }}</td>
             <td>{{ g.remarque }}</td>
             <td>
               <div class="d-flex justify-content-center">
@@ -57,20 +57,19 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurPromotion',
   computed: {
     ...mapState({
-      listGrades: (state) => state.grade.liste,
+      grades: (state) => state.grade.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurGrades: (state) => state.sapeur.active.grades,
     }),
-    ...mapGetters(['getGrade']),
   },
   mounted() {
-    if (this.listGrades.length === 0) {
+    if (this.grades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
     if (this.activeSapeurGrades.length === 0) {
@@ -93,7 +92,7 @@ export default {
         'updateActiveGrade',
         Object.assign(
           {},
-          this.activeSapeurGrades.filter((f) => f.id === grade_id)[0]
+          this.activeSapeurGrades.find((f) => f.id == grade_id)
         )
       );
       this.SHOW_MODAL('ModalSapeurPromotion');

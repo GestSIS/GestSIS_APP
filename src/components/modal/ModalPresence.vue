@@ -99,7 +99,7 @@
         </div>
       </div>
       <ul class="list-group" v-if="!editMode">
-        <li v-for="s in listSapeurs" :key="s.id" class="list-group-item">
+        <li v-for="s in sapeurs" :key="s.id" class="list-group-item">
           <div class="form-check">
             <input
               type="checkbox"
@@ -157,9 +157,8 @@ export default {
   },
   computed: {
     ...mapState({
-      listSapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
     }),
-    ...mapGetters(['getSapeur']),
     heureDebut() {
       return null; //this.activeInterventionData.heure_debut
     },

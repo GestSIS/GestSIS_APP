@@ -41,14 +41,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != fonctionId);
     },
   },
-  getters: {
-    getFonction: (state) => (fonction_id) => {
-      return state.liste.find((f) => f.id === fonction_id);
-    },
-    activeFonction: (state) => {
-      return state.currentFonction;
-    },
-  },
   actions: {
     fetchFonctions({ commit, state }) {
       if(state.liste.length <= 0) {

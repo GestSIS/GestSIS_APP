@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import InterventionTabGeneral from '@/components/intervention/InterventionTabGeneral.vue';
 import InterventionTabResume from '@/components/intervention/InterventionTabResume.vue';
@@ -140,7 +140,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['activeInterventionData', 'activeInterventionId']),
+    ...mapState({
+      activeInterventionId: (state) => state.intervention.active.id,
+      activeInterventionData: (state) => state.intervention.active.data,
+    }),
     newMode() {
       return this.id === 'new';
     },

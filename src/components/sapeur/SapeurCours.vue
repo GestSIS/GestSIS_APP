@@ -24,8 +24,12 @@
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
             <td>{{ c.date }}</td>
-            <td>{{ getCours(c.cours_id).designation }}</td>
-            <td>{{ getLocalite(c.localite_id).designation }}</td>
+            <td>
+              {{ cours.find((cours) => cours.id == c.cours_id).designation }}
+            </td>
+            <td>
+              {{ localites.find((l) => l.id == c.localite_id).designation }}
+            </td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
@@ -52,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurCours',
@@ -60,12 +64,12 @@ export default {
     ...mapState({
       activeSapeurCours: (state) => state.sapeur.active.cours,
       activeSapeurId: (state) => state.sapeur.active.id,
-      listCours: (state) => state.cours.liste,
+      cours: (state) => state.cours.liste,
+      localites: (state) => state.localite.liste,
     }),
-    ...mapGetters(['getCours', 'getLocalite']),
   },
   mounted() {
-    if (this.listCours.length === 0) {
+    if (this.cours.length === 0) {
       this.$store.dispatch('fetchCours');
     }
     if (this.activeSapeurCours.length === 0) {
@@ -88,7 +92,7 @@ export default {
         'updateActiveCours',
         Object.assign(
           { precedent_id: 0 },
-          this.activeSapeurCours.filter((c) => c.id === cours_id)[0]
+          this.activeSapeurCours.find((c) => c.id == cours_id)
         )
       );
       this.SHOW_MODAL('ModalSapeurCours');

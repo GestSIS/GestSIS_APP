@@ -47,8 +47,4 @@ export default {
       });
     },
   },
-  getters: {
-    getControleMedicalType: (state) => (id) =>
-      state.liste.filter((s) => s.id === id)[0],
-  },
 };

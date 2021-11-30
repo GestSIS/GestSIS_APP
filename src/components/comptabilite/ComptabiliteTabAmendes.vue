@@ -140,21 +140,22 @@ export default {
   },
   computed: {
     ...mapState({
-      listeLocalites: (state) =>
+      sapeurs: (state) => state.sapeur.liste,
+      localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      listeAmendes: (state) => state.imputation.ecritures.amendes,
+      amendes: (state) => state.imputation.ecritures.amendes,
     }),
-    ...mapGetters(['currentExerciceComptableId', 'getSapeur']),
+    ...mapGetters(['currentExerciceComptableId']),
     filteredAmendes() {
-      const amendes = this.listeAmendes.filter(
+      const amendes = this.amendes.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
           .map(
             ([key, value]) =>
               (x) =>
-                x[key] === value
+                x[key] == value
           )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
@@ -164,7 +165,7 @@ export default {
 
       const sapeurs = amendes.reduce((rv, a) => {
         (rv[a.sapeur_id] = rv[a.sapeur_id] || {
-          ...this.getSapeur(a.sapeur_id),
+          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
           amendes: [],
         }).amendes.push(a);
         return rv;

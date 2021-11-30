@@ -21,8 +21,6 @@ export default {
   getters: {
     listPermisType: (state) => state.permisTypes,
     listTelephoneTypes: (state) => state.telephoneTypes,
-    getTelephone: (state) => (id) =>
-      state.telephoneTypes.filter((t) => t.id === id)[0],
   },
   actions: {
     fetchPermisType({ commit }) {

@@ -235,7 +235,7 @@ export default {
     ...mapState({
       listeCivilites: (state) => state.baseData.civilites,
     }),
-    ...mapGetters(['listeLocalitesSis', 'getLocalite']),
+    ...mapGetters(['listeLocalitesSis']),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

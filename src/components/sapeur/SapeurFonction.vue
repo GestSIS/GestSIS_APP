@@ -30,7 +30,7 @@
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
             <td>{{ f.debut }}</td>
             <td>{{ f.fin }}</td>
-            <td>{{ getFonction(f.fonction_id).nom }}</td>
+            <td>{{ fonctions.find((f) => f.id == f.fonction_id).nom }}</td>
             <td>{{ f.remarque }}</td>
             <td>
               <div class="d-flex justify-content-center">
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurFonction',
@@ -68,7 +68,6 @@ export default {
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
     }),
-    ...mapGetters(['getFonction']),
   },
   mounted() {
     if (this.listeFonctions.length === 0) {
@@ -92,7 +91,7 @@ export default {
         'updateActiveFonction',
         Object.assign(
           {},
-          this.activeSapeurFonctions.filter((f) => f.id === fonction_id)[0]
+          this.activeSapeurFonctions.find((f) => f.id == fonction_id)
         )
       );
       this.SHOW_MODAL('ModalSapeurFonction');

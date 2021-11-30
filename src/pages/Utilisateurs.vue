@@ -120,27 +120,6 @@ export default {
       permissions: (state) => state.auth.permissions,
       sapeurs: (state) => state.sapeur.liste,
     }),
-    // ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
-    // computedData() {
-    //   const now = Date.now();
-    //   return this.listeControlesMedicaux.map((s) => {
-    //     const sapeur = this.getSapeur(s.sapeur_id);
-    //     var age = Math.floor(
-    //       (now - new Date(sapeur.date_naissance).getTime()) /
-    //         1000 /
-    //         (60 * 60 * 24) /
-    //         365.25
-    //     );
-    //     return {
-    //       ...s,
-    //       sapeur: `${sapeur.nom} ${sapeur.prenom}`,
-    //       age,
-    //       type: this.getControleMedicalType(s.controle_medical_type_id)
-    //         .designation,
-    //       medecin: this.getMedecin(s.medecin_id).designation,
-    //     };
-    //   });
-    // },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

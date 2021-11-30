@@ -38,7 +38,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="(indemnite, index) in listeIndemnitesTypes"
+                v-for="(indemnite, index) in indemnitesType"
                 :key="indemnite.id"
                 class=""
                 @click="selectIndemnite(index)"
@@ -54,7 +54,11 @@
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
                 <td>{{ indemnite.unite_id }}</td>
-                <td>{{ formatCompte(getCompte(indemnite.compte_id)) }}</td>
+                <td>
+                  {{
+                    formatCompte(comptes((f) => f.id == indemnite.compte_id))
+                  }}
+                </td>
                 <td>
                   <div class="form-check">
                     <input
@@ -88,7 +92,7 @@
                 v-for="fonction in activeIndemnite.fonctions"
                 :key="fonction.id"
               >
-                <td>{{ getFonction(fonction.id).nom }}</td>
+                <td>{{ fonctions.find((f) => f.id == fonction.id).nom }}</td>
                 <td>{{ fonction.solde }}</td>
                 <td>{{ fonction.indemnite }}</td>
               </tr>
@@ -121,7 +125,11 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ formatSapeur(getSapeur(ecriture.sapeur_id)) }}</td>
+              <td>
+                {{
+                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                }}
+              </td>
               <td>{{ ecriture.solde }}</td>
               <td>{{ ecriture.indemnite }}</td>
               <td>{{ ecriture.taux_weekend }}</td>
@@ -150,7 +158,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import MultiStep from '@/components/MultiStep.vue';
 
 export default {
@@ -168,17 +176,17 @@ export default {
   },
   computed: {
     ...mapState({
-      listeIndemnitesTypes: (state) =>
-        state.imputation.indemnites.interventions,
-      listeFonctions: (state) => state.fonction.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      indemnitesType: (state) => state.imputation.indemnites.interventions,
+      fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
     }),
-    ...mapGetters(['getFonction', 'getSapeur', 'getCompte']),
     activeIndemniteHasFonction() {
       return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
     },
   },
   mounted() {
-    if (this.listeFonctions.length === 0) {
+    if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
   },
@@ -186,7 +194,7 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     selectIndemnite(index) {
       this.activeIndemniteIndex = index;
-      this.activeIndemnite = this.listeIndemnitesTypes[index];
+      this.activeIndemnite = this.indemnitesType[index];
     },
     cancel() {
       //TODO Cancel depending on state
@@ -213,7 +221,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : ++this.activeIndemniteIndex % this.listeIndemnitesTypes.length
+          : ++this.activeIndemniteIndex % this.indemnitesType.length
       );
     },
     onKeyUp() {
@@ -221,7 +229,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : --this.activeIndemniteIndex % this.listeIndemnitesTypes.length
+          : --this.activeIndemniteIndex % this.indemnitesType.length
       );
     },
     formatSapeur(sapeur) {

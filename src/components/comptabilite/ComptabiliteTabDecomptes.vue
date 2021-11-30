@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
 import DecompteService from '@/services/DecompteService.js';
 
@@ -186,7 +186,6 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       decomptes: (state) => state.decompte.liste,
     }),
-    ...mapGetters(['getSapeur', 'getFonction']),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

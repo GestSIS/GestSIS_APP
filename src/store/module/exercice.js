@@ -63,9 +63,6 @@ export default {
     activeExerciceId: (state) => state.active.id,
     activeExerciceSapeurs: (state) => state.active.sapeurs,
     activeExerciceData: (state) => state.active.data,
-    getExercice: (state) => (exercice_id) => {
-      return state.liste.filter((e) => e.id === exercice_id)[0];
-    },
   },
   actions: {
     fetchListeExercice({ getters, commit }) {

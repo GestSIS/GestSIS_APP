@@ -37,10 +37,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != materielId);
     },
   },
-  getters: {
-    getMateriel: (state) => (materiel_id) =>
-      state.liste.find((m) => m.id === materiel_id),
-  },
   actions: {
     fetchMateriels({ commit }) {
       return MaterielService.getMateriels().then((data) =>

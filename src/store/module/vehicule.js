@@ -24,10 +24,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != vehiculeId);
     },
   },
-  getters: {
-    getVehicule: (state) => (vehicule_id) =>
-      state.liste.filter((m) => m.id === vehicule_id)[0],
-  },
   actions: {
     fetchVehicules({ commit }) {
       return VehiculeService.getVehicules().then((data) =>

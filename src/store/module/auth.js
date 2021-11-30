@@ -23,11 +23,6 @@ export default {
       allPermissions: {},
     },
   },
-  getters: {
-    activePermissions: (state) => {
-      return state.sis.permissions;
-    },
-  },
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.roles = [];
@@ -39,18 +34,18 @@ export default {
       TokenService.saveRefreshToken(payload.refreshToken);
       TokenService.saveUser(payload.user);
       Api.setAccessToken(payload.accessToken);
-
+      
       state.user = payload.user;
-
+      
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.filter(
+        const sis = state.sis.liste.find(
           (sis) => sis.api_key == firstSisKey
-        )[0];
+        );
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
@@ -90,18 +85,18 @@ export default {
       TokenService.saveAccessToken(payload.accessToken);
       TokenService.saveRefreshToken(payload.refreshToken);
       Api.setAccessToken(payload.accessToken);
-
+      
       state.refreshTokenPromise = payload;
-
+      
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.filter(
+        const sis = state.sis.liste.find(
           (sis) => sis.api_key == firstSisKey
-        )[0];
+        );
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
@@ -113,14 +108,14 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
-
+      
       state.user = null;
       state.sis.activeId = null;
       state.sis.activeKey = null;
       state.sis.permissions = [];
       state.sis.available = [];
       state.sis.allPermissions = {};
-
+      
       //location.reload();
     },
     [types.AUTH_SIS_LISTE](state, payload) {
@@ -139,16 +134,19 @@ export default {
       state.sis.activeId = sis.id;
       state.sis.activeKey = sis.key;
       state.sis.permissions = state.sis.allPermissions[sis.api_key];
-
+      
       Api.setSisKey(sis.api_key);
     },
   },
   getters: {
     isLoggedIn: (state) => !!state.user,
+    activePermissions: (state) => {
+      return state.sis.permissions;
+    },
     activeSisData: (state) => {
-      return state.sis.liste.filter(
+      return state.sis.liste.find(
         (sis) => sis.api_key == state.sis.activeKey
-      )[0];
+      );
     },
     availableSisListe: (state) => {
       return state.sis.liste.filter((sis) =>

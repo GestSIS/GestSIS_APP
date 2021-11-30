@@ -13,9 +13,6 @@ export default {
       state.liste = payload;
     },
   },
-  getters: {
-    getAmende: (state) => (id) => state.liste.find((c) => c.id === id),
-  },
   actions: {
     fetchAmendes({ commit, state }) {
       if (state.liste.length > 0) {

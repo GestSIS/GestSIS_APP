@@ -185,7 +185,9 @@ export default {
           title: 'Sapeur',
           field: 'sapeur_id',
           formatter: (field) =>
-            [svm.getSapeur(field)].map((s) => `${s.nom} ${s.prenom}`)[0],
+            [svm.sapeurs.find((s) => s.id == field)].map(
+              (s) => `${s?.nom} ${s?.prenom}`
+            )[0],
         },
         {
           title: 'Tarif',
@@ -252,7 +254,7 @@ export default {
           title: 'Localité',
           key: 'localite_id',
           formatter(value) {
-            return svm.getLocalite(value).designation;
+            return svm.localites.find((l) => l.id == value).designation;
           },
           sortKey: 'localite_id',
         },
@@ -265,7 +267,7 @@ export default {
           title: 'Stat fédéral',
           key: 'stat_federal_id',
           formatter(value) {
-            return svm.getStatFederal(value).designation;
+            return svm.statsFederal.find((s) => s.id == value)?.designation;
           },
           sortKey: 'stat_federal_id',
         },
@@ -273,7 +275,7 @@ export default {
           title: 'Traitement',
           key: 'intervention_traitement_id',
           formatter(value) {
-            return svm.getInterventionTraitement(value).designation;
+            return svm.traitements.find((t) => t.id == value)?.designation;
           },
           sortKey: 'intervention_traitement_id',
         },
@@ -325,6 +327,7 @@ export default {
   },
   computed: {
     ...mapState({
+      sapeurs: (state) => state.sapeur.liste,
       interventions: (state) =>
         state.intervention.liste.filter((e) => e.statut > 1),
       exercicesComptable: (state) => state.exerciceComptable.liste,
@@ -332,25 +335,17 @@ export default {
       typesIntervention: (state) => state.typeIntervention.liste,
       statsFederal: (state) => state.statFederal.liste,
       traitements: (state) => state.interventionTraitement.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
-        ),
+      localites: (state) => state.localite.liste,
+      activeInterventionId: (state) => state.intervention.active.id,
     }),
-    ...mapGetters([
-      'activeInterventionId',
-      'getTypeIntervention',
-      'getLocalite',
-      'getStatFederal',
-      'getInterventionTraitement',
-      'getSapeur',
-    ]),
     computedData() {
       return this.interventions.map((i) => ({
         ...i,
-        type_intervention: this.getTypeIntervention(i.type_intervention_id)
-          .designation,
-        localite: this.getLocalite(i.localite_id).designation,
+        type_intervention: this.typesIntervention.find(
+          (t) => t.id == i.type_intervention_id
+        )?.designation,
+        localite: this.localites.find((l) => l.id == i.localite_id)
+          ?.designation,
         getEcritures: () =>
           ImputationService.getEcrituresForInterventions(i.id),
         columns: this.ecritureColumns,

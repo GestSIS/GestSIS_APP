@@ -332,12 +332,7 @@ export default {
       listeFonctions: (state) => state.fonction.liste,
       listGrades: (state) => state.grade.liste,
     }),
-    ...mapGetters([
-      'activeSapeur',
-      'activeSapeurId',
-      'listeLocalitesSis',
-      'getLocalite',
-    ]),
+    ...mapGetters(['activeSapeur', 'activeSapeurId', 'listeLocalitesSis']),
   },
   watch: {
     activeSapeurId(id) {

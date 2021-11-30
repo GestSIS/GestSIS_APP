@@ -192,8 +192,7 @@ export default {
           }));
 
           let removedSapeurs = supprime.map(
-            (id) =>
-              svm.activeExerciceSapeurs.filter((s) => s.sapeur_id === id)[0].id
+            (id) => svm.activeExerciceSapeurs.find((s) => s.sapeur_id == id).id
           );
 
           //Sapeurs ajoutés

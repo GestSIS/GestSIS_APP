@@ -197,7 +197,6 @@ export default {
     },
   },
   getters: {
-    getSapeur: (state) => (id) => state.liste.filter((s) => s.id === id)[0],
     activeSapeur: (state) => state.active.data,
     activeSapeurPermis: (state) => state.active.permis,
     activeSapeurTelephones: (state) =>

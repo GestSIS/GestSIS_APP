@@ -51,8 +51,6 @@ export default {
 
       return insideGroupes(null);
     },
-    getGroupe: (state) => (groupe_id) =>
-      state.liste.filter((g) => g.id === groupe_id)[0],
   },
   actions: {
     fetchGroupes({ commit }) {

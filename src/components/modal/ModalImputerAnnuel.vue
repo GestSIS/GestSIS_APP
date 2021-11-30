@@ -107,7 +107,11 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ formatSapeur(getSapeur(ecriture.sapeur_id)) }}</td>
+              <td>
+                {{
+                  formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
+                }}
+              </td>
               <td>{{ ecriture.designation }}</td>
               <td class="text-right">{{ ecriture.tarif }}</td>
               <td class="text-right">{{ ecriture.quantite }}</td>
@@ -134,7 +138,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import MultiStep from '@/components/MultiStep.vue';
 
 export default {
@@ -158,8 +162,8 @@ export default {
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
+      sapeurs: (state) => state.sapeur.liste,
     }),
-    ...mapGetters(['getSapeur']),
     typesAnnuel() {
       return [
         ...this.fraisAnnuel.map((f) => ({

@@ -48,9 +48,9 @@ export default {
     },
     [types.UPDATE_INTERVENTION_STATUT](state, payload) {
       state.liste = [
-        ...state.liste.filter((e) => e.id !== payload.id),
+        ...state.liste.filter((e) => e.id != payload.id),
         {
-          ...state.liste.filter((e) => e.id === payload.id)[0],
+          ...state.liste.find((e) => e.id == payload.id),
           statut: payload.statut,
         },
       ];
@@ -135,22 +135,6 @@ export default {
     //Phases
     [types.REMOVE_CURRENT_INTERVENTION_PHASE](state, payload) {
       state.active.phases = state.active.phases.filter((p) => p.id !== payload);
-    },
-  },
-  getters: {
-    listInterventions: (state) => {
-      return state.liste
-        .slice(0)
-        .sort((i1, i2) => new Date(i1.date_debut) - new Date(i2.date_debut));
-    },
-    activeInterventionId: (state) => {
-      return state.active.id;
-    },
-    activeInterventionData: (state) => {
-      return state.active.data;
-    },
-    getIntervention: (state) => (intervention_id) => {
-      return state.liste.filter((e) => e.id === intervention_id)[0];
     },
   },
   actions: {

@@ -25,7 +25,7 @@
           :class="{ 'is-invalid': errors['cours_id'] }"
           :disabled="!addMode"
         >
-          <option v-for="c in listeCours" :key="c.id" :value="c.id">
+          <option v-for="c in cours" :key="c.id" :value="c.id">
             {{ c.designation }}
           </option>
           <!-- TODO limiter le nombre de cours -->
@@ -53,7 +53,7 @@
           disabled
         >
           <option value="0">-</option>
-          <option v-for="c in listeCours" :key="c.id" :value="c.id">
+          <option v-for="c in cours" :key="c.id" :value="c.id">
             {{ c.designation }}
           </option>
           <!-- TODO Limiter le nombre de cours -->
@@ -71,7 +71,7 @@
               :class="{ 'is-invalid': errors['grade_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="g in listeGrades" :key="g.id" :value="g.id">
+              <option v-for="g in grades" :key="g.id" :value="g.id">
                 {{ g.designation }}
               </option>
             </select>
@@ -101,7 +101,7 @@
               :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
+              <option v-for="f in fonctions" :key="f.id" :value="f.id">
                 {{ f.nom }}
               </option>
             </select>
@@ -135,7 +135,7 @@
                 :key="f.id"
                 :value="f.id"
               >
-                {{ getFonction(f.fonction_id).nom }}
+                {{ fonctions.find((f) => f.id == f.fonction_id).nom }}
               </option>
             </select>
           </div>
@@ -165,14 +165,14 @@ export default {
   },
   computed: {
     ...mapState({
-      listeGrades: (state) => state.grade.liste,
-      listeFonctions: (state) => state.fonction.liste,
-      listeCours: (state) => state.cours.liste,
+      grades: (state) => state.grade.liste,
+      fonctions: (state) => state.fonction.liste,
+      cours: (state) => state.cours.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
       activeCours: (state) => state.cours.active,
     }),
-    ...mapGetters(['listLocalites', 'getCours', 'getFonction']),
+    ...mapGetters(['listLocalites']),
     addMode() {
       return (this.activeCours.id || 0) === 0;
     },
@@ -188,13 +188,13 @@ export default {
       this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
     }
 
-    if (this.listeCours.length === 0) {
+    if (this.cours.length === 0) {
       this.$store.dispatch('fetchCours');
     }
-    if (this.listeFonctions.length === 0) {
+    if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
-    if (this.listeGrades.length === 0) {
+    if (this.grades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
   },
@@ -238,17 +238,20 @@ export default {
       this.$store.dispatch('fetchSapeurCours', id);
     },
     activeCoursId: function (cours_id) {
-      let cours = this.listeCours.filter((c) => c.id === cours_id)[0];
+      let cours = this.cours.find((c) => c.id == cours_id);
       this.activeCours.fonction_id = cours.fonction_id || 0;
       this.activeCours.grade_id = cours.grade_id || 0;
       this.activeCours.precedent_id = cours.precedent_id || 0;
       this.activeCours.fonction_sapeur_id = 0;
 
       if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.getFonction(this.activeCours.fonction_id);
+        let fonction = this.fonctions(
+          (f) => f.id == this.activeCours.fonction_id
+        );
         if (fonction.cumulable === 0) {
           let fonctions = this.activesFonctions.filter(
-            (f) => this.getFonction(f.fonction_id).cumulable === 0
+            (f) =>
+              this.fonctions.find((f) => f.id == f.fonction_id).cumulable === 0
           );
           if (fonctions.length > 0) {
             this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;
