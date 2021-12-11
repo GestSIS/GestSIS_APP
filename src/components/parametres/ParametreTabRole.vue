@@ -35,6 +35,7 @@
                 class="form-check-input"
                 :id="p.id + '-' + r.id"
                 :checked="r.permissions.includes(p.id)"
+                readonly
                 disabled
               />
               <label class="form-check-label" :for="p.id + '-' + r.id"></label>
@@ -88,7 +89,7 @@ export default {
     formattedRoles() {
       return this.roles.map((r) => ({
         ...r,
-        permissions: r.permission_roles.map((p) => p.permission_id),
+        permissions: r.permission_roles.map((p) => parseInt(p.permission_id)),
       }));
     },
   },

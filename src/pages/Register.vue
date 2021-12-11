@@ -1,10 +1,10 @@
 <template>
   <div class="centered">
-    <form class="text-center form-signin" @submit.prevent="login">
+    <form class="text-center form-signin d-grid" @submit.prevent="login">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 fwnormal">Veuillez vous enregistrer</h1>
-      <label for="inputEmail" class="sr-only">Nom d'utilisateur</label>
+      <h1 class="h3 mb-3 fwnormal">Veuillez-vous enregistrer</h1>
+      <label for="inputName" class="sr-only">Nom d'utilisateur</label>
       <input
         v-model="name"
         type="text"
@@ -23,7 +23,7 @@
         type="email"
         id="inputEmail"
         class="form-control"
-        placeholder="Adresse email"
+        placeholder="Email"
         required=""
         autocomplete="off"
         :class="{ 'is-invalid': error.email }"
@@ -35,7 +35,7 @@
         type="password"
         id="inputPassword"
         class="form-control"
-        placeholder="Password"
+        placeholder="Mot de passe"
         required=""
         autocomplete="off"
         :class="{ 'is-invalid': error.password }"
@@ -63,7 +63,7 @@
         Mot de passe différent
       </div>
       <button
-        class="btn btn-link"
+        class="btn btn-link btn-block"
         type="button"
         @click.prevent="avance = !avance"
       >
@@ -82,8 +82,8 @@
           />
         </div>
       </transition-expand>
-      <button class="btn btn-lg btn-primary btn-block mt-5" type="submit">
-        Sign in
+      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">
+        Créer un compte
       </button>
       <p class="mt-5 mb-3 text-muted">
         © GestSIS {{ new Date().getFullYear() }}

@@ -4,13 +4,13 @@
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous connectez</h1>
-      <label for="inputEmail" class="sr-only">Adresse email</label>
+      <label for="inputEmail" class="sr-only">Email</label>
       <input
         v-model="email"
         type="email"
         id="inputEmail"
         class="form-control"
-        placeholder="Adresse email"
+        placeholder="Email"
         required=""
         autofocus=""
         autocomplete="off"
@@ -22,7 +22,7 @@
         type="password"
         id="inputPassword"
         class="form-control"
-        placeholder="Password"
+        placeholder="Mot de passe"
         required=""
         autocomplete="off"
         :class="{ 'is-invalid': error }"
@@ -35,7 +35,7 @@
         type="submit"
         @click="login"
       >
-        Sign in
+        Se connecter
       </button>
       <p class="mt-5 mb-3 text-muted">
         © GestSIS {{ new Date().getFullYear() }}

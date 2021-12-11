@@ -226,6 +226,7 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(routeTo, next) {
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadStatFederal = store.dispatch('fetchStatFederals');
   let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
@@ -237,9 +238,10 @@ async function loadData(routeTo, next) {
 
   let loadInterventions = store.dispatch('fetchListeIntervention');
   Promise.all([
-    loadInterventions,
+    loadSapeurs,
     loadLocalities,
     loadStatFederal,
+    loadInterventions,
     loadTypeInterventions,
     loadInterventionTraitement,
   ]).then(() => {

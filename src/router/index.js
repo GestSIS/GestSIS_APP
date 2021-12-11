@@ -190,7 +190,7 @@ const router = new Router({
       ],
     },
     {
-      path: '/Publipostage',
+      path: '/publipostage',
       name: 'publipostage',
       component: () => import('@/pages/Publipostage.vue'),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),

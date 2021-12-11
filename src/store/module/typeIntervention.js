@@ -24,10 +24,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != typeId);
     },
   },
-  getters: {
-    getTypeIntervention: (state) => (type_intervention_id) =>
-      state.liste.find((t) => t.id === type_intervention_id),
-  },
   actions: {
     fetchTypeInterventions({ commit, state }) {
       if (state.liste.length > 0) {

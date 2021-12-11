@@ -20,7 +20,7 @@ const links = [
     permission: permissions.EXERCICE.PRESENCE,
   },
   {
-    to: '/organisation',
+    to: { name: 'organisation' },
     icon: 'sitemap',
     nom: 'Organisation',
     permission: permissions.ORGANISATION.MODIFICATION,
@@ -32,13 +32,13 @@ const links = [
     permission: permissions.COMPTABILITE.TOUT,
   },
   {
-    to: '/publipostage',
+    to: { name: 'publipostage'},
     icon: 'envelope',
     nom: 'Publipostage',
     permission: permissions.SAPEUR.LECTURE,
   },
   {
-    to: '/statistique',
+    to: { name: 'statistique' },
     icon: ['far', 'chart-bar'],
     nom: 'Statistiques',
   },
@@ -53,11 +53,11 @@ const links = [
     nom: 'Contrôles médicaux',
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
-  {
-    to: '/impressions',
-    icon: 'sitemap',
-    nom: 'Impressions',
-  },
+  // {
+  //   to: '/impressions',
+  //   icon: 'sitemap',
+  //   nom: 'Impressions',
+  // },
   {
     to: { name: 'users' },
     icon: 'user',

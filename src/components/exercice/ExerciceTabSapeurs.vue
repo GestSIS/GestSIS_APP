@@ -29,8 +29,9 @@
                 type="checkbox"
                 class="form-check-input"
                 :id="sap.id + 'convoque'"
-                checked=""
                 v-model="sap.convoque"
+                :true-value="1"
+                :false-value="0"
               />
             </div>
           </td>
@@ -40,8 +41,9 @@
                 type="checkbox"
                 class="form-check-input"
                 :id="sap.id + 'present'"
-                checked=""
                 v-model="sap.present"
+                :true-value="1"
+                :false-value="0"
                 @change="selectPresent(sap)"
               />
               <label class="form-check-label" :for="sap.id + 'present'"></label>
@@ -53,8 +55,9 @@
                 type="checkbox"
                 class="form-check-input"
                 :id="sap.id + 'remplace'"
-                checked=""
                 v-model="sap.remplace"
+                :true-value="1"
+                :false-value="0"
                 @change="selectRemplace(sap)"
               />
               <label
@@ -69,8 +72,7 @@
                 type="checkbox"
                 class="form-check-input"
                 :id="sap.id + 'excuse'"
-                checked=""
-                v-model="sap.excuse_type_id"
+                :checked="!!sap.excuse_type_id"
                 @change.stop.prevent="selectExcuse(sap)"
               />
               <label class="form-check-label" :for="sap.id + 'excuse'">
@@ -87,8 +89,9 @@
                 type="checkbox"
                 class="form-check-input"
                 :id="sap.id + 'amende'"
-                checked=""
                 v-model="sap.amende"
+                :true-value="1"
+                :false-value="0"
                 :disabled="!!(sap.remplace || sap.present)"
               />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>

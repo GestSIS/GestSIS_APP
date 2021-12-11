@@ -4,14 +4,12 @@
       <h5 class="modal-title" id="exampleModalLabel">
         Chargement en cours ...
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()">
-        
-      </button>
+      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
+          <span class="sr-only">Chargement...</span>
         </div>
       </div>
     </div>
