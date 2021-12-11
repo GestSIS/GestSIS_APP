@@ -30,7 +30,9 @@
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
             <td>{{ f.debut }}</td>
             <td>{{ f.fin }}</td>
-            <td>{{ getFonction(f.fonction_id).nom }}</td>
+            <td>
+              {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
+            </td>
             <td>{{ f.remarque }}</td>
             <td>
               <div class="d-flex justify-content-center">
@@ -58,20 +60,19 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'SapeurFonction',
   computed: {
     ...mapState({
-      listeFonctions: (state) => state.fonction.liste,
+      fonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
     }),
-    ...mapGetters(['getFonction']),
   },
   mounted() {
-    if (this.listeFonctions.length === 0) {
+    if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
     this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
@@ -83,6 +84,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    formatFonction(fonction) {
+      return fonction?.nom;
+    },
     newFonction() {
       this.$store.dispatch('resetActiveFonction');
       this.SHOW_MODAL('ModalSapeurFonction');
@@ -92,7 +96,7 @@ export default {
         'updateActiveFonction',
         Object.assign(
           {},
-          this.activeSapeurFonctions.filter((f) => f.id === fonction_id)[0]
+          this.activeSapeurFonctions.find((f) => f.id == fonction_id)
         )
       );
       this.SHOW_MODAL('ModalSapeurFonction');

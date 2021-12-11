@@ -2,26 +2,20 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeFrais.id ? 'Modifier' : 'Ajouter' }} un frais annuel
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
+        {{
+          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+        }}
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
-        <label for="designation">Désignation</label>
-        <input
-          type="text"
-          v-model="activeFrais.designation"
-          class="form-control"
-          :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="fonction">Indemnite</label>
+        <label for="fonction">Fonction</label>
         <select
           id="fonction"
-          v-model="activeFrais.fonction_id"
+          :value="active.fonction_id"
+          disabled
           class="form-select"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
@@ -34,7 +28,7 @@
         <label for="montant">Montant</label>
         <input
           type="text"
-          v-model="activeFrais.montant"
+          v-model="active.montant"
           class="form-control"
           :class="{ 'is-invalid': errors['montant'] }"
           id="montant"
@@ -44,7 +38,7 @@
         <label for="quantite">Quantité</label>
         <input
           type="text"
-          v-model="activeFrais.quantite"
+          v-model="active.quantite"
           class="form-control"
           :class="{ 'is-invalid': errors['quantite'] }"
           id="quantite"
@@ -54,38 +48,12 @@
         <label for="unite">Unité</label>
         <select
           id="unite"
-          v-model="activeFrais.type_unite_id"
+          v-model="active.type_unite_id"
           class="form-select"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
-          <option v-for="u in listeUnite" :key="u.id" :value="u.id">
+          <option v-for="u in unites" :key="u.id" :value="u.id">
             {{ u.unite }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="compte">Compte</label>
-        <select
-          id="compte"
-          v-model="activeFrais.compte_id"
-          class="form-select"
-          :class="{ 'is-invalid': errors['compte_id'] }"
-        >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="categorie">Catégorie d'écriture</label>
-        <select
-          id="categorie"
-          v-model="activeFrais.ecriture_categorie_id"
-          class="form-select"
-          :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-            {{ c.designation }}
           </option>
         </select>
       </div>
@@ -95,7 +63,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeFrais.id ? 'Modifier' : 'Ajouter' }}
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -105,7 +73,7 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalFraisAnnuel',
+  name: 'ModalIndemniteFraisAnnuel',
   props: {
     data: {
       type: Object,
@@ -114,12 +82,12 @@ export default {
   data() {
     return {
       errors: {},
-      activeFrais: {},
+      active: {},
     };
   },
   mounted() {
-    this.activeFrais = {
-      ...this.activeFrais,
+    this.active = {
+      ...this.active,
       ...this.data,
     };
   },
@@ -127,7 +95,7 @@ export default {
     ...mapState({
       listeFonction: (state) => state.fonction.liste,
       listeCompte: (state) => state.compte.liste,
-      listeUnite: (state) => state.unite.liste,
+      unites: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
   },
@@ -135,9 +103,11 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     save() {
       //Format back dates to SQL Format
-      if ((this.activeFrais.id || 0) === 0) {
+      if ((this.active.id || 0) === 0) {
+        const action =
+          this.active.type == 'frais' ? 'addFraisAnnuel' : 'addIndemniteAnnuel';
         this.$store
-          .dispatch('addFraisAnnuel', this.activeFrais)
+          .dispatch(action, this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
@@ -149,8 +119,12 @@ export default {
               })
           );
       } else {
+        const action =
+          this.active.type == 'frais'
+            ? 'updateFraisAnnuel'
+            : 'updateIndemniteAnnuel';
         this.$store
-          .dispatch('updateFraisAnnuel', this.activeFrais)
+          .dispatch(action, this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

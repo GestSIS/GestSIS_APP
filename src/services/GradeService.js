@@ -2,10 +2,10 @@ import Api from '@/http/Request';
 
 export default {
   getGrades() {
-    return Api.api().get('/grades/');
+    return Api.api().get('/grades');
   },
   addGrade(grade) {
-    return Api.api().post('/grades/', grade);
+    return Api.api().post('/grades', grade);
   },
   updateGrade(grade) {
     return Api.api().put(`/grades/${grade.id}`, grade);

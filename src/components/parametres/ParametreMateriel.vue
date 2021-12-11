@@ -24,16 +24,14 @@
           <tr v-for="m in listeMateriel" :key="m.id">
             <td>{{ m.tri }}</td>
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="status"
-                  :checked="m.status"
-                  disabled
-                />
-                <label class="form-check-label" for="status"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="status"
+                :checked="m.status"
+                disabled
+              />
+              <label class="form-check-label" for="status"></label>
             </td>
             <td>{{ m.designation }}</td>
             <td>{{ m.forfait }}</td>

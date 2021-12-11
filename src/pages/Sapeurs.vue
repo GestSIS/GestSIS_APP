@@ -146,19 +146,19 @@ export default {
     return {
       filter: 'actif',
       filters: {
-        actif: (s) => s.actif === 1,
-        inactif: (s) => s.actif === 0,
+        actif: (s) => parseInt(s.actif) === 1,
+        inactif: (s) => parseInt(s.actif) === 0,
         all: () => true,
       },
     };
   },
   computed: {
     ...mapState({
-      listeSapeur: (state) => state.sapeur.liste,
+      sapeurs: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
     }),
     filteredSapeurs() {
-      return this.listeSapeur.filter(this.filters[this.filter]);
+      return this.sapeurs.filter(this.filters[this.filter]);
     },
   },
 };

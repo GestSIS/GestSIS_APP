@@ -7,14 +7,14 @@ export default {
   },
   mutations: {
     [types.UPDATE_LOCALITE_LISTE](state, payload) {
-      state.liste = payload;
+      state.liste = payload.sort((a, b) =>
+        a.designation.localeCompare(b.designation)
+      );
     },
   },
   getters: {
     listLocalites: (state) => state.liste,
     listeLocalitesSis: (state) => state.liste,
-    getLocalite: (state) => (localite_id) =>
-      state.liste.filter((l) => l.id === localite_id)[0],
   },
   actions: {
     fetchLocalites({ commit, state }) {

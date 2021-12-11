@@ -49,16 +49,14 @@
             row-selected-class="table-primary"
             @selected="selected"
             ><template v-slot:checkbox="props">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="props.key"
-                  :checked="props.rowData[props.key]"
-                  disabled
-                />
-                <label class="form-check-label" :for="props.key"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="props.key"
+                :checked="props.rowData[props.key]"
+                disabled
+              />
+              <label class="form-check-label" :for="props.key"></label>
             </template>
             <template v-slot:doc="props">
               <div>
@@ -100,7 +98,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -213,27 +211,29 @@ export default {
   },
   computed: {
     ...mapState({
+      sapeurs: (state) => state.sapeur.liste,
+      types: (state) => state.controlesMedicauxType.liste,
+      medecins: (state) => state.medecin.liste,
       listeControlesMedicaux: (state) => state.controleMedical.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getSapeur', 'getMedecin', 'getControleMedicalType']),
     computedData() {
       const now = Date.now();
       return this.listeControlesMedicaux.map((s) => {
-        const sapeur = this.getSapeur(s.sapeur_id);
-        var age = Math.floor(
-          (now - new Date(sapeur.date_naissance).getTime()) /
+        const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
+        const age = Math.floor(
+          (now - new Date(sapeur?.date_naissance || 0).getTime()) /
             1000 /
             (60 * 60 * 24) /
             365.25
         );
         return {
           ...s,
-          sapeur: `${sapeur.nom} ${sapeur.prenom}`,
+          sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
           age,
-          type: this.getControleMedicalType(s.controle_medical_type_id)
-            .designation,
-          medecin: this.getMedecin(s.medecin_id).designation,
+          type: this.types.find((t) => t.id == s.controle_medical_type_id)
+            ?.designation,
+          medecin: this.medecins.find((m) => m.id == s.medecin_id)?.designation,
         };
       });
     },

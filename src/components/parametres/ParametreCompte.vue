@@ -22,16 +22,14 @@
             <td>{{ c.numero }}</td>
             <td>{{ c.designation }}</td>
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="actif"
-                  :checked="c.actif"
-                  disabled
-                />
-                <label class="form-check-label" for="actif"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="actif"
+                :checked="c.actif"
+                disabled
+              />
+              <label class="form-check-label" for="actif"></label>
             </td>
             <td>
               <div class="d-flex justify-content-center">

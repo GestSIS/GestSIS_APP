@@ -99,7 +99,11 @@
               <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
             </div>
           </div>
-          <div v-else>Loading</div>
+          <div v-else class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Chargement...</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -107,7 +111,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
+import store from '@/store/index';
 
 import InterventionTabGeneral from '@/components/intervention/InterventionTabGeneral.vue';
 import InterventionTabResume from '@/components/intervention/InterventionTabResume.vue';
@@ -116,6 +121,30 @@ import InterventionTabMateriel from '@/components/intervention/InterventionTabMa
 import InterventionTabVehicule from '@/components/intervention/InterventionTabVehicule.vue';
 import InterventionTabJournal from '@/components/intervention/InterventionTabJournal.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+
+async function loadData(routeTo, next) {
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  let loadLocalities = store.dispatch('fetchLocalites');
+  let loadStatFederal = store.dispatch('fetchStatFederals');
+  let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+  let loadInterventionTraitement = store.dispatch(
+    'fetchInterventionTraitements'
+  );
+
+  await store.dispatch('fetchExercicesComptables');
+
+  let loadInterventions = store.dispatch('fetchListeIntervention');
+  Promise.all([
+    loadSapeurs,
+    loadLocalities,
+    loadStatFederal,
+    loadInterventions,
+    loadTypeInterventions,
+    loadInterventionTraitement,
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'intervention',
@@ -127,6 +156,12 @@ export default {
     InterventionTabVehicule,
     InterventionTabJournal,
     ExerciceComptable,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   data() {
     return {
@@ -140,7 +175,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['activeInterventionData', 'activeInterventionId']),
+    ...mapState({
+      activeInterventionId: (state) => state.intervention.active.id,
+      activeInterventionData: (state) => state.intervention.active.data,
+    }),
     newMode() {
       return this.id === 'new';
     },

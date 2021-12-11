@@ -24,11 +24,6 @@ export default {
       state.active.id = payload.id;
     },
   },
-  getters: {
-    getPhaseType: (state) => (phase_type_id) => {
-      return state.liste.filter((t) => t.id === phase_type_id)[0];
-    },
-  },
   actions: {
     fetchPhaseTypes({ commit }) {
       return PhaseTypeService.getPhases().then((data) =>

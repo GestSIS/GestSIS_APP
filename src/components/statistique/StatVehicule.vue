@@ -24,12 +24,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="e in vehicules.filter(
-                (e) => allVehicules || occurences[e.id]
-              )"
-              :key="e.id"
-            >
+            <tr v-if="filteredVehicules.length <= 0">
+              <td colspan="2">Aucun véhicule utilisé</td>
+            </tr>
+            <tr v-for="e in filteredVehicules" :key="e.id">
               <td>{{ e.designation }}</td>
               <td class="text-center">
                 {{ occurences[e.id] || 0 }}
@@ -61,6 +59,11 @@ export default {
       return this.vehiculesIntervention
         .map((e) => e.vehicule_id)
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+    },
+    filteredVehicules() {
+      return this.vehicules.filter(
+        (e) => this.allVehicules || this.occurences[e.id]
+      );
     },
   },
 };

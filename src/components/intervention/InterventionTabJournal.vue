@@ -107,7 +107,9 @@
                 <tr v-for="m in missions" :key="m.id">
                   <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
-                  <td>{{ formatSapeur(getSapeur(m.sapeur_id)) }}</td>
+                  <td>
+                    {{ formatSapeur(sapeurs.find((s) => s.id == m.sapeur_id)) }}
+                  </td>
                   <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
                   <td>
@@ -144,12 +146,12 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'InterventionTabJournal',
   computed: {
-    ...mapGetters(['getSapeur']),
     ...mapState({
       id: (state) => state.intervention.active.id,
       data: (state) => state.intervention.active.data,
       missions: (state) => state.intervention.active.missions,
       appels: (state) => state.intervention.active.appels,
+      sapeurs: (state) => state.sapeur.liste,
     }),
     sortedAppels() {
       return this.appels
@@ -189,7 +191,7 @@ export default {
       }));
 
       let chefIntervention = this.data.sapeur_id
-        ? this.getSapeur(this.data.sapeur_id)
+        ? this.sapeurs.find((s) => s.id == this.data.sapeur_id)
         : null;
       let endDate = this.data.date_fin + ' ' + this.data.heure_fin;
       let startDate = this.data.date_debut + ' ' + this.data.heure_debut;
@@ -253,7 +255,10 @@ export default {
     },
     editAppel(id) {
       let cloneAppel = {};
-      Object.assign(cloneAppel, this.appels.filter((a) => a.id === id)[0]);
+      Object.assign(
+        cloneAppel,
+        this.appels.find((a) => a.id == id)
+      );
 
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
       let max = this.data.date_fin + ' ' + this.data.heure_fin;
@@ -286,7 +291,10 @@ export default {
     },
     editMission(id) {
       let cloneMission = {};
-      Object.assign(cloneMission, this.missions.filter((m) => m.id === id)[0]);
+      Object.assign(
+        cloneMission,
+        this.missions.find((m) => m.id == id)
+      );
 
       let min = this.data.date_debut + ' ' + this.data.heure_debut;
       let max = this.data.date_fin + ' ' + this.data.heure_fin;

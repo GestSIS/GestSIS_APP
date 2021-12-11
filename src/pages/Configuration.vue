@@ -75,7 +75,7 @@ export default {
           permission: permissions.INTERVENTION.CONFIG,
         },
         {
-          to: { name: 'param-frais' },
+          to: { name: 'param-comptabilite' },
           name: 'Comptabilité',
           permission: permissions.COMPTABILITE.CONFIG,
         },

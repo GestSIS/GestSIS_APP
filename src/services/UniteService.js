@@ -2,10 +2,10 @@ import Api from '@/http/Request';
 
 export default {
   getUnites() {
-    return Api.api().get('/unites/');
+    return Api.api().get('/unites');
   },
   addUnite(unites) {
-    return Api.api().post('/unites/', unites);
+    return Api.api().post('/unites', unites);
   },
   updateUnite(unites) {
     return Api.api().put(`/unites/${unites.id}`, unites);

@@ -32,21 +32,12 @@
           </a>
           <a
             class="nav-link"
-            :class="{ active: tab === 'frais-annuel' }"
+            :class="{ active: tab === 'indemnite-frais-annuel' }"
             href="#"
             role="tab"
-            @click.prevent="tab = 'frais-annuel'"
+            @click.prevent="tab = 'indemnite-frais-annuel'"
           >
-            Frais annuel
-          </a>
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'indemnite-annuel' }"
-            href="#"
-            role="tab"
-            @click.prevent="tab = 'indemnite-annuel'"
-          >
-            Indemnité annuel
+            Frais &amp; indemnité annuel
           </a>
           <a
             class="nav-link"
@@ -86,8 +77,9 @@
     <div class="col-sm-12 col-xl-9">
       <parametre-compte v-if="tab === 'compte'" />
       <parametre-ecriture-categorie v-if="tab === 'categorie'" />
-      <parametre-frais-annuel v-if="tab === 'frais-annuel'" />
-      <parametre-indemnite-annuel v-if="tab === 'indemnite-annuel'" />
+      <parametre-indemnite-frais-annuel
+        v-if="tab === 'indemnite-frais-annuel'"
+      />
       <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
       <parametre-indemnite-intervention
         v-if="tab === 'indemnite-intervention'"
@@ -103,8 +95,7 @@ import store from '@/store/index';
 
 import ParametreCompte from './ParametreCompte.vue';
 import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
-import ParametreFraisAnnuel from './ParametreFraisAnnuel.vue';
-import ParametreIndemniteAnnuel from './ParametreIndemniteAnnuel.vue';
+import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
 import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
 import ParametreAvs from './ParametreAvs.vue';
@@ -141,8 +132,7 @@ export default {
   components: {
     ParametreCompte,
     ParametreEcritureCategorie,
-    ParametreFraisAnnuel,
-    ParametreIndemniteAnnuel,
+    ParametreIndemniteFraisAnnuel,
     ParametreIndemniteExercice,
     ParametreIndemniteIntervention,
     ParametreAvs,

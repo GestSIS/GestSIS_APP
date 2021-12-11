@@ -26,10 +26,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != traitementId);
     },
   },
-  getters: {
-    getInterventionTraitement: (state) => (intervention_traitement_id) =>
-      state.liste.filter((t) => t.id === intervention_traitement_id)[0],
-  },
   actions: {
     fetchInterventionTraitements({ commit, state }) {
       if (state.liste.length > 0) {

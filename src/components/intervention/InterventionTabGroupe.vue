@@ -31,16 +31,14 @@
                 }}</label>
               </td>
               <td>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="'g-' + g.id"
-                      v-model="selected[g.no]"
-                    />
-                    <label class="form-check-label" :for="'g-' + g.id"></label>
-                  </div>
+                <div class="mb-3 text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="'g-' + g.id"
+                    v-model="selected[g.no]"
+                  />
+                  <label class="form-check-label" :for="'g-' + g.id"></label>
                 </div>
               </td>
             </tr>
@@ -52,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'InterventionTabGroupes',
@@ -62,7 +60,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getGroupe']),
     ...mapState({
       groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
       interventionGroupes: (state) => state.intervention.active.groupes,

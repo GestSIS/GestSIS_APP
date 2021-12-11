@@ -144,6 +144,9 @@ export default {
   },
   computed: {
     ...mapState({
+      categories: (state) => state.exerciceCategorie.liste,
+      groupes: (state) => state.groupe.liste,
+      fonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
       activeSapeurGroupe: (state) => state.sapeur.active.groupes,
@@ -151,12 +154,7 @@ export default {
       activeSapeurFonction: (state) =>
         state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
-    ...mapGetters([
-      'listeLocalitesSis',
-      'getGroupe',
-      'getFonction',
-      'getExerciceCategorie',
-    ]),
+    ...mapGetters(['listeLocalitesSis']),
     exercicesSelectedState() {
       return this.exercices.length
         ? this.exercices
@@ -187,17 +185,17 @@ export default {
     this.exercices = this.activeSapeurExercice.map((e) => ({
       ...e,
       info: `${
-        this.getExerciceCategorie(e.exercice_categorie_id).designation
+        this.categories.find((c) => c.id == e.exercice_categorie_id).designation
       } : ${e.communications}`,
       selected: true,
     }));
     this.groupes = this.activeSapeurGroupe.map((g) => ({
-      ...this.getGroupe(g.groupe_id),
+      ...this.groupes.find((f) => f.id == g.groupe_id),
       id: g.id,
       selected: true,
     }));
     this.fonctions = this.activeSapeurFonction.map((f) => ({
-      ...this.getFonction(f.fonction_id),
+      ...this.fonctions.find((e) => e.id == f.fonction_id),
       debut: f.debut,
       id: f.id,
       info: `Début ${this.formatDate(new Date(f.debut))}`,

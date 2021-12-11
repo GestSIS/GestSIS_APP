@@ -29,10 +29,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != excuseId);
     },
   },
-  getters: {
-    getExcuseType: (state) => (exercice_id) =>
-      state.liste.filter((e) => e.id === exercice_id)[0],
-  },
   actions: {
     fetchExcuseTypes({ commit, state }) {
       if (state.liste.length == 0) {

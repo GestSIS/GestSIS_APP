@@ -38,7 +38,11 @@
         data-accordion="false"
       >
         <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
-          <router-link :to="link.to" class="nav-link internal-link">
+          <router-link
+            :to="link.to"
+            class="nav-link internal-link"
+            active-class="active"
+          >
             <font-awesome-icon :icon="link.icon" />
             <span>{{ link.nom }}</span>
           </router-link>

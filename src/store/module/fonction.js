@@ -24,7 +24,7 @@ export default {
       };
     },
     [types.UPDATE_FONCTION_LISTE](state, payload) {
-      state.liste = payload;
+      state.liste = payload.sort((a,b) => b.tri - a.tri);
     },
     [types.UPDATE_CURRENT_FONCTION](state, payload) {
       state.currentFonction = payload;
@@ -39,14 +39,6 @@ export default {
     },
     [types.REMOVE_FONCTION](state, fonctionId) {
       state.liste = state.liste.filter((m) => m.id != fonctionId);
-    },
-  },
-  getters: {
-    getFonction: (state) => (fonction_id) => {
-      return state.liste.find((f) => f.id === fonction_id);
-    },
-    activeFonction: (state) => {
-      return state.currentFonction;
     },
   },
   actions: {

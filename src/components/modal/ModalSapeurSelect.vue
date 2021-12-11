@@ -64,25 +64,24 @@
                 <td colspan="3">Aucun sapeur sélectioné</td>
               </tr>
               <tr
-                v-for="item in chosenSapeurs.map(getSapeur)"
+                v-for="item in chosenSapeurs.map((id) =>
+                  sapeurs.find((s) => s.id == id)
+                )"
                 :key="item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
                 }"
               >
-                <td>
-                  <div class="form-check d-inline">
+                <td class="text-center">
+                  <div class="form-check d-inline-block ps-0">
                     <input
                       type="checkbox"
-                      class="form-check-input"
+                      class="form-check-input ms-0"
                       :id="item.id"
                       v-model="displaySelected[computeId(item)]"
+                      @click="select(item.id, true)"
                     />
-                    <label
-                      class="form-check-label"
-                      :for="item.id"
-                      @click="select(item.id)"
-                    ></label>
+                    <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
@@ -101,21 +100,21 @@
         <div class="col-6">
           <p
             v-if="
-              groupBy !== 'groupe' &&
-              groupBy !== 'none' &&
-              groupBy !== 'fonction' &&
-              groupBy !== 'civilite'
+              groupBy != 'groupe' &&
+              groupBy != 'none' &&
+              groupBy != 'fonction' &&
+              groupBy != 'civilite'
             "
           >
-            Coming soon!
+            En développement !
           </p>
           <table
             class="table table-sm"
             v-if="
-              groupBy === 'groupe' ||
-              groupBy === 'fonction' ||
-              groupBy === 'grade' ||
-              groupBy === 'civilite'
+              groupBy == 'groupe' ||
+              groupBy == 'fonction' ||
+              groupBy == 'grade' ||
+              groupBy == 'civilite'
             "
           >
             <thead>
@@ -151,17 +150,17 @@
                     v-if="!item.leaf && !item.expanded"
                     @click="toggleGroupe(item.id)"
                   />
-                  <div class="form-check d-inline">
+                  <div class="form-check d-inline-block">
                     <input
                       type="checkbox"
                       class="form-check-input"
                       :id="computeId(item)"
                       v-model="displaySelected[computeId(item)]"
+                      @click="select(item.id, item.leaf)"
                     />
                     <label
                       class="form-check-label"
                       :for="computeId(item)"
-                      @click="select(item.id, item.leaf)"
                     ></label>
                   </div>
                   {{ item.designation }}
@@ -178,7 +177,7 @@
               </tr>
             </tbody>
           </table>
-          <table class="table table-sm table-striped" v-if="groupBy === 'none'">
+          <table class="table table-sm table-striped" v-if="groupBy == 'none'">
             <thead>
               <tr>
                 <th></th>
@@ -186,16 +185,18 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody v-if="groupBy === 'none'">
+            <tbody v-if="groupBy == 'none'">
               <tr
-                v-for="item in availableSapeurs.map(getSapeur)"
+                v-for="item in availableSapeurs.map((id) =>
+                  sapeurs.find((s) => s.id == id)
+                )"
                 :key="item.id"
                 :class="{
                   'table-primary': selectedSapeurs.includes(item.id),
                 }"
               >
                 <td>
-                  <div class="form-check d-inline">
+                  <div class="form-check d-inline-block">
                     <input
                       type="checkbox"
                       class="form-check-input"
@@ -283,23 +284,23 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       civilites: (state) => state.baseData.civilites,
     }),
-    ...mapGetters(['getSapeur', 'treeGroupesSapeurs']),
+    ...mapGetters(['treeGroupesSapeurs']),
     listeSapeurSelect() {
-      if (this.groupBy === 'groupe') {
+      if (this.groupBy == 'groupe') {
         return this.flattenedSapeurGroupe;
-      } else if (this.groupBy === 'fonction') {
+      } else if (this.groupBy == 'fonction') {
         return this.flattenedSapeurGeneric(
           this.fonctions,
           'fonction_id',
           'nom'
         );
-      } else if (this.groupBy === 'grade') {
+      } else if (this.groupBy == 'grade') {
         return this.flattenedSapeurGeneric(
           this.grades,
           'fonction_id',
           'designation'
         );
-      } else if (this.groupBy === 'civilite') {
+      } else if (this.groupBy == 'civilite') {
         return this.flattenedSapeurGeneric(
           this.civilites,
           'civilite_id',
@@ -331,7 +332,7 @@ export default {
           );
           groupe.sapeurs
             .filter(svm.filtreSapeur())
-            .map((s) => svm.getSapeur(s))
+            .map((s) => svm.sapeurs.find((s) => s.id == s))
             .forEach(
               (s) =>
                 (flaten = [
@@ -392,7 +393,7 @@ export default {
             empty: !svm.sapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] === elem.id).length,
+              .filter((s) => s[key] == elem.id).length,
           },
         ];
         if (expanded) {
@@ -401,7 +402,7 @@ export default {
             ...svm.sapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] === elem.id)
+              .filter((s) => s[key] == elem.id)
               .map((sapeur) => ({
                 designation: `${sapeur.nom} ${sapeur.prenom}`,
                 level: 1,
@@ -439,6 +440,7 @@ export default {
         });
     },
     select(id, leaf = true) {
+      console.log(`Select ${id} ${leaf}`);
       if (leaf) {
         this.selectSapeur(id);
       } else {
@@ -447,16 +449,16 @@ export default {
     },
     selectSapeur(id) {
       this.selectedSapeurs = this.selectedSapeurs.includes(id)
-        ? this.selectedSapeurs.filter((i) => i !== id)
+        ? this.selectedSapeurs.filter((i) => i != id)
         : [...this.selectedSapeurs, id];
     },
     selectGroupe(id, state = undefined) {
       let selected = state || !this.selectedGroups.includes(id);
       let svm = this;
 
-      //Select groupe itself
+      // Select groupe itself
       let recursiveSearch = (item) => {
-        let found = item.id === id;
+        let found = item.id == id;
         if (found) {
           svm.selectGroupSingle(item, selected, true);
         } else {
@@ -478,9 +480,9 @@ export default {
 
       this.selectedGroups = state
         ? Array.from(new Set([...this.selectedGroups, groupe.id]))
-        : this.selectedGroups.filter((i) => i !== groupe.id);
+        : this.selectedGroups.filter((i) => i != groupe.id);
 
-      if (this.groupBy === 'groupe') {
+      if (this.groupBy == 'groupe') {
         groupe.sapeurs.filter(this.filtreSapeur()).forEach((s) => {
           svm.displaySelected = {
             ...svm.displaySelected,
@@ -488,14 +490,14 @@ export default {
           };
           svm.selectedSapeurs = state
             ? Array.from(new Set([...svm.selectedSapeurs, s]))
-            : svm.selectedSapeurs.filter((i) => i !== s);
+            : svm.selectedSapeurs.filter((i) => i != s);
         });
         groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
-      } else if (this.groupBy === 'fonction') {
+      } else if (this.groupBy == 'fonction') {
         svm.sapeurs
           .map((s) => ({ ...s, sapeur_id: s.id }))
           .filter(this.filtreSapeur())
-          .filter((s) => s.fonction_id === groupe.id)
+          .filter((s) => s.fonction_id == groupe.id)
           .forEach((s) => {
             svm.displaySelected = {
               ...svm.displaySelected,
@@ -503,14 +505,14 @@ export default {
             };
             svm.selectedSapeurs = state
               ? Array.from(new Set([...svm.selectedSapeurs, s.id]))
-              : svm.selectedSapeurs.filter((i) => i !== s.id);
+              : svm.selectedSapeurs.filter((i) => i != s.id);
           });
       }
     },
     filtreSapeur() {
       let svm = this;
       return (s) =>
-        svm.getSapeur(s.sapeur_id || s).actif === 1 &&
+        svm.sapeurs.find((s) => s.id == (s.sapeur_id || s)).actif == 1 &&
         !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     sapeurFormatter(s) {
@@ -539,10 +541,10 @@ export default {
       this.chosenSapeurs = [...this.chosenSapeurs, id];
     },
     removeSingleSapeur(id) {
-      this.chosenSapeurs = this.chosenSapeurs.filter((item) => item !== id);
+      this.chosenSapeurs = this.chosenSapeurs.filter((item) => item != id);
     },
     computeId(item) {
-      return item.leaf === true || item.leaf === undefined
+      return item.leaf == true || item.leaf == undefined
         ? item.id
         : 'g' + item.id;
     },

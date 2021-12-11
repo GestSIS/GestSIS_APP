@@ -29,7 +29,7 @@
               buttonClass="ms-1 btn btn-outline-secondary dropdown-toggle"
               menuClass="dropdown-menu"
               ref="dropdown"
-              :title="formatCompte(getCompte(activeCompteId))"
+              :title="formatCompte(comptes.find((f) => f.id == activeCompteId))"
             >
               <template #default>
                 <button
@@ -37,7 +37,7 @@
                   :key="c.id"
                   @click="selectCompte(c.id)"
                   class="dropdown-item"
-                  :class="{ active: activeCompteId === c.id }"
+                  :class="{ active: activeCompteId == c.id }"
                   type="button"
                 >
                   {{ formatCompte(c) }}
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
 
 import CompteService from '@/services/CompteService.js';
@@ -128,12 +128,11 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       comptes: (state) => state.compte.liste,
     }),
-    ...mapGetters(['getSapeur', 'getFonction', 'getCompte']),
     computedData() {
       let svm = this;
       return this.ecritures.map((e) => ({
         ...e,
-        sapeur: [svm.getSapeur(e.sapeur_id)].map((s) =>
+        sapeur: [svm.sapeurs.find((s) => s.id == e.sapeur_id)].map((s) =>
           s ? `${s.nom} ${s.prenom}` : ''
         )[0],
       }));
@@ -169,7 +168,7 @@ export default {
         .split('T')[0];
     },
     justificatifIndividuel(compteId) {
-      const compte = this.getCompte(this.activeCompteId);
+      const compte = this.comptes.find((f) => f.id == this.activeCompteId);
       const filename = `${this.formatedDate()}_justificatif-compte-${
         compte.numero
       }.pdf`;

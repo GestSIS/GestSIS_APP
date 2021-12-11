@@ -2,7 +2,7 @@
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
       class="tree-node-header focusable hoverable"
-      :class="{ 'table-primary': active && active.key == node.key }"
+      :class="{ 'alert-primary': active && active.key == node.key }"
       @dblclick="expanded = !expanded"
       @click.prevent="handleClick"
     >

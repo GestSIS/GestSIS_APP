@@ -77,20 +77,18 @@
             }"
           >
             <td class="text-center">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="'select-' + e.sapeur_id"
-                  v-model="unselected[e.sapeur_id]"
-                  :false-value="true"
-                  :true-value="undefined"
-                />
-                <label
-                  class="form-check-label"
-                  :for="'select-' + e.sapeur_id"
-                ></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="'select-' + e.sapeur_id"
+                v-model="unselected[e.sapeur_id]"
+                :false-value="true"
+                :true-value="undefined"
+              />
+              <label
+                class="form-check-label"
+                :for="'select-' + e.sapeur_id"
+              ></label>
             </td>
             <td
               :class="{

@@ -263,7 +263,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import store from '@/store/index';
 
 import ControlesMedicauxService from '@/services/ControlesMedicauxService';
@@ -340,7 +340,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getSapeur']),
     ...mapState({
       controleMedical: (state) => state.controleMedical.active.data,
       listeMedecins: (state) => state.medecin.liste,
@@ -352,7 +351,9 @@ export default {
       return this.controleMedical.designation;
     },
     sapeurName() {
-      const sapeur = this.getSapeur(this.controleMedical.sapeur_id);
+      const sapeur = this.sapeurs.find(
+        (s) => s.id == this.controleMedical.sapeur_id
+      );
       return sapeur ? `${sapeur.nom} ${sapeur.prenom}` : '';
     },
     modeAjout() {

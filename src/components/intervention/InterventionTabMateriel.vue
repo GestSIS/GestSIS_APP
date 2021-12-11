@@ -24,11 +24,15 @@
             </tr>
           </thead>
           <tbody id="materiels">
-            <tr v-if="materiels.length <= 0">
+            <tr v-if="activeMateriels.length <= 0">
               <td colspan="3">Aucun matériel ajouté.</td>
             </tr>
-            <tr v-for="m in materiels" :key="m.id">
-              <td>{{ getMateriel(m.materiel_id).designation }}</td>
+            <tr v-for="m in activeMateriels" :key="m.id">
+              <td>
+                {{
+                  materiels.find((mat) => mat.id == m.materiel_id).designation
+                }}
+              </td>
               <td>{{ m.quantite }}</td>
               <td>
                 <div class="d-flex justify-content-center">
@@ -62,22 +66,21 @@ import { mapGetters, mapState, mapMutations } from 'vuex';
 export default {
   name: 'InterventionTabMateriel',
   computed: {
-    ...mapGetters(['getMateriel']),
     ...mapState({
-      listMateriels: (state) => state.materiel.liste,
-      materiels: (state) => state.intervention.active.materiels,
+      materiels: (state) => state.materiel.liste,
+      activeMateriels: (state) => state.intervention.active.materiels,
       activeInterventionId: (state) => state.intervention.active.id,
     }),
   },
   mounted() {
-    if (this.listMateriels.length === 0) {
+    if (this.materiels.length === 0) {
       this.$store.dispatch('fetchMateriels').then(() => {
         this.$store.dispatch(
           'fetchInterventionMateriels',
           this.activeInterventionId
         );
       });
-    } else if (this.materiels.length === 0) {
+    } else if (this.activeMateriels.length === 0) {
       this.$store.dispatch(
         'fetchInterventionMateriels',
         this.activeInterventionId
@@ -93,7 +96,10 @@ export default {
     editMateriel(grade_id) {
       this.$store.dispatch(
         'updateActiveMateriel',
-        Object.assign({}, this.materiels.filter((m) => m.id === grade_id)[0])
+        Object.assign(
+          {},
+          this.activeMateriels.find((m) => m.id == grade_id)
+        )
       );
       this.SHOW_MODAL('ModalInterventionMateriel');
     },

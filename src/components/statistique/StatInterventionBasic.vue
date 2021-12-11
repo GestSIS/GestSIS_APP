@@ -41,12 +41,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="e in groupingData.filter(
-                (e) => allCategories || occurences[e.id]
-              )"
-              :key="e.id"
-            >
+            <tr v-if="filteredData.length <= 0">
+              <td colspan="2">Aucune intervention</td>
+            </tr>
+            <tr v-for="e in filteredData" :key="e.id">
               <td>{{ e.designation }}</td>
               <td class="text-center">
                 {{ occurences[e.id] || 0 }}
@@ -135,6 +133,11 @@ export default {
         intervention_traitement_id: this.traitements,
       };
       return mapping[this.displayKey];
+    },
+    filteredData() {
+      return this.groupingData.filter(
+        (e) => this.allCategories || this.occurences[e.id]
+      );
     },
   },
 };

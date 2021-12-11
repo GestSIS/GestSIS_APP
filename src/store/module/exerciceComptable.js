@@ -14,7 +14,7 @@ export default {
     [types.UPDATE_EXERCICE_COMPTABLE_LISTE](state, payload) {
       state.liste = payload;
       if ((state.activeId || 0) === 0) {
-        state.activeId = payload.sort((e1, e2) => e2.annee - e1.annee)[0].id;
+        state.activeId = payload.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
       }
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {
@@ -35,11 +35,11 @@ export default {
   getters: {
     currentExerciceComptableId: (state) => state.activeId,
     getExerciceComptable: (state) => (id) =>
-      state.liste.filter((e) => e.id === id)[0],
+      state.liste.find((e) => e.id == id),
     exerciceComptableDebut: (state) => (id) =>
-      state.liste.filter((e) => e.id === id)[0].debut,
+      state.liste.find((e) => e.id == id)?.debut,
     exerciceComptableFin: (state) => (id) =>
-      state.liste.filter((e) => e.id === id)[0].fin,
+      state.liste.find((e) => e.id == id)?.fin,
   },
   actions: {
     fetchExercicesComptables({ commit, state }) {

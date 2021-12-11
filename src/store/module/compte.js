@@ -24,9 +24,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != compteId);
     },
   },
-  getters: {
-    getCompte: (state) => (id) => state.liste.find((c) => c.id === id),
-  },
   actions: {
     fetchComptes({ commit, state }) {
       if (state.liste.length > 0) {

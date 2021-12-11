@@ -77,8 +77,8 @@ export default {
     ...mapState({
       listeFonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
+      activeFonction: (state) => state.fonction.currentFonction,
     }),
-    ...mapGetters(['activeFonction']),
   },
   mounted() {
     if (this.listeFonctions.length === 0) {

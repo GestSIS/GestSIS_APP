@@ -229,19 +229,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listeSapeurs: (state) => state.sapeur.liste,
+      activeInterventionId: (state) => state.intervention.active.id,
     }),
-    ...mapGetters([
-      'activeInterventionId',
-      'getTypeIntervention',
-      'getLocalite',
-      'getStatFederal',
-      'getFonction',
-      'getInterventionTraitement',
-      'getSapeur',
-    ]),
     computedData() {
       // Details of ecritures for an intervention will be loaded on the flight
       let ecrituresBySapeur = this.ecritures
@@ -251,13 +243,15 @@ export default {
           return acc;
         }, new Map());
 
-      return this.listeSapeurs
+      return this.sapeurs
         .filter((s) => ecrituresBySapeur.has(s.id))
         .map((s) => {
           return {
             id: s.id,
             nomPrenom: `${s.nom} ${s.prenom}`,
-            fonction: s.fonction_id ? this.getFonction(s.fonction_id).nom : '',
+            fonction: s.fonction_id
+              ? this.fonctions.find((f) => f.id == s.fonction_id).nom
+              : '',
             aPayer:
               ecrituresBySapeur
                 .get(s.id)

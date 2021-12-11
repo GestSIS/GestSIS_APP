@@ -23,7 +23,6 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <groupe-affichage v-if="false" @selected="selected" />
             <groupe-edition
               :editMode="editMode"
               @selected="selected"
@@ -197,7 +196,6 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import GroupeAffichage from '@/components/groupe/GroupeAffichage.vue';
 import GroupeEdition from '@/components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
@@ -213,7 +211,6 @@ async function loadData(routeTo, next) {
 export default {
   name: 'organisation',
   components: {
-    GroupeAffichage,
     GroupeEdition,
     ExerciceComptable,
   },
@@ -343,8 +340,10 @@ export default {
             question:
               "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
           },
-          callback: () => {
-            this.$store.dispatch('deleteGroupe', this.active.data.id);
+          callback: (confirmed) => {
+            if (confirmed) {
+              this.$store.dispatch('deleteGroupe', this.active.data.id);
+            }
           },
         });
       } else {

@@ -4,7 +4,7 @@ import GradeService from '../../services/GradeService';
 export default {
   state: {
     liste: [],
-    currentGrade: {
+    active: {
       id: 0,
       grade_id: 0,
       date: null,
@@ -14,7 +14,7 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
-      state.currentGrade = {
+      state.active = {
         id: 0,
         grade_id: 0,
         date: null,
@@ -25,7 +25,7 @@ export default {
       state.liste = payload;
     },
     [types.UPDATE_CURRENT_GRADE](state, payload) {
-      state.currentGrade = payload;
+      state.active = payload;
     },
     [types.ADD_GRADE](state, grade) {
       state.liste = [...state.liste, grade];
@@ -37,14 +37,6 @@ export default {
     },
     [types.REMOVE_GRADE](state, gradeId) {
       state.liste = state.liste.filter((m) => m.id != gradeId);
-    },
-  },
-  getters: {
-    getGrade: (state) => (grade_id) => {
-      return state.liste.find((g) => g.id === grade_id);
-    },
-    activeGrade: (state) => {
-      return state.currentGrade;
     },
   },
   actions: {

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <h2>Coming soon!</h2>
+      <h2>En développement !</h2>
     </div>
   </div>
 </template>

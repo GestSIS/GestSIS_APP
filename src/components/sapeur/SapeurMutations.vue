@@ -27,7 +27,9 @@
               <td>{{ m.motif }}</td>
               <td>
                 {{
-                  m.localite_id ? getLocalite(m.localite_id).designation : ''
+                  m.localite_id
+                    ? localites.find((l) => l.id == m.localite_id).designation
+                    : ''
                 }}
               </td>
               <td>
@@ -76,12 +78,12 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters(['getLocalite']),
     ...mapState({
+      localites: (state) => state.localite.liste,
       mutations: (state) => state.sapeur.active.mutations,
     }),
     finServiceButtonState() {
@@ -99,7 +101,10 @@ export default {
     editMutation(mutationId) {
       this.$store.dispatch(
         'updateActiveMutation',
-        Object.assign({}, this.mutations.filter((m) => m.id === mutationId)[0])
+        Object.assign(
+          {},
+          this.mutations.find((m) => m.id == mutationId)
+        )
       );
       this.SHOW_MODAL('ModalMutation');
     },
@@ -108,7 +113,7 @@ export default {
         'updateActiveMutation',
         Object.assign(
           { action: 'finService' },
-          this.mutations.filter((m) => !m.sortie)[0]
+          this.mutations.find((m) => !m.sortie)
         )
       );
       this.SHOW_MODAL('ModalMutation');

@@ -18,7 +18,7 @@
                 :icon="['fab', 'gripfire']"
               />
               <img
-                :src="`${publicPath}icons/${permis.type
+                :src="`${publicPath}permis/${permis.type
                   .toLowerCase()
                   .replace(' ', '_')}.gif`"
               />
@@ -164,8 +164,7 @@ export default {
         else if (
           p.id !== null &&
           p.date !==
-            this.activeSapeurPermis.filter((permis) => permis.id === p.id)[0]
-              .date
+            this.activeSapeurPermis.find((permis) => permis.id == p.id).date
         ) {
           this.$store
             .dispatch('editPermis', { id: p.id, date: p.date })

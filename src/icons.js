@@ -73,7 +73,6 @@ library.add(
   faTimes,
   faAngleRight,
   faAngleDown,
-  faPlusSquare,
   faClock,
   faPhone,
   faChild,

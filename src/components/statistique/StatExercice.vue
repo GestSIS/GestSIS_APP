@@ -27,27 +27,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="c in categories.filter(
-                  (c) => allCategories || categoriesOccurence[c.id]
-                )"
-                :key="c.id"
-              >
+              <tr v-if="filteredCategories.length <= 0">
+                <td colspan="3">Aucun exercice pour l'instant</td>
+              </tr>
+              <tr v-for="c in filteredCategories" :key="c.id">
                 <td>{{ c.designation }}</td>
                 <td class="text-center">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="'amendable' + c.id"
-                      :checked="c.amendable"
-                      disabled
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'amendable' + c.id"
-                    ></label>
-                  </div>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="'amendable' + c.id"
+                    :checked="c.amendable"
+                    disabled
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="'amendable' + c.id"
+                  ></label>
                 </td>
                 <td class="text-center">
                   {{ categoriesOccurence[c.id] || 0 }}
@@ -118,6 +114,11 @@ export default {
       return this.exercices
         .map((e) => e.exercice_categorie_id)
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+    },
+    filteredCategories() {
+      return this.categories.filter(
+        (c) => this.allCategories || this.categoriesOccurence[c.id]
+      );
     },
   },
 };

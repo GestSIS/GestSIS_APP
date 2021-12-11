@@ -18,7 +18,7 @@
                 :to="m.to"
                 class="card text-white bg-primary"
               >
-                <div class="card-body">
+                <div class="card-body w-100">
                   <div
                     class="
                       d-flex

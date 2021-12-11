@@ -190,7 +190,7 @@ const router = new Router({
       ],
     },
     {
-      path: '/Publipostage',
+      path: '/publipostage',
       name: 'publipostage',
       component: () => import('@/pages/Publipostage.vue'),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
@@ -293,8 +293,8 @@ const router = new Router({
             import('@/components/parametres/ParametreTabIntervention.vue'),
         },
         {
-          path: 'frais',
-          name: 'param-frais',
+          path: 'comptabilite',
+          name: 'param-comptabilite',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
             import('@/components/parametres/ParametreTabComptabilite.vue'),

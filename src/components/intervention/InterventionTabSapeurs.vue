@@ -35,7 +35,12 @@
                       : phase.debut.slice(0, 16)
                   }}
                 </td>
-                <td>{{ getPhaseType(phase.phase_type_id).designation }}</td>
+                <td>
+                  {{
+                    phasesType.find((p) => p.id == phase.phase_type_id)
+                      .designation
+                  }}
+                </td>
                 <td>
                   <button
                     type="button"
@@ -204,7 +209,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import InterventionTabGroupe from '@/components/intervention/InterventionTabGroupe.vue';
 
 export default {
@@ -219,13 +224,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getSapeur', 'getPhaseType']),
     ...mapState({
       id: (state) => state.intervention.active.id,
       data: (state) => state.intervention.active.data,
       quittances: (state) => state.intervention.active.quittances,
       presences: (state) => state.intervention.active.sapeurs,
       phases: (state) => state.intervention.active.phases,
+      sapeurs: (state) => state.sapeur.liste,
+      phasesType: (state) => state.phaseType.liste,
     }),
     listSapeurs() {
       return Array.from(
@@ -233,13 +239,12 @@ export default {
           ...this.presences.map((s) => s.sapeur_id),
           ...this.quittances.map((s) => s.sapeur_id),
         ])
-      ).map((id) => this.getSapeur(id));
+      ).map((id) => this.sapeurs.find((s) => s.id == id));
     },
     sortedSapeurs() {
       return [
         ...Object.keys(this.computedPresences)
-          .map((s) => parseInt(s))
-          .map(this.getSapeur)
+          .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
           .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom),
       ];
     },

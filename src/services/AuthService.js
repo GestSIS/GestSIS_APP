@@ -25,7 +25,7 @@ export default {
     });
   },
   createRole(role) {
-    return Api.auth().post('roles/', role);
+    return Api.auth().post('roles', role);
   },
   updateRole(role) {
     return Api.auth().put('roles/' + role.id, role);

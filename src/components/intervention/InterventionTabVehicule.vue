@@ -27,16 +27,14 @@
             <tr v-for="v in vehicules" :key="v.id">
               <td>{{ v.designation }}</td>
               <td>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="'v-' + v.id"
-                      v-model="selected[v.id]"
-                    />
-                    <label class="form-check-label" :for="'v-' + v.id"></label>
-                  </div>
+                <div class="mb-3 text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="'v-' + v.id"
+                    v-model="selected[v.id]"
+                  />
+                  <label class="form-check-label" :for="'v-' + v.id"></label>
                 </div>
               </td>
             </tr>
@@ -48,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'InterventionTabVehicules',
@@ -58,7 +56,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getVehicule']),
     ...mapState({
       vehicules: (state) =>
         state.vehicule.liste.filter(
@@ -101,9 +98,8 @@ export default {
       let removed = vehiculesIds.filter((item) => !ids.includes(item));
       let removedIds = removed.map(
         (vehicule_id) =>
-          this.interventionVehicules
-            .filter((v) => v.vehicule_id === vehicule_id)
-            .map((v) => v.id)[0]
+          this.interventionVehicules.find((v) => v.vehicule_id == vehicule_id)
+            ?.id
       );
 
       if (removedIds.length > 0) {

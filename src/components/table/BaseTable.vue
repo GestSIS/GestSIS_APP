@@ -51,7 +51,7 @@
           :key="'detail-' + r.id"
           :class="r.rowClass"
         >
-          <td :colspan="fields.length">
+          <td :colspan="fields.length" class="p-0">
             <component
               :is="detailRowComponent"
               :class="detailRowClass"
@@ -137,7 +137,7 @@ export default {
     data(val) {
       if (this.selected) {
         // Watcher pour déselectionner l'élément actif en cas de suppression
-        const selectedKey = this.selected[this.selectKey];
+        const selectedKey = this.selected; //[this.selectKey];
         if (val.filter((e) => e[this.selectKey] === selectedKey).length <= 0) {
           this.$emit('selected', null);
         }

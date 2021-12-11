@@ -18,10 +18,10 @@
             <th>Catégorie</th>
             <th>Localité</th>
             <th>Communication</th>
-            <th>Convoqué</th>
-            <th>Présent</th>
-            <th>Excusé</th>
-            <th>Amende</th>
+            <th class="text-center">Convoqué</th>
+            <th class="text-center">Présent</th>
+            <th class="text-center">Excusé</th>
+            <th class="text-center">Amende</th>
             <!-- <th>Solde</th> -->
           </tr>
         </thead>
@@ -35,57 +35,50 @@
             <td>{{ e.categorie }}</td>
             <td>{{ e.localite }}</td>
             <td>{{ e.communications }}</td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="convoque"
-                  :checked="e.convoque"
-                  disabled
-                />
-                <label class="form-check-label" for="convoque"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="convoque"
+                :checked="e.convoque"
+                disabled
+              />
+              <label class="form-check-label" for="convoque"></label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="present"
-                  :checked="e.present"
-                  disabled
-                />
-                <label class="form-check-label" for="present"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="present"
+                :checked="e.present"
+                disabled
+              />
+              <label class="form-check-label" for="present"></label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="excuse"
-                  :checked="e.excuse_type_id"
-                  disabled
-                />
-                <label class="form-check-label" for="excuse">{{
-                  e.excuse_type_id
-                    ? getExcuseType(e.excuse_type_id).designation
-                    : ''
-                }}</label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="excuse"
+                :checked="e.excuse_type_id"
+                disabled
+              />
+              <label class="form-check-label" for="excuse">{{
+                e.excuse_type_id
+                  ? excusesType.find((a) => a.id == e.excuse_type_id)
+                      .designation
+                  : ''
+              }}</label>
             </td>
-            <td>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="amende"
-                  :checked="e.amende_id"
-                  disabled
-                />
-                <label class="form-check-label" for="amende"></label>
-              </div>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="amende"
+                :checked="e.amende_id"
+                disabled
+              />
+              <label class="form-check-label" for="amende"></label>
             </td>
             <!-- <td>0.0</td> -->
           </tr>
@@ -102,18 +95,21 @@ export default {
   name: 'SapeurExercice',
   computed: {
     ...mapState({
+      excusesType: (state) => state.excuseType.liste,
+      localites: (state) => state.localite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['getLocalite', 'getExerciceCategorie', 'getExcuseType']),
     exerciceDisplay() {
       return this.activeSapeurExercice.map((exercice) => {
-        let localite = this.getLocalite(exercice.localite_id);
+        let localite = this.localites.find((l) => l.id == exercice.localite_id);
         return {
           ...exercice,
-          categorie: this.getExerciceCategorie(exercice.exercice_categorie_id)
-            .designation,
+          categorie: this.categories.find(
+            (e) => e.id == exercice.exercice_categorie_id
+          )?.designation,
           localite: `${localite.npa} ${localite.designation}`,
           heure: exercice.heure.substr(0, 5),
         };

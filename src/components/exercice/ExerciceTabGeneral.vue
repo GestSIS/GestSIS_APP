@@ -174,6 +174,7 @@ export default {
   name: 'ExerciceTabGeneral',
   computed: {
     ...mapState({
+      categories: (state) => state.exerciceCategorie.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       listeCategories: (state) => state.exerciceCategorie.liste,
       activeExerciceId: (state) => state.exercice.active.id,
@@ -198,10 +199,10 @@ export default {
     };
   },
   watch: {
-    exerciceCategorie(value) {
+    exerciceCategorie(id) {
       this.activeExerciceData.duree =
         this.activeExerciceData.duree ||
-        this.getExerciceCategorie(value).duree_base;
+        this.categories.find((e) => e.id == id)?.duree_base;
     },
     exerciceHeure(data) {
       this.activeExerciceData.heure = this.formatHeure(data);
@@ -213,9 +214,6 @@ export default {
     );
   },
   methods: {
-    getExerciceCategorie(id) {
-      return this.listeCategories.find((c) => c.id === id);
-    },
     save() {
       if (this.newMode) {
         this.$store
