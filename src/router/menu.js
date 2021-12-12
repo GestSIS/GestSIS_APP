@@ -38,7 +38,7 @@ const links = [
     permission: permissions.SAPEUR.LECTURE,
   },
   {
-    to: { name: 'statistique' },
+    to: { name: 'stat-dashboard' },
     icon: ['far', 'chart-bar'],
     nom: 'Statistiques',
   },

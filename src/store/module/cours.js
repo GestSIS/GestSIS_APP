@@ -34,26 +34,22 @@ export default {
       };
     },
     [types.UPDATE_COURS_LISTE](state, payload) {
-      state.liste = payload;
+      state.liste = payload.sort((c1,c2) => c2.tri - c1.tri);
     },
     [types.UPDATE_CURRENT_COURS](state, payload) {
       state.active = payload;
     },
     [types.ADD_COURS](state, cours) {
-      state.liste = [...state.liste, cours];
+      state.liste = [...state.liste, cours].sort((c1,c2) => c2.tri - c1.tri);
     },
     [types.UPDATE_COURS](state, cours) {
       state.liste = [
         ...state.liste.map((m) => (m.id === cours.id ? cours : m)),
-      ];
+      ].sort((c1,c2) => c2.tri - c1.tri);
     },
     [types.REMOVE_COURS](state, coursId) {
       state.liste = state.liste.filter((m) => m.id != coursId);
     },
-  },
-  getters: {
-    getCours: (state) => (cours_id) =>
-      state.liste.find((c) => c.id === cours_id),
   },
   actions: {
     fetchCours({ commit }) {
