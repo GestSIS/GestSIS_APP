@@ -39,7 +39,7 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listLocalites" :key="l.id" :value="l.id">
+          <option v-for="l in localites" :key="l.id" :value="l.id">
             {{ l.designation }}
           </option>
         </select>
@@ -165,14 +165,14 @@ export default {
   },
   computed: {
     ...mapState({
+      cours: (state) => state.cours.liste,
       grades: (state) => state.grade.liste,
       fonctions: (state) => state.fonction.liste,
-      cours: (state) => state.cours.liste,
+      localites: (state) => state.localite.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
       activeCours: (state) => state.cours.active,
     }),
-    ...mapGetters(['listLocalites']),
     addMode() {
       return (this.activeCours.id || 0) === 0;
     },

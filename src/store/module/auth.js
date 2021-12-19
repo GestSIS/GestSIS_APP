@@ -226,6 +226,7 @@ export default {
       });
     },
     refreshToken({ commit, state }) {
+      //TODO: Improve not to call refreshToken n times
       const callback = () => {
         const p = AuthService.refreshToken(TokenService.getRefreshToken());
 

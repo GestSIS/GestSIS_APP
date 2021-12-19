@@ -13,7 +13,6 @@ export default {
     },
   },
   getters: {
-    listLocalites: (state) => state.liste,
     listeLocalitesSis: (state) => state.liste,
   },
   actions: {
