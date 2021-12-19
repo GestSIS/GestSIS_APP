@@ -76,7 +76,7 @@
                 v-model="controleMedical.medecin_id"
               >
                 <option
-                  v-for="medecin in listeMedecins"
+                  v-for="medecin in medecins"
                   :key="medecin.id"
                   :value="medecin.id"
                 >
@@ -94,11 +94,7 @@
                 style="width: 100%"
                 v-model="controleMedical.controle_medical_type_id"
               >
-                <option
-                  v-for="t in listeControlesTypes"
-                  :key="t.id"
-                  :value="t.id"
-                >
+                <option v-for="t in controleTypes" :key="t.id" :value="t.id">
                   {{ t.designation }}
                 </option>
               </select>
@@ -342,9 +338,9 @@ export default {
   computed: {
     ...mapState({
       controleMedical: (state) => state.controleMedical.active.data,
-      listeMedecins: (state) => state.medecin.liste,
-      listeSapeurs: (state) => state.sapeur.liste,
-      listeControlesTypes: (state) => state.controlesMedicauxType.liste,
+      medecins: (state) => state.medecin.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      controleTypes: (state) => state.controlesMedicauxType.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     breadcrumbFinal() {
@@ -360,7 +356,7 @@ export default {
       return !parseInt(this.id) > 0;
     },
     expirable() {
-      const types = this.listeControlesTypes.filter(
+      const types = this.controleTypes.filter(
         (t) => t.id === this.controleMedical.controle_medical_type_id
       );
       return types.length > 0 && types[0].expirable;
