@@ -71,6 +71,7 @@
             :formatter="formatLocalite"
             :options="localites"
             v-model="sisParam.localite_id"
+            :select-class="{ 'is-invalid': errors['localite_id'] }"
           />
           <base-select
             valueKey="id"
@@ -78,6 +79,7 @@
             :formatter="formatSapeur"
             :options="sapeurs"
             v-model="sisParam.sapeur_id"
+            :select-class="{ 'is-invalid': errors['sapeur_id'] }"
           />
           <div class="row">
             <div class="col-6 mb-3">

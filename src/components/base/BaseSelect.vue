@@ -1,8 +1,8 @@
 <template>
-  <div class="mb-3" :class="wrapperClass">
+  <div class="mb-3">
     <label v-if="label" :for="label">{{ label }}</label>
     <select
-      class="form-select form-select-sm"
+      :class="['form-select form-select-sm', selectClass]"
       :id="label"
       v-model="model"
       v-bind="{
@@ -23,12 +23,13 @@
 <script>
 export default {
   name: 'base-select',
+  inheritsAttrs: false,
   props: {
     label: {
       type: String,
       default: () => '',
     },
-    wrapperClass: {
+    selectClass: {
       type: [String, Array],
     },
     value: {

@@ -21,7 +21,7 @@
         <form class="card-body">
           <div class="row">
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Localité&gt;"
@@ -29,7 +29,7 @@
               @input="(value) => onFilter('localite_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Catégorie&gt;"
@@ -37,7 +37,7 @@
               @input="(value) => onFilter('exercice_categorie_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Statut&gt;"
