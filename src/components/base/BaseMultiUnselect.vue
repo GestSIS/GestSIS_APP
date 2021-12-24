@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3" :class="wrapperClass">
+  <div class="mb-3">
     <label v-if="label" :for="label">{{ label }}</label>
     <select
       multiple
@@ -28,9 +28,6 @@ export default {
     label: {
       type: String,
       default: () => '',
-    },
-    wrapperClass: {
-      type: [String, Array],
     },
     value: {
       //Vuejs 3 -> modelValue

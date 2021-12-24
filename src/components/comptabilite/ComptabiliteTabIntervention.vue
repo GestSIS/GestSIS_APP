@@ -18,7 +18,7 @@
         <form class="card-body">
           <div class="row">
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Localité&gt;"
@@ -26,7 +26,7 @@
               @input="(value) => onFilter('localite_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Type&gt;"
@@ -34,7 +34,7 @@
               @input="(value) => onFilter('type_intervention_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Statistique fédérale&gt;"
@@ -42,7 +42,7 @@
               @input="(value) => onFilter('stat_federal_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Traitement&gt;"
@@ -50,7 +50,7 @@
               @input="(value) => onFilter('intervention_traitement_id', value)"
             />
             <base-select
-              wrapperClass="col-md-4"
+              class="col-md-4"
               valueKey="id"
               displayKey="designation"
               baseOption="&lt;Etendue&gt;"

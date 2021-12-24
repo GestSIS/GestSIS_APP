@@ -9,7 +9,7 @@
         <form class="card-body p-2 pb-0">
           <div class="row">
             <base-multi-unselect
-              wrapperClass="col-md-4"
+              class="col-md-4"
               label="Catégorie :"
               valueKey="id"
               displayKey="designation"
@@ -17,7 +17,7 @@
               v-model="unselectedCategories"
             />
             <base-multi-unselect
-              wrapperClass="col-md-4"
+              class="col-md-4"
               label="Sapeur de :"
               valueKey="id"
               displayKey="designation"
@@ -25,7 +25,7 @@
               v-model="unselectedSapeurDe"
             />
             <base-multi-unselect
-              wrapperClass="col-md-4"
+              class="col-md-4"
               label="Exercice à :"
               valueKey="id"
               displayKey="designation"
