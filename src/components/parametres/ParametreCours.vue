@@ -23,6 +23,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeCours.length">
+            <td colspan="9">Aucun cours</td>
+          </tr>
           <tr v-for="c in listeCours" :key="c.id">
             <td>{{ c.tri }}</td>
             <td>{{ c.abreviation }}</td>

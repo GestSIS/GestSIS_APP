@@ -25,7 +25,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="i in listeIndemniteIntervention" :key="i.id">
+          <tr v-if="!indemnitesIntervention.length">
+            <td colspan="8">Aucune indemnité</td>
+          </tr>
+          <tr v-for="i in indemnitesIntervention" :key="i.id">
             <td>{{ i.designation }}</td>
             <td>{{ i.solde }}</td>
             <td>{{ i.solde_min }}</td>
@@ -94,13 +97,13 @@ export default {
   },
   computed: {
     ...mapState({
-      listeIndemniteIntervention: (state) =>
+      indemnitesIntervention: (state) =>
         state.imputation.indemnites.interventions.sort((a, b) => a.tri - b.tri),
-      listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.compte.liste,
-      listeUnite: (state) => state.unite.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-      listePhase: (state) => state.phaseType.liste,
+      fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
+      phases: (state) => state.phaseType.liste,
     }),
   },
   methods: {
@@ -118,25 +121,24 @@ export default {
       });
     },
     fonction(id) {
-      return id ? this.listeFonction.find((f) => f.id === id)?.abreviation : '';
+      return id ? this.fonctions.find((f) => f.id === id)?.abreviation : '';
     },
     compte(id) {
       if (!id) {
         return '';
       }
-      const compte = this.listeCompte.find((f) => f.id === id);
+      const compte = this.comptes.find((f) => f.id === id);
       return `${compte?.numero} ${compte?.designation}`;
     },
     unite(id) {
-      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+      const unite = this.unites.find((u) => u.id === id);
+      return (unite?.comptable ? 'par ' : '') + unite?.unite;
     },
     phase(id) {
-      return id ? this.listePhase.find((u) => u.id === id)?.designation : '';
+      return id ? this.phases.find((u) => u.id === id)?.designation : '';
     },
     categorie(id) {
-      return id
-        ? this.listeCategorie.find((c) => c.id === id)?.designation
-        : '';
+      return id ? this.categories.find((c) => c.id === id)?.designation : '';
     },
   },
 };

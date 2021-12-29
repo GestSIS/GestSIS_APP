@@ -41,6 +41,14 @@
           </a>
           <a
             class="nav-link"
+            :class="{ active: tab === 'heure-exercice' }"
+            href="#"
+            @click.prevent="tab = 'heure-exercice'"
+          >
+            Heures additionnelles pour exercice
+          </a>
+          <a
+            class="nav-link"
             :class="{ active: tab === 'indemnite-exercice' }"
             href="#"
             @click.prevent="tab = 'indemnite-exercice'"
@@ -81,6 +89,7 @@
         v-if="tab === 'indemnite-frais-annuel'"
       />
       <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
+      <parametre-heure-exercice v-if="tab === 'heure-exercice'" />
       <parametre-indemnite-intervention
         v-if="tab === 'indemnite-intervention'"
       />
@@ -97,6 +106,7 @@ import ParametreCompte from './ParametreCompte.vue';
 import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
 import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
+import ParametreHeureExercice from './ParametreHeureExercice.vue';
 import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
 import ParametreAvs from './ParametreAvs.vue';
 import ParametreAmende from './ParametreAmende.vue';
@@ -111,6 +121,7 @@ async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchEcritureCategories');
   const loadAvsParams = store.dispatch('fetchAvsParams');
   const loadPhases = store.dispatch('fetchPhaseTypes');
+  const loadHeures = store.dispatch('fetchHeuresExercice');
 
   Promise.all([
     loadAmendes,
@@ -122,6 +133,7 @@ async function loadData(_, next) {
     loadCategories,
     loadAvsParams,
     loadPhases,
+    loadHeures,
   ]).then(() => {
     next();
   });
@@ -134,6 +146,7 @@ export default {
     ParametreEcritureCategorie,
     ParametreIndemniteFraisAnnuel,
     ParametreIndemniteExercice,
+    ParametreHeureExercice,
     ParametreIndemniteIntervention,
     ParametreAvs,
     ParametreAmende,

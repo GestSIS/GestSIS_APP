@@ -42,6 +42,9 @@
             >
               Modifier
             </router-link>
+            <button class="btn btn-outline-primary" @click="convoquer">
+              Convoquer
+            </button>
           </form>
         </div>
       </div>
@@ -200,7 +203,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
@@ -371,6 +374,10 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    convoquer() {
+      this.SHOW_MODAL({ component: 'ModalConvoquer', size: 2 });
+    },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
     },

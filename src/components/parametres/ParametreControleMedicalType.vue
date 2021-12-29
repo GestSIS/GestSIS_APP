@@ -19,6 +19,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeType.length">
+            <td colspan="5">Aucun contrôle médical type</td>
+          </tr>
           <tr v-for="t in listeType" :key="t.id">
             <td>{{ t.tri }}</td>
             <td>{{ t.designation }}</td>

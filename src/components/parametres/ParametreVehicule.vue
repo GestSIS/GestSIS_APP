@@ -21,7 +21,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="v in listeVehicule" :key="v.id">
+          <tr v-if="!vehicules.length">
+            <td colspan="7">Aucun véhicule</td>
+          </tr>
+          <tr v-for="v in vehicules" :key="v.id">
             <td>{{ v.tri }}</td>
             <td class="text-center">
               <input
@@ -85,8 +88,7 @@ export default {
   computed: {
     ...mapState({
       listeUnite: (state) => state.unite.liste,
-      listeVehicule: (state) =>
-        state.vehicule.liste.sort((a, b) => a.tri - b.tri),
+      vehicules: (state) => state.vehicule.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

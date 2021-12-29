@@ -26,10 +26,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != categorieId);
     },
   },
-  getters: {
-    getExerciceCategorie: (state) => (categorie_id) =>
-      state.liste.find((c) => c.id === categorie_id),
-  },
   actions: {
     fetchExerciceCategories({ commit, state }) {
       if (state.liste.length > 0) {

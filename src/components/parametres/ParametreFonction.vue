@@ -19,6 +19,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeFonction.length">
+            <td colspan="5">Aucune fonction</td>
+          </tr>
           <tr v-for="f in listeFonction" :key="f.id">
             <td>{{ f.tri }}</td>
             <td>{{ f.abreviation }}</td>

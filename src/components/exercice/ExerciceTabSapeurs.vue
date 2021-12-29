@@ -16,6 +16,9 @@
           <th class="text-center">Remplace</th>
           <th class="text-center">Excuse</th>
           <th class="text-center">Amende</th>
+          <th v-for="h in extendedHeureTypes" :key="h.id">
+            {{ h.designation }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -97,6 +100,14 @@
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
           </td>
+          <td v-for="h in extendedHeureTypes" :key="h.id">
+            <div class="input-group">
+              <input class="form-control form-control-sm" type="text" />
+              <span class="input-group-text">{{
+                formatUnite(h.type_unite_id)
+              }}</span>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -118,7 +129,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
@@ -131,14 +142,16 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.VALIDATION
         ),
+      activeExerciceId: (state) => state.exercice.active.id,
+      activeExerciceData: (state) => state.exercice.active.data,
+      activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
+      heureTypes: (state) => state.heureExercice.liste,
     }),
-    ...mapGetters([
-      'activeExerciceId',
-      'activeExerciceData',
-      'activeExerciceSapeurs',
-    ]),
     canValidate() {
       return this.activeExerciceData.statut == 2;
+    },
+    extendedHeureTypes() {
+      return this.heureTypes;
     },
   },
   methods: {
@@ -164,6 +177,9 @@ export default {
             err?.message || "Erreur lors de la validation de l'exercice."
           )
         );
+    },
+    formatUnite(type_unite_id) {
+      return this.sapeurs.find((s) => s.id == sapeur_id)?.abreviation;
     },
     formatSapeur(sapeur_id) {
       const sapeur = this.sapeurs.find((s) => s.id == sapeur_id);

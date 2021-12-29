@@ -20,6 +20,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeCategorie.length">
+            <td colspan="6">Aucune catégorie</td>
+          </tr>
           <tr v-for="c in listeCategorie" :key="c.id">
             <td>{{ c.tri }}</td>
             <td>{{ c.designation }}</td>

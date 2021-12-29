@@ -18,6 +18,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeCompte.length">
+            <td colspan="4">Aucun compte</td>
+          </tr>
           <tr v-for="c in listeCompte" :key="c.id">
             <td>{{ c.numero }}</td>
             <td>{{ c.designation }}</td>

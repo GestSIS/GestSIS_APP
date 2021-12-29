@@ -16,6 +16,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeMission.length">
+            <td colspan="2">Aucune mission</td>
+          </tr>
           <tr v-for="m in listeMission" :key="m.id">
             <td>{{ m.titre }}</td>
             <td>

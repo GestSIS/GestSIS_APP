@@ -20,6 +20,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeExcuse.length">
+            <td colspan="6">Aucune excuse type</td>
+          </tr>
           <tr v-for="e in listeExcuse" :key="e.id">
             <td>{{ e.tri }}</td>
             <td>{{ e.abreviation }}</td>

@@ -21,6 +21,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeMateriel.length">
+            <td colspan="7">Aucun matériel</td>
+          </tr>
           <tr v-for="m in listeMateriel" :key="m.id">
             <td>{{ m.tri }}</td>
             <td class="text-center">

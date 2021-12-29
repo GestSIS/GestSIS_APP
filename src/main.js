@@ -33,10 +33,14 @@ import 'vue-datetime/dist/vue-datetime.css';
 // Base components
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 import BaseSelect from '@/components/base/BaseSelect.vue';
+import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
+import BaseRadio from '@/components/base/BaseRadio.vue';
 import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
 
 Vue.component('base-dropdown', BaseDropdown);
 Vue.component('base-select', BaseSelect);
+Vue.component('base-checkbox', BaseCheckbox);
+Vue.component('base-radio', BaseRadio);
 Vue.component('base-multi-unselect', BaseMultiUnselect);
 
 Vue.component('datetime', Datetime);
