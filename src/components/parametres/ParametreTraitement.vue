@@ -17,6 +17,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeTraitement.length">
+            <td colspan="3">Aucun traitement</td>
+          </tr>
           <tr v-for="t in listeTraitement" :key="t.id">
             <td>{{ t.tri }}</td>
             <td>{{ t.designation }}</td>

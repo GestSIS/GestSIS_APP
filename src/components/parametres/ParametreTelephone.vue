@@ -18,6 +18,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeTelephone.length">
+            <td colspan="4">Aucun téléphone</td>
+          </tr>
           <tr v-for="t in listeTelephone" :key="t.id">
             <td>{{ t.tri }}</td>
             <td>{{ t.nom }}</td>

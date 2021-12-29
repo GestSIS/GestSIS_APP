@@ -21,6 +21,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="!listeType.length">
+                <td colspan="4">Aucun type</td>
+              </tr>
               <tr v-for="t in listeType" :key="t.id">
                 <td>{{ t.tri }}</td>
                 <td>{{ t.designation }}</td>
@@ -69,6 +72,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="!listeStat.length">
+                <td colspan="3">Aucune statistique</td>
+              </tr>
               <tr v-for="s in listeStat" :key="s.id">
                 <td>{{ s.tri }}</td>
                 <td>{{ s.designation }}</td>

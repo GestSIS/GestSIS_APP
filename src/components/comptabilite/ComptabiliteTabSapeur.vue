@@ -230,6 +230,7 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
+      fonctions: (state) => state.fonction.liste,
       exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeInterventionId: (state) => state.intervention.active.id,

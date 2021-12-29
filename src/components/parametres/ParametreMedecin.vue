@@ -19,6 +19,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeMedecin.length">
+            <td colspan="5">Aucun médecin</td>
+          </tr>
           <tr v-for="m in listeMedecin" :key="m.id">
             <td>{{ m.designation }}</td>
             <td>{{ m.adresse }}</td>

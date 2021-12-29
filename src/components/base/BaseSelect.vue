@@ -30,7 +30,7 @@ export default {
       default: () => '',
     },
     selectClass: {
-      type: [String, Array],
+      type: [String, Array, Object],
     },
     value: {
       //Vuejs 3 -> modelValue

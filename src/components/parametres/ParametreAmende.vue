@@ -45,6 +45,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!params.amendes.length">
+            <td colspan="3">Aucune amende</td>
+          </tr>
           <tr v-for="(a, index) in params.amendes" :key="a.id">
             <td>{{ index + 1 }}</td>
             <td>

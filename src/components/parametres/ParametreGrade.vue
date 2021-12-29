@@ -19,6 +19,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeGrade.length">
+            <td colspan="5">Aucun grade</td>
+          </tr>
           <tr v-for="g in listeGrade" :key="g.id">
             <td>{{ g.tri }}</td>
             <td>{{ g.designation }}</td>

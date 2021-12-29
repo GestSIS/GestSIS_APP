@@ -2,40 +2,40 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Indemnités annuel</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
-        Ajouter une indemnité
+      <h3 class="card-title">Heures additionnelles pour exercice</h3>
+      <button type="button" class="btn btn-primary" @click="ajoutHeure">
+        Ajouter une heure
       </button>
     </div>
     <div class="card-body">
-      <table id="indemnites-anuelles" class="table table-sm">
+      <table id="heures-anuelles" class="table table-sm">
         <thead>
           <tr>
             <th>Désignation</th>
-            <th>Fonction</th>
             <th>Montant</th>
-            <th>Quantité</th>
             <th>Unité</th>
             <th>Compte</th>
-            <th>Catégorie d'écriture</th>
+            <th>Catégorie</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="i in listeIndemniteAnnuel" :key="i.id">
+          <tr v-if="!heureTypes.length">
+            <td colspan="6">Aucune heure type</td>
+          </tr>
+          <tr v-for="i in heureTypes" :key="i.id">
             <td>{{ i.designation }}</td>
-            <td>{{ fonction(i.fonction_id) }}</td>
             <td>{{ i.montant }}</td>
-            <td>{{ i.quantite }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
             <td>{{ compte(i.compte_id) }}</td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
+            <td>TODO:</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  @click="updateIndemnite(i)"
+                  @click="updateHeureType(i)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -60,24 +60,18 @@ import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
+  const loadHeures = store.dispatch('fetchHeuresExercice');
 
-  Promise.all([
-    loadFrais,
-    loadIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-  ]).then(() => {
+  Promise.all([loadFonctions, loadComptes, loadUnites, loadHeures]).then(() => {
     next();
   });
 }
 
 export default {
-  name: 'ParametreIndemniteAnnuel',
+  name: 'ParametreHeureExercice',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -86,42 +80,43 @@ export default {
   },
   computed: {
     ...mapState({
-      listeIndemniteAnnuel: (state) =>
-        state.imputation.indemnites.annuels.sort((a, b) => a.tri - b.tri),
-      listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.compte.liste,
-      listeUnite: (state) => state.unite.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
+      heureTypes: (state) =>
+        state.heureExercice.liste.sort((a, b) => a.tri - b.tri),
+      fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
     }),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    ajoutIndemnite() {
-      this.SHOW_MODAL({ component: 'ModalIndemniteAnnuel', data: {} });
-    },
-    updateIndemnite(indemnite) {
+    ajoutHeure() {
       this.SHOW_MODAL({
-        component: 'ModalIndemniteAnnuel',
-        data: { ...indemnite },
+        component: 'ModalHeureExercice',
+        data: {},
+      });
+    },
+    updateHeureType(heure) {
+      this.SHOW_MODAL({
+        component: 'ModalHeureExercice',
+        data: { ...heure },
       });
     },
     fonction(id) {
-      return id ? this.listeFonction.find((f) => f.id === id)?.abreviation : '';
+      return id ? this.fonctions.find((f) => f.id === id)?.abreviation : '';
     },
     compte(id) {
       if (!id) {
         return '';
       }
-      const compte = this.listeCompte.find((f) => f.id === id);
+      const compte = this.comptes.find((f) => f.id === id);
       return `${compte?.numero} ${compte?.designation}`;
     },
     unite(id) {
-      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '';
+      return id ? this.unites.find((u) => u.id === id)?.unite : '';
     },
     categorie(id) {
-      return id
-        ? this.listeCategorie.find((c) => c.id === id)?.designation
-        : '';
+      return id ? this.categories.find((c) => c.id === id)?.designation : '';
     },
   },
 };
