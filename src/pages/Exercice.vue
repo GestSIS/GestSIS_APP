@@ -103,6 +103,8 @@ export default {
     this.$store.dispatch('fetchExerciceCategories');
     this.$store.dispatch('fetchExercicesComptables');
     this.$store.dispatch('fetchExcuseTypes');
+    this.$store.dispatch('fetchHeuresExercice');
+    this.$store.dispatch('fetchUnites');
 
     let id = parseInt(this.id);
 

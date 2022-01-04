@@ -186,20 +186,20 @@ export default {
           title: 'Solde',
           field: 'solde',
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
         {
           title: 'Indemnité',
           field: 'indemnite',
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
         {
           title: 'Amende',
           field: 'amende',
           formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
         {
           title: 'Total',
@@ -207,7 +207,7 @@ export default {
           formatter: (total, ecriture) =>
             ecriture.amende ? (-total).toFixed(2) : total,
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
       ],
       fields: [

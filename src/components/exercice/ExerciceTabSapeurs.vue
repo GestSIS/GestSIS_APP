@@ -180,8 +180,8 @@ export default {
           e.heure_exercice_type_id == h.id ||
           (!e.heure_exercice_type_id && e.designation == h.designation)
       );
-      // Ajout de l'heure
       if (!heure) {
+        // Ajout de l'heure
         sap.heures = [
           ...sap.heures,
           {
@@ -190,6 +190,7 @@ export default {
           },
         ];
       } else {
+        // Modification de l'heure
         heure.quantite = parseFloat(quantite) || null;
       }
     },

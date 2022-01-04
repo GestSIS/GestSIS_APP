@@ -113,9 +113,9 @@
                 }}
               </td>
               <td>{{ ecriture.designation }}</td>
-              <td class="text-right">{{ ecriture.tarif }}</td>
-              <td class="text-right">{{ ecriture.quantite }}</td>
-              <td class="text-right">{{ ecriture.total }}</td>
+              <td class="text-end">{{ ecriture.tarif }}</td>
+              <td class="text-end">{{ ecriture.quantite }}</td>
+              <td class="text-end">{{ ecriture.total }}</td>
             </tr>
           </tbody>
         </table>

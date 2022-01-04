@@ -10,7 +10,7 @@
       <table class="table table-sm">
         <tbody>
           <tr v-for="permis in permisData" :key="permis.permis_type_id">
-            <td class="text-right">
+            <td class="text-end">
               <font-awesome-icon
                 class="text-danger"
                 v-if="permis.type.toLowerCase().includes('118')"
