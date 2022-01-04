@@ -139,19 +139,19 @@ export default {
           title: 'Tarif',
           field: 'tarif',
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
         {
           title: 'Quantité',
           field: 'quantite',
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
         {
           title: 'Total',
           field: 'total',
           headerClassName: 'text-center',
-          className: 'text-right',
+          className: 'text-end',
         },
       ],
       fields: [
