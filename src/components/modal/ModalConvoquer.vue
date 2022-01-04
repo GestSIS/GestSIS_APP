@@ -6,24 +6,16 @@
     </div>
     <div class="modal-body">
       <div class="row mb-3">
-        <div class="col-3">
+        <!-- <div class="col-3">
           <h6>Options d'impression</h6>
           <base-checkbox label="Code NIP" v-model="params.nip" />
           <base-checkbox label="Groupe" v-model="params.groupe" />
           <base-checkbox label="Téléphone" v-model="params.telephone" />
           <base-checkbox label="Adresse SIS" v-model="params.adresse" />
           <base-checkbox label="Exercice détail" v-model="params.details" />
-        </div>
-        <div class="col-3">
-          <h6>Format</h6>
-          <base-radio
-            :advancedLabel="true"
-            v-model="params.format"
-            :options="formats"
-          />
-        </div>
-        <div class="col-6">
-          <h6>Autre</h6>
+        </div> -->
+        <div class="col-8">
+          <h6>Informations</h6>
           <div class="input-group mb-3">
             <span class="input-group-text" id="titre">Titre</span>
             <input
@@ -52,6 +44,14 @@
               v-model="params.pourInfo"
             />
           </div>
+        </div>
+        <div class="col-4">
+          <h6>Format</h6>
+          <base-radio
+            :advancedLabel="true"
+            v-model="params.format"
+            :options="formats"
+          />
         </div>
       </div>
       <div class="mb-3">

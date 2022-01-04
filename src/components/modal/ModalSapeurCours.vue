@@ -229,8 +229,12 @@ export default {
       }
     },
     dateChange() {
-      this.activeCours.date_grade = this.activeCours.date;
-      this.activeCours.date_fonction = this.activeCours.date;
+      if (!this.activeCours.date_grade) {
+        this.activeCours.date_grade = this.activeCours.date;
+      }
+      if (!this.activeCours.date_fonction) {
+        this.activeCours.date_fonction = this.activeCours.date;
+      }
     },
   },
   watch: {

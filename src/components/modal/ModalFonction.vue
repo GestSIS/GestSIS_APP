@@ -75,7 +75,9 @@ export default {
   data() {
     return {
       errors: {},
-      activeFonction: {},
+      activeFonction: {
+        cumulable: false,
+      },
     };
   },
   mounted() {

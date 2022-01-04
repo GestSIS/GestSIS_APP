@@ -440,7 +440,7 @@ export default {
         });
     },
     select(id, leaf = true) {
-      console.log(`Select ${id} ${leaf}`);
+      // console.log(`Select ${id} ${leaf}`);
       if (leaf) {
         this.selectSapeur(id);
       } else {
