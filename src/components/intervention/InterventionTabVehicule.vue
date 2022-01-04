@@ -60,7 +60,7 @@ export default {
       vehicules: (state) =>
         state.vehicule.liste.filter(
           (v) =>
-            v.status === 1 ||
+            v.statut === 1 ||
             state.intervention.active.vehicules.find(
               (vi) => vi.vehicule_id === v.id
             )

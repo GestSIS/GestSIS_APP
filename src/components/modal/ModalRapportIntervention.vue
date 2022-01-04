@@ -97,10 +97,10 @@
         <input
           type="checkbox"
           class="form-check-input"
-          id="status"
-          v-model="params.status"
+          id="statut"
+          v-model="params.statut"
         />
-        <label class="form-check-label" for="status">
+        <label class="form-check-label" for="statut">
           Indication du traitement du rapport
         </label>
       </div>
@@ -156,7 +156,7 @@ export default {
         vehicules: true,
         materiel: true,
         absents: true,
-        status: true,
+        statut: true,
         missions: true,
         appels: true,
       },

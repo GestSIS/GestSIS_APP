@@ -97,7 +97,7 @@ export default {
         communications: '',
         designation: '',
         duree: null,
-        status: 0,
+        statut: 0,
       });
     },
     createExercice({ state, commit, getters }) {

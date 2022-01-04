@@ -41,11 +41,11 @@
               <input
                 type="checkbox"
                 class="form-check-input"
-                id="status"
-                :checked="e.status"
+                id="statut"
+                :checked="e.statut"
                 disabled
               />
-              <label class="form-check-label" for="amende"></label>
+              <label class="form-check-label" for="statut"></label>
             </td>
             <td>
               <div class="d-flex justify-content-center">

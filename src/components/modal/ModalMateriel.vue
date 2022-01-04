@@ -67,7 +67,7 @@
             type="checkbox"
             class="form-check-input"
             id="medecin-status-modal"
-            v-model="activeMateriel.status"
+            v-model="activeMateriel.statut"
           />
           <label class="form-check-label" for="medecin-status-modal"
             >Actif</label

@@ -140,17 +140,6 @@
           </div>
         </div>
       </div>
-      <!-- STATUS -->
-      <!--                  <div class="mb-3">-->
-      <!--                    <label for="m-exe-status">status</label>-->
-      <!--                    <input-->
-      <!--                      type="number"-->
-      <!--                      class="form-control"-->
-      <!--                      id="m-exe-status"-->
-      <!--                      name="nom"-->
-      <!--                      v-model="activeExerciceData.status"-->
-      <!--                    />-->
-      <!--                  </div>-->
       <!-- COMMUNICATION -->
       <div class="mb-3">
         <label for="m-sap-communication">Communications</label>

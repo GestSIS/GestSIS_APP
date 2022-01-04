@@ -30,11 +30,11 @@
               <input
                 type="checkbox"
                 class="form-check-input"
-                id="status"
-                :checked="v.status"
+                id="statut"
+                :checked="v.statut"
                 disabled
               />
-              <label class="form-check-label" for="status"></label>
+              <label class="form-check-label" for="statut"></label>
             </td>
             <td>{{ v.designation }}</td>
             <td>{{ v.forfait }}</td>

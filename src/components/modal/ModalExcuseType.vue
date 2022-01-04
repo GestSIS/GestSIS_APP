@@ -53,10 +53,10 @@
           <input
             type="checkbox"
             class="form-check-input"
-            id="status-modal"
-            v-model="activeExcuse.status"
+            id="statut-modal"
+            v-model="activeExcuse.statut"
           />
-          <label class="form-check-label" for="status-modal">Actif</label>
+          <label class="form-check-label" for="statut-modal">Actif</label>
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@ export default {
     return {
       errors: {},
       activeExcuse: {
-        status: 1,
+        statut: 1,
       },
     };
   },
@@ -103,7 +103,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      this.activeExcuse.status = this.activeExcuse.status ? 1 : 0;
+      this.activeExcuse.statut = this.activeExcuse.statut ? 1 : 0;
       if ((this.activeExcuse.id || 0) === 0) {
         this.$store
           .dispatch('addExcuseType', this.activeExcuse)
