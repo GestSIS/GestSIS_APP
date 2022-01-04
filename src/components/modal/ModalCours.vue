@@ -127,6 +127,7 @@ export default {
       errors: {},
       activeCours: {
         actif: 1,
+        abreviation: '',
       },
     };
   },

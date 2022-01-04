@@ -15,27 +15,28 @@
             <th>Montant</th>
             <th>Unité</th>
             <th>Compte</th>
+            <th>Type</th>
             <th>Catégorie</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="!heureTypes.length">
-            <td colspan="6">Aucune heure type</td>
+            <td colspan="7">Aucune heure type</td>
           </tr>
-          <tr v-for="i in heureTypes" :key="i.id">
-            <td>{{ i.designation }}</td>
-            <td>{{ i.montant }}</td>
-            <td>{{ unite(i.type_unite_id) }}</td>
-            <td>{{ compte(i.compte_id) }}</td>
-            <td>{{ categorie(i.ecriture_categorie_id) }}</td>
-            <td>TODO:</td>
+          <tr v-for="h in heureTypes" :key="h.id">
+            <td>{{ h.designation }}</td>
+            <td>{{ h.montant }}</td>
+            <td>{{ unite(h.type_unite_id) }}</td>
+            <td>{{ compte(h.compte_id) }}</td>
+            <td>{{ type(h) }}</td>
+            <td>{{ categorie(h.ecriture_categorie_id) }}</td>
             <td>
               <div class="d-flex justify-content-center">
                 <button
                   type="button"
                   class="btn btn-outline-primary border-0"
-                  @click="updateHeureType(i)"
+                  @click="updateHeureType(h)"
                 >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -117,6 +118,10 @@ export default {
     },
     categorie(id) {
       return id ? this.categories.find((c) => c.id === id)?.designation : '';
+    },
+    type(heure) {
+      const mapping = { 1: 'Solde', 2: 'Indemnité' };
+      return mapping[heure?.type];
     },
   },
 };

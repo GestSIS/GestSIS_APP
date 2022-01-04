@@ -102,10 +102,24 @@
           </td>
           <td v-for="h in extendedHeureTypes" :key="h.id">
             <div class="input-group">
-              <input class="form-control form-control-sm" type="text" />
-              <span class="input-group-text">{{
-                formatUnite(h.type_unite_id)
-              }}</span>
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                :value="
+                  getHeureValue(
+                    sap.heures.find(
+                      (e) =>
+                        e.heure_exercice_type_id == h.id ||
+                        (!e.heure_exercice_type_id &&
+                          e.designation == h.designation)
+                    )
+                  )
+                "
+                @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
+              />
+              <span class="input-group-text"
+                >{{ formatUnite(h.type_unite_id) }}
+              </span>
             </div>
           </td>
         </tr>
@@ -146,6 +160,7 @@ export default {
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       heureTypes: (state) => state.heureExercice.liste,
+      unites: (state) => state.unite.liste,
     }),
     canValidate() {
       return this.activeExerciceData.statut == 2;
@@ -156,6 +171,28 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    getHeureValue(sapeur) {
+      return sapeur?.quantite;
+    },
+    updateHeureSapeur(sap, h, quantite) {
+      const heure = sap.heures.find(
+        (e) =>
+          e.heure_exercice_type_id == h.id ||
+          (!e.heure_exercice_type_id && e.designation == h.designation)
+      );
+      // Ajout de l'heure
+      if (!heure) {
+        sap.heures = [
+          ...sap.heures,
+          {
+            heure_exercice_type_id: h.id,
+            quantite,
+          },
+        ];
+      } else {
+        heure.quantite = parseFloat(quantite) || null;
+      }
+    },
     save() {
       this.$store
         .dispatch('editSapeurs', this.activeExerciceSapeurs)
@@ -179,7 +216,7 @@ export default {
         );
     },
     formatUnite(type_unite_id) {
-      return this.sapeurs.find((s) => s.id == sapeur_id)?.abreviation;
+      return this.unites.find((u) => u.id == type_unite_id)?.abreviation;
     },
     formatSapeur(sapeur_id) {
       const sapeur = this.sapeurs.find((s) => s.id == sapeur_id);

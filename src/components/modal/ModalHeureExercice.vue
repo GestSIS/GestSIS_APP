@@ -63,10 +63,10 @@
         label="Type"
         displayKey="label"
         :options="[
-          { id: 0, label: 'Solde' },
-          { id: 1, label: 'Indemnité' },
+          { id: 1, label: 'Solde' },
+          { id: 2, label: 'Indemnité' },
         ]"
-        v-model="activeHeure.indemnite"
+        v-model="activeHeure.type"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />
     </div>
