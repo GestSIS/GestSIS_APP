@@ -67,7 +67,7 @@
             type="checkbox"
             class="form-check-input"
             id="vehicule-status-modal"
-            v-model="activeVehicule.status"
+            v-model="activeVehicule.statut"
           />
           <label class="form-check-label" for="vehicule-status-modal"
             >Actif</label
@@ -100,7 +100,7 @@ export default {
     return {
       errors: {},
       activeVehicule: {
-        status: 1,
+        statut: 1,
         type_unite_id: 0,
       },
     };

@@ -57,7 +57,7 @@
             type="checkbox"
             class="form-check-input"
             id="status-modal"
-            v-model="activeCategorie.status"
+            v-model="activeCategorie.statut"
           />
           <label class="form-check-label" for="status-modal">Actif</label>
         </div>
@@ -88,7 +88,7 @@ export default {
     return {
       errors: {},
       activeCategorie: {
-        status: 1,
+        statut: 1,
       },
     };
   },
@@ -106,7 +106,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     save() {
-      this.activeCategorie.status = this.activeCategorie.status ? 1 : 0;
+      this.activeCategorie.statut = this.activeCategorie.statut ? 1 : 0;
       if ((this.activeCategorie.id || 0) === 0) {
         this.$store
           .dispatch('addExerciceCategorie', this.activeCategorie)
