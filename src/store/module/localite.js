@@ -19,11 +19,10 @@ export default {
     fetchLocalites({ commit, state }) {
       if (state.liste.length > 0) {
         return Promise.resolve();
-      } else {
-        return LocaliteService.getLocalites().then((data) =>
-          commit(types.UPDATE_LOCALITE_LISTE, data)
-        );
       }
+      return LocaliteService.getLocalites().then((data) =>
+        commit(types.UPDATE_LOCALITE_LISTE, data)
+      );
     },
   },
 };

@@ -77,6 +77,13 @@
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">
               Aucun sapeur
             </li>
+            <button
+              class="btn btn-primary"
+              v-if="!filteredSapeurs.length"
+              @click="addSapeur"
+            >
+              Ajouter un sapeur
+            </button>
           </ul>
         </div>
       </div>
@@ -90,10 +97,15 @@
 <script>
 import store from '@/store/index';
 
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
 const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
+  store.dispatch('fetchCivilites');
+  store.dispatch('fetchLocalites');
+  store.dispatch('fetchGrades');
+  store.dispatch('fetchFonctions');
+
   if (
     (!('id' in routeTo.params) || !routeTo.params.id) &&
     store.state.sapeur.active.id > 0
@@ -159,6 +171,24 @@ export default {
     }),
     filteredSapeurs() {
       return this.sapeurs.filter(this.filters[this.filter]);
+    },
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    addSapeur() {
+      this.SHOW_MODAL({
+        component: 'ModalSapeur',
+        size: 2,
+        callback: (sapeurId) => {
+          this.$store.dispatch('selectSapeur', sapeurId).then(() => {
+            this.$router.push({
+              name: 'sapeurs-details',
+              params: { id: sapeurId },
+            });
+          });
+          //TODO
+        },
+      });
     },
   },
 };

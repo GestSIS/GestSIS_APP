@@ -40,7 +40,10 @@ export default {
     },
   },
   actions: {
-    fetchGrades({ commit }) {
+    fetchGrades({ commit, state }) {
+      if (state.liste.length){
+        return Promise.resolve();
+      }
       return GradeService.getGrades().then((data) =>
         commit(types.UPDATE_GRADE_LISTE, data)
       );

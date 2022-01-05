@@ -1,5 +1,6 @@
 <template>
   <div class="tree">
+    <div v-if="!tree.length">Aucun élément à afficher</div>
     <editable-node
       v-for="(item, index) in tree"
       ref="node"

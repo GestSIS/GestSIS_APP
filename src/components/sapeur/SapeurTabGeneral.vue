@@ -308,18 +308,10 @@ export default {
     };
   },
   mounted() {
-    if (this.listeCivilites.length === 0) {
-      this.$store.dispatch('fetchCivilites');
-    }
-    if (this.listeLocalitesSis.length === 0) {
-      this.$store.dispatch('fetchLocalites');
-    }
-    if (this.listGrades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-    if (this.listeFonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
+    this.$store.dispatch('fetchCivilites');
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchGrades');
+    this.$store.dispatch('fetchFonctions');
 
     this.$store.dispatch('fetchSapeurMutations');
     SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
