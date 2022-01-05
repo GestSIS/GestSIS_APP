@@ -28,7 +28,10 @@ export default {
         commit(types.UPDATE_PERMIS_LISTE, data)
       );
     },
-    fetchCivilites({ commit }) {
+    fetchCivilites({ commit, state }) {
+      if (state.civilites.length){
+        return Promise.resolve();
+      }
       return BaseDataService.getCivilites().then((data) =>
         commit(types.UPDATE_CIVILITE_LISTE, data)
       );
