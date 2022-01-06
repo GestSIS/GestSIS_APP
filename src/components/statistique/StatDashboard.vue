@@ -11,7 +11,7 @@
               <li>Nb sapeurs</li>
               <li>Stats cours, fonctions, grades</li>
             </ul> -->
-          <h3>TODO: Second temps</h3>
+          <!-- <h3>TODO: Second temps</h3>
           <h4>Exercices</h4>
           <ul>
             <li>Nb heure par sapeur</li>
@@ -24,9 +24,9 @@
           <h4>Frais</h4>
           <ul>
             <li>Répartition des frais</li>
-          </ul>
+          </ul> -->
 
-          <h3>Première version prête</h3>
+          <h3>Fonctionalités actuelles</h3>
           <h4>Exercices</h4>
           <ul>
             <li>Stat générale par catégorie</li>

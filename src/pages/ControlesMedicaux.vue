@@ -48,7 +48,8 @@
             selectKey="id"
             row-selected-class="table-primary"
             @selected="selected"
-            ><template v-slot:checkbox="props">
+          >
+            <template v-slot:checkbox="props">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -59,15 +60,13 @@
               <label class="form-check-label" :for="props.key"></label>
             </template>
             <template v-slot:doc="props">
-              <div>
-                <button
-                  class="btn"
-                  v-if="props.rowData.filename"
-                  @click="downloadJustificatif(props.rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'file-pdf']" />
-                </button>
-              </div>
+              <button
+                class="btn"
+                v-if="props.rowData.filename"
+                @click="downloadJustificatif(props.rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
+              </button>
             </template>
             <template v-slot:actions="props">
               <div class="d-flex">
@@ -183,14 +182,14 @@ export default {
           title: 'Accepter',
           key: 'accepter',
           sortKey: 'accepter',
-          columnClass: 'text-center',
+          columnClass: 'align-middle text-center',
           slot: 'checkbox',
         },
         {
           title: 'En cours',
           key: 'en_cours',
           sortKey: 'en_cours',
-          columnClass: 'text-center',
+          columnClass: 'align-middle text-center',
           slot: 'checkbox',
         },
         {
@@ -198,13 +197,13 @@ export default {
           key: 'doc',
           sortKey: 'filename',
           slot: 'doc',
-          columnClass: 'text-center',
+          columnClass: 'align-middle text-center',
         },
         {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
-          columnClass: 'text-center',
+          columnClass: 'align-middle text-center',
         },
       ],
     };
