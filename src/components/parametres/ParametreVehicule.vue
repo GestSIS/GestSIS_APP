@@ -52,7 +52,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteVehicule(v)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -98,6 +98,13 @@ export default {
     },
     updateVehicule(vehicule) {
       this.SHOW_MODAL({ component: 'ModalVehicule', data: { ...vehicule } });
+    },
+    deleteVehicule(vehicule) {
+      this.$store
+        .dispatch('removeVehicule', vehicule.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     unite(id) {
       return id ? this.listeUnite.find((u) => u.id === id)?.unite : '-';

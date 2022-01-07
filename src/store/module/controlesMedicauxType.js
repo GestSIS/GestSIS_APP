@@ -40,9 +40,9 @@ export default {
         return data;
       });
     },
-    removeControlesMedicauxTypes({ commit }, type) {
-      return ControlesMedicauxTypeService.removeType(type).then((data) => {
-        commit(types.REMOVE_CONTROLE_MEDICAUX_TYPES, data);
+    removeControlesMedicauxTypes({ commit }, typeId) {
+      return ControlesMedicauxTypeService.removeType(typeId).then((data) => {
+        commit(types.REMOVE_CONTROLE_MEDICAUX_TYPES, typeId);
         return data;
       });
     },

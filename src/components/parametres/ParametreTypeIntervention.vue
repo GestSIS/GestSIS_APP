@@ -40,7 +40,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-danger border-0"
-                      disabled
+                      @click="deleteType(t)"
                     >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />
                     </button>
@@ -90,7 +90,7 @@
                     <button
                       type="button"
                       class="btn btn-outline-danger border-0"
-                      disabled
+                      @click="deleteStat(s)"
                     >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />
                     </button>
@@ -145,6 +145,13 @@ export default {
         data: { ...type },
       });
     },
+    deleteType(type) {
+      this.$store
+        .dispatch('removeTypeIntervention', type.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
+    },
     ...mapMutations(['SHOW_MODAL']),
     ajoutStat() {
       this.SHOW_MODAL({ component: 'ModalStatIntervention', data: {} });
@@ -154,6 +161,13 @@ export default {
         component: 'ModalStatIntervention',
         data: { ...stat },
       });
+    },
+    deleteStat(stat) {
+      this.$store
+        .dispatch('removeStatIntervention', stat.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     statistique(id) {
       return id ? this.listeStat.find((s) => s.id === id)?.designation : '';

@@ -33,7 +33,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteMission(m)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -79,6 +79,9 @@ export default {
     },
     updateMission(mission) {
       this.SHOW_MODAL({ component: 'ModalMission', data: { ...mission } });
+    },
+    deleteMission(mission) {
+      this.$store.dispatch('removeMission', mission.id);
     },
   },
 };

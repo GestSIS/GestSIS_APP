@@ -52,10 +52,10 @@ export default {
         }
       );
     },
-    removeInterventionTraitement({ commit }, traitement) {
-      return InterventionTraitementService.removeTraitement(traitement).then(
+    removeInterventionTraitement({ commit }, traitementId) {
+      return InterventionTraitementService.removeTraitement(traitementId).then(
         (data) => {
-          commit(types.REMOVE_INTERVENTION_TRAITEMENT, data);
+          commit(types.REMOVE_INTERVENTION_TRAITEMENT, traitementId);
           return data;
         }
       );

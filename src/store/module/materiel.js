@@ -55,9 +55,9 @@ export default {
         return data;
       });
     },
-    removeMateriel({ commit }, materiel) {
-      return MaterielService.removeMateriel(materiel).then((data) => {
-        commit(types.REMOVE_MATERIEL, data);
+    removeMateriel({ commit }, materielId) {
+      return MaterielService.removeMateriel(materielId).then((data) => {
+        commit(types.REMOVE_MATERIEL, materielId);
         return data;
       });
     },

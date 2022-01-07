@@ -172,7 +172,8 @@ export default {
     ...mapState({
       fraisAnnuel: (state) => state.imputation.frais.annuels,
       indemnitesAnnuel: (state) => state.imputation.indemnites.annuels,
-      fonctions: (state) => state.fonction.liste,
+      fonctions: (state) =>
+        state.fonction.liste.slice(0).sort((a, b) => b.tri - a.tri),
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,

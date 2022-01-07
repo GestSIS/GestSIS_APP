@@ -52,7 +52,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteMateriel(m)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -99,6 +99,13 @@ export default {
     },
     updateMateriel(materiel) {
       this.SHOW_MODAL({ component: 'ModalMateriel', data: { ...materiel } });
+    },
+    deleteMateriel(materiel) {
+      this.$store
+        .dispatch('removeMateriel', materiel.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     unite(id) {
       return id ? this.listeUnite.find((u) => u.id === id)?.unite : '-';
