@@ -1,6 +1,6 @@
 <template>
   <div class="centered">
-    <form class="text-center form-signin" _lpchecked="1">
+    <form class="text-center form-signin" @submit.prevent="login">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous connectez</h1>
@@ -30,11 +30,7 @@
       <div class="invalid-feedback" v-if="error">
         Informations de connexion invalides
       </div>
-      <button
-        class="btn btn-lg btn-primary btn-block"
-        type="submit"
-        @click="login"
-      >
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
         Se connecter
       </button>
       <p class="mt-5 mb-3 text-muted">
@@ -50,7 +46,7 @@
 
 <script>
 export default {
-  name: 'register',
+  name: 'login',
   data() {
     return {
       email: null,
