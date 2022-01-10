@@ -116,7 +116,7 @@ export default {
     };
   },
   methods: {
-    register() {
+    async register() {
       this.$store
         .dispatch('register', {
           name: this.name,

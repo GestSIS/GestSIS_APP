@@ -55,7 +55,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
       this.$store
         .dispatch('login', { email: this.email, password: this.password })
         .then(() => {
