@@ -60,9 +60,9 @@ export default {
         return data;
       });
     },
-    removeGrade({ commit }, grade) {
-      return GradeService.removeGrade(grade).then((data) => {
-        commit(types.REMOVE_GRADE, data);
+    removeGrade({ commit }, gradeId) {
+      return GradeService.removeGrade(gradeId).then((data) => {
+        commit(types.REMOVE_GRADE, gradeId);
         return data;
       });
     },

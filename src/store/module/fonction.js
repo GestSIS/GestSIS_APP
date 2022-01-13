@@ -61,9 +61,9 @@ export default {
         return data;
       });
     },
-    removeFonction({ commit }, fonction) {
-      return FonctionService.removeFonction(fonction).then((data) => {
-        commit(types.REMOVE_FONCTION, data);
+    removeFonction({ commit }, fonctionId) {
+      return FonctionService.removeFonction(fonctionId).then((data) => {
+        commit(types.REMOVE_FONCTION, fonctionId);
         return data;
       });
     },

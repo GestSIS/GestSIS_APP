@@ -48,7 +48,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteFonction(f)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -94,6 +94,13 @@ export default {
     },
     updateFonction(fonction) {
       this.SHOW_MODAL({ component: 'ModalFonction', data: { ...fonction } });
+    },
+    deleteFonction(fonction) {
+      this.$store
+        .dispatch('removeFonction', fonction.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };
