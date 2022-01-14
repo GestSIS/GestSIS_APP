@@ -149,11 +149,17 @@ export default {
     compte(compte) {
       return `${compte.numero} ${compte.designation}`;
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('updateAmendes', this.params)
-        .then(() => (this.errors = {}))
-        .catch((e) => (this.errors = { ...e }));
+        .then((res) => {
+          this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
+        })
+        .catch((e) => {
+          this.errors = { ...e };
+          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+        });
     },
   },
 };

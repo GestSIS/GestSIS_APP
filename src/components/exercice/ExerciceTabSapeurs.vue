@@ -305,7 +305,7 @@ export default {
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
     },
-    selectExcuse(sapeur) {
+    async selectExcuse(sapeur) {
       if (sapeur.excuse_type_id) {
         sapeur.excuse_type_id = null;
       }
