@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr v-if="!indemnitesIntervention.length">
-            <td colspan="8">Aucune indemnité</td>
+            <td colspan="11">Aucune indemnité</td>
           </tr>
           <tr v-for="i in indemnitesIntervention" :key="i.id">
             <td>{{ i.designation }}</td>

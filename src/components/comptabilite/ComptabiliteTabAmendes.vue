@@ -19,7 +19,7 @@
           :fields="fields"
           :row-class="onRowClass"
           detail-row-class="m-td-0"
-          no-data="Aucun amende à afficher"
+          no-data="Aucune amende à afficher"
           :detail-row-component="detailRow"
           :data="filteredAmendes"
           @selected="selected"

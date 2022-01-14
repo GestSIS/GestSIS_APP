@@ -207,11 +207,13 @@ export default {
         .dispatch('updateSisParams', this.sisParam)
         .then(() => {
           this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
         })
         .catch((errors) => {
           this.errors = {
             ...errors,
           };
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
         });
     },
   },
