@@ -390,13 +390,7 @@ export default {
             groupes: s.groupes.filter(
               (g) => !s.changements.groupesSupprime.includes(g.no)
             ),
-            numeros: s.numeros.slice(
-              0,
-              Math.min(
-                s.changements.numerosAjoute,
-                s.changements.numerosSupprime
-              )
-            ),
+            numeros: s.numeros.slice(0, s.changements.numerosSupprime),
           })),
         supprimes: mutations.filter((m) => m.statut === 'supprime'),
       };
