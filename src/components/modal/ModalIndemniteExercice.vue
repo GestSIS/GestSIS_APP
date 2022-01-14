@@ -130,6 +130,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="activeIndemnite.fonctions.length">
+                <td colspan="3">Aucune fonction paramétrée</td>
+              </tr>
               <tr
                 v-for="index in activeIndemnite.fonctions.length"
                 :key="index"
