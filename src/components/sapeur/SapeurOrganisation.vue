@@ -46,8 +46,8 @@ export default {
         let g = svm.groupes.find((g) => g.id == groupe.groupe_id);
         return {
           id: groupe.id,
-          designation: g.designation,
-          no: g.no || '',
+          designation: g?.designation,
+          no: g?.no || '',
         };
       });
     },

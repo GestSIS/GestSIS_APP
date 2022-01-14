@@ -142,11 +142,6 @@ export default {
     activePermissions: (state) => {
       return state.sis.permissions;
     },
-    activeSisData: (state) => {
-      return state.sis.liste.find(
-        (sis) => sis.api_key == state.sis.activeKey
-      );
-    },
     availableSisListe: (state) => {
       return state.sis.liste.filter((sis) =>
         state.sis.available.includes(sis.api_key)

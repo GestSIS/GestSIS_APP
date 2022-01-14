@@ -84,7 +84,7 @@ export default {
   computed: {
     ...mapState({
       listeFonction: (state) =>
-        state.fonction.liste.sort((a, b) => a.tri - b.tri),
+        state.fonction.liste.sort((a, b) => b.tri - a.tri),
     }),
   },
   methods: {

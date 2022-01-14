@@ -88,8 +88,8 @@ export default {
     ...mapState({
       listeFonction: (state) =>
         state.fonction.liste.sort((a, b) => a.tri - b.tri),
-      listeCours: (state) => state.cours.liste.sort((a, b) => a.tri - b.tri),
-      listeGrade: (state) => state.grade.liste.sort((a, b) => a.tri - b.tri),
+      listeCours: (state) => state.cours.liste.sort((a, b) => b.tri - a.tri),
+      listeGrade: (state) => state.grade.liste.sort((a, b) => b.tri - a.tri),
     }),
   },
   methods: {

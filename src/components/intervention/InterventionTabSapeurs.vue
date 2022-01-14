@@ -142,7 +142,7 @@
                     {{ formatSapeur(s) }}
                   </th>
                   <td class="text-center">
-                    <div class="form-check d-inline">
+                    <div class="mb-3 text-center">
                       <input
                         type="checkbox"
                         class="form-check-input"
@@ -152,12 +152,9 @@
                             (q) => q.sapeur_id === parseInt(s.id)
                           ).length === 1
                         "
-                      />
-                      <label
-                        class="form-check-label"
-                        :for="s.id"
                         @click="(e) => editQuittance(e, s.id)"
-                      ></label>
+                      />
+                      <label class="form-check-label" :for="s.id"></label>
                     </div>
                   </td>
                   <td
