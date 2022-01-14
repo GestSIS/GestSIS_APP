@@ -7,6 +7,10 @@ export default {
     actuel: [],
   },
   mutations: {
+    [types.CLEAR_CACHE](state) {
+      state.reference = [];
+      state.actuel = [];
+    },
     [types.UPDATE_RTA_REFERENCE_RTA](state, payload) {
       state.reference = payload;
     },
