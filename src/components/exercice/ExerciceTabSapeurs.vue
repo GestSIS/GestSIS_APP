@@ -167,6 +167,7 @@ export default {
         state.exerciceCategorie.liste.find(
           (c) => c.id == state.exercice.active.data?.exercice_categorie_id
         )?.amendable,
+
     }),
     canValidate() {
       return this.activeExerciceData.statut == 2;
