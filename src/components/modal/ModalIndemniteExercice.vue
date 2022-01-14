@@ -63,7 +63,7 @@
               class="form-select"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in listeUnite" :key="u.id" :value="u.id">
+              <option v-for="u in unites" :key="u.id" :value="u.id">
                 {{ u.unite }}
               </option>
             </select>
@@ -86,7 +86,7 @@
               class="form-select"
               :class="{ 'is-invalid': errors['compte_id'] }"
             >
-              <option v-for="c in listeCompte" :key="c.id" :value="c.id">
+              <option v-for="c in comptes" :key="c.id" :value="c.id">
                 {{ compte(c) }}
               </option>
             </select>
@@ -113,7 +113,7 @@
               class="form-select"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
-              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+              <option v-for="c in categories" :key="c.id" :value="c.id">
                 {{ c.designation }}
               </option>
             </select>
@@ -192,10 +192,10 @@ export default {
   },
   mounted() {
     const base = Object.fromEntries(
-      this.data.fonctions.map((f) => [f.fonction_id, f])
+      this.activeIndemnite.fonctions.map((f) => [f.fonction_id, f])
     );
     const data = Object.fromEntries(
-      this.listeFonction.map((f) => [
+      this.fonctions.map((f) => [
         f.id,
         { ...f, fonction_id: f.id, solde: 0, indemnite: 0 },
       ])
@@ -214,10 +214,10 @@ export default {
   },
   computed: {
     ...mapState({
-      listeFonction: (state) => state.fonction.liste,
-      listeUnite: (state) => state.unite.liste,
-      listeCompte: (state) => state.compte.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
+      fonctions: (state) => state.fonction.liste,
+      unites: (state) => state.unite.liste,
+      comptes: (state) => state.compte.liste,
+      categories: (state) => state.ecritureCategorie.liste,
     }),
     parFonction() {
       return this.activeIndemnite.par_fonction;
@@ -234,7 +234,7 @@ export default {
       return `${compte?.numero} ${compte.designation}`;
     },
     fonction(id) {
-      return this.listeFonction.find((f) => f.id === id)?.nom;
+      return this.fonctions.find((f) => f.id === id)?.nom;
     },
     updateSolde(index, e) {
       this.activeIndemnite.fonctions[index].solde = e.target.value;

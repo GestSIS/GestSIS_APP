@@ -116,14 +116,12 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',
         data: {},
-        size: 1,
       });
     },
     updateIndemnite(indemnite) {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',
         data: { ...indemnite },
-        size: 1,
       });
     },
     fonction(id) {
