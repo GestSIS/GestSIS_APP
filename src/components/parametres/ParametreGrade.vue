@@ -39,7 +39,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteGrade(g)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -92,6 +92,13 @@ export default {
         3: 'Spécialiste',
       };
       return gradeGroupe[groupe];
+    },
+    deleteGrade(grade) {
+      this.$store
+        .dispatch('removeGrade', grade.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };

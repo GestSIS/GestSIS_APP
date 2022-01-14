@@ -69,9 +69,9 @@ export default {
         return data;
       });
     },
-    removeCours({ commit }, cours) {
-      return CoursService.removeCours(cours).then((data) => {
-        commit(types.REMOVE_COURS, data);
+    removeCours({ commit }, coursId) {
+      return CoursService.removeCours(coursId).then((data) => {
+        commit(types.REMOVE_COURS, coursId);
         return data;
       });
     },

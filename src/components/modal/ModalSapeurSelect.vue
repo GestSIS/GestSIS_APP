@@ -332,7 +332,7 @@ export default {
           );
           groupe.sapeurs
             .filter(svm.filtreSapeur())
-            .map((s) => svm.sapeurs.find((s) => s.id == s))
+            .map((s) => svm.sapeurs.find((sap) => sap.id == s))
             .forEach(
               (s) =>
                 (flaten = [
@@ -512,11 +512,11 @@ export default {
     filtreSapeur() {
       let svm = this;
       return (s) =>
-        svm.sapeurs.find((s) => s.id == (s.sapeur_id || s)).actif == 1 &&
+        svm.sapeurs.find((sap) => sap.id == (s.sapeur_id || s))?.actif == 1 &&
         !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     sapeurFormatter(s) {
-      return s.nom + ' ' + s.prenom;
+      return s?.nom + ' ' + s?.prenom;
     },
     groupeFormatter(g) {
       return g.no ? g.no + ' ' + g.designation : g.designation;

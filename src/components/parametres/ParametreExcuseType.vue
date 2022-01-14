@@ -59,7 +59,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteExcuse(e)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -105,6 +105,13 @@ export default {
     },
     updateExcuse(excuse) {
       this.SHOW_MODAL({ component: 'ModalExcuseType', data: { ...excuse } });
+    },
+    deleteExcuse(excuse) {
+      this.$store
+        .dispatch('removeExcuseType', excuse.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };

@@ -52,9 +52,9 @@ export default {
         return data;
       });
     },
-    removeExcuseType({ commit }, excuse) {
-      return ExcuseTypeService.removeExcuse(excuse).then((data) => {
-        commit(types.REMOVE_EXCUSE_TYPE, data);
+    removeExcuseType({ commit }, excuseId) {
+      return ExcuseTypeService.removeExcuse(excuseId).then((data) => {
+        commit(types.REMOVE_EXCUSE_TYPE, excuseId);
         return data;
       });
     },

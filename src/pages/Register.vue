@@ -1,6 +1,6 @@
 <template>
   <div class="centered">
-    <form class="text-center form-signin d-grid" @submit.prevent="login">
+    <form class="text-center form-signin d-grid" @submit.prevent="register">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous enregistrer</h1>
@@ -116,7 +116,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    async register() {
       this.$store
         .dispatch('register', {
           name: this.name,

@@ -123,7 +123,7 @@
 
 <script>
 import store from '@/store/index';
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
@@ -131,20 +131,24 @@ import ImputationService from '@/services/ImputationService';
 import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
+  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
   const loadInterventions = store.dispatch('fetchListeIntervention');
   const loadTypes = store.dispatch('fetchTypeInterventions');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadStatFederal = store.dispatch('fetchStatFederals');
   const loadTraitement = store.dispatch('fetchInterventionTraitements');
+  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
 
   Promise.all([
+    loadExercicesComptables,
     loadInterventions,
     loadSapeurs,
     loadTypes,
     loadLocalites,
     loadStatFederal,
     loadTraitement,
+    loadIndemnites,
   ]).then(() => {
     next();
   });

@@ -25,7 +25,7 @@
         </thead>
         <tbody>
           <tr v-if="!indemnitesExercice.length">
-            <td colspan="8">Aucune indemnité</td>
+            <td colspan="10">Aucune indemnité</td>
           </tr>
           <tr v-for="i in indemnitesExercice" :key="i.id">
             <td>{{ i.designation }}</td>
@@ -116,14 +116,12 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',
         data: {},
-        size: 2,
       });
     },
     updateIndemnite(indemnite) {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',
         data: { ...indemnite },
-        size: 2,
       });
     },
     fonction(id) {

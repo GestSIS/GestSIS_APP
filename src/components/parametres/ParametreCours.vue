@@ -49,7 +49,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteCours(c)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -88,8 +88,8 @@ export default {
     ...mapState({
       listeFonction: (state) =>
         state.fonction.liste.sort((a, b) => a.tri - b.tri),
-      listeCours: (state) => state.cours.liste.sort((a, b) => a.tri - b.tri),
-      listeGrade: (state) => state.grade.liste.sort((a, b) => a.tri - b.tri),
+      listeCours: (state) => state.cours.liste.sort((a, b) => b.tri - a.tri),
+      listeGrade: (state) => state.grade.liste.sort((a, b) => b.tri - a.tri),
     }),
   },
   methods: {
@@ -99,6 +99,13 @@ export default {
     },
     updateCours(cours) {
       this.SHOW_MODAL({ component: 'ModalCours', data: { ...cours } });
+    },
+    deleteCours(cours) {
+      this.$store
+        .dispatch('removeCours', cours.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     coursPrecedent(id) {
       return id ? this.listeCours.find((f) => f.id === id)?.abreviation : '';

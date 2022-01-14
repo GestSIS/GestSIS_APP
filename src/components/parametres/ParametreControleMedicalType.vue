@@ -48,7 +48,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteType(t)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -97,6 +97,13 @@ export default {
         component: 'ModalControleMedicalType',
         data: { ...type },
       });
+    },
+    deleteType(type) {
+      this.$store
+        .dispatch('removeControlesMedicauxTypes', type.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };

@@ -37,7 +37,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteTelephone(t)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -83,6 +83,9 @@ export default {
     },
     updateTelephone(telephone) {
       this.SHOW_MODAL({ component: 'ModalTelephone', data: { ...telephone } });
+    },
+    deleteTelephone(telephone) {
+      this.$store.dispatch('removeTelephone', telephone.id);
     },
   },
 };

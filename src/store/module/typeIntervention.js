@@ -46,9 +46,9 @@ export default {
         return data;
       });
     },
-    removeTypeIntervention({ commit }, type) {
-      return TypeInterventionService.removeType(type).then((data) => {
-        commit(types.REMOVE_TYPE_INTERVENTION, data);
+    removeTypeIntervention({ commit }, typeId) {
+      return TypeInterventionService.removeType(typeId).then((data) => {
+        commit(types.REMOVE_TYPE_INTERVENTION, typeId);
         return data;
       });
     },

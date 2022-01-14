@@ -25,6 +25,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="!listeExerciceComptable.length">
+            Aucun exercice comptable
+          </tr>
           <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>

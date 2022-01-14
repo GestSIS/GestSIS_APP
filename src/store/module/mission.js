@@ -42,9 +42,9 @@ export default {
         return data;
       });
     },
-    removeMission({ commit }, mission) {
-      return MissionService.removeMission(mission).then((data) => {
-        commit(types.REMOVE_MISSION, data);
+    removeMission({ commit }, missionId) {
+      return MissionService.removeMission(missionId).then((data) => {
+        commit(types.REMOVE_MISSION, missionId);
         return data;
       });
     },

@@ -42,9 +42,9 @@ export default {
         return data;
       });
     },
-    removeVehicule({ commit }, vehicule) {
-      return VehiculeService.removeVehicule(vehicule).then((data) => {
-        commit(types.REMOVE_VEHICULE, data);
+    removeVehicule({ commit }, vehiculeId) {
+      return VehiculeService.removeVehicule(vehiculeId).then((data) => {
+        commit(types.REMOVE_VEHICULE, vehiculeId);
         return data;
       });
     },

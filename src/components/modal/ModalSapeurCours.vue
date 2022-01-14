@@ -144,7 +144,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Close
+        Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
         {{ addMode ? 'Ajouter' : 'Modifier' }}

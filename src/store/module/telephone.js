@@ -46,9 +46,9 @@ export default {
         return data;
       });
     },
-    removeTelephone({ commit }, telephone) {
-      return TelephoneService.removeTelephone(telephone).then((data) => {
-        commit(types.REMOVE_TELEPHONE, data);
+    removeTelephone({ commit }, telephoneId) {
+      return TelephoneService.removeTelephone(telephoneId).then((data) => {
+        commit(types.REMOVE_TELEPHONE, telephoneId);
         return data;
       });
     },

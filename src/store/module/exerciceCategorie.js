@@ -50,10 +50,10 @@ export default {
         }
       );
     },
-    removeExerciceCategorie({ commit }, categorie) {
-      return ExerciceCategorieService.removeCategorie(categorie).then(
+    removeExerciceCategorie({ commit }, categorieId) {
+      return ExerciceCategorieService.removeCategorie(categorieId).then(
         (data) => {
-          commit(types.REMOVE_EXERCICE_CATEGORIE, data);
+          commit(types.REMOVE_EXERCICE_CATEGORIE, categorieId);
           return data;
         }
       );

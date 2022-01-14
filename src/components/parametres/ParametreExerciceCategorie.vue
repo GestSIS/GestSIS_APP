@@ -59,7 +59,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteCategorie(c)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -108,6 +108,13 @@ export default {
         component: 'ModalExerciceCategorie',
         data: { ...categorie },
       });
+    },
+    deleteCategorie(categorie) {
+      this.$store
+        .dispatch('removeExerciceCategorie', categorie.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };

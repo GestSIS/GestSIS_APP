@@ -32,6 +32,10 @@
             </p>
             <p>Auteur : Bastien Wermeille</p>
             <p>
+              <!-- TODO: Ajout sujet par défault - Nom SIS -->
+              <a href="mailto:support@gestsis.ch">Contacter</a>
+            </p>
+            <p>
               GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
             </p>
           </div>

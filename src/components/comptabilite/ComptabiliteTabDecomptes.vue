@@ -62,33 +62,25 @@
           row-selected-class="table-primary"
         >
           <template v-slot:checkbox="{ key, value, rowData }">
-            <div class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :id="key + '-' + rowData.id"
-                :checked="value"
-                disabled
-              />
-              <label
-                class="form-check-label"
-                :for="key + '-' + rowData.id"
-              ></label>
-            </div>
+            <input
+              type="checkbox"
+              class="form-check-input"
+              :id="key + '-' + rowData.id"
+              :checked="value"
+              disabled
+            />
           </template>
           <template v-slot:actions="{ value }">
-            <div class="d-flex justify-content-center">
-              <button type="button" class="btn btn-outline-primary border-0">
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimer(value)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </div>
+            <button type="button" class="btn btn-outline-primary border-0">
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(value)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
           </template>
         </base-table>
       </div>
@@ -151,6 +143,7 @@ export default {
           key: 'deduction',
           sortKey: 'deduction',
           slot: 'checkbox',
+          columnClass: 'align-middle text-center',
         },
         {
           title: 'Charges AVS',
@@ -167,6 +160,7 @@ export default {
           titleClass: 'text-center',
           key: 'id',
           slot: 'actions',
+          columnClass: 'text-center align-middle',
         },
       ],
     };

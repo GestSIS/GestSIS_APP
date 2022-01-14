@@ -130,11 +130,17 @@ export default {
       return `${compte.numero} ${compte.designation}`;
     },
     ...mapMutations(['SHOW_MODAL']),
-    save() {
+    async save() {
       this.$store
         .dispatch('updateAvsParams', this.params)
-        .then(() => (this.errors = {}))
-        .catch((e) => (this.errors = { ...e }));
+        .then((res) => {
+          this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
+        })
+        .catch((e) => {
+          this.errors = { ...e };
+          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+        });
     },
   },
 };

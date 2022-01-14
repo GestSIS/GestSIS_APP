@@ -61,7 +61,7 @@
             <td>{{ exercice.info }}</td>
           </tr>
         </tbody>
-        <tbody v-if="groupes.length">
+        <tbody v-if="sapGroupes.length">
           <tr>
             <td>
               <input
@@ -76,7 +76,7 @@
             <td>Groupes</td>
             <td></td>
           </tr>
-          <tr v-for="groupe in groupes" :key="groupe.id">
+          <tr v-for="groupe in sapGroupes" :key="groupe.id">
             <td>
               <input
                 type="checkbox"
@@ -88,7 +88,7 @@
             <td>{{ groupe.no }}</td>
           </tr>
         </tbody>
-        <tbody v-if="fonctions.length">
+        <tbody v-if="sapFonctions.length">
           <tr>
             <td>
               <input
@@ -103,7 +103,7 @@
             <td>Fonctions</td>
             <td></td>
           </tr>
-          <tr v-for="fonction in fonctions" :key="fonction.id">
+          <tr v-for="fonction in sapFonctions" :key="fonction.id">
             <td>
               <input
                 type="checkbox"
@@ -136,8 +136,8 @@ export default {
   data() {
     return {
       exercices: [],
-      groupes: [],
-      fonctions: [],
+      sapGroupes: [],
+      sapFonctions: [],
       mutationDate: null,
       erreurs: {},
     };
@@ -189,12 +189,12 @@ export default {
       } : ${e.communications}`,
       selected: true,
     }));
-    this.groupes = this.activeSapeurGroupe.map((g) => ({
+    this.sapGroupes = this.activeSapeurGroupe.map((g) => ({
       ...this.groupes.find((f) => f.id == g.groupe_id),
       id: g.id,
       selected: true,
     }));
-    this.fonctions = this.activeSapeurFonction.map((f) => ({
+    this.sapFonctions = this.activeSapeurFonction.map((f) => ({
       ...this.fonctions.find((e) => e.id == f.fonction_id),
       debut: f.debut,
       id: f.id,
@@ -203,7 +203,7 @@ export default {
     }));
 
     // Récupère la date de la dernière mutation
-    if (this.fonctions.length) {
+    if (this.sapFonctions.length) {
       this.mutationDate = this.activeSapeurMutations.sort(
         (a, b) => new Date(b.sortie) - new Date(a.sortie)
       )[0].sortie;
@@ -235,9 +235,9 @@ export default {
     },
     save() {
       if (
-        this.fonctions.length > 0 &&
+        this.sapFonctions.length > 0 &&
         (!this.mutationDate ||
-          this.fonctions.some(
+          this.sapFonctions.some(
             (f) => new Date(f.debut) >= new Date(this.mutationDate)
           ))
       ) {
@@ -251,10 +251,10 @@ export default {
       let isSelected = (e) => e.selected;
       let mapToId = (e) => e.id;
 
-      if (this.fonctions.filter(isSelected).length) {
+      if (this.sapFonctions.filter(isSelected).length) {
         this.$store.dispatch('finFonctions', {
           fin: this.mutationDate,
-          ids: this.fonctions.filter(isSelected).map(mapToId),
+          ids: this.sapFonctions.filter(isSelected).map(mapToId),
         });
       }
       if (this.exercices.filter(isSelected).length) {
@@ -263,10 +263,10 @@ export default {
           this.exercices.filter(isSelected).map(mapToId)
         );
       }
-      if (this.groupes.filter(isSelected).length) {
+      if (this.sapGroupes.filter(isSelected).length) {
         this.$store.dispatch(
           'quitterGroupes',
-          this.groupes.filter(isSelected).map(mapToId)
+          this.sapGroupes.filter(isSelected).map(mapToId)
         );
       }
 
@@ -276,9 +276,9 @@ export default {
     selectGroupe(event, groupeId) {
       let state = event.target.checked;
       if (groupeId) {
-        this.groupes.find((g) => g.id == groupeId).selected = state;
+        this.sapGroupes.find((g) => g.id == groupeId).selected = state;
       } else {
-        this.groupes.forEach((e) => (e.selected = state));
+        this.sapGroupes.forEach((e) => (e.selected = state));
       }
     },
     selectExercice(event, exerciceId) {
@@ -292,9 +292,9 @@ export default {
     selectFonction(event, fonctionId) {
       let state = event.target.checked;
       if (fonctionId) {
-        this.fonctions.find((g) => g.id == fonctionId).selected = state;
+        this.sapFonctions.find((g) => g.id == fonctionId).selected = state;
       } else {
-        this.fonctions.forEach((e) => (e.selected = state));
+        this.sapFonctions.forEach((e) => (e.selected = state));
       }
     },
   },

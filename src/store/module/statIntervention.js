@@ -46,9 +46,9 @@ export default {
         return data;
       });
     },
-    removeStatIntervention({ commit }, stat) {
-      return StatInterventionService.removeStat(stat).then((data) => {
-        commit(types.REMOVE_STAT_INTERVENTION, data);
+    removeStatIntervention({ commit }, statId) {
+      return StatInterventionService.removeStat(statId).then((data) => {
+        commit(types.REMOVE_STAT_INTERVENTION, statId);
         return data;
       });
     },

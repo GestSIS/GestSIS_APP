@@ -93,9 +93,9 @@
                 class="form-check-input"
                 :id="sap.id + 'amende'"
                 v-model="sap.amende"
-                :true-value="1"
-                :false-value="0"
-                :disabled="!!(sap.remplace || sap.present)"
+                :true-value="true"
+                :false-value="false"
+                :disabled="!amendable || !!(sap.remplace || sap.present)"
               />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
@@ -161,6 +161,13 @@ export default {
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       heureTypes: (state) => state.heureExercice.liste,
       unites: (state) => state.unite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+      id: (state) => state.exercice.active.data?.exercice_categorie_id,
+      amendable: (state) =>
+        state.exerciceCategorie.liste.find(
+          (c) => c.id == state.exercice.active.data?.exercice_categorie_id
+        )?.amendable,
+
     }),
     canValidate() {
       return this.activeExerciceData.statut == 2;
@@ -299,7 +306,7 @@ export default {
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
     },
-    selectExcuse(sapeur) {
+    async selectExcuse(sapeur) {
       if (sapeur.excuse_type_id) {
         sapeur.excuse_type_id = null;
       }
@@ -313,7 +320,7 @@ export default {
             );
             sapeur.present = false;
             sapeur.remplace = false;
-            sapeur.amende = excuseType.amende;
+            sapeur.amende = this.amendable && excuseType.amende;
             sapeur.excuse_type_id = excuseTypeId;
           } else {
             sapeur.excuse_type_id = null;

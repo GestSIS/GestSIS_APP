@@ -63,12 +63,6 @@ const router = new Router({
       component: Public,
     },
     {
-      path: '/home',
-      name: 'public',
-      meta: { layout: 'empty', public: true },
-      component: Public,
-    },
-    {
       path: '/accueil',
       name: 'accueil',
       meta: { layout: 'no-sidebar' },

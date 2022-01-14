@@ -29,7 +29,6 @@ export default {
       state.users = [];
     },
     [types.AUTH_SUCCESSFULL](state, payload) {
-      // console.log("Auth login");
       TokenService.saveAccessToken(payload.accessToken);
       TokenService.saveRefreshToken(payload.refreshToken);
       TokenService.saveUser(payload.user);
@@ -143,11 +142,6 @@ export default {
     activePermissions: (state) => {
       return state.sis.permissions;
     },
-    activeSisData: (state) => {
-      return state.sis.liste.find(
-        (sis) => sis.api_key == state.sis.activeKey
-      );
-    },
     availableSisListe: (state) => {
       return state.sis.liste.filter((sis) =>
         state.sis.available.includes(sis.api_key)
@@ -190,9 +184,7 @@ export default {
     },
     loadSisListe({ commit, state }) {
       if (state.sis.liste.length <= 0) {
-        // console.log("load sis vuex")
         return AuthService.sisListe().then((sis) => {
-          // console.log("call commit")
           return commit(types.AUTH_SIS_LISTE, sis.data);
         });
       } else {

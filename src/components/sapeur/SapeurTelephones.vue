@@ -57,27 +57,22 @@
               </select>
             </td>
             <td class="align-middle text-center">
-              <div class="form-check text-center">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="t.priorite"
-                  v-model="t.rta"
-                />
-                <label class="form-check-label" :for="t.priorite"></label>
-              </div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="t.priorite"
+                v-model="t.rta"
+              />
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="removeTelephone(t.priorite)"
-                  required
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="removeTelephone(t.priorite)"
+                required
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </draggable>

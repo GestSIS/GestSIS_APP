@@ -104,10 +104,12 @@ const request = {
   },
 
   auth: () => {
+    // console.log("Create auth")
+    // console.log(axios.defaults.headers.common)
     let auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -126,7 +128,7 @@ const request = {
         return Promise.reject(error.response.data);
       }
     );
-
+    // console.log("Return auth")
     return auth;
   },
 };

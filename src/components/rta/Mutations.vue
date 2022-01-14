@@ -30,7 +30,7 @@
           />
         </div>
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
-          Mutate
+          Transfert RTA
         </button>
       </div>
       <div class="mb-3">
@@ -193,6 +193,8 @@ export default {
     ...mapState({
       reference: (state) =>
         state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+      activeSisData: (state) =>
+        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
       actuel: (state) =>
         state.rta.actuel
           .map((s) => ({
@@ -347,7 +349,6 @@ export default {
     },
   },
   methods: {
-    ...mapGetters(['activeSisData']),
     mutate() {
       if (!this.password) {
         this.errorsData.password = 'Mot de passe invalide';
@@ -374,7 +375,7 @@ export default {
         (m) => !unselected.has(m.sapeur_id)
       );
 
-      const sis = this.activeSisData().nom;
+      const sis = this.activeSisData.nom;
 
       const data = {
         sis,

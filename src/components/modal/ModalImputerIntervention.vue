@@ -56,7 +56,9 @@
                 <td>{{ indemnite.unite_id }}</td>
                 <td>
                   {{
-                    formatCompte(comptes((f) => f.id == indemnite.compte_id))
+                    formatCompte(
+                      comptes.find((f) => f.id == indemnite.compte_id)
+                    )
                   }}
                 </td>
                 <td>

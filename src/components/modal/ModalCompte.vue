@@ -12,7 +12,7 @@
         <input
           type="text"
           v-model="activeCompte.numero"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
           id="numero"
         />
@@ -22,24 +22,22 @@
         <input
           type="text"
           v-model="activeCompte.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
-      <div class="mb-3">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="fonction-actif-modal"
-            v-model="activeCompte.actif"
-          />
-          <label class="form-check-label" for="fonction-actif-modal"
-            >Actif</label
-          >
-        </div>
-      </div>
+      <base-select
+        class="mb-3"
+        label="Type"
+        valueKey="value"
+        displayKey="designation"
+        :options="[
+          { value: 0, designation: 'Passif' },
+          { value: 1, designation: 'Actif' },
+        ]"
+        v-model="activeCompte.actif"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

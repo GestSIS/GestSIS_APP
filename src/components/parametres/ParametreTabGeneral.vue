@@ -202,16 +202,18 @@ export default {
     formatSapeur(sapeur) {
       return `${sapeur?.nom} ${sapeur?.prenom}`;
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('updateSisParams', this.sisParam)
-        .then(() => {
+        .then((res) => {
           this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
         })
         .catch((errors) => {
           this.errors = {
             ...errors,
           };
+          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
         });
     },
   },

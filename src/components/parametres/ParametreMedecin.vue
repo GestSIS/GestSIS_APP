@@ -48,7 +48,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  disabled
+                  @click="deleteMedecin(m)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -100,6 +100,13 @@ export default {
     },
     updateMedecin(medecin) {
       this.SHOW_MODAL({ component: 'ModalMedecin', data: { ...medecin } });
+    },
+    deleteMedecin(medecin) {
+      this.$store
+        .dispatch('removeMedecin', medecin.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     localite(id) {
       return id ? this.listeLocalite.find((l) => l.id === id)?.designation : '';

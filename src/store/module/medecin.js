@@ -42,9 +42,9 @@ export default {
         return data;
       });
     },
-    removeMedecin({ commit }, medecin) {
-      return MedecinService.removeMedecin(medecin).then((data) => {
-        commit(types.REMOVE_MEDECIN, data);
+    removeMedecin({ commit }, medecinId) {
+      return MedecinService.removeMedecin(medecinId).then((data) => {
+        commit(types.REMOVE_MEDECIN, medecinId);
         return data;
       });
     },
