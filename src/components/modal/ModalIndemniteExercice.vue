@@ -130,7 +130,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-if="activeIndemnite.fonctions.length">
+              <tr v-if="!activeIndemnite.fonctions.length">
                 <td colspan="3">Aucune fonction paramétrée</td>
               </tr>
               <tr
