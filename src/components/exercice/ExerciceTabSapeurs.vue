@@ -319,7 +319,7 @@ export default {
             );
             sapeur.present = false;
             sapeur.remplace = false;
-            sapeur.amende = excuseType.amende;
+            sapeur.amende = this.amendable && excuseType.amende;
             sapeur.excuse_type_id = excuseTypeId;
           } else {
             sapeur.excuse_type_id = null;
