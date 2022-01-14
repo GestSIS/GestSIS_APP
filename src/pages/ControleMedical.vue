@@ -57,7 +57,7 @@
                 v-model="controleMedical.sapeur_id"
               >
                 <option
-                  v-for="sapeur in listeSapeurs"
+                  v-for="sapeur in sapeurs"
                   :key="sapeur.id"
                   :value="sapeur.id"
                 >
@@ -316,6 +316,11 @@ export default {
         this.pdfData = null;
       }
     },
+    expirable(next) {
+      if (!next) {
+        this.controleMedical.validite = null;
+      }
+    },
   },
   data() {
     return {
@@ -381,16 +386,31 @@ export default {
         this.pdfData = response.data;
       });
     },
-    save() {
+    async save() {
       if (this.modeAjout) {
         // Ajout d'un nouveau controle-médical
         const router = this.$router;
-        this.$store.dispatch('createControleMedical').then((res) => {
-          router.push({ name: 'controle-medical', params: { id: res.id } });
-        });
+        this.$store
+          .dispatch('createControleMedical')
+          .then((res) => {
+            router.push({ name: 'controle-medical', params: { id: res.id } });
+          })
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       } else {
         // Sauvegarder les changements
-        this.$store.dispatch('updateControleMedical');
+        this.$store
+          .dispatch('updateControleMedical')
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       }
     },
     ajoutJustificatif() {

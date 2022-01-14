@@ -81,11 +81,11 @@
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </router-link>
                 <button
-                  class="btn btn-outline-primary border-0"
-                  v-if="props.rowData.statut === 2"
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimer(props.rowData)"
                 >
-                  <!-- @click="aa(props.rowData.id)" -->
-                  <font-awesome-icon :icon="['fas', 'check']" />
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
               </div>
             </template>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -218,38 +218,60 @@ export default {
     }),
     computedData() {
       const now = Date.now();
-      return this.listeControlesMedicaux.map((s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
-        const age = Math.floor(
-          (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-            1000 /
-            (60 * 60 * 24) /
-            365.25
-        );
-        return {
-          ...s,
-          sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
-          age,
-          type: this.types.find((t) => t.id == s.controle_medical_type_id)
-            ?.designation,
-          medecin: this.medecins.find((m) => m.id == s.medecin_id)?.designation,
-        };
-      });
+      return this.listeControlesMedicaux
+        .map((s) => {
+          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
+          const age = Math.floor(
+            (now - new Date(sapeur?.date_naissance || 0).getTime()) /
+              1000 /
+              (60 * 60 * 24) /
+              365.25
+          );
+          return {
+            ...s,
+            sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
+            age,
+            type: this.types.find((t) => t.id == s.controle_medical_type_id)
+              ?.designation,
+            medecin: this.medecins.find((m) => m.id == s.medecin_id)
+              ?.designation,
+          };
+        })
+        .sort((a, b) => a.sapeur.localeCompare(b.sapeur));
     },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     selected(id) {
       this.selectedId = id;
     },
     downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
     },
+    async supprimer(controle) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce contrôle médical ?',
+          question:
+            "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeControleMedical', controle.id);
+          }
+        },
+      });
+    },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {
         return;
       }
 
-      // TODO: update pour mettre en évidence les contrôles-médicaux voulus
+      if (dataItem.validite && Date.parse(dataItem.validite) < new Date()) {
+        return 'table-danger';
+      }
+      // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
       // const statutsClass = {
       //   0: 'text-danger', //'Annulé',
       //   1: '', //'A saisir',

@@ -199,7 +199,10 @@ export default {
   data() {
     return {
       errors: {},
-      activeIndemnite: {},
+      activeIndemnite: {
+        phase_id: 0,
+        par_fonction: 0,
+      },
       imputationType: 1,
     };
   },

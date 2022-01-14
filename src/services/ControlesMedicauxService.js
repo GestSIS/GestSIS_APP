@@ -17,6 +17,9 @@ export default {
       ...controleData,
     });
   },
+  removeControleMedical(id) {
+    return Api.api().delete('/controles-medicaux/' + id);
+  },
   addJustificatif(id, file) {
     const form = new FormData();
     form.append('justificatif', file);

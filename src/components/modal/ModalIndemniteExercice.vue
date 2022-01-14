@@ -190,12 +190,13 @@ export default {
       errors: {},
       activeIndemnite: {
         fonctions: [],
+        par_fonction: false,
       },
     };
   },
   mounted() {
     const base = Object.fromEntries(
-      this.activeIndemnite.fonctions.map((f) => [f.fonction_id, f])
+      this.data.fonctions.map((f) => [f.fonction_id, f])
     );
     const data = Object.fromEntries(
       this.fonctions.map((f) => [
@@ -211,6 +212,7 @@ export default {
     const fonctions = Object.values(objects).sort((a, b) => b.tri - a.tri);
 
     this.activeIndemnite = {
+      ...this.activeIndemnite,
       ...this.data,
       fonctions: fonctions,
     };
@@ -259,7 +261,7 @@ export default {
         fonctions,
       };
 
-      if ((indemnite || 0) === 0) {
+      if ((indemnite.id || 0) === 0) {
         this.$store
           .dispatch('addIndemniteExercice', indemnite)
           .then(() => {
