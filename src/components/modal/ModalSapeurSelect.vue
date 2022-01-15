@@ -187,9 +187,9 @@
             </thead>
             <tbody v-if="groupBy == 'none'">
               <tr
-                v-for="item in availableSapeurs.map((id) =>
-                  sapeurs.find((s) => s.id == id)
-                )"
+                v-for="item in availableSapeurs
+                  .map((id) => sapeurs.find((s) => s.id == id))
+                  .filter((s) => s && s.actif)"
                 :key="item.id"
                 :class="{
                   'table-primary': selectedSapeurs.includes(item.id),

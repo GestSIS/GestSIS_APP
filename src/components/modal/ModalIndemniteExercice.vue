@@ -196,7 +196,7 @@ export default {
   },
   mounted() {
     const base = Object.fromEntries(
-      this.data.fonctions.map((f) => [f.fonction_id, f])
+      (this.data.fonctions || []).map((f) => [f.fonction_id, f])
     );
     const data = Object.fromEntries(
       this.fonctions.map((f) => [

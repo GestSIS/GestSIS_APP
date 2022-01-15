@@ -13,7 +13,7 @@
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
-          @change="dateChange"
+          @focusout="dateChange"
         />
       </div>
       <div class="mb-3">
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalSapeurCours',

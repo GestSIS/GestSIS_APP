@@ -167,7 +167,6 @@ export default {
         state.exerciceCategorie.liste.find(
           (c) => c.id == state.exercice.active.data?.exercice_categorie_id
         )?.amendable,
-
     }),
     canValidate() {
       return this.activeExerciceData.statut == 2;
@@ -247,7 +246,7 @@ export default {
 
         return new Promise((resolve, reject) => {
           let newSapeurs = ajoute.map((s) => ({
-            convoque: false,
+            convoque: true,
             present: false,
             remplace: false,
             excuse_type_id: null,
