@@ -13,7 +13,7 @@
           <tr>
             <th>Numéro</th>
             <th>Désignation</th>
-            <th>Type (Actif/Passif)</th>
+            <th class="test-center">Type (Actif/Passif)</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
