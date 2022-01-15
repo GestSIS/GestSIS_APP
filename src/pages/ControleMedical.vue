@@ -209,7 +209,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-8 col-12">
+      <div class="col-lg-8 col-12" v-if="controleMedical.id">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Document</h5>

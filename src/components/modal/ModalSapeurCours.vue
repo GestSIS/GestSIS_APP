@@ -249,7 +249,7 @@ export default {
       this.activeCours.fonction_sapeur_id = 0;
 
       if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.fonctions(
+        let fonction = this.fonctions.find(
           (f) => f.id == this.activeCours.fonction_id
         );
         if (fonction.cumulable === 0) {
