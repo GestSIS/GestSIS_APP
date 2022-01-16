@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import Notifications from 'vue-notification';
 import App from './App.vue';
 import router from './router/index';
 import types from './store/mutationTypes';
@@ -14,7 +13,6 @@ import NoSidebar from './layouts/NoSidebar';
 // External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Tooltip from 'vue-directive-tooltip';
-import Datetime from 'vue-datetime';
 import VueAWN from 'vue-awesome-notifications';
 
 // External css dependencies
@@ -26,9 +24,6 @@ require('./assets/sass/main.scss');
 require('./icons');
 
 import bootstrap from 'bootstrap'
-
-// You need a specific loader for CSS files
-import 'vue-datetime/dist/vue-datetime.css';
 
 // Base components
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
@@ -43,7 +38,6 @@ Vue.component('base-checkbox', BaseCheckbox);
 Vue.component('base-radio', BaseRadio);
 Vue.component('base-multi-unselect', BaseMultiUnselect);
 
-Vue.component('datetime', Datetime);
 Vue.component('default-layout', Default);
 Vue.component('empty-layout', Empty);
 Vue.component('no-sidebar-layout', NoSidebar);
@@ -59,9 +53,6 @@ Vue.use(VueAWN, {
   }
 });
 Vue.use(Tooltip);
-Vue.use(Datetime);
-Vue.use(Notifications);
-//Vue.use(VueTimepicker)
 
 Vue.filter('sapeur', function (sapeur) {
   if (!sapeur) return '';
