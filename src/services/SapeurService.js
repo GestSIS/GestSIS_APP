@@ -40,27 +40,26 @@ export default {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
   },
   fetchPhoto(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/photo',
-      {
-        responseType : 'blob'
-      }
-    ).then(data=>{
-      if(data?.type == 'application/json'){
-        return null;
-      } else {
-        return URL.createObjectURL(data);
-      }
-    });
+    return Api.api()
+      .get('/sapeurs/' + sapeurId + '/photo', {
+        responseType: 'blob',
+      })
+      .then((data) => {
+        if (data?.type == 'application/json') {
+          return null;
+        } else {
+          return URL.createObjectURL(data);
+        }
+      });
   },
   updatePhoto(sapeurId, photo) {
     const formData = new FormData();
     formData.append('image', photo);
 
-    return Api.api().post('/sapeurs/' + sapeurId + '/photo', formData,
-    {
+    return Api.api().post('/sapeurs/' + sapeurId + '/photo', formData, {
       headers: {
-          'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
   },
   deletePhoto(sapeurId) {

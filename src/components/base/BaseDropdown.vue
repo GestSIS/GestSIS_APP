@@ -47,9 +47,10 @@ export default {
     let self = this;
     this.listener = function (e) {
       // close dropdown when clicked outside
-      if (!self.$el.contains(e.target)) {
-        self.dropdown = false;
-      }
+      //FIXME: vue3 fix
+      // if (!self.$el.contains(e.target)) {
+      //   self.dropdown = false;
+      // }
     };
     document.addEventListener('click', this.listener);
   },

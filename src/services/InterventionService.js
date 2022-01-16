@@ -58,12 +58,9 @@ export default {
     });
   },
   removeMateriel(interventionId, materielId) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/materiels',
-      {
-        data: { materiels: [materielId] },
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/materiels', {
+      data: { materiels: [materielId] },
+    });
   },
 
   //Vehicules
@@ -73,12 +70,9 @@ export default {
     });
   },
   removeVehicules(interventionId, vehiculesId) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/vehicules',
-      {
-        data: { vehicules: vehiculesId },
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/vehicules', {
+      data: { vehicules: vehiculesId },
+    });
   },
 
   //Groupes

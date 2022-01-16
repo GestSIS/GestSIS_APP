@@ -3,9 +3,9 @@ import StatistiqueService from '../../services/StatistiqueService';
 
 export default {
   state: {
-    materiels:[],
-    vehicules:[],
-    presences:[],
+    materiels: [],
+    vehicules: [],
+    presences: [],
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
@@ -39,5 +39,5 @@ export default {
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_PRESENCE, data));
     },
-  }
+  },
 };

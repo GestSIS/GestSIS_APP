@@ -23,15 +23,11 @@ export default {
   addJustificatif(id, file) {
     const form = new FormData();
     form.append('justificatif', file);
-    return Api.api().post(
-      '/controles-medicaux/' + id + '/justificatif',
-      form,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
+    return Api.api().post('/controles-medicaux/' + id + '/justificatif', form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   },
   downloadJustificatif(controleMedicalId, filename) {
     return Api.apiFileDownload(filename).get(

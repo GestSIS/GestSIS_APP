@@ -126,20 +126,23 @@ export default {
       state.active.fonctions = [...state.active.fonctions, fonction];
       state.active.data.fonction_id = main_fonction_id;
     },
-    [types.EDIT_CURRENT_SAPEUR_FONCTION](state, { fonction, main_fonction_id }) {
+    [types.EDIT_CURRENT_SAPEUR_FONCTION](
+      state,
+      { fonction, main_fonction_id }
+    ) {
       state.active.fonctions = [
         ...state.active.fonctions.filter((p) => p.id !== fonction.id),
         fonction,
       ];
       state.active.data.fonction_id = main_fonction_id;
     },
-    [types.REMOVE_CURRENT_SAPEUR_FONCTION](state, {id, main_fonction_id}) {
+    [types.REMOVE_CURRENT_SAPEUR_FONCTION](state, { id, main_fonction_id }) {
       state.active.fonctions = state.active.fonctions.filter(
         (p) => p.id !== id
       );
       state.active.data.fonction_id = main_fonction_id;
     },
-    
+
     [types.ADD_CURRENT_SAPEUR_GRADE](state, { grade, main_grade_id }) {
       state.active.grades = [...state.active.grades, grade];
       state.active.data.grade_id = main_grade_id;
@@ -155,8 +158,11 @@ export default {
       state.active.grades = state.active.grades.filter((p) => p.id !== id);
       state.active.data.grade_id = main_grade_id;
     },
-    
-    [types.ADD_CURRENT_SAPEUR_COURS](state, { cours, main_fonction_id, main_grade_id }) {
+
+    [types.ADD_CURRENT_SAPEUR_COURS](
+      state,
+      { cours, main_fonction_id, main_grade_id }
+    ) {
       state.active.cours = [...state.active.cours, cours];
       state.active.data.fonction_id = main_fonction_id;
       state.active.data.grade_id = main_grade_id;
@@ -170,7 +176,7 @@ export default {
     [types.REMOVE_CURRENT_SAPEUR_COURS](state, payload) {
       state.active.cours = state.active.cours.filter((c) => c.id !== payload);
     },
-    
+
     [types.ADD_CURRENT_SAPEUR_MUTATION](state, { mutation, actif }) {
       state.active.mutations = [...state.active.mutations, mutation];
       state.liste = state.liste.map((s) => {
@@ -375,7 +381,10 @@ export default {
     removeSapeurFonction({ state, commit }, fonctionId) {
       return SapeurService.removeFonction(state.active.id, fonctionId).then(
         (data) => {
-          commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, { id: fonctionId, main_fonction_id: data.main_fonction_id });
+          commit(types.REMOVE_CURRENT_SAPEUR_FONCTION, {
+            id: fonctionId,
+            main_fonction_id: data.main_fonction_id,
+          });
           return data;
         }
       );
@@ -400,7 +409,10 @@ export default {
     removeSapeurGrade({ state, commit }, gradeId) {
       return SapeurService.removeGrade(state.active.data.id, gradeId).then(
         (data) => {
-          commit(types.REMOVE_CURRENT_SAPEUR_GRADE, { id: gradeId, main_grade_id: data.main_grade_id });
+          commit(types.REMOVE_CURRENT_SAPEUR_GRADE, {
+            id: gradeId,
+            main_grade_id: data.main_grade_id,
+          });
           return data;
         }
       );

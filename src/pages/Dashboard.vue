@@ -20,12 +20,7 @@
               >
                 <div class="card-body w-100">
                   <div
-                    class="
-                      d-flex
-                      justify-content-center
-                      flex-column
-                      align-items-center
-                    "
+                    class="d-flex justify-content-center flex-column align-items-center"
                   >
                     <font-awesome-icon :icon="m.icon" size="2x" />
                     <h3 class="h4 card-title mt-3">{{ m.nom }}</h3>

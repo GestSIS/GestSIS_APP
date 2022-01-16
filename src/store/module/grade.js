@@ -41,7 +41,7 @@ export default {
   },
   actions: {
     fetchGrades({ commit, state }) {
-      if (state.liste.length){
+      if (state.liste.length) {
         return Promise.resolve();
       }
       return GradeService.getGrades().then((data) =>
