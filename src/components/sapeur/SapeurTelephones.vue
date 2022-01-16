@@ -30,51 +30,57 @@
         <tr v-if="telephones.length <= 0">
           <td colspan="5">Aucun numéro enregistré</td>
         </tr>
-        <draggable tag="tbody" v-model="telephones">
-          <tr v-for="t in telephones" :key="t.id">
-            <td
-              class="text-center"
-              :class="{ 'd-none': telephones.length <= 1 }"
-            >
-              {{ t.priorite }}
-            </td>
-            <td>
-              <input
-                class="form-control form-control-sm"
-                type="text"
-                v-model="t.numero"
-                placeholder="..."
-              />
-            </td>
-            <td>
-              <select
-                class="form-select form-select-sm"
-                v-model="t.telephone_type_id"
+        <draggable tag="tbody" v-model="telephones" item-key="id">
+          <template #item="{ t }">
+            <tr>
+              <td
+                class="text-center"
+                :class="{ 'd-none': telephones.length <= 1 }"
               >
-                <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
-                  {{ t.type }}
-                </option>
-              </select>
-            </td>
-            <td class="align-middle text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :id="t.priorite"
-                v-model="t.rta"
-              />
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="removeTelephone(t.priorite)"
-                required
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
+                {{ t.priorite }}
+              </td>
+              <td>
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  v-model="t.numero"
+                  placeholder="..."
+                />
+              </td>
+              <td>
+                <select
+                  class="form-select form-select-sm"
+                  v-model="t.telephone_type_id"
+                >
+                  <option
+                    v-for="t in telephonesTypes"
+                    :value="t.id"
+                    :key="t.id"
+                  >
+                    {{ t.type }}
+                  </option>
+                </select>
+              </td>
+              <td class="align-middle text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  :id="t.priorite"
+                  v-model="t.rta"
+                />
+              </td>
+              <td class="align-middle text-center">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="removeTelephone(t.priorite)"
+                  required
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </td>
+            </tr>
+          </template>
         </draggable>
       </table>
       <button

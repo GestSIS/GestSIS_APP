@@ -102,7 +102,7 @@ export default {
             this.HIDE_MODAL();
           })
           .catch((err) => {
-            this.$awn.error(
+            this.$awn.alert(
               err?.message || "Erreur lors de la modification de l'image"
             );
           });

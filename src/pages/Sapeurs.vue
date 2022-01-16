@@ -63,16 +63,23 @@
           </div>
           <ul class="list-group list-group-flush" id="liste-sapeurs">
             <router-link
+              custom
+              v-slot="{ navigate }"
               v-for="sapeur in filteredSapeurs"
-              tag="li"
               :to="`/sapeurs/${sapeur.id}`"
               :key="sapeur.id"
-              class="list-group-item list-group-item-action"
-              :class="{
-                active: activeSapeurId === sapeur.id,
-              }"
             >
-              {{ sapeur.nom }} {{ sapeur.prenom }}
+              <li
+                class="list-group-item list-group-item-action"
+                :class="{
+                  active: activeSapeurId === sapeur.id,
+                }"
+                @click="navigate"
+                @keypress.enter="navigate"
+                role="link"
+              >
+                {{ sapeur.nom }} {{ sapeur.prenom }}
+              </li>
             </router-link>
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">
               Aucun sapeur

@@ -14,7 +14,7 @@ import NoSidebar from './layouts/NoSidebar';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Tooltip from 'vue-directive-tooltip';
 // import VueAWN from 'vue-awesome-notifications';
-// import VueAWN from './plugins/vue-awesome-notifications';
+import VueAWN from './plugins/vue-awesome-notifications';
 
 // External css dependencies
 import 'vue-directive-tooltip/src/css/index.scss';
@@ -86,13 +86,13 @@ router.beforeEach((to, from, next) => {
 const app = createApp(App)
 app.use(router)
 app.use(store)
-// app.use(VueAWN, {
-//     labels: {
-//       success: 'Succès',
-//       warning: 'Attention',
-//       alert: 'Erreur',
-//     },
-//   });
+app.use(VueAWN, {
+    labels: {
+      success: 'Succès',
+      warning: 'Attention',
+      alert: 'Erreur',
+    },
+  });
 app.use(Tooltip);
 
 app.component('base-dropdown', BaseDropdown);
@@ -103,6 +103,6 @@ app.component('base-multi-unselect', BaseMultiUnselect);
 app.component('default-layout', Default);
 app.component('empty-layout', Empty);
 app.component('no-sidebar-layout', NoSidebar);
-// app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('font-awesome-icon', FontAwesomeIcon);
 
 app.mount('#app');

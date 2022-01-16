@@ -1,4 +1,5 @@
 <script>
+//FIXME: vue 3
 export default {
   name: 'TransitionExpand',
   functional: true,
