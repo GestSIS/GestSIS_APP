@@ -1,74 +1,72 @@
+
+<script setup>
+import { ref, onMounted, onUnmounted, defineProps, defineExpose } from 'vue'
+
+const props = defineProps({
+  tag: {
+    type: String,
+    default: () => 'div',
+  },
+  buttonClass: {
+    type: String,
+    default: () => '',
+  },
+  menuClass: {
+    type: String,
+    default: () => '',
+  },
+  title: {
+    type: String,
+    default: () => '',
+  },
+})
+
+const dropdown = ref(false);
+const listener = ref(null);
+const root = ref(null);
+
+onMounted(() => {
+  listener.value = function (e) {
+    // close dropdown when clicked outside
+    if (!root.value.contains(e.target)) {
+      dropdown.value = false;
+    }
+  };
+  document.addEventListener('click', listener.value);
+})
+onUnmounted(() => {
+  document.removeEventListener('click', listener.value);
+})
+
+// Methods for manipulations from outside
+const close = () => {
+  dropdown.value = false;
+}
+const open = () => {
+  dropdown.value = true
+}
+const trigger = () => {
+  dropdown.value = !dropdown.value
+}
+defineExpose({
+  close, open, trigger
+})
+</script>
+
 <template>
-  <component :is="tag" class="nav-item dropdown">
+  <component :is="tag" class="nav-item dropdown" ref="root">
     <button
       class="dropdown-toggle"
       :class="buttonClass"
-      @click="dropdown = !dropdown"
+      @click.prevent="dropdown = !dropdown"
       data-bs-toggle="dropdown"
     >
-      <slot name="title">
-        {{ title }}
-      </slot>
+      <slot name="title">{{ title }}</slot>
     </button>
     <div class="dropdown-menu" :class="[dropdown ? 'show' : '', menuClass]">
       <slot name="default"></slot>
     </div>
   </component>
 </template>
-
-<script>
-export default {
-  name: 'BaseDropdown',
-  props: {
-    tag: {
-      type: String,
-      default: () => 'div',
-    },
-    buttonClass: {
-      type: String,
-      default: () => '',
-    },
-    menuClass: {
-      type: String,
-      default: () => '',
-    },
-    title: {
-      type: String,
-      default: () => '',
-    },
-  },
-  data() {
-    return {
-      dropdown: false,
-      listener: null,
-    };
-  },
-  created() {
-    let self = this;
-    this.listener = function (e) {
-      // close dropdown when clicked outside
-      //FIXME: vue3 fix
-      // if (!self.$el.contains(e.target)) {
-      //   self.dropdown = false;
-      // }
-    };
-    document.addEventListener('click', this.listener);
-  },
-  destroy() {
-    document.removeEventListener('click', this.listener);
-  },
-  methods: {
-    close() {
-      this.dropdown = false;
-    },
-    open() {
-      this.dropdown = true;
-    },
-    trigger() {
-      this.dropdown = !this.dropdown;
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped></style>
