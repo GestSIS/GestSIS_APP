@@ -1,3 +1,18 @@
+<template>
+  <component :is="tag" class="nav-item dropdown" ref="root">
+    <button
+      class="dropdown-toggle"
+      :class="buttonClass"
+      @click.prevent="dropdown = !dropdown"
+      data-bs-toggle="dropdown"
+    >
+      <slot name="title">{{ title }}</slot>
+    </button>
+    <div class="dropdown-menu" :class="[dropdown ? 'show' : '', menuClass]">
+      <slot name="default"></slot>
+    </div>
+  </component>
+</template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, defineProps, defineExpose } from 'vue'
@@ -52,21 +67,5 @@ defineExpose({
   close, open, trigger
 })
 </script>
-
-<template>
-  <component :is="tag" class="nav-item dropdown" ref="root">
-    <button
-      class="dropdown-toggle"
-      :class="buttonClass"
-      @click.prevent="dropdown = !dropdown"
-      data-bs-toggle="dropdown"
-    >
-      <slot name="title">{{ title }}</slot>
-    </button>
-    <div class="dropdown-menu" :class="[dropdown ? 'show' : '', menuClass]">
-      <slot name="default"></slot>
-    </div>
-  </component>
-</template>
 
 <style lang="scss" scoped></style>
