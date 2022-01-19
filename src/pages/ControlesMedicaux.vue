@@ -25,12 +25,11 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des contrôles médicaux</h3>
-            <router-link
-              tag="button"
-              to="/controles-medicaux/ajout"
-              class="btn btn-outline-primary"
-            >
-              Ajouter
+            <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Ajouter</button>
             </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">

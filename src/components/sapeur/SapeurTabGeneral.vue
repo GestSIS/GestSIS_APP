@@ -337,7 +337,7 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
-    saveSapeur() {
+    async saveSapeur() {
       let fields = [
         'civilite_id',
         'nom',
@@ -370,7 +370,7 @@ export default {
           this.errorsData = err;
         });
     },
-    saveSapeurRefPro() {
+    async saveSapeurRefPro() {
       this.$store
         .dispatch('saveActiveSapeur', {
           profession: this.activeSapeur.profession,

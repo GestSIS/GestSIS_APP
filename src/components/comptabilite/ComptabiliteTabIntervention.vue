@@ -121,6 +121,7 @@
 <script>
 import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
+import { markRaw } from 'vue';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 import ImputationService from '@/services/ImputationService';
@@ -177,7 +178,7 @@ export default {
         { id: 3, designation: 'Moyenne' },
         { id: 4, designation: 'Grande' },
       ],
-      detailRow: FraisEcritureDetails,
+      detailRow: markRaw(FraisEcritureDetails),
       loading: true,
       filters: {},
       selectedId: null,

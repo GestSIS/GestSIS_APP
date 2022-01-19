@@ -23,18 +23,20 @@
             <h5>Actions</h5>
           </div>
           <form class="card-body d-grid gap-2">
-            <router-link
-              tag="button"
-              to="/exercices/new"
-              class="btn btn-outline-primary"
-            >Ajouter un exercice</router-link>
-            <router-link
-              tag="button"
-              :disabled="!selectedId"
-              :to="'/exercices/' + selectedId"
-              class="btn btn-outline-primary"
-            >Modifier</router-link>
-            <button class="btn btn-outline-primary" @click="convoquer">Convoquer</button>
+            <router-link custom to="/exercices/new" v-slot="{ navigate }">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Ajouter un exercice</button>
+            </router-link>
+            <router-link custom :to="'/exercices/' + selectedId" v-slot="{ navigate }">
+              <button
+                :disabled="!selectedId"
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Modifier</button>
+            </router-link>
+            <button class="btn btn-outline-primary" :disabled="exercices.length" @click="convoquer">Convoquer</button>
           </form>
         </div>
       </div>
@@ -186,6 +188,7 @@
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
+import { markRaw } from 'vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
@@ -238,7 +241,7 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      detailRow: ExerciceDetails,
+      detailRow: markRaw(ExerciceDetails),
       fieldsBase: [
         {
           title: '',

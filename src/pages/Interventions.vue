@@ -23,17 +23,19 @@
             <h5>Actions</h5>
           </div>
           <form class="card-body d-grid gap-1">
-            <router-link
-              tag="button"
-              to="/interventions/new"
-              class="btn btn-outline-primary"
-            >Ajouter une intervention</router-link>
-            <router-link
-              tag="button"
-              :disabled="!selectedId"
-              :to="'/interventions/' + selectedId"
-              class="btn btn-outline-primary"
-            >Modifier</router-link>
+            <router-link custom to="/interventions/new" v-slot="{ navigate }">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Ajouter une intervention</button>
+            </router-link>
+            <router-link custom :to="'/interventions/' + selectedId" v-slot="{ navigate }">
+              <button
+                :disabled="!selectedId"
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Modifier</button>
+            </router-link>
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
@@ -172,11 +174,7 @@
             row-selected-class="table-primary"
           >
             <template v-slot:actions="props">
-              <router-link
-                :to="'/interventions/' + props.rowData.id"
-                custom
-                v-slot="{ navigate }"
-              >
+              <router-link :to="'/interventions/' + props.rowData.id" custom v-slot="{ navigate }">
                 <button class="btn btn-outline-primary border-0" @click="navigate">
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>

@@ -55,7 +55,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import { markRaw } from 'vue';
 import store from '@/store/index';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 
@@ -111,7 +112,7 @@ export default {
   data() {
     let svm = this;
     return {
-      detailRow: FraisEcritureDetails,
+      detailRow: markRaw(FraisEcritureDetails),
       loading: true,
       selectedId: null,
       ecritureColumns: [

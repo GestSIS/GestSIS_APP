@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
+import { markRaw } from 'vue';
 import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
 
 import BaseTable from '@/components/table/BaseTable.vue';
@@ -88,7 +89,7 @@ export default {
   },
   data() {
     return {
-      detailRow: AmendesSapeurDetails,
+      detailRow: markRaw(AmendesSapeurDetails),
       loading: true,
       filters: {},
       amendeColumns: [
