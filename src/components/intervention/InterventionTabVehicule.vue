@@ -85,7 +85,7 @@ export default {
     },
   },
   methods: {
-    save() {
+    async save() {
       let vehiculesIds = this.interventionVehicules.map((v) => v.vehicule_id);
       let ids = Object.keys(this.selected)
         .filter((item) => this.selected[item])

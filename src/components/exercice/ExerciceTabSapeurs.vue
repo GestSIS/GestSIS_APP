@@ -200,7 +200,7 @@ export default {
         heure.quantite = parseFloat(quantite) || null;
       }
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('editSapeurs', this.activeExerciceSapeurs)
         .then((res) =>
@@ -210,7 +210,7 @@ export default {
           this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
         );
     },
-    validate() {
+    async validate() {
       this.$store
         .dispatch('validerExercice', this.activeExerciceId)
         .then((res) =>

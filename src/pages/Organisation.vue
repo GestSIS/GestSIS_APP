@@ -301,7 +301,7 @@ export default {
         this.groupeEdit = {};
       }
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('updateGroupe', {
           groupeId: this.groupeEdit.id,

@@ -442,7 +442,7 @@ export default {
     },
   },
   methods: {
-    save() {
+    async save() {
       if (this.newMode) {
         this.$store
           .dispatch('createIntervention', this.activeInterventionData)

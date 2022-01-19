@@ -123,7 +123,7 @@ export default {
     localite(localite) {
       return localite?.designation;
     },
-    save() {
+    async save() {
       if ((this.activeMateriel.id || 0) === 0) {
         this.$store
           .dispatch('addMateriel', this.activeMateriel)

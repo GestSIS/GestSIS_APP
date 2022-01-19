@@ -203,20 +203,30 @@ export default {
     );
   },
   methods: {
-    save() {
+    async save() {
       if (this.newMode) {
         this.$store
           .dispatch('createExercice', this.activeExerciceData)
           .then((data) => {
             this.$router.push('/exercices/' + data.id);
             this.errors = {};
+            this.$awn.success(res?.message || 'Modifications enregistrées')
           })
-          .catch((errors) => (this.errors = errors));
+          .catch((err) =>{
+            this.errors = err
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          });
       } else {
         this.$store
           .dispatch('saveActiveExercice', this.activeExerciceData)
-          .then(() => (this.errors = {}))
-          .catch((errors) => (this.errors = errors));
+          .then((res) => {
+            this.errors = {}
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          })
+          .catch((err) =>{
+            this.errors = err
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          });
       }
     },
     formatHeure(value) {

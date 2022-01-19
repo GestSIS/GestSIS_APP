@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeMateriel.id || 0) === 0) {
         this.$store
           .dispatch('addInterventionMateriel', this.activeMateriel)

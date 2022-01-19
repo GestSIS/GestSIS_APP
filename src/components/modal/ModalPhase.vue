@@ -159,7 +159,7 @@ export default {
     roundHour() {
       this.heure = this.roundTime(this.heure, 15);
     },
-    save() {
+    async save() {
       if (!this.heure || !this.date) {
         this.errors = { ...this.errors, debut: 'Données invalide' };
       }

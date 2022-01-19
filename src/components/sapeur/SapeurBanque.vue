@@ -37,7 +37,7 @@ export default {
     ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },
   methods: {
-    save() {
+    async save() {
       this.$store
         .dispatch('saveActiveSapeur', {
           iban: this.activeSapeur.iban,

@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.role.id || 0) === 0) {
         this.$store
           .dispatch('createRole', this.role)

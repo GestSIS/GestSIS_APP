@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeMission.id || 0) === 0) {
         this.$store
           .dispatch('addMission', this.activeMission)

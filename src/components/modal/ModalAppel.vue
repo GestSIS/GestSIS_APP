@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       //Format back dates to SQL Format
       this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
         this.format

@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
-    save() {
+    async save() {
       if ((this.activeMutation.id || 0) === 0) {
         this.$store
           .dispatch('addMutation', this.activeMutation)

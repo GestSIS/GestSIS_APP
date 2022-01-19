@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       this.$store
         .dispatch('createGroupe', this.groupe)
         .then(() => {

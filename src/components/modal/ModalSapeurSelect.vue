@@ -419,7 +419,7 @@ export default {
       this.callback(null);
       this.HIDE_MODAL();
     },
-    save() {
+    async save() {
       // Sapeurs ajoutés
       const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
       // Sapeurs supprimés

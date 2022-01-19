@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       let saveData = Object.assign({}, this.activeCours);
       Object.keys(saveData).map((key) => {
         saveData[key] =

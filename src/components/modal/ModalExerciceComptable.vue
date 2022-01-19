@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeExercice.id || 0) === 0) {
         this.$store
           .dispatch('addExerciceComptable', this.activeExercice)

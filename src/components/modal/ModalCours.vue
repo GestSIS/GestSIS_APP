@@ -152,7 +152,7 @@ export default {
     localite(localite) {
       return localite?.designation;
     },
-    save() {
+    async save() {
       //Format back dates to SQL Format
       if ((this.activeCours.id || 0) === 0) {
         this.$store

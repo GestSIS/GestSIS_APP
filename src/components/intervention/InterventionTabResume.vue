@@ -52,7 +52,7 @@ export default {
     }),
   },
   methods: {
-    save() {
+    async save() {
       this.$store
         .dispatch('saveActiveIntervention', {
           id: this.activeInterventionData.id,

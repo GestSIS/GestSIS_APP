@@ -233,7 +233,7 @@ export default {
 
       return day + ' ' + monthNames[monthIndex] + ' ' + year;
     },
-    save() {
+    async save() {
       if (
         this.sapFonctions.length > 0 &&
         (!this.mutationDate ||

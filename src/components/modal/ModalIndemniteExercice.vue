@@ -247,7 +247,7 @@ export default {
     updateIndemnite(index, e) {
       this.activeIndemnite.fonctions[index].indemnite = e.target.value;
     },
-    save() {
+    async save() {
       const fonctions = this.activeIndemnite.fonctions
         .filter((f) => f.solde != 0 || f.indemnite != 0)
         .map((f) => ({

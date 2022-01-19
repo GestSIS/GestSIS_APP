@@ -92,7 +92,7 @@ export default {
     },
   },
   methods: {
-    save() {
+    async save() {
       let groupesNo = this.interventionGroupes.map((g) => g.no);
       let nos = Object.keys(this.selected)
         .filter((item) => this.selected[item])

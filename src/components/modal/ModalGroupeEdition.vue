@@ -105,7 +105,7 @@ export default {
     close() {
       this.HIDE_MODAL();
     },
-    save() {},
+    async save() {},
   },
 };
 </script>

@@ -100,7 +100,7 @@ export default {
     localite(localite) {
       return localite?.designation;
     },
-    save() {
+    async save() {
       if ((this.activeMedecin.id || 0) === 0) {
         this.$store
           .dispatch('addMedecin', this.activeMedecin)

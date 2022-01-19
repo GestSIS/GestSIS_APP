@@ -237,7 +237,7 @@ export default {
         this.heure_debut = this.roundTime(this.heure_debut, 15);
       }
     },
-    save() {
+    async save() {
       let debut = this.date_debut + ' ' + this.heure_debut;
       let fin = this.date_fin + ' ' + this.heure_fin;
       if (this.editMode) {

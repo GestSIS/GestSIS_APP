@@ -89,7 +89,7 @@ export default {
       }
       this.fileReader.readAsDataURL(files[0]);
     },
-    save() {
+    async save() {
       const { canvas } = this.$refs.cropper.getResult();
       const image = canvas.toDataURL();
       canvas.toBlob((blob) => {

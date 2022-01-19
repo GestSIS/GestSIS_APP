@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       this.activeExcuse.statut = this.activeExcuse.statut ? 1 : 0;
       if ((this.activeExcuse.id || 0) === 0) {
         this.$store
