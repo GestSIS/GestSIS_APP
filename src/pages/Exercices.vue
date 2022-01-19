@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Exercices
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Exercices</li>
           </ol>
         </nav>
       </div>
@@ -31,20 +27,14 @@
               tag="button"
               to="/exercices/new"
               class="btn btn-outline-primary"
-            >
-              Ajouter un exercice
-            </router-link>
+            >Ajouter un exercice</router-link>
             <router-link
               tag="button"
               :disabled="!selectedId"
               :to="'/exercices/' + selectedId"
               class="btn btn-outline-primary"
-            >
-              Modifier
-            </router-link>
-            <button class="btn btn-outline-primary" @click="convoquer">
-              Convoquer
-            </button>
+            >Modifier</router-link>
+            <button class="btn btn-outline-primary" @click="convoquer">Convoquer</button>
           </form>
         </div>
       </div>
@@ -59,16 +49,12 @@
               :disabled="!selectedId"
               @click="listePresences({ id: selectedId })"
               class="btn btn-outline-primary"
-            >
-              Liste de présences
-            </button>
+            >Liste de présences</button>
             <button
               :disabled="!selectedId"
               @click="listeAppel({ id: selectedId })"
               class="btn btn-outline-primary"
-            >
-              Liste d'appel
-            </button>
+            >Liste d'appel</button>
           </form>
         </div>
       </div>
@@ -93,9 +79,7 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                  >
-                    {{ loc.designation }}
-                  </option>
+                  >{{ loc.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -112,9 +96,7 @@
                     v-for="categorie in filteredExercicesCategories"
                     :key="categorie.id"
                     :value="categorie.id"
-                  >
-                    {{ categorie.designation }}
-                  </option>
+                  >{{ categorie.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -178,22 +160,22 @@
               </div>
             </template>
             <template v-slot:actions="props">
-              <div class="d-flex">
-                <router-link
-                  tag="button"
-                  :to="'/exercices/' + props.rowData.id"
-                  class="btn btn-outline-primary border-0"
-                >
+              <router-link
+                :to="'/exercices/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button class="btn btn-outline-primary border-0" @click="navigate">
                   <font-awesome-icon :icon="['far', 'edit']" />
-                </router-link>
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="validerExercice(props.rowData.id)"
-                  v-if="hasValidationPermission && props.rowData.statut == 2"
-                >
-                  <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
-              </div>
+              </router-link>
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut == 2"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
             </template>
           </base-table>
         </div>
@@ -321,6 +303,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

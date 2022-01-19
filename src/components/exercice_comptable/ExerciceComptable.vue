@@ -23,12 +23,17 @@
         </button>
         <div class="dropdown-divider" v-if="hasConfigPermission"></div>
         <router-link
-          v-if="hasConfigPermission"
           :to="{ name: 'param-exercice-comptable' }"
-          class="dropdown-item"
-          tag="button"
+          custom
+          v-slot="{ navigate }"
+          v-if="hasConfigPermission"
         >
-          <span>Paramètres</span>
+          <button
+            class="dropdown-item"
+            @click="navigate"
+          >
+          Paramètres
+          </button>
         </router-link>
       </template>
     </base-dropdown>

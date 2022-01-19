@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Véhicules</h3>
-      <button type="button" class="btn btn-primary" @click="ajouterVehicule()">
-        Ajouter un véhicule
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajouterVehicule()">Ajouter un véhicule</button>
     </div>
     <div class="card-body">
       <table id="vehicules" class="table table-sm">
@@ -40,23 +38,21 @@
             <td>{{ v.forfait }}</td>
             <td>{{ v.unite }}</td>
             <td>{{ unite(v.type_unite_id) }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateVehicule(v)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteVehicule(v)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateVehicule(v)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteVehicule(v)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

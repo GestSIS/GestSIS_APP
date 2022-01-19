@@ -5,7 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
+              <router-link :to="{ name: 'accueil' }"
                 >Accueil</router-link
               >
             </li>
@@ -69,16 +69,20 @@
               </button>
             </template>
             <template v-slot:actions="props">
-              <div class="d-flex">
                 <router-link
-                  tag="button"
                   :to="{
                     name: 'controle-medical',
                     params: { id: props.rowData.id },
                   }"
-                  class="btn btn-outline-primary border-0"
+                  custom
+                  v-slot="{ navigate }"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
                 </router-link>
                 <button
                   type="button"
@@ -87,7 +91,6 @@
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
-              </div>
             </template>
           </base-table>
         </div>
@@ -197,12 +200,14 @@ export default {
           key: 'doc',
           sortKey: 'filename',
           slot: 'doc',
+          titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
         },
         {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
         },
       ],

@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Comptes</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCompte">
-        Ajouter un compte
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutCompte">Ajouter un compte</button>
     </div>
     <div class="card-body">
       <table id="indemnites-anuelles" class="table table-sm">
@@ -34,23 +32,17 @@
               />
               <label class="form-check-label" for="actif"></label>
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateCompte(c)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateCompte(c)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button type="button" class="btn btn-outline-danger border-0" disabled>
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

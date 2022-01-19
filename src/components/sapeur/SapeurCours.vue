@@ -4,9 +4,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary" @click="newCours">
-        Ajouter un cours
-      </button>
+      <button type="button" class="btn btn-primary" @click="newCours">Ajouter un cours</button>
     </div>
     <div class="card-body">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
@@ -24,29 +22,23 @@
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
             <td>{{ c.date }}</td>
-            <td>
-              {{ cours.find((cours) => cours.id == c.cours_id).designation }}
-            </td>
-            <td>
-              {{ localites.find((l) => l.id == c.localite_id).designation }}
-            </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="editCours(c.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimerCours(c.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td>{{ cours.find((cours) => cours.id == c.cours_id).designation }}</td>
+            <td>{{ localites.find((l) => l.id == c.localite_id).designation }}</td>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="editCours(c.id)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerCours(c.id)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

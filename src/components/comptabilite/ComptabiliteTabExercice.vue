@@ -7,9 +7,7 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button class="btn btn-outline-primary" disabled>Imputer</button>
-          <button class="btn btn-outline-primary" disabled>
-            Créer un décompte
-          </button>
+          <button class="btn btn-outline-primary" disabled>Créer un décompte</button>
         </div>
       </div>
     </div>
@@ -75,47 +73,43 @@
           row-selected-class="table-primary"
         >
           <template v-slot:details="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="props.actions.toggleDetailRow(props.rowData.id)"
-                v-if="props.rowData.statut === 4"
-              >
-                <font-awesome-icon
-                  v-if="props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+              v-if="props.rowData.statut === 4"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
           </template>
           <template v-slot:actions="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 3"
-                @click="imputerExercice(props.rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 4"
-                @click="
-                  genererDecompteExercice(
-                    props.rowData.id,
-                    props.rowData.designation
-                  )
-                "
-                title="Décompte sapeur"
-                :disabled="!props.rowData.aPayer"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </div>
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 3"
+              @click="imputerExercice(props.rowData.id)"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 4"
+              @click="
+                genererDecompteExercice(
+                  props.rowData.id,
+                  props.rowData.designation
+                )
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
           </template>
         </base-table>
       </div>
@@ -274,6 +268,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

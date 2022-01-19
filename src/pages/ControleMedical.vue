@@ -5,12 +5,12 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
+              <router-link :to="{ name: 'accueil' }"
                 >Accueil</router-link
               >
             </li>
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'controles-medicaux' }">
+              <router-link :to="{ name: 'controles-medicaux' }">
                 Controles médicaux
               </router-link>
             </li>

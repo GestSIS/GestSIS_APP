@@ -88,32 +88,29 @@
           row-selected-class="table-primary"
         >
           <template v-slot:details="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="props.actions.toggleDetailRow(props.rowData.id)"
-                v-if="props.rowData.statut === 3"
-              >
-                <font-awesome-icon
-                  v-if="props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div> </template
-          ><template v-slot:actions="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-outline-primary border-0"
-                v-if="props.rowData.statut === 2"
-                @click="imputerIntervention(props.rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </div>
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+              v-if="props.rowData.statut === 3"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </template>
+          <template v-slot:actions="props">
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 2"
+              @click="imputerIntervention(props.rowData.id)"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
           </template>
         </base-table>
       </div>
@@ -315,6 +312,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

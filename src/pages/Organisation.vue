@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <ol class="breadcrumb m-3">
           <li class="breadcrumb-item">
-            <router-link tag="a" :to="{ name: 'accueil' }">Accueil</router-link>
+            <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Organisation

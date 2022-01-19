@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Interventions
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Interventions</li>
           </ol>
         </nav>
       </div>
@@ -31,24 +27,18 @@
               tag="button"
               to="/interventions/new"
               class="btn btn-outline-primary"
-            >
-              Ajouter une intervention
-            </router-link>
+            >Ajouter une intervention</router-link>
             <router-link
               tag="button"
               :disabled="!selectedId"
               :to="'/interventions/' + selectedId"
               class="btn btn-outline-primary"
-            >
-              Modifier
-            </router-link>
+            >Modifier</router-link>
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
               class="btn btn-outline-primary"
-            >
-              Supprimer
-            </button>
+            >Supprimer</button>
           </form>
         </div>
       </div>
@@ -63,9 +53,7 @@
               :disabled="!selectedId"
               @click="rapportIntervention"
               class="btn btn-outline-primary"
-            >
-              Rapport d'intervention
-            </button>
+            >Rapport d'intervention</button>
           </form>
         </div>
       </div>
@@ -90,9 +78,7 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                  >
-                    {{ loc.designation }}
-                  </option>
+                  >{{ loc.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -109,9 +95,7 @@
                     v-for="type in filteredInterventionsTypes"
                     :key="type.id"
                     :value="type.id"
-                  >
-                    {{ type.designation }}
-                  </option>
+                  >{{ type.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -127,9 +111,7 @@
                     v-for="stat in filteredStatFederal"
                     :key="stat.id"
                     :value="stat.id"
-                  >
-                    {{ stat.designation }}
-                  </option>
+                  >{{ stat.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -146,9 +128,7 @@
                     v-for="traitement in traitements"
                     :key="traitement.id"
                     :value="traitement.id"
-                  >
-                    {{ traitement.designation }}
-                  </option>
+                  >{{ traitement.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -192,22 +172,22 @@
             row-selected-class="table-primary"
           >
             <template v-slot:actions="props">
-              <div class="d-flex">
-                <router-link
-                  tag="button"
-                  :to="'/interventions/' + props.rowData.id"
-                  class="btn btn-outline-primary border-0"
-                >
+              <router-link
+                :to="'/interventions/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button class="btn btn-outline-primary border-0" @click="navigate">
                   <font-awesome-icon :icon="['far', 'edit']" />
-                </router-link>
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="validerIntervention(props.rowData.id)"
-                  v-if="hasValidationPermission && props.rowData.statut === 1"
-                >
-                  <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
-              </div>
+              </router-link>
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerIntervention(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut === 1"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
             </template>
           </base-table>
         </div>
@@ -363,6 +343,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

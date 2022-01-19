@@ -5,9 +5,7 @@
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Amendes</h3>
-          <button class="btn btn-primary" @click="generer">
-            Générer les amendes
-          </button>
+          <button class="btn btn-primary" @click="generer">Générer les amendes</button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -28,21 +26,19 @@
           row-selected-class="table-primary"
         >
           <template v-slot:details="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="props.actions.toggleDetailRow(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
           </template>
         </base-table>
       </div>
@@ -134,6 +130,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

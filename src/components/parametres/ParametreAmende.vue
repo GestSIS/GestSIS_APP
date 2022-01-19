@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Amendes</h3>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Enregistrer
-      </button>
+      <button type="button" class="btn btn-primary" @click="save()">Enregistrer</button>
     </div>
     <div class="card-body">
       <div class="row">
@@ -17,9 +15,7 @@
             class="form-select"
             :class="{ 'is-invalid': errors['compte_id_id'] }"
           >
-            <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-              {{ compte(c) }}
-            </option>
+            <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ compte(c) }}</option>
           </select>
         </div>
         <div class="mb-3 col-6">
@@ -30,9 +26,7 @@
             class="form-select"
             :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
           >
-            <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-              {{ c.designation }}
-            </option>
+            <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
           </select>
         </div>
       </div>
@@ -58,16 +52,14 @@
                 :value="params.amendes[index].montant"
               />
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="removeAmende(index)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="removeAmende(index)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>
