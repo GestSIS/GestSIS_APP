@@ -43,20 +43,16 @@ export default {
       });
     },
     updateExerciceHeure({ commit }, heure) {
-      return ExerciceHeureService.updateHeureType(heure).then(
-        (data) => {
-          commit(types.UPDATE_HEURE_EXERCICE, data);
-          return data;
-        }
-      );
+      return ExerciceHeureService.updateHeureType(heure).then((data) => {
+        commit(types.UPDATE_HEURE_EXERCICE, data);
+        return data;
+      });
     },
     removeExerciceHeure({ commit }, heure) {
-      return ExerciceHeureService.removeHeureType(heure).then(
-        (data) => {
-          commit(types.REMOVE_HEURE_EXERCICE, data);
-          return data;
-        }
-      );
+      return ExerciceHeureService.removeHeureType(heure).then((data) => {
+        commit(types.REMOVE_HEURE_EXERCICE, data);
+        return data;
+      });
     },
   },
 };

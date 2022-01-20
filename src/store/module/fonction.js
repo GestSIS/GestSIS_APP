@@ -24,7 +24,7 @@ export default {
       };
     },
     [types.UPDATE_FONCTION_LISTE](state, payload) {
-      state.liste = payload.sort((a,b) => b.tri - a.tri);
+      state.liste = payload.sort((a, b) => b.tri - a.tri);
     },
     [types.UPDATE_CURRENT_FONCTION](state, payload) {
       state.currentFonction = payload;
@@ -43,11 +43,13 @@ export default {
   },
   actions: {
     fetchFonctions({ commit, state }) {
-      if(state.liste.length <= 0) {
+      if (state.liste.length <= 0) {
         return FonctionService.getFonctions().then((data) =>
           commit(types.UPDATE_FONCTION_LISTE, data)
         );
-      } else { return Promise.resolve(); }
+      } else {
+        return Promise.resolve();
+      }
     },
     addFonction({ commit }, fonction) {
       return FonctionService.addFonction(fonction).then((data) => {

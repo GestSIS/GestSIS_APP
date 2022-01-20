@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeHeure.id || 0) === 0) {
         this.$store
           .dispatch('addExerciceHeure', this.activeHeure)

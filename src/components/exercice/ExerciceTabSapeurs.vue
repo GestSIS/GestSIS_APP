@@ -167,7 +167,6 @@ export default {
         state.exerciceCategorie.liste.find(
           (c) => c.id == state.exercice.active.data?.exercice_categorie_id
         )?.amendable,
-
     }),
     canValidate() {
       return this.activeExerciceData.statut == 2;
@@ -201,7 +200,7 @@ export default {
         heure.quantite = parseFloat(quantite) || null;
       }
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('editSapeurs', this.activeExerciceSapeurs)
         .then((res) =>
@@ -211,7 +210,7 @@ export default {
           this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
         );
     },
-    validate() {
+    async validate() {
       this.$store
         .dispatch('validerExercice', this.activeExerciceId)
         .then((res) =>
@@ -247,7 +246,7 @@ export default {
 
         return new Promise((resolve, reject) => {
           let newSapeurs = ajoute.map((s) => ({
-            convoque: false,
+            convoque: true,
             present: false,
             remplace: false,
             excuse_type_id: null,

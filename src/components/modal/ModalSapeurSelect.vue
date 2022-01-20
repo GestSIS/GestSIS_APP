@@ -187,9 +187,9 @@
             </thead>
             <tbody v-if="groupBy == 'none'">
               <tr
-                v-for="item in availableSapeurs.map((id) =>
-                  sapeurs.find((s) => s.id == id)
-                )"
+                v-for="item in availableSapeurs
+                  .map((id) => sapeurs.find((s) => s.id == id))
+                  .filter((s) => s && s.actif)"
                 :key="item.id"
                 :class="{
                   'table-primary': selectedSapeurs.includes(item.id),
@@ -419,7 +419,7 @@ export default {
       this.callback(null);
       this.HIDE_MODAL();
     },
-    save() {
+    async save() {
       // Sapeurs ajoutés
       const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
       // Sapeurs supprimés
@@ -435,7 +435,7 @@ export default {
           svm.HIDE_MODAL();
         })
         .catch((errorMessage) => {
-          console.error(errorMessage);
+          // console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },

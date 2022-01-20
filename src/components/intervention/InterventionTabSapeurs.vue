@@ -46,6 +46,7 @@
                     type="button"
                     class="btn btn-outline-primary border-0 ms-2"
                     @click="editPhase(phase)"
+                    v-if="phase.debut !== null"
                   >
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>

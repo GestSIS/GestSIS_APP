@@ -5,7 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
+              <router-link :to="{ name: 'accueil' }"
                 >Accueil</router-link
               >
             </li>
@@ -25,12 +25,11 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des contrôles médicaux</h3>
-            <router-link
-              tag="button"
-              to="/controles-medicaux/ajout"
-              class="btn btn-outline-primary"
-            >
-              Ajouter
+            <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Ajouter</button>
             </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
@@ -69,25 +68,28 @@
               </button>
             </template>
             <template v-slot:actions="props">
-              <div class="d-flex">
                 <router-link
-                  tag="button"
                   :to="{
                     name: 'controle-medical',
                     params: { id: props.rowData.id },
                   }"
-                  class="btn btn-outline-primary border-0"
+                  custom
+                  v-slot="{ navigate }"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
                 </router-link>
                 <button
-                  class="btn btn-outline-primary border-0"
-                  v-if="props.rowData.statut === 2"
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimer(props.rowData)"
                 >
-                  <!-- @click="aa(props.rowData.id)" -->
-                  <font-awesome-icon :icon="['fas', 'check']" />
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
-              </div>
             </template>
           </base-table>
         </div>
@@ -97,7 +99,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
@@ -197,12 +199,14 @@ export default {
           key: 'doc',
           sortKey: 'filename',
           slot: 'doc',
+          titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
         },
         {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
         },
       ],
@@ -218,38 +222,60 @@ export default {
     }),
     computedData() {
       const now = Date.now();
-      return this.listeControlesMedicaux.map((s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
-        const age = Math.floor(
-          (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-            1000 /
-            (60 * 60 * 24) /
-            365.25
-        );
-        return {
-          ...s,
-          sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
-          age,
-          type: this.types.find((t) => t.id == s.controle_medical_type_id)
-            ?.designation,
-          medecin: this.medecins.find((m) => m.id == s.medecin_id)?.designation,
-        };
-      });
+      return this.listeControlesMedicaux
+        .map((s) => {
+          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
+          const age = Math.floor(
+            (now - new Date(sapeur?.date_naissance || 0).getTime()) /
+              1000 /
+              (60 * 60 * 24) /
+              365.25
+          );
+          return {
+            ...s,
+            sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
+            age,
+            type: this.types.find((t) => t.id == s.controle_medical_type_id)
+              ?.designation,
+            medecin: this.medecins.find((m) => m.id == s.medecin_id)
+              ?.designation,
+          };
+        })
+        .sort((a, b) => a.sapeur.localeCompare(b.sapeur));
     },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     selected(id) {
       this.selectedId = id;
     },
     downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
     },
+    async supprimer(controle) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce contrôle médical ?',
+          question:
+            "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeControleMedical', controle.id);
+          }
+        },
+      });
+    },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {
         return;
       }
 
-      // TODO: update pour mettre en évidence les contrôles-médicaux voulus
+      if (dataItem.validite && Date.parse(dataItem.validite) < new Date()) {
+        return 'table-danger';
+      }
+      // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
       // const statutsClass = {
       //   0: 'text-danger', //'Annulé',
       //   1: '', //'A saisir',

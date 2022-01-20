@@ -199,7 +199,10 @@ export default {
   data() {
     return {
       errors: {},
-      activeIndemnite: {},
+      activeIndemnite: {
+        phase_id: 0,
+        par_fonction: 0,
+      },
       imputationType: 1,
     };
   },
@@ -224,7 +227,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if (this.imputationType == 'taux') {
         this.activeIndemnite.solde_min = null;
         this.activeIndemnite.solde_min_pour = null;

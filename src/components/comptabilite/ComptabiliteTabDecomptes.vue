@@ -186,7 +186,7 @@ export default {
     selected(row) {
       this.selectedId = row?.id || null;
     },
-    supprimer(decompteId) {
+    async supprimer(decompteId) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {

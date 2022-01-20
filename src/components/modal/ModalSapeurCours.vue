@@ -13,7 +13,7 @@
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
           id="cours-date"
-          @change="dateChange"
+          @focusout="dateChange"
         />
       </div>
       <div class="mb-3">
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalSapeurCours',
@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       let saveData = Object.assign({}, this.activeCours);
       Object.keys(saveData).map((key) => {
         saveData[key] =
@@ -249,7 +249,7 @@ export default {
       this.activeCours.fonction_sapeur_id = 0;
 
       if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.fonctions(
+        let fonction = this.fonctions.find(
           (f) => f.id == this.activeCours.fonction_id
         );
         if (fonction.cumulable === 0) {

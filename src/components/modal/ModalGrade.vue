@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeGrade.id || 0) === 0) {
         this.$store
           .dispatch('addGrade', this.activeGrade)

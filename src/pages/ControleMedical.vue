@@ -5,18 +5,12 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link tag="a" :to="{ name: 'controles-medicaux' }">
-                Controles médicaux
-              </router-link>
+              <router-link :to="{ name: 'controles-medicaux' }">Controles médicaux</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              {{ breadcrumbFinal }}
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbFinal }}</li>
           </ol>
         </nav>
       </div>
@@ -29,9 +23,10 @@
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Infos</h5>
-            <button class="btn btn-outline-primary" @click="save">
-              {{ modeAjout ? 'Ajouter' : 'Enregistrer' }}
-            </button>
+            <button
+              class="btn btn-outline-primary"
+              @click="save"
+            >{{ modeAjout ? 'Ajouter' : 'Enregistrer' }}</button>
           </div>
           <div class="card-body">
             <!-- NOM -->
@@ -57,12 +52,10 @@
                 v-model="controleMedical.sapeur_id"
               >
                 <option
-                  v-for="sapeur in listeSapeurs"
+                  v-for="sapeur in sapeurs"
                   :key="sapeur.id"
                   :value="sapeur.id"
-                >
-                  {{ sapeur.nom }} {{ sapeur.prenom }}
-                </option>
+                >{{ sapeur.nom }} {{ sapeur.prenom }}</option>
               </select>
             </div>
             <!-- MEDECIN -->
@@ -79,9 +72,7 @@
                   v-for="medecin in medecins"
                   :key="medecin.id"
                   :value="medecin.id"
-                >
-                  {{ medecin.designation }}
-                </option>
+                >{{ medecin.designation }}</option>
               </select>
             </div>
             <!-- TYPE -->
@@ -94,9 +85,7 @@
                 style="width: 100%"
                 v-model="controleMedical.controle_medical_type_id"
               >
-                <option v-for="t in controleTypes" :key="t.id" :value="t.id">
-                  {{ t.designation }}
-                </option>
+                <option v-for="t in controleTypes" :key="t.id" :value="t.id">{{ t.designation }}</option>
               </select>
             </div>
             <!-- ACCEPTER -->
@@ -108,13 +97,11 @@
                   id="m-ctr-accepter"
                   v-model="controleMedical.accepter"
                 />
-                <label class="form-check-label" for="m-ctr-accepter"
-                  >Accepté</label
-                >
+                <label class="form-check-label" for="m-ctr-accepter">Accepté</label>
               </div>
             </div>
             <div class="row">
-              <div class="col-12 col-xl-6">
+              <div class="col-12" :class="{ 'col-xl-6': expirable }">
                 <!-- CONSULTATION -->
                 <div class="mb-3">
                   <label for="m-exe-date">Consultation</label>
@@ -135,23 +122,17 @@
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(1)">
-                    +1
-                  </button>
+                  <button class="btn btn-primary" @click="validite(1)">+1</button>
                 </div>
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(2)">
-                    +2
-                  </button>
+                  <button class="btn btn-primary" @click="validite(2)">+2</button>
                 </div>
               </div>
               <div class="col-4 d-xl-none" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(5)">
-                    +5
-                  </button>
+                  <button class="btn btn-primary" @click="validite(5)">+5</button>
                 </div>
               </div>
               <div class="col-12 col-xl-6" v-if="expirable">
@@ -175,23 +156,17 @@
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(1)">
-                    +1
-                  </button>
+                  <button class="btn btn-primary" @click="validite(1)">+1</button>
                 </div>
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(2)">
-                    +2
-                  </button>
+                  <button class="btn btn-primary" @click="validite(2)">+2</button>
                 </div>
               </div>
               <div class="col-4 d-none d-xl-block" v-if="expirable">
                 <div class="d-grid" v-if="expirable">
-                  <button class="btn btn-primary" @click="validite(5)">
-                    +5
-                  </button>
+                  <button class="btn btn-primary" @click="validite(5)">+5</button>
                 </div>
               </div>
             </div>
@@ -209,7 +184,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-8 col-12">
+      <div class="col-lg-8 col-12" v-if="controleMedical.id">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Document</h5>
@@ -218,15 +193,8 @@
               <button
                 class="btn btn-outline-primary ms-2"
                 @click="downloadJustificatif()"
-              >
-                Download
-              </button>
-              <button
-                class="btn btn-outline-primary ms-2"
-                @click="removeJustificatif()"
-              >
-                Supprimer
-              </button>
+              >Download</button>
+              <button class="btn btn-outline-primary ms-2" @click="removeJustificatif()">Supprimer</button>
             </div>
           </div>
           <div class="card-body" v-if="!controleMedical.filename">
@@ -246,9 +214,7 @@
                 @click="ajoutJustificatif"
                 v-if="!controleMedical.filename"
                 :disabled="!file"
-              >
-                Ajouter
-              </button>
+              >Ajouter</button>
             </div>
           </div>
           <pdf-viewer :pdf-data="pdfData" />
@@ -316,6 +282,11 @@ export default {
         this.pdfData = null;
       }
     },
+    expirable(next) {
+      if (!next) {
+        this.controleMedical.validite = null;
+      }
+    },
   },
   data() {
     return {
@@ -381,16 +352,31 @@ export default {
         this.pdfData = response.data;
       });
     },
-    save() {
+    async save() {
       if (this.modeAjout) {
         // Ajout d'un nouveau controle-médical
         const router = this.$router;
-        this.$store.dispatch('createControleMedical').then((res) => {
-          router.push({ name: 'controle-medical', params: { id: res.id } });
-        });
+        this.$store
+          .dispatch('createControleMedical')
+          .then((res) => {
+            router.push({ name: 'controle-medical', params: { id: res.id } });
+          })
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       } else {
         // Sauvegarder les changements
-        this.$store.dispatch('updateControleMedical');
+        this.$store
+          .dispatch('updateControleMedical')
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       }
     },
     ajoutJustificatif() {

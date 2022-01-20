@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Traitement</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutTraitement()">
-        Ajouter un traitement
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutTraitement()">Ajouter un traitement</button>
     </div>
     <div class="card-body">
       <table id="traitements" class="table table-sm">
@@ -23,23 +21,21 @@
           <tr v-for="t in listeTraitement" :key="t.id">
             <td>{{ t.tri }}</td>
             <td>{{ t.designation }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateTraitement(t)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteTraitement(t)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateTraitement(t)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteTraitement(t)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

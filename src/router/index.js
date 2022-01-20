@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Public from '@/pages/Public';
 import Home from '@/pages/Home';
 import store from '@/store/index';
@@ -9,10 +8,8 @@ import { TokenService } from '@/services/StorageService';
 
 import NProgress from 'nprogress';
 
-Vue.use(Router);
-
 const permissionGuard = (permission) => {
-  return  function(to, from, next) {
+  return function (to, from, next) {
     try {
       const permissions = store.state.auth.sis.permissions;
       if (permissions.includes(permission)) {
@@ -30,31 +27,26 @@ const permissionGuard = (permission) => {
   };
 };
 
-
-const router = new Router({
-  //mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHashHistory(process.env.BASE_URL),
   routes: [
     {
       path: '/login',
       name: 'login',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
-      component: () =>
-        import('@/pages/Login.vue'),
+      component: () => import('@/pages/Login.vue'),
     },
     {
       path: '/confirmation',
       name: 'confirmation',
       meta: { layout: 'no-sidebar', public: true },
-      component: () =>
-        import('@/pages/Confirmation.vue'),
+      component: () => import('@/pages/Confirmation.vue'),
     },
     {
       path: '/register',
       name: 'register',
       meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
-      component: () =>
-        import('@/pages/Register.vue'),
+      component: () => import('@/pages/Register.vue'),
     },
     {
       path: '/',
@@ -198,15 +190,13 @@ const router = new Router({
           path: '',
           name: 'stat-dashboard',
           meta: {},
-          component: () =>
-            import('@/components/statistique/StatDashboard.vue'),
+          component: () => import('@/components/statistique/StatDashboard.vue'),
         },
         {
           path: 'exercice',
           name: 'stat-exercice-simple',
           meta: {},
-          component: () =>
-            import('@/components/statistique/StatExercice.vue'),
+          component: () => import('@/components/statistique/StatExercice.vue'),
         },
         {
           path: 'exercice-presence',
@@ -221,8 +211,8 @@ const router = new Router({
           meta: {},
           component: () =>
             import('@/components/statistique/StatIntervention.vue'),
-        }
-      ]
+        },
+      ],
     },
     {
       path: '/controles-medicaux',
@@ -313,26 +303,26 @@ const router = new Router({
       path: '/rta',
       name: 'rta',
       beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-      component: () => import('@/pages/Rta.vue'),
+      component: () => import(/* webpackChunkName: "rta" */ '@/pages/Rta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
           path: 'mutations',
           name: 'rta-mutations',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () => import('@/components/rta/Mutations.vue'),
+          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Mutations.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () => import('@/components/rta/Reference.vue'),
+          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Reference.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
           beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
-          component: () => import('@/components/rta/GestSis.vue'),
+          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/GestSis.vue'),
         },
       ],
     },

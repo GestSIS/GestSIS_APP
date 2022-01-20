@@ -127,7 +127,7 @@ export default {
 
       document.execCommand('copy');
     },
-    save() {
+    async save() {
       if (this.token.roles.length <= 0) {
         this.errors = { roles: 'Sélectionnez au minimum 1 rôle' };
       } else {

@@ -5,13 +5,8 @@
       :class="['form-select form-select-sm', selectClass]"
       :id="label"
       v-model="model"
-      v-bind="{
-        ...$attrs,
-      }"
+      v-bind="{ ...$attrs }"
     >
-      {{
-        formatter ? true : false
-      }}
       <option v-if="baseOption" :value="undefined">{{ baseOption }}</option>
       <option v-for="o in options" :key="o[valueKey]" :value="o[valueKey]">
         {{ formatter ? formatter(o) : o[displayKey] }}
@@ -32,8 +27,7 @@ export default {
     selectClass: {
       type: [String, Array, Object],
     },
-    value: {
-      //Vuejs 3 -> modelValue
+    modelValue: {
       type: [String, Number],
       default: undefined,
     },
@@ -59,17 +53,17 @@ export default {
   },
   data() {
     return {
-      model: this.value,
+      model: this.modelValue,
     };
   },
   watch: {
-    value(newValue, oldValue) {
+    modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
         this.model = newValue;
       }
     },
     model(currentValue) {
-      this.$emit('input', currentValue);
+      this.$emit('update:modelValue', currentValue);
     },
   },
 };

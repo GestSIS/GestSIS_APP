@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if (this.user.roles.length <= 0) {
         this.errors = { roles: 'Sélectionnez au minimum 1 rôle' };
       } else {

@@ -62,10 +62,13 @@ export default {
           id: 'g',
           type: 'groupe',
           label: 'Groupes',
-          children: this.groupeTree,
+          children: [],
         },
       ],
     };
+  },
+  mounted() {
+    this.tree.children = this.groupeTree;
   },
   computed: {
     ...mapState({
@@ -102,7 +105,7 @@ export default {
     close() {
       this.HIDE_MODAL();
     },
-    save() {},
+    async save() {},
   },
 };
 </script>

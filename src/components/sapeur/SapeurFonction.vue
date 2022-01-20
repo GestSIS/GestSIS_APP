@@ -3,17 +3,10 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button type="button" class="btn btn-primary" @click="newFonction">
-        Ajouter une fonction
-      </button>
+      <button type="button" class="btn btn-primary" @click="newFonction">Ajouter une fonction</button>
     </div>
     <div class="card-body">
-      <table
-        id="sap-fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Début</th>
@@ -30,27 +23,23 @@
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
             <td>{{ f.debut }}</td>
             <td>{{ f.fin }}</td>
-            <td>
-              {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
-            </td>
+            <td>{{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}</td>
             <td>{{ f.remarque }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="editFonction(f.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimerFonction(f.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="editFonction(f.id)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerFonction(f.id)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

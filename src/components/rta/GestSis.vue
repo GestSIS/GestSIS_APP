@@ -13,6 +13,7 @@
             <th>Nom Prénom</th>
             <th>Date naissance</th>
             <th>Localité</th>
+            <th>Adresse</th>
             <th>Fonction</th>
             <th v-for="i in nbNumero" :key="'num-' + i">Numéro {{ i }}</th>
             <th v-for="i in nbGroupes" :key="'grp' + i">Grp{{ i }}</th>
@@ -21,7 +22,7 @@
         <tbody>
           <tr v-if="!mutations.length">
             <td></td>
-            <td colspan="4">
+            <td colspan="5">
               Aucun sapeur possédant un numéro rta dans GestSIS n'appartient à
               un groupe d'alarme.
             </td>
@@ -68,6 +69,13 @@
               }"
             >
               {{ e.localite }}
+            </td>
+            <td
+              :class="{
+                'text-warning': e.changements.adresse,
+              }"
+            >
+              {{ e.adresse }}
             </td>
             <td
               :class="{
@@ -124,7 +132,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'GestSis',
@@ -205,6 +213,7 @@ export default {
           'prenom',
           'fonction',
           'localite',
+          'adresse',
           'date_naissance',
         ];
         let changements = {};

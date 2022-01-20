@@ -18,6 +18,9 @@ export default {
     [types.UPDATE_CONTROLE_MEDICAUX_LISTE](state, payload) {
       state.liste = payload;
     },
+    [types.REMOVE_CONTROLE_MEDICAL](state, id) {
+      state.liste = state.liste.filter((c) => c.id != id);
+    },
     [types.UPDATE_CURRENT_CONTROLE_MEDICAL](state, payload) {
       state.active.id = payload.id;
       state.active.data = payload;
@@ -67,7 +70,6 @@ export default {
         return data;
       });
     },
-
     updateControleMedical({ commit, state }, payload) {
       return ControlesMedicauxService.updateControleMedical(
         state.active.data.id,
@@ -76,6 +78,14 @@ export default {
         commit(types.UPDATE_CURRENT_CONTROLE_MEDICAL, data);
         return data;
       });
+    },
+    removeControleMedical({ commit }, controleId) {
+      return ControlesMedicauxService.removeControleMedical(controleId).then(
+        (data) => {
+          commit(types.REMOVE_CONTROLE_MEDICAL, controleId);
+          return data;
+        }
+      );
     },
 
     addJustificatif({ state, commit }, justificatif) {

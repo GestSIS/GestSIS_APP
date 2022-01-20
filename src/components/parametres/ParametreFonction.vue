@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutFonction()">
-        Ajouter une fonction
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutFonction()">Ajouter une fonction</button>
     </div>
     <div class="card-body">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
@@ -36,23 +34,21 @@
               />
               <label class="form-check-label" for="en_cours"></label>
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateFonction(f)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteFonction(f)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateFonction(f)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteFonction(f)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mission</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutMission()">
-        Ajouter une mission
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutMission()">Ajouter une mission</button>
     </div>
     <div class="card-body">
       <table id="missions" class="table table-sm">
@@ -21,23 +19,21 @@
           </tr>
           <tr v-for="m in listeMission" :key="m.id">
             <td>{{ m.titre }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateMission(m)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteMission(m)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateMission(m)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteMission(m)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

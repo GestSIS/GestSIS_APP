@@ -2,7 +2,7 @@
   <div>
     <hr class="bg-secondary" />
     <div class="info">
-      <div class="input-group mb-3">
+      <div class="mb-3">
         <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
         <select
           class="form-select"

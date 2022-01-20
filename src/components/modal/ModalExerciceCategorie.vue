@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       this.activeCategorie.statut = this.activeCategorie.statut ? 1 : 0;
       if ((this.activeCategorie.id || 0) === 0) {
         this.$store

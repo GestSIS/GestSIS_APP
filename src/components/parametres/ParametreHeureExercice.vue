@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Heures additionnelles pour exercice</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutHeure">
-        Ajouter une heure
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutHeure">Ajouter une heure</button>
     </div>
     <div class="card-body">
       <table id="heures-anuelles" class="table table-sm">
@@ -31,23 +29,17 @@
             <td>{{ compte(h.compte_id) }}</td>
             <td>{{ type(h) }}</td>
             <td>{{ categorie(h.ecriture_categorie_id) }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateHeureType(h)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateHeureType(h)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button type="button" class="btn btn-outline-danger border-0" disabled>
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

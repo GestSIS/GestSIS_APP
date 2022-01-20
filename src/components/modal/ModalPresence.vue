@@ -50,7 +50,9 @@
                 :class="{ 'is-invalid': errors['heure_debut'] }"
                 id="m-int-heure_debut"
                 name="heure_debut"
+                step="900"
                 v-model="heure_debut"
+                @focusout="roundDebut"
               />
             </div>
           </div>
@@ -92,7 +94,9 @@
                 }"
                 id="m-int-heure_fin"
                 name="heure_fin"
+                step="900"
                 v-model="heure_fin"
+                @focusout="roundFin"
               />
             </div>
           </div>
@@ -209,7 +213,31 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    roundTime(time, minutesToRound) {
+      let [hours, minutes] = time.split(':');
+      hours = parseInt(hours);
+      minutes = parseInt(minutes);
+
+      // Convert hours and minutes to time in minutes
+      time = hours * 60 + minutes;
+
+      let rounded = Math.round(time / minutesToRound) * minutesToRound;
+      let rHr = '' + Math.floor(rounded / 60);
+      let rMin = '' + (rounded % 60);
+
+      return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
+    },
+    roundFin() {
+      if (this.heure_fin) {
+        this.heure_fin = this.roundTime(this.heure_fin, 15);
+      }
+    },
+    roundDebut() {
+      if (this.heure_debut) {
+        this.heure_debut = this.roundTime(this.heure_debut, 15);
+      }
+    },
+    async save() {
       let debut = this.date_debut + ' ' + this.heure_debut;
       let fin = this.date_fin + ' ' + this.heure_fin;
       if (this.editMode) {

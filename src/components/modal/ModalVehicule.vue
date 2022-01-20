@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeVehicule.id || 0) === 0) {
         this.$store
           .dispatch('addVehicule', this.activeVehicule)

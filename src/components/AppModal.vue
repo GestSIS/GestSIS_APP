@@ -31,15 +31,16 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapState, mapMutations } from 'vuex';
 
 const components = Object.fromEntries(
   require
-    .context('@/components/modal/', true, /\.(js|vue)$/i)
+    .context('@/components/modal/', true, /\.(js|vue)$/i, 'lazy')
     .keys()
     .map((key) => {
       const name = key.match(/\w+/)[0];
-      return [name, () => import(`./modal/${name}`)];
+      return [name, defineAsyncComponent(() => import(`./modal/${name}`))];
     })
 );
 

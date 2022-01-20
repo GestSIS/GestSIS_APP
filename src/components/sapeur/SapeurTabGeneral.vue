@@ -337,7 +337,7 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
-    saveSapeur() {
+    async saveSapeur() {
       let fields = [
         'civilite_id',
         'nom',
@@ -364,13 +364,13 @@ export default {
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch((err) => {
-          this.$awn.error(
+          this.$awn.alert(
             err.message || "Erreur lors de l'enregistrement des données"
           );
           this.errorsData = err;
         });
     },
-    saveSapeurRefPro() {
+    async saveSapeurRefPro() {
       this.$store
         .dispatch('saveActiveSapeur', {
           profession: this.activeSapeur.profession,
@@ -381,7 +381,7 @@ export default {
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch(() => {
-          this.$awn.error(
+          this.$awn.alert(
             res.message || "Erreur lors de l'enregistrement des données"
           );
         });

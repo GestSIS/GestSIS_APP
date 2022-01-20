@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCours()">
-        Ajouter un cours
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutCours()">Ajouter un cours</button>
     </div>
     <div class="card-body">
       <table id="cours" class="table table-sm" cellspacing="0" width="100%">
@@ -30,30 +28,22 @@
             <td>{{ c.tri }}</td>
             <td>{{ c.abreviation }}</td>
             <td>{{ c.designation }}</td>
-            <td>
-              {{ coursPrecedent(c.precedent_id) }}
-            </td>
+            <td>{{ coursPrecedent(c.precedent_id) }}</td>
             <td>{{ grade(c.grade_id) }}</td>
             <td>{{ fonction(c.fonction_id) }}</td>
             <td>{{ c.validite_debut }}</td>
             <td>{{ c.validite_fin }}</td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateCours(c)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteCours(c)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateCours(c)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteCours(c)">
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

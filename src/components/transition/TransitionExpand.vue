@@ -1,54 +1,64 @@
-<script>
-export default {
-  name: 'TransitionExpand',
-  functional: true,
-  render(createElement, context) {
-    const data = {
-      props: {
-        name: 'expand',
-      },
-      on: {
-        afterEnter(element) {
-          element.style.height = 'auto';
-        },
-        enter(element) {
-          const width = getComputedStyle(element).width;
+<template >
+  <!-- <transition :css="false" @enter="onEnter" @afterEnter="onAfterEnter" @leave="onLeave"> -->
+    <slot></slot>
+  <!-- </transition> -->
+</template>
 
-          element.style.width = width;
-          element.style.position = 'absolute';
-          element.style.visibility = 'hidden';
-          element.style.height = 'auto';
+<script setup>
+// import gsap from "gsap";
 
-          const height = getComputedStyle(element).height;
+// //FIXME: vue 3
+// const onAfterEnter = (element) => {
+//   console.log("onAfterEnter")
+//   // element.style.height = 'auto';
+//   gsap.set(element, {
+//     height: 'auto',
+//   })
+// }
+// const onEnter = (element, done) => {
+//   console.log("onEnter")
+//   // const width = getComputedStyle(element).width;
 
-          element.style.width = null;
-          element.style.position = null;
-          element.style.visibility = null;
-          element.style.height = 0;
+//   // element.style.width = width;
+//   // element.style.position = 'absolute';
+//   // element.style.visibility = 'hidden';
+//   // element.style.height = 'auto';
 
-          // Force repaint to make sure the
-          // animation is triggered correctly.
-          getComputedStyle(element).height;
+//   // const height = getComputedStyle(element).height;
 
-          requestAnimationFrame(() => {
-            element.style.height = height;
-          });
-        },
-        leave(element) {
-          const height = getComputedStyle(element).height;
+//   // gsap.set(element, {
+//   //   width : null,
+//   //   position : null,
+//   //   visibility : null,
+//   //   height : 0,
+//   // });
 
-          element.style.height = height;
-          // Force repaint to make sure the
-          // animation is triggered correctly.
-          getComputedStyle(element).height;
+//   // Force repaint to make sure the
+//   // animation is triggered correctly.
+//   // getComputedStyle(element).height;
 
-          requestAnimationFrame(() => {
-            element.style.height = 0;
-          });
-        },
-      },
-    };
-    return createElement('transition', data, context.children);
-  },
-};
+//   // window.requestAnimationFrame(() => {
+//   //   element.style.height = height;
+//   // });
+//   // done()
+//   gsap.to(element, {
+//     height: "auto",
+//     duration: 0.5,
+//     onComplete: done
+//   })
+// }
+// const onLeave = (element, done) => {
+//   console.log("onLeave")
+//   const height = getComputedStyle(element).height;
+
+//   element.style.height = height;
+//   // Force repaint to make sure the
+//   // animation is triggered correctly.
+//   getComputedStyle(element).height;
+
+//   requestAnimationFrame(() => {
+//     element.style.height = 0;
+//   });
+//   done()
+// }
 </script>

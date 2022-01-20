@@ -4,9 +4,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Indemnités et Frais annuels</h3>
-          <button @click.prevent="generer" class="btn btn-primary">
-            Générer
-          </button>
+          <button @click.prevent="generer" class="btn btn-primary">Générer</button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -27,32 +25,28 @@
           row-selected-class="table-primary"
         >
           <template v-slot:details="props">
-            <div class="d-flex">
-              <button
-                class="btn btn-link border-0"
-                @click="props.actions.toggleDetailRow(props.rowData.id)"
-              >
-                <font-awesome-icon
-                  v-if="props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-down']"
-                />
-                <font-awesome-icon
-                  v-if="!props.status.detailRowVisible || false"
-                  :icon="['fas', 'angle-right']"
-                />
-              </button>
-            </div>
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
           </template>
           <template v-slot:actions="props">
-            <div class="d-flex">
-              <button
-                title="Regénérer les frais de ce sapeur"
-                class="btn btn-outline-primary border-0"
-                @click="regenererSapeur(props.rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </div>
+            <button
+              title="Regénérer les frais de ce sapeur"
+              class="btn btn-outline-primary border-0"
+              @click="regenererSapeur(props.rowData.id)"
+            >
+              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+            </button>
           </template>
         </base-table>
       </div>
@@ -61,7 +55,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import { markRaw } from 'vue';
 import store from '@/store/index';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
 
@@ -117,7 +112,7 @@ export default {
   data() {
     let svm = this;
     return {
-      detailRow: FraisEcritureDetails,
+      detailRow: markRaw(FraisEcritureDetails),
       loading: true,
       selectedId: null,
       ecritureColumns: [
@@ -180,6 +175,8 @@ export default {
           title: 'Actions',
           key: 'actions',
           slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center'
         },
       ],
     };

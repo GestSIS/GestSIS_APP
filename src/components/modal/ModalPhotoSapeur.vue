@@ -89,7 +89,7 @@ export default {
       }
       this.fileReader.readAsDataURL(files[0]);
     },
-    save() {
+    async save() {
       const { canvas } = this.$refs.cropper.getResult();
       const image = canvas.toDataURL();
       canvas.toBlob((blob) => {
@@ -102,7 +102,7 @@ export default {
             this.HIDE_MODAL();
           })
           .catch((err) => {
-            this.$awn.error(
+            this.$awn.alert(
               err?.message || "Erreur lors de la modification de l'image"
             );
           });

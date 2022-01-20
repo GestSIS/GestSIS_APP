@@ -29,7 +29,7 @@ export default {
       );
     },
     fetchCivilites({ commit, state }) {
-      if (state.civilites.length){
+      if (state.civilites.length) {
         return Promise.resolve();
       }
       return BaseDataService.getCivilites().then((data) =>

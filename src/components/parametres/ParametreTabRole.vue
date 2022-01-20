@@ -4,24 +4,15 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Rôles</h3>
-      <button type="button" class="btn btn-primary" @click="newRole">
-        Nouveau rôle
-      </button>
+      <button type="button" class="btn btn-primary" @click="newRole">Nouveau rôle</button>
     </div>
     <div class="card-body">
-      <table
-        id="sap-cours"
-        class="table table-sm table-responsive"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="sap-cours" class="table table-sm table-responsive" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th data-field="date">Année</th>
             <th data-field="designation">Désignation</th>
-            <th v-for="p in permissions" :key="p.id" class="text-center">
-              {{ p.nom }}
-            </th>
+            <th v-for="p in permissions" :key="p.id" class="text-center">{{ p.nom }}</th>
             <th data-field="actions">Actions</th>
           </tr>
         </thead>
@@ -40,23 +31,13 @@
               />
               <label class="form-check-label" :for="p.id + '-' + r.id"></label>
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="edit(r)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="remove(r)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button type="button" class="btn btn-outline-primary border-0" @click="edit(r)">
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button type="button" class="btn btn-outline-danger border-0" @click="remove(r)">
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>
@@ -80,7 +61,7 @@ async function loadData(_, next) {
 
 export default {
   name: 'ParametreTabRoles',
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState({
       permissions: (state) => state.auth.permissions,

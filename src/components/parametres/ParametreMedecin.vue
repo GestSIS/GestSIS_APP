@@ -3,9 +3,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Médecins</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutMedecin">
-        Ajouter un médecin
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutMedecin">Ajouter un médecin</button>
     </div>
     <div class="card-body">
       <table id="excuses-types" class="table table-sm">
@@ -36,23 +34,21 @@
               />
               <label class="form-check-label" :for="`actif-${m.id}`"></label>
             </td>
-            <td>
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateMedecin(m)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteMedecin(m)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateMedecin(m)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteMedecin(m)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

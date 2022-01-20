@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       //Format back dates to SQL Format
       if ((this.active.id || 0) === 0) {
         const action =

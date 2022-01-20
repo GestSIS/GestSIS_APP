@@ -192,7 +192,8 @@ export default {
     ...mapState({
       params: (state) => state.sisParam.params,
       localites: (state) => state.localite.liste,
-      sapeurs: (state) => state.sapeur.liste.sort((a, b) => a.tri - b.tri),
+      sapeurs: (state) =>
+        state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeTelephone.id || 0) === 0) {
         this.$store
           .dispatch('addTelephone', this.activeTelephone)

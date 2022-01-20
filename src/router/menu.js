@@ -32,7 +32,7 @@ const links = [
     permission: permissions.COMPTABILITE.TOUT,
   },
   {
-    to: { name: 'publipostage'},
+    to: { name: 'publipostage' },
     icon: 'envelope',
     nom: 'Publipostage',
     permission: permissions.SAPEUR.LECTURE,

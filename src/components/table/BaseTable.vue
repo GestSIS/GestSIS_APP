@@ -16,9 +16,8 @@
       <tr v-if="!data.length">
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
-      <template v-for="r in computedData">
+      <template v-for="r in computedData" :key="'main-' + r.id">
         <tr
-          :key="'main-' + r.id"
           @click="select(r)"
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',

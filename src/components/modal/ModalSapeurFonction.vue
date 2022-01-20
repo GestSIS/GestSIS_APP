@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter une fonction</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une fonction
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -62,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 //TODO: Empêcher fonctions à double
 
@@ -87,7 +89,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    save() {
+    async save() {
       if ((this.activeFonction.id || 0) === 0) {
         this.$store
           .dispatch('addSapeurFonction', this.activeFonction)

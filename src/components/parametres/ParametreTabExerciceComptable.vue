@@ -8,9 +8,7 @@
         type="button"
         class="btn btn-primary"
         @click="newExerciceComptable"
-      >
-        Ajouter un exercice comptable
-      </button>
+      >Ajouter un exercice comptable</button>
     </div>
     <div class="card-body">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
@@ -25,9 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-if="!listeExerciceComptable.length">
-            Aucun exercice comptable
-          </tr>
+          <tr v-if="!listeExerciceComptable.length">Aucun exercice comptable</tr>
           <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>
@@ -43,24 +39,18 @@
               />
               <label class="form-check-label" for="en_cours"></label>
             </td>
-            <td>
-              <!-- TODO Implement those 2 buttons -->
-              <div class="d-flex justify-content-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateExerciceComptable(e)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  disabled
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </div>
+            <td class="align-middle text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateExerciceComptable(e)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <!-- TODO Implement Suppression exercice comptable -->
+              <button type="button" class="btn btn-outline-danger border-0" disabled v-if="false">
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </td>
           </tr>
         </tbody>

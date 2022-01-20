@@ -6,9 +6,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Type d'intervention</h3>
-          <button type="button" class="btn btn-primary" @click="ajoutType()">
-            Ajouter un type
-          </button>
+          <button type="button" class="btn btn-primary" @click="ajoutType()">Ajouter un type</button>
         </div>
         <div class="card-body">
           <table id="type-intervention" class="table table-sm">
@@ -28,23 +26,21 @@
                 <td>{{ t.tri }}</td>
                 <td>{{ t.designation }}</td>
                 <td>{{ statistique(t.stat_intervention_id) }}</td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary border-0"
-                      @click="updateType(t)"
-                    >
-                      <font-awesome-icon :icon="['far', 'edit']" />
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger border-0"
-                      @click="deleteType(t)"
-                    >
-                      <font-awesome-icon :icon="['far', 'trash-alt']" />
-                    </button>
-                  </div>
+                <td class="align-middle text-center">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    @click="updateType(t)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="deleteType(t)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -58,9 +54,11 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Statistiques</h3>
-          <button type="button" class="btn btn-primary" @click="ajoutStat()">
-            Ajouter un type de statistique
-          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="ajoutStat()"
+          >Ajouter un type de statistique</button>
         </div>
         <div class="card-body">
           <table id="statistiques" class="table table-sm">

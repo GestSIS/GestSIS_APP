@@ -243,7 +243,7 @@ export default {
       this.callback(null);
       this.HIDE_MODAL();
     },
-    save() {
+    async save() {
       this.$store
         .dispatch('createSapeur', this.sapeur)
         .then((data) => {
