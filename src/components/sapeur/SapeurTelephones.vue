@@ -104,11 +104,9 @@ export default {
     draggable,
   },
   mounted() {
-    console.log(this.activeSapeurTelephones)
     this.telephonesData = [
-      // ...(this.activeSapeurTelephones || []).map((t) => ({...t})),
+      ...(this.activeSapeurTelephones || []).map((t) => ({...t})),
     ];
-    console.log(this.telephonesData)
   },
   data() {
     return {
