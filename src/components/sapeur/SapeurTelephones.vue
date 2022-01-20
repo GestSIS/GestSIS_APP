@@ -30,27 +30,27 @@
         <tr v-if="telephones.length <= 0">
           <td colspan="5">Aucun numéro enregistré</td>
         </tr>
-        <draggable tag="tbody" v-model="telephones" item-key="id">
-          <template #item="{ t }">
+        <draggable tag="tbody" v-model="telephones" item-key="priorite">
+          <template #item="{ element }">
             <tr>
               <td
                 class="text-center"
                 :class="{ 'd-none': telephones.length <= 1 }"
               >
-                {{ t.priorite }}
+                {{ element.priorite }}
               </td>
               <td>
                 <input
                   class="form-control form-control-sm"
                   type="text"
-                  v-model="t.numero"
+                  v-model="element.numero"
                   placeholder="..."
                 />
               </td>
               <td>
                 <select
                   class="form-select form-select-sm"
-                  v-model="t.telephone_type_id"
+                  v-model="element.telephone_type_id"
                 >
                   <option
                     v-for="t in telephonesTypes"
@@ -65,15 +65,14 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  :id="t.priorite"
-                  v-model="t.rta"
+                  v-model="element.rta"
                 />
               </td>
               <td class="align-middle text-center">
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  @click="removeTelephone(t.priorite)"
+                  @click="removeTelephone(element.priorite)"
                   required
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
@@ -105,9 +104,11 @@ export default {
     draggable,
   },
   mounted() {
+    console.log(this.activeSapeurTelephones)
     this.telephonesData = [
-      ...this.activeSapeurTelephones.map((t) => Object.assign({}, t)),
+      // ...(this.activeSapeurTelephones || []).map((t) => ({...t})),
     ];
+    console.log(this.telephonesData)
   },
   data() {
     return {
@@ -117,9 +118,7 @@ export default {
   },
   watch: {
     activeSapeurTelephones() {
-      this.telephonesData = [
-        ...this.activeSapeurTelephones.map((t) => Object.assign({}, t)),
-      ];
+      this.telephonesData = this.activeSapeurTelephones.map((t) => ({...t}));
     },
   },
   computed: {
@@ -128,7 +127,7 @@ export default {
     }),
     ...mapGetters(['activeSapeurTelephones']),
     telephones: {
-      get: function () {
+      get() {
         return this.telephonesData;
       },
       set(telephones) {
