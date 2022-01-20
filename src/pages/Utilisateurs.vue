@@ -5,19 +5,15 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Utilisateurs
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Utilisateurs</li>
           </ol>
         </nav>
       </div>
       <!-- <div class="col-sm-6 d-flex justify-content-end">
         <exercice-comptable />
-      </div> -->
+      </div>-->
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -25,9 +21,7 @@
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
-            <button @click="invite" class="btn btn-outline-primary">
-              Inviter
-            </button>
+            <button @click="invite" class="btn btn-outline-primary">Inviter</button>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
@@ -55,16 +49,12 @@
                     v-for="r in u.user_roles"
                     :key="r.id"
                     class="badge bg-primary me-1"
-                    >{{ formatRole(r.role_id) }}</span
-                  >
+                  >{{ formatRole(r.role_id) }}</span>
                 </td>
                 <!-- <td>{{ u }}</td> -->
                 <td>
                   <div class="d-flex">
-                    <button
-                      class="btn btn-outline-primary border-0"
-                      @click="edit(u)"
-                    >
+                    <button class="btn btn-outline-primary border-0" @click="edit(u)">
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </div>

@@ -55,6 +55,7 @@
             <th>Nom Prénom</th>
             <th>Date naissance</th>
             <th>Localité</th>
+            <th>Adresse</th>
             <th>Fonction</th>
             <th v-for="i in nbNumero" :key="'num-' + i">Numéro {{ i }}</th>
             <th v-for="i in nbGroupes" :key="'grp' + i">Grp{{ i }}</th>
@@ -63,7 +64,7 @@
         <tbody>
           <tr v-if="!mutations.length">
             <td></td>
-            <td colspan="4">
+            <td colspan="5">
               Aucun changement détecté entre la base RTA et les données
               actuelles.
             </td>
@@ -110,6 +111,13 @@
               }"
             >
               {{ e.localite }}
+            </td>
+            <td
+              :class="{
+                'text-warning': e.changements.adresse,
+              }"
+            >
+              {{ e.adresse }}
             </td>
             <td
               :class="{
@@ -261,6 +269,7 @@ export default {
             'prenom',
             'fonction',
             'localite',
+            'adresse',
             'date_naissance',
           ];
           let changements = {};

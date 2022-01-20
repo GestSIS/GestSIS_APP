@@ -435,7 +435,7 @@ export default {
           svm.HIDE_MODAL();
         })
         .catch((errorMessage) => {
-          console.error(errorMessage);
+          // console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },

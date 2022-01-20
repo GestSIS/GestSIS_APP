@@ -24,10 +24,7 @@
           </div>
           <form class="card-body d-grid gap-1">
             <router-link custom to="/interventions/new" v-slot="{ navigate }">
-              <button
-                @click="navigate"
-                class="btn btn-outline-primary"
-              >Ajouter une intervention</button>
+              <button @click="navigate" class="btn btn-outline-primary">Ajouter une intervention</button>
             </router-link>
             <router-link custom :to="'/interventions/' + selectedId" v-slot="{ navigate }">
               <button

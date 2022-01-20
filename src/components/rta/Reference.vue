@@ -4,6 +4,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Référence RTA</h3>
+      <button @click="reset" class="btn btn-outline-primary">Reset</button>
     </div>
     <div class="card-body">
       <table class="table table-sm" cellspacing="0">
@@ -13,6 +14,7 @@
             <th>Nom Prénom</th>
             <th>Date naissance</th>
             <th>Localité</th>
+            <th>Adresse</th>
             <th>Fonction</th>
             <th v-for="i in nbNumero" :key="'num-' + i">Numéro {{ i }}</th>
             <th v-for="i in nbGroupes" :key="'grp' + i">Grp{{ i }}</th>
@@ -20,9 +22,7 @@
         </thead>
         <tbody>
           <tr v-if="!mutations.length">
-            <td colspan="4">
-              Aucun sapeur présent actuellement dans la référence RTA.
-            </td>
+            <td colspan="5">Aucun sapeur présent actuellement dans la référence RTA.</td>
           </tr>
           <tr
             v-for="e in mutations"
@@ -45,35 +45,32 @@
                   class="form-check-label"
                   :for="'select-' + e.sapeur_id"
                 ></label>
-            </td> -->
+            </td>-->
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
-            >
-              {{ e.nom }} {{ e.prenom }}
-            </td>
+            >{{ e.nom }} {{ e.prenom }}</td>
             <td
               :class="{
                 'text-warning': e.changements.date_naissance,
               }"
-            >
-              {{ e.date_naissance }}
-            </td>
+            >{{ e.date_naissance }}</td>
             <td
               :class="{
                 'text-warning': e.changements.localite,
               }"
-            >
-              {{ e.localite }}
-            </td>
+            >{{ e.localite }}</td>
+            <td
+              :class="{
+                'text-warning': e.changements.adresse,
+              }"
+            >{{ e.adresse }}</td>
             <td
               :class="{
                 'text-warning': e.changements.fonction,
               }"
-            >
-              {{ e.fonction }}
-            </td>
+            >{{ e.fonction }}</td>
             <td
               v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
@@ -86,13 +83,8 @@
                 'text-danger':
                   e.statut == 'modifie' && i >= e.changements.numerosSupprime,
               }"
-            >
-              {{ n }}
-            </td>
-            <td
-              v-for="n in nbNumero - e.numeros.length"
-              :key="'n-comp-' + n"
-            ></td>
+            >{{ n }}</td>
+            <td v-for="n in nbNumero - e.numeros.length" :key="'n-comp-' + n"></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
@@ -107,13 +99,8 @@
                   e.statut == 'modifie' &&
                   e.changements.groupesSupprime.includes(g.no),
               }"
-            >
-              {{ g.no }}
-            </td>
-            <td
-              v-for="g in nbGroupes - e.groupes.length"
-              :key="'g-comp-' + g"
-            ></td>
+            >{{ g.no }}</td>
+            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
           </tr>
         </tbody>
       </table>
@@ -183,8 +170,17 @@ export default {
     },
     mutations() {
       const actuelsIds = new Set(this.reference.map((s) => s.sapeur_id));
+      const fields = [
+        'nom',
+        'prenom',
+        'fonction',
+        'localite',
+        'adresse',
+        'date_naissance',
+      ];
 
-      return this.reference.map((s) => {
+      return this.reference
+        .map((s) => {
         // Ajoute
         if (!actuelsIds.has(s.sapeur_id)) {
           return {
@@ -196,13 +192,14 @@ export default {
 
         // Modifie
         const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
-        const fields = [
-          'nom',
-          'prenom',
-          'fonction',
-          'localite',
-          'date_naissance',
-        ];
+        if(!actuel) {
+          return {
+            ...s,
+            statut: 'supprime',
+            changements: {},
+          };
+        }
+
         let changements = {};
         // Fields
         fields.forEach((f) => {
@@ -254,6 +251,11 @@ export default {
       });
     },
   },
+  methods:{
+    reset(){
+      this.$store.dispatch('resetReferenceRta')
+    }
+  }
 };
 </script>
 
