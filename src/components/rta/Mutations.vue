@@ -29,9 +29,7 @@
             v-model="password"
           />
         </div>
-        <button type="button" class="col-auto btn btn-primary" @click="mutate">
-          Transfert RTA
-        </button>
+        <button type="button" class="col-auto btn btn-primary" @click="mutate">Transfert RTA</button>
       </div>
       <div class="mb-3">
         <div class="input-group">
@@ -84,48 +82,35 @@
                 :id="'select-' + e.sapeur_id"
                 v-model="unselected[e.sapeur_id]"
                 :false-value="true"
-                :true-value="undefined"
+                :true-value="false"
               />
-              <label
-                class="form-check-label"
-                :for="'select-' + e.sapeur_id"
-              ></label>
+              <label class="form-check-label" :for="'select-' + e.sapeur_id"></label>
             </td>
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
-            >
-              {{ e.nom }} {{ e.prenom }}
-            </td>
+            >{{ e.nom }} {{ e.prenom }}</td>
             <td
               :class="{
                 'text-warning': e.changements.date_naissance,
               }"
-            >
-              {{ e.date_naissance }}
-            </td>
+            >{{ e.date_naissance }}</td>
             <td
               :class="{
                 'text-warning': e.changements.localite,
               }"
-            >
-              {{ e.localite }}
-            </td>
+            >{{ e.localite }}</td>
             <td
               :class="{
                 'text-warning': e.changements.adresse,
               }"
-            >
-              {{ e.adresse }}
-            </td>
+            >{{ e.adresse }}</td>
             <td
               :class="{
                 'text-warning': e.changements.fonction,
               }"
-            >
-              {{ e.fonction }}
-            </td>
+            >{{ e.fonction }}</td>
             <td
               v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
@@ -138,13 +123,8 @@
                 'text-danger':
                   e.statut == 'modifie' && i >= e.changements.numerosSupprime,
               }"
-            >
-              {{ n }}
-            </td>
-            <td
-              v-for="n in nbNumero - e.numeros.length"
-              :key="'n-comp-' + n"
-            ></td>
+            >{{ n }}</td>
+            <td v-for="n in nbNumero - e.numeros.length" :key="'n-comp-' + n"></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
@@ -159,13 +139,8 @@
                   e.statut == 'modifie' &&
                   e.changements.groupesSupprime.includes(g.no),
               }"
-            >
-              {{ g.no }}
-            </td>
-            <td
-              v-for="g in nbGroupes - e.groupes.length"
-              :key="'g-comp-' + g"
-            ></td>
+            >{{ g.no }}</td>
+            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
           </tr>
         </tbody>
       </table>
@@ -174,7 +149,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Mutations',
@@ -195,6 +170,18 @@ export default {
     this.$store.dispatch('fetchReferenceGestSis');
     if (!this.reference.length) {
       this.$store.dispatch('fetchReferenceRta');
+    }
+    this.unselected = {
+      ...this.mutations.map(m => ({ [m.sapeur_id]: false })).reduce((a, b) => ({ ...a, ...b }), {}),
+      ...this.unselected,
+    }
+  },
+  watch: {
+    mutations() {
+      this.unselected = {
+        ...this.mutations.map(m => ({ [m.sapeur_id]: false })).reduce((a, b) => ({ ...a, ...b }), {}),
+        ...this.unselected,
+      };
     }
   },
   computed: {

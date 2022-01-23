@@ -4,7 +4,7 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Référence RTA</h3>
-      <button @click="reset" class="btn btn-outline-primary">Reset</button>
+      <button @click="reset" class="btn btn-outline-primary">Réinitialiser</button>
     </div>
     <div class="card-body">
       <table class="table table-sm" cellspacing="0">
@@ -181,78 +181,78 @@ export default {
 
       return this.reference
         .map((s) => {
-        // Ajoute
-        if (!actuelsIds.has(s.sapeur_id)) {
-          return {
-            ...s,
-            statut: 'supprime',
-            changements: {},
-          };
-        }
-
-        // Modifie
-        const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
-        if(!actuel) {
-          return {
-            ...s,
-            statut: 'supprime',
-            changements: {},
-          };
-        }
-
-        let changements = {};
-        // Fields
-        fields.forEach((f) => {
-          if (s[f] != actuel[f]) {
-            changements[f] = true;
+          // Ajoute
+          if (!actuelsIds.has(s.sapeur_id)) {
+            return {
+              ...s,
+              statut: 'supprime',
+              changements: {},
+            };
           }
+
+          // Modifie
+          const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
+          if (!actuel) {
+            return {
+              ...s,
+              statut: 'supprime',
+              changements: {},
+            };
+          }
+
+          let changements = {};
+          // Fields
+          fields.forEach((f) => {
+            if (s[f] != actuel[f]) {
+              changements[f] = true;
+            }
+          });
+
+          // Groupes
+          const actuelGroupes = new Set(actuel.groupes.map((g) => g.no));
+
+          const groupesSupprime = s.groupes
+            .map((g) => g.no)
+            .filter((g) => !actuelGroupes.has(g));
+
+          const groupesActuel = new Map(
+            actuel.groupes.map((g) => [g.no, g.description])
+          );
+          const groupesModifie = s.groupes.filter(
+            (g) =>
+              groupesActuel.has(g.no) && groupesActuel.get(g.no) !== g.description
+          );
+
+          changements = {
+            ...changements,
+            groupesAjoute: [],
+            groupesModifie,
+            groupesSupprime,
+          };
+
+          const groupes = [...s.groupes];
+
+          // Numéros
+          const numerosAjoute = s.numeros.length;
+          const numerosSupprime = actuel.numeros.length;
+          const numerosModifie = s.numeros
+            .slice(0, Math.min(numerosAjoute, numerosSupprime))
+            .map((n, index) => (actuel.numeros[index] != n ? index : -1))
+            .filter((i) => i >= 0);
+
+          changements = {
+            ...changements,
+            numerosAjoute,
+            numerosModifie,
+            numerosSupprime,
+          };
+
+          return { ...s, groupes, statut: 'modifie', changements };
         });
-
-        // Groupes
-        const actuelGroupes = new Set(actuel.groupes.map((g) => g.no));
-
-        const groupesSupprime = s.groupes
-          .map((g) => g.no)
-          .filter((g) => !actuelGroupes.has(g));
-
-        const groupesActuel = new Map(
-          actuel.groupes.map((g) => [g.no, g.description])
-        );
-        const groupesModifie = s.groupes.filter(
-          (g) =>
-            groupesActuel.has(g.no) && groupesActuel.get(g.no) !== g.description
-        );
-
-        changements = {
-          ...changements,
-          groupesAjoute: [],
-          groupesModifie,
-          groupesSupprime,
-        };
-
-        const groupes = [...s.groupes];
-
-        // Numéros
-        const numerosAjoute = s.numeros.length;
-        const numerosSupprime = actuel.numeros.length;
-        const numerosModifie = s.numeros
-          .slice(0, Math.min(numerosAjoute, numerosSupprime))
-          .map((n, index) => (actuel.numeros[index] != n ? index : -1))
-          .filter((i) => i >= 0);
-
-        changements = {
-          ...changements,
-          numerosAjoute,
-          numerosModifie,
-          numerosSupprime,
-        };
-
-        return { ...s, groupes, statut: 'modifie', changements };
-      });
     },
   },
-  methods:{
-    reset(){
+  methods: {
+    reset() {
       this.$store.dispatch('resetReferenceRta')
     }
   }
