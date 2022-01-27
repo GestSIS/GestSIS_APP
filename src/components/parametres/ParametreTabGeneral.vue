@@ -6,9 +6,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">General</h3>
-          <button type="button" class="btn btn-primary" @click="save()">
-            Enregister
-          </button>
+          <button type="button" class="btn btn-primary" @click="save()">Enregister</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -153,7 +151,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
