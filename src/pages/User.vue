@@ -14,7 +14,7 @@
     </div>
     <div class="row">
       <!-- Jeton -->
-      <div class="col-6">
+      <div class="col-12 col-sm-6">
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
             <h3>Utiliser un jeton</h3>
@@ -35,10 +35,10 @@
         </div>
       </div>
       <!-- Mot de passe -->
-      <div class="col-6">
+      <div class="col-12 col-sm-6">
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
-            <h3>Changement mot de passe</h3>
+            <h3>Changer mon mot de passe</h3>
           </div>
           <div class="card-body">
             <div class="mb-3">
@@ -155,16 +155,14 @@ export default {
       this.$store
         .dispatch('changePassword', { password: this.oldPassword, newPassword: this.newPassword })
         .then((response) => {
-          console.log(response)
           this.$awn.success(response?.message || 'Mot de passe mis à jour');
           this.oldPassword = '';
           this.newPassword = '';
           this.newPasswordRepeated = '';
         })
-        .catch((e) => {
-          console.log(e?.message)
-          this.$awn.alert(e?.message || 'Impossible de changer le mot de passe')
-        });
+        .catch((e) =>
+          this.$awn.alert(e?.message || 'Mot de passe incorrect')
+        );
     },
   },
 };
