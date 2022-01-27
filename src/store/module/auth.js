@@ -10,6 +10,7 @@ export default {
   state: {
     authenticated: !!TokenService.getAccessToken(),
     user: null,
+    email: null,
     refreshTokenPromise: null,
     permissions: [],
     roles: [],
@@ -40,6 +41,7 @@ export default {
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
+      state.email = jwt.data.email;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -89,6 +91,7 @@ export default {
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
+      state.email = jwt.data.email; 
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -105,6 +108,7 @@ export default {
       TokenService.removeUser();
 
       state.user = null;
+      state.email = null;
       state.sis.activeId = null;
       state.sis.activeKey = null;
       state.sis.permissions = [];
@@ -153,6 +157,13 @@ export default {
     register({ commit }, credentials) {
       return AuthService.register(credentials).then((data) => {
         return commit(types.AUTH_SUCCESSFULL, data);
+      });
+    },
+    changePassword({ state }, { password, newPassword }) {
+      return AuthService.changePassword({
+        email: state.email,
+        password: password,
+        new_password: newPassword
       });
     },
     confirmation({}, token) {
