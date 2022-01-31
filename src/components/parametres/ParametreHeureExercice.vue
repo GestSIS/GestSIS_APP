@@ -37,7 +37,11 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" disabled>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteHeureType(h)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -94,6 +98,13 @@ export default {
         component: 'ModalHeureExercice',
         data: { ...heure },
       });
+    },
+    deleteHeureType(heure) {
+      this.$store
+        .dispatch('removeExerciceHeure', heure.id)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
     fonction(id) {
       return id ? this.fonctions.find((f) => f.id === id)?.abreviation : '';

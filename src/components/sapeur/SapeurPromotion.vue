@@ -63,9 +63,7 @@ export default {
     if (this.grades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
-    if (this.activeSapeurGrades.length === 0) {
-      this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-    }
+    this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
   },
   watch: {
     activeSapeurId(id) {

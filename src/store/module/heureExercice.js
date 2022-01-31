@@ -48,9 +48,9 @@ export default {
         return data;
       });
     },
-    removeExerciceHeure({ commit }, heure) {
-      return ExerciceHeureService.removeHeureType(heure).then((data) => {
-        commit(types.REMOVE_HEURE_EXERCICE, data);
+    removeExerciceHeure({ commit }, heureId) {
+      return ExerciceHeureService.removeHeureType(heureId).then((data) => {
+        commit(types.REMOVE_HEURE_EXERCICE, heureId);
         return data;
       });
     },

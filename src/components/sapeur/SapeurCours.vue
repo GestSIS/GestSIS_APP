@@ -64,9 +64,7 @@ export default {
     if (this.cours.length === 0) {
       this.$store.dispatch('fetchCours');
     }
-    if (this.activeSapeurCours.length === 0) {
-      this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
-    }
+    this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
   },
   watch: {
     activeSapeurId(id) {
