@@ -178,6 +178,7 @@ export default {
         'adresse',
         'date_naissance',
       ];
+      const sapeurCompare = (a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
 
       return this.reference
         .map((s) => {
@@ -248,7 +249,8 @@ export default {
           };
 
           return { ...s, groupes, statut: 'modifie', changements };
-        });
+        })
+        .sort(sapeurCompare);
     },
   },
   methods: {

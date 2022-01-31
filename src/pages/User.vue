@@ -81,8 +81,8 @@
                 v-model="newPasswordRepeated"
               />
               <div class="invalid-feedback" v-if="!isPasswordIdentical">Mot de passe différent</div>
-              <button class="btn btn-primary mt-3" @click="changerMotDePasse">Changer</button>
             </div>
+            <button class="btn btn-primary" @click="changerMotDePasse">Changer</button>
           </div>
         </div>
       </div>

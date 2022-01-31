@@ -46,9 +46,7 @@
             id="amendable-modal"
             v-model="activeCategorie.amendable"
           />
-          <label class="form-check-label" for="amendable-modal"
-            >Amendable</label
-          >
+          <label class="form-check-label" for="amendable-modal">Amendable</label>
         </div>
       </div>
       <div class="mb-3">
@@ -58,18 +56,19 @@
             class="form-check-input"
             id="status-modal"
             v-model="activeCategorie.statut"
+            :true-value="1"
           />
           <label class="form-check-label" for="status-modal">Actif</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -88,6 +87,7 @@ export default {
     return {
       errors: {},
       activeCategorie: {
+        amendable: true,
         statut: 1,
       },
     };
@@ -116,9 +116,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store

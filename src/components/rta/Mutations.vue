@@ -229,20 +229,24 @@ export default {
         [...referenceIds].filter((id) => actuelIds.has(id))
       );
 
+      const sapeurCompare = (a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom)
+
       const ajoutes = this.actuel
         .filter((s) => !referenceIds.has(s.sapeur_id))
         .map((s) => ({
           ...s,
           statut: 'ajoute',
           changements: {},
-        }));
+        }))
+        .sort(sapeurCompare);
       const supprimes = this.reference
         .filter((s) => !actuelIds.has(s.sapeur_id))
         .map((s) => ({
           ...s,
           statut: 'supprime',
           changements: {},
-        }));
+        }))
+        .sort(sapeurCompare);
       const modifies = this.actuel
         .filter((s) => potentielModifieIds.has(s.sapeur_id))
         .map((s) => {
@@ -339,7 +343,8 @@ export default {
 
           return { ...s, groupes, numeros, statut: 'modifie', changements };
         })
-        .filter((m) => m.changements.modifie);
+        .filter((m) => m.changements.modifie)
+        .sort(sapeurCompare);
 
       return [...ajoutes, ...modifies, ...supprimes];
     },

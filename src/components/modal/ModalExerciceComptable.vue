@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -54,20 +55,19 @@
             class="form-check-input"
             id="exercice-comptable-boucle-modal"
             v-model="activeExercice.boucle"
+            :true-value="1"
           />
-          <label class="form-check-label" for="exercice-comptable-boucle-modal"
-            >Bouclé</label
-          >
+          <label class="form-check-label" for="exercice-comptable-boucle-modal">Bouclé</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeExercice.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -105,9 +105,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store

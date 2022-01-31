@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ role.id ? 'Modifier' : 'Ajouter' }} un role
-      </h5>
+      <h5 class="modal-title" id="exampleModalLabel">{{ role.id ? 'Modifier' : 'Ajouter' }} un rôle</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -29,11 +27,7 @@
       </div>
       <div class="mb-3">
         <label for="designation">Permissions</label>
-        <div
-          class="form-check"
-          v-for="permission in permissions"
-          :key="permission.id"
-        >
+        <div class="form-check" v-for="permission in permissions" :key="permission.id">
           <input
             type="checkbox"
             class="form-check-input"
@@ -41,25 +35,25 @@
             v-model="role.permissions"
             :id="'r' + permission.id"
           />
-          <label class="form-check-label" :for="'r' + permission.id">{{
-            permission.nom
-          }}</label>
+          <label class="form-check-label" :for="'r' + permission.id">
+            {{
+              permission.nom
+            }}
+          </label>
         </div>
         <div
           class="invalid-feedback"
           :class="{ 'd-block': errors['permissions'] }"
-        >
-          {{ errors['permissions'] }}
-        </div>
+        >{{ errors['permissions'] }}</div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ role.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ role.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -109,9 +103,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store
