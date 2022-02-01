@@ -10,7 +10,7 @@
       <table id="sap-cours" class="table table-sm table-responsive" cellspacing="0" width="100%">
         <thead>
           <tr>
-            <th data-field="date">Année</th>
+            <th data-field="date">Rôle</th>
             <th data-field="designation">Désignation</th>
             <th v-for="p in permissions" :key="p.id" class="text-center">{{ p.nom }}</th>
             <th data-field="actions">Actions</th>

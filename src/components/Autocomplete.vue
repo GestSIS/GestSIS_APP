@@ -23,9 +23,7 @@
         @click="setResult(result)"
         class="autocomplete-result list-group-item list-group-item-action"
         :class="{ active: i === arrowCounter }"
-      >
-        {{ result }}
-      </li>
+      >{{ result }}</li>
     </ul>
   </div>
 </template>
@@ -35,7 +33,7 @@ export default {
   name: 'autocomplete',
 
   props: {
-    value: {
+    modelValue: {
       default: '',
     },
     items: {
@@ -57,7 +55,7 @@ export default {
     return {
       isOpen: false,
       results: [],
-      search: this.value,
+      search: this.modelValue,
       isLoading: false,
       arrowCounter: 0,
     };
@@ -65,7 +63,7 @@ export default {
   methods: {
     onChange() {
       // Let's warn the parent that a change was made
-      this.$emit('input', this.search);
+      this.$emit('update:modelValue', this.search);
 
       // Let's  our flat array
       this.filterResults();
@@ -82,7 +80,7 @@ export default {
       this.search = result;
       this.isOpen = false;
       this.arrowCounter = -1;
-      this.$emit('input', this.search);
+      this.$emit('update:modelValue', this.search);
     },
     onArrowDown() {
       if (this.arrowCounter < this.results.length) {
@@ -99,7 +97,7 @@ export default {
       this.search = this.results[this.arrowCounter];
       this.isOpen = false;
       this.arrowCounter = -1;
-      this.$emit('input', this.search);
+      this.$emit('update:modelValue', this.search);
     },
     handleClickOutside(evt) {
       if (!this.$el.contains(evt.target)) {
@@ -115,7 +113,7 @@ export default {
         this.results = val;
       }
     },
-    value: function (val) {
+    modelValue: function (val) {
       this.search = val;
     },
   },

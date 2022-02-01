@@ -1,15 +1,11 @@
 <template>
   <div class="form-check">
-    <input
-      class="form-check-input"
-      type="checkbox"
-      :id="label"
-      v-model="model"
-      v-bind="$attrs"
-    />
-    <label v-if="label" class="form-check-label" :for="label">{{
-      label
-    }}</label>
+    <input class="form-check-input" type="checkbox" :id="label" v-model="model" v-bind="$attrs" />
+    <label v-if="label" class="form-check-label" :for="label">
+      {{
+        label
+      }}
+    </label>
   </div>
 </template>
 
@@ -21,25 +17,24 @@ export default {
       type: String,
       default: () => '',
     },
-    value: {
-      //Vuejs 3 -> modelValue
+    modelValue: {
       type: [Boolean, Number],
       default: undefined,
     },
   },
   data() {
     return {
-      model: this.value,
+      model: this.modelValue,
     };
   },
   watch: {
-    value(newValue, oldValue) {
+    modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
         this.model = newValue;
       }
     },
     model(currentValue) {
-      this.$emit('input', currentValue);
+      this.$emit('update:modelValue', currentValue);
     },
   },
 };

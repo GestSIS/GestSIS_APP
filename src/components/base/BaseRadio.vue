@@ -9,19 +9,13 @@
         :value="option.value"
         v-model="model"
       />
-      <label
-        v-if="!advancedLabel"
-        class="form-check-label"
-        :for="option.value"
-        >{{ option.label }}</label
-      >
+      <label v-if="!advancedLabel" class="form-check-label" :for="option.value">{{ option.label }}</label>
       <label
         v-else
         class="form-check-label"
         :for="option.value"
         v-html="replaceNewLines(option.label)"
-      >
-      </label>
+      ></label>
     </div>
   </div>
 </template>
@@ -34,8 +28,7 @@ export default {
       type: String,
       default: () => '',
     },
-    value: {
-      //Vuejs 3 -> modelValue
+    modelValue: {
       type: [Boolean, Number],
       default: undefined,
     },
@@ -58,17 +51,17 @@ export default {
     return {
       generateQuickGuid: generateQuickGuid,
       uuid: generateQuickGuid(),
-      model: this.value,
+      model: this.modelValue,
     };
   },
   watch: {
-    value(newValue, oldValue) {
+    modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
         this.model = newValue;
       }
     },
     model(currentValue) {
-      this.$emit('input', currentValue);
+      this.$emit('update:modelValue', currentValue);
     },
   },
   methods: {

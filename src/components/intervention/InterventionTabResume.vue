@@ -4,9 +4,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
+          <button @click.prevent="save" class="btn btn-primary">Enregistrer</button>
         </div>
         <div class="card-body">
           <label for="m-int-resume">Description</label>
@@ -58,8 +56,14 @@ export default {
           id: this.activeInterventionData.id,
           description: this.activeInterventionData.description,
         })
-        .then(() => (this.errors = {}))
-        .catch((errors) => (this.errors = errors));
+        .then((res) => {
+          this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées')
+        })
+        .catch((err) => {
+          this.errors = err
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+        });
     },
   },
 };

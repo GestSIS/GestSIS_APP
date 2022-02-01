@@ -2,9 +2,10 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <span></span>
-      <button class="btn btn-outline-primary" @click="save">
-        {{ newMode ? 'Ajouter' : 'Sauvegarder' }}
-      </button>
+      <button
+        class="btn btn-outline-primary"
+        @click="save"
+      >{{ newMode ? 'Ajouter' : 'Sauvegarder' }}</button>
     </div>
     <div class="card-body">
       <!-- NOM -->
@@ -33,9 +34,7 @@
             v-for="categorie in listeCategories"
             :key="categorie.id"
             :value="categorie.id"
-          >
-            {{ categorie.designation }}
-          </option>
+          >{{ categorie.designation }}</option>
         </select>
       </div>
       <div class="row">
@@ -119,9 +118,7 @@
                 v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-              >
-                {{ localite.npa + ' ' + localite.designation }}
-              </option>
+              >{{ localite.npa + ' ' + localite.designation }}</option>
             </select>
           </div>
         </div>
@@ -210,9 +207,9 @@ export default {
           .then((data) => {
             this.$router.push('/exercices/' + data.id);
             this.errors = {};
-            this.$awn.success(res?.message || 'Modifications enregistrées')
+            this.$awn.success(data?.message || 'Exercice créé')
           })
-          .catch((err) =>{
+          .catch((err) => {
             this.errors = err
             this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
           });
@@ -220,12 +217,12 @@ export default {
         this.$store
           .dispatch('saveActiveExercice', this.activeExerciceData)
           .then((res) => {
-            this.errors = {}
-            this.$awn.success(res?.message || 'Modifications enregistrées')
+            this.errors = {};
+            this.$awn.success(res?.message || 'Modifications enregistrées');
           })
-          .catch((err) =>{
-            this.errors = err
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          .catch((err) => {
+            this.errors = err;
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
           });
       }
     },

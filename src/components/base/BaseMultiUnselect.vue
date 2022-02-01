@@ -14,9 +14,11 @@
         formatter ? true : false
       }}
       <option v-if="baseOption" :value="undefined">{{ baseOption }}</option>
-      <option v-for="o in options" :key="o[valueKey]" :value="o[valueKey]">
-        {{ formatter ? formatter(o) : o[displayKey] }}
-      </option>
+      <option
+        v-for="o in options"
+        :key="o[valueKey]"
+        :value="o[valueKey]"
+      >{{ formatter ? formatter(o) : o[displayKey] }}</option>
     </select>
   </div>
 </template>
@@ -29,8 +31,7 @@ export default {
       type: String,
       default: () => '',
     },
-    value: {
-      //Vuejs 3 -> modelValue
+    modelValue: {
       type: Array,
       default: undefined,
     },
@@ -56,7 +57,7 @@ export default {
   },
   data() {
     const selected = this.options.map((o) => o[this.valueKey]);
-    const unselected = new Set(this.value);
+    const unselected = new Set(this.modelValue);
     return {
       model: selected.filter((e) => !unselected.has(e)),
       cachedUnselected: [],
@@ -70,10 +71,10 @@ export default {
         .filter((e) => !oldOnes.has(e));
       this.model = [...this.model, ...addedValues];
     },
-    value(newValue, oldValue) {
+    modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
         const selected = this.options.map((o) => o[this.valueKey]);
-        const unselected = new Set(this.value);
+        const unselected = new Set(this.modelValue);
         this.model = selected.filter((e) => !unselected.has(e));
       }
     },
@@ -91,7 +92,7 @@ export default {
 
       if (intersect.length > 0) {
         this.cachedUnselected = newUnselected;
-        this.$emit('input', this.cachedUnselected);
+        this.$emit('update:modelValue', this.cachedUnselected);
       }
     },
   },
