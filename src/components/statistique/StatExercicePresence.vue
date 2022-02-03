@@ -92,9 +92,7 @@
                   v-for="(e, index) in displayExercice"
                   :key="e.id"
                   class="text-center"
-                >
-                  {{ index + 1 }}
-                </th>
+                >{{ index + 1 }}</th>
                 <th>Nb Cvq</th>
                 <th>Nb Pre</th>
                 <th>Nb Rpl</th>
@@ -107,9 +105,7 @@
                 <td
                   v-if="!computedData.length"
                   :colspan="displayExercice.length + 8"
-                >
-                  Aucun sapeur à afficher
-                </td>
+                >Aucun sapeur à afficher</td>
               </tr>
               <tr v-for="s in computedData" :key="s.id">
                 <td>{{ s.nom }} {{ s.prenom }}</td>
@@ -120,9 +116,7 @@
                   :key="index"
                   class="text-center"
                   :class="formatPresenceClass(p)"
-                >
-                  {{ formatPresence(p) }}
-                </td>
+                >{{ formatPresence(p) }}</td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
                 <td class="text-center">{{ s.stats.present }}</td>
                 <td class="text-center">{{ s.stats.remplace }}</td>
@@ -133,10 +127,7 @@
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th
-                  v-if="displayExercice.length"
-                  :colspan="displayExercice.length"
-                ></th>
+                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
@@ -149,7 +140,7 @@
           <ul>
             <li>Exporter dans Excel</li>
             <li>Graphique d'un simple tableau</li>
-          </ul> -->
+          </ul>-->
         </div>
       </div>
     </div>
@@ -159,6 +150,7 @@
 <script>
 import { mapState } from 'vuex';
 import store from '@/store/index';
+import ModalPhaseVue from '../modal/ModalPhase.vue';
 
 async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
@@ -206,9 +198,17 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
+      indexedSapeursLocaliteId: (state) => state.sapeur.liste.reduce((map, e) => {
+        map.set(e.id, e.localite_id)
+        return map;
+      }, new Map()),
       fonctions: (state) => state.fonction.liste,
       localites: (state) => state.localites.liste,
       exercices: (state) => state.exercice.liste,
+      indexedExercices: (state) => state.exercice.liste.reduce((map, e) => {
+        map.set(e.id, e)
+        return map;
+      }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
       presences: (state) => state.statistique.presences,
       excuses: (state) => state.excuseType.liste,
@@ -256,42 +256,55 @@ export default {
       const unselectedExerciceCategorie = new Set(this.unselectedCategories);
 
       const filteredPresences = this.presences.filter((p) => {
-        const exercice = this.exercices.find((e) => e.id === p.exercice_id);
+        const exercice = this.indexedExercices.get(p.exercice_id);
         return (
           !unselectedLocaliteExercice.has(exercice?.localite_id) &&
           !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
           !unselectedLocaliteSapeur.has(
-            this.sapeurs.find((s) => s.id === p.sapeur_id)?.localite_id
+            this.indexedSapeursLocaliteId.get(p.sapeur_id)
           )
         );
-      });
+      })
+      const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
+        const sapeurList = map[e.sapeur_id] || [];
+        map[e.sapeur_id] = [...sapeurList, e];
+        return map;
+      }, {});
+
+      const sapeurExerciceIndexedPresence = filteredPresences.reduce((map, e) => {
+        const sapeurMap = map.get(e.sapeur_id) || new Map();
+        sapeurMap.set(e.exercice_id, e);
+        map.set(e.sapeur_id, sapeurMap);
+        return map;
+      }, new Map());
+
+
       return this.filteredSapeurs
         .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
         .map((s) => ({
           ...s,
           presences: this.displayExercice.map((e) =>
-            filteredPresences.find(
-              (p) => p.sapeur_id == s.id && p.exercice_id == e.id
-            )
+            sapeurExerciceIndexedPresence.get(s.id)?.get(e.id)
           ),
           stats: this.computeStats(
-            filteredPresences.filter((p) => p.sapeur_id == s.id)
+            sapeurIndexedPresence[s.id]
           ),
-          temp: filteredPresences.filter((p) => p.sapeur_id == s.id),
+          temp: sapeurIndexedPresence[s.id]
         }));
     },
     computedStats() {
       const unselectedLocaliteSapeur = new Set(this.unselectedSapeurDe);
       const unselectedLocaliteExercice = new Set(this.unselectedExerciceA);
       const unselectedExerciceCategorie = new Set(this.unselectedCategories);
+
       return this.computeStats(
         this.presences.filter((p) => {
-          const exercice = this.exercices.find((e) => e.id === p.exercice_id);
+          const exercice = this.indexedExercices.get(p.exercice_id);
           return (
             !unselectedLocaliteExercice.has(exercice?.localite_id) &&
             !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
             !unselectedLocaliteSapeur.has(
-              this.sapeurs.find((s) => s.id === p.sapeur_id)?.localite_id
+              this.indexedSapeursLocaliteId.get(p.sapeur_id)
             )
           );
         })
