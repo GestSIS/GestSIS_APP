@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="wrapper">
       <!-- Main Sidebar Container -->
-      <main-sidebar class="sidebar" />
+      <main-sidebar class="custom-sidebar" />
 
       <div class="content">
         <navbar />
@@ -24,7 +24,7 @@
               @yield('content')
             </div>
           </div>
-    @endif-->
+  @endif-->
 </template>
 
 <script>
@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .wrapper {
   display: flex;
   width: 100%;
@@ -52,12 +52,20 @@ export default {
 
 .content {
   flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto; /*adds scroll to this container*/
+  // overflow-y: auto; /*adds scroll to this container*/
+  overflow: hidden; /*adds scroll to this container*/
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
 }
 
-.sidebar {
+.custom-sidebar {
   flex-shrink: 0;
   flex-grow: 0;
   padding: 0;
+}
+
+.container-fluid {
+  overflow-y: scroll;
 }
 </style>

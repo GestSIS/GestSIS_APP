@@ -1,13 +1,11 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid overflow-hidden custom-container">
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">Sapeurs</li>
           </ol>
@@ -17,10 +15,10 @@
         <exercice-comptable />
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-3">
+    <div class="row overflow-hidden">
+      <div class="col-md-3 custom-scroll-column">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>
             <div class="card-body px-0">
@@ -44,9 +42,7 @@
                   value="inactif"
                   v-model="filter"
                 />
-                <label class="form-check-label" for="statutInactif"
-                  >Inactif</label
-                >
+                <label class="form-check-label" for="statutInactif">Inactif</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -77,24 +73,18 @@
                 @click="navigate"
                 @keypress.enter="navigate"
                 role="link"
-              >
-                {{ sapeur.nom }} {{ sapeur.prenom }}
-              </li>
+              >{{ sapeur.nom }} {{ sapeur.prenom }}</li>
             </router-link>
-            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
-              Aucun sapeur
-            </li>
+            <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
             <button
               class="btn btn-primary"
               v-if="!filteredSapeurs.length"
               @click="addSapeur"
-            >
-              Ajouter un sapeur
-            </button>
+            >Ajouter un sapeur</button>
           </ul>
         </div>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9 custom-scroll-column">
         <router-view></router-view>
       </div>
     </div>
@@ -206,5 +196,15 @@ export default {
   li {
     padding: 0.25rem 0.75rem;
   }
+}
+
+.custom-container {
+  display: flex;
+  flex-flow: column;
+}
+
+.custom-scroll-column {
+  height: 100%;
+  overflow-y: scroll;
 }
 </style>

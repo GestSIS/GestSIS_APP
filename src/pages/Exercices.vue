@@ -125,7 +125,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
               <span class="sr-only">Chargement...</span>

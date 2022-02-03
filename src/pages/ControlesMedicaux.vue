@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Contrôles Medicaux
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Contrôles Medicaux</li>
           </ol>
         </nav>
       </div>
@@ -22,14 +18,11 @@
     <div class="row">
       <div class="col-md-12">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des contrôles médicaux</h3>
             <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
-              <button
-                @click="navigate"
-                class="btn btn-outline-primary"
-              >Ajouter</button>
+              <button @click="navigate" class="btn btn-outline-primary">Ajouter</button>
             </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
@@ -68,28 +61,25 @@
               </button>
             </template>
             <template v-slot:actions="props">
-                <router-link
-                  :to="{
-                    name: 'controle-medical',
-                    params: { id: props.rowData.id },
-                  }"
-                  custom
-                  v-slot="{ navigate }"
-                >
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="navigate"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                </router-link>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimer(props.rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+              <router-link
+                :to="{
+                  name: 'controle-medical',
+                  params: { id: props.rowData.id },
+                }"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button class="btn btn-outline-primary border-0" @click="navigate">
+                  <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
+              </router-link>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimer(props.rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </template>
           </base-table>
         </div>
@@ -227,9 +217,9 @@ export default {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           const age = Math.floor(
             (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-              1000 /
-              (60 * 60 * 24) /
-              365.25
+            1000 /
+            (60 * 60 * 24) /
+            365.25
           );
           return {
             ...s,
@@ -299,3 +289,11 @@ table button.btn {
   padding: 0 !important;
 }
 </style>
+
+table button.btn {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.m-td-0 > td {
+  padding: 0 !important;
+}
