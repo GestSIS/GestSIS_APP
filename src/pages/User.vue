@@ -123,8 +123,13 @@ export default {
       errors: {},
     };
   },
+  computed: {
+    isPasswordIdentical() {
+      return this.newPassword === this.newPasswordRepeated;
+    }
+  },
   methods: {
-    utiliserJeton() {
+    async utiliserJeton() {
       if (!this.jeton) {
         this.$awn.warning('Jeton invalide');
       } else {
@@ -139,13 +144,6 @@ export default {
           );
       }
     },
-  },
-  computed: {
-    isPasswordIdentical() {
-      return this.newPassword === this.newPasswordRepeated;
-    }
-  },
-  methods: {
     async changerMotDePasse() {
       this.errors.password = this.newPassword.length < 7;
       if (!this.isPasswordIdentical || this.errors.password) {
