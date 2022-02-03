@@ -156,19 +156,21 @@ async function loadData(_, next) {
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadExcuses = store.dispatch('fetchExcuseTypes');
-  const loadExercies = store.dispatch('fetchListeExercice');
   const loadCategories = store.dispatch('fetchExerciceCategories');
-  const loadPresences = store.dispatch('fetchStatistiquePresence');
+  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
 
   Promise.all([
     loadLocalites,
     loadFonctions,
     loadSapeurs,
     loadExcuses,
-    loadExercies,
+    // loadExercies,
     loadCategories,
-    loadPresences,
+    // loadPresences,
+    loadExercicesComptables,
   ]).then(() => {
+    const loadExercies = store.dispatch('fetchListeExercice');
+    store.dispatch('fetchStatistiquePresence');
     next();
   });
 }
