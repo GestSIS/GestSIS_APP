@@ -5,12 +5,7 @@
       <h3 class="card-title">Exercices</h3>
     </div>
     <div class="card-body">
-      <table
-        id="sap-fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Date</th>
@@ -63,12 +58,14 @@
                 :checked="e.excuse_type_id"
                 disabled
               />
-              <label class="form-check-label" for="excuse">{{
-                e.excuse_type_id
-                  ? excusesType.find((a) => a.id == e.excuse_type_id)
+              <label class="form-check-label" for="excuse">
+                {{
+                  e.excuse_type_id
+                    ? excusesType.find((a) => a.id == e.excuse_type_id)
                       .designation
-                  : ''
-              }}</label>
+                    : ''
+                }}
+              </label>
             </td>
             <td class="text-center">
               <input
@@ -89,7 +86,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'SapeurExercice',
@@ -113,7 +110,7 @@ export default {
           localite: `${localite.npa} ${localite.designation}`,
           heure: exercice.heure.substr(0, 5),
         };
-      });
+      }).sort((a, b) => new Date(a.date) - new Date(b.date));
     },
   },
   mounted() {
