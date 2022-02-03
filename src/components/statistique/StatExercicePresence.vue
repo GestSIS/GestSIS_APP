@@ -150,7 +150,6 @@
 <script>
 import { mapState } from 'vuex';
 import store from '@/store/index';
-import ModalPhaseVue from '../modal/ModalPhase.vue';
 
 async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
@@ -204,7 +203,7 @@ export default {
       }, new Map()),
       fonctions: (state) => state.fonction.liste,
       localites: (state) => state.localites.liste,
-      exercices: (state) => state.exercice.liste,
+      exercices: (state) => state.exercice.liste.sort((a, b) => new Date(a.date) - new Date(b.date)),
       indexedExercices: (state) => state.exercice.liste.reduce((map, e) => {
         map.set(e.id, e)
         return map;
@@ -287,9 +286,9 @@ export default {
             sapeurExerciceIndexedPresence.get(s.id)?.get(e.id)
           ),
           stats: this.computeStats(
-            sapeurIndexedPresence[s.id]
+            sapeurIndexedPresence[s.id] || []
           ),
-          temp: sapeurIndexedPresence[s.id]
+          temp: sapeurIndexedPresence[s.id] || []
         }));
     },
     computedStats() {
@@ -298,7 +297,7 @@ export default {
       const unselectedExerciceCategorie = new Set(this.unselectedCategories);
 
       return this.computeStats(
-        this.presences.filter((p) => {
+        this.presences?.filter((p) => {
           const exercice = this.indexedExercices.get(p.exercice_id);
           return (
             !unselectedLocaliteExercice.has(exercice?.localite_id) &&
