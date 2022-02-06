@@ -34,11 +34,10 @@
             <h5>Filtres</h5>
           </div>
           <form class="card-body">
-            <!-- <div class="row">
+            <div class="row">
               <div class="col-md-4">
                 <select
                   class="form-select form-select-sm"
-                  id="filterLocalite"
                   @change="
                     (event) => onFilter('localite_id', event.target.value)
                   "
@@ -54,37 +53,41 @@
               <div class="col-md-4">
                 <select
                   class="form-select form-select-sm"
-                  id="filterCategorie"
                   @change="
-                    (event) =>
-                      onFilter('exercice_categorie_id', event.target.value)
+                    (event) => onFilter('fonctions', parseInt(event.target.value) ? fonctions => fonctions.find(f => f.fonction_id == event.target.value) != undefined : null)
                   "
                 >
-                  <option>&lt;Catégorie&gt;</option>
-                  <option
-                    v-for="categorie in filteredExercicesCategories"
-                    :key="categorie.id"
-                    :value="categorie.id"
-                  >{{ categorie.designation }}</option>
+                  <option>&lt;Fonction&gt;</option>
+                  <option v-for="f in filteredFonctions" :key="f.id" :value="f.id">{{ f.nom }}</option>
                 </select>
               </div>
               <div class="col-md-4">
                 <select
                   class="form-select form-select-sm"
-                  id="filterStatus"
                   @change="
-                    (event) => onFilter('statut', parseInt(event.target.value))
+                    (event) => onFilter('grade_id', event.target.value)
                   "
                 >
-                  <option value="-1">&lt;Statut&gt;</option>
-                  <option value="0">Annulé</option>
-                  <option value="1">Sapeurs à ajouter</option>
-                  <option value="2">En attente de validation</option>
-                  <option value="3">A imputer</option>
-                  <option value="4">Imputée</option>
+                  <option>&lt;Grade&gt;</option>
+                  <option v-for="f in filteredGrades" :key="f.id" :value="f.id">{{ f.designation }}</option>
                 </select>
               </div>
-            </div>-->
+              <div class="col-md-4">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) => onFilter('groupes', parseInt(event.target.value) ? groupes => groupes.find(f => f.groupe_id == event.target.value) != undefined : undefined)
+                  "
+                >
+                  <option :value="undefined">&lt;Groupe&gt;</option>
+                  <option
+                    v-for="f in filteredGroupes"
+                    :key="f.id"
+                    :value="f.id"
+                  >{{ (f.no ? f.no + ' ' : '') + f.designation }}</option>
+                </select>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -149,6 +152,7 @@ import permissions from '@/store/permissions.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 import SapeurService from '../services/SapeurService';
+import { DateTime } from 'luxon';
 
 async function loadData(routeTo, next) {
   let loadLocalites = store.dispatch('fetchLocalites');
@@ -243,8 +247,8 @@ export default {
         },
         {
           title: 'Groupes',
-          key: 'groupes',
-          sortKey: 'groupes',
+          key: 'formatedGroupes',
+          sortKey: 'formatedGroupes',
         },
         {
           title: 'Tel n°1',
@@ -311,6 +315,7 @@ export default {
         b: s.permis.find(p => p.permis_type_id == b_id) != undefined,
         c1: s.permis.find(p => p.permis_type_id == c1_id) != undefined,
         c1_118: s.permis.find(p => p.permis_type_id == c1_118_id) != undefined,
+        fonctions: s.fonctions.filter(f => f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0),
         fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
         localite: indexedLocalite.get(s.localite_id)?.designation || '',
         fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
@@ -318,7 +323,8 @@ export default {
         grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
         tels: s.telephones
           .map(t => t.numero),
-        groupes: s.groupes
+        groupes: s.groupes,
+        formatedGroupes: s.groupes
           .map(g => indexedGroupes.get(g.groupe_id))
           .filter(g => g.type == 1)
           .sort((a, b) => a.tri - b.tri)
@@ -327,18 +333,38 @@ export default {
       })).sort((a, b) => b.fonction_tri - a.fonction_tri);
     },
     filteredLocalites() {
-      // const ids = new Set(this.exercices.map((i) => parseInt(i.localite_id)));
-      // return this.localites.filter((t) => ids.has(t.id));
-      return this.localites;
+      const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
+      return this.localites.filter((t) => ids.has(t.id));
+    },
+    // filteredCours() {
+    //   const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
+    //   return this.localites.filter((t) => ids.has(t.id));
+    // },
+    filteredFonctions() {
+      const ids = new Set(this.sapeurs.map((s) => s.fonctions.map(f => f.fonction_id)).reduce((acc, e) => [...acc, ...e], []));
+      return this.fonctions.filter((e) => ids.has(e.id));
+    },
+    filteredGrades() {
+      const ids = new Set(this.sapeurs.map((s) => parseInt(s.grade_id)));
+      return this.grades.filter((t) => ids.has(t.id));
+    },
+    filteredGroupes() {
+      const ids = new Set(this.sapeurs.map((s) => s.groupes.map(f => f.groupe_id)).reduce((acc, e) => [...acc, ...e], []));
+      return this.groupes.filter((t) => ids.has(t.id));
     },
     filteredSapeurs() {
       return this.computedData.filter(
         Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
+          .filter(([, val]) => val && (val >= 0 || typeof val == 'function'))
           .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
+            ([key, value]) => {
+              if (typeof value == 'function') {
+                return (x) => value(x[key]);
+              } else {
+                return (x) =>
+                  x[key] == value;
+              }
+            }
           )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
@@ -394,7 +420,11 @@ END:VCARD`
       const url = URL.createObjectURL(file);
 
       a.href = url;
-      a.download = 'sis_vcard.vcf';
+      a.download = sapeurs.length == 1 ? sapeurs[0].nom_prenom
+        .replaceAll(' ', '_')
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase() + '.vcf' : 'sis_vcard.vcf';
 
       document.body.appendChild(a);
 
@@ -403,9 +433,6 @@ END:VCARD`
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       }, 0);
-    },
-    emailTo() {
-      //TODO:
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {
@@ -422,13 +449,19 @@ END:VCARD`
       return statutsClass[dataItem.statut];
     },
     onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
+      console.log(value)
+      this.filters = { ...this.filters, [key]: value };
     },
   },
 };
 </script>
 
 <style>
+table button.btn {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 table button.btn {
   padding-top: 0;
   padding-bottom: 0;
