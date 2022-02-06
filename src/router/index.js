@@ -167,6 +167,13 @@ const router = createRouter({
             import('@/components/comptabilite/ComptabiliteTabSapeur.vue'),
         },
         {
+          path: 'divers',
+          name: 'comptabilite-divers',
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabDivers.vue'),
+        },
+        {
           path: 'amendes',
           name: 'comptabilite-amendes',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
