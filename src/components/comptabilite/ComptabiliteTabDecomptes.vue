@@ -6,16 +6,12 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="generer">
-            Nouveau
-          </button>
+          <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedId"
             @click="supprimer(selectedId)"
-          >
-            Supprimer
-          </button>
+          >Supprimer</button>
         </div>
       </div>
     </div>
@@ -29,16 +25,12 @@
             class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="impression(selectedId)"
-          >
-            Impression
-          </button>
+          >Impression</button>
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="iso20022Decompte(selectedId)"
-          >
-            Fichier de paiement (ISO20022)
-          </button>
+          >Fichier de paiement (ISO20022)</button>
         </div>
       </div>
     </div>
@@ -48,9 +40,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
-          <button @click.prevent="generer" class="btn btn-primary">
-            Nouveau
-          </button>
+          <button @click.prevent="generer" class="btn btn-primary">Nouveau</button>
         </div>
         <base-table
           :fields="fields"
@@ -74,11 +64,7 @@
             <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="supprimer(value)"
-            >
+            <button type="button" class="btn btn-outline-danger border-0" @click="supprimer(value)">
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
@@ -209,7 +195,7 @@ export default {
       ).catch((err) => {
         this.$awn.alert(
           err?.data?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },
@@ -221,7 +207,7 @@ export default {
       ).catch((err) => {
         this.$awn.alert(
           err?.data?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },

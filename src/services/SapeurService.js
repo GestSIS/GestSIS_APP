@@ -1,6 +1,9 @@
 import Api from '@/http/Request';
 
 export default {
+  getEffectif() {
+    return Api.api().get('/effectif');
+  },
   getSapeurs() {
     return Api.api().get('/sapeurs');
   },

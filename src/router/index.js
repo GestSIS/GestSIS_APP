@@ -87,6 +87,12 @@ const router = createRouter({
       ],
     },
     {
+      path: '/effectif',
+      name: 'effectif',
+      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
+      component: () => import('@/pages/Effectif.vue'),
+    },
+    {
       path: '/exercices/:id',
       name: 'exercice',
       beforeEnter: permissionGuard(permissions.EXERCICE.PRESENCE),
