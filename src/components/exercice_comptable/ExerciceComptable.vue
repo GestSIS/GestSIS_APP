@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="exercice-comptable d-flex align-items-center"
-    v-if="currentExerciceComptableId"
-  >
+  <div class="exercice-comptable d-flex align-items-center" v-if="currentExerciceComptableId">
     <span>Exercice comptable</span>
     <base-dropdown
       :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
@@ -18,9 +15,7 @@
           class="dropdown-item"
           :class="{ active: currentExerciceComptableId === e.id }"
           :type="getExerciceComptable(currentExerciceComptableId).annee"
-        >
-          {{ e.annee }}
-        </button>
+        >{{ e.annee }}</button>
         <div class="dropdown-divider" v-if="hasConfigPermission"></div>
         <router-link
           :to="{ name: 'param-exercice-comptable' }"
@@ -28,12 +23,7 @@
           v-slot="{ navigate }"
           v-if="hasConfigPermission"
         >
-          <button
-            class="dropdown-item"
-            @click="navigate"
-          >
-          Paramètres
-          </button>
+          <button class="dropdown-item" @click="navigate">Paramètres</button>
         </router-link>
       </template>
     </base-dropdown>
@@ -48,7 +38,7 @@ export default {
   name: 'ExerciceComptable',
   computed: {
     ...mapState({
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasConfigPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),

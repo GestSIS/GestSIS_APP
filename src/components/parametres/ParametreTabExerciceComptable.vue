@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
+      listeExerciceComptable: (state) => state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },
