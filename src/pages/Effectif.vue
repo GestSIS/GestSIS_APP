@@ -111,6 +111,13 @@
             :data="filteredSapeurs"
             :row-class="onRowClass"
           >
+            <template v-slot:foot>
+              <tr>
+                <th
+                  :colspan="fieldsBase.length"
+                >Nombre sapeurs : {{ filteredSapeurs.length }} / {{ computedData.length }}</th>
+              </tr>
+            </template>
             <template v-slot:checkbox="{ key, value, rowData }">
               <input
                 type="checkbox"
@@ -461,10 +468,11 @@ table button.btn {
   padding-bottom: 0;
 }
 
-table button.btn {
+table a.btn {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .m-td-0 > td {
   padding: 0 !important;
 }
