@@ -12,7 +12,7 @@
             <th>heure</th>
             <th>Catégorie</th>
             <th>Localité</th>
-            <th>Communication</th>
+            <th>Désignation</th>
             <th class="text-center">Convoqué</th>
             <th class="text-center">Présent</th>
             <th class="text-center">Excusé</th>
@@ -29,7 +29,7 @@
             <td>{{ e.heure }}</td>
             <td>{{ e.categorie }}</td>
             <td>{{ e.localite }}</td>
-            <td>{{ e.communications }}</td>
+            <td>{{ e.designation }}</td>
             <td class="text-center">
               <input
                 type="checkbox"

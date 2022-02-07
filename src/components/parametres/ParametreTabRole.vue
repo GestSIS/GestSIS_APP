@@ -6,7 +6,7 @@
       <h3 class="card-title">Rôles</h3>
       <button type="button" class="btn btn-primary" @click="newRole">Nouveau rôle</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm table-responsive" cellspacing="0" width="100%">
         <thead>
           <tr>
