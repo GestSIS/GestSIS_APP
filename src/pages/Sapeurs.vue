@@ -57,7 +57,7 @@
               </div>
             </div>
           </div>
-          <ul class="list-group list-group-flush" id="liste-sapeurs">
+          <ul class="list-group list-group-flush" id="liste-sapeurs" ref="liste-sapeurs">
             <router-link
               custom
               v-slot="{ navigate }"
@@ -65,15 +65,15 @@
               :to="`/sapeurs/${sapeur.id}`"
               :key="sapeur.id"
             >
-              <li
+              <a
                 class="list-group-item list-group-item-action"
+                href="#"
                 :class="{
                   active: activeSapeurId === sapeur.id,
                 }"
                 @click="navigate"
-                @keypress.enter="navigate"
                 role="link"
-              >{{ sapeur.nom }} {{ sapeur.prenom }}</li>
+              >{{ sapeur.nom }} {{ sapeur.prenom }}</a>
             </router-link>
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
             <button
@@ -159,7 +159,17 @@ export default {
         inactif: (s) => parseInt(s.actif) === 0,
         all: () => true,
       },
+      eventListener: null,
     };
+  },
+  mounted() {
+    this.eventListener = (e) => {
+      if (e.key == "ArrowDown" || e.key == "ArrowUp") {
+        e.preventDefault();
+      }
+    }
+    this.$refs['liste-sapeurs'].addEventListener('keydown', this.eventListener);
+    this.$refs['liste-sapeurs'].addEventListener('keyup', this.navigationEventListener);
   },
   computed: {
     ...mapState({
@@ -172,6 +182,19 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    async navigationEventListener(e) {
+      const ids = this.filteredSapeurs.map(s => s.id);
+      const i = ids.indexOf(this.activeSapeurId);
+      if (e.key == "ArrowDown") {
+        if (i < ids.length - 1) {
+          this.$router.push({ name: 'sapeurs-details', params: { id: ids[i + 1] } })
+        }
+      } else if (e.key == "ArrowUp") {
+        if (i > 0) {
+          this.$router.push({ name: 'sapeurs-details', params: { id: ids[i - 1] } })
+        }
+      }
+    },
     addSapeur() {
       this.SHOW_MODAL({
         component: 'ModalSapeur',
