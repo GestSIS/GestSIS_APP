@@ -104,7 +104,7 @@
               </tbody>
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
-                  <th class="ms-0 pe-0">
+                  <th class="ms-0 ps-1">
                     <button class="btn btn-link border-0" @click="expandSap(s.id)">
                       <font-awesome-icon
                         v-if="toggles[s.id] || false"
@@ -118,20 +118,18 @@
                     {{ formatSapeur(s) }}
                   </th>
                   <td class="text-center">
-                    <div class="mb-3 text-center">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        :id="s.id"
-                        :checked="
-                          quittances.filter(
-                            (q) => q.sapeur_id === parseInt(s.id)
-                          ).length === 1
-                        "
-                        @click="(e) => editQuittance(e, s.id)"
-                      />
-                      <label class="form-check-label" :for="s.id"></label>
-                    </div>
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      :id="s.id"
+                      :checked="
+                        quittances.filter(
+                          (q) => q.sapeur_id === parseInt(s.id)
+                        ).length === 1
+                      "
+                      @click="(e) => editQuittance(e, s.id)"
+                    />
+                    <label class="form-check-label" :for="s.id"></label>
                   </td>
                   <td
                     v-for="i in Array(columns.length * 4).keys()"
@@ -173,6 +171,11 @@
                   </tr>
                 </template>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th :colspan="4 + 4 * columns.length">Nombre sapeurs : {{ sortedSapeurs.length }}</th>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -218,7 +221,7 @@ export default {
       return [
         ...Object.keys(this.computedPresences)
           .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
-          .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom),
+          .sort((s1, s2) => (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)),
       ];
     },
     computedPresences() {
