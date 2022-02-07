@@ -22,7 +22,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Actions</h5>
           </div>
-          <form class="card-body d-grid gap-1">
+          <div class="card-body d-grid gap-1">
             <router-link custom to="/interventions/new" v-slot="{ navigate }">
               <button @click="navigate" class="btn btn-outline-primary">Ajouter une intervention</button>
             </router-link>
@@ -38,7 +38,7 @@
               @click="supprimerIntervention(selectedId)"
               class="btn btn-outline-primary"
             >Supprimer</button>
-          </form>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
@@ -47,13 +47,13 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Impressions</h5>
           </div>
-          <form class="card-body d-grid gap-1">
+          <div class="card-body d-grid gap-1">
             <button
               :disabled="!selectedId"
               @click="rapportIntervention"
               class="btn btn-outline-primary"
             >Rapport d'intervention</button>
-          </form>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
@@ -62,7 +62,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
           </div>
-          <form class="card-body">
+          <div class="card-body">
             <div class="row">
               <div class="mb-3 col-md-4">
                 <select
@@ -146,7 +146,7 @@
                 </select>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

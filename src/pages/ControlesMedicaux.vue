@@ -16,14 +16,127 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Actions</h5>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
+              <button @click="navigate" class="btn btn-outline-primary">Ajouter un contrôle</button>
+            </router-link>
+            <router-link
+              custom
+              :to="'/controles-medicaux/' + selectedItem?.id"
+              v-slot="{ navigate }"
+            >
+              <button
+                :disabled="!selectedItem"
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >Modifier</button>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Impressions</h5>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <button
+              :disabled="!selectedItem?.filename"
+              @click="downloadJustificatif(selectedItem)"
+              class="btn btn-outline-primary"
+            >Justificatif</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Filtres</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) => onFilter('controle_medical_type_id', event.target.value)
+                  "
+                >
+                  <option>&lt;Type&gt;</option>
+                  <option
+                    v-for="type in filteredTypes"
+                    :key="type.id"
+                    :value="type.id"
+                  >{{ type.designation }}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) =>
+                      onFilter('medecin_id', event.target.value)
+                  "
+                >
+                  <option>&lt;Médecin&gt;</option>
+                  <option
+                    v-for="medecin in filteredMedecins"
+                    :key="medecin.id"
+                    :value="medecin.id"
+                  >{{ medecin.designation }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) => onAnneeFilter('consultation', event.target.value)
+                  "
+                >
+                  <option>&lt;Année de consultation&gt;</option>
+                  <option
+                    v-for="annee in filteredAnneesConsultation"
+                    :key="annee"
+                    :value="annee"
+                  >{{ annee }}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) => onAnneeFilter('validite', event.target.value)
+                  "
+                >
+                  <option>&lt;Année de validite&gt;</option>
+                  <option
+                    v-for="annee in filteredAnneesExpiration"
+                    :key="annee"
+                    :value="annee"
+                  >{{ annee }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des contrôles médicaux</h3>
-            <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary">Ajouter</button>
-            </router-link>
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
@@ -35,7 +148,7 @@
             :fields="fields"
             no-data="Aucun contrôle médical à afficher"
             :row-class="onRowClass"
-            :data="computedData"
+            :data="filteredControles"
             :selectable="true"
             selectKey="id"
             row-selected-class="table-primary"
@@ -133,7 +246,8 @@ export default {
   data() {
     return {
       loading: true,
-      selectedId: null,
+      selectedItem: null,
+      filters: {},
       fields: [
         {
           title: 'Sapeur',
@@ -171,7 +285,7 @@ export default {
           sortKey: 'designation',
         },
         {
-          title: 'Accepter',
+          title: 'Accepté',
           key: 'accepter',
           sortKey: 'accepter',
           columnClass: 'align-middle text-center',
@@ -207,12 +321,12 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       types: (state) => state.controlesMedicauxType.liste,
       medecins: (state) => state.medecin.liste,
-      listeControlesMedicaux: (state) => state.controleMedical.liste,
+      controlesMedicaux: (state) => state.controleMedical.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       const now = Date.now();
-      return this.listeControlesMedicaux
+      return this.controlesMedicaux
         .map((s) => {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           const age = Math.floor(
@@ -233,11 +347,44 @@ export default {
         })
         .sort((a, b) => a.sapeur.localeCompare(b.sapeur));
     },
+    filteredControles() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0 || typeof val == 'function')
+          .map(
+            ([key, value]) =>
+              typeof value == 'function' ?
+                (x) =>
+                  value(x[key])
+                :
+                (x) =>
+                  x[key] == value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredTypes() {
+      const ids = new Set(this.controlesMedicaux.map(e => e.controle_medical_type_id));
+      return this.types.filter(t => ids.has(t.id));
+    },
+    filteredMedecins() {
+      const ids = new Set(this.controlesMedicaux.map(e => e.medecin_id));
+      return this.medecins.filter(t => ids.has(t.id));
+    },
+    filteredAnneesConsultation() {
+      return new Set(this.controlesMedicaux.map(e => e.consultation).filter(e => e).map(d => new Date(d).getFullYear()).sort().reverse());
+    },
+    filteredAnneesExpiration() {
+      return new Set(this.controlesMedicaux.map(e => e.validite).filter(e => e).map(d => new Date(d).getFullYear()).sort().reverse());
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    selected(id) {
-      this.selectedId = id;
+    selected(item) {
+      this.selectedItem = item;
     },
     downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
@@ -262,7 +409,7 @@ export default {
         return;
       }
 
-      if (dataItem.validite && Date.parse(dataItem.validite) < new Date()) {
+      if (dataItem.validite && Date.parse(dataItem.validite) < new Date() || !dataItem.accepter) {
         return 'table-danger';
       }
       // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
@@ -275,6 +422,16 @@ export default {
       // };
       // return statutsClass[dataItem.statut];
       return '';
+    },
+    onAnneeFilter(key, value) {
+      if (parseInt(value)) {
+        this.filters = { ...this.filters, [key]: (e) => e && new Date(e).getFullYear() == value };
+      } else {
+        this.filters = { ...this.filters, [key]: undefined };
+      }
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };
@@ -289,11 +446,3 @@ table button.btn {
   padding: 0 !important;
 }
 </style>
-
-table button.btn {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.m-td-0 > td {
-  padding: 0 !important;
-}

@@ -18,14 +18,14 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Actions</h5>
           </div>
-          <form class="card-body d-grid gap-2">
+          <div class="card-body d-grid gap-2">
             <button @click="vcard(filteredSapeurs)" class="btn btn-outline-primary">VCard tous</button>
             <a
               :disabled="filteredSapeurs.length == 0"
               :href="'mailto:?bcc=' + filteredSapeurs.map(s => s.email).filter(s => s && s != null).join(',')"
               class="btn btn-outline-primary"
             >Email groupé</a>
-          </form>
+          </div>
         </div>
       </div>
       <div class="col-md-9">
@@ -33,7 +33,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
           </div>
-          <form class="card-body">
+          <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <select
@@ -88,7 +88,7 @@
                 </select>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -449,7 +449,6 @@ END:VCARD`
       return statutsClass[dataItem.statut];
     },
     onFilter(key, value) {
-      console.log(value)
       this.filters = { ...this.filters, [key]: value };
     },
   },
