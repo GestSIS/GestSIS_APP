@@ -5,9 +5,7 @@
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Véhicules</h3>
-        <button type="button" class="btn btn-primary" @click="save">
-          Enregistrer
-        </button>
+        <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
       </div>
       <div class="card-body">
         <table id="int-vehicules" class="table table-sm">
@@ -27,7 +25,7 @@
             <tr v-for="v in vehicules" :key="v.id">
               <td>{{ v.designation }}</td>
               <td>
-                <div class="mb-3 text-center">
+                <div class="text-center">
                   <input
                     type="checkbox"
                     class="form-check-input"
