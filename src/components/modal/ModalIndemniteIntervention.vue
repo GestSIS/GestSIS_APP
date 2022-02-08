@@ -50,9 +50,7 @@
             value="taux"
             v-model="imputationType"
           />
-          <label class="form-check-label" for="taux"
-            >Taux week-end et taux nuit</label
-          >
+          <label class="form-check-label" for="taux">Taux week-end et taux nuit</label>
         </div>
       </div>
       <div class="container-fluid">
@@ -85,9 +83,7 @@
               class="form-select"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in listeUnite" :key="u.id" :value="u.id">
-                {{ u.unite }}
-              </option>
+              <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
             </select>
           </div>
           <div class="mb-3 col-12">
@@ -99,9 +95,11 @@
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
               <option>toutes les phases</option>
-              <option v-for="p in listePhase" :key="p.id" :value="p.id">
-                uniquement phase {{ p.designation }}
-              </option>
+              <option
+                v-for="p in phases"
+                :key="p.id"
+                :value="p.id"
+              >uniquement phase {{ p.designation }}</option>
             </select>
           </div>
         </div>
@@ -156,9 +154,7 @@
           class="form-select"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in comptes" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -169,19 +165,17 @@
           class="form-select"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -218,11 +212,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.compte.liste,
-      listeUnite: (state) => state.unite.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-      listePhase: (state) => state.phaseType.liste,
+      fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
+      phases: (state) => state.phaseType.liste,
     }),
   },
   methods: {
@@ -249,9 +243,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store

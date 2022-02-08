@@ -1,11 +1,30 @@
 <template>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedItem"
+            @click="modifier(selectedItem)"
+          >Modifier</button>
+          <button
+            class="btn btn-outline-danger"
+            :disabled="!selectedItem"
+            @click="supprimer(selectedItem)"
+          >Supprimer</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
-          <h3>Amendes</h3>
-          <button class="btn btn-primary" @click="generer">Générer les amendes</button>
+          <h3>Autres</h3>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -16,31 +35,13 @@
           v-show="!loading"
           :fields="fields"
           :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data="Aucune amende à afficher"
-          :detail-row-component="detailRow"
+          no-data="Aucune écriture à afficher"
           :data="[]"
           @selected="selected"
           :selectable="true"
           selectKey="id"
           row-selected-class="table-primary"
-        >
-          <template v-slot:details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
-        </base-table>
+        ></base-table>
       </div>
     </div>
   </div>
@@ -48,9 +49,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { markRaw } from 'vue';
-import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
-
 import BaseTable from '@/components/table/BaseTable.vue';
 
 import store from '@/store/index';
@@ -89,23 +87,8 @@ export default {
   },
   data() {
     return {
-      detailRow: markRaw(AmendesSapeurDetails),
       loading: true,
       filters: {},
-      amendeColumns: [
-        {
-          title: 'Exercice',
-          field: 'designation',
-        },
-        {
-          title: 'Date',
-          field: 'date',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-        },
-      ],
       fields: [
         {
           title: '',
@@ -140,46 +123,15 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
-        ),
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
     }),
     ...mapGetters(['currentExerciceComptableId']),
-    // filteredAmendes() {
-    //   const amendes = this.amendes.filter(
-    //     Object.entries(this.filters)
-    //       .filter(([, val]) => val)
-    //       .map(
-    //         ([key, value]) =>
-    //           (x) =>
-    //             x[key] == value
-    //       )
-    //       .reduce(
-    //         (f, g) => (x) => f(x) && g(x),
-    //         () => true
-    //       )
-    //   );
-
-    //   const sapeurs = amendes.reduce((rv, a) => {
-    //     (rv[a.sapeur_id] = rv[a.sapeur_id] || {
-    //       ...this.sapeurs.find((s) => s.id == a.sapeur_id),
-    //       amendes: [],
-    //     }).amendes.push(a);
-    //     return rv;
-    //   }, {});
-    //   return Object.values(sapeurs).map((s) => ({
-    //     ...s,
-    //     nb: s.amendes.length,
-    //     sapeur: s.nom + ' ' + s.prenom,
-    //     total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-    //     columns: this.amendeColumns,
-    //   }));
-    // },
   },
   methods: {
-    selected(id) {
-      this.selectedId = id;
+    selected(item) {
+      this.selectedItem = item;
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
