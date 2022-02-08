@@ -1,6 +1,16 @@
 import Api from '@/http/Request';
 
 export default {
+  addEcriture(ecriture) {
+    return Api.api().post('/ecritures/', ecriture);
+  },
+  updateEcriture(ecriture) {
+    return Api.api().put('/ecritures/' + ecriture.id, ecriture);
+  },
+  removeEcriture(ecritureId) {
+    return Api.api().delete('/ecritures/' + ecritureId);
+  },
+
   getExerciceEcriturePourExerciceComptable(exerciceComptableId) {
     return Api.api().get('/ecritures/exercices/' + exerciceComptableId);
   },
@@ -98,6 +108,9 @@ export default {
   },
   getEcrituresAnnuelsForExerciceComptable(exerciceComtableId) {
     return Api.api().get('/ecritures/annuel/' + exerciceComtableId);
+  },
+  getEcrituresDiversForExerciceComptable(exerciceComtableId) {
+    return Api.api().get('/ecritures/divers/' + exerciceComtableId);
   },
   getAmendesForExerciceComptable(exerciceComptableId) {
     return Api.api().get('/ecritures/amende/' + exerciceComptableId);

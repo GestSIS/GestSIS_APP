@@ -14,6 +14,7 @@ export default {
     ecritures: {
       annuels: [],
       amendes: [],
+      divers: [],
     },
     active: {
       compteId: null,
@@ -39,6 +40,15 @@ export default {
         ecritures: [],
       };
     },
+    [types.ADD_ECRITURE](state, payload) {
+      //TODO: next
+    },
+    [types.UPDATE_ECRITURE](state, payload) {
+      //TODO: next
+    },
+    [types.REMOVE_ECRITURE](state, payload) {
+      //TODO: next
+    },
     [types.UPDATE_COMPTE_LISTE](state, payload) {
       if (state.active.compteId === null && payload.length > 0) {
         state.active.compteId = payload[0].id;
@@ -61,6 +71,9 @@ export default {
     },
     [types.UPDATE_ECRITURES_AMENDES](state, payload) {
       state.ecritures.amendes = payload;
+    },
+    [types.UPDATE_ECRITURES_DIVERS_LISTE](state, payload) {
+      state.ecritures.divers = payload;
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
       state.active.ecritures = payload;
@@ -216,6 +229,23 @@ export default {
       commit(types.SELECT_CURRENT_COMPTE, compteId);
       return dispatch('fetchEcritureComptes', compteId);
     },
+
+    addEcriture({ commit }, ecriture) {
+      return ImputationService.addEcriture(ecriture).then((data) => {
+        return commit(types.ADD_ECRITURE, data);
+      });
+    },
+    updateEcriture({ commit }, ecriture) {
+      return ImputationService.updateEcriture(ecriture).then((data) => {
+        return commit(types.UPDATE_ECRITURE, data);
+      });
+    },
+    destroyEcriture({ commit }, ecriture) {
+      return ImputationService.removeEcriture(ecriture).then((data) => {
+        return commit(types.REMOVE_ECRITURE, ecriture);
+      });
+    },
+
     fetchEcritureComptes({ state, getters, commit }, compteId) {
       return ImputationService.getEcritureForCompte(
         compteId ?? state.active.compteId,
@@ -238,6 +268,11 @@ export default {
       return ImputationService.getEcrituresAnnuelsForExerciceComptable(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_ANNUEL_TYPES_LISTE, data));
+    },
+    fetchEcrituresDivers({ commit, getters }) {
+      return ImputationService.getEcrituresDiversForExerciceComptable(
+        getters.currentExerciceComptableId
+      ).then((data) => commit(types.UPDATE_ECRITURES_DIVERS_LISTE, data));
     },
     fetchAmendesExerciceComptable({ commit, getters }) {
       return ImputationService.getAmendesForExerciceComptable(
@@ -295,7 +330,7 @@ export default {
       )
         .then //data =>
         // commit(types.UPDATE_COURS_LISTE, data)
-        //TODO
+        //TODO:
         ();
     },
     addFraisAnnuel({ commit }, frais) {

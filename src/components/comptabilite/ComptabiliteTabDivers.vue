@@ -6,16 +6,16 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
+          <button class="btn btn-outline-primary" @click="newEcriture">Nouveau</button>
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedItem"
-            @click="modifier(selectedItem)"
+            @click="editEcriture(selectedItem)"
           >Modifier</button>
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedItem"
-            @click="supprimer(selectedItem)"
+            @click="deleteEcriture(selectedItem)"
           >Supprimer</button>
         </div>
       </div>
@@ -36,7 +36,7 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
-          :data="[]"
+          :data="ecritures"
           @selected="selected"
           :selectable="true"
           selectKey="id"
@@ -48,17 +48,22 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import BaseTable from '@/components/table/BaseTable.vue';
 
 import store from '@/store/index';
 
 async function loadData(routeTo, next) {
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadUnites = store.dispatch('fetchUnites');
+  const loadComptes = store.dispatch('fetchComptes');
+  const loadEcritureCategorie = store.dispatch('fetchEcritureCategories');
+
   await store.dispatch('fetchExercicesComptables');
 
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadAmendes = store.dispatch('fetchAmendesExerciceComptable');
-  Promise.all([loadSapeurs, loadAmendes]).then(() => {
+  const loadEcrituresDivers = store.dispatch('fetchEcrituresDivers');
+
+  Promise.all([loadSapeurs, loadUnites, loadComptes, loadEcritureCategorie, loadEcrituresDivers]).then(() => {
     next();
   });
 }
@@ -88,12 +93,13 @@ export default {
   data() {
     return {
       loading: true,
+      selectedItem: null,
       filters: {},
       fields: [
         {
-          title: '',
-          key: 'details',
-          slot: 'details',
+          title: 'Designation',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
           title: 'Sapeur',
@@ -126,10 +132,21 @@ export default {
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
+      ecritures: (state) => state.imputation.ecritures.divers,
     }),
     ...mapGetters(['currentExerciceComptableId']),
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    newEcriture() {
+      this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: {} });
+    },
+    editEcriture(eciture) {
+      this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
+    },
+    deleteEcriture() {
+      // TODO: Supprimer écriture si pas déjà liée à un décompte
+    },
     selected(item) {
       this.selectedItem = item;
     },
