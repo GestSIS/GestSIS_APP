@@ -256,6 +256,17 @@ export default {
         return data;
       });
     },
+    cancelImputationExercice({ commit }, exerciceId) {
+      return ImputationService.cancelImputationExercice(
+        exerciceId,
+      ).then((data) => {
+        commit(types.UPDATE_INTERVENTION_STATUT, {
+          id: exerciceId,
+          statut: data.statut,
+        });
+        return data;
+      });
+    },
     imputerIntervention({ commit }, payload) {
       return ImputationService.imputerIntervention(
         payload.intervention_id,
@@ -263,6 +274,17 @@ export default {
       ).then((data) => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: payload.intervention_id,
+          statut: data.statut,
+        });
+        return data;
+      });
+    },
+    cancelImputationIntervention({ commit }, interventionId) {
+      return ImputationService.cancelImputationIntervention(
+        interventionId,
+      ).then((data) => {
+        commit(types.UPDATE_INTERVENTION_STATUT, {
+          id: interventionId,
           statut: data.statut,
         });
         return data;

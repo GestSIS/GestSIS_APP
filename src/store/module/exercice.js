@@ -26,20 +26,12 @@ export default {
     },
     [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
       state.liste = [
-        ...state.liste.map((e) => {
-          if (e.id !== id) {
-            return e;
-          } else {
-            return {
-              ...e,
-              statut: statut,
-            };
-          }
-        }),
+        ...state.liste.filter((e) => e.id != id),
+        {
+          ...state.liste.find((e) => e.id == id),
+          statut: statut,
+        },
       ];
-      if (state.active.id == id) {
-        state.active.data.statut = statut;
-      }
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
