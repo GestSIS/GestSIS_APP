@@ -225,9 +225,9 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
       if (this.imputationType == 'taux') {
+        this.activeIndemnite.type_unite_id = 2; // Par heure
         this.activeIndemnite.solde_min = null;
         this.activeIndemnite.solde_min_pour = null;
-        this.activeIndemnite.unite_type_id = 0;
         this.activeIndemnite.phase_id = null;
       } else {
         this.activeIndemnite.taux_nuit = null;
