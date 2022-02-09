@@ -5,10 +5,7 @@
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
-      <multi-step
-        :steps="['Type de frais', 'Résultat']"
-        :activeIndex="phase - 1"
-      />
+      <multi-step :steps="['Type de frais', 'Résultat']" :activeIndex="phase - 1" />
       <div v-if="phase === 1" class="row">
         <div
           :class="{
@@ -16,11 +13,7 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table
-            class="table table-sm"
-            @keydown.down="onKeyDown"
-            @keydown.up="onKeyUp"
-          >
+          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -37,7 +30,7 @@
               <tr
                 v-for="(indemnite, index) in indemnitesTypes"
                 :key="indemnite.id"
-                class=""
+                class
                 @click="selectIndemnite(index)"
                 :class="{
                   'table-primary': index === activeIndemniteIndex,
@@ -63,12 +56,9 @@
                       class="form-check-input"
                       id="checkbox-fonction"
                       :checked="indemnite.par_fonction"
-                      disabled=""
+                      disabled
                     />
-                    <label
-                      class="form-check-label"
-                      for="checkbox-fonction"
-                    ></label>
+                    <label class="form-check-label" for="checkbox-fonction"></label>
                   </div>
                 </td>
               </tr>
@@ -85,10 +75,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="fonction in activeIndemnite.fonctions"
-                :key="fonction.id"
-              >
+              <tr v-for="fonction in activeIndemnite.fonctions" :key="fonction.id">
                 <td>{{ fonctions.find((f) => f.id == fonction.id).nom }}</td>
                 <td>{{ fonction.solde }}</td>
                 <td>{{ fonction.indemnite }}</td>
@@ -98,16 +85,10 @@
         </div>
       </div>
       <div v-if="phase === 2">
-        <div
-          class="alert alert-dismissible alert-success"
-          v-if="successMessageVisibility"
-        >
-          <button
-            type="button"
-            class="btn-close"
-            @click="successMessageVisibility = false"
-          ></button>
-          Imputations effectuées avec <strong>succès</strong>!
+        <div class="alert alert-dismissible alert-success" v-if="successMessageVisibility">
+          <button type="button" class="btn-close" @click="successMessageVisibility = false"></button>
+          Imputations effectuées avec
+          <strong>succès</strong>!
         </div>
         <table class="table table-sm">
           <thead>
@@ -134,18 +115,18 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
-      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="cancel"
+      >{{ phase === 1 ? 'Annuler' : 'Fermer' }}</button>
       <button
         type="button"
         class="btn btn-primary"
         @click="imputer()"
         v-if="phase === 1"
         :disabled="activeIndemnite === null"
-      >
-        Imputer
-      </button>
+      >Imputer</button>
     </div>
   </div>
 </template>
@@ -157,7 +138,14 @@ import MultiStep from '@/components/MultiStep.vue';
 export default {
   name: 'ModalImputerExercice',
   components: { MultiStep },
-  props: ['data'],
+  props: {
+    data: {
+      type: Object,
+    },
+    callback: {
+      type: Function,
+    },
+  },
   data() {
     return {
       phase: 1,
@@ -191,6 +179,7 @@ export default {
     },
     cancel() {
       //TODO Cancel depending on state
+      this.callback();
       this.HIDE_MODAL();
     },
     imputer() {

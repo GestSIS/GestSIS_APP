@@ -256,11 +256,11 @@ export default {
         return data;
       });
     },
-    cancelImputationExercice({ commit }, exerciceId) {
-      return ImputationService.cancelImputationExercice(
+    annulerImputationExercice({ commit }, exerciceId) {
+      return ImputationService.annulerImputationExercice(
         exerciceId,
       ).then((data) => {
-        commit(types.UPDATE_INTERVENTION_STATUT, {
+        commit(types.UPDATE_EXERCICE_STATUT, {
           id: exerciceId,
           statut: data.statut,
         });
@@ -279,8 +279,8 @@ export default {
         return data;
       });
     },
-    cancelImputationIntervention({ commit }, interventionId) {
-      return ImputationService.cancelImputationIntervention(
+    annulerImputationIntervention({ commit }, interventionId) {
+      return ImputationService.annulerImputationIntervention(
         interventionId,
       ).then((data) => {
         commit(types.UPDATE_INTERVENTION_STATUT, {

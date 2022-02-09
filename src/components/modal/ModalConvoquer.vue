@@ -81,7 +81,7 @@ import { mapState, mapMutations } from 'vuex';
 import ConvocationService from '@/services/ConvocationService.js';
 
 export default {
-  name: 'ModalAppel',
+  name: 'ModalConvoquer',
   props: {
     data: {
       type: Object,

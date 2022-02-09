@@ -10,13 +10,13 @@ export default {
   getFraisTypes() {
     return Api.api().get('/frais-types');
   },
-  cancelImputationExercice(exerciceId) {
-    return Api.api().delete('/imputation/intervention/' + exerciceId);
+  annulerImputationExercice(exerciceId) {
+    return Api.api().delete('/imputation/exercice/' + exerciceId);
   },
   imputerExercice(exerciceId, payload) {
     return Api.api().post('/imputation/exercice/' + exerciceId, payload);
   },
-  cancelImputationIntervention(interventionId) {
+  annulerImputationIntervention(interventionId) {
     return Api.api().delete('/imputation/intervention/' + interventionId);
   },
   imputerIntervention(interventionId, payload) {

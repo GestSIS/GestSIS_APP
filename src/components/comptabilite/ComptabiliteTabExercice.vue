@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
+      <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Exercices</h3>
         </div>
@@ -360,8 +360,8 @@ export default {
       ImputationService.getExerciceEcriturePourExerciceComptable(
         this.currentExerciceComptableId
       ).then((e) => {
-        this.selectedItem = null;
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
+        this.selectedItem = this.exercices.find(e => e.id == this.selectedItem?.id) || null;
         this.loading = false;
       });
     },
@@ -383,6 +383,7 @@ export default {
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
         size: 2,
+        callback: () => this.init()
       });
     },
     annulerImputer(exerciceId) {
@@ -395,7 +396,15 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('cancelImputationExercice', exerciceId);
+            this.$store.dispatch('annulerImputationExercice', exerciceId)
+              .then(({ statut }) => {
+                this.exercices = [...this.exercices.filter((e) => e.id != exerciceId),
+                {
+                  ...this.exercices.find((e) => e.id == exerciceId),
+                  statut: statut,
+                }].sort((a, b) => a.date.localeCompare(b.date))
+                this.selectedItem = this.exercices.find(e => e.id == exerciceId);
+              });
           }
         },
       });

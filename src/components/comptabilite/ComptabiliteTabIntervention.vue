@@ -428,7 +428,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('cancelImputationIntervention', interventionId);
+            this.$store.dispatch('annulerImputationIntervention', interventionId);
           }
         },
       });

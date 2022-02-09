@@ -32,6 +32,9 @@ export default {
           statut: statut,
         },
       ];
+      if (state.active.id == id) {
+        state.active.data.statut = statut;
+      }
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
