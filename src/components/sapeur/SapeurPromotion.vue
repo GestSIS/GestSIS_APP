@@ -56,7 +56,7 @@ export default {
     ...mapState({
       grades: (state) => state.grade.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurGrades: (state) => state.sapeur.active.grades,
+      activeSapeurGrades: (state) => state.sapeur.active.grades.sort((a, b) => b.date.localeCompare(a.date)),
     }),
   },
   mounted() {

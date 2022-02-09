@@ -14,7 +14,10 @@ export default {
     [types.UPDATE_EXERCICE_COMPTABLE_LISTE](state, payload) {
       state.liste = payload;
       if ((state.activeId || 0) === 0) {
-        state.activeId = payload.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
+        // Select année en cours ou sinon, le dernier
+        const anneeEnCours = new Date().getFullYear();
+        const exerciceEnCours = payload.find(e => e.annee == anneeEnCours);
+        state.activeId = exerciceEnCours?.id || payload.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
       }
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {

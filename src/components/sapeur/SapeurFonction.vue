@@ -57,7 +57,7 @@ export default {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
+      activeSapeurFonctions: (state) => state.sapeur.active.fonctions.sort((a, b) => b.debut.localeCompare(a.debut)),
     }),
   },
   mounted() {
