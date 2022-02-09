@@ -25,7 +25,7 @@
               <p>{{ permis.type }}</p>
             </td>
             <td>
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <div class="input-group-text">
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>

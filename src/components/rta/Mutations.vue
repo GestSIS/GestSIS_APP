@@ -32,7 +32,7 @@
         <button type="button" class="col-auto btn btn-primary" @click="mutate">Transfert RTA</button>
       </div>
       <div class="mb-3">
-        <div class="input-group">
+        <div class="input-group input-group-sm">
           <label for="m-communication"></label>
           <textarea
             type="text"

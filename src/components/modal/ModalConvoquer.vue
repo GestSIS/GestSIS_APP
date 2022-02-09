@@ -16,7 +16,7 @@
         </div>-->
         <div class="col-8">
           <h6>Informations</h6>
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="titre">Titre</span>
             <input
               type="text"
@@ -32,7 +32,7 @@
             label="Affichage des personnes 'Pour information'"
             v-model="params.info"
           />
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="info">Info</span>
             <input
               type="text"

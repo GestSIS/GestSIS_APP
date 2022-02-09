@@ -80,7 +80,8 @@
         <div class="mb-3">
           <label for="m-sap-localite">NPA Localité</label>
           <select
-            class="form-select required"
+            class="form-select form-select-sm"
+            required
             id="m-sap-localite"
             :class="{ 'is-invalid': errorsData['localite_id'] }"
             name="localite_id"
@@ -109,7 +110,7 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="m-sap-email">Email</label>
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <div class="input-group-text">
               <font-awesome-icon icon="envelope" />
             </div>
@@ -128,7 +129,7 @@
           <div class="col-6">
             <div class="mb-3">
               <label for="m-sap-date-naissance">Date de naissance</label>
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <div class="input-group-text">
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
@@ -167,7 +168,7 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="m-sap-email">Date incorporation</label>
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <div class="input-group-text">
               <font-awesome-icon :icon="['far', 'calendar-alt']" />
             </div>

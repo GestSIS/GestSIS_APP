@@ -24,7 +24,8 @@
       <div class="mb-3">
         <label for="m-sap-cat">Categorie</label>
         <select
-          class="form-select required"
+          class="form-select form-select-sm"
+          required
           :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
           id="m-sap-cat"
           style="width: 100%"
@@ -42,7 +43,7 @@
           <!-- DATE -->
           <div class="mb-3">
             <label for="m-exe-date">Date</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
@@ -61,7 +62,7 @@
           <!-- HEURE -->
           <div class="mb-3">
             <label for="m-exe-heure">Heure</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
@@ -82,7 +83,7 @@
           <!-- DUREE -->
           <div class="mb-3">
             <label for="m-exe-duree">Durée</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['fas', 'hourglass-end']" />
               </div>
@@ -107,7 +108,8 @@
           <div class="mb-3">
             <label for="m-sap-localite">Localité</label>
             <select
-              class="form-select required"
+              class="form-select form-select-sm"
+              required
               :class="{ 'is-invalid': errors['localite_id'] }"
               id="m-sap-localite"
               name="localite_id"

@@ -18,7 +18,7 @@
             <div class="col-sm-6 col-xl-6">
               <div class="mb-3">
                 <label for="m-int-date-debut">Date de début</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                   <div class="input-group-text">
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
@@ -38,7 +38,7 @@
             <div class="col-sm-6 col-xl-6">
               <div class="mb-3">
                 <label for="m-int-heure_debut">Heure</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                   <div class="input-group-text">
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
@@ -58,7 +58,7 @@
             <div class="col-sm-6 col-xl-6">
               <div class="mb-3">
                 <label for="m-int-date-fin">Date de fin</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                   <div class="input-group-text">
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
@@ -78,7 +78,7 @@
             <div class="col-sm-6 col-xl-6">
               <div class="mb-3">
                 <label for="m-int-heure_fin">Heure</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                   <div class="input-group-text">
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>

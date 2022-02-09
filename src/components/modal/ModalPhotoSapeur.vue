@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
       <div class="mb-3">
-        <div class="input-group">
+        <div class="input-group input-group-sm">
           <input
             type="file"
             class="form-control form-control-sm"

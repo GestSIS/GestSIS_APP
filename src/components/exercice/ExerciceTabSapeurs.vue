@@ -16,16 +16,12 @@
           <th class="text-center">Remplace</th>
           <th class="text-center">Excuse</th>
           <th class="text-center">Amende</th>
-          <th v-for="h in extendedHeureTypes" :key="h.id">
-            {{ h.designation }}
-          </th>
+          <th v-for="h in extendedHeureTypes" :key="h.id">{{ h.designation }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="sap in activeExerciceSapeurs" :key="sap.id">
-          <td>
-            {{ formatSapeur(sap.sapeur_id) }}
-          </td>
+          <td>{{ formatSapeur(sap.sapeur_id) }}</td>
           <td>
             <div class="text-center">
               <input
@@ -63,10 +59,7 @@
                 :false-value="0"
                 @change="selectRemplace(sap)"
               />
-              <label
-                class="form-check-label"
-                :for="sap.id + 'remplace'"
-              ></label>
+              <label class="form-check-label" :for="sap.id + 'remplace'"></label>
             </div>
           </td>
           <td>
@@ -81,9 +74,8 @@
               <label class="form-check-label" :for="sap.id + 'excuse'">
                 <span
                   v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-                  >{{ formatExcuseType(sap.excuse_type_id) }}</span
-                ></label
-              >
+                >{{ formatExcuseType(sap.excuse_type_id) }}</span>
+              </label>
             </div>
           </td>
           <td>
@@ -101,7 +93,7 @@
             </div>
           </td>
           <td v-for="h in extendedHeureTypes" :key="h.id">
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <input
                 class="form-control form-control-sm"
                 type="text"
@@ -117,9 +109,7 @@
                 "
                 @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
               />
-              <span class="input-group-text"
-                >{{ formatUnite(h.type_unite_id) }}
-              </span>
+              <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
             </div>
           </td>
         </tr>
@@ -127,17 +117,13 @@
     </table>
     <p class="ms-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
     <div class="card-footer">
-      <button class="btn btn-outline-primary" @click="manageSapeurs">
-        Gérer la liste des sapeurs
-      </button>
+      <button class="btn btn-outline-primary" @click="manageSapeurs">Gérer la liste des sapeurs</button>
       <button
         class="btn btn-outline-primary ms-2"
         @click="validate"
         :disabled="!canValidate"
         v-if="hasValidationPermission"
-      >
-        Valider
-      </button>
+      >Valider</button>
     </div>
   </div>
 </template>

@@ -53,7 +53,7 @@
       </p>
       <p>Ce compte aura dès lors accès au rôles précédemment défini.</p>
       <div class="mb-3">
-        <div class="input-group mb-3">
+        <div class="input-group input-group-sm mb-3">
           <input
             type="text"
             class="form-control form-control-sm"

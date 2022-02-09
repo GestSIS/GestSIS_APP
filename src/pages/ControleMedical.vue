@@ -45,7 +45,8 @@
             <div class="mb-3" v-else>
               <label for="m-exe-des">Sapeur</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -62,7 +63,8 @@
             <div class="mb-3">
               <label for="m-sap-cat">Médecin</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -79,7 +81,8 @@
             <div class="mb-3">
               <label for="m-sap-cat">Type</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -105,7 +108,7 @@
                 <!-- CONSULTATION -->
                 <div class="mb-3">
                   <label for="m-exe-date">Consultation</label>
-                  <div class="input-group">
+                  <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
@@ -139,7 +142,7 @@
                 <!-- Validité -->
                 <div class="mb-3">
                   <label for="m-exe-date">Validité</label>
-                  <div class="input-group">
+                  <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
@@ -198,7 +201,7 @@
             </div>
           </div>
           <div class="card-body" v-if="!controleMedical.filename">
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input
                 type="file"
