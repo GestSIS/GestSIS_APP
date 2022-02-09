@@ -94,7 +94,7 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
-              <option>toutes les phases</option>
+              <option :value="null">toutes les phases</option>
               <option
                 v-for="p in listePhase"
                 :key="p.id"
@@ -204,6 +204,8 @@ export default {
     this.activeIndemnite = {
       ...this.activeIndemnite,
       ...this.data,
+      debut: this.data?.debut?.slice(0, 5),
+      fin: this.data?.fin?.slice(0, 5)
     };
     this.imputationType =
       this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
@@ -243,9 +245,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store
