@@ -10,7 +10,7 @@
         <input
           type="datetime-local"
           v-model="activeMission.debut2"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
           id="debut"
         />
@@ -30,7 +30,7 @@
         <select
           id="mission"
           v-model="activeMission.sapeur_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
           <option v-for="s in listSapeurs" :key="s.id" :value="s.id">{{ formatSapeur(s) }}</option>
@@ -41,7 +41,7 @@
         <input
           type="datetime-local"
           v-model="activeMission.fin2"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
           id="fin"
         />
@@ -52,7 +52,7 @@
         <label for="resume">Résumé</label>
         <textarea
           v-model="activeMission.resume"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['resume'] }"
           id="resume"
         ></textarea>

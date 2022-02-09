@@ -10,7 +10,7 @@
         <input
           type="text"
           v-model="role.nom"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
           id="nom"
         />
@@ -20,7 +20,7 @@
         <input
           type="text"
           v-model="role.description"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['description'] }"
           id="description"
         />
@@ -37,7 +37,7 @@
           />
           <label class="form-check-label" :for="'r' + permission.id">
             {{
-              permission.nom
+            permission.nom
             }}
           </label>
         </div>

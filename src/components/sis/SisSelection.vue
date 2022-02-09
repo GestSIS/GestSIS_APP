@@ -5,18 +5,12 @@
       <div class="mb-3">
         <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
         <select
-          class="form-select"
+          class="form-select form-select-sm"
           id="inputGroupSelect01"
           @change="selectSis($event)"
           v-model="sisId"
         >
-          <option
-            v-for="sis in availableSisListe"
-            :key="sis.id"
-            :value="sis.id"
-          >
-            {{ sis.nom }}
-          </option>
+          <option v-for="sis in availableSisListe" :key="sis.id" :value="sis.id">{{ sis.nom }}</option>
         </select>
       </div>
       <!-- <a href="#" class="d-block">
@@ -26,7 +20,7 @@
              {{ $user_details['nom_utilisateur'] }}
              @endif&ndash;&gt;
              John Doe
-            </a> -->
+      </a>-->
     </div>
   </div>
 </template>
@@ -68,8 +62,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
 
 hr {
   width: 100%;
@@ -166,7 +160,7 @@ ul li a:hover {
 }
 
 .router-link-active,
-a[aria-expanded='true'] {
+a[aria-expanded="true"] {
   color: #fff;
   background: $primary;
 }

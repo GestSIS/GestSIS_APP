@@ -5,9 +5,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">AVS</h3>
-          <button type="button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
+          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -15,7 +13,7 @@
             <input
               type="text"
               v-model="params.taux_avs"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_avs'] }"
               id="taux_avs"
             />
@@ -25,7 +23,7 @@
             <input
               type="text"
               v-model="params.taux_ac"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_ac'] }"
               id="taux_ac"
             />
@@ -35,19 +33,17 @@
             <input
               type="text"
               v-model="params.franchise_avs"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['franchise_avs'] }"
               id="franchise_avs"
             />
           </div>
           <div class="mb-3">
-            <label for="franchise_imposition"
-              >Franchise imposition fédéral</label
-            >
+            <label for="franchise_imposition">Franchise imposition fédéral</label>
             <input
               type="text"
               v-model="params.franchise_imposition"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['franchise_imposition'] }"
               id="franchise_imposition"
             />
@@ -57,12 +53,10 @@
             <select
               id="compte_id"
               v-model="params.compte_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['compte_id_id'] }"
             >
-              <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-                {{ compte(c) }}
-              </option>
+              <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ compte(c) }}</option>
             </select>
           </div>
           <div class="mb-3">
@@ -70,12 +64,10 @@
             <select
               id="ecriture_categorie_id"
               v-model="params.ecriture_categorie_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
-              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-                {{ c.designation }}
-              </option>
+              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
             </select>
           </div>
         </div>

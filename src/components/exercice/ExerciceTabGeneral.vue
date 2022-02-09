@@ -13,7 +13,7 @@
         <label for="m-exe-des">Designation</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="m-exe-des"
           name="nom"
@@ -48,7 +48,7 @@
               </div>
               <input
                 type="date"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date'] }"
                 id="m-exe-date"
                 name="nom"
@@ -67,7 +67,7 @@
               </div>
               <input
                 type="time"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure'] }"
                 id="m-exe-heure"
                 name="nom"
@@ -88,7 +88,7 @@
               </div>
               <input
                 type="number"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['duree'] }"
                 min="1"
                 max="780"
@@ -128,7 +128,7 @@
             <label for="m-exe-lieu">Lieu</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
               id="m-exe-lieu"
               name="nom"
@@ -142,7 +142,7 @@
         <label for="m-sap-communication">Communications</label>
         <textarea
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['communications'] }"
           id="m-sap-communication"
           name="communications"

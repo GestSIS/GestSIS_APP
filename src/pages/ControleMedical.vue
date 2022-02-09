@@ -34,7 +34,7 @@
               <label for="m-exe-des">Sapeur</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['designation'] }"
                 id="m-exe-des"
                 name="nom"
@@ -111,7 +111,7 @@
                     </div>
                     <input
                       type="date"
-                      class="form-control"
+                      class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="consultation"
@@ -145,7 +145,7 @@
                     </div>
                     <input
                       type="date"
-                      class="form-control"
+                      class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="validite"
@@ -174,7 +174,7 @@
               <label for="m-sap-communication">Désignation</label>
               <textarea
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['communications'] }"
                 id="m-sap-communication"
                 name="communications"
@@ -202,7 +202,7 @@
               <p class="w-100">Aucun document</p>
               <input
                 type="file"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="inputGroupFile01"
                 aria-describedby="inputGroupFileAddon01"
                 accept="application/pdf"

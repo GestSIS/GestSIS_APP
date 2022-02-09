@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeIndemnite.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeIndemnite.solde"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['solde'] }"
           id="solde"
         />
@@ -50,9 +50,7 @@
             value="taux"
             v-model="imputationType"
           />
-          <label class="form-check-label" for="taux"
-            >Taux week-end et taux nuit</label
-          >
+          <label class="form-check-label" for="taux">Taux week-end et taux nuit</label>
         </div>
       </div>
       <div class="container-fluid">
@@ -62,7 +60,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min'] }"
               id="solde_min"
             />
@@ -72,7 +70,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min_pour"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min_pour'] }"
               id="solde_min_pour"
             />
@@ -82,12 +80,10 @@
             <select
               id="unite"
               v-model="activeIndemnite.type_unite_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in listeUnite" :key="u.id" :value="u.id">
-                {{ u.unite }}
-              </option>
+              <option v-for="u in listeUnite" :key="u.id" :value="u.id">{{ u.unite }}</option>
             </select>
           </div>
           <div class="mb-3 col-12">
@@ -95,13 +91,15 @@
             <select
               id="phase_id"
               v-model="activeIndemnite.phase_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
               <option>toutes les phases</option>
-              <option v-for="p in listePhase" :key="p.id" :value="p.id">
-                uniquement phase {{ p.designation }}
-              </option>
+              <option
+                v-for="p in listePhase"
+                :key="p.id"
+                :value="p.id"
+              >uniquement phase {{ p.designation }}</option>
             </select>
           </div>
         </div>
@@ -111,7 +109,7 @@
             <input
               type="text"
               v-model="activeIndemnite.taux_nuit"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_nuit'] }"
               id="taux_nuit"
             />
@@ -121,7 +119,7 @@
             <input
               type="text"
               v-model="activeIndemnite.taux_weekend"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_weekend'] }"
               id="taux_weekend"
             />
@@ -131,7 +129,7 @@
             <input
               type="time"
               v-model="activeIndemnite.debut"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['debut'] }"
               id="debut"
             />
@@ -141,7 +139,7 @@
             <input
               type="time"
               v-model="activeIndemnite.fin"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['fin'] }"
               id="fin"
             />
@@ -153,12 +151,10 @@
         <select
           id="compte"
           v-model="activeIndemnite.compte_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -166,22 +162,20 @@
         <select
           id="categorie"
           v-model="activeIndemnite.ecriture_categorie_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

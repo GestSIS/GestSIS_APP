@@ -10,7 +10,7 @@
           <label for="m-int-resume">Description</label>
           <textarea
             id="m-int-resume"
-            class="form-control"
+            class="form-control form-control-sm"
             v-model="activeInterventionData.description"
             rows="30"
           ></textarea>

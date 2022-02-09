@@ -2,9 +2,7 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Permis de conduire</h3>
-      <button @click.prevent="savePermis" class="btn btn-primary flex-shrink-1">
-        Enregistrer
-      </button>
+      <button @click.prevent="savePermis" class="btn btn-primary flex-shrink-1">Enregistrer</button>
     </div>
     <div class="card-body">
       <table class="table table-sm">
@@ -19,8 +17,8 @@
               />
               <img
                 :src="`${publicPath}permis/${permis.type
-                  .toLowerCase()
-                  .replace(' ', '_')}.gif`"
+                .toLowerCase()
+                .replace(' ', '_')}.gif`"
               />
             </td>
             <td>
@@ -33,7 +31,7 @@
                 </div>
                 <input
                   type="date"
-                  class="form-control"
+                  class="form-control form-control-sm"
                   v-model="permis.date"
                   :class="{
                     'is-invalid': isInvalid(permis.permis_type_id),

@@ -20,7 +20,7 @@
             <input
               type="text"
               v-model="activeIndemnite.designation"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['designation'] }"
               id="designation"
             />
@@ -30,7 +30,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde'] }"
               id="solde"
             />
@@ -40,7 +40,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min'] }"
               id="solde_min"
             />
@@ -50,7 +50,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min_pour"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min_pour'] }"
               id="solde_min_pour"
             />
@@ -60,12 +60,10 @@
             <select
               id="unite"
               v-model="activeIndemnite.type_unite_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in unites" :key="u.id" :value="u.id">
-                {{ u.unite }}
-              </option>
+              <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
             </select>
           </div>
           <div>
@@ -73,7 +71,7 @@
             <input
               type="text"
               v-model="activeIndemnite.indemnite"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['indemnite'] }"
               id="indemnite"
             />
@@ -83,12 +81,10 @@
             <select
               id="compte"
               v-model="activeIndemnite.compte_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['compte_id'] }"
             >
-              <option v-for="c in comptes" :key="c.id" :value="c.id">
-                {{ compte(c) }}
-              </option>
+              <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
             </select>
           </div>
           <div class="mb-3">
@@ -99,9 +95,7 @@
                 id="par-fonction-modal"
                 v-model="activeIndemnite.par_fonction"
               />
-              <label class="form-check-label" for="par-fonction-modal"
-                >Par fonction</label
-              >
+              <label class="form-check-label" for="par-fonction-modal">Par fonction</label>
             </div>
           </div>
 
@@ -110,12 +104,10 @@
             <select
               id="categorie"
               v-model="activeIndemnite.ecriture_categorie_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
-              <option v-for="c in categories" :key="c.id" :value="c.id">
-                {{ c.designation }}
-              </option>
+              <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
             </select>
           </div>
         </div>
@@ -133,13 +125,10 @@
               <tr v-if="!activeIndemnite.fonctions.length">
                 <td colspan="3">Aucune fonction paramétrée</td>
               </tr>
-              <tr
-                v-for="index in activeIndemnite.fonctions.length"
-                :key="index"
-              >
+              <tr v-for="index in activeIndemnite.fonctions.length" :key="index">
                 <td>
                   {{
-                    fonction(activeIndemnite.fonctions[index - 1].fonction_id)
+                  fonction(activeIndemnite.fonctions[index - 1].fonction_id)
                   }}
                 </td>
                 <td>
@@ -165,12 +154,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

@@ -5,9 +5,7 @@
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button @click.prevent="save" class="btn btn-primary">
-            Enregistrer
-          </button>
+          <button @click.prevent="save" class="btn btn-primary">Enregistrer</button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -16,7 +14,7 @@
             <label for="f-sap-nom">IBAN</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               id="f-sap-nom"
               name="nom"
               v-model="activeSapeur.iban"

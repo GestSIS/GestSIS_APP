@@ -14,7 +14,7 @@
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['debut'] }"
                 type="date"
                 id="m-int-date-debut"
@@ -33,7 +33,7 @@
               </div>
               <input
                 type="time"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['debut'] }"
                 id="m-int-heure_debut"
                 name="heure_debut"
@@ -46,7 +46,7 @@
         </div>
       </div>
       <!-- <div class="mb-3">
-        <label for="debut">Début de la phase</label> -->
+      <label for="debut">Début de la phase</label>-->
       <!-- <datetime
           v-model="activePhase.debut2"
           :format="format"
@@ -57,7 +57,7 @@
           :max-datetime="max"
           :minute-step="15"
           :disabled="activePhase.debut === null && activePhase.id"
-        ></datetime> -->
+      ></datetime>-->
       <!-- <input
           type="datetime-local"
           v-model="activePhase.debut2"
@@ -66,36 +66,34 @@
           :min="min"
           :max="max"
           @focusout="roundHour"
-        /> -->
+      />-->
       <!-- <input
           type="datetime-local"
           v-model="activePhase.debut2"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
           id="cours-date"
-        /> -->
+      />-->
       <!-- </div> -->
       <div class="mb-3">
         <label for="phase_type">Type</label>
         <select
           id="phase_type"
           v-model="activePhase.phase_type_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['phase_type_id'] }"
         >
-          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">
-            {{ p.designation }}
-          </option>
+          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">{{ p.designation }}</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activePhase.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activePhase.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

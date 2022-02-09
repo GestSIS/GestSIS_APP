@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeVehicule.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeVehicule.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -33,7 +33,7 @@
         <input
           type="text"
           v-model="activeVehicule.forfait"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['forfait'] }"
           id="forfait"
         />
@@ -43,7 +43,7 @@
         <input
           type="text"
           v-model="activeVehicule.unite"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['unite'] }"
           id="unite"
         />
@@ -53,7 +53,7 @@
         <select
           id="type_unite_id"
           v-model="activeVehicule.type_unite_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
           <option :value="0">-</option>

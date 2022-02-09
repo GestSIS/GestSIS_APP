@@ -10,7 +10,7 @@
         <div class="col-auto">
           <input
             type="text"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData.username }"
             id="m-user"
             name="username"
@@ -21,7 +21,7 @@
         <div class="col-auto mx-sm-3">
           <input
             type="password"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData.password }"
             id="m-password"
             name="password"
@@ -37,7 +37,7 @@
           <textarea
             type="text"
             rows="2"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['communication'] }"
             id="m-communication"
             name="communication"

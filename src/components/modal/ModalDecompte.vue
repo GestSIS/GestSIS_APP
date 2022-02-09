@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        Paramètres pour le décompte
-      </h5>
+      <h5 class="modal-title" id="exampleModalLabel">Paramètres pour le décompte</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -11,7 +9,7 @@
         <label for="m-designation">Désignation</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errorsData['designation'] }"
           id="m-designation"
           name="designation"
@@ -22,7 +20,7 @@
       <div class="mb-3" v-if="!this.params.exercice_id">
         <label for="m-exercice-comptable-id">Exercice comptable id</label>
         <select
-          class="form-select"
+          class="form-select form-select-sm"
           id="m-exercice-comptable-id"
           :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }"
           name="exercice_comptable_id"
@@ -32,16 +30,14 @@
             v-for="exercice in listeExerciceComptable"
             :value="exercice.id"
             :key="exercice.id"
-          >
-            {{ exercice.designation }}
-          </option>
+          >{{ exercice.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="m-date">Date</label>
         <input
           type="date"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errorsData['date'] }"
           id="m-date"
           name="date"
@@ -56,9 +52,7 @@
             id="m-sap-cotisation_avs"
             v-model="params.deduction"
           />
-          <label class="form-check-label" for="m-sap-cotisation_avs"
-            >Déduction</label
-          >
+          <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
         </div>
       </div>
     </div>

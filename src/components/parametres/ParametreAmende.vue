@@ -12,7 +12,7 @@
           <select
             id="compte_id"
             v-model="params.compte_id"
-            class="form-select"
+            class="form-select form-select-sm"
             :class="{ 'is-invalid': errors['compte_id_id'] }"
           >
             <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ compte(c) }}</option>
@@ -23,7 +23,7 @@
           <select
             id="ecriture_categorie_id"
             v-model="params.ecriture_categorie_id"
-            class="form-select"
+            class="form-select form-select-sm"
             :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
           >
             <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>

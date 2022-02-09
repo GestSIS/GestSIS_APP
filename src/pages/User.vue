@@ -24,7 +24,7 @@
               <label for="jeton">Jeton</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="jeton"
                 placeholder="jeton"
                 v-model="jeton"
@@ -49,7 +49,7 @@
                 placeholder="mot de passe"
                 required
                 autocomplete="off"
-                class="form-control"
+                class="form-control form-control-sm"
                 v-model="oldPassword"
               />
             </div>
@@ -61,7 +61,7 @@
                 placeholder="mot de passe"
                 required
                 autocomplete="off"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors.password }"
                 v-model="newPassword"
               />
@@ -76,7 +76,7 @@
                 placeholder="répéter mot de passe"
                 required
                 autocomplete="off"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': !isPasswordIdentical }"
                 v-model="newPasswordRepeated"
               />
