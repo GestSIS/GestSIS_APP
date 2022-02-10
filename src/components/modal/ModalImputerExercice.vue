@@ -27,6 +27,9 @@
               </tr>
             </thead>
             <tbody>
+              <tr v-if="indemnitesTypes.length == 0">
+                <td colspan="8">Aucune indemnité type pour exercice de configuré</td>
+              </tr>
               <tr
                 v-for="(indemnite, index) in indemnitesTypes"
                 :key="indemnite.id"
