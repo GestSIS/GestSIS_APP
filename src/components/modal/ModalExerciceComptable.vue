@@ -97,9 +97,10 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     presetDebutFin() {
+      const annee = parseInt(this.activeExercice.annee);
       if (!this.activeExercice.debut) {
-        // this.activeExercice.debut = 
-        //TODO: Parse année and set debut / fin
+        this.activeExercice.debut = annee + "-01-01";
+        this.activeExercice.fin = annee + "-12-31";
       }
     },
     async save() {
