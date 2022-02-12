@@ -46,7 +46,7 @@
           v-model="activeCours.precedent_id"
           class="form-select form-select-sm"
         >
-          <option value="0">-</option>
+          <option :value="null">-</option>
           <option v-for="c in listeCours" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
@@ -58,7 +58,7 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
-          <option value="0">-</option>
+          <option :value="null">-</option>
           <option v-for="g in listeGrade" :key="g.id" :value="g.id">{{ g.designation }}</option>
         </select>
       </div>
@@ -71,7 +71,7 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
-          <option value="0">-</option>
+          <option :value="null">-</option>
           <option v-for="f in listeFonction" :key="f.id" :value="f.id">{{ f.nom }}</option>
         </select>
       </div>

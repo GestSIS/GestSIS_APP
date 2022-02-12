@@ -11,11 +11,12 @@
       <div class="mb-3">
         <label for="annee">Année</label>
         <input
-          type="text"
+          type="number"
           v-model="activeExercice.annee"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['annee'] }"
           id="annee"
+          @focusout="presetDebutFin"
         />
       </div>
       <div class="mb-3">
@@ -95,6 +96,12 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    presetDebutFin() {
+      if (!this.activeExercice.debut) {
+        // this.activeExercice.debut = 
+        //TODO: Parse année and set debut / fin
+      }
+    },
     async save() {
       if ((this.activeExercice.id || 0) === 0) {
         this.$store
