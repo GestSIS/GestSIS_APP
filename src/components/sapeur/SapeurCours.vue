@@ -54,7 +54,7 @@ export default {
   name: 'SapeurCours',
   computed: {
     ...mapState({
-      activeSapeurCours: (state) => state.sapeur.active.cours,
+      activeSapeurCours: (state) => state.sapeur.active.cours.sort((a, b) => b.date.localeCompare(a.date)),
       activeSapeurId: (state) => state.sapeur.active.id,
       cours: (state) => state.cours.liste,
       localites: (state) => state.localite.liste,

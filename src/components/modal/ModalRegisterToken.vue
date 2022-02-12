@@ -10,7 +10,7 @@
         <input
           type="text"
           v-model="token.description"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['description'] }"
           id="desc"
           ref="desc"
@@ -21,7 +21,7 @@
         <input
           type="date"
           v-model="token.validite"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite'] }"
           id="designation"
         />
@@ -36,13 +36,13 @@
             v-model="token.roles"
             :id="'r' + role.id"
           />
-          <label class="form-check-label" :for="'r' + role.id">{{
+          <label class="form-check-label" :for="'r' + role.id">
+            {{
             role.nom
-          }}</label>
+            }}
+          </label>
         </div>
-        <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">
-          {{ errors['roles'] }}
-        </div>
+        <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">{{ errors['roles'] }}</div>
       </div>
     </div>
     <div class="modal-body" v-if="step === 2">
@@ -53,10 +53,10 @@
       </p>
       <p>Ce compte aura dès lors accès au rôles précédemment défini.</p>
       <div class="mb-3">
-        <div class="input-group mb-3">
+        <div class="input-group input-group-sm mb-3">
           <input
             type="text"
-            class="form-control"
+            class="form-control form-control-sm"
             readonly
             id="desc"
             v-model="token.token"
@@ -73,17 +73,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        {{ step == 1 ? 'Annuler' : 'Fermer' }}
-      </button>
       <button
         type="button"
-        class="btn btn-primary"
-        @click="save()"
-        v-if="step === 1"
-      >
-        Créer
-      </button>
+        class="btn btn-secondary"
+        @click="HIDE_MODAL()"
+      >{{ step == 1 ? 'Annuler' : 'Fermer' }}</button>
+      <button type="button" class="btn btn-primary" @click="save()" v-if="step === 1">Créer</button>
     </div>
   </div>
 </template>

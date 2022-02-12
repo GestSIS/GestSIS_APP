@@ -7,37 +7,27 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres sapeurs</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'cours' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'cours'"
-          >
-            Cours
-          </a>
+          >Cours</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'fonction' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'fonction'"
-          >
-            Fonctions
-          </a>
+          >Fonctions</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'grade' }"
             href="#"
             @click.prevent="tab = 'grade'"
-          >
-            Grades
-          </a>
+          >Grades</a>
         </nav>
       </div>
     </div>

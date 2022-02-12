@@ -6,8 +6,25 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" disabled>Imputer</button>
-          <button class="btn btn-outline-primary" disabled>Créer un décompte</button>
+          <button
+            class="btn btn-outline-primary"
+            v-if="!selectedItem || selectedItem?.statut == 3"
+            :disabled="!selectedItem"
+            @click="imputer(selectedItem.id)"
+          >Imputer</button>
+          <button
+            class="btn btn-outline-danger"
+            v-if="selectedItem?.statut == 4"
+            @click="annulerImputer(selectedItem.id)"
+          >Annuler l'imputation</button>
+          <button
+            class="btn btn-outline-primary"
+            :disabled="selectedItem?.statut != 4"
+            @click="genererDecompteExercice(
+              selectedItem.id,
+              selectedItem.designation
+            )"
+          >Créer un décompte</button>
         </div>
       </div>
     </div>
@@ -50,7 +67,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
+      <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Exercices</h3>
         </div>
@@ -92,7 +109,7 @@
             <button
               class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 3"
-              @click="imputerExercice(props.rowData.id)"
+              @click="imputer(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -167,7 +184,7 @@ export default {
       loading: true,
       exercices: [],
       filters: {},
-      selectedId: null,
+      selectedItem: null,
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -343,13 +360,13 @@ export default {
       ImputationService.getExerciceEcriturePourExerciceComptable(
         this.currentExerciceComptableId
       ).then((e) => {
-        this.selectedId = null;
-        this.exercices = [...e];
+        this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
+        this.selectedItem = this.exercices.find(e => e.id == this.selectedItem?.id) || null;
         this.loading = false;
       });
     },
-    selected(id) {
-      this.selectedId = id;
+    selected(item) {
+      this.selectedItem = item;
     },
     genererDecompteExercice(exerciceId, designation) {
       this.SHOW_MODAL({
@@ -361,11 +378,35 @@ export default {
         callback: () => this.init(),
       });
     },
-    imputerExercice(exerciceId) {
+    imputer(exerciceId) {
       this.SHOW_MODAL({
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
         size: 2,
+        callback: () => this.init()
+      });
+    },
+    annulerImputer(exerciceId) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette imputation ?',
+          question:
+            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('annulerImputationExercice', exerciceId)
+              .then(({ statut }) => {
+                this.exercices = [...this.exercices.filter((e) => e.id != exerciceId),
+                {
+                  ...this.exercices.find((e) => e.id == exerciceId),
+                  statut: statut,
+                }].sort((a, b) => a.date.localeCompare(b.date))
+                this.selectedItem = this.exercices.find(e => e.id == exerciceId);
+              });
+          }
+        },
       });
     },
     onRowClass(dataItem, isSelected) {

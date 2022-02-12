@@ -67,7 +67,7 @@
             <input
               type="text"
               v-model="activeEcriture.tarif"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
               id="tarif"
             />
@@ -85,7 +85,7 @@
               type="text"
               readonly
               :value="(activeEcriture?.quantite * activeEcriture?.tarif) || 0"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
               id="tarif"
             />

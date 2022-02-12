@@ -4,9 +4,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données personnelles</h3>
-          <button @click.prevent="saveSapeur" class="btn btn-primary">
-            Enregistrer
-          </button>
+          <button @click.prevent="saveSapeur" class="btn btn-primary">Enregistrer</button>
         </div>
         <div class="card-body">
           <base-select
@@ -92,8 +90,8 @@
               />
             </div>
             <div class="col-6">
-              <label for="m-sap-cotisation_avs">Cotisation AVS</label
-              ><font-awesome-icon
+              <label for="m-sap-cotisation_avs">Cotisation AVS</label>
+              <font-awesome-icon
                 class="ms-1"
                 v-tooltip.bottom="
                   'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
@@ -107,17 +105,14 @@
                   id="m-sap-cotisation_avs"
                   v-model="activeSapeur.cotisation_avs"
                 />
-                <label
-                  class="form-check-label"
-                  for="m-sap-cotisation_avs"
-                ></label>
+                <label class="form-check-label" for="m-sap-cotisation_avs"></label>
               </div>
             </div>
           </div>
           <!-- Email -->
           <div class="mb-3">
             <label for="m-sap-email">Email</label>
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <div class="input-group-text">
                 <font-awesome-icon icon="envelope" />
               </div>
@@ -136,7 +131,7 @@
             <div class="col-6">
               <div class="mb-3">
                 <label for="m-sap-date-naissance">Date de naissance</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                   <div class="input-group-text">
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
@@ -203,9 +198,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
-          <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">
-            Enregistrer
-          </button>
+          <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">Enregistrer</button>
         </div>
         <form role="form">
           <div class="card-body">
@@ -260,9 +253,7 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
-                  {{ f.nom }}
-                </option>
+                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">{{ f.nom }}</option>
               </select>
             </div>
             <div class="mb-3">
@@ -273,9 +264,7 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="g in listGrades" :key="g.id" :value="g.id">
-                  {{ g.designation }}
-                </option>
+                <option v-for="g in listGrades" :key="g.id" :value="g.id">{{ g.designation }}</option>
               </select>
             </div>
             <!-- TODO Actif et Porteur checkbox -->

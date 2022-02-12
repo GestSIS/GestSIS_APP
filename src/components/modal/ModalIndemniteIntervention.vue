@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeIndemnite.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeIndemnite.solde"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['solde'] }"
           id="solde"
         />
@@ -60,7 +60,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min'] }"
               id="solde_min"
             />
@@ -70,7 +70,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde_min_pour"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde_min_pour'] }"
               id="solde_min_pour"
             />
@@ -80,7 +80,7 @@
             <select
               id="unite"
               v-model="activeIndemnite.type_unite_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
               <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
@@ -91,7 +91,7 @@
             <select
               id="phase_id"
               v-model="activeIndemnite.phase_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
               <option>toutes les phases</option>
@@ -109,7 +109,7 @@
             <input
               type="text"
               v-model="activeIndemnite.taux_nuit"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_nuit'] }"
               id="taux_nuit"
             />
@@ -119,7 +119,7 @@
             <input
               type="text"
               v-model="activeIndemnite.taux_weekend"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_weekend'] }"
               id="taux_weekend"
             />
@@ -129,7 +129,7 @@
             <input
               type="time"
               v-model="activeIndemnite.debut"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['debut'] }"
               id="debut"
             />
@@ -139,7 +139,7 @@
             <input
               type="time"
               v-model="activeIndemnite.fin"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['fin'] }"
               id="fin"
             />
@@ -151,7 +151,7 @@
         <select
           id="compte"
           v-model="activeIndemnite.compte_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
           <option v-for="c in comptes" :key="c.id" :value="c.id">{{ c.designation }}</option>
@@ -162,7 +162,7 @@
         <select
           id="categorie"
           v-model="activeIndemnite.ecriture_categorie_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
           <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
@@ -204,6 +204,8 @@ export default {
     this.activeIndemnite = {
       ...this.activeIndemnite,
       ...this.data,
+      debut: this.data?.debut?.slice(0, 5),
+      fin: this.data?.fin?.slice(0, 5)
     };
     this.imputationType =
       this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
@@ -223,9 +225,9 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
       if (this.imputationType == 'taux') {
+        this.activeIndemnite.type_unite_id = 2; // Par heure
         this.activeIndemnite.solde_min = null;
         this.activeIndemnite.solde_min_pour = null;
-        this.activeIndemnite.unite_type_id = 0;
         this.activeIndemnite.phase_id = null;
       } else {
         this.activeIndemnite.taux_nuit = null;

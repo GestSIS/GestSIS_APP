@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un grade
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un grade</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -12,7 +13,7 @@
         <input
           type="text"
           v-model="activeGrade.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -22,7 +23,7 @@
         <input
           type="text"
           v-model="activeGrade.abreviation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
           id="abreviation"
         />
@@ -32,14 +33,14 @@
         <input
           type="text"
           v-model="activeGrade.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="cours-precedent">Grade précédent</label>
-        <select id="groupe" v-model="activeGrade.groupe" class="form-select">
+        <select id="groupe" v-model="activeGrade.groupe" class="form-select form-select-sm">
           <option value="1">Officier</option>
           <option value="2">Sous-Officier</option>
           <option value="3">Spécialiste</option>
@@ -47,12 +48,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeGrade.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -93,9 +94,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store

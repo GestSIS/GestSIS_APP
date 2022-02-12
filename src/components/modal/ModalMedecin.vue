@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeMedecin.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeMedecin.adresse"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['adresse'] }"
           id="adresse"
         />
@@ -33,7 +33,7 @@
         <select
           id="localite"
           v-model="activeMedecin.localite_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
           <option v-for="l in listeLocalite" :key="l.id" :value="l.id">{{ localite(l) }}</option>

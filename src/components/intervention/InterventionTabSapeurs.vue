@@ -7,9 +7,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Phases de l'intervention</h3>
-          <button type="button" class="btn btn-primary" @click="newPhase">
-            Nouvelle phase
-          </button>
+          <button type="button" class="btn btn-primary" @click="newPhase">Nouvelle phase</button>
         </div>
         <div class="card-body">
           <table class="table table-sm">
@@ -71,9 +69,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Présences</h3>
-          <button type="button" class="btn btn-primary" @click="addPresences">
-            Ajouter des présences
-          </button>
+          <button type="button" class="btn btn-primary" @click="addPresences">Ajouter des présences</button>
         </div>
         <div class="card-body">
           <div class="badge-wrapper">
@@ -92,31 +88,13 @@
                     v-for="(col, i) in columns"
                     :key="i"
                     class="text-center ps-3 pe-3"
-                  >
-                    {{ col }}h
-                  </th>
+                  >{{ col }}h</th>
                 </tr>
                 <tr>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'1' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'2' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'3' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'4' + i"
-                    class="ps-3 pe-3"
-                  ></th>
+                  <th v-for="(col, i) in columns" :key="'1' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'2' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'3' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'4' + i" class="ps-3 pe-3"></th>
                 </tr>
               </thead>
               <tbody v-if="sortedSapeurs.length <= 0">
@@ -126,11 +104,8 @@
               </tbody>
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
-                  <th class="ms-0 pe-0">
-                    <button
-                      class="btn btn-link border-0"
-                      @click="expandSap(s.id)"
-                    >
+                  <th class="ms-0 ps-1">
+                    <button class="btn btn-link border-0" @click="expandSap(s.id)">
                       <font-awesome-icon
                         v-if="toggles[s.id] || false"
                         :icon="['fas', 'angle-down']"
@@ -143,20 +118,18 @@
                     {{ formatSapeur(s) }}
                   </th>
                   <td class="text-center">
-                    <div class="mb-3 text-center">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        :id="s.id"
-                        :checked="
-                          quittances.filter(
-                            (q) => q.sapeur_id === parseInt(s.id)
-                          ).length === 1
-                        "
-                        @click="(e) => editQuittance(e, s.id)"
-                      />
-                      <label class="form-check-label" :for="s.id"></label>
-                    </div>
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      :id="s.id"
+                      :checked="
+                        quittances.filter(
+                          (q) => q.sapeur_id === parseInt(s.id)
+                        ).length === 1
+                      "
+                      @click="(e) => editQuittance(e, s.id)"
+                    />
+                    <label class="form-check-label" :for="s.id"></label>
                   </td>
                   <td
                     v-for="i in Array(columns.length * 4).keys()"
@@ -198,6 +171,11 @@
                   </tr>
                 </template>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th :colspan="4 + 4 * columns.length">Nombre sapeurs : {{ sortedSapeurs.length }}</th>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -243,17 +221,17 @@ export default {
       return [
         ...Object.keys(this.computedPresences)
           .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
-          .sort((s1, s2) => s1.nom + s1.prenom > s2.nom + s2.prenom),
+          .sort((s1, s2) => (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)),
       ];
     },
     computedPresences() {
       let temp = [];
       this.listSapeurs.forEach(
         (s) =>
-          (temp = {
-            ...temp,
-            [s.id]: this.computeSapeur(s.id),
-          })
+        (temp = {
+          ...temp,
+          [s.id]: this.computeSapeur(s.id),
+        })
       );
       return temp;
     },
@@ -264,12 +242,15 @@ export default {
     this.$store.dispatch('fetchInterventionPhases', this.id);
     this.$store.dispatch('fetchInterventionSapeurs', this.id);
 
-    let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
+    let startFloored = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
     let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
 
-    let diff = Math.abs(start - end) / 3600000;
-    let min = start.getHours();
-    for (let i = 0; i < diff; ++i) {
+    startFloored.setMinutes(0);
+    let diff = Math.abs(startFloored - end) / 3600000;
+
+    // Génère une colonne par heure
+    let min = startFloored.getHours();
+    for (let i = 0; i < Math.ceil(diff); ++i) {
       this.columns.push((min + i) % 24);
     }
 
@@ -309,7 +290,7 @@ export default {
     addPresences() {
       this.SHOW_MODAL({
         component: 'ModalPresence',
-        callback: () => {},
+        callback: () => { },
         data: {
           mode: 'add',
           id: this.data.id,
@@ -323,7 +304,7 @@ export default {
       Object.assign(clone, presence);
       this.SHOW_MODAL({
         component: 'ModalPresence',
-        callback: () => {},
+        callback: () => { },
         data: {
           mode: 'edit',
           sapeurs: [clone.sapeur_id],
@@ -340,7 +321,7 @@ export default {
       this.$store.dispatch('resetActivePhase');
       this.SHOW_MODAL({
         component: 'ModalPhase',
-        callback: () => {},
+        callback: () => { },
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin,
@@ -353,7 +334,7 @@ export default {
       this.$store.dispatch('updateActivePhase', clone);
       this.SHOW_MODAL({
         component: 'ModalPhase',
-        callback: () => {},
+        callback: () => { },
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin,
@@ -378,28 +359,30 @@ export default {
     computeSapeur(id) {
       let res = {};
       let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
+      start.setMinutes(0)
 
       this.presences
         .filter((s) => s.sapeur_id === id)
         .forEach((q) => {
-          let diff = ((new Date(q.debut) - start) / 3600000) * 4;
-          //Durée de la présence en quart d'heures
-          let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000) * 4;
+          // Offset calculé à partir de l'heure de début d'intervention arrondi
+          let offset = ((new Date(q.debut) - start) / 3600000.0) * 4.0;
+          // Durée de la présence en quart d'heures
+          let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000.0) * 4.0;
 
           for (let i = 0; i < duree; ++i) {
             let code = null;
             if (q.piquet) {
-              //Piquet
+              // Piquet
               code = 3;
             } else {
-              //DetectPhase
+              // DetectPhase
               let currentDate = new Date(q.debut);
               currentDate.setMinutes(currentDate.getMinutes() + i * 15);
               code = this.getPhaseTypeAt(currentDate);
             }
             res = {
               ...res,
-              [diff + i]: code,
+              [offset + i]: code,
             };
           }
         });

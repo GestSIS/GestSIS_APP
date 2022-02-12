@@ -64,14 +64,9 @@
         </tr>
       </template>
     </tbody>
-    <!-- <thead>
-      <tr>
-        <th v-if="fields.length > 1"></th>
-        <th :colspan="Math.max(fields.length - 1, 1)">
-          Nb : {{ computedData.length }}
-        </th>
-      </tr>
-    </thead> -->
+    <tfoot>
+      <slot name="foot"></slot>
+    </tfoot>
   </table>
 </template>
 

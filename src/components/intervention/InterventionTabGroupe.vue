@@ -5,9 +5,7 @@
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Groupes</h3>
-        <button type="button" class="btn btn-primary" @click="save">
-          Enregistrer
-        </button>
+        <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
       </div>
       <div class="card-body">
         <table id="int-groupes" class="table table-sm">
@@ -26,12 +24,14 @@
             </tr>
             <tr v-for="g in groupes" :key="g.id">
               <td>
-                <label :for="'g-' + g.id">{{
-                  (g.no ? g.no + ' ' : '') + g.designation
-                }}</label>
+                <label :for="'g-' + g.id">
+                  {{
+                    (g.no ? g.no + ' ' : '') + g.designation
+                  }}
+                </label>
               </td>
               <td>
-                <div class="mb-3 text-center">
+                <div class="text-center">
                   <input
                     type="checkbox"
                     class="form-check-input"

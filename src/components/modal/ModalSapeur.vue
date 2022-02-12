@@ -10,7 +10,7 @@
         <div class="mb-3">
           <label for="m-sap-civilite">Civilité</label>
           <select
-            class="form-select"
+            class="form-select form-select-sm"
             id="m-sap-civilite"
             :class="{ 'is-invalid': errorsData['civilite_id'] }"
             name="civilite_id"
@@ -20,9 +20,7 @@
               v-for="civilite in listeCivilites"
               :value="civilite.id"
               :key="civilite.id"
-            >
-              {{ civilite.designation }}
-            </option>
+            >{{ civilite.designation }}</option>
           </select>
         </div>
         <!-- NOM -->
@@ -30,7 +28,7 @@
           <label for="m-sap-nom">Nom</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['nom'] }"
             id="m-sap-nom"
             name="nom"
@@ -42,7 +40,7 @@
           <label for="m-sap-prenom">Prénom</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['prenom'] }"
             id="m-sap-prenom"
             name="prenom"
@@ -56,7 +54,7 @@
               <label for="m-sap-rue">Rue</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['rue'] }"
                 id="m-sap-rue"
                 name="rue"
@@ -69,7 +67,7 @@
               <label for="m-sap-no-rue">N°</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['no_rue'] }"
                 id="m-sap-no-rue"
                 name="no_rue"
@@ -82,7 +80,8 @@
         <div class="mb-3">
           <label for="m-sap-localite">NPA Localité</label>
           <select
-            class="form-select required"
+            class="form-select form-select-sm"
+            required
             id="m-sap-localite"
             :class="{ 'is-invalid': errorsData['localite_id'] }"
             name="localite_id"
@@ -93,9 +92,7 @@
               v-for="localite in listeLocalitesSis"
               :key="localite.id"
               :value="localite.id"
-            >
-              {{ localite.npa + ' ' + localite.designation }}
-            </option>
+            >{{ localite.npa + ' ' + localite.designation }}</option>
           </select>
         </div>
         <!-- N° AVS -->
@@ -103,7 +100,7 @@
           <label for="m-sap-avs">N° AVS</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['no_avs'] }"
             id="m-sap-avs"
             name="no_avs"
@@ -113,12 +110,12 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="m-sap-email">Email</label>
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <div class="input-group-text">
               <font-awesome-icon icon="envelope" />
             </div>
             <input
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['email'] }"
               type="email"
               id="m-sap-email"
@@ -132,12 +129,12 @@
           <div class="col-6">
             <div class="mb-3">
               <label for="m-sap-date-naissance">Date de naissance</label>
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <div class="input-group-text">
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
-                  class="form-control"
+                  class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['date_naissance'] }"
                   type="date"
                   id="m-sap-date-naissance"
@@ -159,7 +156,7 @@
               />
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['suffixe'] }"
                 id="m-sap-suffixe"
                 name="suffixe"
@@ -171,12 +168,12 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="m-sap-email">Date incorporation</label>
-          <div class="input-group mb-3">
+          <div class="input-group input-group-sm mb-3">
             <div class="input-group-text">
               <font-awesome-icon :icon="['far', 'calendar-alt']" />
             </div>
             <input
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['incorporation'] }"
               type="date"
               id="m-sap-incorporation"
@@ -189,7 +186,7 @@
         <div class="mb-3">
           <label for="m-sap-remarques">Remarques</label>
           <textarea
-            class="form-control"
+            class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['remarque'] }"
             rows="3"
             id="m-sap-remarques"

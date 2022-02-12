@@ -34,7 +34,7 @@
               <label for="m-exe-des">Sapeur</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['designation'] }"
                 id="m-exe-des"
                 name="nom"
@@ -45,7 +45,8 @@
             <div class="mb-3" v-else>
               <label for="m-exe-des">Sapeur</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -62,7 +63,8 @@
             <div class="mb-3">
               <label for="m-sap-cat">Médecin</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -79,7 +81,8 @@
             <div class="mb-3">
               <label for="m-sap-cat">Type</label>
               <select
-                class="form-select required"
+                class="form-select form-select-sm"
+                required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
                 id="m-sap-cat"
                 style="width: 100%"
@@ -105,13 +108,13 @@
                 <!-- CONSULTATION -->
                 <div class="mb-3">
                   <label for="m-exe-date">Consultation</label>
-                  <div class="input-group">
+                  <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
                       type="date"
-                      class="form-control"
+                      class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="consultation"
@@ -139,13 +142,13 @@
                 <!-- Validité -->
                 <div class="mb-3">
                   <label for="m-exe-date">Validité</label>
-                  <div class="input-group">
+                  <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
                       type="date"
-                      class="form-control"
+                      class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
                       id="m-exe-date"
                       name="validite"
@@ -174,7 +177,7 @@
               <label for="m-sap-communication">Désignation</label>
               <textarea
                 type="text"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['communications'] }"
                 id="m-sap-communication"
                 name="communications"
@@ -198,11 +201,11 @@
             </div>
           </div>
           <div class="card-body" v-if="!controleMedical.filename">
-            <div class="input-group mb-3">
+            <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input
                 type="file"
-                class="form-control"
+                class="form-control form-control-sm"
                 id="inputGroupFile01"
                 aria-describedby="inputGroupFileAddon01"
                 accept="application/pdf"

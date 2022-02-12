@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -12,7 +13,7 @@
         <input
           type="datetime-local"
           v-model="activeAppel.date2"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
           id="heure"
           :min="min"
@@ -32,7 +33,7 @@
         <input
           type="text"
           v-model="activeAppel.numero"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
           id="numero"
         />
@@ -41,19 +42,19 @@
         <label for="commentaire">Commentaire</label>
         <textarea
           v-model="activeAppel.commentaire"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['commentaire'] }"
           id="commentaire"
         ></textarea>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeAppel.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

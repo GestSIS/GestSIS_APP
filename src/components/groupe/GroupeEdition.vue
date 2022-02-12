@@ -9,34 +9,14 @@
   >
     <template v-slot:default="{ node }" v-if="editMode">
       <div v-if="node.data.type == 'groupe' || node.data.type == 'groupeInter'">
-        <button
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="left(node)"
-          v-if="!node.isRoot"
-        >
-          ←
-        </button>
+        <button class="btn btn-sm pt-0 pb-0" @click.prevent="left(node)" v-if="!node.isRoot">←</button>
         <button
           class="btn btn-sm pt-0 pb-0"
           @click.prevent="right(node)"
           v-if="!node.isFirstOfLevel"
-        >
-          →
-        </button>
-        <button
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="up(node)"
-          v-if="!node.isFirst"
-        >
-          ↑
-        </button>
-        <button
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="down(node)"
-          v-if="!node.isLast"
-        >
-          ↓
-        </button>
+        >→</button>
+        <button class="btn btn-sm pt-0 pb-0" @click.prevent="up(node)" v-if="!node.isFirst">↑</button>
+        <button class="btn btn-sm pt-0 pb-0" @click.prevent="down(node)" v-if="!node.isLast">↓</button>
       </div>
     </template>
   </editable-tree>
@@ -120,7 +100,7 @@ export default {
         tri: g.tri,
         children: [
           ...this.groupes.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeur_ids.map(sapeurMapping),
+          ...g.sapeur_ids.map(sapeurMapping).sort((a, b) => a.label.localeCompare(b.label)),
         ],
       });
 

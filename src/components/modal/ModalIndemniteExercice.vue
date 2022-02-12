@@ -20,7 +20,7 @@
             <input
               type="text"
               v-model="activeIndemnite.designation"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['designation'] }"
               id="designation"
             />
@@ -30,7 +30,7 @@
             <input
               type="text"
               v-model="activeIndemnite.solde"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['solde'] }"
               id="solde"
             />
@@ -73,7 +73,7 @@
             <input
               type="text"
               v-model="activeIndemnite.indemnite"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['indemnite'] }"
               id="indemnite"
             />
@@ -83,7 +83,7 @@
             <select
               id="compte"
               v-model="activeIndemnite.compte_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['compte_id'] }"
             >
               <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
@@ -106,7 +106,7 @@
             <select
               id="categorie"
               v-model="activeIndemnite.ecriture_categorie_id"
-              class="form-select"
+              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
               <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>

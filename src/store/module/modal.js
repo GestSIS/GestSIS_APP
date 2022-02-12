@@ -15,12 +15,12 @@ export default {
         state.modalComponent = payload;
         state.modalCallback = () => {};
         state.modalSize = 0;
-        state.modalData = 0;
+        state.modalData = {};
       } else {
         state.modalComponent = payload.component;
         state.modalCallback = payload.callback || function () {};
         state.modalSize = payload?.size ?? 0;
-        state.modalData = payload?.data ?? 0;
+        state.modalData = payload?.data ?? {};
       }
     },
     [types.HIDE_MODAL](state) {

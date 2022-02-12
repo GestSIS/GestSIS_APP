@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeCategorie.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeCategorie.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -33,7 +33,7 @@
         <input
           type="text"
           v-model="activeCategorie.duree_base"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['duree_base'] }"
           id="duree_base"
         />

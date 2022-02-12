@@ -7,12 +7,7 @@
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="piquet"
-            v-model="piquet"
-          />
+          <input type="checkbox" class="form-check-input" id="piquet" v-model="piquet" />
           <label class="form-check-label" for="piquet">Piquet</label>
         </div>
       </div>
@@ -20,12 +15,12 @@
         <div class="col-sm-6 col-xl-6">
           <div class="mb-3">
             <label for="m-int-date-debut">Date de début</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_debut'] }"
                 type="date"
                 :min="dateDebutMin"
@@ -40,13 +35,13 @@
         <div class="col-sm-6 col-xl-6">
           <div class="mb-3">
             <label for="m-int-heure_debut">Heure</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure_debut'] }"
                 id="m-int-heure_debut"
                 name="heure_debut"
@@ -62,12 +57,12 @@
         <div class="col-sm-6 col-xl-6">
           <div class="mb-3">
             <label for="m-int-date-fin">Date de fin</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_fin'] }"
                 :min="dateFinMin"
                 :max="dateFinMax"
@@ -82,13 +77,13 @@
         <div class="col-sm-6 col-xl-6">
           <div class="mb-3">
             <label for="m-int-heure_fin">Heure</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{
                   'is-invalid': errors['heure_fin'],
                 }"
@@ -111,25 +106,23 @@
               :id="'sp' + s.id"
               v-model="selectedSapeurs[s.id]"
             />
-            <label class="form-check-label" :for="'sp' + s.id">{{
+            <label class="form-check-label" :for="'sp' + s.id">
+              {{
               formatSapeur(s)
-            }}</label>
+              }}
+            </label>
           </div>
         </li>
       </ul>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
       <button
         type="button"
         class="btn btn-primary"
         @click="save()"
         :disabled="!nbSelectedSapeurs"
-      >
-        {{ editMode ? 'Enregistrer' : 'Ajouter' }}
-      </button>
+      >{{ editMode ? 'Enregistrer' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

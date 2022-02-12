@@ -9,10 +9,10 @@
         v-model="name"
         type="text"
         id="inputName"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Nom d'utilisateur"
-        required=""
-        autofocus=""
+        required
+        autofocus
         autocomplete="off"
         :class="{ 'is-invalid': error.name }"
       />
@@ -22,9 +22,9 @@
         v-model="email"
         type="email"
         id="inputEmail"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Email"
-        required=""
+        required
         autocomplete="off"
         :class="{ 'is-invalid': error.email }"
       />
@@ -34,41 +34,29 @@
         v-model="password"
         type="password"
         id="inputPassword"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Mot de passe"
-        required=""
+        required
         autocomplete="off"
         :class="{ 'is-invalid': error.password }"
       />
-      <div class="invalid-feedback" v-if="error.password">
-        Taille minimum: 8
-      </div>
-      <label for="inputPasswordConfirmation" class="sr-only"
-        >Confirmation</label
-      >
+      <div class="invalid-feedback" v-if="error.password">Taille minimum: 8</div>
+      <label for="inputPasswordConfirmation" class="sr-only">Confirmation</label>
       <input
         v-model="password_confirmation"
         type="password"
         id="inputPasswordConfirmation"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Confirmation"
-        required=""
+        required
         autocomplete="off"
         :class="{
           'is-invalid':
             error.password_confirmation || password !== password_confirmation,
         }"
       />
-      <div class="invalid-feedback" v-if="error.password_confirmation">
-        Mot de passe différent
-      </div>
-      <button
-        class="btn btn-link btn-block"
-        type="button"
-        @click.prevent="avance = !avance"
-      >
-        Avancé
-      </button>
+      <div class="invalid-feedback" v-if="error.password_confirmation">Mot de passe différent</div>
+      <button class="btn btn-link btn-block" type="button" @click.prevent="avance = !avance">Avancé</button>
       <transition-expand>
         <div v-show="avance">
           <label for="inputToken" class="sr-only">Jeton d'enregistrement</label>
@@ -76,22 +64,16 @@
             v-model="token"
             type="text"
             id="inputToken"
-            class="form-control"
+            class="form-control form-control-sm"
             placeholder="Jeton (optionnel)"
             autocomplete="off"
           />
         </div>
       </transition-expand>
-      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">
-        Créer un compte
-      </button>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Créer un compte</button>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link to="/login" class="btn btn-link is-active"
-        >Se connecter</router-link
-      >
+      <router-link to="/login" class="btn btn-link is-active">Se connecter</router-link>
     </form>
   </div>
 </template>
@@ -171,13 +153,13 @@ export default {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

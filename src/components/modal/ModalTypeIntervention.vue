@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeTypeIntervention.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeTypeIntervention.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -33,22 +33,20 @@
         <select
           id="stat_intervention"
           v-model="activeTypeIntervention.stat_intervention_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['stat_intervention_id'] }"
         >
-          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">
-            {{ s.designation }}
-          </option>
+          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">{{ s.designation }}</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

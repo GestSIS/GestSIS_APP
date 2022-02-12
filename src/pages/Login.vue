@@ -9,10 +9,10 @@
         v-model="email"
         type="email"
         id="inputEmail"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Email"
-        required=""
-        autofocus=""
+        required
+        autofocus
         autocomplete="off"
         :class="{ 'is-invalid': error }"
       />
@@ -21,25 +21,17 @@
         v-model="password"
         type="password"
         id="inputPassword"
-        class="form-control"
+        class="form-control form-control-sm"
         placeholder="Mot de passe"
-        required=""
+        required
         autocomplete="off"
         :class="{ 'is-invalid': error }"
       />
-      <div class="invalid-feedback" v-if="error">
-        Informations de connexion invalides
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        Se connecter
-      </button>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <div class="invalid-feedback" v-if="error">Informations de connexion invalides</div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link to="/register" class="btn btn-link is-active"
-        >S'enregistrer</router-link
-      >
+      <router-link to="/register" class="btn btn-link is-active">S'enregistrer</router-link>
     </form>
   </div>
 </template>
@@ -104,13 +96,13 @@ export default {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

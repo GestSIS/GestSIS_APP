@@ -13,7 +13,7 @@
         <label for="m-exe-des">Designation</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="m-exe-des"
           name="nom"
@@ -24,7 +24,8 @@
       <div class="mb-3">
         <label for="m-sap-cat">Categorie</label>
         <select
-          class="form-select required"
+          class="form-select form-select-sm"
+          required
           :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
           id="m-sap-cat"
           style="width: 100%"
@@ -42,13 +43,13 @@
           <!-- DATE -->
           <div class="mb-3">
             <label for="m-exe-date">Date</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
                 type="date"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date'] }"
                 id="m-exe-date"
                 name="nom"
@@ -61,13 +62,13 @@
           <!-- HEURE -->
           <div class="mb-3">
             <label for="m-exe-heure">Heure</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
                 type="time"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure'] }"
                 id="m-exe-heure"
                 name="nom"
@@ -82,13 +83,13 @@
           <!-- DUREE -->
           <div class="mb-3">
             <label for="m-exe-duree">Durée</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['fas', 'hourglass-end']" />
               </div>
               <input
                 type="number"
-                class="form-control"
+                class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['duree'] }"
                 min="1"
                 max="780"
@@ -107,7 +108,8 @@
           <div class="mb-3">
             <label for="m-sap-localite">Localité</label>
             <select
-              class="form-select required"
+              class="form-select form-select-sm"
+              required
               :class="{ 'is-invalid': errors['localite_id'] }"
               id="m-sap-localite"
               name="localite_id"
@@ -128,7 +130,7 @@
             <label for="m-exe-lieu">Lieu</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
               id="m-exe-lieu"
               name="nom"
@@ -142,7 +144,7 @@
         <label for="m-sap-communication">Communications</label>
         <textarea
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['communications'] }"
           id="m-sap-communication"
           name="communications"

@@ -4,7 +4,7 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
-          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+        active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
         }}
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -16,12 +16,10 @@
           id="fonction"
           :value="active.fonction_id"
           disabled
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
-            {{ f.nom }}
-          </option>
+          <option v-for="f in listeFonction" :key="f.id" :value="f.id">{{ f.nom }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -29,7 +27,7 @@
         <input
           type="text"
           v-model="active.montant"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['montant'] }"
           id="montant"
         />
@@ -39,7 +37,7 @@
         <input
           type="text"
           v-model="active.quantite"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['quantite'] }"
           id="quantite"
         />
@@ -49,22 +47,20 @@
         <select
           id="unite"
           v-model="active.type_unite_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
-          <option v-for="u in unites" :key="u.id" :value="u.id">
-            {{ u.unite }}
-          </option>
+          <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ active.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ active.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

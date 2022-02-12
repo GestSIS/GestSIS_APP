@@ -22,7 +22,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Actions</h5>
           </div>
-          <form class="card-body d-grid gap-2">
+          <div class="card-body d-grid gap-2">
             <router-link custom to="/exercices/new" v-slot="{ navigate }">
               <button @click="navigate" class="btn btn-outline-primary">Ajouter un exercice</button>
             </router-link>
@@ -38,7 +38,7 @@
               :disabled="!exercices.length"
               @click="convoquer"
             >Convoquer</button>
-          </form>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
@@ -47,7 +47,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Impressions</h5>
           </div>
-          <form class="card-body d-grid gap-2">
+          <div class="card-body d-grid gap-2">
             <button
               :disabled="!selectedId"
               @click="listePresences({ id: selectedId })"
@@ -58,7 +58,7 @@
               @click="listeAppel({ id: selectedId })"
               class="btn btn-outline-primary"
             >Liste d'appel</button>
-          </form>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
@@ -67,7 +67,7 @@
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
           </div>
-          <form class="card-body">
+          <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <select
@@ -119,7 +119,7 @@
                 </select>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

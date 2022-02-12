@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="activeExcuse.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -23,7 +23,7 @@
         <input
           type="text"
           v-model="activeExcuse.abreviation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
           id="abreviation"
         />
@@ -33,7 +33,7 @@
         <input
           type="text"
           v-model="activeExcuse.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />

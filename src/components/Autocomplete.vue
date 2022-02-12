@@ -3,7 +3,7 @@
     <label :for="'d1_' + _uid">{{ title }}</label>
     <input
       :id="'d1_' + _uid"
-      class="form-control"
+      class="form-control form-control-sm"
       :class="{ 'is-invalid': error }"
       type="text"
       @input="onChange"

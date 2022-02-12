@@ -8,12 +8,8 @@
       <p>{{ data.question }}</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="cancel()">
-        Annuler
-      </button>
-      <button type="button" class="btn btn-primary" @click="confirmer()">
-        Confirmer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="cancel()">Annuler</button>
+      <button type="button" class="btn btn-primary" @click="confirmer()">Confirmer</button>
     </div>
   </div>
 </template>

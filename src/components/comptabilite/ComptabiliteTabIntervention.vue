@@ -6,7 +6,17 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" disabled>Imputer</button>
+          <button
+            class="btn btn-outline-primary"
+            v-if="!selectedItem || selectedItem?.statut == 2"
+            :disabled="!selectedItem"
+            @click="imputer(selectedItem.id)"
+          >Imputer</button>
+          <button
+            class="btn btn-outline-danger"
+            v-if="selectedItem?.statut == 3"
+            @click="annulerImputer(selectedItem.id)"
+          >Annuler l'imputation</button>
         </div>
       </div>
     </div>
@@ -107,7 +117,7 @@
             <button
               class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 2"
-              @click="imputerIntervention(props.rowData.id)"
+              @click="imputer(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -181,7 +191,7 @@ export default {
       detailRow: markRaw(FraisEcritureDetails),
       loading: true,
       filters: {},
-      selectedId: null,
+      selectedItem: null,
       ecritureColumns: [
         {
           title: 'Sapeur',
@@ -333,7 +343,9 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       interventions: (state) =>
-        state.intervention.liste.filter((e) => e.statut > 1),
+        state.intervention.liste
+          .filter((e) => e.statut > 1)
+          .sort((a, b) => a.date_debut.localeCompare(b.date_debut)),
       exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       typesIntervention: (state) => state.typeIntervention.liste,
@@ -396,14 +408,29 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    selected(id) {
-      this.selectedId = id;
+    selected(item) {
+      this.selectedItem = item;
     },
-    imputerIntervention(interventionId) {
+    imputer(interventionId) {
       this.SHOW_MODAL({
         component: 'ModalImputerIntervention',
         data: { id: interventionId },
         size: 2,
+      });
+    },
+    annulerImputer(interventionId) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette imputation ?',
+          question:
+            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('annulerImputationIntervention', interventionId);
+          }
+        },
       });
     },
     onRowClass(dataItem, isSelected) {

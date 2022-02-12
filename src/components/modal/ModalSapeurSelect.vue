@@ -8,10 +8,8 @@
       <div class="row mt-2">
         <div class="col-12">
           <div class="mb-3 d-flex align-items-center">
-            <label class="form-select-label mb-0 me-2" for="group-by"
-              >Afficher&nbsp;par</label
-            >
-            <select class="form-select" v-model="groupBy" id="group-by">
+            <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
+            <select class="form-select form-select-sm" v-model="groupBy" id="group-by">
               <option value="none">Alphabétique</option>
               <option value="fonction">Fonction</option>
               <option value="grade">Grade</option>
@@ -27,16 +25,12 @@
       </div>
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">
-            Sapeurs sélectionnés ({{ chosenSapeurs.length }})
-          </h6>
+          <h6 class="mb-0">Sapeurs sélectionnés ({{ chosenSapeurs.length }})</h6>
           <button
             class="btn btn-outline-danger"
             @click="removeSapeurs"
             :disabled="!removeSapeurState"
-          >
-            Enlever ces sapeurs
-          </button>
+          >Enlever ces sapeurs</button>
         </div>
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Sapeurs disponibles</h6>
@@ -44,9 +38,7 @@
             class="btn btn-outline-primary"
             @click="addSapeurs"
             :disabled="!addSapeurState"
-          >
-            Ajouter ces sapeurs
-          </button>
+          >Ajouter ces sapeurs</button>
         </div>
       </div>
       <div class="row">
@@ -105,9 +97,7 @@
               groupBy != 'fonction' &&
               groupBy != 'civilite'
             "
-          >
-            En développement !
-          </p>
+          >En développement !</p>
           <table
             class="table table-sm"
             v-if="
@@ -158,10 +148,7 @@
                       v-model="displaySelected[computeId(item)]"
                       @click="select(item.id, item.leaf)"
                     />
-                    <label
-                      class="form-check-label"
-                      :for="computeId(item)"
-                    ></label>
+                    <label class="form-check-label" :for="computeId(item)"></label>
                   </div>
                   {{ item.designation }}
                 </td>
@@ -188,8 +175,8 @@
             <tbody v-if="groupBy == 'none'">
               <tr
                 v-for="item in availableSapeurs
-                  .map((id) => sapeurs.find((s) => s.id == id))
-                  .filter((s) => s && s.actif)"
+                .map((id) => sapeurs.find((s) => s.id == id))
+                .filter((s) => s && s.actif)"
                 :key="item.id"
                 :class="{
                   'table-primary': selectedSapeurs.includes(item.id),
@@ -203,11 +190,7 @@
                       :id="item.id"
                       v-model="displaySelected[item.id]"
                     />
-                    <label
-                      class="form-check-label"
-                      :for="item.id"
-                      @click="select(item.id)"
-                    ></label>
+                    <label class="form-check-label" :for="item.id" @click="select(item.id)"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>

@@ -4,7 +4,7 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
-          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+        active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
         }}
         type
       </h5>
@@ -16,7 +16,7 @@
         <input
           type="text"
           v-model="active.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -27,18 +27,12 @@
           v-if="!active.id"
           id="type"
           v-model="active.type"
-          class="form-select"
+          class="form-select form-select-sm"
         >
           <option value="frais">Frais</option>
           <option value="indemnite">Indemnité</option>
         </select>
-        <select
-          v-else
-          id="type"
-          :value="active.type"
-          class="form-select"
-          disabled
-        >
+        <select v-else id="type" :value="active.type" class="form-select form-select-sm" disabled>
           <option value="frais">Frais</option>
           <option value="indemnite">Indemnité</option>
         </select>
@@ -48,12 +42,10 @@
         <select
           id="compte"
           v-model="active.compte_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -61,12 +53,10 @@
         <select
           id="categorie"
           v-model="active.ecriture_categorie_id"
-          class="form-select"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
+          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -77,19 +67,17 @@
             id="fonction-actif-modal"
             v-model="active.cumulable"
           />
-          <label class="form-check-label" for="fonction-actif-modal"
-            >Cumulable</label
-          >
+          <label class="form-check-label" for="fonction-actif-modal">Cumulable</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ active.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ active.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

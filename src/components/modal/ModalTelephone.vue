@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeTelephone.id ? 'Modifier' : 'Ajouter' }} un téléphone
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeTelephone.id ? 'Modifier' : 'Ajouter' }} un téléphone</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -12,7 +13,7 @@
         <input
           type="text"
           v-model="activeTelephone.tri"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
           id="tri"
         />
@@ -22,7 +23,7 @@
         <input
           type="text"
           v-model="activeTelephone.nom"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
           id="nom"
         />
@@ -32,19 +33,19 @@
         <input
           type="text"
           v-model="activeTelephone.numero"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
           id="numero"
         />
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTelephone.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeTelephone.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>

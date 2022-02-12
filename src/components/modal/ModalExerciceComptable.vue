@@ -11,11 +11,12 @@
       <div class="mb-3">
         <label for="annee">Année</label>
         <input
-          type="text"
+          type="number"
           v-model="activeExercice.annee"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['annee'] }"
           id="annee"
+          @focusout="presetDebutFin"
         />
       </div>
       <div class="mb-3">
@@ -23,7 +24,7 @@
         <input
           type="text"
           v-model="activeExercice.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
@@ -33,7 +34,7 @@
         <input
           type="date"
           v-model="activeExercice.debut"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
           id="debut"
         />
@@ -43,7 +44,7 @@
         <input
           type="date"
           v-model="activeExercice.fin"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
           id="fin"
         />
@@ -95,6 +96,13 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    presetDebutFin() {
+      const annee = parseInt(this.activeExercice.annee);
+      if (!this.activeExercice.debut) {
+        this.activeExercice.debut = annee + "-01-01";
+        this.activeExercice.fin = annee + "-12-31";
+      }
+    },
     async save() {
       if ((this.activeExercice.id || 0) === 0) {
         this.$store

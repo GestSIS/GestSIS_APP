@@ -10,7 +10,7 @@
         <input
           type="number"
           v-model="groupe.no"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['no'] }"
           id="no"
         />
@@ -20,18 +20,20 @@
         <input
           type="text"
           v-model="groupe.designation"
-          class="form-control"
+          class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="cours-precedent">Groupe parent</label>
-        <select id="pere_id" v-model="groupe.pere_id" class="form-select">
+        <select id="pere_id" v-model="groupe.pere_id" class="form-select form-select-sm">
           <option :value="null">-</option>
-          <option v-for="g in groupes" :key="g.id" :value="g.id">
-            {{ (g.no ? g.no + ' ' : '') + g.designation }}
-          </option>
+          <option
+            v-for="g in groupes"
+            :key="g.id"
+            :value="g.id"
+          >{{ (g.no ? g.no + ' ' : '') + g.designation }}</option>
         </select>
       </div>
       <div class="mb-3">
@@ -44,19 +46,13 @@
             :true-value="1"
             :false-value="0"
           />
-          <label class="form-check-label" for="modal-type"
-            >Groupe d'alarme</label
-          >
+          <label class="form-check-label" for="modal-type">Groupe d'alarme</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Ajouter
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button type="button" class="btn btn-primary" @click="save()">Ajouter</button>
     </div>
   </div>
 </template>
@@ -90,9 +86,9 @@ export default {
         })
         .catch(
           (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+          (this.errors = {
+            ...errors,
+          })
         );
     },
   },
