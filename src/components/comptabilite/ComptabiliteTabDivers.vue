@@ -15,7 +15,7 @@
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedItem"
-            @click="deleteEcriture(selectedItem)"
+            @click="deleteEcriture(selectedItem?.id)"
           >Supprimer</button>
         </div>
       </div>
@@ -36,12 +36,29 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
-          :data="ecritures"
+          :data="computedData"
           @selected="selected"
           :selectable="true"
           selectKey="id"
           row-selected-class="table-primary"
-        ></base-table>
+        >
+          <template v-slot:actions="{ rowData }">
+            <button
+              type="button"
+              class="btn btn-outline-primary border-0"
+              @click="editEcriture(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="deleteEcriture(rowData?.id)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -82,7 +99,7 @@ export default {
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
+      this.$store.dispatch('fetchEcrituresDivers').then(() => {
         this.loading = false;
       });
     },
@@ -97,6 +114,11 @@ export default {
       filters: {},
       fields: [
         {
+          title: 'Date',
+          key: 'date',
+          sortKey: 'date',
+        },
+        {
           title: 'Designation',
           key: 'designation',
           sortKey: 'designation',
@@ -107,14 +129,39 @@ export default {
           sortKey: 'sapeur',
         },
         {
-          title: 'Nombre',
-          key: 'nb',
-          sortKey: 'nb',
+          title: 'Quantité',
+          key: 'quantite',
+          sortKey: 'quantite',
         },
         {
-          title: 'Montant',
+          title: 'Unité',
+          key: 'unite',
+          sortKey: 'unite',
+        },
+        {
+          title: 'Tarif',
+          key: 'tarif',
+          sortKey: 'tarif',
+        },
+        {
+          title: 'Total',
           key: 'total',
           sortKey: 'total',
+        },
+        {
+          title: 'Type',
+          key: 'ecritureType',
+          sortKey: 'ecritureType',
+        },
+        {
+          title: 'Compte',
+          key: 'compte',
+          sortKey: 'compte',
+        },
+        {
+          title: 'Catégorie',
+          key: 'ecriture_categorie',
+          sortKey: 'ecriture_categorie',
         },
         {
           title: 'Actions',
@@ -134,6 +181,20 @@ export default {
       categories: (state) => state.ecritureCategorie.liste,
       ecritures: (state) => state.imputation.ecritures.divers,
     }),
+    computedData() {
+      let svm = this;
+      const formatCompte = (compte) => compte?.numero + " " + compte?.designation
+      return this.ecritures.map((e) => ({
+        ...e,
+        sapeur: [svm.sapeurs.find((s) => s.id == e.sapeur_id)].map((s) =>
+          s ? `${s.nom} ${s.prenom}` : ''
+        )[0],
+        unite: svm.unites.find(u => u.id == e.type_unite_id)?.unite,
+        ecriture_categorie: svm.categories.find(c => c.id == e.ecriture_categorie_id)?.designation,
+        compte: formatCompte(svm.comptes.find(c => c.id == e.compte_id)),
+        ecritureType: svm.comptes.find(c => c.id == e.compte_id)?.actif ? 'Retenue' : e.indemnite != 0 ? 'Indemnité' : e.solde != 0 ? 'Solde' : 'Frais'
+      }));
+    },
     ...mapGetters(['currentExerciceComptableId']),
   },
   methods: {
@@ -141,10 +202,11 @@ export default {
     newEcriture() {
       this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: {} });
     },
-    editEcriture(eciture) {
+    editEcriture(ecriture) {
       this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
     },
-    deleteEcriture() {
+    deleteEcriture(ecritureId) {
+      this.$store.dispatch('removeEcriture', ecritureId)
       // TODO: Supprimer écriture si pas déjà liée à un décompte
     },
     selected(item) {

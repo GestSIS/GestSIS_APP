@@ -40,14 +40,20 @@ export default {
         ecritures: [],
       };
     },
-    [types.ADD_ECRITURE](state, payload) {
-      //TODO: next
+    [types.ADD_ECRITURE](state, ecriture) {
+      if (ecriture.type == 0) {
+        state.ecritures.divers.push(ecriture);
+      }
     },
-    [types.UPDATE_ECRITURE](state, payload) {
-      //TODO: next
+    [types.UPDATE_ECRITURE](state, ecriture) {
+      if (ecriture.type == 0) {
+        state.ecritures.divers = state.ecritures.divers.map(e => e.id == ecriture.id ? ecriture : e);
+      }
     },
-    [types.REMOVE_ECRITURE](state, payload) {
-      //TODO: next
+    [types.REMOVE_ECRITURE](state, ecritureId) {
+      state.ecritures.divers = state.ecritures.divers.filter(e => e.id != ecritureId);
+      state.ecritures.amendes = state.ecritures.amendes.filter(e => e.id != ecritureId);
+      state.ecritures.annuels = state.ecritures.annuels.filter(e => e.id != ecritureId);
     },
     [types.UPDATE_COMPTE_LISTE](state, payload) {
       if (state.active.compteId === null && payload.length > 0) {
@@ -232,17 +238,20 @@ export default {
 
     addEcriture({ commit }, ecriture) {
       return ImputationService.addEcriture(ecriture).then((data) => {
-        return commit(types.ADD_ECRITURE, data);
+        commit(types.ADD_ECRITURE, data);
+        return data;
       });
     },
     updateEcriture({ commit }, ecriture) {
       return ImputationService.updateEcriture(ecriture).then((data) => {
-        return commit(types.UPDATE_ECRITURE, data);
+        commit(types.UPDATE_ECRITURE, data);
+        return data;
       });
     },
-    destroyEcriture({ commit }, ecriture) {
-      return ImputationService.removeEcriture(ecriture).then((data) => {
-        return commit(types.REMOVE_ECRITURE, ecriture);
+    removeEcriture({ commit }, ecritureId) {
+      return ImputationService.removeEcriture(ecritureId).then((data) => {
+        commit(types.REMOVE_ECRITURE, ecritureId);
+        return data;
       });
     },
 

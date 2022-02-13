@@ -200,7 +200,7 @@ export default {
       // { id: 1, designation: 'Indemnité' },
       // { id: 2, designation: 'Solde' },
       // { id: 3, designation: 'Frais' },
-      if (this.activeCompteType.actif) {
+      if (!this.activeCompteType.actif) {
         this.activeEcriture.indemnite = this.activeEcriture.ecriture_type == 1 ? this.activeEcriture?.total : 0;
         this.activeEcriture.solde = this.activeEcriture.ecriture_type == 2 ? this.activeEcriture?.total : 0;
         this.activeEcriture.frais = this.activeEcriture.ecriture_type == 3 ? this.activeEcriture?.total : 0;
