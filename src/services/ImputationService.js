@@ -2,7 +2,7 @@ import Api from '@/http/Request';
 
 export default {
   addEcriture(ecriture) {
-    return Api.api().post('/ecritures/', ecriture);
+    return Api.api().post('/ecritures', ecriture);
   },
   updateEcriture(ecriture) {
     return Api.api().put('/ecritures/' + ecriture.id, ecriture);

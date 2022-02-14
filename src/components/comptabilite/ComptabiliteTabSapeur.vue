@@ -139,6 +139,10 @@ export default {
       selected: null,
       ecritureColumns: [
         {
+          title: 'Date',
+          field: 'date',
+        },
+        {
           title: 'Ecriture',
           field: 'designation',
         },
