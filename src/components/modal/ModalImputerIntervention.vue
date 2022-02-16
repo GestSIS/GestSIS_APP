@@ -18,15 +18,14 @@
             <thead>
               <tr>
                 <th>Designation</th>
-                <th>Solde</th>
-                <th>Indemnite</th>
-                <th>Solde min</th>
+                <th>Tarif</th>
+                <th>Tarif min</th>
                 <th>Pour</th>
                 <th>Taux nuit</th>
                 <th>Taux weekend</th>
                 <th>Unité</th>
                 <th>Compte</th>
-                <th>Par fonction</th>
+                <th class="text-center">Par fonction</th>
               </tr>
             </thead>
             <tbody>
@@ -43,31 +42,28 @@
                 }"
               >
                 <td>{{ indemnite.designation }}</td>
-                <td>{{ indemnite.solde }}</td>
-                <td>{{ indemnite.indemnite }}</td>
-                <td>{{ indemnite.solde_min }}</td>
-                <td>{{ indemnite.solde_min_pour }}</td>
+                <td>{{ indemnite.tarif }}</td>
+                <td>{{ indemnite.tarif_min }}</td>
+                <td>{{ indemnite.tarif_min_pour }}</td>
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
                 <td>{{ indemnite.unite_id }}</td>
                 <td>
                   {{
-                  formatCompte(
-                  comptes.find((f) => f.id == indemnite.compte_id)
-                  )
+                    formatCompte(
+                      comptes.find((f) => f.id == indemnite.compte_id)
+                    )
                   }}
                 </td>
-                <td>
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      id="checkbox-fonction"
-                      :checked="indemnite.par_fonction"
-                      disabled
-                    />
-                    <label class="form-check-label" for="checkbox-fonction"></label>
-                  </div>
+                <td class="text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="checkbox-fonction"
+                    :checked="indemnite.par_fonction"
+                    disabled
+                  />
+                  <label class="form-check-label" for="checkbox-fonction"></label>
                 </td>
               </tr>
             </tbody>
@@ -78,15 +74,14 @@
             <thead>
               <tr>
                 <th>Fonction</th>
-                <th>Solde</th>
+                <th>Tarif</th>
                 <th>Indemnité</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="fonction in activeIndemnite.fonctions" :key="fonction.id">
                 <td>{{ fonctions.find((f) => f.id == fonction.id).nom }}</td>
-                <td>{{ fonction.solde }}</td>
-                <td>{{ fonction.indemnite }}</td>
+                <td>{{ fonction.tarif }}</td>
               </tr>
             </tbody>
           </table>
@@ -102,7 +97,7 @@
           <thead>
             <tr>
               <th>Fonction</th>
-              <th>Solde</th>
+              <th>Tarif</th>
               <th>Indemnité</th>
               <th>Taux weekend</th>
               <th>Taux nuit</th>
@@ -113,11 +108,10 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
                 }}
               </td>
-              <td>{{ ecriture.solde }}</td>
-              <td>{{ ecriture.indemnite }}</td>
+              <td>{{ ecriture.tarif }}</td>
               <td>{{ ecriture.taux_weekend }}</td>
               <td>{{ ecriture.taux_nuit }}</td>
               <td>{{ ecriture.total }}</td>

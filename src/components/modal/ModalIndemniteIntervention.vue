@@ -168,6 +168,18 @@
           <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
         </select>
       </div>
+      <base-select
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type'] }"
+        label="Type comptable"
+        valueKey="value"
+        displayKey="label"
+        :options="[
+          { value: 1, label: 'Solde' },
+          { value: 2, label: 'Indemnite' },
+        ]"
+        v-model="activeIndemnite.type"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
@@ -257,6 +269,7 @@ export default {
             this.HIDE_MODAL();
           })
           .catch((errors) => {
+            console.log(errors)
             this.errors = {
               ...errors,
             };

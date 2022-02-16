@@ -19,6 +19,7 @@
             <th>Taux nuit</th>
             <th>Compte</th>
             <th>Catégorie d'écriture</th>
+            <th>Type</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -37,6 +38,7 @@
             <td>{{ i.taux_nuit }}</td>
             <td>{{ compte(i.compte_id) }}</td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
+            <td>{{ formatType(i.type) }}</td>
             <td class="align-middle text-center">
               <button
                 type="button"
@@ -131,6 +133,17 @@ export default {
     },
     categorie(id) {
       return id ? this.categories.find((c) => c.id === id)?.designation : '';
+    },
+    formatType(type) {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC',
+      }
+      return mapping[type] || '';
     },
   },
 };

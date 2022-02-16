@@ -127,35 +127,35 @@ export default {
       state.fraisIndemnites.annuels = state.fraisIndemnites.annuels.filter((m) => m.id != fraisIndemniteId);
     },
     [types.ADD_INDEMNITE_EXERCICE](state, indemnite) {
-      state.indemnites.exercices = [...state.indemnites.exercices, indemnite];
+      state.fraisIndemnites.exercices = [...state.fraisIndemnites.exercices, indemnite];
     },
     [types.UPDATE_INDEMNITE_EXERCICE](state, indemnite) {
-      state.indemnites.exercices = [
-        ...state.indemnites.exercices.map((m) =>
+      state.fraisIndemnites.exercices = [
+        ...state.fraisIndemnites.exercices.map((m) =>
           m.id === indemnite.id ? indemnite : m
         ),
       ];
     },
     [types.REMOVE_INDEMNITE_EXERCICE](state, indemniteId) {
-      state.indemnites.exercices = state.indemnites.exercices.filter(
+      state.fraisIndemnites.exercices = state.fraisIndemnites.exercices.filter(
         (m) => m.id != indemniteId
       );
     },
     [types.ADD_INDEMNITE_INTERVENTION](state, indemnite) {
-      state.indemnites.interventions = [
-        ...state.indemnites.interventions,
+      state.fraisIndemnites.interventions = [
+        ...state.fraisIndemnites.interventions,
         indemnite,
       ];
     },
     [types.UPDATE_INDEMNITE_INTERVENTION](state, indemnite) {
-      state.indemnites.interventions = [
-        ...state.indemnites.interventions.map((m) =>
+      state.fraisIndemnites.interventions = [
+        ...state.fraisIndemnites.interventions.map((m) =>
           m.id === indemnite.id ? indemnite : m
         ),
       ];
     },
     [types.REMOVE_INDEMNITE_INTERVENTION](state, indemniteId) {
-      state.indemnites.interventions = state.indemnites.interventions.filter(
+      state.fraisIndemnites.interventions = state.fraisIndemnites.interventions.filter(
         (m) => m.id != indemniteId
       );
     },
