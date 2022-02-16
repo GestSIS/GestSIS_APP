@@ -57,7 +57,7 @@ import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
-  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');

@@ -146,7 +146,7 @@ async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadStatFederal = store.dispatch('fetchStatFederals');
   const loadTraitement = store.dispatch('fetchInterventionTraitements');
-  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
 
   Promise.all([
     loadExercicesComptables,
@@ -163,7 +163,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'FraisTabIntervention',
+  name: 'ComptabiliteTabIntervention',
   components: { BaseTable },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
@@ -398,7 +398,7 @@ export default {
             )
         )
         .map((i) => {
-          if (i.id == self.selectedId) {
+          if (i.id == self.selectedItem?.id) {
             return { ...i, 'row-class': 'bg-primary' };
           } else {
             return i;

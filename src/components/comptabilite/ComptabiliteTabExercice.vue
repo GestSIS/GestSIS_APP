@@ -149,7 +149,7 @@ async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchExerciceCategories');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
-  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
 
   Promise.all([
     loadExercices,
