@@ -315,26 +315,26 @@ const router = createRouter({
     {
       path: '/rta',
       name: 'rta',
-      beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
+      beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
       component: () => import(/* webpackChunkName: "rta" */ '@/pages/Rta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
           path: 'mutations',
           name: 'rta-mutations',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
+          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Mutations.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
+          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Reference.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.CONFIG),
+          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () => import(/* webpackChunkName: "rta" */'@/components/rta/GestSis.vue'),
         },
       ],

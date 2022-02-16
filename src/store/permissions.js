@@ -1,10 +1,14 @@
 export default {
+  EFFECTIF: {
+    TOUT: 'effectif.tout',
+  },
   SAPEUR: {
     LECTURE: 'sapeur.lecture',
     MODIFICATION: 'sapeur.modification',
     CONFIG: 'sapeur.config',
   },
   INTERVENTION: {
+    LECTURE: 'intervention.lecture',
     MODIFICATION: 'intervention.modification',
     VALIDATION: 'intervention.validation',
     CONFIG: 'intervention.config',
@@ -25,7 +29,6 @@ export default {
   },
   ORGANISATION: {
     MODIFICATION: 'organisation.modification',
-    CONFIG: 'organisation.config',
   },
   CONTROLE_MEDICAL: {
     TOUT: 'controle_medical.tout',
