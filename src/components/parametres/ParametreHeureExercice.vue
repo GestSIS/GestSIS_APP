@@ -27,7 +27,7 @@
             <td>{{ h.montant }}</td>
             <td>{{ unite(h.type_unite_id) }}</td>
             <td>{{ compte(h.compte_id) }}</td>
-            <td>{{ type(h) }}</td>
+            <td>{{ formatType(h.type) }}</td>
             <td>{{ categorie(h.ecriture_categorie_id) }}</td>
             <td class="align-middle text-center">
               <button
@@ -122,9 +122,16 @@ export default {
     categorie(id) {
       return id ? this.categories.find((c) => c.id === id)?.designation : '';
     },
-    type(heure) {
-      const mapping = { 1: 'Solde', 2: 'Indemnité' };
-      return mapping[heure?.type];
+    formatType(type) {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC',
+      }
+      return mapping[type] || '';
     },
   },
 };

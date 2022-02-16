@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -63,20 +64,24 @@
         label="Type"
         displayKey="label"
         :options="[
+          // { id: 0, label: 'Autre' },
           { id: 1, label: 'Solde' },
           { id: 2, label: 'Indemnité' },
+          // { id: 3, label: 'Frais forfaitaire' },
+          // { id: 4, label: 'Frais effectif' },
+          // { id: 5, label: 'Charges AVS/AC' },
         ]"
         v-model="activeHeure.type"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeHeure.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -123,9 +128,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store
