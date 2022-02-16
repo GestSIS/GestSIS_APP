@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
-        {{ activeCompte.id ? 'Modifier' : 'Ajouter' }} un compte
-      </h5>
+      <h5
+        class="modal-title"
+        id="exampleModalLabel"
+      >{{ activeCompte.id ? 'Modifier' : 'Ajouter' }} un compte</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -29,23 +30,38 @@
       </div>
       <base-select
         class="mb-3"
-        label="Type"
+        label="Type comptable"
         valueKey="value"
         displayKey="designation"
         :options="[
-          { value: 0, designation: 'Passif' },
-          { value: 1, designation: 'Actif' },
+          { value: 0, designation: 'Charge' },
+          { value: 1, designation: 'Produit' },
         ]"
-        v-model="activeCompte.actif"
+        v-model="activeCompte.produit"
+      />
+      <base-select
+        class="mb-3"
+        label="Catégorie"
+        valueKey="value"
+        displayKey="designation"
+        :options="[
+          { value: 0, designation: 'Autre' },
+          { value: 1, designation: 'Solde' },
+          { value: 2, designation: 'Indemnité' },
+          { value: 3, designation: 'Frais forfaitaire' },
+          { value: 4, designation: 'Frais effectif' },
+          { value: 5, designation: 'Charges AVS/AC' },
+        ]"
+        v-model="activeCompte.type"
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeCompte.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+      >{{ activeCompte.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -85,9 +101,9 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store

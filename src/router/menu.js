@@ -81,7 +81,7 @@ const links = [
     to: '/rta',
     icon: 'globe-europe',
     nom: 'Exportation RTA',
-    permission: permissions.ORGANISATION.CONFIG,
+    permission: permissions.ORGANISATION.MODIFICATION,
   },
   {
     to: { name: 'about' },

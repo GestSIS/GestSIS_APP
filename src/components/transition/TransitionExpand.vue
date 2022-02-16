@@ -1,6 +1,6 @@
 <template >
   <!-- <transition :css="false" @enter="onEnter" @afterEnter="onAfterEnter" @leave="onLeave"> -->
-    <slot></slot>
+  <slot></slot>
   <!-- </transition> -->
 </template>
 

@@ -11,7 +11,8 @@
           <tr>
             <th>Numéro</th>
             <th>Désignation</th>
-            <th class="test-center">Type (Actif/Passif)</th>
+            <th>Produit / Charge</th>
+            <th>Type</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -22,16 +23,18 @@
           <tr v-for="c in listeCompte" :key="c.id">
             <td>{{ c.numero }}</td>
             <td>{{ c.designation }}</td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
-                id="actif"
-                :checked="c.actif"
+                id="produit"
+                :checked="c.produit"
                 disabled
               />
-              <label class="form-check-label" for="actif"></label>
-            </td>
+              <label class="form-check-label" for="produit"></label>
+            </td>-->
+            <td>{{ formatType(c.produit) }}</td>
+            <td>{{ formatCategorie(c.type) }}</td>
             <td class="align-middle text-center">
               <button
                 type="button"
@@ -82,11 +85,25 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCompte: (state) => state.compte.liste,
+      listeCompte: (state) => state.compte.liste.sort((a, b) => a.numero.localeCompare(b.numero)),
     }),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    formatType(type) {
+      return type ? 'Produit' : 'Charge';
+    },
+    formatCategorie(type) {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC'
+      };
+      return mapping[type] || 'Autre';
+    },
     ajoutCompte() {
       this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
     },
