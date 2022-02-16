@@ -66,9 +66,8 @@ async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
   let loadComptes = store.dispatch('fetchComptes');
-  let loadFrais = store.dispatch('fetchFraisTypes');
-  let loadIndemnites = store.dispatch('fetchIndemnitesTypes');
-  Promise.all([loadComptes, loadFrais, loadIndemnites]).then(() => {
+  let loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+  Promise.all([loadComptes, loadFraisIndemnites]).then(() => {
     next();
   });
 }

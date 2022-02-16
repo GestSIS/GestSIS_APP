@@ -7,92 +7,68 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres comptabilité</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'compte' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'compte'"
-          >
-            Compte
-          </a>
+          >Compte</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'categorie' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'categorie'"
-          >
-            Catégories
-          </a>
+          >Catégories</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'indemnite-frais-annuel' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'indemnite-frais-annuel'"
-          >
-            Frais &amp; indemnité annuel
-          </a>
+          >Frais &amp; indemnité annuel</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'heure-exercice' }"
             href="#"
             @click.prevent="tab = 'heure-exercice'"
-          >
-            Heures additionnelles pour exercice
-          </a>
+          >Heures additionnelles pour exercice</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'indemnite-exercice' }"
             href="#"
             @click.prevent="tab = 'indemnite-exercice'"
-          >
-            Indemnité exercice
-          </a>
+          >Indemnité exercice</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'indemnite-intervention' }"
             href="#"
             @click.prevent="tab = 'indemnite-intervention'"
-          >
-            Indemnité intervention
-          </a>
+          >Indemnité intervention</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'comptabilite' }"
             href="#"
             @click.prevent="tab = 'comptabilite'"
-          >
-            AVS
-          </a>
+          >AVS</a>
           <a
             class="nav-link"
             :class="{ active: tab === 'amende' }"
             href="#"
             @click.prevent="tab = 'amende'"
-          >
-            Amende
-          </a>
+          >Amende</a>
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
       <parametre-compte v-if="tab === 'compte'" />
       <parametre-ecriture-categorie v-if="tab === 'categorie'" />
-      <parametre-indemnite-frais-annuel
-        v-if="tab === 'indemnite-frais-annuel'"
-      />
+      <parametre-indemnite-frais-annuel v-if="tab === 'indemnite-frais-annuel'" />
       <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
       <parametre-heure-exercice v-if="tab === 'heure-exercice'" />
-      <parametre-indemnite-intervention
-        v-if="tab === 'indemnite-intervention'"
-      />
+      <parametre-indemnite-intervention v-if="tab === 'indemnite-intervention'" />
       <parametre-avs v-if="tab === 'comptabilite'" />
       <parametre-amende v-if="tab === 'amende'" />
     </div>
@@ -113,8 +89,7 @@ import ParametreAmende from './ParametreAmende.vue';
 
 async function loadData(_, next) {
   const loadAmendes = store.dispatch('fetchAmendes');
-  const loadFrais = store.dispatch('fetchFraisTypes');
-  const loadIndemnites = store.dispatch('fetchIndemnitesTypes');
+  const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
@@ -125,8 +100,7 @@ async function loadData(_, next) {
 
   Promise.all([
     loadAmendes,
-    loadFrais,
-    loadIndemnites,
+    loadFraisIndemnites,
     loadFonctions,
     loadComptes,
     loadUnites,

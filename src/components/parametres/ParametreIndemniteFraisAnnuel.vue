@@ -4,15 +4,8 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Frais &amp; indemnités annuels</h3>
       <div class="form-check form-switch mb-2">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          id="switch"
-          v-model="detailsTypes"
-        />
-        <label class="form-check-label" for="switch"
-          >Afficher les détails</label
-        >
+        <input type="checkbox" class="form-check-input" id="switch" v-model="detailsTypes" />
+        <label class="form-check-label" for="switch">Afficher les détails</label>
       </div>
     </div>
     <div class="card-body">
@@ -20,11 +13,7 @@
         <thead>
           <tr>
             <th></th>
-            <th
-              v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
-              class="text-center"
-            >
+            <th v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-center">
               {{ type.designation }}
               <button
                 type="button"
@@ -42,11 +31,7 @@
               </button>
             </th>
             <th rowspan="4" class="text-center align-middle">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="ajoutType()"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="ajoutType()">
                 <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
               </button>
             </th>
@@ -55,52 +40,41 @@
             <th>Compte</th>
             <td
               v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
+              :key="type.id"
               class="text-center"
-            >
-              {{ compte(type.compte_id) }}
-            </td>
+            >{{ compte(type.compte_id) }}</td>
           </tr>
           <tr>
             <th>Catégorie</th>
             <td
               v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
+              :key="type.id"
               class="text-center"
-            >
-              {{ categorie(type.ecriture_categorie_id) }}
-            </td>
+            >{{ categorie(type.ecriture_categorie_id) }}</td>
+          </tr>
+          <tr>
+            <th>Type</th>
+            <td
+              v-for="type in typesAnnuel"
+              :key="type.id"
+              class="text-center"
+            >{{ formatType(type.type) }}</td>
           </tr>
           <tr>
             <th>Cumulable</th>
-            <td
-              v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
-              class="text-center"
-            >
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="type.cumulable"
-                disabled
-              />
+            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
+              <input type="checkbox" class="form-check-input" :checked="type.cumulable" disabled />
             </td>
           </tr>
         </thead>
         <tbody>
           <tr v-for="fonction in fonctions" :key="fonction.id">
             <td>{{ fonction.nom }}</td>
-            <td
-              v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
-              class="text-end"
-            >
-              <template v-if="!detailsTypes">
-                {{ montantAnnuelTypePourFonction(type, fonction) }}
-              </template>
-              <template v-if="detailsTypes">
-                {{ montantAnnuelTypePourFonctionDetails(type, fonction) }}
-              </template>
+            <td v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-end">
+              <template v-if="!detailsTypes">{{ montantAnnuelTypePourFonction(type, fonction) }}</template>
+              <template
+                v-if="detailsTypes"
+              >{{ montantAnnuelTypePourFonctionDetails(type, fonction) }}</template>
               <button
                 type="button"
                 v-if="!type.fonctions.find((f) => f.fonction_id == fonction.id)"
@@ -170,8 +144,7 @@ export default {
   },
   computed: {
     ...mapState({
-      fraisAnnuel: (state) => state.imputation.frais.annuels,
-      indemnitesAnnuel: (state) => state.imputation.indemnites.annuels,
+      fraisIndemnitesAnnuel: (state) => state.imputation.fraisIndemnites.annuels,
       fonctions: (state) =>
         state.fonction.liste.slice(0).sort((a, b) => b.tri - a.tri),
       comptes: (state) => state.compte.liste,
@@ -180,21 +153,26 @@ export default {
     }),
     typesAnnuel() {
       return [
-        ...this.fraisAnnuel.map((f) => ({
+        ...this.fraisIndemnitesAnnuel.map((f) => ({
           ...f,
-          fonctions: f.fraisAnnuels || [],
-          type: 'frais',
-        })),
-        ...this.indemnitesAnnuel.map((f) => ({
-          ...f,
-          fonctions: f.indemniteAnnuels || [],
-          type: 'indemnite',
+          fonctions: f.frais_indemnite_annuels || [],
         })),
       ];
     },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    formatType(type) {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC',
+      }
+      return mapping[type] || '';
+    },
     montantAnnuelTypePourFonction(type, fonction) {
       const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       return elem?.quantite * elem?.montant || '';
@@ -226,10 +204,6 @@ export default {
     deleteType(type) {
       const description =
         type.type == 'frais' ? 'ce frais type' : 'cette indemnité type';
-      const action =
-        type.type == 'frais'
-          ? 'removeFraisAnnuelType'
-          : 'removeIndemniteAnnuelType';
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -239,36 +213,34 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch(action, type.id);
+            this.$store.dispatch('removeFraisIndemnitesAnnuelType', type.id);
           }
         },
       });
     },
     addFonction(type, fonction) {
-      const elem = (type.indemniteAnnuels || type.fraisAnnuels).find(
+      const elem = type?.frais_indemnite_annuels.find(
         (e) => e.fonction_id == fonction.id
       );
       this.SHOW_MODAL({
         component: 'ModalIndemniteFraisAnnuel',
         data: {
           fonction_id: fonction.id,
-          frais_annuel_type_id: type.id,
-          indemnite_annuel_type_id: type.id,
+          frais_indemnite_annuel_type_id: type.id,
           type: type.type,
           ...elem,
         },
       });
     },
     updateFonction(type, fonction) {
-      const elem = (type.indemniteAnnuels || type.fraisAnnuels).find(
+      const elem = type.frais_indemnite_annuels.find(
         (e) => e.fonction_id == fonction.id
       );
       this.SHOW_MODAL({
         component: 'ModalIndemniteFraisAnnuel',
         data: {
           fonction_id: fonction.id,
-          frais_annuel_type_id: type.frais_annuel_type_id,
-          indemnite_annuel_type_id: type.indemnite_annuel_type_id,
+          frais_indemnite_annuel_type_id: type.frais_indemnite_annuel_type_id,
           type: type.type,
           ...elem,
         },
@@ -277,8 +249,6 @@ export default {
     deleteFonction(type, fonction) {
       const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
       const description = type.type == 'frais' ? 'ce frais' : 'cette indemnité';
-      const action =
-        type.type == 'frais' ? 'removeFraisAnnuel' : 'removeIndemniteAnnuel';
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -288,7 +258,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch(action, elem.id);
+            this.$store.dispatch('removeFraisIndemniteAnnuel', elem.id);
           }
         },
       });

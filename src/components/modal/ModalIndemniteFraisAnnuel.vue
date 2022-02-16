@@ -4,7 +4,7 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
-        active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
         }}
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -100,27 +100,21 @@ export default {
     async save() {
       //Format back dates to SQL Format
       if ((this.active.id || 0) === 0) {
-        const action =
-          this.active.type == 'frais' ? 'addFraisAnnuel' : 'addIndemniteAnnuel';
         this.$store
-          .dispatch(action, this.active)
+          .dispatch('addFraisIndemniteAnnuel', this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
-        const action =
-          this.active.type == 'frais'
-            ? 'updateFraisAnnuel'
-            : 'updateIndemniteAnnuel';
         this.$store
-          .dispatch(action, this.active)
+          .dispatch('updateFraisIndemniteAnnuel', this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

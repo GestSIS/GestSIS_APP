@@ -39,21 +39,6 @@
         ]"
         v-model="activeCompte.produit"
       />
-      <base-select
-        class="mb-3"
-        label="Catégorie"
-        valueKey="value"
-        displayKey="designation"
-        :options="[
-          { value: 0, designation: 'Autre' },
-          { value: 1, designation: 'Solde' },
-          { value: 2, designation: 'Indemnité' },
-          { value: 3, designation: 'Frais forfaitaire' },
-          { value: 4, designation: 'Frais effectif' },
-          { value: 5, designation: 'Charges AVS/AC' },
-        ]"
-        v-model="activeCompte.type"
-      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>

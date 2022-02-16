@@ -4,7 +4,7 @@
       <h5 class="modal-title" id="exampleModalLabel">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
-        active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
         }}
         type
       </h5>
@@ -23,18 +23,9 @@
       </div>
       <div class="mb-3">
         <label for="compte">Type</label>
-        <select
-          v-if="!active.id"
-          id="type"
-          v-model="active.type"
-          class="form-select form-select-sm"
-        >
-          <option value="frais">Frais</option>
-          <option value="indemnite">Indemnité</option>
-        </select>
-        <select v-else id="type" :value="active.type" class="form-select form-select-sm" disabled>
-          <option value="frais">Frais</option>
-          <option value="indemnite">Indemnité</option>
+        <select id="type" v-model="active.type" class="form-select form-select-sm">
+          <option :value="2">Indemnité</option>
+          <option :value="3">Frais forfaitaire</option>
         </select>
       </div>
       <div class="mb-3">
@@ -118,30 +109,20 @@ export default {
       //Format back dates to SQL Format
       if ((this.active.id || 0) === 0) {
         this.$store
-          .dispatch(
-            this.active.type == 'frais'
-              ? 'addFraisAnnuelType'
-              : 'addIndemniteAnnuelType',
-            this.active
-          )
+          .dispatch('addFraisIndemniteAnnuelType', this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-              })
+            (this.errors = {
+              ...errors,
+            })
           );
       } else {
         this.$store
-          .dispatch(
-            this.active.type == 'frais'
-              ? 'updateFraisAnnuelType'
-              : 'updateIndemniteAnnuelType',
-            this.active
-          )
+          .dispatch('updateFraisIndemniteAnnuelType', this.active)
           .then(() => {
             this.errors = {};
             this.HIDE_MODAL();

@@ -10,8 +10,8 @@
         <thead>
           <tr>
             <th>Désignation</th>
-            <th>Solde</th>
-            <th>Solde min</th>
+            <th>Tarif</th>
+            <th>Tarif min</th>
             <th>Pour</th>
             <th>Unité</th>
             <th>Phase</th>
@@ -28,9 +28,9 @@
           </tr>
           <tr v-for="i in indemnitesIntervention" :key="i.id">
             <td>{{ i.designation }}</td>
-            <td>{{ i.solde }}</td>
-            <td>{{ i.solde_min }}</td>
-            <td>{{ i.solde_min_pour }}</td>
+            <td>{{ i.tarif }}</td>
+            <td>{{ i.tarif_min }}</td>
+            <td>{{ i.tarif_min_pour }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
             <td>{{ phase(i.phase_id) }}</td>
             <td>{{ i.taux_weekend }}</td>
@@ -90,7 +90,7 @@ export default {
   computed: {
     ...mapState({
       indemnitesIntervention: (state) =>
-        state.imputation.indemnites.interventions.sort((a, b) => a.tri - b.tri),
+        state.imputation.fraisIndemnites.interventions.sort((a, b) => a.tri - b.tri),
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,

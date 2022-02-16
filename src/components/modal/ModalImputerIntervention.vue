@@ -52,9 +52,9 @@
                 <td>{{ indemnite.unite_id }}</td>
                 <td>
                   {{
-                    formatCompte(
-                      comptes.find((f) => f.id == indemnite.compte_id)
-                    )
+                  formatCompte(
+                  comptes.find((f) => f.id == indemnite.compte_id)
+                  )
                   }}
                 </td>
                 <td>
@@ -113,7 +113,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
                 }}
               </td>
               <td>{{ ecriture.solde }}</td>
@@ -163,7 +163,7 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      indemnitesTypes: (state) => state.imputation.indemnites.interventions,
+      indemnitesTypes: (state) => state.imputation.fraisIndemnites.interventions,
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
     }),

@@ -19,13 +19,13 @@
         />
       </div>
       <div class="mb-3">
-        <label for="solde">Solde</label>
+        <label for="tarif">Tarif</label>
         <input
           type="text"
-          v-model="activeIndemnite.solde"
+          v-model="activeIndemnite.tarif"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['solde'] }"
-          id="solde"
+          :class="{ 'is-invalid': errors['tarif'] }"
+          id="tarif"
         />
       </div>
       <div class="mb-3">
@@ -34,12 +34,12 @@
           <input
             class="form-check-input"
             type="radio"
-            name="solde-min"
-            id="solde-min"
-            value="solde-min"
+            name="tarif-min"
+            id="tarif-min"
+            value="tarif-min"
             v-model="imputationType"
           />
-          <label class="form-check-label" for="solde-min">Solde min</label>
+          <label class="form-check-label" for="tarif-min">Tarif min</label>
         </div>
         <div class="form-check form-check-inline">
           <input
@@ -56,23 +56,23 @@
       <div class="container-fluid">
         <div class="row" v-if="imputationType != 'taux'">
           <div class="mb-3 col-3">
-            <label for="solde_min">Solde min</label>
+            <label for="tarif_min">Tarif min</label>
             <input
               type="text"
-              v-model="activeIndemnite.solde_min"
+              v-model="activeIndemnite.tarif_min"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['solde_min'] }"
-              id="solde_min"
+              :class="{ 'is-invalid': errors['tarif_min'] }"
+              id="tarif_min"
             />
           </div>
           <div class="mb-3 col-2">
-            <label for="solde_min_pour">Pour</label>
+            <label for="tarif_min_pour">Pour</label>
             <input
               type="text"
-              v-model="activeIndemnite.solde_min_pour"
+              v-model="activeIndemnite.tarif_min_pour"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['solde_min_pour'] }"
-              id="solde_min_pour"
+              :class="{ 'is-invalid': errors['tarif_min_pour'] }"
+              id="tarif_min_pour"
             />
           </div>
           <div class="mb-3 col-7">
@@ -87,7 +87,7 @@
             </select>
           </div>
           <div class="mb-3 col-12">
-            <label for="phase_id">Solde min pour phase</label>
+            <label for="phase_id">Tarif min pour phase</label>
             <select
               id="phase_id"
               v-model="activeIndemnite.phase_id"
@@ -210,7 +210,7 @@ export default {
     this.imputationType =
       this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
         ? 'taux'
-        : 'solde-min';
+        : 'tarif-min';
   },
   computed: {
     ...mapState({
@@ -226,8 +226,8 @@ export default {
     async save() {
       if (this.imputationType == 'taux') {
         this.activeIndemnite.type_unite_id = 2; // Par heure
-        this.activeIndemnite.solde_min = null;
-        this.activeIndemnite.solde_min_pour = null;
+        this.activeIndemnite.tarif_min = null;
+        this.activeIndemnite.tarif_min_pour = null;
         this.activeIndemnite.phase_id = null;
       } else {
         this.activeIndemnite.taux_nuit = null;

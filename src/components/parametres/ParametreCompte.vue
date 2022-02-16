@@ -12,7 +12,6 @@
             <th>Numéro</th>
             <th>Désignation</th>
             <th>Produit / Charge</th>
-            <th>Type</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -34,7 +33,6 @@
               <label class="form-check-label" for="produit"></label>
             </td>-->
             <td>{{ formatType(c.produit) }}</td>
-            <td>{{ formatCategorie(c.type) }}</td>
             <td class="align-middle text-center">
               <button
                 type="button"
@@ -93,17 +91,17 @@ export default {
     formatType(type) {
       return type ? 'Produit' : 'Charge';
     },
-    formatCategorie(type) {
-      const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC'
-      };
-      return mapping[type] || 'Autre';
-    },
+    // formatCategorie(type) {
+    //   const mapping = {
+    //     0: 'Autre',
+    //     1: 'Solde',
+    //     2: 'Indemnité',
+    //     3: 'Frais forfaitaire',
+    //     4: 'Frais effectif',
+    //     5: 'Charges AVS/AC',
+    //   }
+    //   return mapping[type] || '';
+    // },
     ajoutCompte() {
       this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
     },
