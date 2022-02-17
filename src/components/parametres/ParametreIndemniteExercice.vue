@@ -10,11 +10,14 @@
         <thead>
           <tr>
             <th>Désignation</th>
+            <th>Unité</th>
             <th>Solde</th>
             <th>Solde min</th>
             <th>Pour</th>
-            <th>Unité</th>
+            <th>Compte</th>
             <th>Indemnité</th>
+            <th>Indemnité min</th>
+            <th>Pour</th>
             <th>Compte</th>
             <th>Par fonction</th>
             <th>Catégorie</th>
@@ -22,17 +25,38 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-if="!indemnitesExercice.length">
+          <tr v-if="!computedIndemnites.length">
             <td colspan="10">Aucune indemnité</td>
           </tr>
-          <tr v-for="i in indemnitesExercice" :key="i.id">
+          <tr v-for="i in computedIndemnites" :key="i.id">
             <td>{{ i.designation }}</td>
-            <td>{{ i.solde }}</td>
-            <td>{{ i.solde_min }}</td>
-            <td>{{ i.solde_min_pour }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
-            <td>{{ i.indemnite }}</td>
-            <td>{{ compte(i.compte_id) }}</td>
+            <td v-if="!i.solde_undefined && min_solde == NaN">NaN</td>
+            <td v-else-if="!i.solde_undefined">{{ i.total_solde }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.solde_undefined && min_solde != NaN">{{ i.min_solde }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.solde_undefined && min_solde != NaN">{{ i.min_solde_pour }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.solde_undefined">
+              {{
+                i.compte_solde_id ? compte(i.compte_solde_id) : 'Plus d\'un compte'
+              }}
+            </td>
+            <td v-else>-</td>
+            <td v-if="!i.indemnite_undefined && min_indemnite == NaN">NaN</td>
+            <td v-else-if="!i.indemnite_undefined">{{ i.total_indemnite }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.indemnite_undefined && min_indemnite != NaN">{{ i.min_indemnite }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.indemnite_undefined && min_indemnite != NaN">{{ i.min_indemnite_pour }}</td>
+            <td v-else>-</td>
+            <td v-if="!i.indemnite_undefined">
+              {{
+                i.compte_indemnite_id ? compte(i.compte_indemnite_id) : 'Plus d\'un compte'
+              }}
+            </td>
+            <td v-else>-</td>
             <td class="text-center">
               <input
                 type="checkbox"
@@ -74,7 +98,6 @@ async function loadData(_, next) {
   const loadUnites = store.dispatch('fetchUnites');
 
   Promise.all([
-    loadFrais,
     loadIndemnites,
     loadFonctions,
     loadComptes,
@@ -101,6 +124,29 @@ export default {
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
     }),
+    computedIndemnites() {
+      return this.indemnitesExercice.map(e => {
+        const indemniteBase = e.fonctions.filter(f => !f.fonction_id);
+        const soldes = indemniteBase.filter(e => e.type == 1)
+        const indemnites = indemniteBase.filter(e => e.type == 2)
+
+        const sumReducer = (acc, a) => acc + parseFloat(a);
+
+        return {
+          ...e,
+          total_solde: soldes.map(e => e.tarif).reduce(sumReducer, 0.0),
+          total_indemnite: indemnites.map(e => e.tarif).reduce(sumReducer, 0.0),
+          solde_undefined: soldes.length == 0,
+          min_solde: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min || 0) : NaN,
+          min_solde_pour: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min_pour || 0) : NaN,
+          compte_solde_id: soldes.length == 0 ? null : soldes.length == 1 ? soldes[0].compte_id : NaN,
+          indemnite_undefined: indemnites.length == 0,
+          min_indemnite: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min || 0) : NaN,
+          min_indemnite_pour: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min_pour || 0) : NaN,
+          compte_indemnite_id: indemnites.length == 0 ? null : indemnites.length == 1 ? indemnites[0].compte_id : NaN,
+        }
+      })
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

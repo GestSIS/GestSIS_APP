@@ -112,7 +112,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="5">
+                  <td :colspan="base.length > 1 ? 6 : 5">
                     <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
                       Ajouter
                       <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
