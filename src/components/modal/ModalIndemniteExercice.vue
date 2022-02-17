@@ -180,7 +180,6 @@
                   <button
                     type="button"
                     class="btn btn-outline-primary border-0"
-                    :class="{ 'is-invalid': errors['column-type' + i] }"
                     @click="ajoutTypePourFonction()"
                   >
                     <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
@@ -262,7 +261,7 @@ export default {
   },
   mounted() {
     // Calcul des différentes combinaisons existantes
-    const configurations = new Set(this.data?.fonctions?.map(f => f.type + ' ' + f.compte_id) || []);
+    const configurations = new Set(this.data?.fonctions?.filter(f => f.fonction_id)?.map(f => f.type + ' ' + f.compte_id) || []);
     this.columns = Object.fromEntries([...configurations]
       .map(e => [e, e.split(' ')])
       .map(([index, e]) => ([index, {
@@ -271,12 +270,13 @@ export default {
         fonctions: {},
       }])));
 
-    this.data?.fonctions?.forEach(f => {
+    this.data?.fonctions?.filter(f => f.fonction_id)?.forEach(f => {
       this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] = f.tarif;
     })
 
+
     // Ajout un type par défault en cas d'utilisation des indemnités par fonction
-    if (!this.columns.length) {
+    if (!Object.keys(this.columns).length) {
       this.columns[this.columnCreationIndex] = { type: 1, compte_id: null, fonctions: [] };
       this.columnCreationIndex++;
     }
@@ -287,6 +287,7 @@ export default {
       ...this.data,
     };
 
+    this.base = this.data?.fonctions?.filter(f => !f.fonction_id) || [];
     if (!this.base.length) {
       // Ajout d'un revenu de base de type solde
       this.base.push({
@@ -296,6 +297,7 @@ export default {
         tarif_min: null,
         tarif_min_pour: null,
         compte_id: null,
+        fonction_id: null,
       })
     }
   },
@@ -346,6 +348,7 @@ export default {
         tarif_min: null,
         tarif_min_pour: null,
         compte_id: null,
+        fonction_id: null,
       })
     },
     supprimerType(i) {
@@ -402,9 +405,8 @@ export default {
       ];
 
       if (this.activeIndemnite.par_fonction) {
-        this.fonctions = [
-          ...this.fonctions,
-          ...(this.columns
+        fonctions.push(
+          ...(Object.values(this.columns)
             .map(e => [...Object.entries(e.fonctions)
               .map(([f, tarif]) => ({
                 type: e.type,
@@ -413,9 +415,8 @@ export default {
                 tarif: tarif
               }))])
             .reduce((e, acc) => [...acc, ...e], []))
-        ]
+        )
       }
-      console.log(fonctions)
 
       const indemnite = {
         ...this.activeIndemnite,
