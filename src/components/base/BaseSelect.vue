@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div>
     <label v-if="label" :for="label">{{ label }}</label>
     <select
       :class="['form-select form-select-sm', selectClass]"

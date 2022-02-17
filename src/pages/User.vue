@@ -131,7 +131,7 @@ export default {
   methods: {
     async utiliserJeton() {
       if (!this.jeton) {
-        this.$awn.warning('Jeton invalide');
+        this.$awn.alert('Jeton invalide');
       } else {
         this.$store
           .dispatch('useToken', this.jeton)

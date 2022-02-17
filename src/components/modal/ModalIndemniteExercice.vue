@@ -26,68 +26,101 @@
             />
           </div>
           <div class="mb-3">
-            <label for="solde">Solde</label>
-            <input
-              type="text"
-              v-model="activeIndemnite.solde"
-              class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['solde'] }"
-              id="solde"
-            />
-          </div>
-          <div class="row">
-            <div class="mb-3 col-3">
-              <label for="solde_min">Solde min</label>
-              <input
-                type="text"
-                v-model="activeIndemnite.solde_min"
-                class="form-control"
-                :class="{ 'is-invalid': errors['solde_min'] }"
-                id="solde_min"
-              />
-            </div>
-            <div class="mb-3 col-2">
-              <label for="solde_min_pour">Pour</label>
-              <input
-                type="text"
-                v-model="activeIndemnite.solde_min_pour"
-                class="form-control"
-                :class="{ 'is-invalid': errors['solde_min_pour'] }"
-                id="solde_min_pour"
-              />
-            </div>
-            <div class="mb-3 col-7">
-              <label for="unite">Unité</label>
-              <select
-                id="unite"
-                v-model="activeIndemnite.type_unite_id"
-                class="form-select"
-                :class="{ 'is-invalid': errors['type_unite_id'] }"
-              >
-                <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label for="indemnite">Indemnite</label>
-            <input
-              type="text"
-              v-model="activeIndemnite.indemnite"
-              class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['indemnite'] }"
-              id="indemnite"
-            />
+            <label for="unite">Unité</label>
+            <select
+              id="unite"
+              v-model="activeIndemnite.type_unite_id"
+              class="form-select form-select-sm"
+              :class="{ 'is-invalid': errors['type_unite_id'] }"
+            >
+              <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
+            </select>
           </div>
           <div class="mb-3">
-            <label for="compte">Compte</label>
-            <select
-              id="compte"
-              v-model="activeIndemnite.compte_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['compte_id'] }"
-            >
-              <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
-            </select>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Tarif</th>
+                  <th v-if="uniteComptable">Tarif min</th>
+                  <th v-if="uniteComptable">Pour</th>
+                  <th>Compte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(indemnite, i) in base" :key="i">
+                  <td :class="uniteComptable ? 'col-2' : 'col-4'">
+                    <base-select
+                      :class="{ 'is-invalid': errors['base-type' + i] }"
+                      valueKey="value"
+                      displayKey="label"
+                      :options="[
+                        { value: 1, label: 'Solde' },
+                        { value: 2, label: 'Indemnite' },
+                      ]"
+                      v-model="base[i].type"
+                    />
+                  </td>
+                  <td :class="uniteComptable ? 'col-2' : 'col-4'">
+                    <input
+                      type="text"
+                      v-model="base[i].tarif"
+                      class="form-control form-control-sm"
+                      :class="{ 'is-invalid': errors['base-tarif' + i] }"
+                      id="tarif"
+                    />
+                  </td>
+                  <td class="col-2" v-if="uniteComptable">
+                    <input
+                      type="text"
+                      v-model="base[i].tarif_min"
+                      class="form-control form-control-sm"
+                      :class="{ 'is-invalid': errors['base-tarif-min' + i] }"
+                      id="tarif_min"
+                    />
+                  </td>
+                  <td class="col-2" v-if="uniteComptable">
+                    <div class="input-group input-group-sm">
+                      <input
+                        type="text"
+                        v-model="base[i].tarif_min_pour"
+                        class="form-control form-control-sm"
+                        :class="{ 'is-invalid': errors['base-tarif-min-pour' + i] }"
+                        id="tarif_min_pour"
+                      />
+                      <span class="input-group-text">{{ unite(activeIndemnite.type_unite_id) }}</span>
+                    </div>
+                  </td>
+                  <td :class="uniteComptable ? 'col-3' : 'col-4'">
+                    <select
+                      id="compte"
+                      v-model="base[i].compte_id"
+                      class="form-select form-select-sm"
+                      :class="{ 'is-invalid': errors['base-compte' + i] }"
+                    >
+                      <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+                    </select>
+                  </td>
+                  <td class="text-center" v-if="base.length > 1">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      @click="supprimerType()"
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" />
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
+                      Ajouter
+                      <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div class="mb-3">
             <div class="form-check">
@@ -117,36 +150,74 @@
         <div class="col-6" v-if="activeIndemnite.par_fonction">
           <table class="table table-sm">
             <thead>
+              <tr v-if="Object.keys(columns).length > 1">
+                <th></th>
+                <th class="text-center" v-for="(column, i) in columns" :key="i">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerTypePourFonction(i)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </th>
+              </tr>
               <tr>
-                <th>Fonction</th>
-                <th>Solde</th>
-                <th>Indemnité</th>
+                <th>Type</th>
+                <th v-for="(column, i) in columns" :key="i">
+                  <base-select
+                    :class="{ 'is-invalid': errors['type'] }"
+                    valueKey="value"
+                    displayKey="label"
+                    :options="[
+                      { value: 1, label: 'Solde' },
+                      { value: 2, label: 'Indemnite' },
+                    ]"
+                    v-model="columns[i].type"
+                  />
+                </th>
+                <th rowspan="2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    :class="{ 'is-invalid': errors['column-type' + i] }"
+                    @click="ajoutTypePourFonction()"
+                  >
+                    <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th>Compte</th>
+                <th v-for="(column, i) in columns" :key="i">
+                  <select
+                    id="compte"
+                    v-model="columns[i].compte_id"
+                    class="form-select form-select-sm"
+                    :class="{ 'is-invalid': errors['column-compte' + i] }"
+                  >
+                    <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+                  </select>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-if="!activeIndemnite.fonctions.length">
+              <tr v-if="!fonctions.length">
                 <td colspan="3">Aucune fonction paramétrée</td>
               </tr>
-              <tr v-for="index in activeIndemnite.fonctions.length" :key="index">
+              <tr v-for="f in fonctions" :key="f.id">
                 <td>
                   {{
-                    fonction(activeIndemnite.fonctions[index - 1].fonction_id)
+                    fonction(f.id)
                   }}
                 </td>
-                <td>
+                <td v-for="(column, i) in columns" :key="i">
                   <input
                     class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['column-tarif' + i + '-' + f.id] }"
                     type="text"
-                    @change="(e) => updateSolde(index - 1, e)"
-                    :value="activeIndemnite.fonctions[index - 1].solde"
-                  />
-                </td>
-                <td>
-                  <input
-                    class="form-control form-control-sm"
-                    type="text"
-                    @change="(e) => updateIndemnite(index - 1, e)"
-                    :value="activeIndemnite.fonctions[index - 1].indemnite"
+                    @change="(e) => columns[i].fonctions[f.id] = e.target.value"
+                    :value="columns[i].fonctions[f.id] || 0.0"
                   />
                 </td>
               </tr>
@@ -179,34 +250,54 @@ export default {
   data() {
     return {
       errors: {},
+      columnCreationIndex: 0,
+      columns: [],
+      base: [],
       activeIndemnite: {
         fonctions: [],
         par_fonction: false,
+        type_unite_id: null,
       },
     };
   },
   mounted() {
-    const base = Object.fromEntries(
-      (this.data.fonctions || []).map((f) => [f.fonction_id, f])
-    );
-    const data = Object.fromEntries(
-      this.fonctions.map((f) => [
-        f.id,
-        { ...f, fonction_id: f.id, solde: 0, indemnite: 0 },
-      ])
-    );
+    // Calcul des différentes combinaisons existantes
+    const configurations = new Set(this.data?.fonctions?.map(f => f.type + ' ' + f.compte_id) || []);
+    this.columns = Object.fromEntries([...configurations]
+      .map(e => [e, e.split(' ')])
+      .map(([index, e]) => ([index, {
+        type: e[0],
+        compte_id: e[1],
+        fonctions: {},
+      }])));
 
-    const objects = {
-      ...data,
-      ...base,
-    };
-    const fonctions = Object.values(objects).sort((a, b) => b.tri - a.tri);
+    this.data?.fonctions?.forEach(f => {
+      this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] = f.tarif;
+    })
+
+    // Ajout un type par défault en cas d'utilisation des indemnités par fonction
+    if (!this.columns.length) {
+      this.columns[this.columnCreationIndex] = { type: 1, compte_id: null, fonctions: [] };
+      this.columnCreationIndex++;
+    }
 
     this.activeIndemnite = {
       ...this.activeIndemnite,
+      type_unite_id: 6, // Set unité type défault à forfait
       ...this.data,
-      fonctions: fonctions,
     };
+
+    if (!this.base.length) {
+      // Ajout d'un revenu de base de type solde
+      this.base.push({
+        type: 1,
+        id: null,
+        tarif: null,
+        tarif_min: null,
+        tarif_min_pour: null,
+        compte_id: null,
+      })
+    }
   },
   computed: {
     ...mapState({
@@ -218,36 +309,115 @@ export default {
     parFonction() {
       return this.activeIndemnite.par_fonction;
     },
+    uniteComptable() {
+      const uniteId = this.activeIndemnite.type_unite_id;
+      return this.unites.find(u => u.id == uniteId)?.comptable;
+    }
   },
   watch: {
     parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 1);
+      this.UPDATE_MODAL_SIZE(this.uniteComptable || val ? 2 : 0);
+    },
+    uniteComptable: function (val) {
+      this.UPDATE_MODAL_SIZE(val || this.parFonction ? 2 : 0);
     },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    unite(id) {
+      return this.unites.find(u => u.id == id)?.abreviation;
+    },
     compte(compte) {
       return `${compte?.numero} ${compte.designation}`;
     },
     fonction(id) {
       return this.fonctions.find((f) => f.id === id)?.nom;
     },
-    updateSolde(index, e) {
-      this.activeIndemnite.fonctions[index].solde = e.target.value;
+    updateTarif(index, e) {
+      this.activeIndemnite.fonctions[index].tarif = e.target.value;
     },
     updateIndemnite(index, e) {
       this.activeIndemnite.fonctions[index].indemnite = e.target.value;
     },
+    ajoutType() {
+      this.base.push({
+        type: 1,
+        tarif: null,
+        tarif_min: null,
+        tarif_min_pour: null,
+        compte_id: null,
+      })
+    },
+    supprimerType(i) {
+      this.base.splice(i, 1);
+    },
+    ajoutTypePourFonction() {
+      this.columns[this.columnCreationIndex] = ({ type: 1, compte_id: null, fonctions: [] });
+      this.columnCreationIndex++;
+    },
+    supprimerTypePourFonction(i) {
+      delete this.columns[i];
+    },
     async save() {
-      const fonctions = this.activeIndemnite.fonctions
-        .filter((f) => f.solde != 0 || f.indemnite != 0)
-        .map((f) => ({
-          solde: f.solde,
-          indemnite: f.indemnite,
-          fonction_id: f.fonction_id,
-        }));
+      this.errors = {};
 
-      let indemnite = {
+      // Contrôle qu'aucune colonne n'est dupliquée
+      const baseSet = new Set(this.base.map(e => e.type + ' ' + e.compte_id));
+      if (baseSet.size != this.base.length) {
+        this.$awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise.")
+        return;
+      }
+
+      if (this.activeIndemnite.par_fonction) {
+        const columnsFonctionsSet = new Set(Object.values(this.columns).map(e => e.type + ' ' + e.compte_id));
+        if (columnsFonctionsSet.size != Object.keys(this.columns).length) {
+          this.$awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise dans les fonctions.")
+          return;
+        }
+      }
+
+      // Contrôle des données de base
+      this.base.forEach((e, i) => {
+        if (!e.type) this.errors['base-type' + i] = true;
+        if (!e.compte_id) this.errors['base-compte' + i] = true;
+        if (!e.tarif || e.tarif < 0) this.errors['base-tarif' + i] = true;
+        if (e.tarif_min && e.tarif_min < 0) this.errors['base-tarif-min' + i] = true;
+        if (e.tarif_min_pour && e.tarif_min_pour < 0) this.errors['base-tarif-min-pour' + i] = true;
+      })
+      if (this.activeIndemnite.par_fonction) {
+        Object.values(this.columns).forEach((e, i) => {
+          if (!e.type) this.errors['column-type' + i] = true;
+          if (!e.compte_id) this.errors['column-compte' + i] = true;
+        })
+      }
+
+      // Return en cas d'erreurs
+      if (Object.keys(this.errors).length > 0) {
+        return;
+      }
+
+      // Generate data
+      const fonctions = [
+        ...this.base,
+      ];
+
+      if (this.activeIndemnite.par_fonction) {
+        this.fonctions = [
+          ...this.fonctions,
+          ...(this.columns
+            .map(e => [...Object.entries(e.fonctions)
+              .map(([f, tarif]) => ({
+                type: e.type,
+                compte_id: e.compte_id,
+                fonction_id: f,
+                tarif: tarif
+              }))])
+            .reduce((e, acc) => [...acc, ...e], []))
+        ]
+      }
+      console.log(fonctions)
+
+      const indemnite = {
         ...this.activeIndemnite,
         fonctions,
       };
