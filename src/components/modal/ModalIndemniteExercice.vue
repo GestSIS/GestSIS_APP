@@ -312,6 +312,8 @@ export default {
       return this.activeIndemnite.par_fonction;
     },
     uniteComptable() {
+      return false;
+      // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
       const uniteId = this.activeIndemnite.type_unite_id;
       return this.unites.find(u => u.id == uniteId)?.comptable || uniteId == 1; // Comptable ou par pièces
     }

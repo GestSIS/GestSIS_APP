@@ -12,12 +12,12 @@
             <th>Désignation</th>
             <th>Unité</th>
             <th>Solde</th>
-            <th>Solde min</th>
-            <th>Pour</th>
+            <!-- <th>Solde min</th>
+            <th>Pour</th>-->
             <th>Compte</th>
             <th>Indemnité</th>
-            <th>Indemnité min</th>
-            <th>Pour</th>
+            <!-- <th>Indemnité min</th>
+            <th>Pour</th>-->
             <th>Compte</th>
             <th>Par fonction</th>
             <th>Catégorie</th>
@@ -31,26 +31,26 @@
           <tr v-for="i in computedIndemnites" :key="i.id">
             <td>{{ i.designation }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
-            <td v-if="!i.solde_undefined && i.min_solde == NaN">NaN</td>
-            <td v-else-if="!i.solde_undefined">{{ i.total_solde }}</td>
+            <!-- <td v-if="!i.solde_undefined && i.min_solde == NaN">NaN</td> -->
+            <td v-if="!i.solde_undefined">{{ i.total_solde }}</td>
             <td v-else>-</td>
-            <td v-if="!i.solde_undefined && i.min_solde != NaN">{{ i.min_solde }}</td>
+            <!-- <td v-if="!i.solde_undefined && i.min_solde != NaN">{{ i.min_solde }}</td>
             <td v-else>-</td>
             <td v-if="!i.solde_undefined && i.min_solde != NaN">{{ i.min_solde_pour }}</td>
-            <td v-else>-</td>
+            <td v-else>-</td>-->
             <td v-if="!i.solde_undefined">
               {{
                 i.compte_solde_id ? compte(i.compte_solde_id) : 'Plus d\'un compte'
               }}
             </td>
             <td v-else>-</td>
-            <td v-if="!i.indemnite_undefined && i.min_indemnite == NaN">NaN</td>
-            <td v-else-if="!i.indemnite_undefined">{{ i.total_indemnite }}</td>
+            <!-- <td v-if="!i.indemnite_undefined && i.min_indemnite == NaN">NaN</td> -->
+            <td v-if="!i.indemnite_undefined">{{ i.total_indemnite }}</td>
             <td v-else>-</td>
-            <td v-if="!i.indemnite_undefined && i.min_indemnite != NaN">{{ i.min_indemnite }}</td>
+            <!-- <td v-if="!i.indemnite_undefined && i.min_indemnite != NaN">{{ i.min_indemnite }}</td>
             <td v-else>-</td>
             <td v-if="!i.indemnite_undefined && i.min_indemnite != NaN">{{ i.min_indemnite_pour }}</td>
-            <td v-else>-</td>
+            <td v-else>-</td>-->
             <td v-if="!i.indemnite_undefined">
               {{
                 i.compte_indemnite_id ? compte(i.compte_indemnite_id) : 'Plus d\'un compte'
