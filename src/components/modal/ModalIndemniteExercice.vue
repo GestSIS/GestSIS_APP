@@ -304,7 +304,7 @@ export default {
   computed: {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
-      unites: (state) => state.unite.liste,
+      unites: (state) => state.unite.liste,//.filter(u => !(u.id in [3, 4, 5, 7])),
       comptes: (state) => state.compte.liste,
       categories: (state) => state.ecritureCategorie.liste,
     }),
@@ -313,7 +313,7 @@ export default {
     },
     uniteComptable() {
       const uniteId = this.activeIndemnite.type_unite_id;
-      return this.unites.find(u => u.id == uniteId)?.comptable;
+      return this.unites.find(u => u.id == uniteId)?.comptable || uniteId == 1; // Comptable ou par pièces
     }
   },
   watch: {
@@ -404,6 +404,7 @@ export default {
         ...this.base,
       ];
 
+      // TODO: Set tarif_min to null if unite == forfait
       if (this.activeIndemnite.par_fonction) {
         fonctions.push(
           ...(Object.values(this.columns)

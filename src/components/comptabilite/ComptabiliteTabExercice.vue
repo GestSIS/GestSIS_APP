@@ -150,6 +150,7 @@ async function loadData(_, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+  const loadComptes = store.dispatch('fetchComptes');
 
   Promise.all([
     loadExercices,
@@ -157,6 +158,7 @@ async function loadData(_, next) {
     loadSapeurs,
     loadLocalites,
     loadIndemnites,
+    loadComptes
   ]).then(() => {
     next();
   });
@@ -195,21 +197,21 @@ export default {
           },
         },
         {
-          title: 'Solde',
-          field: 'solde',
+          title: 'Tarif',
+          field: 'tarif',
           headerClassName: 'text-center',
           className: 'text-end',
         },
         {
-          title: 'Indemnité',
-          field: 'indemnite',
+          title: 'Quantite',
+          field: 'quantite',
           headerClassName: 'text-center',
           className: 'text-end',
         },
         {
           title: 'Amende',
-          field: 'amende',
-          formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
+          field: 'total',
+          formatter: (total, ecriture) => (ecriture.module == 5 ? ecriture.total : '0.00'),
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -217,7 +219,7 @@ export default {
           title: 'Total',
           field: 'total',
           formatter: (total, ecriture) =>
-            ecriture.amende ? (-total).toFixed(2) : total,
+            ecriture.module == 5 ? (-total).toFixed(2) : total,
           headerClassName: 'text-center',
           className: 'text-end',
         },

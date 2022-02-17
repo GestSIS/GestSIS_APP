@@ -31,12 +31,12 @@
           <tr v-for="i in computedIndemnites" :key="i.id">
             <td>{{ i.designation }}</td>
             <td>{{ unite(i.type_unite_id) }}</td>
-            <td v-if="!i.solde_undefined && min_solde == NaN">NaN</td>
+            <td v-if="!i.solde_undefined && i.min_solde == NaN">NaN</td>
             <td v-else-if="!i.solde_undefined">{{ i.total_solde }}</td>
             <td v-else>-</td>
-            <td v-if="!i.solde_undefined && min_solde != NaN">{{ i.min_solde }}</td>
+            <td v-if="!i.solde_undefined && i.min_solde != NaN">{{ i.min_solde }}</td>
             <td v-else>-</td>
-            <td v-if="!i.solde_undefined && min_solde != NaN">{{ i.min_solde_pour }}</td>
+            <td v-if="!i.solde_undefined && i.min_solde != NaN">{{ i.min_solde_pour }}</td>
             <td v-else>-</td>
             <td v-if="!i.solde_undefined">
               {{
@@ -44,12 +44,12 @@
               }}
             </td>
             <td v-else>-</td>
-            <td v-if="!i.indemnite_undefined && min_indemnite == NaN">NaN</td>
+            <td v-if="!i.indemnite_undefined && i.min_indemnite == NaN">NaN</td>
             <td v-else-if="!i.indemnite_undefined">{{ i.total_indemnite }}</td>
             <td v-else>-</td>
-            <td v-if="!i.indemnite_undefined && min_indemnite != NaN">{{ i.min_indemnite }}</td>
+            <td v-if="!i.indemnite_undefined && i.min_indemnite != NaN">{{ i.min_indemnite }}</td>
             <td v-else>-</td>
-            <td v-if="!i.indemnite_undefined && min_indemnite != NaN">{{ i.min_indemnite_pour }}</td>
+            <td v-if="!i.indemnite_undefined && i.min_indemnite != NaN">{{ i.min_indemnite_pour }}</td>
             <td v-else>-</td>
             <td v-if="!i.indemnite_undefined">
               {{
