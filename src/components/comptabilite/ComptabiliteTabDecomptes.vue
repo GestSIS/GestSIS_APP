@@ -139,6 +139,14 @@ export default {
           field: 'date',
         },
         {
+          title: 'Sapeur',
+          field: 'sapeur_id',
+          formatter: (sapeurId) => {
+            const sapeur = svm.sapeurs.find(e => e.id == sapeurId);
+            return sapeur.nom + " " + sapeur.prenom;
+          }
+        },
+        {
           title: 'Quantité',
           field: 'quantite',
         },
