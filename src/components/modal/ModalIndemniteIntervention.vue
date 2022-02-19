@@ -94,7 +94,7 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
-              <option>toutes les phases</option>
+              <option :value="0">toutes les phases</option>
               <option
                 v-for="p in phases"
                 :key="p.id"
@@ -269,7 +269,6 @@ export default {
             this.HIDE_MODAL();
           })
           .catch((errors) => {
-            console.log(errors)
             this.errors = {
               ...errors,
             };

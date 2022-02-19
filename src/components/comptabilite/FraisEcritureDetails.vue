@@ -5,7 +5,7 @@
     </div>
     <table class="table mb-0" v-else-if="!ecritures.length">
       <tr>
-        <th colspan="*">Aucune donnée</th>
+        <th>Aucune écriture</th>
       </tr>
     </table>
 
@@ -16,9 +16,7 @@
             v-for="(column, index) in columns"
             :key="index"
             :class="column.headerClassName || ''"
-          >
-            {{ column.title }}
-          </th>
+          >{{ column.title }}</th>
         </tr>
       </thead>
       <tbody>
@@ -27,9 +25,7 @@
             v-for="(column, index) in columns"
             :key="index"
             :class="column.className || ''"
-          >
-            {{ computeColumn(column, ecriture) }}
-          </td>
+          >{{ computeColumn(column, ecriture) }}</td>
         </tr>
       </tbody>
     </table>

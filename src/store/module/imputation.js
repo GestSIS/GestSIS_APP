@@ -35,12 +35,12 @@ export default {
       };
     },
     [types.ADD_ECRITURE](state, ecriture) {
-      if (ecriture.type == 0) {
+      if (ecriture.module == 0) {
         state.ecritures.divers.push(ecriture);
       }
     },
     [types.UPDATE_ECRITURE](state, ecriture) {
-      if (ecriture.type == 0) {
+      if (ecriture.module == 0) {
         state.ecritures.divers = state.ecritures.divers.map(e => e.id == ecriture.id ? ecriture : e);
       }
     },

@@ -31,9 +31,7 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Appels</h3>
-            <button type="button" class="btn btn-primary" @click="newAppel">
-              Ajouter un appel
-            </button>
+            <button type="button" class="btn btn-primary" @click="newAppel">Ajouter un appel</button>
           </div>
           <div class="card-body">
             <table id="int-appels" class="table table-sm">
@@ -84,9 +82,7 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Missions</h3>
-            <button type="button" class="btn btn-primary" @click="newMission">
-              Ajouter une mission
-            </button>
+            <button type="button" class="btn btn-primary" @click="newMission">Ajouter une mission</button>
           </div>
           <div class="card-body">
             <table id="int-mission" class="table table-sm">
@@ -107,9 +103,7 @@
                 <tr v-for="m in missions" :key="m.id">
                   <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
-                  <td>
-                    {{ formatSapeur(sapeurs.find((s) => s.id == m.sapeur_id)) }}
-                  </td>
+                  <td>{{ formatSapeur(sapeurs.find((s) => s.id == m.sapeur_id)) }}</td>
                   <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
                   <td>
@@ -201,9 +195,9 @@ export default {
         title: "Debut de l'intervention",
         description: chefIntervention
           ? "Chef d'intervention : " +
-            chefIntervention.nom +
-            ' ' +
-            chefIntervention.prenom
+          chefIntervention.nom +
+          ' ' +
+          chefIntervention.prenom
           : '',
         type: 'start',
         colorClass: 'default',
@@ -340,7 +334,7 @@ export default {
   &:before {
     background-color: #eee;
     bottom: 0;
-    content: ' ';
+    content: " ";
     left: 50px;
     margin-left: -1.5px;
     position: absolute;
@@ -356,7 +350,7 @@ export default {
 
     &:before,
     &:after {
-      content: ' ';
+      content: " ";
       display: table;
     }
 
@@ -429,7 +423,7 @@ export default {
         border-left: 0 solid #ccc;
         border-right: 15px solid #ccc;
         border-top: 15px solid transparent;
-        content: ' ';
+        content: " ";
         display: inline-block;
         position: absolute;
         left: -15px;
@@ -442,7 +436,7 @@ export default {
         border-left: 0 solid #fff;
         border-right: 14px solid #fff;
         border-top: 14px solid transparent;
-        content: ' ';
+        content: " ";
         display: inline-block;
         position: absolute;
         left: -14px;
@@ -453,7 +447,7 @@ export default {
   }
 }
 
-@import '~bootswatch/dist/cosmo/variables';
+@import "~bootswatch/dist/cosmo/variables";
 
 .timeline-badge {
   &.mission-ended {

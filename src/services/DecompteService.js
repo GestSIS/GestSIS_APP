@@ -21,6 +21,9 @@ export default {
   genererDecompteExercice(params) {
     return Api.api().post('decomptes/creer-exercice', params);
   },
+  getEcritures(decompteId) {
+    return Api.api().get(`decomptes/${decompteId}/ecritures`);
+  },
   downloadDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(`/decomptes/${decompteId}/print`);
   },

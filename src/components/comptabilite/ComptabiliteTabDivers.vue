@@ -192,7 +192,7 @@ export default {
         unite: svm.unites.find(u => u.id == e.type_unite_id)?.unite,
         ecriture_categorie: svm.categories.find(c => c.id == e.ecriture_categorie_id)?.designation,
         compte: formatCompte(svm.comptes.find(c => c.id == e.compte_id)),
-        ecritureType: svm.comptes.find(c => c.id == e.compte_id)?.actif ? 'Retenue' : e.indemnite != 0 ? 'Indemnité' : e.solde != 0 ? 'Solde' : 'Frais'
+        ecritureType: svm.formatType(e.type)
       }));
     },
     ...mapGetters(['currentExerciceComptableId']),
@@ -214,6 +214,17 @@ export default {
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
+    },
+    formatType(type) {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC',
+      }
+      return mapping[type] || '';
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

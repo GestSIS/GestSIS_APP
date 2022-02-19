@@ -44,13 +44,30 @@
         </div>
         <base-table
           :fields="fields"
-          :data="decomptes"
+          :data="computedDecomptes"
           :selectable="true"
+          :detail-row-component="detailRow"
+          detail-row-class="m-td-0"
           selectKey="id"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
           @selected="selected"
           row-selected-class="table-primary"
         >
+          <template v-slot:details="props">
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </template>
           <template v-slot:checkbox="{ key, value, rowData }">
             <input
               type="checkbox"
@@ -61,9 +78,9 @@
             />
           </template>
           <template v-slot:actions="{ value }">
-            <button type="button" class="btn btn-outline-primary border-0">
+            <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
+            </button>-->
             <button type="button" class="btn btn-outline-danger border-0" @click="supprimer(value)">
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
@@ -76,17 +93,20 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import { markRaw } from 'vue';
 import store from '@/store/index';
 import DecompteService from '@/services/DecompteService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
+import FraisEcritureDetailsVue from './FraisEcritureDetails.vue';
 
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadUnites = store.dispatch('fetchUnites');
   await store.dispatch('fetchExercicesComptables');
 
-  let loadDecomptes = store.dispatch('fetchDecomptes');
-  Promise.all([loadDecomptes, loadSapeurs]).then(() => {
+  const loadDecomptes = store.dispatch('fetchDecomptes');
+  Promise.all([loadDecomptes, loadSapeurs, loadUnites]).then(() => {
     next();
   });
 }
@@ -103,11 +123,68 @@ export default {
     loadData(routeTo, next);
   },
   data() {
+    const svm = this;
     return {
+      detailRow: markRaw(FraisEcritureDetailsVue),
       dropdown: false,
       loading: true,
       selectedId: 0,
+      ecritureColumns: [
+        {
+          title: 'Designation',
+          field: 'designation',
+        },
+        {
+          title: 'Date',
+          field: 'date',
+        },
+        {
+          title: 'Quantité',
+          field: 'quantite',
+        },
+        {
+          title: 'Unité',
+          field: 'type_unite_id',
+          formatter: (id) => svm.unites.find(u => u.id == id)?.abreviation
+        },
+        {
+          title: 'Tarif',
+          field: 'tarif',
+        },
+        {
+          title: 'Tarif min',
+          field: 'tarif_min',
+        },
+        {
+          title: 'Pour',
+          field: 'tarif_min_pour',
+        },
+        {
+          title: 'Type',
+          field: 'type',
+          formatter: (type) => {
+            const mapping = {
+              0: 'Autre',
+              1: 'Solde',
+              2: 'Indemnité',
+              3: 'Frais forfaitaire',
+              4: 'Frais effectif',
+              5: 'Charges AVS/AC',
+            }
+            return mapping[type] || '';
+          },
+        },
+        {
+          title: 'Total',
+          field: 'total',
+        },
+      ],
       fields: [
+        {
+          title: '',
+          key: 'details',
+          slot: 'details',
+        },
         {
           title: 'Designation',
           key: 'designation',
@@ -165,7 +242,11 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       sapeurs: (state) => state.sapeur.liste,
       decomptes: (state) => state.decompte.liste,
+      unites: (state) => state.unite.liste,
     }),
+    computedDecomptes() {
+      return this.decomptes.map(d => ({ ...d, columns: this.ecritureColumns, getEcritures: () => DecompteService.getEcritures(d.id) }))
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

@@ -5,17 +5,10 @@
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Matériel consommable et en prêt</h3>
-        <button type="button" class="btn btn-primary" @click="newMateriel">
-          Ajouter du matériel
-        </button>
+        <button type="button" class="btn btn-primary" @click="newMateriel">Ajouter du matériel</button>
       </div>
       <div class="card-body">
-        <table
-          id="int-materiel"
-          class="table table-sm"
-          cellspacing="0"
-          width="100%"
-        >
+        <table id="int-materiel" class="table table-sm" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th>Matériel</th>

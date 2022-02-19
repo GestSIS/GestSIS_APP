@@ -104,11 +104,11 @@
           <option v-for="c in comptes" :key="c.id" :value="c.id">{{ c.numero }} {{ c.designation }}</option>
         </select>
       </div>
-      <div class="mb-3" v-if="!activeCompteType?.actif">
+      <div class="mb-3">
         <label for="ecriture_type">Type d'écriture</label>
         <select
           id="ecriture_type"
-          v-model="activeEcriture.ecriture_type"
+          v-model="activeEcriture.type"
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_type'] }"
         >
@@ -157,11 +157,14 @@ export default {
         tarif: 0,
         type_unite_id: 1,
         type: 0,
+        module: 0,
       },
       types: [
-        { id: 1, designation: 'Indemnité' },
-        { id: 2, designation: 'Solde' },
-        { id: 3, designation: 'Frais' },
+        { id: 0, designation: 'Autre' },
+        { id: 1, designation: 'Solde' },
+        { id: 2, designation: 'indemnité' },
+        { id: 3, designation: 'Frais forfaitaire' },
+        { id: 4, designation: 'Frais effectif' },
       ]
     };
   },
@@ -196,19 +199,6 @@ export default {
         this.activeEcriture.quantite = 1;
       }
       this.activeEcriture.total = this.activeEcriture?.tarif * this.activeEcriture?.quantite;
-
-      // { id: 1, designation: 'Indemnité' },
-      // { id: 2, designation: 'Solde' },
-      // { id: 3, designation: 'Frais' },
-      if (!this.activeCompteType.actif) {
-        this.activeEcriture.indemnite = this.activeEcriture.ecriture_type == 1 ? this.activeEcriture?.total : 0;
-        this.activeEcriture.solde = this.activeEcriture.ecriture_type == 2 ? this.activeEcriture?.total : 0;
-        this.activeEcriture.frais = this.activeEcriture.ecriture_type == 3 ? this.activeEcriture?.total : 0;
-      } else {
-        this.activeEcriture.indemnite = 0;
-        this.activeEcriture.solde = 0;
-        this.activeEcriture.frais = 0;
-      }
 
       if ((this.activeEcriture.id || 0) === 0) {
         this.$store
