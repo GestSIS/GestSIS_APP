@@ -20,8 +20,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="sap in activeExerciceSapeurs" :key="sap.id">
-          <td>{{ formatSapeur(sap.sapeur_id) }}</td>
+        <tr v-for="sap in computedExerciceSapeurs" :key="sap.id">
+          <td>{{ sap.nomPrenom }}</td>
           <td>
             <div class="text-center">
               <input
@@ -160,6 +160,11 @@ export default {
     extendedHeureTypes() {
       return this.heureTypes;
     },
+    computedExerciceSapeurs() {
+      return this.activeExerciceSapeurs
+        .map(s => ({ ...s, nomPrenom: this.formatSapeur(s.sapeur_id) }))
+        .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

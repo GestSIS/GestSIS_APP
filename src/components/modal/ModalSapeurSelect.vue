@@ -52,13 +52,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-if="chosenSapeurs.length <= 0">
+              <tr v-if="computedChosenSapeurs.length <= 0">
                 <td colspan="3">Aucun sapeur sélectioné</td>
               </tr>
               <tr
-                v-for="item in chosenSapeurs.map((id) =>
-                  sapeurs.find((s) => s.id == id)
-                )"
+                v-for="item in computedChosenSapeurs"
                 :key="item.id"
                 :class="{
                   'table-primary': displaySelected[computeId(item)],
@@ -76,7 +74,7 @@
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
-                <td>{{ sapeurFormatter(item) }}</td>
+                <td>{{ item.nomPrenom }}</td>
                 <td>
                   <button
                     class="btn btn-outline-danger border-0"
@@ -268,6 +266,12 @@ export default {
       civilites: (state) => state.baseData.civilites,
     }),
     ...mapGetters(['treeGroupesSapeurs']),
+    computedChosenSapeurs() {
+      return this.chosenSapeurs
+        .map(sapeurId => this.sapeurs.find(s => s.id == sapeurId))
+        .map(s => ({ ...s, nomPrenom: this.sapeurFormatter(s) }))
+        .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+    },
     listeSapeurSelect() {
       if (this.groupBy == 'groupe') {
         return this.flattenedSapeurGroupe;
@@ -318,16 +322,16 @@ export default {
             .map((s) => svm.sapeurs.find((sap) => sap.id == s))
             .forEach(
               (s) =>
-                (flaten = [
-                  ...flaten,
-                  {
-                    designation: svm.sapeurFormatter(s),
-                    leaf: true,
-                    level: level + 1,
-                    parent_id: groupe.id,
-                    id: s.id,
-                  },
-                ])
+              (flaten = [
+                ...flaten,
+                {
+                  designation: svm.sapeurFormatter(s),
+                  leaf: true,
+                  level: level + 1,
+                  parent_id: groupe.id,
+                  id: s.id,
+                },
+              ])
             );
         }
         return flaten;
