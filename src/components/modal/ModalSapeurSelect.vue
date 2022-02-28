@@ -171,12 +171,12 @@
               </tr>
             </thead>
             <tbody v-if="groupBy == 'none'">
-              <tr>
+              <tr v-if="availableSapeurs.length == 0">
                 <td
                   colspan="3"
-                  v-if="sapeurs.length > 0"
+                  v-if="sapeurs.length > 0 && availableSapeurs.length == 0"
                 >Tous les sapeurs sont déjà présent dans l'exercice</td>
-                <td colspan="3" v-else>Aucun sapeur dans GestSIS</td>
+                <td colspan="3" v-if="sapeurs.length == 0">Aucun sapeur dans GestSIS</td>
               </tr>
               <tr
                 v-for="item in availableSapeurs
