@@ -8,19 +8,9 @@
         Email validé avec succès, vous allez être redirigé dans
         {{ sec }} secondes
       </h2>
-      <div class="h3 mb-3" v-if="error">
-        {{ error }}
-      </div>
-      <button
-        class="btn btn-lg btn-primary btn-block"
-        type="submit"
-        @click="redirect"
-      >
-        Accueil
-      </button>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <div class="h3 mb-3" v-if="error">{{ error }}</div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" @click="redirect">Accueil</button>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
     </form>
   </div>
 </template>
@@ -110,13 +100,13 @@ export default {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
