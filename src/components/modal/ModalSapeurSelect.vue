@@ -171,6 +171,13 @@
               </tr>
             </thead>
             <tbody v-if="groupBy == 'none'">
+              <tr v-if="availableSapeurs.length == 0">
+                <td
+                  colspan="3"
+                  v-if="sapeurs.length > 0 && availableSapeurs.length == 0"
+                >Tous les sapeurs sont déjà présent dans l'exercice</td>
+                <td colspan="3" v-if="sapeurs.length == 0">Aucun sapeur dans GestSIS</td>
+              </tr>
               <tr
                 v-for="item in availableSapeurs
                 .map((id) => sapeurs.find((s) => s.id == id))
@@ -187,8 +194,9 @@
                       class="form-check-input"
                       :id="item.id"
                       v-model="displaySelected[item.id]"
+                      @click="select(item.id)"
                     />
-                    <label class="form-check-label" :for="item.id" @click="select(item.id)"></label>
+                    <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
@@ -435,6 +443,7 @@ export default {
       }
     },
     selectSapeur(id) {
+      console.log("Select triggered")
       this.selectedSapeurs = this.selectedSapeurs.includes(id)
         ? this.selectedSapeurs.filter((i) => i != id)
         : [...this.selectedSapeurs, id];
