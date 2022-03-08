@@ -94,7 +94,7 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
-              <option :value="0">toutes les phases</option>
+              <option :value="null">toutes les phases</option>
               <option
                 v-for="p in phases"
                 :key="p.id"

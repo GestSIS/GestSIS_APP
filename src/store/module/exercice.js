@@ -50,7 +50,7 @@ export default {
     },
     [types.REMOVE_CURRENT_EXERCICE_SAPEURS](state, payload) {
       state.active.sapeurs = state.active.sapeurs.filter(
-        (p) => !payload.includes(p.id)
+        (p) => !payload.includes(p.sapeur_id)
       );
     },
   },

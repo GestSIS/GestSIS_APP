@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="sap in computedExerciceSapeurs" :key="sap.id">
+        <tr v-for="sap in presences" :key="sap.id">
           <td>{{ sap.nomPrenom }}</td>
           <td>
             <div class="text-center">
@@ -134,6 +134,11 @@ import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ExerciceTabSapeurs',
+  data: () => {
+    return {
+      presences: [],
+    }
+  },
   computed: {
     ...mapState({
       excusesTypes: (state) => state.excuseType.liste,
@@ -166,6 +171,14 @@ export default {
         .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
     }
   },
+  mounted() {
+    this.presences = this.computedExerciceSapeurs.map(s => ({ ...s }));
+  },
+  watch: {
+    computedExerciceSapeurs() {
+      this.presences = this.computedExerciceSapeurs.map(s => ({ ...s }));
+    }
+  },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     getHeureValue(sapeur) {
@@ -193,7 +206,7 @@ export default {
     },
     async save() {
       this.$store
-        .dispatch('editSapeurs', this.activeExerciceSapeurs)
+        .dispatch('editSapeurs', this.presences)
         .then((res) =>
           this.$awn.success(res?.message || 'Modifications enregistrées')
         )
@@ -224,7 +237,7 @@ export default {
       return this.excusesTypes.find((e) => e.id == id)?.designation;
     },
     manageSapeurs() {
-      const data = this.activeExerciceSapeurs.map((s) => s.sapeur_id).slice(0);
+      const data = this.presences.map((s) => s.sapeur_id).slice(0);
       let svm = this;
       let callback = (param) => {
         if (!param) {
@@ -245,16 +258,12 @@ export default {
             amende: false,
           }));
 
-          let removedSapeurs = supprime.map(
-            (id) => svm.activeExerciceSapeurs.find((s) => s.sapeur_id == id).id
-          );
-
           //Sapeurs ajoutés
           if (newSapeurs.length > 0) {
             svm.$store
               .dispatch('addSapeurs', newSapeurs)
               .then(() => {
-                if (removedSapeurs.length <= 0) {
+                if (supprime.length <= 0) {
                   resolve();
                 }
               })
@@ -263,16 +272,16 @@ export default {
               });
           }
 
-          if (removedSapeurs.length > 0) {
+          if (supprime.length > 0) {
             svm.$store
-              .dispatch('removeSapeurs', removedSapeurs)
+              .dispatch('removeSapeurs', supprime)
               .then(resolve)
               .catch((error) => {
                 reject("Erreur lors de l'opération");
               });
           }
 
-          if (newSapeurs.length <= 0 && removedSapeurs.length <= 0) {
+          if (newSapeurs.length <= 0 && supprime.length <= 0) {
             resolve('Solved');
           }
         });
@@ -287,12 +296,12 @@ export default {
       });
     },
     selectPresent(sapeur) {
-      sapeur.remplace = false;
+      sapeur.remplace = 0;
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
     },
     selectRemplace(sapeur) {
-      sapeur.present = false;
+      sapeur.present = 0;
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
     },
@@ -308,8 +317,8 @@ export default {
             let excuseType = self.excusesTypes.find(
               (e) => e.id == excuseTypeId
             );
-            sapeur.present = false;
-            sapeur.remplace = false;
+            sapeur.present = 0;
+            sapeur.remplace = 0;
             sapeur.amende = this.amendable && excuseType.amende;
             sapeur.excuse_type_id = excuseTypeId;
           } else {
