@@ -226,7 +226,6 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
-import { ids } from 'webpack';
 
 //TODO:
 // - Par cours
