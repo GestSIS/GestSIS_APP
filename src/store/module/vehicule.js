@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import VehiculeService from '../../services/VehiculeService';
+import VehiculeService from '../../services/VehiculeService.js';
 
 export default {
   state: {

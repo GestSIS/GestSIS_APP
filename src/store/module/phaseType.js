@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import PhaseTypeService from '../../services/PhaseTypeService';
+import PhaseTypeService from '../../services/PhaseTypeService.js';
 
 export default {
   state: {

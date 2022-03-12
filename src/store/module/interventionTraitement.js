@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import InterventionTraitementService from '../../services/InterventionTraitementService';
+import InterventionTraitementService from '../../services/InterventionTraitementService.js';
 
 export default {
   state: {

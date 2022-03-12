@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import TelephoneService from '../../services/TelephoneService';
+import TelephoneService from '../../services/TelephoneService.js';
 
 export default {
   state: {

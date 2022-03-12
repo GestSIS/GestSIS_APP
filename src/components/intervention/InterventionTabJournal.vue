@@ -447,21 +447,19 @@ export default {
   }
 }
 
-@import "~bootswatch/dist/cosmo/variables";
-
 .timeline-badge {
   &.mission-ended {
-    background-color: $success !important;
+    background-color: var(--success) !important;
     opacity: 0.8;
   }
 
   &.mission-running {
-    background-color: $warning !important;
+    background-color: var(--warning) !important;
     opacity: 0.8;
   }
 
   &.appel {
-    background-color: $primary !important;
+    background-color: var(--primary) !important;
     opacity: 0.8;
   }
 }

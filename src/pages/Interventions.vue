@@ -196,7 +196,7 @@ import { mapGetters, mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

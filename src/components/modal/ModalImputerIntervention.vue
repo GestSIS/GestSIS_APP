@@ -50,9 +50,9 @@
                 <td>{{ indemnite.unite_id }}</td>
                 <td>
                   {{
-                    formatCompte(
-                      comptes.find((f) => f.id == indemnite.compte_id)
-                    )
+                  formatCompte(
+                  comptes.find((f) => f.id == indemnite.compte_id)
+                  )
                   }}
                 </td>
                 <td class="text-center">
@@ -108,7 +108,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
                 }}
               </td>
               <td>{{ ecriture.tarif }}</td>

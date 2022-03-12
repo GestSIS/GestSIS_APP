@@ -158,7 +158,7 @@ import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
-import SapeurService from '../services/SapeurService';
+import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
 
 async function loadData(routeTo, next) {

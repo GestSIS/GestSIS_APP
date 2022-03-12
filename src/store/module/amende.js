@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import AmendeService from '../../services/AmendeService';
+import AmendeService from '../../services/AmendeService.js';
 
 export default {
   state: {

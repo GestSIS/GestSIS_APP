@@ -62,8 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
+/* @use "~bootstrap/scss/variables.scss"; */
 
 hr {
   width: 100%;
@@ -155,13 +154,13 @@ a:focus {
 }
 
 ul li a:hover {
-  color: $primary;
+  color: var(--primary);
   background: #fff;
 }
 
 .router-link-active,
 a[aria-expanded="true"] {
   color: #fff;
-  background: $primary;
+  background: var(--primary);
 }
 </style>

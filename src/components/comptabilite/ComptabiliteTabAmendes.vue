@@ -49,7 +49,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import { markRaw } from 'vue';
-import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails';
+import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails.vue';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

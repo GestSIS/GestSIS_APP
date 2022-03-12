@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import BaseDataService from '../../services/BaseDataService';
+import BaseDataService from '../../services/BaseDataService.js';
 
 export default {
   state: {

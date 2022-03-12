@@ -205,8 +205,8 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
-import ControlesMedicauxService from '@/services/ControlesMedicauxService';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

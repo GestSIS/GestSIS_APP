@@ -5,9 +5,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">A propos</li>
           </ol>
@@ -35,9 +33,7 @@
               <!-- TODO: Ajout sujet par défault - Nom SIS -->
               <a href="mailto:support@gestsis.ch">Contacter</a>
             </p>
-            <p>
-              GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
-            </p>
+            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
           </div>
         </div>
       </div>
@@ -46,7 +42,7 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'about',

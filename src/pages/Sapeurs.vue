@@ -95,7 +95,7 @@
 import store from '@/store/index';
 
 import { mapState, mapMutations } from 'vuex';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
   store.dispatch('fetchCivilites');

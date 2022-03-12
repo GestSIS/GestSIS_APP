@@ -3,28 +3,26 @@ import App from './App.vue';
 import router from './router/index';
 import types from './store/mutationTypes';
 import store from './store/index';
-import { TokenService } from './services/StorageService';
+import { TokenService } from './services/StorageService.js';
 
 // Page layouts
-import Default from './layouts/Default';
-import Empty from './layouts/Empty';
-import NoSidebar from './layouts/NoSidebar';
+import Default from './layouts/Default.vue';
+import Empty from './layouts/Empty.vue';
+import NoSidebar from './layouts/NoSidebar.vue';
 
 // External dependencies
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Tooltip from 'vue-directive-tooltip';
 // import VueAWN from 'vue-awesome-notifications';
 import VueAWN from './plugins/vue-awesome-notifications';
 
 // External css dependencies
-import 'vue-directive-tooltip/src/css/index.scss';
-import 'nprogress/nprogress.css';
 
 // Css assets
-require('./assets/sass/main.scss');
-require('./icons');
+// import './assets/sass/main.scss';
+import './icons';
 
-import bootstrap from 'bootstrap';
+// import bootstrap from 'bootstrap';
 
 // Base components
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
@@ -83,17 +81,24 @@ router.beforeEach((to, from, next) => {
 
 //   render: () => h(App),
 // }
-const app = createApp(App)
-app.use(router)
-app.use(store)
+const app = createApp(App);
+app.use(router);
+app.use(store);
 app.use(VueAWN, {
-    labels: {
-      success: 'Succès',
-      warning: 'Attention',
-      alert: 'Erreur',
-    },
-  });
+  labels: {
+    success: 'Succès',
+    warning: 'Attention',
+    alert: 'Erreur',
+  },
+});
 app.use(Tooltip);
+
+// Object.entries(import.meta.globEager('./modal/*.vue')).forEach(
+//   ([key, value]) => {
+//     const name = key.match(/\w+/)[0];
+//     app.component(letterToUpperCase(key), defineAsyncComponent(value));
+//   }
+// );
 
 app.component('base-dropdown', BaseDropdown);
 app.component('base-select', BaseSelect);

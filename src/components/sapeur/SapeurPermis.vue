@@ -61,7 +61,7 @@ export default {
   name: 'SapeurPermis',
   data() {
     return {
-      publicPath: process.env.BASE_URL,
+      publicPath: import.meta.env.BASE_URL,
       permisData: {},
       errors: {},
     };

@@ -278,10 +278,10 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
-import SapeurService from '../../services/SapeurService';
+import SapeurService from '../../services/SapeurService.js';
 
-import SapeurMutations from '@/components/sapeur/SapeurMutations';
-import SapeurTelephones from '@/components/sapeur/SapeurTelephones';
+import SapeurMutations from '@/components/sapeur/SapeurMutations.vue';
+import SapeurTelephones from '@/components/sapeur/SapeurTelephones.vue';
 
 export default {
   name: 'SapeurTabGeneral',

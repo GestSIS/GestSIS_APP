@@ -28,15 +28,15 @@
               <tr v-for="phase in phases" :key="phase.id">
                 <td>
                   {{
-                    phase.debut === null
-                      ? `${data.date_debut} ${data.heure_debut}`
-                      : phase.debut.slice(0, 16)
+                  phase.debut === null
+                  ? `${data.date_debut} ${data.heure_debut}`
+                  : phase.debut.slice(0, 16)
                   }}
                 </td>
                 <td>
                   {{
-                    phasesType.find((p) => p.id == phase.phase_type_id)
-                      .designation
+                  phasesType.find((p) => p.id == phase.phase_type_id)
+                  .designation
                   }}
                 </td>
                 <td>

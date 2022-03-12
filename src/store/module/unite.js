@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import UniteService from '../../services/UniteService';
+import UniteService from '../../services/UniteService.js';
 
 export default {
   state: {

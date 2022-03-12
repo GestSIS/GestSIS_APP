@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import CoursService from '../../services/CoursService';
+import CoursService from '../../services/CoursService.js';
 
 export default {
   state: {

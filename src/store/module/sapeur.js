@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import SapeurService from '../../services/SapeurService';
+import SapeurService from '../../services/SapeurService.js';
 
 export default {
   state: {

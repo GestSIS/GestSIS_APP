@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ControlesMedicauxService from '../../services/ControlesMedicauxService';
+import ControlesMedicauxService from '../../services/ControlesMedicauxService.js';
 
 export default {
   state: {

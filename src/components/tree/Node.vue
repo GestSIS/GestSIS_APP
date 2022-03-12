@@ -17,7 +17,7 @@
         class="q-tree__arrow q-mr-xs q-icon notranslate tree-node-arrow"
         :class="[expanded ? 'tree-node-arrow--rotate' : '']"
       >
-        <path d="M8,5.14V19.14L19,12.14L8,5.14Z"></path>
+        <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
       </svg>
       <div class="tree-node-content">
         <img v-if="data.avatar" :src="data.avatar" class="tree-node-icon" />
@@ -227,7 +227,7 @@ export default {
 }
 
 .tree-node.tree-node--parent::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -3px;
   bottom: 0;
@@ -242,7 +242,7 @@ export default {
 }
 
 .tree-node--parent > .tree-node-header::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 15px;
   left: -15px;

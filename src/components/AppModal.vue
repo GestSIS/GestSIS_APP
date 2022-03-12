@@ -8,25 +8,12 @@
       role="dialog"
       v-if="visible"
     >
-      <div
-        class="modal-dialog modal-dialog-scrollable"
-        :class="computedSize"
-        role="document"
-      >
-        <component
-          :is="component"
-          :callback="callback"
-          :data="data"
-          class="modal-content"
-        ></component>
+      <div class="modal-dialog modal-dialog-scrollable" :class="computedSize" role="document">
+        <component :is="component" :callback="callback" :data="data" class="modal-content"></component>
       </div>
     </div>
     <!-- Overlay -->
-    <div
-      id="modal-overlay"
-      class="modal-backdrop fade show"
-      v-if="visible"
-    ></div>
+    <div id="modal-overlay" class="modal-backdrop fade show" v-if="visible"></div>
   </div>
 </template>
 
@@ -35,12 +22,10 @@ import { defineAsyncComponent } from 'vue';
 import { mapState, mapMutations } from 'vuex';
 
 const components = Object.fromEntries(
-  require
-    .context('@/components/modal/', true, /\.(js|vue)$/i, 'lazy')
-    .keys()
-    .map((key) => {
-      const name = key.match(/\w+/)[0];
-      return [name, defineAsyncComponent(() => import(`./modal/${name}`))];
+  Object.entries(import.meta.glob('./modal/*.vue'))
+    .map(([key, value]) => {
+      const name = key.split("/").pop().replace('.vue', '');
+      return [name, defineAsyncComponent(value)];
     })
 );
 

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import SisParamService from '../../services/SisParamService';
+import SisParamService from '../../services/SisParamService.js';
 
 export default {
   state: {

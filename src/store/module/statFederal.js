@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import StatFederalService from '../../services/StatFederalService';
+import StatFederalService from '../../services/StatFederalService.js';
 
 export default {
   state: {

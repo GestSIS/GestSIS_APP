@@ -189,10 +189,10 @@ import { markRaw } from 'vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import ExerciceDetails from '@/components/exercice/ExerciceDetails';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceDetails from '@/components/exercice/ExerciceDetails.vue';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
-import ExerciceService from '@/services/ExerciceService';
+import ExerciceService from '@/services/ExerciceService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

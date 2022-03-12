@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Public from '@/pages/Public';
-import Home from '@/pages/Home';
+import Public from '@/pages/Public.vue';
+import Home from '@/pages/Home.vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import { TokenService } from '@/services/StorageService';
+import { TokenService } from '@/services/StorageService.js';
 
 import NProgress from 'nprogress';
 
@@ -28,7 +28,7 @@ const permissionGuard = (permission) => {
 };
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
@@ -323,19 +323,28 @@ const router = createRouter({
           path: 'mutations',
           name: 'rta-mutations',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Mutations.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/Mutations.vue'
+            ),
         },
         {
           path: 'reference',
           name: 'rta-reference',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Reference.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/Reference.vue'
+            ),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/GestSis.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/GestSis.vue'
+            ),
         },
       ],
     },

@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar';
-import AppModal from '@/components/AppModal';
+import Navbar from '@/components/Navbar.vue';
+import AppModal from '@/components/AppModal.vue';
 
 export default {
   components: {

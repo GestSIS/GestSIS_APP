@@ -88,7 +88,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                  formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
+                formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
                 }}
               </td>
               <td>{{ ecriture.designation }}</td>

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import GradeService from '../../services/GradeService';
+import GradeService from '../../services/GradeService.js';
 
 export default {
   state: {

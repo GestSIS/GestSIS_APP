@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ExerciceHeureService from '../../services/ExerciceHeureTypeService';
+import ExerciceHeureService from '../../services/ExerciceHeureTypeService.js';
 
 export default {
   state: {
