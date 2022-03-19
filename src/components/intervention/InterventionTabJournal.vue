@@ -459,6 +459,7 @@ export default {
   }
 
   &.appel {
+    // FIXME: Be sure to import css variables
     background-color: var(--primary) !important;
     opacity: 0.8;
   }

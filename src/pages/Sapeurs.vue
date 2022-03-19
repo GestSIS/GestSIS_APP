@@ -66,7 +66,7 @@
               :key="sapeur.id"
             >
               <a
-                class="list-group-item list-group-item-action"
+                class="list-group-item list-group-item-action sapeur-item"
                 href="#"
                 :class="{
                   active: activeSapeurId === sapeur.id,
@@ -206,7 +206,6 @@ export default {
               params: { id: sapeurId },
             });
           });
-          //TODO
         },
       });
     },
@@ -216,7 +215,7 @@ export default {
 
 <style lang="scss" scoped>
 #liste-sapeurs {
-  li {
+  a {
     padding: 0.25rem 0.75rem;
   }
 }

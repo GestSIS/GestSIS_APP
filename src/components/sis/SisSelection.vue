@@ -154,6 +154,7 @@ a:focus {
 }
 
 ul li a:hover {
+  // FIXME: Be sure to import css variables
   color: var(--primary);
   background: #fff;
 }
