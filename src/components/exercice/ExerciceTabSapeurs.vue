@@ -5,7 +5,7 @@
         {{ activeExerciceData.designation }} &ndash;
         {{ activeExerciceData.date }}
       </h3>
-      <button class="btn btn-outline-primary" @click="save">Sauvegarder</button>
+      <button class="btn btn-outline-primary" @click="save" v-if="hasPresencePermission">Sauvegarder</button>
     </div>
     <table class="table table-sm">
       <thead>
@@ -26,6 +26,7 @@
             <div class="text-center">
               <input
                 type="checkbox"
+                :disabled="!hasPresencePermission"
                 class="form-check-input"
                 :id="sap.id + 'convoque'"
                 v-model="sap.convoque"
@@ -38,6 +39,7 @@
             <div class="text-center">
               <input
                 type="checkbox"
+                :disabled="!hasPresencePermission"
                 class="form-check-input"
                 :id="sap.id + 'present'"
                 v-model="sap.present"
@@ -52,6 +54,7 @@
             <div class="text-center">
               <input
                 type="checkbox"
+                :disabled="!hasPresencePermission"
                 class="form-check-input"
                 :id="sap.id + 'remplace'"
                 v-model="sap.remplace"
@@ -66,6 +69,7 @@
             <div class="text-center">
               <input
                 type="checkbox"
+                :disabled="!hasPresencePermission"
                 class="form-check-input"
                 :id="sap.id + 'excuse'"
                 :checked="!!sap.excuse_type_id"
@@ -87,7 +91,7 @@
                 v-model="sap.amende"
                 :true-value="true"
                 :false-value="false"
-                :disabled="!amendable || !!(sap.remplace || sap.present)"
+                :disabled="!amendable || !!(sap.remplace || sap.present) || !hasPresencePermission"
               />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
@@ -97,6 +101,7 @@
               <input
                 class="form-control form-control-sm"
                 type="text"
+                :readonly="!hasPresencePermission"
                 :value="
                   getHeureValue(
                     sap.heures.find(
@@ -117,7 +122,11 @@
     </table>
     <p class="ms-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
     <div class="card-footer">
-      <button class="btn btn-outline-primary" @click="manageSapeurs">Gérer la liste des sapeurs</button>
+      <button
+        class="btn btn-outline-primary"
+        @click="manageSapeurs"
+        v-if="hasPresencePermission"
+      >Gérer la liste des sapeurs</button>
       <button
         class="btn btn-outline-primary ms-2"
         @click="validate"
@@ -145,8 +154,11 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       hasValidationPermission: (state) =>
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.VALIDATION
+          permissions.EXERCICE.VALIDATION
         ),
+      hasPresencePermission: (state) => state.auth.sis.permissions.includes(
+        permissions.EXERCICE.PRESENCE
+      ),
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,

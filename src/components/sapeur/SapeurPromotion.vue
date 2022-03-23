@@ -4,7 +4,12 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Promotions</h3>
-      <button type="button" class="btn btn-primary" @click="newGrade">Ajouter une promotion</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="newGrade"
+        v-if="hasEditPermission"
+      >Ajouter une promotion</button>
     </div>
     <div class="card-body">
       <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">
@@ -13,18 +18,18 @@
             <th>Date</th>
             <th>Désignation</th>
             <th>Remarques</th>
-            <th class="text-center">Actions</th>
+            <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="activeSapeurGrades.length <= 0">
-            <td colspan="4">Aucun grade</td>
+            <td :colspan="hasEditPermission ? 4 : 3">Aucun grade</td>
           </tr>
           <tr v-for="g in activeSapeurGrades" :key="g.id">
             <td>{{ g.date }}</td>
             <td>{{ formatGrade(grades.find((e) => e.id == g.grade_id)) }}</td>
             <td>{{ g.remarque }}</td>
-            <td class="align-middle text-center">
+            <td class="align-middle text-center" v-if="hasEditPermission">
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
@@ -49,6 +54,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurPromotion',
@@ -57,6 +63,9 @@ export default {
       grades: (state) => state.grade.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurGrades: (state) => state.sapeur.active.grades.sort((a, b) => b.date.localeCompare(a.date)),
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
   },
   mounted() {

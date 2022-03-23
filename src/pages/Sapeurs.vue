@@ -78,7 +78,7 @@
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
             <button
               class="btn btn-primary"
-              v-if="!filteredSapeurs.length"
+              v-if="!filteredSapeurs.length && hasEditPermission"
               @click="addSapeur"
             >Ajouter un sapeur</button>
           </ul>
@@ -93,7 +93,7 @@
 
 <script>
 import store from '@/store/index';
-
+import permissions from '@/store/permissions.js';
 import { mapState, mapMutations } from 'vuex';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
 
@@ -175,6 +175,9 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
     filteredSapeurs() {
       return this.sapeurs.filter(this.filters[this.filter]);

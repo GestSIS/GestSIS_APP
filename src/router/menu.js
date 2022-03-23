@@ -5,19 +5,19 @@ const links = [
     to: { name: 'effectif' },
     icon: ['far', 'address-book'],
     nom: 'Effectif',
-    permission: permissions.SAPEUR.LECTURE,
+    permission: permissions.EFFECTIF.TOUT,
   },
   {
     to: { name: 'sapeurs' },
     icon: 'user',
     nom: 'Sapeurs',
-    permission: permissions.SAPEUR.MODIFICATION,
+    permission: permissions.SAPEUR.LECTURE,
   },
   {
     to: { name: 'interventions' },
     icon: 'fire-extinguisher',
     nom: 'Interventions',
-    permission: permissions.INTERVENTION.MODIFICATION,
+    permission: permissions.INTERVENTION.LECTURE,
   },
   {
     to: { name: 'exercices' },

@@ -14,12 +14,12 @@
               <th>Sortie</th>
               <th>Motif</th>
               <th>Localité</th>
-              <th class="text-center">Actions</th>
+              <th class="text-center" v-if="hasEditPermission">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="mutations.length <= 0">
-              <td colspan="5">Aucune mutation</td>
+              <td :colspan="hasEditPermission ? 5 : 4">Aucune mutation</td>
             </tr>
             <tr v-for="m in mutations" :key="m.id">
               <td>{{ m.incorporation }}</td>
@@ -32,7 +32,7 @@
                     : ''
                 }}
               </td>
-              <td>
+              <td v-if="hasEditPermission">
                 <div class="d-flex justify-content-center">
                   <button
                     type="button"
@@ -58,19 +58,17 @@
           type="button"
           class="btn btn-outline-primary"
           @click="finService"
-          v-if="finServiceButtonState"
+          v-if="finServiceButtonState && hasEditPermission"
         >
-          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />
-          Fin de service
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin de service
         </button>
         <button
           type="button"
           class="btn btn-outline-primary"
           @click="incorporation"
-          v-else
+          v-else-if="hasEditPermission"
         >
-          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />
-          Incorporation
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
         </button>
       </div>
     </form>
@@ -79,12 +77,16 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   computed: {
     ...mapState({
       localites: (state) => state.localite.liste,
       mutations: (state) => state.sapeur.active.mutations,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
     finServiceButtonState() {
       return (

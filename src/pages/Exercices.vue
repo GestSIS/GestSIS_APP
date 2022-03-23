@@ -24,14 +24,18 @@
           </div>
           <div class="card-body d-grid gap-2">
             <router-link custom to="/exercices/new" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary">Ajouter un exercice</button>
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+                v-if="hasEditPermission"
+              >Ajouter un exercice</button>
             </router-link>
             <router-link custom :to="'/exercices/' + selectedId" v-slot="{ navigate }">
               <button
                 :disabled="!selectedId"
                 @click="navigate"
                 class="btn btn-outline-primary"
-              >Modifier</button>
+              >{{ hasEditPermission ? "Modifier" : "Aperçu" }}</button>
             </router-link>
             <button
               class="btn btn-outline-primary"
@@ -318,6 +322,9 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.EXERCICE.MODIFICATION
+      ),
       hasValidationPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),

@@ -18,9 +18,7 @@
             <td colspan="4">Incorporé dans aucun groupe</td>
           </tr>
           <tr v-for="g in groupeDisplay" :key="g.id">
-            <td>
-              {{ g.no }}
-            </td>
+            <td>{{ g.no }}</td>
             <td>{{ g.designation }}</td>
           </tr>
         </tbody>
@@ -30,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'SapeurOrganisation',

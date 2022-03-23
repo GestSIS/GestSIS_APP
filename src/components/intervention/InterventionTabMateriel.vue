@@ -5,7 +5,12 @@
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Matériel consommable et en prêt</h3>
-        <button type="button" class="btn btn-primary" @click="newMateriel">Ajouter du matériel</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="newMateriel"
+          v-if="hasEditPermission"
+        >Ajouter du matériel</button>
       </div>
       <div class="card-body">
         <table id="int-materiel" class="table table-sm" cellspacing="0" width="100%">
@@ -13,12 +18,12 @@
             <tr>
               <th>Matériel</th>
               <th>Quantité</th>
-              <th class="text-center">Actions</th>
+              <th class="text-center" v-if="hasEditPermission">Actions</th>
             </tr>
           </thead>
           <tbody id="materiels">
             <tr v-if="activeMateriels.length <= 0">
-              <td colspan="3">Aucun matériel ajouté.</td>
+              <td :colspan="hasEditPermission ? 3 : 2">Aucun matériel ajouté.</td>
             </tr>
             <tr v-for="m in activeMateriels" :key="m.id">
               <td>
@@ -27,7 +32,7 @@
                 }}
               </td>
               <td>{{ m.quantite }}</td>
-              <td>
+              <td v-if="hasEditPermission">
                 <div class="d-flex justify-content-center">
                   <button
                     type="button"
@@ -54,7 +59,8 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'InterventionTabMateriel',
@@ -63,6 +69,9 @@ export default {
       materiels: (state) => state.materiel.liste,
       activeMateriels: (state) => state.intervention.active.materiels,
       activeInterventionId: (state) => state.intervention.active.id,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
   },
   mounted() {

@@ -4,7 +4,12 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary" @click="newCours">Ajouter un cours</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="newCours"
+        v-if="hasEditPermission"
+      >Ajouter un cours</button>
     </div>
     <div class="card-body">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
@@ -13,18 +18,18 @@
             <th data-field="date">Date</th>
             <th data-field="designation">Désignation</th>
             <th data-field="lieu">Lieu</th>
-            <th class="text-center">Actions</th>
+            <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="activeSapeurCours.length <= 0">
-            <td colspan="4">Aucun cours suivi</td>
+            <td :colspan="hasEditPermission ? 4 : 3">Aucun cours suivi</td>
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
             <td>{{ c.date }}</td>
             <td>{{ cours.find((cours) => cours.id == c.cours_id).designation }}</td>
             <td>{{ localites.find((l) => l.id == c.localite_id).designation }}</td>
-            <td class="align-middle text-center">
+            <td class="align-middle text-center" v-if="hasEditPermission">
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
@@ -49,6 +54,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurCours',
@@ -58,6 +64,9 @@ export default {
       activeSapeurId: (state) => state.sapeur.active.id,
       cours: (state) => state.cours.liste,
       localites: (state) => state.localite.liste,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
   },
   mounted() {

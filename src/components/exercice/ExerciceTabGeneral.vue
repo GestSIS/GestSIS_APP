@@ -5,6 +5,7 @@
       <button
         class="btn btn-outline-primary"
         @click="save"
+        v-if="hasEditPermission"
       >{{ newMode ? 'Ajouter' : 'Sauvegarder' }}</button>
     </div>
     <div class="card-body">
@@ -13,6 +14,7 @@
         <label for="m-exe-des">Designation</label>
         <input
           type="text"
+          :readonly="!hasEditPermission"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
           id="m-exe-des"
@@ -24,6 +26,7 @@
       <div class="mb-3">
         <label for="m-sap-cat">Categorie</label>
         <select
+          :disabled="!hasEditPermission"
           class="form-select form-select-sm"
           required
           :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
@@ -49,6 +52,7 @@
               </div>
               <input
                 type="date"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date'] }"
                 id="m-exe-date"
@@ -68,6 +72,7 @@
               </div>
               <input
                 type="time"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure'] }"
                 id="m-exe-heure"
@@ -89,6 +94,7 @@
               </div>
               <input
                 type="number"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['duree'] }"
                 min="1"
@@ -108,6 +114,7 @@
           <div class="mb-3">
             <label for="m-sap-localite">Localité</label>
             <select
+              :disabled="!hasEditPermission"
               class="form-select form-select-sm"
               required
               :class="{ 'is-invalid': errors['localite_id'] }"
@@ -130,6 +137,7 @@
             <label for="m-exe-lieu">Lieu</label>
             <input
               type="text"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
               id="m-exe-lieu"
@@ -144,6 +152,7 @@
         <label for="m-sap-communication">Communications</label>
         <textarea
           type="text"
+          :readonly="!hasEditPermission"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['communications'] }"
           id="m-sap-communication"
@@ -157,6 +166,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ExerciceTabGeneral',
@@ -168,6 +178,9 @@ export default {
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.EXERCICE.MODIFICATION
+      ),
     }),
     ...mapGetters(['listeLocalitesSis']),
     exerciceCategorie() {
