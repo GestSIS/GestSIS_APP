@@ -5,7 +5,12 @@
       <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Groupes</h3>
-        <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="save"
+          v-if="hasEditPermission"
+        >Enregistrer</button>
       </div>
       <div class="card-body">
         <table id="int-groupes" class="table table-sm">
@@ -34,6 +39,7 @@
                 <div class="text-center">
                   <input
                     type="checkbox"
+                    :disabled="!hasEditPermission"
                     class="form-check-input"
                     :id="'g-' + g.id"
                     v-model="selected[g.no]"
@@ -51,6 +57,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'InterventionTabGroupes',
@@ -64,6 +71,9 @@ export default {
       groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
       interventionGroupes: (state) => state.intervention.active.groupes,
       activeInterventionId: (state) => state.intervention.active.id,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
     filteredGroupes() {
       const nos = new Set(this.interventionGroupes.map((g) => g.no));

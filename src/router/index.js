@@ -74,13 +74,13 @@ const router = createRouter({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      beforeEnter: permissionGuard(permissions.SAPEUR.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
       component: () => import('@/pages/Sapeurs.vue'),
       children: [
         {
           path: ':id',
           name: 'sapeurs-details',
-          beforeEnter: permissionGuard(permissions.SAPEUR.MODIFICATION),
+          beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import('@/components/sapeur/SapeurDetails.vue'),
           props: true,
         },
@@ -114,14 +114,14 @@ const router = createRouter({
     {
       path: '/interventions/:id',
       name: 'intervention',
-      beforeEnter: permissionGuard(permissions.INTERVENTION.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
       component: () => import('@/pages/Intervention.vue'),
     },
     {
       path: '/interventions',
       name: 'interventions',
-      beforeEnter: permissionGuard(permissions.INTERVENTION.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       component: () => import('@/pages/Interventions.vue'),
     },
     {

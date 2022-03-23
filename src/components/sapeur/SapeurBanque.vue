@@ -5,7 +5,7 @@
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button @click.prevent="save" class="btn btn-primary">Enregistrer</button>
+          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -17,6 +17,7 @@
               class="form-control form-control-sm"
               id="f-sap-nom"
               name="nom"
+              :readonly="!hasEditPermission"
               v-model="activeSapeur.iban"
             />
           </div>
@@ -27,11 +28,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurBanque',
   computed: {
+    ...mapState({
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
+    }),
     ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },
   methods: {

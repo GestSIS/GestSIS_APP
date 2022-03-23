@@ -4,12 +4,17 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données personnelles</h3>
-          <button @click.prevent="saveSapeur" class="btn btn-primary">Enregistrer</button>
+          <button
+            @click.prevent="saveSapeur"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >Enregistrer</button>
         </div>
         <div class="card-body">
           <base-select
             label="Civilité"
             valueKey="id"
+            :disabled="!hasEditPermission"
             displayKey="designation"
             :options="listeCivilites"
             v-model="activeSapeur.civilite_id"
@@ -19,6 +24,7 @@
             <label for="m-sap-nom">Nom</label>
             <input
               type="text"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['nom'] }"
               id="m-sap-nom"
@@ -31,6 +37,7 @@
             <label for="m-sap-prenom">Prénom</label>
             <input
               type="text"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['prenom'] }"
               id="m-sap-prenom"
@@ -45,6 +52,7 @@
                 <label for="m-sap-rue">Rue</label>
                 <input
                   type="text"
+                  :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['rue'] }"
                   id="m-sap-rue"
@@ -58,6 +66,7 @@
                 <label for="m-sap-no-rue">N°</label>
                 <input
                   type="text"
+                  :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['no_rue'] }"
                   id="m-sap-no-rue"
@@ -72,6 +81,7 @@
             label="NPA Localité"
             valueKey="id"
             required
+            :disabled="!hasEditPermission"
             :options="listeLocalitesSis"
             :formatter="(l) => l.npa + ' ' + l.designation"
             v-model="activeSapeur.localite_id"
@@ -82,6 +92,7 @@
               <label for="m-sap-avs">N° AVS</label>
               <input
                 type="text"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['no_avs'] }"
                 id="m-sap-avs"
@@ -101,6 +112,7 @@
               <div class="form-check text-center col-6">
                 <input
                   type="checkbox"
+                  :disabled="!hasEditPermission"
                   class="form-check-input"
                   id="m-sap-cotisation_avs"
                   v-model="activeSapeur.cotisation_avs"
@@ -120,6 +132,7 @@
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['email'] }"
                 type="email"
+                :readonly="!hasEditPermission"
                 id="m-sap-email"
                 name="email"
                 v-model="activeSapeur.email"
@@ -139,6 +152,7 @@
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errorsData['date_naissance'] }"
                     type="date"
+                    :readonly="!hasEditPermission"
                     id="m-sap-date-naissance"
                     name="date_naissance"
                     v-model="activeSapeur.date_naissance"
@@ -158,6 +172,7 @@
                 />
                 <input
                   type="text"
+                  :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['suffixe'] }"
                   id="m-sap-suffixe"
@@ -171,6 +186,7 @@
           <div class="mb-3">
             <label for="m-sap-remarques">Remarques</label>
             <textarea
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['remarque'] }"
               rows="3"
@@ -188,7 +204,7 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Photo</h3>
-          <button @click="editPhoto" class="btn btn-primary">Modifier</button>
+          <button @click="editPhoto" class="btn btn-primary" v-if="hasEditPermission">Modifier</button>
         </div>
         <div class="card-body text-center">
           <font-awesome-icon v-if="!photo" :icon="['fas', 'user']" size="10x" />
@@ -198,7 +214,11 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
-          <button @click.prevent="saveSapeurRefPro" class="btn btn-primary">Enregistrer</button>
+          <button
+            @click.prevent="saveSapeurRefPro"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >Enregistrer</button>
         </div>
         <form role="form">
           <div class="card-body">
@@ -206,6 +226,7 @@
               <label for="m-sap-profession">Profession</label>
               <input
                 type="text"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 id="m-sap-profession"
                 name="profession"
@@ -216,6 +237,7 @@
               <label for="m-sap-employeur">Employeur</label>
               <input
                 type="text"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 id="m-sap-employeur"
                 name="employeur"
@@ -226,6 +248,7 @@
               <label for="m-sap-lieu-travail">Lieu de travail</label>
               <input
                 type="text"
+                :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 id="m-sap-lieu-travail"
                 name="lieu_travail"
@@ -277,9 +300,9 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
-
 import SapeurMutations from '@/components/sapeur/SapeurMutations.vue';
 import SapeurTelephones from '@/components/sapeur/SapeurTelephones.vue';
 
@@ -312,6 +335,9 @@ export default {
       listeCivilites: (state) => state.baseData.civilites,
       listeFonctions: (state) => state.fonction.liste,
       listGrades: (state) => state.grade.liste,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
     ...mapGetters(['activeSapeur', 'activeSapeurId', 'listeLocalitesSis']),
   },

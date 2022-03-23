@@ -11,6 +11,10 @@
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
+<<<<<<< HEAD
+=======
+              v-if="hasEditPermission"
+>>>>>>> a5f44e0b78627550c479a925e47ae51945f85458
             >Ajouter un sapeur</button>
           </div>
         </div>
@@ -49,8 +53,9 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
+import permissions from '@/store/permissions.js';
 
 //TODO Implémenter Matériel personnel
 const tabList = {
@@ -124,6 +129,11 @@ export default {
     loadData(routeTo, next);
   },
   computed: {
+    ...mapState({
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
+    }),
     modeAjout() {
       return this.id == 'ajout';
     },

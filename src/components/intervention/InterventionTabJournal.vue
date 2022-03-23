@@ -31,7 +31,12 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Appels</h3>
-            <button type="button" class="btn btn-primary" @click="newAppel">Ajouter un appel</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="newAppel"
+              v-if="hasEditPermission"
+            >Ajouter un appel</button>
           </div>
           <div class="card-body">
             <table id="int-appels" class="table table-sm">
@@ -41,19 +46,19 @@
                   <th>Numéro</th>
                   <th>Nom</th>
                   <th>Commentaire</th>
-                  <th class="text-center">Actions</th>
+                  <th class="text-center" v-if="hasEditPermission">Actions</th>
                 </tr>
               </thead>
               <tbody id="appels">
                 <tr v-if="appels.length <= 0">
-                  <td colspan="5">Aucun appel</td>
+                  <td :colspan="hasEditPermission ? 5 : 4">Aucun appel</td>
                 </tr>
                 <tr v-for="a in appels" :key="a.id">
                   <td>{{ formatTime(a.date) }}</td>
                   <td>{{ a.numero }}</td>
                   <td>{{ a.nom }}</td>
                   <td>{{ a.commentaire }}</td>
-                  <td>
+                  <td v-if="hasEditPermission">
                     <div class="d-flex justify-content-center">
                       <button
                         type="button"
@@ -82,7 +87,12 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Missions</h3>
-            <button type="button" class="btn btn-primary" @click="newMission">Ajouter une mission</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="newMission"
+              v-if="hasEditPermission"
+            >Ajouter une mission</button>
           </div>
           <div class="card-body">
             <table id="int-mission" class="table table-sm">
@@ -135,7 +145,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'InterventionTabJournal',
@@ -146,6 +157,9 @@ export default {
       missions: (state) => state.intervention.active.missions,
       appels: (state) => state.intervention.active.appels,
       sapeurs: (state) => state.sapeur.liste,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
     sortedAppels() {
       return this.appels

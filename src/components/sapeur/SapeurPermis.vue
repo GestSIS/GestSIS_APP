@@ -2,7 +2,11 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Permis de conduire</h3>
-      <button @click.prevent="savePermis" class="btn btn-primary flex-shrink-1">Enregistrer</button>
+      <button
+        @click.prevent="savePermis"
+        class="btn btn-primary flex-shrink-1"
+        v-if="hasEditPermission"
+      >Enregistrer</button>
     </div>
     <div class="card-body">
       <table class="table table-sm">
@@ -33,12 +37,13 @@
                   type="date"
                   class="form-control form-control-sm"
                   v-model="permis.date"
+                  :readonly="!hasEditPermission"
                   :class="{
                     'is-invalid': isInvalid(permis.permis_type_id),
                   }"
                 />
                 <button
-                  v-if="(permis.date || '') !== ''"
+                  v-if="(permis.date || '') !== '' && hasEditPermission"
                   type="button"
                   class="btn btn-outline-danger border-0"
                   @click="supprimerPermis(permis.permis_type_id)"
@@ -55,7 +60,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurPermis',
@@ -68,6 +74,11 @@ export default {
   },
   computed: {
     ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId']),
+    ...mapState({
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
+    })
   },
   mounted() {
     if (this.listPermisType.length === 0) {
@@ -162,7 +173,7 @@ export default {
         else if (
           p.id !== null &&
           p.date !==
-            this.activeSapeurPermis.find((permis) => permis.id == p.id).date
+          this.activeSapeurPermis.find((permis) => permis.id == p.id).date
         ) {
           this.$store
             .dispatch('editPermis', { id: p.id, date: p.date })
