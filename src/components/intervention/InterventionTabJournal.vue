@@ -461,20 +461,21 @@ export default {
   }
 }
 
+@import "node_modules/bootswatch/dist/cosmo/variables.scss";
+
 .timeline-badge {
   &.mission-ended {
-    background-color: var(--success) !important;
+    background-color: $success !important;
     opacity: 0.8;
   }
 
   &.mission-running {
-    background-color: var(--warning) !important;
+    background-color: $warning !important;
     opacity: 0.8;
   }
 
   &.appel {
-    // FIXME: Be sure to import css variables
-    background-color: var(--primary) !important;
+    background-color: $primary !important;
     opacity: 0.8;
   }
 }

@@ -153,15 +153,15 @@ a:focus {
   transition: all 0.3s;
 }
 
+@import "node_modules/bootswatch/dist/cosmo/variables.scss";
 ul li a:hover {
-  // FIXME: Be sure to import css variables
-  color: var(--primary);
+  color: $primary;
   background: #fff;
 }
 
 .router-link-active,
 a[aria-expanded="true"] {
   color: #fff;
-  background: var(--primary);
+  background: $primary;
 }
 </style>
