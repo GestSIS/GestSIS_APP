@@ -106,6 +106,7 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
+      Api.setAccessToken("");
 
       state.user = null;
       state.email = null;
