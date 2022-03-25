@@ -11,10 +11,7 @@
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
-<<<<<<< HEAD
-=======
               v-if="hasEditPermission"
->>>>>>> a5f44e0b78627550c479a925e47ae51945f85458
             >Ajouter un sapeur</button>
           </div>
         </div>
