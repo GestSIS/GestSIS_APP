@@ -89,20 +89,20 @@ const router = createRouter({
     {
       path: '/effectif',
       name: 'effectif',
-      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
+      beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
       component: () => import('@/pages/Effectif.vue'),
     },
     {
       path: '/exercices/:id',
       name: 'exercice',
-      beforeEnter: permissionGuard(permissions.EXERCICE.PRESENCE),
+      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
       component: () => import('@/pages/Exercice.vue'),
     },
     {
       path: '/exercices',
       name: 'exercices',
-      beforeEnter: permissionGuard(permissions.EXERCICE.PRESENCE),
+      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       component: () => import('@/pages/Exercices.vue'),
     },
     {

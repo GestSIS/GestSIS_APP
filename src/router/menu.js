@@ -23,7 +23,7 @@ const links = [
     to: { name: 'exercices' },
     icon: ['fas', 'calendar-alt'],
     nom: 'Exercices & Séances',
-    permission: permissions.EXERCICE.PRESENCE,
+    permission: permissions.EXERCICE.LECTURE,
   },
   {
     to: { name: 'organisation' },

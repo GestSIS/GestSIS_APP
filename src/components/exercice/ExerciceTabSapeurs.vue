@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline">
+  <div class="card card-primary card-outline table-responsive">
     <div class="card-header d-flex justify-content-between">
       <h3>
         {{ activeExerciceData.designation }} &ndash;
