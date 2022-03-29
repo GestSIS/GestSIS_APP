@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, defineProps, defineExpose } from 'vue'
+import { ref, onMounted, onUnmounted, defineExpose } from 'vue'
 
 const props = defineProps({
   tag: {
