@@ -5,13 +5,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }"
-                >Accueil</router-link
-              >
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Statistique
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Statistique</li>
           </ol>
         </nav>
       </div>
@@ -47,7 +43,7 @@
 <script>
 import permissions from '@/store/permissions.js';
 import { mapState } from 'vuex';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'statistiques',

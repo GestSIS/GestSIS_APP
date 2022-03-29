@@ -1,8 +1,8 @@
 import types from '../mutationTypes';
 import permissions from '../permissions';
 
-import { TokenService } from '../../services/StorageService';
-import AuthService from '../../services/AuthService';
+import { TokenService } from '../../services/StorageService.js';
+import AuthService from '../../services/AuthService.js';
 import Api from '../../http/Request';
 import jwt_decode from 'jwt-decode';
 
@@ -91,7 +91,7 @@ export default {
       const permissionsParSis = jwt.data.permissions;
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
-      state.email = jwt.data.email; 
+      state.email = jwt.data.email;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -106,6 +106,7 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
+      Api.setAccessToken("");
 
       state.user = null;
       state.email = null;
@@ -163,7 +164,7 @@ export default {
       return AuthService.changePassword({
         email: state.email,
         password: password,
-        new_password: newPassword
+        new_password: newPassword,
       });
     },
     confirmation({}, token) {

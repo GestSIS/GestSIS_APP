@@ -7,7 +7,12 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Phases de l'intervention</h3>
-          <button type="button" class="btn btn-primary" @click="newPhase">Nouvelle phase</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="newPhase"
+            v-if="hasEditPermission"
+          >Nouvelle phase</button>
         </div>
         <div class="card-body">
           <table class="table table-sm">
@@ -15,12 +20,12 @@
               <tr>
                 <th>Début</th>
                 <th>Type</th>
-                <th>Actions</th>
+                <th v-if="hasEditPermission">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="phases.length <= 0">
-                <td colspan="3">
+                <td :colspan="hasEditPermission ? 3 : 2">
                   Erreur, une phase est nécessaire pour chaque intervention,
                   veuillez contacter l'administrateur du système.
                 </td>
@@ -28,18 +33,18 @@
               <tr v-for="phase in phases" :key="phase.id">
                 <td>
                   {{
-                    phase.debut === null
-                      ? `${data.date_debut} ${data.heure_debut}`
-                      : phase.debut.slice(0, 16)
+                  phase.debut === null
+                  ? `${data.date_debut} ${data.heure_debut}`
+                  : phase.debut.slice(0, 16)
                   }}
                 </td>
                 <td>
                   {{
-                    phasesType.find((p) => p.id == phase.phase_type_id)
-                      .designation
+                  phasesType.find((p) => p.id == phase.phase_type_id)
+                  .designation
                   }}
                 </td>
-                <td>
+                <td v-if="hasEditPermission">
                   <button
                     type="button"
                     class="btn btn-outline-primary border-0 ms-2"
@@ -120,6 +125,7 @@
                   <td class="text-center">
                     <input
                       type="checkbox"
+                      :disabled="!hasEditPermission"
                       class="form-check-input"
                       :id="s.id"
                       :checked="
@@ -157,6 +163,7 @@
                         type="button"
                         class="btn btn-outline-primary border-0 ms-2"
                         @click="editPresence(p)"
+                        v-if="hasEditPermission"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />
                       </button>
@@ -164,6 +171,7 @@
                         type="button"
                         class="btn btn-outline-danger border-0"
                         @click="removePresence(p.id)"
+                        v-if="hasEditPermission"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
@@ -186,6 +194,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 import InterventionTabGroupe from '@/components/intervention/InterventionTabGroupe.vue';
 
 export default {
@@ -208,6 +217,9 @@ export default {
       phases: (state) => state.intervention.active.phases,
       sapeurs: (state) => state.sapeur.liste,
       phasesType: (state) => state.phaseType.liste,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
     listSapeurs() {
       return Array.from(

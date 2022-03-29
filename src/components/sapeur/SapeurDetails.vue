@@ -4,34 +4,15 @@
       <div class="tab-pane fade show active" id="tab-sapeur-details">
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
-              Exporter
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
-              Importer
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
-              Fiche sapeur
-            </button>
+            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Exporter</button>
+            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Importer</button>
+            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Fiche sapeur</button>
             <button
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
-            >
-              Ajouter un sapeur
-            </button>
+              v-if="hasEditPermission"
+            >Ajouter un sapeur</button>
           </div>
         </div>
       </div>
@@ -45,9 +26,7 @@
           :class="{ active: activeTab === tabList[tab] }"
           @click.prevent="selectTab(tabList[tab])"
           href="#"
-        >
-          {{ tabList[tab] }}
-        </a>
+        >{{ tabList[tab] }}</a>
       </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -71,8 +50,9 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
+import permissions from '@/store/permissions.js';
 
 //TODO Implémenter Matériel personnel
 const tabList = {
@@ -87,15 +67,15 @@ const tabList = {
   EXERCICE: 'Exercice',
 };
 
-import SapeurTabGeneral from '@/components/sapeur/SapeurTabGeneral';
-import SapeurFonction from '@/components/sapeur/SapeurFonction';
-import SapeurCours from '@/components/sapeur/SapeurCours';
-import SapeurPromotion from '@/components/sapeur/SapeurPromotion';
-import SapeurMateriel from '@/components/sapeur/SapeurMateriel';
-import SapeurOrganisation from '@/components/sapeur/SapeurOrganisation';
-import SapeurPermis from '@/components/sapeur/SapeurPermis';
-import SapeurBanque from '@/components/sapeur/SapeurBanque';
-import SapeurExercice from '@/components/sapeur/SapeurExercice';
+import SapeurTabGeneral from '@/components/sapeur/SapeurTabGeneral.vue';
+import SapeurFonction from '@/components/sapeur/SapeurFonction.vue';
+import SapeurCours from '@/components/sapeur/SapeurCours.vue';
+import SapeurPromotion from '@/components/sapeur/SapeurPromotion.vue';
+import SapeurMateriel from '@/components/sapeur/SapeurMateriel.vue';
+import SapeurOrganisation from '@/components/sapeur/SapeurOrganisation.vue';
+import SapeurPermis from '@/components/sapeur/SapeurPermis.vue';
+import SapeurBanque from '@/components/sapeur/SapeurBanque.vue';
+import SapeurExercice from '@/components/sapeur/SapeurExercice.vue';
 
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
@@ -146,6 +126,11 @@ export default {
     loadData(routeTo, next);
   },
   computed: {
+    ...mapState({
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
+    }),
     modeAjout() {
       return this.id == 'ajout';
     },

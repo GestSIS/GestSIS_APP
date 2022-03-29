@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.VUE_APP_API_ENDPOINT;
-const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
+const API_URL = import.meta.env.VITE_API_ENDPOINT;
+const AUTH_URL = import.meta.env.VITE_AUTH_ENDPOINT;
 
 // console.log(API_URL)
 // console.log(AUTH_URL)

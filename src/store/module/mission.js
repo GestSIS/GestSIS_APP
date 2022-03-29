@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import MissionService from '../../services/MissionService';
+import MissionService from '../../services/MissionService.js';
 
 export default {
   state: {

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import CompteService from '../../services/CompteService';
+import CompteService from '../../services/CompteService.js';
 
 export default {
   state: {

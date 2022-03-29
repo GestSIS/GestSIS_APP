@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import TypeInterventionService from '../../services/TypeInterventionService';
+import TypeInterventionService from '../../services/TypeInterventionService.js';
 
 export default {
   state: {

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ExerciceComptableService from '../../services/ExerciceComptableService';
+import ExerciceComptableService from '../../services/ExerciceComptableService.js';
 
 export default {
   state: {
@@ -16,8 +16,10 @@ export default {
       if ((state.activeId || 0) === 0) {
         // Select année en cours ou sinon, le dernier
         const anneeEnCours = new Date().getFullYear();
-        const exerciceEnCours = payload.find(e => e.annee == anneeEnCours);
-        state.activeId = exerciceEnCours?.id || payload.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
+        const exerciceEnCours = payload.find((e) => e.annee == anneeEnCours);
+        state.activeId =
+          exerciceEnCours?.id ||
+          payload.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
       }
     },
     [types.SELECT_EXERCICE_COMPTABLE](state, payload) {

@@ -24,19 +24,24 @@
           </div>
           <div class="card-body d-grid gap-1">
             <router-link custom to="/interventions/new" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary">Ajouter une intervention</button>
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+                v-if="hasEditPermission"
+              >Ajouter une intervention</button>
             </router-link>
             <router-link custom :to="'/interventions/' + selectedId" v-slot="{ navigate }">
               <button
                 :disabled="!selectedId"
                 @click="navigate"
                 class="btn btn-outline-primary"
-              >Modifier</button>
+              >{{ hasEditPermission ? "Modifier" : "Aperçu" }}</button>
             </router-link>
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
               class="btn btn-outline-primary"
+              v-if="hasEditPermission"
             >Supprimer</button>
           </div>
         </div>
@@ -193,10 +198,10 @@
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
 import permissions from '@/store/permissions.js';
+import store from '@/store/index';
 
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 
@@ -358,6 +363,9 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.VALIDATION
         ),
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
     ...mapGetters(['currentExerciceComptableId']),
     filteredInterventionsTypes() {

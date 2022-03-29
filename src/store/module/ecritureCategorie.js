@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import EcritureCategorieService from '../../services/EcritureCategorieService';
+import EcritureCategorieService from '../../services/EcritureCategorieService.js';
 
 export default {
   state: {

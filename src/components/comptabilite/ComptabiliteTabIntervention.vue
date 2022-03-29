@@ -133,8 +133,8 @@ import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
-import ImputationService from '@/services/ImputationService';
+import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import ImputationService from '@/services/ImputationService.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

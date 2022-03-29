@@ -66,7 +66,7 @@
               :key="sapeur.id"
             >
               <a
-                class="list-group-item list-group-item-action"
+                class="list-group-item list-group-item-action sapeur-item"
                 href="#"
                 :class="{
                   active: activeSapeurId === sapeur.id,
@@ -78,7 +78,7 @@
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
             <button
               class="btn btn-primary"
-              v-if="!filteredSapeurs.length"
+              v-if="!filteredSapeurs.length && hasEditPermission"
               @click="addSapeur"
             >Ajouter un sapeur</button>
           </ul>
@@ -93,9 +93,9 @@
 
 <script>
 import store from '@/store/index';
-
+import permissions from '@/store/permissions.js';
 import { mapState, mapMutations } from 'vuex';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
   store.dispatch('fetchCivilites');
@@ -175,6 +175,9 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
     filteredSapeurs() {
       return this.sapeurs.filter(this.filters[this.filter]);
@@ -206,7 +209,6 @@ export default {
               params: { id: sapeurId },
             });
           });
-          //TODO
         },
       });
     },
@@ -216,7 +218,7 @@ export default {
 
 <style lang="scss" scoped>
 #liste-sapeurs {
-  li {
+  a {
     padding: 0.25rem 0.75rem;
   }
 }

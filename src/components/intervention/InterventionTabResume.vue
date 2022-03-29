@@ -4,11 +4,12 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
-          <button @click.prevent="save" class="btn btn-primary">Enregistrer</button>
+          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
         </div>
         <div class="card-body">
           <label for="m-int-resume">Description</label>
           <textarea
+            :readonly="!hasEditPermission"
             id="m-int-resume"
             class="form-control form-control-sm"
             v-model="activeInterventionData.description"
@@ -22,6 +23,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
@@ -47,6 +49,9 @@ export default {
     ...mapState({
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
   },
   methods: {

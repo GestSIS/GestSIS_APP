@@ -14,6 +14,7 @@ export default {
     CONFIG: 'intervention.config',
   },
   EXERCICE: {
+    LECTURE: 'exercice.lecture',
     PRESENCE: 'exercice.presence',
     MODIFICATION: 'exercice.modification',
     VALIDATION: 'exercice.validation',

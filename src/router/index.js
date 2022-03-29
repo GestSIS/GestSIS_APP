@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Public from '@/pages/Public';
-import Home from '@/pages/Home';
+import Public from '@/pages/Public.vue';
+import Home from '@/pages/Home.vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import { TokenService } from '@/services/StorageService';
+import { TokenService } from '@/services/StorageService.js';
 
 import NProgress from 'nprogress';
 
@@ -28,7 +28,7 @@ const permissionGuard = (permission) => {
 };
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
@@ -74,13 +74,13 @@ const router = createRouter({
     {
       path: '/sapeurs',
       name: 'sapeurs',
-      beforeEnter: permissionGuard(permissions.SAPEUR.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
       component: () => import('@/pages/Sapeurs.vue'),
       children: [
         {
           path: ':id',
           name: 'sapeurs-details',
-          beforeEnter: permissionGuard(permissions.SAPEUR.MODIFICATION),
+          beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import('@/components/sapeur/SapeurDetails.vue'),
           props: true,
         },
@@ -89,20 +89,20 @@ const router = createRouter({
     {
       path: '/effectif',
       name: 'effectif',
-      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
+      beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
       component: () => import('@/pages/Effectif.vue'),
     },
     {
       path: '/exercices/:id',
       name: 'exercice',
-      beforeEnter: permissionGuard(permissions.EXERCICE.PRESENCE),
+      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
       component: () => import('@/pages/Exercice.vue'),
     },
     {
       path: '/exercices',
       name: 'exercices',
-      beforeEnter: permissionGuard(permissions.EXERCICE.PRESENCE),
+      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       component: () => import('@/pages/Exercices.vue'),
     },
     {
@@ -114,14 +114,14 @@ const router = createRouter({
     {
       path: '/interventions/:id',
       name: 'intervention',
-      beforeEnter: permissionGuard(permissions.INTERVENTION.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
       component: () => import('@/pages/Intervention.vue'),
     },
     {
       path: '/interventions',
       name: 'interventions',
-      beforeEnter: permissionGuard(permissions.INTERVENTION.MODIFICATION),
+      beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       component: () => import('@/pages/Interventions.vue'),
     },
     {
@@ -323,19 +323,28 @@ const router = createRouter({
           path: 'mutations',
           name: 'rta-mutations',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Mutations.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/Mutations.vue'
+            ),
         },
         {
           path: 'reference',
           name: 'rta-reference',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/Reference.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/Reference.vue'
+            ),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () => import(/* webpackChunkName: "rta" */'@/components/rta/GestSis.vue'),
+          component: () =>
+            import(
+              /* webpackChunkName: "rta" */ '@/components/rta/GestSis.vue'
+            ),
         },
       ],
     },

@@ -52,7 +52,7 @@
                 <td v-else>-</td>-->
                 <td v-if="!i.solde_undefined">
                   {{
-                    i.compte_solde_id ? formatCompte(i.compte_solde_id) : 'Plus d\'un compte'
+                  i.compte_solde_id ? formatCompte(i.compte_solde_id) : 'Plus d\'un compte'
                   }}
                 </td>
                 <td v-else>-</td>
@@ -67,7 +67,7 @@
                 <td v-else>-</td>-->
                 <td v-if="!i.indemnite_undefined">
                   {{
-                    i.compte_indemnite_id ? formatCompte(i.compte_indemnite_id) : 'Plus d\'un compte'
+                  i.compte_indemnite_id ? formatCompte(i.compte_indemnite_id) : 'Plus d\'un compte'
                   }}
                 </td>
                 <td v-else>-</td>
@@ -136,7 +136,7 @@
               <td>{{ ecriture.designation }}</td>
               <td>
                 {{
-                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
                 }}
               </td>
               <td>{{ ecriture.quantite }}</td>

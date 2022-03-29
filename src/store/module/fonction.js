@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import FonctionService from '../../services/FonctionService';
+import FonctionService from '../../services/FonctionService.js';
 
 export default {
   state: {

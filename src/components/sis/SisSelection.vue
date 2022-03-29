@@ -62,8 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
+/* @use "~bootstrap/scss/variables.scss"; */
 
 hr {
   width: 100%;
@@ -154,6 +153,7 @@ a:focus {
   transition: all 0.3s;
 }
 
+@import "node_modules/bootswatch/dist/cosmo/variables.scss";
 ul li a:hover {
   color: $primary;
   background: #fff;

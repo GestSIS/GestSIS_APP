@@ -4,7 +4,7 @@
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
-          <button @click.prevent="save" class="btn btn-primary">Enregistrer</button>
+          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
         </div>
       </div>
     </div>
@@ -26,6 +26,7 @@
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_debut'] }"
                     type="date"
+                    :readonly="!hasEditPermission"
                     :min="dateDebutMin"
                     :max="dateDebutMax"
                     id="m-int-date-debut"
@@ -44,6 +45,7 @@
                   </div>
                   <input
                     type="time"
+                    :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['heure_debut'] }"
                     id="m-int-heure_debut"
@@ -68,6 +70,7 @@
                     :min="dateFinMin"
                     :max="dateFinMax"
                     type="date"
+                    :readonly="!hasEditPermission"
                     id="m-int-date-fin"
                     name="date_fin"
                     v-model="activeInterventionData.date_fin"
@@ -84,6 +87,7 @@
                   </div>
                   <input
                     type="time"
+                    :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
                     :class="{
                       'is-invalid': errors['heure_fin'],
@@ -101,6 +105,7 @@
             <label for="m-int-objet">Objet</label>
             <input
               type="text"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['objet'] }"
               id="m-int-objet"
@@ -114,6 +119,7 @@
             <label for="m-int-lieu">Lieu (Rue, N°)</label>
             <input
               type="text"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
               id="m-int-lieu"
@@ -130,6 +136,7 @@
               id="m-int-localite"
               name="localite_id"
               style="width: 100%"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.localite_id"
             >
               <option
@@ -148,6 +155,7 @@
               id="m-int-sapeur"
               name="localite_id"
               style="width: 100%"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.sapeur_id"
             >
               <option
@@ -178,6 +186,7 @@
               id="m-int-traitement"
               name="localite_id"
               style="width: 100%"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.intervention_traitement_id"
             >
               <option
@@ -195,6 +204,7 @@
               :class="{ 'is-invalid': errors['type_intervention_id'] }"
               id="m-int-type"
               name="type_intervention_id"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.type_intervention_id"
             >
               <option
@@ -213,6 +223,7 @@
               id="m-int-stat"
               name="stat"
               style="width: 100%"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.stat_federal_id"
             >
               <option
@@ -228,6 +239,7 @@
             <label for="m-int-save-pers">Nb de personnes sauvées</label>
             <input
               type="number"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_personne'] }"
               id="m-int-save-pers"
@@ -241,6 +253,7 @@
             <label for="m-int-save-ani">Nb d'animaux sauvés</label>
             <input
               type="number"
+              :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_animaux'] }"
               id="m-int-save-ani"
@@ -261,6 +274,7 @@
               id="m-int-degre"
               name="degre"
               style="width: 100%"
+              :disabled="!hasEditPermission"
               v-model="activeInterventionData.degre"
             >
               <option v-for="deg in degre" :key="deg.id" :value="deg.id">{{ deg.type }}</option>
@@ -283,6 +297,7 @@
                 <label for="m-int-save-ani">Propriétaire</label>
                 <textarea
                   type="text"
+                  :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['proprietaire'] }"
                   id="m-int-proprietaire"
@@ -296,6 +311,7 @@
                 <label for="m-int-save-ani">Responsable</label>
                 <textarea
                   type="text"
+                  :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['responsable'] }"
                   id="m-int-responsable"
@@ -314,7 +330,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-
+import permissions from '@/store/permissions.js';
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
   { id: 2, type: 'Petite' },
@@ -344,6 +360,9 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.INTERVENTION.MODIFICATION
+      ),
     }),
     ...mapGetters([
       'listeLocalitesSis',

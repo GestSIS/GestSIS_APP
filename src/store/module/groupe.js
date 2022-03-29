@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import GroupeService from '../../services/GroupeService';
+import GroupeService from '../../services/GroupeService.js';
 
 export default {
   state: {

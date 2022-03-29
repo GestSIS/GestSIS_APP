@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import DecompteService from '../../services/DecompteService';
+import DecompteService from '../../services/DecompteService.js';
 
 export default {
   state: {

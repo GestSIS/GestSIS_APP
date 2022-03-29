@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import MaterielService from '../../services/MaterielService';
+import MaterielService from '../../services/MaterielService.js';
 
 export default {
   state: {

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import AvsParamService from '../../services/AvsParamService';
+import AvsParamService from '../../services/AvsParamService.js';
 
 export default {
   state: {

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import StatistiqueService from '../../services/StatistiqueService';
+import StatistiqueService from '../../services/StatistiqueService.js';
 
 export default {
   state: {

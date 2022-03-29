@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ExerciceCategorieService from '../../services/ExerciceCategorieService';
+import ExerciceCategorieService from '../../services/ExerciceCategorieService.js';
 
 export default {
   state: {

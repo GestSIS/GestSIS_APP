@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ExcuseTypeService from '../../services/ExcuseTypeService';
+import ExcuseTypeService from '../../services/ExcuseTypeService.js';
 
 export default {
   state: {

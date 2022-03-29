@@ -3,9 +3,11 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button @click.prevent="saveTelephones" class="btn btn-primary">
-        Enregistrer
-      </button>
+      <button
+        @click.prevent="saveTelephones"
+        class="btn btn-primary"
+        v-if="hasEditPermission"
+      >Enregistrer</button>
     </div>
     <div class="card-body table-responsive">
       <table class="table table-sm">
@@ -24,11 +26,11 @@
                 :icon="['far', 'question-circle']"
               />
             </th>
-            <th class="text-center">Actions</th>
+            <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
         </thead>
         <tr v-if="telephones.length <= 0">
-          <td colspan="5">Aucun numéro enregistré</td>
+          <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
         </tr>
         <draggable tag="tbody" v-model="telephones" item-key="priorite">
           <template #item="{ element }">
@@ -36,13 +38,12 @@
               <td
                 class="text-center"
                 :class="{ 'd-none': telephones.length <= 1 }"
-              >
-                {{ element.priorite }}
-              </td>
+              >{{ element.priorite }}</td>
               <td>
                 <input
                   class="form-control form-control-sm"
                   type="text"
+                  :readonly="!hasEditPermission"
                   v-model="element.numero"
                   placeholder="..."
                 />
@@ -51,14 +52,9 @@
                 <select
                   class="form-select form-select-sm"
                   v-model="element.telephone_type_id"
+                  :disabled="!hasEditPermission"
                 >
-                  <option
-                    v-for="t in telephonesTypes"
-                    :value="t.id"
-                    :key="t.id"
-                  >
-                    {{ t.type }}
-                  </option>
+                  <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">{{ t.type }}</option>
                 </select>
               </td>
               <td class="align-middle text-center">
@@ -66,9 +62,10 @@
                   type="checkbox"
                   class="form-check-input"
                   v-model="element.rta"
+                  :disabled="!hasEditPermission"
                 />
               </td>
-              <td class="align-middle text-center">
+              <td class="align-middle text-center" v-if="hasEditPermission">
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
@@ -87,9 +84,9 @@
         class="btn btn-outline-primary"
         @click="addTelephone()"
         :disabled="this.telephonesData.length >= 3"
+        v-if="hasEditPermission"
       >
-        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />
-        Ajouter un numéro
+        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un numéro
       </button>
     </div>
   </div>
@@ -97,6 +94,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import permissions from '@/store/permissions.js';
 import draggable from 'vuedraggable';
 
 export default {
@@ -105,7 +103,7 @@ export default {
   },
   mounted() {
     this.telephonesData = [
-      ...(this.activeSapeurTelephones || []).map((t) => ({...t})),
+      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
     ];
   },
   data() {
@@ -116,12 +114,15 @@ export default {
   },
   watch: {
     activeSapeurTelephones() {
-      this.telephonesData = this.activeSapeurTelephones.map((t) => ({...t}));
+      this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
     },
   },
   computed: {
     ...mapState({
       telephonesTypes: (state) => state.baseData.telephoneTypes,
+      hasEditPermission: (state) => state.auth.sis.permissions.includes(
+        permissions.SAPEUR.MODIFICATION
+      ),
     }),
     ...mapGetters(['activeSapeurTelephones']),
     telephones: {

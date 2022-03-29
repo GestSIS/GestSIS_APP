@@ -68,4 +68,9 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+</style>

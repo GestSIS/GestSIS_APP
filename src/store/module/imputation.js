@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import ImputationService from '../../services/ImputationService';
+import ImputationService from '../../services/ImputationService.js';
 
 export default {
   state: {
@@ -41,13 +41,21 @@ export default {
     },
     [types.UPDATE_ECRITURE](state, ecriture) {
       if (ecriture.module == 0) {
-        state.ecritures.divers = state.ecritures.divers.map(e => e.id == ecriture.id ? ecriture : e);
+        state.ecritures.divers = state.ecritures.divers.map((e) =>
+          e.id == ecriture.id ? ecriture : e
+        );
       }
     },
     [types.REMOVE_ECRITURE](state, ecritureId) {
-      state.ecritures.divers = state.ecritures.divers.filter(e => e.id != ecritureId);
-      state.ecritures.amendes = state.ecritures.amendes.filter(e => e.id != ecritureId);
-      state.ecritures.annuels = state.ecritures.annuels.filter(e => e.id != ecritureId);
+      state.ecritures.divers = state.ecritures.divers.filter(
+        (e) => e.id != ecritureId
+      );
+      state.ecritures.amendes = state.ecritures.amendes.filter(
+        (e) => e.id != ecritureId
+      );
+      state.ecritures.annuels = state.ecritures.annuels.filter(
+        (e) => e.id != ecritureId
+      );
     },
     [types.UPDATE_COMPTE_LISTE](state, payload) {
       if (state.active.compteId === null && payload.length > 0) {
@@ -79,7 +87,13 @@ export default {
       state.fraisIndemnites.annuels = [
         ...state.fraisIndemnites.annuels.map((f) => {
           if (f.id === fraisIndemnite.frais_indemnite_annuel_type_id) {
-            return { ...f, frais_indemnite_annuels: [...f.frais_indemnite_annuels, fraisIndemnite] };
+            return {
+              ...f,
+              frais_indemnite_annuels: [
+                ...f.frais_indemnite_annuels,
+                fraisIndemnite,
+              ],
+            };
           } else {
             return f;
           }
@@ -93,7 +107,9 @@ export default {
             return {
               ...f,
               frais_indemnite_annuels: [
-                ...f.frais_indemnite_annuels.filter((e) => e.id != fraisIndemnite.id),
+                ...f.frais_indemnite_annuels.filter(
+                  (e) => e.id != fraisIndemnite.id
+                ),
                 fraisIndemnite,
               ],
             };
@@ -108,13 +124,18 @@ export default {
         ...state.fraisIndemnites.annuels.map((f) => {
           return {
             ...f,
-            frais_indemnite_annuels: f.frais_indemnite_annuels.filter((e) => e.id != fraisIndemniteId),
+            frais_indemnite_annuels: f.frais_indemnite_annuels.filter(
+              (e) => e.id != fraisIndemniteId
+            ),
           };
         }),
       ];
     },
     [types.ADD_FRAIS_INDEMNITE_ANNUEL_TYPE](state, fraisIndemnite) {
-      state.fraisIndemnites.annuels = [...state.fraisIndemnites.annuels, fraisIndemnite];
+      state.fraisIndemnites.annuels = [
+        ...state.fraisIndemnites.annuels,
+        fraisIndemnite,
+      ];
     },
     [types.UPDATE_FRAIS_INDEMNITE_ANNUEL_TYPE](state, fraisIndemnite) {
       state.fraisIndemnites.annuels = [
@@ -124,10 +145,15 @@ export default {
       ];
     },
     [types.REMOVE_FRAIS_INDEMNITE_ANNUEL_TYPE](state, fraisIndemniteId) {
-      state.fraisIndemnites.annuels = state.fraisIndemnites.annuels.filter((m) => m.id != fraisIndemniteId);
+      state.fraisIndemnites.annuels = state.fraisIndemnites.annuels.filter(
+        (m) => m.id != fraisIndemniteId
+      );
     },
     [types.ADD_INDEMNITE_EXERCICE](state, indemnite) {
-      state.fraisIndemnites.exercices = [...state.fraisIndemnites.exercices, indemnite];
+      state.fraisIndemnites.exercices = [
+        ...state.fraisIndemnites.exercices,
+        indemnite,
+      ];
     },
     [types.UPDATE_INDEMNITE_EXERCICE](state, indemnite) {
       state.fraisIndemnites.exercices = [
@@ -155,9 +181,8 @@ export default {
       ];
     },
     [types.REMOVE_INDEMNITE_INTERVENTION](state, indemniteId) {
-      state.fraisIndemnites.interventions = state.fraisIndemnites.interventions.filter(
-        (m) => m.id != indemniteId
-      );
+      state.fraisIndemnites.interventions =
+        state.fraisIndemnites.interventions.filter((m) => m.id != indemniteId);
     },
   },
   actions: {
@@ -226,15 +251,15 @@ export default {
       });
     },
     annulerImputationExercice({ commit }, exerciceId) {
-      return ImputationService.annulerImputationExercice(
-        exerciceId,
-      ).then((data) => {
-        commit(types.UPDATE_EXERCICE_STATUT, {
-          id: exerciceId,
-          statut: data.statut,
-        });
-        return data;
-      });
+      return ImputationService.annulerImputationExercice(exerciceId).then(
+        (data) => {
+          commit(types.UPDATE_EXERCICE_STATUT, {
+            id: exerciceId,
+            statut: data.statut,
+          });
+          return data;
+        }
+      );
     },
     imputerIntervention({ commit }, payload) {
       return ImputationService.imputerIntervention(
@@ -250,7 +275,7 @@ export default {
     },
     annulerImputationIntervention({ commit }, interventionId) {
       return ImputationService.annulerImputationIntervention(
-        interventionId,
+        interventionId
       ).then((data) => {
         commit(types.UPDATE_INTERVENTION_STATUT, {
           id: interventionId,
@@ -293,34 +318,44 @@ export default {
       });
     },
     updateFraisIndemniteAnnuel({ commit }, frais) {
-      return ImputationService.updateFraisIndemniteAnnuel(frais).then((data) => {
-        commit(types.UPDATE_FRAIS_INDEMNITE_ANNUEL, data);
-        return data;
-      });
+      return ImputationService.updateFraisIndemniteAnnuel(frais).then(
+        (data) => {
+          commit(types.UPDATE_FRAIS_INDEMNITE_ANNUEL, data);
+          return data;
+        }
+      );
     },
     removeFraisIndemniteAnnuel({ commit }, frais) {
-      return ImputationService.removeFraisIndemniteAnnuel(frais).then((data) => {
-        commit(types.REMOVE_FRAIS_INDEMNITE_ANNUEL, frais);
-        return data;
-      });
+      return ImputationService.removeFraisIndemniteAnnuel(frais).then(
+        (data) => {
+          commit(types.REMOVE_FRAIS_INDEMNITE_ANNUEL, frais);
+          return data;
+        }
+      );
     },
     addFraisIndemniteAnnuelType({ commit }, frais) {
-      return ImputationService.addFraisIndemniteAnnuelType(frais).then((data) => {
-        commit(types.ADD_FRAIS_INDEMNITE_ANNUEL_TYPE, data);
-        return data;
-      });
+      return ImputationService.addFraisIndemniteAnnuelType(frais).then(
+        (data) => {
+          commit(types.ADD_FRAIS_INDEMNITE_ANNUEL_TYPE, data);
+          return data;
+        }
+      );
     },
     updateFraisIndemniteAnnuelType({ commit }, frais) {
-      return ImputationService.updateFraisIndemniteAnnuelType(frais).then((data) => {
-        commit(types.UPDATE_FRAIS_INDEMNITE_ANNUEL_TYPE, data);
-        return data;
-      });
+      return ImputationService.updateFraisIndemniteAnnuelType(frais).then(
+        (data) => {
+          commit(types.UPDATE_FRAIS_INDEMNITE_ANNUEL_TYPE, data);
+          return data;
+        }
+      );
     },
     removeFraisIndemniteAnnuelType({ commit }, frais) {
-      return ImputationService.removeFraisIndemniteAnnuelType(frais).then((data) => {
-        commit(types.REMOVE_FRAIS_INDEMNITE_ANNUEL_TYPE, frais);
-        return data;
-      });
+      return ImputationService.removeFraisIndemniteAnnuelType(frais).then(
+        (data) => {
+          commit(types.REMOVE_FRAIS_INDEMNITE_ANNUEL_TYPE, frais);
+          return data;
+        }
+      );
     },
     addIndemniteExercice({ commit }, indemnite) {
       return ImputationService.addIndemniteExercice(indemnite).then((data) => {

@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import RtaService from '../../services/RtaService';
+import RtaService from '../../services/RtaService.js';
 
 export default {
   state: {

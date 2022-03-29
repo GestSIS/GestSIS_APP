@@ -58,7 +58,7 @@
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 import store from '@/store/index';
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails';
+import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
 
 import BaseTable from '@/components/table/BaseTable.vue';
 

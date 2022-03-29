@@ -1,5 +1,5 @@
 import types from '../mutationTypes';
-import LocaliteService from '../../services/LocaliteService';
+import LocaliteService from '../../services/LocaliteService.js';
 
 export default {
   state: {

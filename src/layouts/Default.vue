@@ -16,7 +16,6 @@
   <!-- Control Sidebar -->
   <!-- @include('control-sidebar') -->
   <!-- /.control-sidebar -->
-
   <!-- @else
           <div id="main-content">
             <div class="container-fluid">
@@ -28,9 +27,9 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar';
-import AppModal from '@/components/AppModal';
-import MainSidebar from '@/components/MainSidebar';
+import Navbar from '@/components/Navbar.vue';
+import AppModal from '@/components/AppModal.vue';
+import MainSidebar from '@/components/MainSidebar.vue';
 
 export default {
   components: {

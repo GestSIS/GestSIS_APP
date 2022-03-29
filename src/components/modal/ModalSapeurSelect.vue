@@ -11,6 +11,7 @@
             <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
             <select class="form-select form-select-sm" v-model="groupBy" id="group-by">
               <option value="none">Alphabétique</option>
+              <option value="localite">Localité</option>
               <option value="fonction">Fonction</option>
               <option value="grade">Grade</option>
               <option value="civilite">Civilité</option>
@@ -93,6 +94,7 @@
               groupBy != 'groupe' &&
               groupBy != 'none' &&
               groupBy != 'fonction' &&
+              groupBy != 'localite' &&
               groupBy != 'civilite'
             "
           >En développement !</p>
@@ -100,6 +102,7 @@
             class="table table-sm"
             v-if="
               groupBy == 'groupe' ||
+              groupBy == 'localite' ||
               groupBy == 'fonction' ||
               groupBy == 'grade' ||
               groupBy == 'civilite'
@@ -171,15 +174,15 @@
               </tr>
             </thead>
             <tbody v-if="groupBy == 'none'">
-              <tr v-if="availableSapeurs.length == 0">
+              <tr v-if="availableSapeurIds.length == 0">
                 <td
                   colspan="3"
-                  v-if="sapeurs.length > 0 && availableSapeurs.length == 0"
+                  v-if="sapeurs.length > 0 && availableSapeurIds.length == 0"
                 >Tous les sapeurs sont déjà présent dans l'exercice</td>
                 <td colspan="3" v-if="sapeurs.length == 0">Aucun sapeur dans GestSIS</td>
               </tr>
               <tr
-                v-for="item in availableSapeurs
+                v-for="item in availableSapeurIds
                 .map((id) => sapeurs.find((s) => s.id == id))
                 .filter((s) => s && s.actif)"
                 :key="item.id"
@@ -245,6 +248,9 @@ export default {
   mounted() {
     this.chosenSapeurs = this.data.slice(0);
 
+    if (this.localites.length <= 0) {
+      this.$store.dispatch('fetchLocalites');
+    }
     if (this.grades.length <= 0) {
       this.$store.dispatch('fetchGrades');
     }
@@ -267,6 +273,7 @@ export default {
   computed: {
     ...mapState({
       groupes: (state) => state.groupe.liste,
+      localites: (state) => state.localite.liste,
       grades: (state) => state.grade.liste,
       civilites: (state) => state.baseData.civilites,
       fonctions: (state) => state.fonction.liste,
@@ -274,6 +281,11 @@ export default {
       civilites: (state) => state.baseData.civilites,
     }),
     ...mapGetters(['treeGroupesSapeurs']),
+    filteredLocalites() {
+      const sapeursIds = new Set(this.availableSapeurIds)
+      const localitesIds = new Set(this.availableSapeurIds.map(s => this.sapeurs.find(s => sapeursIds.has(s.id))?.localite_id));
+      return this.localites.filter(l => localitesIds.has(l.id));
+    },
     computedChosenSapeurs() {
       return this.chosenSapeurs
         .map(sapeurId => this.sapeurs.find(s => s.id == sapeurId))
@@ -283,6 +295,12 @@ export default {
     listeSapeurSelect() {
       if (this.groupBy == 'groupe') {
         return this.flattenedSapeurGroupe;
+      } else if (this.groupBy == 'localite') {
+        return this.flattenedSapeurGeneric(
+          this.filteredLocalites,
+          'localite_id',
+          'designation'
+        );
       } else if (this.groupBy == 'fonction') {
         return this.flattenedSapeurGeneric(
           this.fonctions,
@@ -292,7 +310,7 @@ export default {
       } else if (this.groupBy == 'grade') {
         return this.flattenedSapeurGeneric(
           this.grades,
-          'fonction_id',
+          'grade_id',
           'designation'
         );
       } else if (this.groupBy == 'civilite') {
@@ -350,7 +368,7 @@ export default {
       );
       return flattened;
     },
-    availableSapeurs() {
+    availableSapeurIds() {
       return this.sapeurs
         .slice(0)
         .filter((s) => !this.chosenSapeurs.includes(s.id))

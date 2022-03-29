@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable';
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'comptabilite',

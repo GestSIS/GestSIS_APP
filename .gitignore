@@ -25,3 +25,6 @@ run.sh
 
 # Vue configuration
 vue.config.js
+
+# Yarn 
+.yarn/*

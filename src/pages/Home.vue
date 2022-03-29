@@ -7,10 +7,7 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div
-            class="card col-md-3 col-sm-6 col-xs-12"
-            v-if="availableSisListe.length <= 0"
-          >
+          <div class="card col-md-3 col-sm-6 col-xs-12" v-if="availableSisListe.length <= 0">
             <div class="align-vertical">
               <p>
                 Vous n'avez actuellement aucun droit, demandez des droits à
@@ -25,10 +22,7 @@
           >
             <div class="align-vertical">
               <button class="btn btn-link" @click="connectToSis(sis)">
-                <img
-                  class="img-fetch"
-                  :src="require('@/assets/sis/' + sis.api_key + '.jpg')"
-                />
+                <img class="img-fetch" :src="getImageUrl(sis)" />
               </button>
             </div>
           </div>
@@ -47,8 +41,7 @@ export default {
       loading: false,
     };
   },
-  created: function () {
-    // console.log("--- Before create hook")
+  created() {
     if (this.listeSis.length <= 0) {
       const self = this;
       this.loading = true;
@@ -67,6 +60,9 @@ export default {
     ...mapGetters(['availableSisListe']),
   },
   methods: {
+    getImageUrl(sis) {
+      return new URL(`../assets/sis/${sis.api_key}.jpg`, import.meta.url).href
+    },
     connectToSis(sis) {
       this.$store.dispatch('selectSis', sis).then(() => {
         this.$router.push({ name: 'dashboard' });
@@ -76,7 +72,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .img-fetch {
   height: auto;
   max-height: 220px;
