@@ -5,28 +5,11 @@
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous connectez</h1>
       <label for="inputEmail" class="sr-only">Email</label>
-      <input
-        v-model="email"
-        type="email"
-        id="inputEmail"
-        class="form-control form-control-sm"
-        placeholder="Email"
-        required
-        autofocus
-        autocomplete="off"
-        :class="{ 'is-invalid': error }"
-      />
+      <input v-model="email" type="email" id="inputEmail" class="form-control form-control-sm" placeholder="Email"
+        required autofocus autocomplete="off" :class="{ 'is-invalid': error }" />
       <label for="inputPassword" class="sr-only">Mot de passe</label>
-      <input
-        v-model="password"
-        type="password"
-        id="inputPassword"
-        class="form-control form-control-sm"
-        placeholder="Mot de passe"
-        required
-        autocomplete="off"
-        :class="{ 'is-invalid': error }"
-      />
+      <input v-model="password" type="password" id="inputPassword" class="form-control form-control-sm"
+        placeholder="Mot de passe" required autocomplete="off" :class="{ 'is-invalid': error }" />
       <div class="invalid-feedback" v-if="error">Informations de connexion invalides</div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
       <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
@@ -48,6 +31,13 @@ export default {
   },
   methods: {
     async login() {
+      if (this.email?.trim()?.toLowerCase()?.endsWith("@gestsis.ch")) {
+        this.error = {
+          'email': 'Email invalid'
+        }
+        return;
+      }
+
       this.$store
         .dispatch('login', { email: this.email, password: this.password })
         .then(() => {

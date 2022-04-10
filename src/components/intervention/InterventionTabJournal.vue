@@ -157,6 +157,7 @@ export default {
       missions: (state) => state.intervention.active.missions,
       appels: (state) => state.intervention.active.appels,
       sapeurs: (state) => state.sapeur.liste,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),

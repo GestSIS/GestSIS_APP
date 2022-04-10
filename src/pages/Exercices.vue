@@ -389,8 +389,8 @@ export default {
       const statutsClass = {
         0: 'text-danger', //'Annulé',
         1: '', //'A saisir',
-        2: '', //'En attente de validation',
-        3: '', //'A imputer',
+        2: '', //'Saisie',
+        3: '', //'Validé',
         4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];

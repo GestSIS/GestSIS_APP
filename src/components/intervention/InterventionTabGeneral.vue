@@ -360,6 +360,7 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),

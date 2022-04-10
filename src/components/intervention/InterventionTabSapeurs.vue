@@ -33,15 +33,15 @@
               <tr v-for="phase in phases" :key="phase.id">
                 <td>
                   {{
-                  phase.debut === null
-                  ? `${data.date_debut} ${data.heure_debut}`
-                  : phase.debut.slice(0, 16)
+                    phase.debut === null
+                      ? `${data.date_debut} ${data.heure_debut}`
+                      : phase.debut.slice(0, 16)
                   }}
                 </td>
                 <td>
                   {{
-                  phasesType.find((p) => p.id == phase.phase_type_id)
-                  .designation
+                    phasesType.find((p) => p.id == phase.phase_type_id)
+                      .designation
                   }}
                 </td>
                 <td v-if="hasEditPermission">
@@ -217,6 +217,7 @@ export default {
       phases: (state) => state.intervention.active.phases,
       sapeurs: (state) => state.sapeur.liste,
       phasesType: (state) => state.phaseType.liste,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),

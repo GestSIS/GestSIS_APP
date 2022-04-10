@@ -208,7 +208,7 @@ export default {
         description: '',
         proprietaire: '',
         responsable: '',
-        stat_nb: 0,
+        stat_nb: 1,
         imputer: 0,
         exercice_comptable_id: getters.currentExerciceComptableId,
         localite_id: null,

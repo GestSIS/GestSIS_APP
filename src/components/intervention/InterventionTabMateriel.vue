@@ -69,6 +69,7 @@ export default {
       materiels: (state) => state.materiel.liste,
       activeMateriels: (state) => state.intervention.active.materiels,
       activeInterventionId: (state) => state.intervention.active.id,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),

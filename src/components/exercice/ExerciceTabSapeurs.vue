@@ -156,6 +156,7 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.EXERCICE.VALIDATION
         ),
+      // TODO: Check si exercice pas déjà imputé
       hasPresencePermission: (state) => state.auth.sis.permissions.includes(
         permissions.EXERCICE.PRESENCE
       ),
