@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline table-responsive">
+  <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3>
         {{ activeExerciceData.designation }} &ndash;
@@ -24,96 +24,57 @@
           <td>{{ sap.nomPrenom }}</td>
           <td>
             <div class="text-center">
-              <input
-                type="checkbox"
-                :disabled="!hasPresencePermission"
-                class="form-check-input"
-                :id="sap.id + 'convoque'"
-                v-model="sap.convoque"
-                :true-value="1"
-                :false-value="0"
-              />
+              <input type="checkbox" :disabled="!hasPresencePermission" class="form-check-input"
+                :id="sap.id + 'convoque'" v-model="sap.convoque" :true-value="1" :false-value="0" />
             </div>
           </td>
           <td>
             <div class="text-center">
-              <input
-                type="checkbox"
-                :disabled="!hasPresencePermission"
-                class="form-check-input"
-                :id="sap.id + 'present'"
-                v-model="sap.present"
-                :true-value="1"
-                :false-value="0"
-                @change="selectPresent(sap)"
-              />
+              <input type="checkbox" :disabled="!hasPresencePermission" class="form-check-input"
+                :id="sap.id + 'present'" v-model="sap.present" :true-value="1" :false-value="0"
+                @change="selectPresent(sap)" />
               <label class="form-check-label" :for="sap.id + 'present'"></label>
             </div>
           </td>
           <td>
             <div class="text-center">
-              <input
-                type="checkbox"
-                :disabled="!hasPresencePermission"
-                class="form-check-input"
-                :id="sap.id + 'remplace'"
-                v-model="sap.remplace"
-                :true-value="1"
-                :false-value="0"
-                @change="selectRemplace(sap)"
-              />
+              <input type="checkbox" :disabled="!hasPresencePermission" class="form-check-input"
+                :id="sap.id + 'remplace'" v-model="sap.remplace" :true-value="1" :false-value="0"
+                @change="selectRemplace(sap)" />
               <label class="form-check-label" :for="sap.id + 'remplace'"></label>
             </div>
           </td>
           <td>
             <div class="text-center">
-              <input
-                type="checkbox"
-                :disabled="!hasPresencePermission"
-                class="form-check-input"
-                :id="sap.id + 'excuse'"
-                :checked="!!sap.excuse_type_id"
-                @change.stop.prevent="selectExcuse(sap)"
-              />
+              <input type="checkbox" :disabled="!hasPresencePermission" class="form-check-input" :id="sap.id + 'excuse'"
+                :checked="!!sap.excuse_type_id" @change.stop.prevent="selectExcuse(sap)" />
               <label class="form-check-label" :for="sap.id + 'excuse'">
-                <span
-                  v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-                >{{ formatExcuseType(sap.excuse_type_id) }}</span>
+                <span v-if="sap.excuse_type_id && sap.excuse_type_id !== true">{{
+                  formatExcuseType(sap.excuse_type_id)
+                }}</span>
               </label>
             </div>
           </td>
           <td>
             <div class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :id="sap.id + 'amende'"
-                v-model="sap.amende"
-                :true-value="true"
-                :false-value="false"
-                :disabled="!amendable || !!(sap.remplace || sap.present) || !hasPresencePermission"
-              />
+              <input type="checkbox" class="form-check-input" :id="sap.id + 'amende'" v-model="sap.amende"
+                :true-value="true" :false-value="false"
+                :disabled="!amendable || !!(sap.remplace || sap.present) || !hasPresencePermission" />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
           </td>
           <td v-for="h in extendedHeureTypes" :key="h.id">
             <div class="input-group input-group-sm">
-              <input
-                class="form-control form-control-sm"
-                type="text"
-                :readonly="!hasPresencePermission"
-                :value="
-                  getHeureValue(
-                    sap.heures.find(
-                      (e) =>
-                        e.heure_exercice_type_id == h.id ||
-                        (!e.heure_exercice_type_id &&
-                          e.designation == h.designation)
-                    )
+              <input class="form-control form-control-sm" type="text" :readonly="!hasPresencePermission" :value="
+                getHeureValue(
+                  sap.heures.find(
+                    (e) =>
+                      e.heure_exercice_type_id == h.id ||
+                      (!e.heure_exercice_type_id &&
+                        e.designation == h.designation)
                   )
-                "
-                @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
-              />
+                )
+              " @change="(e) => updateHeureSapeur(sap, h, e.target.value)" />
               <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
             </div>
           </td>
@@ -122,17 +83,10 @@
     </table>
     <p class="ms-2" v-if="activeExerciceSapeurs.length === 0">Aucun sapeur</p>
     <div class="card-footer">
-      <button
-        class="btn btn-outline-primary"
-        @click="manageSapeurs"
-        v-if="hasPresencePermission"
-      >Gérer la liste des sapeurs</button>
-      <button
-        class="btn btn-outline-primary ms-2"
-        @click="validate"
-        :disabled="!canValidate"
-        v-if="hasValidationPermission"
-      >Valider</button>
+      <button class="btn btn-outline-primary" @click="manageSapeurs" v-if="hasPresencePermission">Gérer la liste des
+        sapeurs</button>
+      <button class="btn btn-outline-primary ms-2" @click="validate" :disabled="!canValidate"
+        v-if="hasValidationPermission">Valider</button>
     </div>
   </div>
 </template>
@@ -156,6 +110,7 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.EXERCICE.VALIDATION
         ),
+      // TODO: Check si exercice pas déjà imputé
       hasPresencePermission: (state) => state.auth.sis.permissions.includes(
         permissions.EXERCICE.PRESENCE
       ),
@@ -343,4 +298,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  background-color: white;
+}
+</style>

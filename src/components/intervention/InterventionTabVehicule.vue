@@ -72,6 +72,7 @@ export default {
         ),
       interventionVehicules: (state) => state.intervention.active.vehicules,
       activeInterventionId: (state) => state.intervention.active.id,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),

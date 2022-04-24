@@ -178,6 +178,7 @@ export default {
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
+      // TODO: Check si exercice pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.EXERCICE.MODIFICATION
       ),

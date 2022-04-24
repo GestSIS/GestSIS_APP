@@ -4,7 +4,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Exercices</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>

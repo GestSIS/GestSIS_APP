@@ -71,6 +71,7 @@ export default {
       groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
       interventionGroupes: (state) => state.intervention.active.groupes,
       activeInterventionId: (state) => state.intervention.active.id,
+      // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) => state.auth.sis.permissions.includes(
         permissions.INTERVENTION.MODIFICATION
       ),
