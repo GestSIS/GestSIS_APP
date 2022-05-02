@@ -72,17 +72,18 @@
         </div>
         <div class="col-6">
           <p v-if="
-            groupBy != 'groupe' &&
             groupBy != 'none' &&
+            groupBy != 'groupe' &&
             groupBy != 'fonction' &&
+            groupBy != 'grade' &&
             groupBy != 'localite' &&
             groupBy != 'civilite'
           ">En développement !</p>
           <table class="table table-sm" v-if="
             groupBy == 'groupe' ||
-            groupBy == 'localite' ||
             groupBy == 'fonction' ||
             groupBy == 'grade' ||
+            groupBy == 'localite' ||
             groupBy == 'civilite'
           ">
             <thead>
@@ -447,11 +448,11 @@ export default {
             : svm.selectedSapeurs.filter((i) => i != s);
         });
         groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
-      } else if (this.groupBy == 'fonction') {
+      } else if (this.groupBy != 'none') {
         svm.sapeurs
           .map((s) => ({ ...s, sapeur_id: s.id }))
           .filter(this.filtreSapeur())
-          .filter((s) => s.fonction_id == groupe.id)
+          .filter((s) => s[this.groupBy + "_id"] == groupe.id)
           .forEach((s) => {
             svm.displaySelected = {
               ...svm.displaySelected,
