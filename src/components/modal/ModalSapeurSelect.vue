@@ -116,14 +116,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-if="availableSapeurIds.length == 0">
-                <td colspan="3" v-if="sapeurs.length > 0 && availableSapeurIds.length == 0">Tous les sapeurs sont déjà
+              <tr v-if="availableSapeur.length == 0">
+                <td colspan="3" v-if="sapeurs.length > 0">Tous les sapeurs sont déjà
                   présent dans l'exercice</td>
                 <td colspan="3" v-if="sapeurs.length == 0">Aucun sapeur dans GestSIS</td>
               </tr>
-              <tr v-for="item in availableSapeurIds
-              .map((id) => sapeurs.find((s) => s.id == id))
-              .filter((s) => s && s.actif)" :key="item.id"
+              <tr v-for="item in availableSapeur.filter((s) => s && s.actif)" :key="item.id"
                 :class="{ 'table-primary': selectedGeneric.sapeur[item.id] }">
                 <td>
                   <div class="form-check d-inline-block">
@@ -214,8 +212,7 @@ export default {
     }),
     ...mapGetters(['treeGroupesSapeurs']),
     filteredLocalites() {
-      const sapeursIds = new Set(this.availableSapeurIds)
-      const localitesIds = new Set(this.sapeurs.filter(s => sapeursIds.has(s.id)).map(s => s.localite_id));
+      const localitesIds = new Set(this.availableSapeur.map(s => s.localite_id));
       return this.localites.filter(l => localitesIds.has(l.id));
     },
     computedChosenSapeurs() {
@@ -223,6 +220,11 @@ export default {
         .map(sapeurId => this.sapeurs.find(s => s.id == sapeurId))
         .map(s => ({ ...s, nomPrenom: this.sapeurFormatter(s) }))
         .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+    },
+    availableSapeur() {
+      return this.sapeurs
+        .slice(0)
+        .filter((s) => !this.chosenSapeurs.includes(s.id));
     },
     listeSapeurSelect() {
       if (this.groupBy == 'groupe') {
@@ -299,12 +301,6 @@ export default {
         (i) => (flattened = [...flattened, ...recursive(i, 0)])
       );
       return flattened;
-    },
-    availableSapeurIds() {
-      return this.sapeurs
-        .slice(0)
-        .filter((s) => !this.chosenSapeurs.includes(s.id))
-        .map((s) => s.id);
     },
     addSapeurState() {
       return Object.entries(this.selectedGeneric.sapeur).find(([id, selected]) => selected && !this.chosenSapeurs.includes(parseInt(id))) != null;
@@ -399,7 +395,10 @@ export default {
       this.selectedGeneric[this.groupBy][id] = !state;
 
       // Select all sapeurs
-      this.listeSapeurSelect.filter(e => e.leaf && e.parent_id == id).forEach(e => this.selectedGeneric.sapeur[e.id] = !state)
+      this.availableSapeur
+        .filter(s => s[this.groupBy + "_id"] == id && !this.chosenSapeurs.includes(s.id))
+        // this.listeSapeurSelect.filter(e => e.leaf && e.parent_id == id)
+        .forEach(s => this.selectedGeneric.sapeur[s.id] = !state)
     },
     selectGroupe(id, state = undefined) {
       const selected = state ?? this.selectedGeneric.groupe[id] ?? false;
