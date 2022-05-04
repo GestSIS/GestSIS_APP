@@ -370,12 +370,10 @@ export default {
           svm.HIDE_MODAL();
         })
         .catch((errorMessage) => {
-          // console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },
     select(id, leaf = true) {
-      // console.log(`Select ${id} ${leaf}`);
       if (leaf) {
         this.selectSapeur(id);
       } else if (this.groupBy == "groupe") {
@@ -397,11 +395,10 @@ export default {
       // Select all sapeurs
       this.availableSapeur
         .filter(s => s[this.groupBy + "_id"] == id && !this.chosenSapeurs.includes(s.id))
-        // this.listeSapeurSelect.filter(e => e.leaf && e.parent_id == id)
         .forEach(s => this.selectedGeneric.sapeur[s.id] = !state)
     },
-    selectGroupe(id, state = undefined) {
-      const selected = state ?? this.selectedGeneric.groupe[id] ?? false;
+    selectGroupe(id) {
+      const selected = !(this.selectedGeneric.groupe[id] ?? false);
       const svm = this;
 
       // Select groupe itself
@@ -418,23 +415,16 @@ export default {
       this.treeGroupesSapeurs.forEach(recursiveSearch);
     },
     selectGroupSingle(groupe, state, first = false) {
-      let svm = this;
-      this.selectedGeneric.groupe[groupe.id] = state;
-
-      if (this.groupBy == 'groupe') {
-        groupe.sapeurs.filter(this.filtreSapeur()).forEach((s) => {
-          svm.selectedGeneric.sapeur[s.id] = state;
-        });
-        groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
-      } else if (this.groupBy != 'none') {
-        svm.sapeurs
-          .map((s) => ({ ...s, sapeur_id: s.id }))
-          .filter(this.filtreSapeur())
-          .filter((s) => s[this.groupBy + "_id"] == groupe.id)
-          .forEach((s) => {
-            svm.selectedGeneric.sapeur[s.id] = state;
-          });
+      if (!first) {
+        this.selectedGeneric.groupe[groupe.id] = state;
       }
+
+      (groupe.sapeur_ids ?? [])
+        .filter(this.filtreSapeur())
+        .forEach((s) => {
+          this.selectedGeneric.sapeur[s.sapeur_id] = state;
+        });
+      groupe.groupes.forEach((g) => this.selectGroupSingle(g, state));
     },
     filtreSapeur() {
       let svm = this;
