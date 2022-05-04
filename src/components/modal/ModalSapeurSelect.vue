@@ -27,19 +27,13 @@
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Sapeurs sélectionnés ({{ chosenSapeurs.length }})</h6>
-          <button
-            class="btn btn-outline-danger"
-            @click="removeSapeurs"
-            :disabled="!removeSapeurState"
-          >Enlever ces sapeurs</button>
+          <button class="btn btn-outline-danger" @click="removeSapeurs" :disabled="!removeSapeurState">Enlever ces
+            sapeurs</button>
         </div>
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Sapeurs disponibles</h6>
-          <button
-            class="btn btn-outline-primary"
-            @click="addSapeurs"
-            :disabled="!addSapeurState"
-          >Ajouter ces sapeurs</button>
+          <button class="btn btn-outline-primary" @click="addSapeurs" :disabled="!addSapeurState">Ajouter ces
+            sapeurs</button>
         </div>
       </div>
       <div class="row">
@@ -56,31 +50,19 @@
               <tr v-if="computedChosenSapeurs.length <= 0">
                 <td colspan="3">Aucun sapeur sélectioné</td>
               </tr>
-              <tr
-                v-for="item in computedChosenSapeurs"
-                :key="item.id"
-                :class="{
-                  'table-primary': displaySelected[computeId(item)],
-                }"
-              >
+              <tr v-for="item in computedChosenSapeurs" :key="item.id" :class="{
+                'table-primary': selectedGeneric.sapeur[item.id],
+              }">
                 <td class="text-center">
                   <div class="form-check d-inline-block ps-0">
-                    <input
-                      type="checkbox"
-                      class="form-check-input ms-0"
-                      :id="item.id"
-                      v-model="displaySelected[computeId(item)]"
-                      @click="select(item.id, true)"
-                    />
+                    <input type="checkbox" class="form-check-input ms-0" :id="item.id"
+                      v-model="selectedGeneric.sapeur[item.id]" @click="select(item.id, true)" />
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ item.nomPrenom }}</td>
                 <td>
-                  <button
-                    class="btn btn-outline-danger border-0"
-                    @click="removeSingleSapeur(item.id)"
-                  >
+                  <button class="btn btn-outline-danger border-0" @click="removeSingleSapeur(item.id)">
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
                 </td>
@@ -89,25 +71,7 @@
           </table>
         </div>
         <div class="col-6">
-          <p
-            v-if="
-              groupBy != 'groupe' &&
-              groupBy != 'none' &&
-              groupBy != 'fonction' &&
-              groupBy != 'localite' &&
-              groupBy != 'civilite'
-            "
-          >En développement !</p>
-          <table
-            class="table table-sm"
-            v-if="
-              groupBy == 'groupe' ||
-              groupBy == 'localite' ||
-              groupBy == 'fonction' ||
-              groupBy == 'grade' ||
-              groupBy == 'civilite'
-            "
-          >
+          <table class="table table-sm" v-if="groupBy !== 'none'">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -118,54 +82,32 @@
               <tr v-if="listeSapeurSelect.length <= 0">
                 <td colspan="2">Aucun sapeur ne possède de fonction</td>
               </tr>
-              <tr
-                v-for="item in listeSapeurSelect"
-                :key="item.parent_id + '-' + item.id"
-                class="clickable"
-                :class="{
-                  'table-primary': displaySelected[computeId(item)],
-                  'text-muted': item.empty,
-                }"
-                @dblclick="toggleGroupe(item.id)"
-              >
+              <tr v-for="item in listeSapeurSelect" :key="item.parent_id + '-' + item.id" class="clickable" :class="{
+                'table-primary': selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id],
+                'text-muted': item.empty,
+              }" @dblclick="toggleGroupe(item.id)">
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-                  <font-awesome-icon
-                    class="me-2 ms-2"
-                    :icon="['fas', 'angle-down']"
-                    v-if="!item.leaf && item.expanded"
-                    @click="toggleGroupe(item.id)"
-                  />
-                  <font-awesome-icon
-                    class="me-2 ms-2"
-                    :icon="['fas', 'angle-right']"
-                    v-if="!item.leaf && !item.expanded"
-                    @click="toggleGroupe(item.id)"
-                  />
+
+                  <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.expanded ? 'angle-down' : 'angle-right']"
+                    v-if="!item.leaf" @click="toggleGroupe(item.id)" />
+
                   <div class="form-check d-inline-block">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="computeId(item)"
-                      v-model="displaySelected[computeId(item)]"
-                      @click="select(item.id, item.leaf)"
-                    />
+                    <input type="checkbox" class="form-check-input" :id="computeId(item)"
+                      v-model="selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]"
+                      @click="select(item.id, item.leaf)" />
                     <label class="form-check-label" :for="computeId(item)"></label>
                   </div>
                   {{ item.designation }}
                 </td>
                 <td>
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="addSingleSapeur(item.id)"
-                    v-if="item.leaf"
-                  >
+                  <button class="btn btn-outline-primary border-0" @click="addSingleSapeur(item.id)" v-if="item.leaf">
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <table class="table table-sm table-striped" v-if="groupBy == 'none'">
+          <table class="table table-sm table-striped" v-if="groupBy === 'none'">
             <thead>
               <tr>
                 <th></th>
@@ -173,41 +115,24 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody v-if="groupBy == 'none'">
-              <tr v-if="availableSapeurIds.length == 0">
-                <td
-                  colspan="3"
-                  v-if="sapeurs.length > 0 && availableSapeurIds.length == 0"
-                >Tous les sapeurs sont déjà présent dans l'exercice</td>
+            <tbody>
+              <tr v-if="availableSapeur.length == 0">
+                <td colspan="3" v-if="sapeurs.length > 0">Tous les sapeurs sont déjà
+                  présent dans l'exercice</td>
                 <td colspan="3" v-if="sapeurs.length == 0">Aucun sapeur dans GestSIS</td>
               </tr>
-              <tr
-                v-for="item in availableSapeurIds
-                .map((id) => sapeurs.find((s) => s.id == id))
-                .filter((s) => s && s.actif)"
-                :key="item.id"
-                :class="{
-                  'table-primary': selectedSapeurs.includes(item.id),
-                }"
-              >
+              <tr v-for="item in availableSapeur.filter((s) => s && s.actif)" :key="item.id"
+                :class="{ 'table-primary': selectedGeneric.sapeur[item.id] }">
                 <td>
                   <div class="form-check d-inline-block">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :id="item.id"
-                      v-model="displaySelected[item.id]"
-                      @click="select(item.id)"
-                    />
+                    <input type="checkbox" class="form-check-input" :id="item.id"
+                      v-model="selectedGeneric.sapeur[item.id]" @click="select(item.id)" />
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
                 <td>
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="addSingleSapeur(item.id)"
-                  >
+                  <button class="btn btn-outline-primary border-0" @click="addSingleSapeur(item.id)">
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
@@ -239,10 +164,15 @@ export default {
     return {
       groupBy: 'groupe',
       chosenSapeurs: [],
-      selectedSapeurs: [],
-      selectedGroups: [],
+      selectedGeneric: {
+        groupe: {},
+        fonction: {},
+        grade: {},
+        localite: {},
+        civilite: {},
+        sapeur: {},
+      },
       expanded: {},
-      displaySelected: {},
     };
   },
   mounted() {
@@ -282,8 +212,7 @@ export default {
     }),
     ...mapGetters(['treeGroupesSapeurs']),
     filteredLocalites() {
-      const sapeursIds = new Set(this.availableSapeurIds)
-      const localitesIds = new Set(this.availableSapeurIds.map(s => this.sapeurs.find(s => sapeursIds.has(s.id))?.localite_id));
+      const localitesIds = new Set(this.availableSapeur.map(s => s.localite_id));
       return this.localites.filter(l => localitesIds.has(l.id));
     },
     computedChosenSapeurs() {
@@ -291,6 +220,11 @@ export default {
         .map(sapeurId => this.sapeurs.find(s => s.id == sapeurId))
         .map(s => ({ ...s, nomPrenom: this.sapeurFormatter(s) }))
         .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+    },
+    availableSapeur() {
+      return this.sapeurs
+        .slice(0)
+        .filter((s) => !this.chosenSapeurs.includes(s.id));
     },
     listeSapeurSelect() {
       if (this.groupBy == 'groupe') {
@@ -368,23 +302,11 @@ export default {
       );
       return flattened;
     },
-    availableSapeurIds() {
-      return this.sapeurs
-        .slice(0)
-        .filter((s) => !this.chosenSapeurs.includes(s.id))
-        .map((s) => s.id);
-    },
     addSapeurState() {
-      return (
-        this.selectedSapeurs.filter((x) => !this.chosenSapeurs.includes(x))
-          .length > 0
-      );
+      return Object.entries(this.selectedGeneric.sapeur).find(([id, selected]) => selected && !this.chosenSapeurs.includes(parseInt(id))) != null;
     },
     removeSapeurState() {
-      return (
-        this.selectedSapeurs.filter((x) => this.chosenSapeurs.includes(x))
-          .length > 0
-      );
+      return Object.entries(this.selectedGeneric.sapeur).find(([id, selected]) => selected && this.chosenSapeurs.includes(parseInt(id))) != null;
     },
   },
   methods: {
@@ -448,31 +370,40 @@ export default {
           svm.HIDE_MODAL();
         })
         .catch((errorMessage) => {
-          // console.error(errorMessage);
           svm.$awn.warning(errorMessage);
         });
     },
     select(id, leaf = true) {
-      // console.log(`Select ${id} ${leaf}`);
       if (leaf) {
         this.selectSapeur(id);
-      } else {
+      } else if (this.groupBy == "groupe") {
         this.selectGroupe(id);
+      } else {
+        this.selectGeneric(id);
       }
     },
     selectSapeur(id) {
-      console.log("Select triggered")
-      this.selectedSapeurs = this.selectedSapeurs.includes(id)
-        ? this.selectedSapeurs.filter((i) => i != id)
-        : [...this.selectedSapeurs, id];
+      this.selectedGeneric.sapeur[id] = !this.selectedGeneric.sapeur[id];
     },
-    selectGroupe(id, state = undefined) {
-      let selected = state || !this.selectedGroups.includes(id);
-      let svm = this;
+    selectGeneric(id) {
+      // Get group state
+      const state = this.selectedGeneric[this.groupBy][id] ?? false;
+
+      // Select groupe
+      this.selectedGeneric[this.groupBy][id] = !state;
+
+      // Select all sapeurs
+      this.availableSapeur
+        .filter(s => s[this.groupBy + "_id"] == id && !this.chosenSapeurs.includes(s.id))
+        .forEach(s => this.selectedGeneric.sapeur[s.id] = !state)
+    },
+    selectGroupe(id) {
+      const selected = !(this.selectedGeneric.groupe[id] ?? false);
+      const svm = this;
 
       // Select groupe itself
-      let recursiveSearch = (item) => {
-        let found = item.id == id;
+      const recursiveSearch = (item) => {
+        const found = item.id == id;
         if (found) {
           svm.selectGroupSingle(item, selected, true);
         } else {
@@ -484,44 +415,16 @@ export default {
       this.treeGroupesSapeurs.forEach(recursiveSearch);
     },
     selectGroupSingle(groupe, state, first = false) {
-      let svm = this;
       if (!first) {
-        this.displaySelected = {
-          ...this.displaySelected,
-          [this.computeId({ leaf: false, id: groupe.id })]: state,
-        };
+        this.selectedGeneric.groupe[groupe.id] = state;
       }
 
-      this.selectedGroups = state
-        ? Array.from(new Set([...this.selectedGroups, groupe.id]))
-        : this.selectedGroups.filter((i) => i != groupe.id);
-
-      if (this.groupBy == 'groupe') {
-        groupe.sapeurs.filter(this.filtreSapeur()).forEach((s) => {
-          svm.displaySelected = {
-            ...svm.displaySelected,
-            [svm.computeId({ leaf: true, id: s })]: state,
-          };
-          svm.selectedSapeurs = state
-            ? Array.from(new Set([...svm.selectedSapeurs, s]))
-            : svm.selectedSapeurs.filter((i) => i != s);
+      (groupe.sapeur_ids ?? [])
+        .filter(this.filtreSapeur())
+        .forEach((s) => {
+          this.selectedGeneric.sapeur[s.sapeur_id] = state;
         });
-        groupe.groupes.forEach((g) => svm.selectGroupSingle(g, state));
-      } else if (this.groupBy == 'fonction') {
-        svm.sapeurs
-          .map((s) => ({ ...s, sapeur_id: s.id }))
-          .filter(this.filtreSapeur())
-          .filter((s) => s.fonction_id == groupe.id)
-          .forEach((s) => {
-            svm.displaySelected = {
-              ...svm.displaySelected,
-              [svm.computeId({ leaf: true, id: s.id })]: state,
-            };
-            svm.selectedSapeurs = state
-              ? Array.from(new Set([...svm.selectedSapeurs, s.id]))
-              : svm.selectedSapeurs.filter((i) => i != s.id);
-          });
-      }
+      groupe.groupes.forEach((g) => this.selectGroupSingle(g, state));
     },
     filtreSapeur() {
       let svm = this;
@@ -543,13 +446,12 @@ export default {
     },
     addSapeurs() {
       this.chosenSapeurs = Array.from(
-        new Set([...this.chosenSapeurs, ...this.selectedSapeurs])
+        new Set([...this.chosenSapeurs, ...Object.entries(this.selectedGeneric.sapeur).filter(([_, selected]) => selected).map(([id, _]) => parseInt(id))])
       );
     },
     removeSapeurs() {
-      this.chosenSapeurs = this.chosenSapeurs.filter(
-        (item) => !this.selectedSapeurs.includes(item)
-      );
+      const sapeursToRemove = new Set([...Object.entries(this.selectedGeneric.sapeur).filter(([_, selected]) => selected).map(([id, _]) => parseInt(id))]);
+      this.chosenSapeurs = this.chosenSapeurs.filter((id) => !sapeursToRemove.has(id));
     },
     addSingleSapeur(id) {
       this.chosenSapeurs = [...this.chosenSapeurs, id];
