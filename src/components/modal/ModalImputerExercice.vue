@@ -7,12 +7,10 @@
     <div class="modal-body">
       <multi-step :steps="['Type de frais', 'Résultat']" :activeIndex="phase - 1" />
       <div v-if="phase === 1" class="row">
-        <div
-          :class="{
-            'col-12': !activeIndemniteHasFonction,
-            'col-8': activeIndemniteHasFonction,
-          }"
-        >
+        <div :class="{
+          'col-12': !activeIndemniteHasFonction,
+          'col-8': activeIndemniteHasFonction,
+        }">
           <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
             <thead>
               <tr>
@@ -33,14 +31,9 @@
               <tr v-if="!computedIndemnites.length">
                 <td colspan="10">Aucune indemnité</td>
               </tr>
-              <tr
-                v-for="(i, index) in computedIndemnites"
-                :key="index"
-                @click="selectIndemnite(index)"
-                :class="{
-                  'table-primary': index === activeIndemniteIndex,
-                }"
-              >
+              <tr v-for="(i, index) in computedIndemnites" :key="index" @click="selectIndemnite(index)" :class="{
+                'table-primary': index === activeIndemniteIndex,
+              }">
                 <td>{{ i.designation }}</td>
                 <td>{{ formatUnite(i.type_unite_id) }}</td>
                 <!-- <td v-if="!i.solde_undefined && i.min_solde == NaN">NaN</td> -->
@@ -52,7 +45,7 @@
                 <td v-else>-</td>-->
                 <td v-if="!i.solde_undefined">
                   {{
-                  i.compte_solde_id ? formatCompte(i.compte_solde_id) : 'Plus d\'un compte'
+                      i.compte_solde_id ? formatCompte(i.compte_solde_id) : 'Plus d\'un compte'
                   }}
                 </td>
                 <td v-else>-</td>
@@ -67,18 +60,13 @@
                 <td v-else>-</td>-->
                 <td v-if="!i.indemnite_undefined">
                   {{
-                  i.compte_indemnite_id ? formatCompte(i.compte_indemnite_id) : 'Plus d\'un compte'
+                      i.compte_indemnite_id ? formatCompte(i.compte_indemnite_id) : 'Plus d\'un compte'
                   }}
                 </td>
                 <td v-else>-</td>
                 <td class="text-center">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="par_fonction"
-                    :checked="i.par_fonction"
-                    disabled
-                  />
+                  <input type="checkbox" class="form-check-input" id="par_fonction" :checked="i.par_fonction"
+                    disabled />
                   <label class="form-check-label" for="par_fonction"></label>
                 </td>
               </tr>
@@ -103,10 +91,7 @@
               </tr>
               <tr v-for="f in filteredFonctions" :key="f.id">
                 <td>{{ f.nom }}</td>
-                <td
-                  v-for="(column, i) in columns"
-                  :key="i"
-                >{{ column.fonctions[parseInt(f.id)] || 0.0 }}</td>
+                <td v-for="(column, i) in columns" :key="i">{{ column.fonctions[parseInt(f.id)] || 0.0 }}</td>
               </tr>
             </tbody>
           </table>
@@ -115,8 +100,7 @@
       <div v-if="phase === 2">
         <div class="alert alert-dismissible alert-success" v-if="successMessageVisibility">
           <button type="button" class="btn-close" @click="successMessageVisibility = false"></button>
-          Imputations effectuées avec
-          <strong>succès</strong>!
+          Imputations effectuées avec <strong>succès</strong>!
         </div>
         <table class="table table-sm">
           <thead>
@@ -125,8 +109,6 @@
               <th>Sapeur</th>
               <th>Quantité</th>
               <th>Tarif</th>
-              <th>Tarif min</th>
-              <th>Pour</th>
               <th>Total</th>
               <th>Type</th>
             </tr>
@@ -134,15 +116,9 @@
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>{{ ecriture.designation }}</td>
-              <td>
-                {{
-                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
-                }}
-              </td>
+              <td> {{ formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id)) }} </td>
               <td>{{ ecriture.quantite }}</td>
               <td>{{ ecriture.tarif }}</td>
-              <td>{{ ecriture.tarif_min }}</td>
-              <td>{{ ecriture.tarif_min_pour }}</td>
               <td>{{ ecriture.total }}</td>
               <td>{{ formatType(ecriture.type) }}</td>
             </tr>
@@ -151,18 +127,9 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="cancel"
-      >{{ phase === 1 ? 'Annuler' : 'Fermer' }}</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="imputer()"
-        v-if="phase === 1"
-        :disabled="activeIndemnite === null"
-      >Imputer</button>
+      <button type="button" class="btn btn-secondary" @click="cancel">{{ phase === 1 ? 'Annuler' : 'Fermer' }}</button>
+      <button type="button" class="btn btn-primary" @click="imputer()" v-if="phase === 1"
+        :disabled="activeIndemnite === null">Imputer</button>
     </div>
   </div>
 </template>
@@ -326,4 +293,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
