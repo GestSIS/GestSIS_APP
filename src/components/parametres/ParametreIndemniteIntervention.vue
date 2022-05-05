@@ -5,7 +5,7 @@
       <h3 class="card-title">Indemnités intervention</h3>
       <button type="button" class="btn btn-primary" @click="ajoutIndemnite">Ajouter une indemnité</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="indemnites-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -40,11 +40,7 @@
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td>{{ formatType(i.type) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateIndemnite(i)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateIndemnite(i)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button type="button" class="btn btn-outline-danger border-0" disabled>
@@ -149,4 +145,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

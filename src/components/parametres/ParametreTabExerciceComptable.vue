@@ -4,13 +4,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Exercices comptables</h3>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="newExerciceComptable"
-      >Ajouter un exercice comptable</button>
+      <button type="button" class="btn btn-primary" @click="newExerciceComptable">Ajouter un exercice comptable</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -30,21 +26,11 @@
             <td>{{ e.debut }}</td>
             <td>{{ e.fin }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="en_cours"
-                :checked="e.boucle"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="en_cours" :checked="e.boucle" disabled />
               <label class="form-check-label" for="en_cours"></label>
             </td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateExerciceComptable(e)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateExerciceComptable(e)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <!-- TODO Implement Suppression exercice comptable -->
@@ -100,4 +86,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

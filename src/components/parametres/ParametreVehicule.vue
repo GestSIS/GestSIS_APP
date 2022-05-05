@@ -5,7 +5,7 @@
       <h3 class="card-title">Véhicules</h3>
       <button type="button" class="btn btn-primary" @click="ajouterVehicule()">Ajouter un véhicule</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="vehicules" class="table table-sm">
         <thead>
           <tr>
@@ -25,13 +25,7 @@
           <tr v-for="v in vehicules" :key="v.id">
             <td>{{ v.tri }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="statut"
-                :checked="v.statut"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="statut" :checked="v.statut" disabled />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td>{{ v.designation }}</td>
@@ -39,18 +33,10 @@
             <td>{{ v.unite }}</td>
             <td>{{ unite(v.type_unite_id) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateVehicule(v)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateVehicule(v)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteVehicule(v)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteVehicule(v)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -109,4 +95,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

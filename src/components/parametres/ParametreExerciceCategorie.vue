@@ -5,7 +5,7 @@
       <h3 class="card-title">Catégories</h3>
       <button type="button" class="btn btn-primary" @click="ajoutCategorie()">Ajouter une catégorie</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="exercice-categories" class="table table-sm">
         <thead>
           <tr>
@@ -26,38 +26,18 @@
             <td>{{ c.designation }}</td>
             <td>{{ c.duree_base }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="amendable"
-                :checked="c.amendable"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="amendable" :checked="c.amendable" disabled />
               <label class="form-check-label" for="amendable"></label>
             </td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="statut"
-                :checked="c.statut"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="statut" :checked="c.statut" disabled />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCategorie(c)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateCategorie(c)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCategorie(c)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteCategorie(c)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -116,4 +96,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

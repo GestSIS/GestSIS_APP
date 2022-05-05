@@ -5,7 +5,7 @@
       <h3 class="card-title">Heures additionnelles pour exercice</h3>
       <button type="button" class="btn btn-primary" @click="ajoutHeure">Ajouter une heure</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="heures-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -30,18 +30,10 @@
             <td>{{ formatType(h.type) }}</td>
             <td>{{ categorie(h.ecriture_categorie_id) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateHeureType(h)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateHeureType(h)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteHeureType(h)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteHeureType(h)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -137,4 +129,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

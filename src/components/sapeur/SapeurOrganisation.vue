@@ -5,7 +5,7 @@
       <h3 class="card-title">Organisation</h3>
     </div>
     <!-- /.card-header -->
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-groupe" class="table table-sm">
         <thead>
           <tr>
@@ -67,4 +67,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

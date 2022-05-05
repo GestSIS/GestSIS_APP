@@ -5,7 +5,7 @@
       <h3 class="card-title">Contrôles médicaux types</h3>
       <button type="button" class="btn btn-primary" @click="ajoutType">Ajouter une nouveau type</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="exercice-categories" class="table table-sm">
         <thead>
           <tr>
@@ -25,13 +25,7 @@
             <td>{{ t.designation }}</td>
             <td>{{ t.duree_validite }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="expirable"
-                :checked="t.expirable"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="expirable" :checked="t.expirable" disabled />
               <label class="form-check-label" for="expirable"></label>
             </td>
             <td class="align-middle text-center">
@@ -97,4 +91,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

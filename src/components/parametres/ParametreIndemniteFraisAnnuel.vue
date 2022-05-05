@@ -8,7 +8,7 @@
         <label class="form-check-label" for="switch">Afficher les détails</label>
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="frais-annuels" class="table table-sm">
         <thead>
           <tr>
@@ -35,7 +35,7 @@
           <tr>
             <th>Catégorie</th>
             <td v-for="type in typesAnnuel" :key="type.id" class="text-center">{{
-              categorie(type.ecriture_categorie_id)
+            categorie(type.ecriture_categorie_id)
             }}</td>
           </tr>
           <tr>

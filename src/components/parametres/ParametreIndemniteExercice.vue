@@ -5,7 +5,7 @@
       <h3 class="card-title">Indemnités exercice</h3>
       <button type="button" class="btn btn-primary" @click="ajoutIndemnite">Ajouter une indemnite</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="indemnites-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -40,7 +40,7 @@
             <td v-else>-</td>-->
             <td v-if="!i.solde_undefined">
               {{
-                i.compte_solde_id ? compte(i.compte_solde_id) : 'Plus d\'un compte'
+                  i.compte_solde_id ? compte(i.compte_solde_id) : 'Plus d\'un compte'
               }}
             </td>
             <td v-else>-</td>
@@ -53,27 +53,17 @@
             <td v-else>-</td>-->
             <td v-if="!i.indemnite_undefined">
               {{
-                i.compte_indemnite_id ? compte(i.compte_indemnite_id) : 'Plus d\'un compte'
+                  i.compte_indemnite_id ? compte(i.compte_indemnite_id) : 'Plus d\'un compte'
               }}
             </td>
             <td v-else>-</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="par_fonction"
-                :checked="i.par_fonction"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="par_fonction" :checked="i.par_fonction" disabled />
               <label class="form-check-label" for="par_fonction"></label>
             </td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateIndemnite(i)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateIndemnite(i)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button type="button" class="btn btn-outline-danger border-0" disabled>
@@ -185,4 +175,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

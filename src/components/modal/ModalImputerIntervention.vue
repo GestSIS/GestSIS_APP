@@ -8,12 +8,10 @@
       <!-- fieldsets -->
       <multi-step :steps="['Type de frais', 'Résultat']" :activeIndex="phase - 1" />
       <div v-if="phase === 1" class="row">
-        <div
-          :class="{
-            'col-12': !activeIndemniteHasFonction,
-            'col-8': activeIndemniteHasFonction,
-          }"
-        >
+        <div :class="{
+          'col-12': !activeIndemniteHasFonction,
+          'col-8': activeIndemniteHasFonction,
+        }">
           <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
             <thead>
               <tr>
@@ -32,37 +30,21 @@
               <tr v-if="indemnitesTypes.length == 0">
                 <td colspan="8">Aucune indemnité type pour intervention de configuré</td>
               </tr>
-              <tr
-                v-for="(indemnite, index) in indemnitesTypes"
-                :key="indemnite.id"
-                class
-                @click="selectIndemnite(index)"
-                :class="{
+              <tr v-for="(indemnite, index) in indemnitesTypes" :key="indemnite.id" class
+                @click="selectIndemnite(index)" :class="{
                   'table-primary': index === activeIndemniteIndex,
-                }"
-              >
+                }">
                 <td>{{ indemnite.designation }}</td>
                 <td>{{ indemnite.tarif }}</td>
                 <td>{{ indemnite.tarif_min }}</td>
                 <td>{{ indemnite.tarif_min_pour }}</td>
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
-                <td>{{ indemnite.unite_id }}</td>
-                <td>
-                  {{
-                  formatCompte(
-                  comptes.find((f) => f.id == indemnite.compte_id)
-                  )
-                  }}
-                </td>
+                <td>{{ unites.find(u => u.id == indemnite.type_unite_id)?.abreviation }}</td>
+                <td> {{ formatCompte(comptes.find((f) => f.id == indemnite.compte_id)) }} </td>
                 <td class="text-center">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="checkbox-fonction"
-                    :checked="indemnite.par_fonction"
-                    disabled
-                  />
+                  <input type="checkbox" class="form-check-input" id="checkbox-fonction"
+                    :checked="indemnite.par_fonction" disabled />
                   <label class="form-check-label" for="checkbox-fonction"></label>
                 </td>
               </tr>
@@ -96,9 +78,12 @@
         <table class="table table-sm">
           <thead>
             <tr>
-              <th>Fonction</th>
+              <th>Sapeur</th>
+              <th>Quantité</th>
+              <th>Unité</th>
               <th>Tarif</th>
-              <th>Indemnité</th>
+              <th>Tarif min</th>
+              <th>Pour</th>
               <th>Taux weekend</th>
               <th>Taux nuit</th>
               <th>Total</th>
@@ -106,12 +91,12 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>
-                {{
-                formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
-                }}
-              </td>
+              <td> {{ formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id)) }} </td>
+              <td>{{ ecriture.quantite }} </td>
+              <td>{{ unites.find(u => u.id == ecriture.type_unite_id)?.abreviation }}</td>
               <td>{{ ecriture.tarif }}</td>
+              <td>{{ ecriture.tarif_min }}</td>
+              <td>{{ ecriture.tarif_min_pour }}</td>
               <td>{{ ecriture.taux_weekend }}</td>
               <td>{{ ecriture.taux_nuit }}</td>
               <td>{{ ecriture.total }}</td>
@@ -121,18 +106,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="HIDE_MODAL()"
-      >{{ phase === 1 ? 'Annuler' : 'Fermer' }}</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="imputer()"
-        v-if="phase === 1"
-        :disabled="activeIndemnite === null"
-      >Imputer</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">{{ phase === 1 ? 'Annuler' : 'Fermer'
+      }}</button>
+      <button type="button" class="btn btn-primary" @click="imputer()" v-if="phase === 1"
+        :disabled="activeIndemnite === null">Imputer</button>
     </div>
   </div>
 </template>
@@ -160,6 +137,7 @@ export default {
       indemnitesTypes: (state) => state.imputation.fraisIndemnites.interventions,
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
     }),
     activeIndemniteHasFonction() {
       return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
@@ -224,4 +202,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

@@ -5,7 +5,7 @@
       <h3 class="card-title">Traitement</h3>
       <button type="button" class="btn btn-primary" @click="ajoutTraitement()">Ajouter un traitement</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="traitements" class="table table-sm">
         <thead>
           <tr>
@@ -22,18 +22,10 @@
             <td>{{ t.tri }}</td>
             <td>{{ t.designation }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateTraitement(t)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateTraitement(t)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteTraitement(t)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteTraitement(t)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -92,4 +84,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

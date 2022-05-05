@@ -3,14 +3,10 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="newFonction"
-        v-if="hasEditPermission"
-      >Ajouter une fonction</button>
+      <button type="button" class="btn btn-primary" @click="newFonction" v-if="hasEditPermission">Ajouter une
+        fonction</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -31,18 +27,10 @@
             <td>{{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}</td>
             <td>{{ f.remarque }}</td>
             <td class="align-middle text-center" v-if="hasEditPermission">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="editFonction(f.id)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="editFonction(f.id)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerFonction(f.id)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="supprimerFonction(f.id)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -106,4 +94,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

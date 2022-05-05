@@ -4,7 +4,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Statistique fédéral</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="materiel" class="table table-sm">
         <thead>
           <tr>
@@ -21,13 +21,7 @@
             <td>{{ s.tri }}</td>
             <td>{{ s.designation }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="statut"
-                :checked="s.statut"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="statut" :checked="s.statut" disabled />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td>{{ s.forfait }}</td>
@@ -52,4 +46,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

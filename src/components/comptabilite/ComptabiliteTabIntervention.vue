@@ -6,17 +6,10 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button
-            class="btn btn-outline-primary"
-            v-if="!selectedItem || selectedItem?.statut == 2"
-            :disabled="!selectedItem"
-            @click="imputer(selectedItem.id)"
-          >Imputer</button>
-          <button
-            class="btn btn-outline-danger"
-            v-if="selectedItem?.statut == 3"
-            @click="annulerImputer(selectedItem.id)"
-          >Annuler l'imputation</button>
+          <button class="btn btn-outline-primary" v-if="!selectedItem || selectedItem?.statut == 2"
+            :disabled="!selectedItem" @click="imputer(selectedItem.id)">Imputer</button>
+          <button class="btn btn-outline-danger" v-if="selectedItem?.statut == 3"
+            @click="annulerImputer(selectedItem.id)">Annuler l'imputation</button>
         </div>
       </div>
     </div>
@@ -27,52 +20,23 @@
         </div>
         <form class="card-body">
           <div class="row">
-            <base-select
-              class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Localité&gt;"
-              :options="filteredLocalites"
-              @input="(value) => onFilter('localite_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Type&gt;"
-              :options="filteredTypesIntervention"
-              @input="(value) => onFilter('type_intervention_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Statistique fédérale&gt;"
-              :options="filteredStatFederal"
-              @input="(value) => onFilter('stat_federal_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Traitement&gt;"
-              :options="traitements"
-              @input="(value) => onFilter('intervention_traitement_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Etendue&gt;"
-              :options="degres"
-              @input="(value) => onFilter('degre', value)"
-            />
+            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Localité&gt;"
+              :options="filteredLocalites" @input="(value) => onFilter('localite_id', value)" />
+            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Type&gt;"
+              :options="filteredTypesIntervention" @input="(value) => onFilter('type_intervention_id', value)" />
+            <base-select class="col-md-4" valueKey="id" displayKey="designation"
+              baseOption="&lt;Statistique fédérale&gt;" :options="filteredStatFederal"
+              @input="(value) => onFilter('stat_federal_id', value)" />
+            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Traitement&gt;"
+              :options="traitements" @input="(value) => onFilter('intervention_traitement_id', value)" />
+            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Etendue&gt;"
+              :options="degres" @input="(value) => onFilter('degre', value)" />
           </div>
         </form>
       </div>
     </div>
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
+      <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Interventions</h3>
           <!--          <button @click.prevent="save" class="btn btn-primary">-->
@@ -84,41 +48,19 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data="Aucune écriture à afficher"
-          :detail-row-component="detailRow"
-          :data="filteredInterventions"
-          @selected="selected"
-          :selectable="true"
-          selectKey="id"
-          row-selected-class="table-primary"
-        >
+        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" detail-row-class="m-td-0"
+          no-data="Aucune écriture à afficher" :detail-row-component="detailRow" :data="filteredInterventions"
+          @selected="selected" :selectable="true" selectKey="id" row-selected-class="table-primary">
           <template v-slot:details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-              v-if="props.rowData.statut === 3"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
+            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)"
+              v-if="props.rowData.statut === 3">
+              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
+              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
             </button>
           </template>
           <template v-slot:actions="props">
-            <button
-              class="btn btn-outline-primary border-0"
-              v-if="props.rowData.statut === 2"
-              @click="imputer(props.rowData.id)"
-            >
+            <button class="btn btn-outline-primary border-0" v-if="props.rowData.statut === 2"
+              @click="imputer(props.rowData.id)">
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
@@ -453,4 +395,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

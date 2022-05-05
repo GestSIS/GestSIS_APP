@@ -5,7 +5,7 @@
       <h3 class="card-title">Catégories</h3>
       <button type="button" class="btn btn-primary" @click="ajoutCategorie">Ajouter une catégorie</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="exercice-categories" class="table table-sm">
         <thead>
           <tr>
@@ -22,11 +22,7 @@
             <td>{{ c.tri }}</td>
             <td>{{ c.designation }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCategorie(c)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateCategorie(c)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button type="button" class="btn btn-outline-danger border-0" disabled>
@@ -81,4 +77,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

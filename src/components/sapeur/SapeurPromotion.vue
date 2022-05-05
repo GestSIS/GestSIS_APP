@@ -4,14 +4,10 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Promotions</h3>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="newGrade"
-        v-if="hasEditPermission"
-      >Ajouter une promotion</button>
+      <button type="button" class="btn btn-primary" @click="newGrade" v-if="hasEditPermission">Ajouter une
+        promotion</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-promotions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -30,18 +26,10 @@
             <td>{{ formatGrade(grades.find((e) => e.id == g.grade_id)) }}</td>
             <td>{{ g.remarque }}</td>
             <td class="align-middle text-center" v-if="hasEditPermission">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="editGrade(g.id)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="editGrade(g.id)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerGrade(g.id)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="supprimerGrade(g.id)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -105,4 +93,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

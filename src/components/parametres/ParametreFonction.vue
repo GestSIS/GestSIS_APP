@@ -5,7 +5,7 @@
       <h3 class="card-title">Fonctions</h3>
       <button type="button" class="btn btn-primary" @click="ajoutFonction()">Ajouter une fonction</button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -25,28 +25,14 @@
             <td>{{ f.abreviation }}</td>
             <td>{{ f.nom }}</td>
             <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="en_cours"
-                :checked="f.cumulable"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" id="en_cours" :checked="f.cumulable" disabled />
               <label class="form-check-label" for="en_cours"></label>
             </td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateFonction(f)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateFonction(f)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteFonction(f)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteFonction(f)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -102,4 +88,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
