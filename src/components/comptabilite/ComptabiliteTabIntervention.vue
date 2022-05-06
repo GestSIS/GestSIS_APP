@@ -150,26 +150,39 @@ export default {
           className: 'text-end',
         },
         {
+          title: 'Tarif min',
+          field: 'tarif_min',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
+          title: 'Pour',
+          field: 'tarif_min_pour',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
+          title: 'Unité',
+          field: 'type_unite_id',
+          headerClassName: 'text-center',
+          className: 'text-end',
+          formatter: (id) => svm.unites.find(u => u.id == id)?.abreviation
+        },
+        {
           title: 'Taux',
           field: 'taux',
           headerClassName: 'text-center',
           className: 'text-end',
         },
         {
+          title: 'Taux description',
+          field: 'taux_description',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
           title: 'Quantité',
           field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Solde',
-          field: 'solde',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Indemnité',
-          field: 'indemnite',
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -295,6 +308,7 @@ export default {
       traitements: (state) => state.interventionTraitement.liste,
       localites: (state) => state.localite.liste,
       activeInterventionId: (state) => state.intervention.active.id,
+      unites: (state) => state.unite.liste,
     }),
     computedData() {
       return this.interventions.map((i) => ({
