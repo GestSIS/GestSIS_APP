@@ -7,28 +7,16 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres exercices</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'categorie' }"
-            href="#"
-            role="tab"
-            @click.prevent="tab = 'categorie'"
-          >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+          <a class="nav-link" :class="{ active: tab === 'categorie' }" href="#" role="tab"
+            @click.prevent="tab = 'categorie'">
             Catégorie
           </a>
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'excuse' }"
-            href="#"
-            role="tab"
-            @click.prevent="tab = 'excuse'"
-          >
+          <a class="nav-link" :class="{ active: tab === 'excuse' }" href="#" role="tab" @click.prevent="tab = 'excuse'">
             Excuses
+          </a>
+          <a class="nav-link" :class="{ active: tab === 'aspsms' }" href="#" role="tab" @click.prevent="tab = 'aspsms'">
+            ASPSMS
           </a>
         </nav>
       </div>
@@ -36,6 +24,7 @@
     <div class="col-sm-12 col-xl-9">
       <parametre-exercice-categorie v-if="tab === 'categorie'" />
       <parametre-excuse-type v-if="tab === 'excuse'" />
+      <parametre-aspsms v-if="tab === 'aspsms'" />
     </div>
   </div>
 </template>
@@ -45,19 +34,21 @@ import { mapState } from 'vuex';
 import store from '@/store/index';
 import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
 import ParametreExcuseType from './ParametreExcuseType.vue';
+import ParametreAspsms from './ParametreAspsms.vue';
 
 async function loadData(_, next) {
   const loadExcuses = store.dispatch('fetchExcuseTypes');
   const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadAspsmsParams = store.dispatch('fetchAspsmsParams');
 
-  Promise.all([loadExcuses, loadCategories]).then(() => {
+  Promise.all([loadExcuses, loadCategories, loadAspsmsParams]).then(() => {
     next();
   });
 }
 
 export default {
   name: 'ParametreTabExercice',
-  components: { ParametreExcuseType, ParametreExerciceCategorie },
+  components: { ParametreExcuseType, ParametreExerciceCategorie, ParametreAspsms },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -84,4 +75,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
