@@ -10,31 +10,30 @@
           TODO: Sélection des sapeurs
         </div>
         <div class="col-4">
-          <base-checkbox class="mb-3" label="Envoie différé" />
+          <base-checkbox class="mb-3" label="Envoie différé" v-model="params.differe" />
           <div class="mb-3">
             <label for="date">Date</label>
-            <input type="datetime-local" v-model="activeAppel.date2" class="form-control form-control-sm"
+            <input type="datetime-local" v-model="params.date" class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date'] }" id="date" :min="min" :max="max" />
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="origine">Origine</label>
-            <input type="text" v-model="activeAppel.origine" class="form-control form-control-sm"
+            <input type="text" v-model="params.origine" class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['origine'] }" id="origine" />
-          </div>
+          </div> -->
           <div class="mb-3">
             <label for="commentaire">Message</label>
-            <textarea maxlength="500" v-model="activeAppel.commentaire" class="form-control form-control-sm"
+            <textarea maxlength="500" v-model="params.message" class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire"></textarea>
           </div>
-          TODO: Ajout balance actuelle du crédit
+          <p>TODO: Ajout balance actuelle du crédit</p>
+          <p>TODO: Ajout compteur nb characters restant</p>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">{{
-        activeAppel.id ? 'Modifier' : 'Ajouter'
-      }}</button>
+      <button type="button" class="btn btn-primary" @click="save()">Envoyer</button>
     </div>
   </div>
 </template>
@@ -52,11 +51,13 @@ export default {
   },
   data() {
     return {
+      errors: {},
       params: {
-        origin: "",
+        origin: "GestSIS",
         differe: true,
         date: "",
-        selectedSapeurs: []
+        selectedSapeurs: [],
+        message: "",
       },
     };
   },
@@ -68,25 +69,24 @@ export default {
     }),
   },
   mounted() {
-    if (this.listTelephones.length === 0) {
-      this.$store.dispatch('fetchTelephones');
-    }
-    this.activeAppel = this.data.appel;
-
-    this.min = DateTime.fromSQL(this.data.min).toISO();
-    this.max = DateTime.fromSQL(this.data.max).toISO();
-
-    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date)
-      .toISO()
-      .slice(0, 16);
+    // TODO: set date to exercice date
+    this.params.date = "";
+    // TODO: à compléter
+    this.params.message = `Rappel\n` +
+      `${"dim. 29.05.2022"} ${"20:00"} ${"Hangar"} à ${"Courgenay"} \n` +
+      `${"Séance divers"} : ${"Séance avec Resp.VHC"} `
+    // if (this.listTelephones.length === 0) {
+    //   this.$store.dispatch('fetchTelephones');
+    // }
+    // this.max = DateTime.fromSQL(this.data.max).toISO().slice(0, 16);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
-      this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
-        this.format
-      );
+      // //Format back dates to SQL Format
+      // this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
+      //   this.format
+      // );
 
       this.$store
         .dispatch('addInterventionAppel', this.activeAppel)

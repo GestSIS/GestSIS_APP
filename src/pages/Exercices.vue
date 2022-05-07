@@ -29,12 +29,12 @@
             </router-link>
             <router-link custom :to="'/exercices/' + selectedId" v-slot="{ navigate }">
               <button :disabled="!selectedId" @click="navigate" class="btn btn-outline-primary">{{
-                hasEditPermission ?
-                  "Modifier" : "Aperçu"
+                  hasEditPermission ?
+                    "Modifier" : "Aperçu"
               }}</button>
             </router-link>
-            <!-- <button :disabled="!selectedId" @click="sms({ id: selectedId })"
-              class="btn btn-outline-primary">SMS</button> -->
+            <button :disabled="!selectedId" @click="sms({ id: selectedId })"
+              class="btn btn-outline-primary">SMS</button>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
                 ">
                   <option>&lt;Catégorie&gt;</option>
                   <option v-for="categorie in filteredExercicesCategories" :key="categorie.id" :value="categorie.id">{{
-                    categorie.designation
+                      categorie.designation
                   }}</option>
                 </select>
               </div>
