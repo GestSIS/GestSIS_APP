@@ -4,15 +4,9 @@
       <div class="card-header d-flex justify-content-between">
         <h3>Stats véhicules pour interventions</h3>
         <div class="form-check form-switch mb-2">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="switch-vehicule"
-            v-model="allVehicules"
-          />
-          <label class="form-check-label" for="switch-vehicule"
-            >Afficher les véhicules n'ayant pas effectué d'interventions</label
-          >
+          <input type="checkbox" class="form-check-input" id="switch-vehicule" v-model="allVehicules" />
+          <label class="form-check-label" for="switch-vehicule">Afficher les véhicules n'ayant pas effectué
+            d'interventions</label>
         </div>
       </div>
       <div class="card-body">
@@ -57,8 +51,7 @@ export default {
     }),
     occurences() {
       return this.vehiculesIntervention
-        .map((e) => e.vehicule_id)
-        .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+        .reduce((prev, vehicule) => ((prev[vehicule.vehicule_id] = (prev[vehicule.vehicule_id] ?? 0) + vehicule.nb), prev), {});
     },
     filteredVehicules() {
       return this.vehicules.filter(
@@ -69,4 +62,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
