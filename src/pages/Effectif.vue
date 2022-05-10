@@ -20,11 +20,9 @@
           </div>
           <div class="card-body d-grid gap-2">
             <button @click="vcard(filteredSapeurs)" class="btn btn-outline-primary">VCard tous</button>
-            <a
-              :disabled="filteredSapeurs.length == 0"
+            <a :disabled="filteredSapeurs.length == 0"
               :href="'mailto:?bcc=' + filteredSapeurs.map(s => s.email).filter(s => s && s != null).join(',')"
-              class="btn btn-outline-primary"
-            >Email groupé</a>
+              class="btn btn-outline-primary">Email groupé</a>
           </div>
         </div>
       </div>
@@ -36,55 +34,37 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('localite_id', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onFilter('localite_id', event.target.value)
+                ">
                   <option>&lt;Localité&gt;</option>
-                  <option
-                    v-for="loc in filteredLocalites"
-                    :key="loc.id"
-                    :value="loc.id"
-                  >{{ loc.designation }}</option>
+                  <option v-for="loc in filteredLocalites" :key="loc.id" :value="loc.id">{{ loc.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('fonctions', parseInt(event.target.value) ? fonctions => fonctions.find(f => f.fonction_id == event.target.value) != undefined : null)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onFilter('fonctions', parseInt(event.target.value) ? fonctions => fonctions.find(f => f.fonction_id == event.target.value) != undefined : null)
+                ">
                   <option>&lt;Fonction&gt;</option>
                   <option v-for="f in filteredFonctions" :key="f.id" :value="f.id">{{ f.nom }}</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('grade_id', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onFilter('grade_id', event.target.value)
+                ">
                   <option>&lt;Grade&gt;</option>
                   <option v-for="f in filteredGrades" :key="f.id" :value="f.id">{{ f.designation }}</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('groupes', parseInt(event.target.value) ? groupes => groupes.find(f => f.groupe_id == event.target.value) != undefined : undefined)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onFilter('groupes', parseInt(event.target.value) ? groupes => groupes.find(f => f.groupe_id == event.target.value) != undefined : undefined)
+                ">
                   <option :value="undefined">&lt;Groupe&gt;</option>
-                  <option
-                    v-for="f in filteredGroupes"
-                    :key="f.id"
-                    :value="f.id"
-                  >{{ (f.no ? f.no + ' ' : '') + f.designation }}</option>
+                  <option v-for="f in filteredGroupes" :key="f.id" :value="f.id">{{ (f.no ? f.no + ' ' : '') +
+                      f.designation
+                  }}</option>
                 </select>
               </div>
             </div>
@@ -100,40 +80,20 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            selectKey="id"
-            row-selected-class="table-primary"
-            @selected="selectSapeur"
-            :fields="fieldsBase"
-            no-data="Aucun sapeur à afficher"
-            :data="filteredSapeurs"
-            :row-class="onRowClass"
-          >
+          <base-table v-show="!loading" :selectable="true" selectKey="id" row-selected-class="table-primary"
+            @selected="selectSapeur" :fields="fieldsBase" no-data="Aucun sapeur à afficher" :data="filteredSapeurs">
             <template v-slot:foot>
               <tr>
-                <th
-                  :colspan="fieldsBase.length"
-                >Nombre sapeurs : {{ filteredSapeurs.length }} / {{ computedData.length }}</th>
+                <th :colspan="fieldsBase.length">Nombre sapeurs : {{ filteredSapeurs.length }} / {{ computedData.length
+                }}</th>
               </tr>
             </template>
             <template v-slot:checkbox="{ key, value, rowData }">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :id="key + '-' + rowData.id"
-                :checked="value"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
             </template>
             <template v-slot:actions="props">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                :to="'/sapeurs/' + props.rowData.id"
-                custom
-                v-slot="{ navigate }"
-              >
+              <router-link v-if="hasSapeurModificationPermission" :to="'/sapeurs/' + props.rowData.id" custom
+                v-slot="{ navigate }">
                 <button class="btn btn-outline-primary border-0" @click="navigate">
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
@@ -421,7 +381,7 @@ SOURCE:GestSIS2.0
 END:VCARD`
       ).join('\n')
 
-      //TODO: V-Card for all
+      // TODO: V-Card for all
       const file = new Blob([contacts], { type: 'text/plain' });
       const a = document.createElement("a");
       const url = URL.createObjectURL(file);
@@ -441,20 +401,6 @@ END:VCARD`
         window.URL.revokeObjectURL(url);
       }, 0);
     },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return '';
-      }
-
-      const statutsClass = {
-        0: 'text-danger', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'En attente de validation',
-        3: '', //'A imputer',
-        4: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
-    },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: value };
     },
@@ -473,7 +419,7 @@ table a.btn {
   padding-bottom: 0;
 }
 
-.m-td-0 > td {
+.m-td-0>td {
   padding: 0 !important;
 }
 </style>

@@ -7,16 +7,10 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button class="btn btn-outline-primary" @click="newEcriture">Nouveau</button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedItem"
-            @click="editEcriture(selectedItem)"
-          >Modifier</button>
-          <button
-            class="btn btn-outline-danger"
-            :disabled="!selectedItem"
-            @click="deleteEcriture(selectedItem?.id)"
-          >Supprimer</button>
+          <button class="btn btn-outline-primary" :disabled="!selectedItem"
+            @click="editEcriture(selectedItem)">Modifier</button>
+          <button class="btn btn-outline-danger" :disabled="!selectedItem"
+            @click="deleteEcriture(selectedItem?.id)">Supprimer</button>
         </div>
       </div>
     </div>
@@ -31,30 +25,14 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune écriture à afficher"
-          :data="computedData"
-          @selected="selected"
-          :selectable="true"
-          selectKey="id"
-          row-selected-class="table-primary"
-        >
+        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" no-data="Aucune écriture à afficher"
+          :data="computedData" @selected="selected" :selectable="true" selectKey="id"
+          row-selected-class="table-primary">
           <template v-slot:actions="{ rowData }">
-            <button
-              type="button"
-              class="btn btn-outline-primary border-0"
-              @click="editEcriture(rowData)"
-            >
+            <button type="button" class="btn btn-outline-primary border-0" @click="editEcriture(rowData)">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="deleteEcriture(rowData?.id)"
-            >
+            <button type="button" class="btn btn-outline-danger border-0" @click="deleteEcriture(rowData?.id)">
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
@@ -233,8 +211,8 @@ export default {
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'En attente de validation',
-        2: '', // 'Validée',
-        3: 'table-success', //'Imputée'
+        2: '', // 'Validé',
+        3: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
     },
@@ -242,4 +220,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

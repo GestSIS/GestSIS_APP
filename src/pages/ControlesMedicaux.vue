@@ -26,16 +26,8 @@
             <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
               <button @click="navigate" class="btn btn-outline-primary">Ajouter un contrôle</button>
             </router-link>
-            <router-link
-              custom
-              :to="'/controles-medicaux/' + selectedItem?.id"
-              v-slot="{ navigate }"
-            >
-              <button
-                :disabled="!selectedItem"
-                @click="navigate"
-                class="btn btn-outline-primary"
-              >Modifier</button>
+            <router-link custom :to="'/controles-medicaux/' + selectedItem?.id" v-slot="{ navigate }">
+              <button :disabled="!selectedItem" @click="navigate" class="btn btn-outline-primary">Modifier</button>
             </router-link>
           </div>
         </div>
@@ -47,11 +39,8 @@
             <h5>Impressions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <button
-              :disabled="!selectedItem?.filename"
-              @click="downloadJustificatif(selectedItem)"
-              class="btn btn-outline-primary"
-            >Justificatif</button>
+            <button :disabled="!selectedItem?.filename" @click="downloadJustificatif(selectedItem)"
+              class="btn btn-outline-primary">Justificatif</button>
           </div>
         </div>
       </div>
@@ -64,66 +53,40 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('controle_medical_type_id', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onFilter('controle_medical_type_id', event.target.value)
+                ">
                   <option>&lt;Type&gt;</option>
-                  <option
-                    v-for="type in filteredTypes"
-                    :key="type.id"
-                    :value="type.id"
-                  >{{ type.designation }}</option>
+                  <option v-for="type in filteredTypes" :key="type.id" :value="type.id">{{ type.designation }}</option>
                 </select>
               </div>
               <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) =>
-                      onFilter('medecin_id', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) =>
+                    onFilter('medecin_id', event.target.value)
+                ">
                   <option>&lt;Médecin&gt;</option>
-                  <option
-                    v-for="medecin in filteredMedecins"
-                    :key="medecin.id"
-                    :value="medecin.id"
-                  >{{ medecin.designation }}</option>
+                  <option v-for="medecin in filteredMedecins" :key="medecin.id" :value="medecin.id">{{
+                      medecin.designation
+                  }}</option>
                 </select>
               </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onAnneeFilter('consultation', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onAnneeFilter('consultation', event.target.value)
+                ">
                   <option>&lt;Année de consultation&gt;</option>
-                  <option
-                    v-for="annee in filteredAnneesConsultation"
-                    :key="annee"
-                    :value="annee"
-                  >{{ annee }}</option>
+                  <option v-for="annee in filteredAnneesConsultation" :key="annee" :value="annee">{{ annee }}</option>
                 </select>
               </div>
               <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onAnneeFilter('validite', event.target.value)
-                  "
-                >
+                <select class="form-select form-select-sm" @change="
+                  (event) => onAnneeFilter('validite', event.target.value)
+                ">
                   <option>&lt;Année de validite&gt;</option>
-                  <option
-                    v-for="annee in filteredAnneesExpiration"
-                    :key="annee"
-                    :value="annee"
-                  >{{ annee }}</option>
+                  <option v-for="annee in filteredAnneesExpiration" :key="annee" :value="annee">{{ annee }}</option>
                 </select>
               </div>
             </div>
@@ -143,54 +106,29 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            no-data="Aucun contrôle médical à afficher"
-            :row-class="onRowClass"
-            :data="filteredControles"
-            :selectable="true"
-            selectKey="id"
-            row-selected-class="table-primary"
-            @selected="selected"
-          >
+          <base-table v-show="!loading" :fields="fields" no-data="Aucun contrôle médical à afficher"
+            :row-class="onRowClass" :data="filteredControles" :selectable="true" selectKey="id"
+            row-selected-class="table-primary" @selected="selected">
             <template v-slot:checkbox="props">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :id="props.key"
-                :checked="props.rowData[props.key]"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" :id="props.key" :checked="props.rowData[props.key]"
+                disabled />
               <label class="form-check-label" :for="props.key"></label>
             </template>
             <template v-slot:doc="props">
-              <button
-                class="btn"
-                v-if="props.rowData.filename"
-                @click="downloadJustificatif(props.rowData)"
-              >
+              <button class="btn" v-if="props.rowData.filename" @click="downloadJustificatif(props.rowData)">
                 <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
             </template>
             <template v-slot:actions="props">
-              <router-link
-                :to="{
-                  name: 'controle-medical',
-                  params: { id: props.rowData.id },
-                }"
-                custom
-                v-slot="{ navigate }"
-              >
+              <router-link :to="{
+                name: 'controle-medical',
+                params: { id: props.rowData.id },
+              }" custom v-slot="{ navigate }">
                 <button class="btn btn-outline-primary border-0" @click="navigate">
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimer(props.rowData)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="supprimer(props.rowData)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
@@ -417,8 +355,8 @@ export default {
       //   0: 'text-danger', //'Annulé',
       //   1: '', //'A saisir',
       //   2: '', //'En attente de validation',
-      //   3: '', //'A imputer',
-      //   4: 'table-success', //'Imputée'
+      //   3: '', //'Validé',
+      //   4: 'table-success', //'Imputé'
       // };
       // return statutsClass[dataItem.statut];
       return '';
@@ -442,7 +380,8 @@ table button.btn {
   padding-top: 0;
   padding-bottom: 0;
 }
-.m-td-0 > td {
+
+.m-td-0>td {
   padding: 0 !important;
 }
 </style>

@@ -267,7 +267,7 @@ export default {
             const statuts = {
               0: 'A saisir',
               1: 'A valider',
-              2: 'A imputer',
+              2: 'Validée',
               3: 'Imputée',
             };
             return statuts[value];
@@ -397,7 +397,7 @@ export default {
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'A valider',
-        2: 'table-warning', //'A imputer',
+        2: 'table-warning', //'Validée',
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];

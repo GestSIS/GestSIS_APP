@@ -29,8 +29,8 @@
             </router-link>
             <router-link custom :to="'/exercices/' + selectedId" v-slot="{ navigate }">
               <button :disabled="!selectedId" @click="navigate" class="btn btn-outline-primary">{{
-                hasEditPermission ?
-                  "Modifier" : "Aperçu"
+                  hasEditPermission ?
+                    "Modifier" : "Aperçu"
               }}</button>
             </router-link>
             <!-- <button :disabled="!selectedId" @click="sms({ id: selectedId })"
@@ -77,7 +77,7 @@
                 ">
                   <option>&lt;Catégorie&gt;</option>
                   <option v-for="categorie in filteredExercicesCategories" :key="categorie.id" :value="categorie.id">{{
-                    categorie.designation
+                      categorie.designation
                   }}</option>
                 </select>
               </div>
@@ -89,8 +89,8 @@
                   <option value="0">Annulé</option>
                   <option value="1">Sapeurs à ajouter</option>
                   <option value="2">En attente de validation</option>
-                  <option value="3">A imputer</option>
-                  <option value="4">Imputée</option>
+                  <option value="3">Validé</option>
+                  <option value="4">Imputé</option>
                 </select>
               </div>
             </div>
@@ -246,8 +246,8 @@ export default {
               0: 'Annulé',
               1: 'A saisir',
               2: 'En attente de validation',
-              3: 'A imputer',
-              4: 'Imputée',
+              3: 'Validé',
+              4: 'Imputé',
             };
             return statuts[value];
           },

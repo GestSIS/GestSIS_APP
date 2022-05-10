@@ -12,32 +12,13 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data="Aucune amende à afficher"
-          :detail-row-component="detailRow"
-          :data="filteredAmendes"
-          @selected="selected"
-          :selectable="true"
-          selectKey="id"
-          row-selected-class="table-primary"
-        >
+        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" detail-row-class="m-td-0"
+          no-data="Aucune amende à afficher" :detail-row-component="detailRow" :data="filteredAmendes"
+          @selected="selected" :selectable="true" selectKey="id" row-selected-class="table-primary">
           <template v-slot:details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
+            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
+              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
+              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
             </button>
           </template>
         </base-table>
@@ -207,4 +188,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

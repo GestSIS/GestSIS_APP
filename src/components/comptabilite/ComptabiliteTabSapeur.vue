@@ -33,46 +33,22 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          selectKey="id"
-          :fields="fields"
-          :detail-row-component="detailRow"
-          detail-row-class="m-td-0"
-          row-selected-class="table-primary"
-          no-data="Aucun exercice/séance à afficher"
-          :data="computedData"
-          @selected="select"
-          :row-class="onRowClass"
-        >
+        <base-table v-show="!loading" :selectable="true" selectKey="id" :fields="fields"
+          :detail-row-component="detailRow" detail-row-class="m-td-0" row-selected-class="table-primary"
+          no-data="Aucun sapeur à afficher" :data="computedData" @selected="select">
           <template v-slot:details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
+            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
+              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
+              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
             </button>
           </template>
           <template v-slot:actions="props">
-            <button
-              class="btn btn-outline-primary border-0"
-              @click="
-                genererDecompteSapeur(
-                  props.rowData.id,
-                  props.rowData.nomPrenom
-                )
-              "
-              title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
-            >
+            <button class="btn btn-outline-primary border-0" @click="
+              genererDecompteSapeur(
+                props.rowData.id,
+                props.rowData.nomPrenom
+              )
+            " title="Décompte sapeur" :disabled="!props.rowData.aPayer">
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
@@ -281,17 +257,9 @@ export default {
     select(id) {
       this.selected = id;
     },
-    onRowClass(dataItem) {
-      const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'A valider',
-        2: 'table-warning', //'A imputer',
-        3: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
-    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
