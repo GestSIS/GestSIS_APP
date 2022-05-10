@@ -7,53 +7,27 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="nom">Nom</label>
-        <input
-          type="text"
-          v-model="role.nom"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['nom'] }"
-          id="nom"
-        />
+        <input type="text" v-model="role.nom" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['nom'] }" id="nom" />
       </div>
       <div class="mb-3">
         <label for="description">Description</label>
-        <input
-          type="text"
-          v-model="role.description"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['description'] }"
-          id="description"
-        />
+        <input type="text" required v-model="role.description" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['description'] }" id="description" />
       </div>
       <div class="mb-3">
         <label for="designation">Permissions</label>
         <div class="form-check" v-for="permission in permissions" :key="permission.id">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            :value="permission.id"
-            v-model="role.permissions"
-            :id="'r' + permission.id"
-          />
-          <label class="form-check-label" :for="'r' + permission.id">
-            {{
-            permission.nom
-            }}
-          </label>
+          <input type="checkbox" class="form-check-input" :value="permission.id" v-model="role.permissions"
+            :id="'r' + permission.id" />
+          <label class="form-check-label" :for="'r' + permission.id">{{ permission.nom }}</label>
         </div>
-        <div
-          class="invalid-feedback"
-          :class="{ 'd-block': errors['permissions'] }"
-        >{{ errors['permissions'] }}</div>
+        <div class="invalid-feedback" :class="{ 'd-block': errors['permissions'] }">{{ errors['permissions'] }}</div>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ role.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-primary" @click="save()">{{ role.id ? 'Modifier' : 'Ajouter' }}</button>
     </div>
   </div>
 </template>
@@ -94,6 +68,17 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
+      this.errors = {}
+      if (!this.role.nom) {
+        this.errors.nom = "Nom requis";
+      }
+      if (!this.role.nom) {
+        this.errors.description = "Description requise";
+      }
+      if (Object.entries(this.errors).length > 0) {
+        return;
+      }
+
       if ((this.role.id || 0) === 0) {
         this.$store
           .dispatch('createRole', this.role)
@@ -125,4 +110,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
