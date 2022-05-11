@@ -2,12 +2,7 @@
   <table class="table table-sm table-hover mb-0">
     <thead>
       <tr>
-        <th
-          v-for="f in fields"
-          :key="f.key"
-          @click="sort(f)"
-          :class="f.titleClass"
-        >
+        <th v-for="f in fields" :key="f.key" @click="sort(f)" :class="f.titleClass">
           {{ f.title }}
         </th>
       </tr>
@@ -17,48 +12,34 @@
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
       <template v-for="r in computedData" :key="'main-' + r.id">
-        <tr
-          @click="select(r)"
-          :class="[
-            selected == r[selectKey] ? rowSelectedClass : '',
-            rowClass,
-            typeof rowClass === 'function'
-              ? rowClass(r, selected == r[selectKey])
-              : rowClass,
-          ]"
-        >
+        <tr @click="select(r)" :class="[
+          selected == r[selectKey] ? rowSelectedClass : '',
+          rowClass,
+          typeof rowClass === 'function'
+            ? rowClass(r, selected == r[selectKey])
+            : rowClass,
+        ]">
           <td v-for="f in fields" :key="f.key" :class="f.columnClass">
-            <slot
-              :name="f.slot"
-              v-bind="{
-                key: f.key,
-                value: r[f.key],
-                actions,
-                status: {
-                  selected: selected == r[selectKey],
-                  detailRowVisible: detailsRowVisibility[r.id],
-                },
-                rowData: r,
-              }"
-            >
+            <slot :name="f.slot" v-bind="{
+              key: f.key,
+              value: r[f.key],
+              actions,
+              status: {
+                selected: selected == r[selectKey],
+                detailRowVisible: detailsRowVisibility[r.id],
+              },
+              rowData: r,
+            }">
               {{ (f.formatter || defaultFormatter)(r[f.key]) }}
             </slot>
           </td>
         </tr>
-        <tr
-          v-if="detailsRowVisibility[r.id]"
-          :key="'detail-' + r.id"
-          :class="r.rowClass"
-        >
+        <tr v-if="detailsRowVisibility[r.id]" :key="'detail-' + r.id" :class="r.rowClass">
           <td :colspan="fields.length" class="p-0">
-            <component
-              :is="detailRowComponent"
-              :class="detailRowClass"
-              v-bind="{
-                visible: detailsRowVisibility[r.id],
-                rowData: r,
-              }"
-            >
+            <component :is="detailRowComponent" :class="detailRowClass" v-bind="{
+              visible: detailsRowVisibility[r.id],
+              rowData: r,
+            }">
             </component>
           </td>
         </tr>
@@ -88,7 +69,7 @@ export default {
     },
     filter: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     selectable: {
       type: Boolean,
@@ -108,7 +89,7 @@ export default {
     },
     detailRowComponent: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     detailRowClass: {
       type: String,

@@ -7,14 +7,18 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-8">
-          TODO: Sélection des sapeurs
+          <base-table :fields="fields" :data="[]">
+            <template v-slot:checkbox="{ key, value, rowData }">
+              <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
+            </template>
+          </base-table>
         </div>
         <div class="col-4">
           <base-checkbox class="mb-3" label="Envoie différé" v-model="params.differe" />
           <div class="mb-3">
             <label for="date">Date</label>
             <input type="datetime-local" v-model="params.date" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['date'] }" id="date" :min="min" :max="max" />
+              :class="{ 'is-invalid': errors['date'] }" id="date" />
           </div>
           <!-- <div class="mb-3">
             <label for="origine">Origine</label>
@@ -24,7 +28,7 @@
           <div class="mb-3">
             <label for="commentaire">Message ({{ 500 - params.message.length }})</label>
             <textarea maxlength="500" v-model="params.message" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire"></textarea>
+              :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire" rows="6"></textarea>
           </div>
           <p>Crédit : <span>{{ loadingCredit ? 'chargement...' : credit }}</span></p>
         </div>
@@ -41,8 +45,11 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
+import BaseTable from '@/components/table/BaseTable.vue';
+
 export default {
   name: 'ModalSms',
+  components: { BaseTable },
   props: {
     data: {
       type: Object,
@@ -59,13 +66,43 @@ export default {
         selectedSapeurs: [],
         message: "",
       },
+      fields: [
+        {
+          title: 'Nom prénom',
+          key: 'nom_prenom',
+          sortKey: 'nom_prenom',
+        },
+        {
+          title: 'Convoqué',
+          key: 'convoque',
+          sortKey: 'convoque',
+          slot: "checkbox",
+        },
+        {
+          title: 'Excusé',
+          key: 'excuse',
+          sortKey: 'excuse',
+          slot: "checkbox",
+        },
+        {
+          title: 'Portable',
+          key: 'portable',
+          sortKey: 'portable',
+        },
+        // {
+        //   title: 'Actions',
+        //   key: 'actions',
+        //   slot: 'actions',
+        //   titleClass: 'align-middle text-center',
+        //   columnClass: 'align-middle text-center'
+        // },
+      ],
     };
   },
   computed: {
     ...mapState({
       //TODO: a implémenter
       sapeurs: (state) => state.telephone.liste,
-      activeInterventionId: (state) => state.intervention.active.id,
       credit: (state) => state.aspsmsParam.credit,
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
