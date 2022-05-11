@@ -33,8 +33,8 @@
                     "Modifier" : "Aperçu"
               }}</button>
             </router-link>
-            <!-- <button :disabled="!selectedId" @click="sms({ id: selectedId })"
-              class="btn btn-outline-primary">SMS</button> -->
+            <button :disabled="!selectedId" @click="sms({ id: selectedId })"
+              class="btn btn-outline-primary">SMS</button>
           </div>
         </div>
       </div>
