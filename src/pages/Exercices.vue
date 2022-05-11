@@ -319,7 +319,8 @@ export default {
       this.SHOW_MODAL({ component: 'ModalConvoquer', size: 2 });
     },
     sms({ id }) {
-      this.SHOW_MODAL({ component: 'ModalSms', size: 2 });
+      const exercice = this.exercices.find(e => e.id == id);
+      this.SHOW_MODAL({ component: 'ModalSms', size: 2, data: exercice });
     },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);

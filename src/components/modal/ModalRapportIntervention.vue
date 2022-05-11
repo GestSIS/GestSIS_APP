@@ -6,21 +6,11 @@
     </div>
     <div class="modal-body">
       <div class="form-check">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          id="infoGeneral"
-          v-model="params.infoGeneral"
-        />
+        <input type="checkbox" class="form-check-input" id="infoGeneral" v-model="params.infoGeneral" />
         <label class="form-check-label" for="infoGeneral">Informations générales</label>
       </div>
       <div class="form-check">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          id="description"
-          v-model="params.description"
-        />
+        <input type="checkbox" class="form-check-input" id="description" v-model="params.description" />
         <label class="form-check-label" for="description">Description de l'intervention</label>
       </div>
       <div class="form-check">
@@ -30,10 +20,6 @@
       <div class="form-check">
         <input type="checkbox" class="form-check-input" id="presences" v-model="params.presences" />
         <label class="form-check-label" for="presences">Détails des présences des sapeurs</label>
-      </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="montants" v-model="params.montants" />
-        <label class="form-check-label" for="montants">Informations financières (montant)</label>
       </div>
       <div class="form-check">
         <input type="checkbox" class="form-check-input" id="vehicules" v-model="params.vehicules" />
@@ -59,6 +45,10 @@
         <input type="checkbox" class="form-check-input" id="appels" v-model="params.appels" />
         <label class="form-check-label" for="appels">Appels durant l'intervention</label>
       </div>
+      <div class="form-check" v-if="hasComptabilitePermission && data.statut >= 3">
+        <input type="checkbox" class="form-check-input" id="montants" v-model="params.montants" />
+        <label class="form-check-label" for="montants">Informations financières (montant)</label>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
@@ -68,7 +58,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 import InterventionService from '@/services/InterventionService.js';
 
@@ -81,13 +72,13 @@ export default {
         description: true,
         groupes: true,
         presences: true,
-        montants: true,
         vehicules: true,
         materiel: true,
         absents: true,
         statut: true,
         missions: true,
         appels: true,
+        montants: false,
       },
     };
   },
@@ -96,7 +87,6 @@ export default {
       type: Object,
     },
   },
-  mounted() {},
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     generer() {
@@ -108,7 +98,15 @@ export default {
       this.HIDE_MODAL();
     },
   },
+  computed: {
+    ...mapState({
+      hasComptabilitePermission: (state) => state.auth.sis.permissions.includes(
+        permissions.COMPTABILITE.TOUT
+      ),
+    })
+  }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

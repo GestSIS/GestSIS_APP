@@ -379,12 +379,12 @@ export default {
       this.$store.dispatch('validerIntervention', id);
     },
     rapportIntervention() {
+      const statut = this.interventions.find(i => i.id == this.selectedId)?.statut;
       this.SHOW_MODAL({
         component: 'ModalRapportIntervention',
         size: 1,
-        data: { interventionId: this.selectedId },
+        data: { interventionId: this.selectedId, statut },
       });
-      //TODO: imprimer le rapport d'intervention -> modal
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

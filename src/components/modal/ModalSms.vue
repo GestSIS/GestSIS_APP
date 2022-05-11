@@ -22,12 +22,11 @@
               :class="{ 'is-invalid': errors['origine'] }" id="origine" />
           </div> -->
           <div class="mb-3">
-            <label for="commentaire">Message</label>
+            <label for="commentaire">Message ({{ 500 - params.message.length }})</label>
             <textarea maxlength="500" v-model="params.message" class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire"></textarea>
           </div>
-          <p>TODO: Ajout balance actuelle du crédit</p>
-          <p>TODO: Ajout compteur nb characters restant</p>
+          <p>Crédit : <span>{{ loadingCredit ? 'chargement...' : credit }}</span></p>
         </div>
       </div>
     </div>
@@ -52,6 +51,7 @@ export default {
   data() {
     return {
       errors: {},
+      loadingCredit: true,
       params: {
         origin: "GestSIS",
         differe: true,
@@ -66,19 +66,25 @@ export default {
       //TODO: a implémenter
       sapeurs: (state) => state.telephone.liste,
       activeInterventionId: (state) => state.intervention.active.id,
+      credit: (state) => state.aspsmsParam.credit,
+      localites: (state) => state.localite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
     }),
   },
   mounted() {
-    // TODO: set date to exercice date
-    this.params.date = "";
-    // TODO: à compléter
+    this.loadingCredit = true;
+    this.$store.dispatch('fetchAspsmsCredit').then(() => this.loadingCredit = false).catch(() => {
+      this.loadingCredit = false;
+      console.log("ASPSMS non configuré");
+    })
+
+    const localite = this.localites.find(l => l.id == this.data.localite_id);
+    const categorie = this.categories.find(l => l.id == this.data.exercice_categorie_id);
+    this.params.date = this.data.date + " " + this.data.heure;
+
     this.params.message = `Rappel\n` +
-      `${"dim. 29.05.2022"} ${"20:00"} ${"Hangar"} à ${"Courgenay"} \n` +
-      `${"Séance divers"} : ${"Séance avec Resp.VHC"} `
-    // if (this.listTelephones.length === 0) {
-    //   this.$store.dispatch('fetchTelephones');
-    // }
-    // this.max = DateTime.fromSQL(this.data.max).toISO().slice(0, 16);
+      `${DateTime.fromSQL(this.data.date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${localite?.designation ?? ""} \n` +
+      `${categorie?.designation} : ${this.data.communications}`
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
