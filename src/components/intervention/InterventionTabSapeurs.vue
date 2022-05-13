@@ -403,8 +403,8 @@ export default {
     },
     getPhaseTypeAt(date) {
       let res = this.phases
-        .filter((p) => new Date(p.debut) <= date)
-        .sort((d1, d2) => new Date(d1.debut) < new Date(d2.debut));
+        .filter((p) => p.debut == null || new Date(p.debut) <= date)
+        .sort((d1, d2) => d1.debut == null ? 1 : d2.debut == null ? -1: new Date(d1.debut) < new Date(d2.debut));
       if (res.length > 0) {
         return res[0].phase_type_id;
       }
