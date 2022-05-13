@@ -7,51 +7,28 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="m-designation">Désignation</label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['designation'] }"
-          id="m-designation"
-          name="designation"
-          v-model="params.designation"
-          :disabled="this.params.exercice_id || this.params.sapeur_id"
-        />
+        <input type="text" class="form-control form-control-sm" :class="{ 'is-invalid': errorsData['designation'] }"
+          id="m-designation" name="designation" v-model="params.designation"
+          :disabled="this.params.exercice_id || this.params.sapeur_id" />
       </div>
       <div class="mb-3" v-if="!this.params.exercice_id">
         <label for="m-exercice-comptable-id">Exercice comptable id</label>
-        <select
-          class="form-select form-select-sm"
-          id="m-exercice-comptable-id"
-          :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }"
-          name="exercice_comptable_id"
-          v-model="params.exercice_comptable_id"
-        >
-          <option
-            v-for="exercice in listeExerciceComptable"
-            :value="exercice.id"
-            :key="exercice.id"
-          >{{ exercice.designation }}</option>
+        <select class="form-select form-select-sm" id="m-exercice-comptable-id"
+          :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }" name="exercice_comptable_id"
+          v-model="params.exercice_comptable_id">
+          <option v-for="exercice in listeExerciceComptable" :value="exercice.id" :key="exercice.id">{{
+              exercice.designation
+          }}</option>
         </select>
       </div>
       <div class="mb-3">
         <label for="m-date">Date</label>
-        <input
-          type="date"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['date'] }"
-          id="m-date"
-          name="date"
-          v-model="params.date"
-        />
+        <input type="date" class="form-control form-control-sm" :class="{ 'is-invalid': errorsData['date'] }"
+          id="m-date" name="date" v-model="params.date" />
       </div>
       <div class="mb-3" v-if="this.params.exercice_id">
         <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="m-sap-cotisation_avs"
-            v-model="params.deduction"
-          />
+          <input type="checkbox" class="form-check-input" id="m-sap-cotisation_avs" v-model="params.deduction" />
           <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
         </div>
       </div>
@@ -99,8 +76,8 @@ export default {
     this.mode = this.params.sapeur_id
       ? 'genererDecompteSapeur'
       : this.params.exercice_id
-      ? 'genererDecompteExercice'
-      : 'genererDecompteAnnuel';
+        ? 'genererDecompteExercice'
+        : 'genererDecompteAnnuel';
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -114,8 +91,12 @@ export default {
       this.$store
         .dispatch(this.mode, this.params)
         .then(() => {
-          this.HIDE_MODAL();
-          this.callback();
+          (this.callback() ?? Promise.resolve())
+            .then((close) => {
+              if (close ?? true) {
+                this.HIDE_MODAL();
+              }
+            });
         })
         .catch((errors) => {
           this.errorsData = errors;
@@ -125,4 +106,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

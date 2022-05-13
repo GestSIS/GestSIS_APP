@@ -351,8 +351,12 @@ export default {
       return liste;
     },
     close() {
-      this.callback(null);
-      this.HIDE_MODAL();
+      (this.callback(null) ?? Promise.resolve())
+        .then((close) => {
+          if (close ?? true) {
+            this.HIDE_MODAL();
+          }
+        });
     },
     async save() {
       // Sapeurs ajoutés
@@ -366,8 +370,10 @@ export default {
 
       const svm = this;
       this.callback({ ajoute: newSap, supprime: removedSap, tous: sapeurs })
-        .then(() => {
-          svm.HIDE_MODAL();
+        .then((close) => {
+          if (close ?? true) {
+            svm.HIDE_MODAL();
+          }
         })
         .catch((errorMessage) => {
           svm.$awn.warning(errorMessage);

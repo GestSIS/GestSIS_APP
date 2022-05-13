@@ -1,13 +1,7 @@
 <template>
   <div>
     <!-- Modal -->
-    <div
-      class="modal fade show d-block"
-      id="exampleModal"
-      tabindex="-1"
-      role="dialog"
-      v-if="visible"
-    >
+    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog" v-if="visible">
       <div class="modal-dialog modal-dialog-scrollable" :class="computedSize" role="document">
         <component :is="component" :callback="callback" :data="data" class="modal-content"></component>
       </div>
@@ -58,8 +52,12 @@ export default {
   mounted() {
     this.escapeHandler = (e) => {
       if (e.key === 'Escape' && this.visible) {
-        this.callback();
-        this.HIDE_MODAL();
+        (this.callback() ?? Promise.resolve())
+          .then((close) => {
+            if (close ?? true) {
+              this.HIDE_MODAL();
+            }
+          });
       }
     };
 
@@ -81,4 +79,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

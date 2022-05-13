@@ -229,8 +229,12 @@ export default {
     },
     cancel() {
       //TODO Cancel depending on state
-      this.callback();
-      this.HIDE_MODAL();
+      (this.callback() ?? Promise.resolve())
+        .then((close) => {
+          if (close ?? true) {
+            this.HIDE_MODAL();
+          }
+        });
     },
     imputer() {
       if (this.indemniteType === null) {
