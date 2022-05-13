@@ -5,6 +5,8 @@
         {{ activeExerciceData.designation }} &ndash;
         {{ activeExerciceData.date }}
       </h3>
+      <button class="btn btn-outline-primary ms-2" @click="validate" :disabled="!canValidate"
+        v-if="hasValidationPermission">Valider</button>
       <button class="btn btn-outline-primary" @click="save" v-if="hasPresencePermission">Sauvegarder</button>
     </div>
     <table class="table table-sm">
@@ -85,8 +87,6 @@
     <div class="card-footer">
       <button class="btn btn-outline-primary" @click="manageSapeurs" v-if="hasPresencePermission">Gérer la liste des
         sapeurs</button>
-      <button class="btn btn-outline-primary ms-2" @click="validate" :disabled="!canValidate"
-        v-if="hasValidationPermission">Valider</button>
     </div>
   </div>
 </template>
