@@ -55,7 +55,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     async save() {
       this.$store
-        .dispatch('updateAspsmsParams', this.params)
+        .dispatch('updateAspsmsParams', { ...this.params })
         .then((res) => {
           this.errors = {};
           this.$awn.success(res?.message || 'Modifications enregistrées');
