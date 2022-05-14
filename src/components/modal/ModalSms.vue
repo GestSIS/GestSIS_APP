@@ -103,7 +103,7 @@ export default {
     ...mapState({
       //TODO: a implémenter
       sapeurs: (state) => state.telephone.liste,
-      credit: (state) => state.aspsmsParam.credit,
+      credit: (state) => state.aspsmsParam.params.credit,
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
     }),
