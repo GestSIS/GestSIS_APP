@@ -5,6 +5,7 @@ import { TokenService } from '../../services/StorageService.js';
 import AuthService from '../../services/AuthService.js';
 import Api from '../../http/Request';
 import jwt_decode from 'jwt-decode';
+import router from '../../router/index';
 
 export default {
   state: {
@@ -237,7 +238,7 @@ export default {
         })
           .catch((e) => {
             commit(types.AUTH_LOGOUT);
-            //TODO: Redirect to home page or login page
+            router.push({name:'login'})
             return e;
           })
           .then(() => {

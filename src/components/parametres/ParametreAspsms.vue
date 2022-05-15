@@ -15,12 +15,12 @@
           </div>
           <div class="mb-3">
             <label for="password">Mot de passe</label>
-            <input type="text" v-model="params.password" class="form-control form-control-sm"
+            <input type="password" v-model="params.password" class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['password'] }" id="password" />
           </div>
           <div class="mb-3">
             <label for="credit">Crédit actuel</label>
-            <input type="number" readonly v-model="params.credit" class="form-control form-control-sm" id="credit" />
+            <input type="number" readonly :value="credit" class="form-control form-control-sm" id="credit" />
           </div>
         </div>
       </div>
@@ -39,7 +39,6 @@ export default {
       params: {
         username: null,
         password: null,
-        credit: 0,
       },
     };
   },
@@ -49,6 +48,7 @@ export default {
   computed: {
     ...mapState({
       aspsmsParams: (state) => state.aspsmsParam.params,
+      credit: (state) => state.aspsmsParam.credit,
     }),
   },
   methods: {

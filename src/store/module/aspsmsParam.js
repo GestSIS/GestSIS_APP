@@ -10,8 +10,9 @@ export default {
     [types.CLEAR_CACHE](state) {
       state.params = null;
     },
-    [types.UPDATE_ASPSMS_PARAMS](state, payload) {
-      state.params = payload;
+    [types.UPDATE_ASPSMS_PARAMS](state, {username, password, credit}) {
+      state.params = {...state.params, username, password};
+      state.credit = credit
     },
     [types.UPDATE_ASPSMS_CREDIT](state, payload) {
       state.credit = parseFloat(payload);
@@ -34,7 +35,7 @@ export default {
     },
     updateAspsmsParams({ commit }, params) {
       return AspsmsParamService.updateParams(params).then((data) => {
-        commit(types.UPDATE_ASPSMS_PARAMS, { username: params.username });
+        commit(types.UPDATE_ASPSMS_PARAMS, { ...params, credit: data.credit });
         return data;
       });
     },
