@@ -4,6 +4,9 @@ export default {
   getEffectif() {
     return Api.api().get('/effectif');
   },
+  getSapeurPourConvocationSms() {
+    return Api.api().get('/sapeurs-convocation');
+  },
   getSapeurs() {
     return Api.api().get('/sapeurs');
   },

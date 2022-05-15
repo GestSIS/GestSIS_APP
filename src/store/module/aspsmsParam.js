@@ -20,17 +20,17 @@ export default {
   },
   actions: {
     fetchAspsmsCredit({ state, commit }) {
-      if (state.params === null) {
-        return AspsmsParamService.getCredit().then((data) =>
-          commit(types.UPDATE_ASPSMS_CREDIT, data)
-        );
-      }
+      return AspsmsParamService.getCredit().then((data) =>
+        commit(types.UPDATE_ASPSMS_CREDIT, data)
+      );
     },
-    fetchAspsmsParams({ state, commit }) {
+    fetchAspsmsParams({ dispatch, state, commit }) {
       if (state.params === null) {
         return AspsmsParamService.getParams().then((data) =>
           commit(types.UPDATE_ASPSMS_PARAMS, data)
         );
+      } else {
+        return dispatch('fetchAspsmsCredit');
       }
     },
     updateAspsmsParams({ commit }, params) {

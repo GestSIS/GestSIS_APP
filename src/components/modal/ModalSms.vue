@@ -7,7 +7,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-8">
-          <base-table :fields="fields" :data="[]">
+          <base-table :fields="fields" :data="computedSapeurs">
             <template v-slot:checkbox="{ key, value, rowData }">
               <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
             </template>
@@ -46,6 +46,8 @@ import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
 import BaseTable from '@/components/table/BaseTable.vue';
+import SapeurService from '../../services/SapeurService';
+import ExerciceService from '../../services/ExerciceService';
 
 export default {
   name: 'ModalSms',
@@ -58,7 +60,10 @@ export default {
   data() {
     return {
       errors: {},
+      loadingSapeurs: true,
       loadingCredit: true,
+      sapeurs: [],
+      presences: [],
       params: {
         origin: "GestSIS",
         differe: true,
@@ -99,14 +104,20 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapState({
-      //TODO: a implémenter
-      sapeurs: (state) => state.telephone.liste,
-      credit: (state) => state.aspsmsParam.params.credit,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-    }),
+  beforeMount() {
+    let resolvedCount = 0;
+    SapeurService.getSapeurPourConvocationSms()
+      .then((sapeurs) => {
+        this.sapeurs = sapeurs;
+        resolvedCount++;
+        this.loadingSapeurs = resolvedCount == 2;
+      });
+    ExerciceService.getSapeurs(this.data.id)
+      .then((presences) => {
+        this.presences = presences;
+        resolvedCount++;
+        this.loadingSapeurs = resolvedCount == 2;
+      });
   },
   mounted() {
     this.loadingCredit = true;
@@ -123,6 +134,20 @@ export default {
       `${DateTime.fromSQL(this.data.date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${localite?.designation ?? ""} \n` +
       `${categorie?.designation} : ${this.data.communications}`
   },
+  computed: {
+    ...mapState({
+      credit: (state) => state.aspsmsParam.credit,
+      localites: (state) => state.localite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+    }),
+    computedSapeurs() {
+      if (!this.loadingSapeurs) {
+        return [];
+      }
+      // const indexedSapeurs = this.sapeurs.map(s =>)
+      return this.presences;
+    }
+  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
@@ -131,22 +156,22 @@ export default {
       //   this.format
       // );
 
-      this.$store
-        .dispatch('addInterventionAppel', this.activeAppel)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-          (this.errors = {
-            ...errors,
-            date: errors['appels.0.date'],
-            nom: errors['appels.0.nom'],
-            numero: errors['appels.0.numero'],
-            commentaire: errors['appels.0.commentaire'],
-          })
-        );
+      // this.$store
+      //   .dispatch('addInterventionAppel', this.activeAppel)
+      //   .then(() => {
+      //     this.errors = {};
+      //     this.HIDE_MODAL();
+      //   })
+      //   .catch(
+      //     (errors) =>
+      //     (this.errors = {
+      //       ...errors,
+      //       date: errors['appels.0.date'],
+      //       nom: errors['appels.0.nom'],
+      //       numero: errors['appels.0.numero'],
+      //       commentaire: errors['appels.0.commentaire'],
+      //     })
+      //   );
     },
   },
 };
