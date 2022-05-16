@@ -74,18 +74,23 @@ export default {
       fields: [
         {
           title: 'Nom prénom',
-          key: 'nom_prenom',
-          sortKey: 'nom_prenom',
+          key: 'nomPrenom',
+          sortKey: 'nomPrenom',
+          titleClass: 'align-middle',
         },
         {
           title: 'Convoqué',
           key: 'convoque',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center',
           sortKey: 'convoque',
           slot: "checkbox",
         },
         {
           title: 'Excusé',
           key: 'excuse',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center',
           sortKey: 'excuse',
           slot: "checkbox",
         },
@@ -93,6 +98,7 @@ export default {
           title: 'Portable',
           key: 'portable',
           sortKey: 'portable',
+          titleClass: 'align-middle',
         },
         // {
         //   title: 'Actions',
@@ -144,8 +150,15 @@ export default {
       if (!this.loadingSapeurs) {
         return [];
       }
-      // const indexedSapeurs = this.sapeurs.map(s =>)
-      return this.presences;
+      const indexedSapeurs = {};
+      this.sapeurs.forEach(s => indexedSapeurs[s.id] = {
+        nomPrenom: `${s.nom} ${s.prenom}`,
+        portable: s.telephones
+          .filter(a => a.telephone_type_id === 2)
+          .sort((a, b) => a.priorite - b.priorite)
+          .find(() => true)?.numero,
+      });
+      return this.presences.map(s => ({ ...s, ...(indexedSapeurs[s.sapeur_id] ?? {}) }));
     }
   },
   methods: {
