@@ -36,7 +36,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">Envoyer</button>
+      <button type="button" class="btn btn-primary" @click="send()">Envoyer</button>
     </div>
   </div>
 </template>
@@ -48,6 +48,7 @@ import { DateTime } from 'luxon';
 import BaseTable from '@/components/table/BaseTable.vue';
 import SapeurService from '../../services/SapeurService';
 import ExerciceService from '../../services/ExerciceService';
+import AspsmsParamService from '../../services/AspsmsParamService';
 
 export default {
   name: 'ModalSms',
@@ -65,11 +66,11 @@ export default {
       sapeurs: [],
       presences: [],
       params: {
+        message: "",
         origin: "GestSIS",
         differe: true,
         date: "",
-        selectedSapeurs: [],
-        message: "",
+        sapeurIds: [],
       },
       fields: [
         {
@@ -163,28 +164,27 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    async save() {
+    async send() {
       // //Format back dates to SQL Format
       // this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
       //   this.format
       // );
+      let params = {
+        ...this.params,
+        numeros: [] // TODO: Next 
+      }
 
-      // this.$store
-      //   .dispatch('addInterventionAppel', this.activeAppel)
-      //   .then(() => {
-      //     this.errors = {};
-      //     this.HIDE_MODAL();
-      //   })
-      //   .catch(
-      //     (errors) =>
-      //     (this.errors = {
-      //       ...errors,
-      //       date: errors['appels.0.date'],
-      //       nom: errors['appels.0.nom'],
-      //       numero: errors['appels.0.numero'],
-      //       commentaire: errors['appels.0.commentaire'],
-      //     })
-      //   );
+      AspsmsParamService.sendSms(this.params)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+          (this.errors = {
+            ...errors,
+          })
+        );
     },
   },
 };
