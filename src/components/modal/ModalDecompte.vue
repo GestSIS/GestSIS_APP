@@ -26,7 +26,7 @@
         <input type="date" class="form-control form-control-sm" :class="{ 'is-invalid': errorsData['date'] }"
           id="m-date" name="date" v-model="params.date" />
       </div>
-      <div class="mb-3">
+      <div class="mb-3" v-if="this.mode === 'genererDecompteAnnuel'">
         <label>Sélection des écritures</label>
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="ecritures-exercice"
