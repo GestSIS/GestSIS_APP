@@ -130,8 +130,7 @@ export default {
     this.loadingCredit = true;
     this.$store.dispatch('fetchAspsmsCredit').then(() => this.loadingCredit = false).catch(() => {
       this.loadingCredit = false;
-      console.log("ASPSMS non configuré");
-    })
+    });
 
     const localite = this.localites.find(l => l.id == this.data.localite_id);
     const categorie = this.categories.find(l => l.id == this.data.exercice_categorie_id);
@@ -155,7 +154,7 @@ export default {
       this.sapeurs.forEach(s => indexedSapeurs[s.id] = {
         nomPrenom: `${s.nom} ${s.prenom}`,
         portable: s.telephones
-          .filter(a => a.telephone_type_id === 2)
+          .filter(a => a.telephone_type_id === 3)
           .sort((a, b) => a.priorite - b.priorite)
           .find(() => true)?.numero,
       });
@@ -165,25 +164,30 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async send() {
-      // //Format back dates to SQL Format
-      // this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
-      //   this.format
-      // );
-      let params = {
+      const params = {
         ...this.params,
-        numeros: [] // TODO: Next 
+        numeros: this.computedSapeurs.map(s => s?.portable).filter(s => s),
+      };
+
+      if (params.numeros.length == 0) {
+        return this.$awn.alert("Aucun numéro disponible");
       }
 
-      AspsmsParamService.sendSms(this.params)
+      if (params.differe && new Date(params.date) < new Date()) {
+        return this.$awn.alert("Date invalide");
+      }
+
+      AspsmsParamService.sendSms(params)
         .then(() => {
           this.errors = {};
-          this.HIDE_MODAL();
+          this.$store.dispatch('fetchAspsmsCredit');
+          return this.$awn.success("Message envoyé avec succès");
         })
         .catch(
-          (errors) =>
-          (this.errors = {
-            ...errors,
-          })
+          (errors) => {
+            this.errors = { ...errors };
+            return this.$awn.alert(errors?.message ?? "Erreur lors de l'envoie des SMS");
+          }
         );
     },
   },

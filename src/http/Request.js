@@ -69,6 +69,7 @@ const request = {
 
     api.interceptors.response.use(
       (response) => {
+        console.log(response.data.error)
         if (response.data.error !== undefined) {
           throw response.data.error;
         }

@@ -128,6 +128,10 @@
                 v-if="hasValidationPermission && props.rowData.statut == 2">
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
+              <!-- <button class="btn btn-outline-primary border-0" @click="validerExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut <= 3">
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button> -->
             </template>
           </base-table>
         </div>

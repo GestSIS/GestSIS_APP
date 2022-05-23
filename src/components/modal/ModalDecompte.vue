@@ -16,15 +16,38 @@
         <select class="form-select form-select-sm" id="m-exercice-comptable-id"
           :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }" name="exercice_comptable_id"
           v-model="params.exercice_comptable_id">
-          <option v-for="exercice in listeExerciceComptable" :value="exercice.id" :key="exercice.id">{{
-              exercice.designation
-          }}</option>
+          <option v-for="exercice in listeExerciceComptable" :value="exercice.id" :key="exercice.id">
+            {{ exercice.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
         <label for="m-date">Date</label>
         <input type="date" class="form-control form-control-sm" :class="{ 'is-invalid': errorsData['date'] }"
           id="m-date" name="date" v-model="params.date" />
+      </div>
+      <div class="mb-3">
+        <label>Sélection des écritures</label>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="ecritures-exercice"
+            v-model="params.ecrituresExercice">
+          <label class="form-check-label" for="ecritures-exercice">Exercices</label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="ecritures-intervention"
+            v-model="params.ecrituresIntervention">
+          <label class="form-check-label" for="ecritures-intervention">Interventions</label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="ecritures-divers"
+            v-model="params.ecrituresDivers">
+          <label class="form-check-label" for="ecritures-divers">Ecritures diverses</label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="ecritures-annuel"
+            v-model="params.ecrituresAnnuel">
+          <label class="form-check-label" for="ecritures-annuel">Indemnités et frais annuels</label>
+        </div>
       </div>
       <div class="mb-3" v-if="this.params.exercice_id">
         <div class="form-check">
@@ -41,7 +64,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalDecompte',
@@ -57,6 +80,12 @@ export default {
         sapeur_id: null,
         exercice_id: null,
         deduction: false,
+
+        // Types d'écritures
+        ecrituresExercice: true,
+        ecrituresIntervention: true,
+        ecrituresDivers: true,
+        ecrituresAnnuel: true,
       },
     };
   },
@@ -100,6 +129,8 @@ export default {
         })
         .catch((errors) => {
           this.errorsData = errors;
+          console.log(errors)
+          this.$awn.alert(errors?.message ?? "Erreur lors de la création du décompte");
         });
     },
   },

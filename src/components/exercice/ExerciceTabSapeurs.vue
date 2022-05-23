@@ -1,11 +1,11 @@
 <template>
   <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3>
+    <div class="card-header d-flex">
+      <h3 class="me-auto">
         {{ activeExerciceData.designation }} &ndash;
         {{ activeExerciceData.date }}
       </h3>
-      <button class="btn btn-outline-primary ms-2" @click="validate" :disabled="!canValidate"
+      <button class="btn btn-outline-primary me-2" @click="validate" :disabled="!canValidate"
         v-if="hasValidationPermission">Valider</button>
       <button class="btn btn-outline-primary" @click="save" v-if="hasPresencePermission">Sauvegarder</button>
     </div>
@@ -52,7 +52,7 @@
                 :checked="!!sap.excuse_type_id" @change.stop.prevent="selectExcuse(sap)" />
               <label class="form-check-label" :for="sap.id + 'excuse'">
                 <span v-if="sap.excuse_type_id && sap.excuse_type_id !== true">{{
-                  formatExcuseType(sap.excuse_type_id)
+                    formatExcuseType(sap.excuse_type_id)
                 }}</span>
               </label>
             </div>
