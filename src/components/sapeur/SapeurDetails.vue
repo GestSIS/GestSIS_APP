@@ -4,15 +4,35 @@
       <div class="tab-pane fade show active" id="tab-sapeur-details">
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Exporter</button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Importer</button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Fiche sapeur</button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Exporter
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Importer
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Fiche sapeur
+            </button>
             <button
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
               v-if="hasEditPermission"
-            >Ajouter un sapeur</button>
+            >
+              Ajouter un sapeur
+            </button>
           </div>
         </div>
       </div>
@@ -26,7 +46,8 @@
           :class="{ active: activeTab === tabList[tab] }"
           @click.prevent="selectTab(tabList[tab])"
           href="#"
-        >{{ tabList[tab] }}</a>
+          >{{ tabList[tab] }}</a
+        >
       </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -127,9 +148,8 @@ export default {
   },
   computed: {
     ...mapState({
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     modeAjout() {
       return this.id == 'ajout';

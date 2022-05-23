@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Médecins</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutMedecin">Ajouter un médecin</button>
+      <button type="button" class="btn btn-primary" @click="ajoutMedecin">
+        Ajouter un médecin
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="excuses-types" class="table table-sm">
@@ -25,14 +27,28 @@
             <td>{{ m.adresse }}</td>
             <td>{{ localite(m.localite_id) }}</td>
             <td class="text-center">
-              <input type="checkbox" class="form-check-input" :id="`actif-${m.id}`" :checked="m.actif" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="`actif-${m.id}`"
+                :checked="m.actif"
+                disabled
+              />
               <label class="form-check-label" :for="`actif-${m.id}`"></label>
             </td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateMedecin(m)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateMedecin(m)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteMedecin(m)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteMedecin(m)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -97,5 +113,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -5,7 +5,12 @@
       <h3 class="card-title">Exercices</h3>
     </div>
     <div class="card-body table-responsive">
-      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
+      <table
+        id="sap-fonctions"
+        class="table table-sm"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th>Date</th>
@@ -62,7 +67,7 @@
                 {{
                   e.excuse_type_id
                     ? excusesType.find((a) => a.id == e.excuse_type_id)
-                      .designation
+                        .designation
                     : ''
                 }}
               </label>
@@ -100,17 +105,21 @@ export default {
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     exerciceDisplay() {
-      return this.activeSapeurExercice.map((exercice) => {
-        let localite = this.localites.find((l) => l.id == exercice.localite_id);
-        return {
-          ...exercice,
-          categorie: this.categories.find(
-            (e) => e.id == exercice.exercice_categorie_id
-          )?.designation,
-          localite: `${localite.npa} ${localite.designation}`,
-          heure: exercice.heure.substr(0, 5),
-        };
-      }).sort((a, b) => new Date(a.date) - new Date(b.date));
+      return this.activeSapeurExercice
+        .map((exercice) => {
+          let localite = this.localites.find(
+            (l) => l.id == exercice.localite_id
+          );
+          return {
+            ...exercice,
+            categorie: this.categories.find(
+              (e) => e.id == exercice.exercice_categorie_id
+            )?.designation,
+            localite: `${localite.npa} ${localite.designation}`,
+            heure: exercice.heure.substr(0, 5),
+          };
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
     },
   },
   mounted() {

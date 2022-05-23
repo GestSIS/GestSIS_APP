@@ -5,22 +5,40 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">ASPSMS</h3>
-          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+          <button type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">
             <label for="user">Utilisateur</label>
-            <input type="text" v-model="params.username" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['username'] }" id="username" />
+            <input
+              type="text"
+              v-model="params.username"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['username'] }"
+              id="username"
+            />
           </div>
           <div class="mb-3">
             <label for="password">Mot de passe</label>
-            <input type="password" v-model="params.password" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['password'] }" id="password" />
+            <input
+              type="password"
+              v-model="params.password"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['password'] }"
+              id="password"
+            />
           </div>
           <div class="mb-3">
             <label for="credit">Crédit actuel</label>
-            <input type="number" readonly :value="credit" class="form-control form-control-sm" id="credit" />
+            <input
+              type="number"
+              readonly
+              :value="credit"
+              class="form-control form-control-sm"
+              id="credit"
+            />
           </div>
         </div>
       </div>
@@ -62,12 +80,13 @@ export default {
         })
         .catch((e) => {
           this.errors = { ...e };
-          this.$awn.alert(this.errors?.message || "Erreur lors de l'enregistrement");
+          this.$awn.alert(
+            this.errors?.message || "Erreur lors de l'enregistrement"
+          );
         });
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

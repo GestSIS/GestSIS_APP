@@ -92,7 +92,9 @@
                   v-for="(e, index) in displayExercice"
                   :key="e.id"
                   class="text-center"
-                >{{ index + 1 }}</th>
+                >
+                  {{ index + 1 }}
+                </th>
                 <th>Nb Cvq</th>
                 <th>Nb Pre</th>
                 <th>Nb Rpl</th>
@@ -105,7 +107,9 @@
                 <td
                   v-if="!computedData.length"
                   :colspan="displayExercice.length + 8"
-                >Aucun sapeur à afficher</td>
+                >
+                  Aucun sapeur à afficher
+                </td>
               </tr>
               <tr v-for="s in computedData" :key="s.id">
                 <td>{{ s.nom }} {{ s.prenom }}</td>
@@ -116,7 +120,9 @@
                   :key="index"
                   class="text-center"
                   :class="formatPresenceClass(p)"
-                >{{ formatPresence(p) }}</td>
+                >
+                  {{ formatPresence(p) }}
+                </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
                 <td class="text-center">{{ s.stats.present }}</td>
                 <td class="text-center">{{ s.stats.remplace }}</td>
@@ -127,7 +133,10 @@
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
+                <th
+                  v-if="displayExercice.length"
+                  :colspan="displayExercice.length"
+                ></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
@@ -199,17 +208,22 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      indexedSapeursLocaliteId: (state) => state.sapeur.liste.reduce((map, e) => {
-        map.set(e.id, e.localite_id)
-        return map;
-      }, new Map()),
+      indexedSapeursLocaliteId: (state) =>
+        state.sapeur.liste.reduce((map, e) => {
+          map.set(e.id, e.localite_id);
+          return map;
+        }, new Map()),
       fonctions: (state) => state.fonction.liste,
       localites: (state) => state.localites.liste,
-      exercices: (state) => state.exercice.liste.sort((a, b) => new Date(a.date) - new Date(b.date)),
-      indexedExercices: (state) => state.exercice.liste.reduce((map, e) => {
-        map.set(e.id, e)
-        return map;
-      }, new Map()),
+      exercices: (state) =>
+        state.exercice.liste.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        ),
+      indexedExercices: (state) =>
+        state.exercice.liste.reduce((map, e) => {
+          map.set(e.id, e);
+          return map;
+        }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
       presences: (state) => state.statistique.presences,
       excuses: (state) => state.excuseType.liste,
@@ -265,20 +279,22 @@ export default {
             this.indexedSapeursLocaliteId.get(p.sapeur_id)
           )
         );
-      })
+      });
       const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
         const sapeurList = map[e.sapeur_id] || [];
         map[e.sapeur_id] = [...sapeurList, e];
         return map;
       }, {});
 
-      const sapeurExerciceIndexedPresence = filteredPresences.reduce((map, e) => {
-        const sapeurMap = map.get(e.sapeur_id) || new Map();
-        sapeurMap.set(e.exercice_id, e);
-        map.set(e.sapeur_id, sapeurMap);
-        return map;
-      }, new Map());
-
+      const sapeurExerciceIndexedPresence = filteredPresences.reduce(
+        (map, e) => {
+          const sapeurMap = map.get(e.sapeur_id) || new Map();
+          sapeurMap.set(e.exercice_id, e);
+          map.set(e.sapeur_id, sapeurMap);
+          return map;
+        },
+        new Map()
+      );
 
       return this.filteredSapeurs
         .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
@@ -287,10 +303,8 @@ export default {
           presences: this.displayExercice.map((e) =>
             sapeurExerciceIndexedPresence.get(s.id)?.get(e.id)
           ),
-          stats: this.computeStats(
-            sapeurIndexedPresence[s.id] || []
-          ),
-          temp: sapeurIndexedPresence[s.id] || []
+          stats: this.computeStats(sapeurIndexedPresence[s.id] || []),
+          temp: sapeurIndexedPresence[s.id] || [],
         }));
     },
     computedStats() {

@@ -33,7 +33,9 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
+              <option v-for="u in unites" :key="u.id" :value="u.id">
+                {{ u.unite }}
+              </option>
             </select>
           </div>
           <div class="mb-3">
@@ -85,10 +87,14 @@
                         type="text"
                         v-model="base[i].tarif_min_pour"
                         class="form-control form-control-sm"
-                        :class="{ 'is-invalid': errors['base-tarif-min-pour' + i] }"
+                        :class="{
+                          'is-invalid': errors['base-tarif-min-pour' + i],
+                        }"
                         id="tarif_min_pour"
                       />
-                      <span class="input-group-text">{{ unite(activeIndemnite.type_unite_id) }}</span>
+                      <span class="input-group-text">{{
+                        unite(activeIndemnite.type_unite_id)
+                      }}</span>
                     </div>
                   </td>
                   <td :class="uniteComptable ? 'col-3' : 'col-4'">
@@ -98,7 +104,9 @@
                       class="form-select form-select-sm"
                       :class="{ 'is-invalid': errors['base-compte' + i] }"
                     >
-                      <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+                      <option v-for="c in comptes" :key="c.id" :value="c.id">
+                        {{ compte(c) }}
+                      </option>
                     </select>
                   </td>
                   <td class="text-center" v-if="base.length > 1">
@@ -113,9 +121,16 @@
                 </tr>
                 <tr>
                   <td :colspan="base.length > 1 ? 6 : 5">
-                    <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary"
+                      @click="ajoutType()"
+                    >
                       Ajouter
-                      <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
+                      <font-awesome-icon
+                        size="1x"
+                        :icon="['far', 'plus-square']"
+                      />
                     </button>
                   </td>
                 </tr>
@@ -130,7 +145,9 @@
                 id="par-fonction-modal"
                 v-model="activeIndemnite.par_fonction"
               />
-              <label class="form-check-label" for="par-fonction-modal">Par fonction</label>
+              <label class="form-check-label" for="par-fonction-modal"
+                >Par fonction</label
+              >
             </div>
           </div>
 
@@ -142,7 +159,9 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
-              <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
+              <option v-for="c in categories" :key="c.id" :value="c.id">
+                {{ c.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -182,7 +201,10 @@
                     class="btn btn-outline-primary border-0"
                     @click="ajoutTypePourFonction()"
                   >
-                    <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
+                    <font-awesome-icon
+                      size="2x"
+                      :icon="['far', 'plus-square']"
+                    />
                   </button>
                 </th>
               </tr>
@@ -195,7 +217,9 @@
                     class="form-select form-select-sm"
                     :class="{ 'is-invalid': errors['column-compte' + i] }"
                   >
-                    <option v-for="c in comptes" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+                    <option v-for="c in comptes" :key="c.id" :value="c.id">
+                      {{ compte(c) }}
+                    </option>
                   </select>
                 </th>
               </tr>
@@ -206,16 +230,18 @@
               </tr>
               <tr v-for="f in fonctions" :key="f.id">
                 <td>
-                  {{
-                    fonction(f.id)
-                  }}
+                  {{ fonction(f.id) }}
                 </td>
                 <td v-for="(column, i) in columns" :key="i">
                   <input
                     class="form-control form-control-sm"
-                    :class="{ 'is-invalid': errors['column-tarif' + i + '-' + f.id] }"
+                    :class="{
+                      'is-invalid': errors['column-tarif' + i + '-' + f.id],
+                    }"
                     type="text"
-                    @change="(e) => columns[i].fonctions[f.id] = e.target.value"
+                    @change="
+                      (e) => (columns[i].fonctions[f.id] = e.target.value)
+                    "
                     :value="columns[i].fonctions[f.id] || 0.0"
                   />
                 </td>
@@ -226,12 +252,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -261,23 +287,38 @@ export default {
   },
   mounted() {
     // Calcul des différentes combinaisons existantes
-    const configurations = new Set(this.data?.fonctions?.filter(f => f.fonction_id)?.map(f => f.type + ' ' + f.compte_id) || []);
-    this.columns = Object.fromEntries([...configurations]
-      .map(e => [e, e.split(' ')])
-      .map(([index, e]) => ([index, {
-        type: e[0],
-        compte_id: e[1],
-        fonctions: {},
-      }])));
+    const configurations = new Set(
+      this.data?.fonctions
+        ?.filter((f) => f.fonction_id)
+        ?.map((f) => f.type + ' ' + f.compte_id) || []
+    );
+    this.columns = Object.fromEntries(
+      [...configurations]
+        .map((e) => [e, e.split(' ')])
+        .map(([index, e]) => [
+          index,
+          {
+            type: e[0],
+            compte_id: e[1],
+            fonctions: {},
+          },
+        ])
+    );
 
-    this.data?.fonctions?.filter(f => f.fonction_id)?.forEach(f => {
-      this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] = f.tarif;
-    })
-
+    this.data?.fonctions
+      ?.filter((f) => f.fonction_id)
+      ?.forEach((f) => {
+        this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
+          f.tarif;
+      });
 
     // Ajout un type par défault en cas d'utilisation des indemnités par fonction
     if (!Object.keys(this.columns).length) {
-      this.columns[this.columnCreationIndex] = { type: 1, compte_id: null, fonctions: [] };
+      this.columns[this.columnCreationIndex] = {
+        type: 1,
+        compte_id: null,
+        fonctions: [],
+      };
       this.columnCreationIndex++;
     }
 
@@ -287,7 +328,7 @@ export default {
       ...this.data,
     };
 
-    this.base = this.data?.fonctions?.filter(f => !f.fonction_id) || [];
+    this.base = this.data?.fonctions?.filter((f) => !f.fonction_id) || [];
     if (!this.base.length) {
       // Ajout d'un revenu de base de type solde
       this.base.push({
@@ -298,13 +339,13 @@ export default {
         tarif_min_pour: null,
         compte_id: null,
         fonction_id: null,
-      })
+      });
     }
   },
   computed: {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
-      unites: (state) => state.unite.liste,//.filter(u => !(u.id in [3, 4, 5, 7])),
+      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
       comptes: (state) => state.compte.liste,
       categories: (state) => state.ecritureCategorie.liste,
     }),
@@ -315,8 +356,10 @@ export default {
       return false;
       // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
       const uniteId = this.activeIndemnite.type_unite_id;
-      return this.unites.find(u => u.id == uniteId)?.comptable || uniteId == 1; // Comptable ou par pièces
-    }
+      return (
+        this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
+      ); // Comptable ou par pièces
+    },
   },
   watch: {
     parFonction: function (val) {
@@ -329,7 +372,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
     unite(id) {
-      return this.unites.find(u => u.id == id)?.abreviation;
+      return this.unites.find((u) => u.id == id)?.abreviation;
     },
     compte(compte) {
       return `${compte?.numero} ${compte.designation}`;
@@ -351,13 +394,17 @@ export default {
         tarif_min_pour: null,
         compte_id: null,
         fonction_id: null,
-      })
+      });
     },
     supprimerType(i) {
       this.base.splice(i, 1);
     },
     ajoutTypePourFonction() {
-      this.columns[this.columnCreationIndex] = ({ type: 1, compte_id: null, fonctions: [] });
+      this.columns[this.columnCreationIndex] = {
+        type: 1,
+        compte_id: null,
+        fonctions: [],
+      };
       this.columnCreationIndex++;
     },
     supprimerTypePourFonction(i) {
@@ -367,16 +414,22 @@ export default {
       this.errors = {};
 
       // Contrôle qu'aucune colonne n'est dupliquée
-      const baseSet = new Set(this.base.map(e => e.type + ' ' + e.compte_id));
+      const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
       if (baseSet.size != this.base.length) {
-        this.$awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise.")
+        this.$awn.alert(
+          "Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise."
+        );
         return;
       }
 
       if (this.activeIndemnite.par_fonction) {
-        const columnsFonctionsSet = new Set(Object.values(this.columns).map(e => e.type + ' ' + e.compte_id));
+        const columnsFonctionsSet = new Set(
+          Object.values(this.columns).map((e) => e.type + ' ' + e.compte_id)
+        );
         if (columnsFonctionsSet.size != Object.keys(this.columns).length) {
-          this.$awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise dans les fonctions.")
+          this.$awn.alert(
+            "Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise dans les fonctions."
+          );
           return;
         }
       }
@@ -386,14 +439,16 @@ export default {
         if (!e.type) this.errors['base-type' + i] = true;
         if (!e.compte_id) this.errors['base-compte' + i] = true;
         if (!e.tarif || e.tarif < 0) this.errors['base-tarif' + i] = true;
-        if (e.tarif_min && e.tarif_min < 0) this.errors['base-tarif-min' + i] = true;
-        if (e.tarif_min_pour && e.tarif_min_pour < 0) this.errors['base-tarif-min-pour' + i] = true;
-      })
+        if (e.tarif_min && e.tarif_min < 0)
+          this.errors['base-tarif-min' + i] = true;
+        if (e.tarif_min_pour && e.tarif_min_pour < 0)
+          this.errors['base-tarif-min-pour' + i] = true;
+      });
       if (this.activeIndemnite.par_fonction) {
         Object.values(this.columns).forEach((e, i) => {
           if (!e.type) this.errors['column-type' + i] = true;
           if (!e.compte_id) this.errors['column-compte' + i] = true;
-        })
+        });
       }
 
       // Return en cas d'erreurs
@@ -402,23 +457,22 @@ export default {
       }
 
       // Generate data
-      const fonctions = [
-        ...this.base,
-      ];
+      const fonctions = [...this.base];
 
       // TODO: Set tarif_min to null if unite == forfait
       if (this.activeIndemnite.par_fonction) {
         fonctions.push(
-          ...(Object.values(this.columns)
-            .map(e => [...Object.entries(e.fonctions)
-              .map(([f, tarif]) => ({
+          ...Object.values(this.columns)
+            .map((e) => [
+              ...Object.entries(e.fonctions).map(([f, tarif]) => ({
                 type: e.type,
                 compte_id: e.compte_id,
                 fonction_id: f,
-                tarif: tarif
-              }))])
-            .reduce((e, acc) => [...acc, ...e], []))
-        )
+                tarif: tarif,
+              })),
+            ])
+            .reduce((e, acc) => [...acc, ...e], [])
+        );
       }
 
       const indemnite = {
@@ -435,9 +489,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

@@ -8,8 +8,12 @@
     </div>
     <div class="mb-3">
       <ul class="list-group list-group-flush">
-        <li class="list-group-item list-group-item-action" v-for="excuse in listeExcuseTypes" :key="excuse.id"
-          @click="selectExcuseType(excuse.id)">
+        <li
+          class="list-group-item list-group-item-action"
+          v-for="excuse in listeExcuseTypes"
+          :key="excuse.id"
+          @click="selectExcuseType(excuse.id)"
+        >
           {{ excuse.designation }}
         </li>
       </ul>
@@ -34,24 +38,21 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     selectExcuseType(excuseTypeId) {
-      (this.callback(excuseTypeId) ?? Promise.resolve())
-        .then((close) => {
-          if (close ?? true) {
-            this.HIDE_MODAL();
-          }
-        });
+      (this.callback(excuseTypeId) ?? Promise.resolve()).then((close) => {
+        if (close ?? true) {
+          this.HIDE_MODAL();
+        }
+      });
     },
     close() {
-      (this.callback(null) ?? Promise.resolve())
-        .then((close) => {
-          if (close ?? true) {
-            this.HIDE_MODAL();
-          }
-        });
+      (this.callback(null) ?? Promise.resolve()).then((close) => {
+        if (close ?? true) {
+          this.HIDE_MODAL();
+        }
+      });
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

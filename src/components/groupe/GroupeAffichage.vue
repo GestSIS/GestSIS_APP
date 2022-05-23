@@ -1,5 +1,10 @@
 <template>
-  <tree :tree="groupeTree" :_types="types" :selectable="true" @selected="selected" />
+  <tree
+    :tree="groupeTree"
+    :_types="types"
+    :selectable="true"
+    @selected="selected"
+  />
 </template>
 
 <script>

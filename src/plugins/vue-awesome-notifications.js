@@ -1,4 +1,4 @@
-import AWN from "awesome-notifications";
+import AWN from 'awesome-notifications';
 
 const VueAWN = {
   install(app, options) {

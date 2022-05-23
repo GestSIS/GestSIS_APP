@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Grades</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutGrade()">Ajouter un grade</button>
+      <button type="button" class="btn btn-primary" @click="ajoutGrade()">
+        Ajouter un grade
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
@@ -26,10 +28,18 @@
             <td>{{ g.abreviation }}</td>
             <td>{{ groupe(g.groupe) }}</td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateGrade(g)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateGrade(g)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteGrade(g)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteGrade(g)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -92,5 +102,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -38,7 +38,11 @@
         data-accordion="false"
       >
         <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
-          <router-link :to="link.to" class="nav-link internal-link" active-class="active">
+          <router-link
+            :to="link.to"
+            class="nav-link internal-link"
+            active-class="active"
+          >
             <font-awesome-icon :icon="link.icon" />
             <span>{{ link.nom }}</span>
           </router-link>
@@ -171,14 +175,14 @@ a:focus {
   transition: all 0.3s;
 }
 
-@import "node_modules/bootswatch/dist/cosmo/variables.scss";
+@import 'node_modules/bootswatch/dist/cosmo/variables.scss';
 ul li a:hover {
   color: $primary;
   background: #fff;
 }
 
 .router-link-active,
-a[aria-expanded="true"] {
+a[aria-expanded='true'] {
   color: #fff;
   background: $primary;
 }

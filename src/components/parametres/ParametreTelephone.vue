@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutTelephone()">Ajouter une numéro</button>
+      <button type="button" class="btn btn-primary" @click="ajoutTelephone()">
+        Ajouter une numéro
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="telephones" class="table table-sm">
@@ -24,10 +26,18 @@
             <td>{{ t.nom }}</td>
             <td>{{ t.numero }}</td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateTelephone(t)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateTelephone(t)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteTelephone(t)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteTelephone(t)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -79,5 +89,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

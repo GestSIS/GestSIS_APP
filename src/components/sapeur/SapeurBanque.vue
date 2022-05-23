@@ -5,7 +5,13 @@
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
+          <button
+            @click.prevent="save"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >
+            Enregistrer
+          </button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -35,9 +41,8 @@ export default {
   name: 'SapeurBanque',
   computed: {
     ...mapState({
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },

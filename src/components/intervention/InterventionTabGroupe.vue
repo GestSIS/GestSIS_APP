@@ -10,7 +10,9 @@
           class="btn btn-primary"
           @click="save"
           v-if="hasEditPermission"
-        >Enregistrer</button>
+        >
+          Enregistrer
+        </button>
       </div>
       <div class="card-body">
         <table id="int-groupes" class="table table-sm">
@@ -30,9 +32,7 @@
             <tr v-for="g in groupes" :key="g.id">
               <td>
                 <label :for="'g-' + g.id">
-                  {{
-                    (g.no ? g.no + ' ' : '') + g.designation
-                  }}
+                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
                 </label>
               </td>
               <td>
@@ -72,9 +72,10 @@ export default {
       interventionGroupes: (state) => state.intervention.active.groupes,
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
     filteredGroupes() {
       const nos = new Set(this.interventionGroupes.map((g) => g.no));

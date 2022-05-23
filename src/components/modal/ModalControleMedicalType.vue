@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5
-        class="modal-title"
-        id="exampleModalLabel"
-      >{{ activeType.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeType.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -46,17 +45,19 @@
             id="type-expirable-modal"
             v-model="activeType.expirable"
           />
-          <label class="form-check-label" for="type-expirable-modal">Expirable</label>
+          <label class="form-check-label" for="type-expirable-modal"
+            >Expirable</label
+          >
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeType.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeType.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

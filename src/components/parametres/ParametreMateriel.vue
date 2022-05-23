@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Matériel consommable et en prêt</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutMateriel()">Ajouter du matériel</button>
+      <button type="button" class="btn btn-primary" @click="ajoutMateriel()">
+        Ajouter du matériel
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="materiel" class="table table-sm">
@@ -25,7 +27,13 @@
           <tr v-for="m in listeMateriel" :key="m.id">
             <td>{{ m.tri }}</td>
             <td class="text-center">
-              <input type="checkbox" class="form-check-input" id="statut" :checked="m.statut" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="statut"
+                :checked="m.statut"
+                disabled
+              />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td>{{ m.designation }}</td>
@@ -33,10 +41,18 @@
             <td>{{ m.unite }}</td>
             <td>{{ unite(m.type_unite_id) }}</td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateMateriel(m)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateMateriel(m)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteMateriel(m)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteMateriel(m)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -96,5 +112,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

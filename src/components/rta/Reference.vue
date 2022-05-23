@@ -4,7 +4,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Référence RTA</h3>
-      <button @click="reset" class="btn btn-outline-primary">Réinitialiser</button>
+      <button @click="reset" class="btn btn-outline-primary">
+        Réinitialiser
+      </button>
     </div>
     <div class="card-body">
       <table class="table table-sm" cellspacing="0">
@@ -22,7 +24,9 @@
         </thead>
         <tbody>
           <tr v-if="!mutations.length">
-            <td colspan="5">Aucun sapeur présent actuellement dans la référence RTA.</td>
+            <td colspan="5">
+              Aucun sapeur présent actuellement dans la référence RTA.
+            </td>
           </tr>
           <tr
             v-for="e in mutations"
@@ -50,27 +54,37 @@
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
-            >{{ e.nom }} {{ e.prenom }}</td>
+            >
+              {{ e.nom }} {{ e.prenom }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.date_naissance,
               }"
-            >{{ e.date_naissance }}</td>
+            >
+              {{ e.date_naissance }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.localite,
               }"
-            >{{ e.localite }}</td>
+            >
+              {{ e.localite }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.adresse,
               }"
-            >{{ e.adresse }}</td>
+            >
+              {{ e.adresse }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.fonction,
               }"
-            >{{ e.fonction }}</td>
+            >
+              {{ e.fonction }}
+            </td>
             <td
               v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
@@ -83,8 +97,13 @@
                 'text-danger':
                   e.statut == 'modifie' && i >= e.changements.numerosSupprime,
               }"
-            >{{ n }}</td>
-            <td v-for="n in nbNumero - e.numeros.length" :key="'n-comp-' + n"></td>
+            >
+              {{ n }}
+            </td>
+            <td
+              v-for="n in nbNumero - e.numeros.length"
+              :key="'n-comp-' + n"
+            ></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
@@ -99,8 +118,13 @@
                   e.statut == 'modifie' &&
                   e.changements.groupesSupprime.includes(g.no),
               }"
-            >{{ g.no }}</td>
-            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
+            >
+              {{ g.no }}
+            </td>
+            <td
+              v-for="g in nbGroupes - e.groupes.length"
+              :key="'g-comp-' + g"
+            ></td>
           </tr>
         </tbody>
       </table>
@@ -178,7 +202,8 @@ export default {
         'adresse',
         'date_naissance',
       ];
-      const sapeurCompare = (a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
+      const sapeurCompare = (a, b) =>
+        (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
 
       return this.reference
         .map((s) => {
@@ -221,7 +246,8 @@ export default {
           );
           const groupesModifie = s.groupes.filter(
             (g) =>
-              groupesActuel.has(g.no) && groupesActuel.get(g.no) !== g.description
+              groupesActuel.has(g.no) &&
+              groupesActuel.get(g.no) !== g.description
           );
 
           changements = {
@@ -255,9 +281,9 @@ export default {
   },
   methods: {
     reset() {
-      this.$store.dispatch('resetReferenceRta')
-    }
-  }
+      this.$store.dispatch('resetReferenceRta');
+    },
+  },
 };
 </script>
 

@@ -16,7 +16,9 @@
             v-for="(column, index) in columns"
             :key="index"
             :class="column.headerClassName || ''"
-          >{{ column.title }}</th>
+          >
+            {{ column.title }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +27,9 @@
             v-for="(column, index) in columns"
             :key="index"
             :class="column.className || ''"
-          >{{ computeColumn(column, amende) }}</td>
+          >
+            {{ computeColumn(column, amende) }}
+          </td>
         </tr>
       </tbody>
     </table>

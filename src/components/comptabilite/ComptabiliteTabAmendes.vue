@@ -5,20 +5,41 @@
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Amendes</h3>
-          <button class="btn btn-primary" @click="generer">Générer les amendes</button>
+          <button class="btn btn-primary" @click="generer">
+            Générer les amendes
+          </button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" detail-row-class="m-td-0"
-          no-data="Aucune amende à afficher" :detail-row-component="detailRow" :data="filteredAmendes"
-          @selected="selected" :selectable="true" selectKey="id" row-selected-class="table-primary">
+        <base-table
+          v-show="!loading"
+          :fields="fields"
+          :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          no-data="Aucune amende à afficher"
+          :detail-row-component="detailRow"
+          :data="filteredAmendes"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
+        >
           <template v-slot:details="props">
-            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
-              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
-              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
             </button>
           </template>
         </base-table>
@@ -113,7 +134,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -188,5 +209,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

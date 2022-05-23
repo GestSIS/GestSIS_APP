@@ -6,7 +6,9 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" disabled>Créer un décompte individuel</button>
+          <button class="btn btn-outline-primary" disabled>
+            Créer un décompte individuel
+          </button>
         </div>
       </div>
     </div>
@@ -16,7 +18,9 @@
           <h3 class="card-title">Impressions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" :disabled="!selected">Résumé des frais</button>
+          <button class="btn btn-outline-primary" :disabled="!selected">
+            Résumé des frais
+          </button>
         </div>
       </div>
     </div>
@@ -33,22 +37,42 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table v-show="!loading" :selectable="true" selectKey="id" :fields="fields"
-          :detail-row-component="detailRow" detail-row-class="m-td-0" row-selected-class="table-primary"
-          no-data="Aucun sapeur à afficher" :data="computedData" @selected="select">
+        <base-table
+          v-show="!loading"
+          :selectable="true"
+          selectKey="id"
+          :fields="fields"
+          :detail-row-component="detailRow"
+          detail-row-class="m-td-0"
+          row-selected-class="table-primary"
+          no-data="Aucun sapeur à afficher"
+          :data="computedData"
+          @selected="select"
+        >
           <template v-slot:details="props">
-            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
-              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
-              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
             </button>
           </template>
           <template v-slot:actions="props">
-            <button class="btn btn-outline-primary border-0" @click="
-              genererDecompteSapeur(
-                props.rowData.id,
-                props.rowData.nomPrenom
-              )
-            " title="Décompte sapeur" :disabled="!props.rowData.aPayer">
+            <button
+              class="btn btn-outline-primary border-0"
+              @click="
+                genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
@@ -193,7 +217,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -261,5 +285,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

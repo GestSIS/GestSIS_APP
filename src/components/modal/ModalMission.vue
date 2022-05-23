@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5
-        class="modal-title"
-        id="exampleModalLabel"
-      >{{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -20,12 +19,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeMission.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

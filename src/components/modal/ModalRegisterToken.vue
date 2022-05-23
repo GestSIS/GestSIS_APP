@@ -37,12 +37,12 @@
             :id="'r' + role.id"
           />
           <label class="form-check-label" :for="'r' + role.id">
-            {{
-            role.nom
-            }}
+            {{ role.nom }}
           </label>
         </div>
-        <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">{{ errors['roles'] }}</div>
+        <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">
+          {{ errors['roles'] }}
+        </div>
       </div>
     </div>
     <div class="modal-body" v-if="step === 2">
@@ -73,12 +73,17 @@
       </div>
     </div>
     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        {{ step == 1 ? 'Annuler' : 'Fermer' }}
+      </button>
       <button
         type="button"
-        class="btn btn-secondary"
-        @click="HIDE_MODAL()"
-      >{{ step == 1 ? 'Annuler' : 'Fermer' }}</button>
-      <button type="button" class="btn btn-primary" @click="save()" v-if="step === 1">Créer</button>
+        class="btn btn-primary"
+        @click="save()"
+        v-if="step === 1"
+      >
+        Créer
+      </button>
     </div>
   </div>
 </template>

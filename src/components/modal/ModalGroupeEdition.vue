@@ -18,7 +18,8 @@
             :_types="types"
             :selectable="true"
             @selected="selected"
-          >1</editable-tree>
+            >1</editable-tree
+          >
         </div>
       </div>
     </div>

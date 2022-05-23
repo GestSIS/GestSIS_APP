@@ -1,25 +1,47 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">{{ data ? 'Modifier' : 'Ajouter' }} une photo</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ data ? 'Modifier' : 'Ajouter' }} une photo
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <div class="input-group input-group-sm">
-          <input type="file" class="form-control form-control-sm" id="photoAjout" @change="loadFile" />
+          <input
+            type="file"
+            class="form-control form-control-sm"
+            id="photoAjout"
+            @change="loadFile"
+          />
         </div>
       </div>
-      <cropper ref="cropper" class="cropper" :src="img" :canvas="{
-        maxWidth: 128,
-      }" :stencil-props="{
-  aspectRatio: 10 / 12,
-}" :default-size="defaultSize"></cropper>
+      <cropper
+        ref="cropper"
+        class="cropper"
+        :src="img"
+        :canvas="{
+          maxWidth: 128,
+        }"
+        :stencil-props="{
+          aspectRatio: 10 / 12,
+        }"
+        :default-size="defaultSize"
+      ></cropper>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()" :disabled="!img">{{ data ? 'Modifier' : 'Ajouter'
-      }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save()"
+        :disabled="!img"
+      >
+        {{ data ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

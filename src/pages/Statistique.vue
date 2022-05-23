@@ -7,7 +7,9 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Statistique</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Statistique
+            </li>
           </ol>
         </nav>
       </div>

@@ -6,7 +6,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Type d'intervention</h3>
-          <button type="button" class="btn btn-primary" @click="ajoutType()">Ajouter un type</button>
+          <button type="button" class="btn btn-primary" @click="ajoutType()">
+            Ajouter un type
+          </button>
         </div>
         <div class="card-body">
           <table id="type-intervention" class="table table-sm">
@@ -54,11 +56,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Statistiques</h3>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="ajoutStat()"
-          >Ajouter un type de statistique</button>
+          <button type="button" class="btn btn-primary" @click="ajoutStat()">
+            Ajouter un type de statistique
+          </button>
         </div>
         <div class="card-body">
           <table id="statistiques" class="table table-sm">

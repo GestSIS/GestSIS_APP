@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">{{ activeEcriture.id ? 'Modifier' : 'Ajouter' }} une écriture</h5>
+      <h5 class="modal-title">
+        {{ activeEcriture.id ? 'Modifier' : 'Ajouter' }} une écriture
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -23,7 +25,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
-          <option v-for="s in sapeurs" :key="s.id" :value="s.id">{{ s.nom }} {{ s.prenom }}</option>
+          <option v-for="s in sapeurs" :key="s.id" :value="s.id">
+            {{ s.nom }} {{ s.prenom }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -44,7 +48,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
-          <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
+          <option v-for="u in unites" :key="u.id" :value="u.id">
+            {{ u.unite }}
+          </option>
         </select>
       </div>
       <div class="row">
@@ -61,7 +67,10 @@
             <span class="input-group-text">{{ activeUnite.abreviation }}</span>
           </div>
         </div>
-        <div class="mb-3 col-4" :class="activeUnite?.comptable ? 'col-4' : 'col-12'">
+        <div
+          class="mb-3 col-4"
+          :class="activeUnite?.comptable ? 'col-4' : 'col-12'"
+        >
           <label for="tarif">Tarif</label>
           <div class="input-group input-group-sm">
             <input
@@ -84,7 +93,7 @@
             <input
               type="text"
               readonly
-              :value="(activeEcriture?.quantite * activeEcriture?.tarif) || 0"
+              :value="activeEcriture?.quantite * activeEcriture?.tarif || 0"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
               id="tarif"
@@ -101,7 +110,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in comptes" :key="c.id" :value="c.id">{{ c.numero }} {{ c.designation }}</option>
+          <option v-for="c in comptes" :key="c.id" :value="c.id">
+            {{ c.numero }} {{ c.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -112,7 +123,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_type'] }"
         >
-          <option v-for="s in types" :key="s.id" :value="s.id">{{ s.designation }}</option>
+          <option v-for="s in types" :key="s.id" :value="s.id">
+            {{ s.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -123,17 +136,19 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in categories" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeEcriture.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeEcriture.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -165,7 +180,7 @@ export default {
         { id: 2, designation: 'indemnité' },
         { id: 3, designation: 'Frais forfaitaire' },
         { id: 4, designation: 'Frais effectif' },
-      ]
+      ],
     };
   },
   mounted() {
@@ -177,18 +192,18 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter(s => s.actif),
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     activeCompteType() {
-      return this.comptes.find(c => c.id == this.activeEcriture.compte_id);
+      return this.comptes.find((c) => c.id == this.activeEcriture.compte_id);
     },
     activeUnite() {
-      return this.unites.find(u => u.id == this.activeEcriture.type_unite_id);
-    }
+      return this.unites.find((u) => u.id == this.activeEcriture.type_unite_id);
+    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -198,7 +213,8 @@ export default {
       if (!this.activeUnite?.comptable) {
         this.activeEcriture.quantite = 1;
       }
-      this.activeEcriture.total = this.activeEcriture?.tarif * this.activeEcriture?.quantite;
+      this.activeEcriture.total =
+        this.activeEcriture?.tarif * this.activeEcriture?.quantite;
 
       if ((this.activeEcriture.id || 0) === 0) {
         this.$store
@@ -209,9 +225,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

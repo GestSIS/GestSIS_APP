@@ -23,7 +23,9 @@
         @click="setResult(result)"
         class="autocomplete-result list-group-item list-group-item-action"
         :class="{ active: i === arrowCounter }"
-      >{{ result }}</li>
+      >
+        {{ result }}
+      </li>
     </ul>
   </div>
 </template>

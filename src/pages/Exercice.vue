@@ -10,7 +10,9 @@
             <li class="breadcrumb-item">
               <router-link to="/exercices">Exercices</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbFinal }}</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ breadcrumbFinal }}
+            </li>
           </ol>
         </nav>
       </div>
@@ -20,26 +22,36 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav v-if="!newMode" class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav
+          v-if="!newMode"
+          class="nav nav-tabs mb-3"
+          id="nav-tab"
+          role="tablist"
+        >
           <a
             class="nav-item nav-link"
             :class="{ active: !tabPresence }"
             role="tab"
             href="#"
             @click.prevent="tabPresence = false"
-          >Informations</a>
+            >Informations</a
+          >
           <a
             class="nav-item nav-link"
             :class="{ active: tabPresence }"
             role="tab"
             href="#"
             @click.prevent="tabPresence = true"
-          >Présences</a>
+            >Présences</a
+          >
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">
             <ExerciceTabSapeurs v-if="tabPresence"></ExerciceTabSapeurs>
-            <ExerciceTabGeneral :newMode="newMode" v-if="!tabPresence"></ExerciceTabGeneral>
+            <ExerciceTabGeneral
+              :newMode="newMode"
+              v-if="!tabPresence"
+            ></ExerciceTabGeneral>
           </div>
         </div>
       </div>

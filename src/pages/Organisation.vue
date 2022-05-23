@@ -6,7 +6,9 @@
           <li class="breadcrumb-item">
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">Organisation</li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Organisation
+          </li>
         </ol>
       </div>
       <div class="col-sm-6 d-flex justify-content-end">
@@ -21,7 +23,11 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <groupe-edition :editMode="editMode" @selected="selected" ref="groupeEdition" />
+            <groupe-edition
+              :editMode="editMode"
+              @selected="selected"
+              ref="groupeEdition"
+            />
           </div>
         </div>
       </div>
@@ -31,10 +37,18 @@
             <h3>Actions</h3>
           </div>
           <div class="card-body pb-2">
-            <button class="btn btn-info me-1" @click="expand" v-tooltip.top="'Tout développer'">
+            <button
+              class="btn btn-info me-1"
+              @click="expand"
+              v-tooltip.top="'Tout développer'"
+            >
               <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
-            <button class="btn btn-info me-1" @click="contract" v-tooltip.top="'Tout réduire'">
+            <button
+              class="btn btn-info me-1"
+              @click="contract"
+              v-tooltip.top="'Tout réduire'"
+            >
               <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
             <button
@@ -50,15 +64,21 @@
               class="btn btn-primary mb-2"
               :disabled="!activeIsGroupe"
               @click="addSapeurs(active)"
-            >Ajouter/enlever des sapeurs</button>
+            >
+              Ajouter/enlever des sapeurs
+            </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
-            <button class="btn btn-primary d-block mb-2" @click="addGroupe">Ajouter un groupe</button>
+            <button class="btn btn-primary d-block mb-2" @click="addGroupe">
+              Ajouter un groupe
+            </button>
             <button
               class="btn btn-primary d-block mb-2"
               :disabled="!activeIsGroupe"
               @click="deleteGroupe"
-            >Supprimer</button>
+            >
+              Supprimer
+            </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
             <h3>Réorganiser le groupe</h3>
@@ -70,7 +90,9 @@
               }"
               @click.prevent="left"
               :disabled="!canMoveLeft"
-            >←</button>
+            >
+              ←
+            </button>
             <button
               class="btn btn-sm"
               :class="{
@@ -79,7 +101,9 @@
               }"
               @click.prevent="right"
               :disabled="!canMoveRight"
-            >→</button>
+            >
+              →
+            </button>
             <button
               class="btn btn-sm"
               :class="{
@@ -88,7 +112,9 @@
               }"
               @click.prevent="up"
               :disabled="!canMoveUp"
-            >↑</button>
+            >
+              ↑
+            </button>
             <button
               class="btn btn-sm"
               :class="{
@@ -97,7 +123,9 @@
               }"
               @click.prevent="down"
               :disabled="!canMoveDown"
-            >↓</button>
+            >
+              ↓
+            </button>
           </div>
         </div>
         <div
@@ -130,13 +158,15 @@
             </div>
             <div class="mb-3">
               <label for="cours-precedent">Groupe parent</label>
-              <select id="pere_id" v-model="groupeEdit.pere_id" class="form-select form-select-sm">
+              <select
+                id="pere_id"
+                v-model="groupeEdit.pere_id"
+                class="form-select form-select-sm"
+              >
                 <option :value="null">-</option>
-                <option
-                  v-for="g in filteredGroupes"
-                  :key="g.id"
-                  :value="g.id"
-                >{{ (g.no ? g.no + ' ' : '') + g.designation }}</option>
+                <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
+                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
+                </option>
               </select>
             </div>
             <div class="mb-3">
@@ -149,7 +179,9 @@
                   :true-value="1"
                   :false-value="0"
                 />
-                <label class="form-check-label" for="type">Groupe d'alarme</label>
+                <label class="form-check-label" for="type"
+                  >Groupe d'alarme</label
+                >
               </div>
             </div>
             <button class="btn btn-primary" @click="save">Modifier</button>

@@ -33,7 +33,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
-          <option v-for="s in listSapeurs" :key="s.id" :value="s.id">{{ formatSapeur(s) }}</option>
+          <option v-for="s in listSapeurs" :key="s.id" :value="s.id">
+            {{ formatSapeur(s) }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -59,12 +61,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeMission.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -109,10 +111,10 @@ export default {
     // this.min = this.data.min;//DateTime.fromSQL(this.data.min)slice(0, ).toISO().slice(0, 16);
     // this.max = this.data.max;//DateTime.fromSQL(this.data.max).toISO().slice(0, 16);
     // console.log(this.activeMission.debut)
-    this.activeMission.debut2 = this.activeMission.debut//DateTime.fromISO(this.activeMission.debut)
+    this.activeMission.debut2 = this.activeMission.debut //DateTime.fromISO(this.activeMission.debut)
       // .toISO()
       ?.slice(0, 16);
-    this.activeMission.fin2 = this.activeMission.fin//DateTime.fromISO(this.activeMission.fin)
+    this.activeMission.fin2 = this.activeMission.fin //DateTime.fromISO(this.activeMission.fin)
       // .toISO()
       ?.slice(0, 16);
   },
@@ -136,13 +138,13 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-              debut: errors['missions.0.debut'],
-              fin: errors['missions.0.fin'],
-              sapeur_id: errors['missions.0.sapeur_id'],
-              titre: errors['missions.0.titre'],
-            })
+              (this.errors = {
+                ...errors,
+                debut: errors['missions.0.debut'],
+                fin: errors['missions.0.fin'],
+                sapeur_id: errors['missions.0.sapeur_id'],
+                titre: errors['missions.0.titre'],
+              })
           );
       } else {
         this.$store
@@ -153,13 +155,13 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-              debut: errors['missions.0.debut'],
-              fin: errors['missions.0.fin'],
-              sapeur_id: errors['missions.0.sapeur_id'],
-              titre: errors['missions.0.titre'],
-            })
+              (this.errors = {
+                ...errors,
+                debut: errors['missions.0.debut'],
+                fin: errors['missions.0.fin'],
+                sapeur_id: errors['missions.0.sapeur_id'],
+                titre: errors['missions.0.titre'],
+              })
           );
       }
     },

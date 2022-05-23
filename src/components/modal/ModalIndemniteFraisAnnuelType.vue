@@ -23,7 +23,11 @@
       </div>
       <div class="mb-3">
         <label for="compte">Type</label>
-        <select id="type" v-model="active.type" class="form-select form-select-sm">
+        <select
+          id="type"
+          v-model="active.type"
+          class="form-select form-select-sm"
+        >
           <option :value="2">Indemnité</option>
           <option :value="3">Frais forfaitaire</option>
         </select>
@@ -36,7 +40,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -47,7 +53,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -58,17 +66,19 @@
             id="fonction-actif-modal"
             v-model="active.cumulable"
           />
-          <label class="form-check-label" for="fonction-actif-modal">Cumulable</label>
+          <label class="form-check-label" for="fonction-actif-modal"
+            >Cumulable</label
+          >
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ active.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -116,9 +126,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

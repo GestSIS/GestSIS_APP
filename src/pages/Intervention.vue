@@ -9,7 +9,9 @@
           <li class="breadcrumb-item">
             <router-link to="/interventions">Interventions</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbFinal }}</li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ breadcrumbFinal }}
+          </li>
         </ol>
       </div>
       <div class="col-sm-6 d-flex justify-content-end">
@@ -18,49 +20,73 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav v-if="!newMode" class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav
+          v-if="!newMode"
+          class="nav nav-tabs mb-3"
+          id="nav-tab"
+          role="tablist"
+        >
           <a
             class="nav-item nav-link"
             :class="{ active: activeTab === 'general' }"
             role="tab"
             href="#"
             @click.prevent="activeTab = 'general'"
-          >Informations</a>
+            >Informations</a
+          >
           <a
             class="nav-item nav-link"
             :class="{ active: activeTab === 'resume' }"
             role="tab"
             href="#"
             @click.prevent="activeTab = 'resume'"
-          >Résumé</a>
+            >Résumé</a
+          >
           <a
             class="nav-item nav-link"
             :class="{ active: activeTab === 'sapeurs' }"
             role="tab"
             href="#"
             @click.prevent="activeTab = 'sapeurs'"
-          >Sapeurs</a>
+            >Sapeurs</a
+          >
           <a
             class="nav-item nav-link"
             :class="{ active: activeTab === 'journal' }"
             role="tab"
             href="#"
             @click.prevent="activeTab = 'journal'"
-          >Journal</a>
+            >Journal</a
+          >
           <a
             class="nav-item nav-link"
             :class="{ active: activeTab === 'mat-veh' }"
             role="tab"
             href="#"
             @click.prevent="activeTab = 'mat-veh'"
-          >Matériels &amp; Véhicules</a>
+            >Matériels &amp; Véhicules</a
+          >
         </nav>
         <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" role="tabpanel" v-if="!loading">
-            <InterventionTabGeneral :newMode="newMode" v-if="activeTab === 'general'">General</InterventionTabGeneral>
-            <InterventionTabResume v-else-if="activeTab === 'resume'">Résumé</InterventionTabResume>
-            <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'">Sapeurs</InterventionTabSapeurs>
-            <InterventionTabJournal v-else-if="activeTab === 'journal'">Journal</InterventionTabJournal>
+          <div
+            class="tab-pane fade show active"
+            role="tabpanel"
+            v-if="!loading"
+          >
+            <InterventionTabGeneral
+              :newMode="newMode"
+              v-if="activeTab === 'general'"
+              >General</InterventionTabGeneral
+            >
+            <InterventionTabResume v-else-if="activeTab === 'resume'"
+              >Résumé</InterventionTabResume
+            >
+            <InterventionTabSapeurs v-else-if="activeTab === 'sapeurs'"
+              >Sapeurs</InterventionTabSapeurs
+            >
+            <InterventionTabJournal v-else-if="activeTab === 'journal'"
+              >Journal</InterventionTabJournal
+            >
             <div class="row" v-else-if="activeTab === 'mat-veh'">
               <InterventionTabMateriel>Materiels</InterventionTabMateriel>
               <InterventionTabVehicule>Véhicules</InterventionTabVehicule>

@@ -9,16 +9,31 @@
         <div class="col-8">
           <base-table :fields="fields" :data="computedSapeurs">
             <template v-slot:checkbox="{ key, value, rowData }">
-              <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="key + '-' + rowData.id"
+                :checked="value"
+                disabled
+              />
             </template>
           </base-table>
         </div>
         <div class="col-4">
-          <base-checkbox class="mb-3" label="Envoie différé" v-model="params.differe" />
+          <base-checkbox
+            class="mb-3"
+            label="Envoie différé"
+            v-model="params.differe"
+          />
           <div class="mb-3">
             <label for="date">Date</label>
-            <input type="datetime-local" v-model="params.date" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['date'] }" id="date" />
+            <input
+              type="datetime-local"
+              v-model="params.date"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['date'] }"
+              id="date"
+            />
           </div>
           <!-- <div class="mb-3">
             <label for="origine">Origine</label>
@@ -26,17 +41,31 @@
               :class="{ 'is-invalid': errors['origine'] }" id="origine" />
           </div> -->
           <div class="mb-3">
-            <label for="commentaire">Message ({{ 500 - params.message.length }})</label>
-            <textarea maxlength="500" v-model="params.message" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire" rows="6"></textarea>
+            <label for="commentaire"
+              >Message ({{ 500 - params.message.length }})</label
+            >
+            <textarea
+              maxlength="500"
+              v-model="params.message"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['commentaire'] }"
+              id="commentaire"
+              rows="6"
+            ></textarea>
           </div>
-          <p>Crédit : <span>{{ loadingCredit ? 'chargement...' : credit }}</span></p>
+          <p>
+            Crédit : <span>{{ loadingCredit ? 'chargement...' : credit }}</span>
+          </p>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="send()">Envoyer</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="send()">
+        Envoyer
+      </button>
     </div>
   </div>
 </template>
@@ -66,10 +95,10 @@ export default {
       sapeurs: [],
       presences: [],
       params: {
-        message: "",
-        origin: "GestSIS",
+        message: '',
+        origin: 'GestSIS',
         differe: true,
-        date: "",
+        date: '',
         sapeurIds: [],
       },
       fields: [
@@ -85,7 +114,7 @@ export default {
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
           sortKey: 'convoque',
-          slot: "checkbox",
+          slot: 'checkbox',
         },
         {
           title: 'Excusé',
@@ -93,7 +122,7 @@ export default {
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
           sortKey: 'excuse',
-          slot: "checkbox",
+          slot: 'checkbox',
         },
         {
           title: 'Portable',
@@ -113,32 +142,40 @@ export default {
   },
   beforeMount() {
     let resolvedCount = 0;
-    SapeurService.getSapeurPourConvocationSms()
-      .then((sapeurs) => {
-        this.sapeurs = sapeurs;
-        resolvedCount++;
-        this.loadingSapeurs = resolvedCount == 2;
-      });
-    ExerciceService.getSapeurs(this.data.id)
-      .then((presences) => {
-        this.presences = presences;
-        resolvedCount++;
-        this.loadingSapeurs = resolvedCount == 2;
-      });
+    SapeurService.getSapeurPourConvocationSms().then((sapeurs) => {
+      this.sapeurs = sapeurs;
+      resolvedCount++;
+      this.loadingSapeurs = resolvedCount == 2;
+    });
+    ExerciceService.getSapeurs(this.data.id).then((presences) => {
+      this.presences = presences;
+      resolvedCount++;
+      this.loadingSapeurs = resolvedCount == 2;
+    });
   },
   mounted() {
     this.loadingCredit = true;
-    this.$store.dispatch('fetchAspsmsCredit').then(() => this.loadingCredit = false).catch(() => {
-      this.loadingCredit = false;
-    });
+    this.$store
+      .dispatch('fetchAspsmsCredit')
+      .then(() => (this.loadingCredit = false))
+      .catch(() => {
+        this.loadingCredit = false;
+      });
 
-    const localite = this.localites.find(l => l.id == this.data.localite_id);
-    const categorie = this.categories.find(l => l.id == this.data.exercice_categorie_id);
-    this.params.date = this.data.date + " " + this.data.heure;
+    const localite = this.localites.find((l) => l.id == this.data.localite_id);
+    const categorie = this.categories.find(
+      (l) => l.id == this.data.exercice_categorie_id
+    );
+    this.params.date = this.data.date + ' ' + this.data.heure;
 
-    this.params.message = `Rappel\n` +
-      `${DateTime.fromSQL(this.data.date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${localite?.designation ?? ""} \n` +
-      `${categorie?.designation} : ${this.data.communications}`
+    this.params.message =
+      `Rappel\n` +
+      `${DateTime.fromSQL(this.data.date).toLocaleString(
+        DateTime.DATE_MED_WITH_WEEKDAY
+      )} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${
+        localite?.designation ?? ''
+      } \n` +
+      `${categorie?.designation} : ${this.data.communications}`;
   },
   computed: {
     ...mapState({
@@ -151,48 +188,53 @@ export default {
         return [];
       }
       const indexedSapeurs = {};
-      this.sapeurs.forEach(s => indexedSapeurs[s.id] = {
-        nomPrenom: `${s.nom} ${s.prenom}`,
-        portable: s.telephones
-          .filter(a => a.telephone_type_id === 3)
-          .sort((a, b) => a.priorite - b.priorite)
-          .find(() => true)?.numero,
-      });
-      return this.presences.map(s => ({ ...s, ...(indexedSapeurs[s.sapeur_id] ?? {}) }));
-    }
+      this.sapeurs.forEach(
+        (s) =>
+          (indexedSapeurs[s.id] = {
+            nomPrenom: `${s.nom} ${s.prenom}`,
+            portable: s.telephones
+              .filter((a) => a.telephone_type_id === 3)
+              .sort((a, b) => a.priorite - b.priorite)
+              .find(() => true)?.numero,
+          })
+      );
+      return this.presences.map((s) => ({
+        ...s,
+        ...(indexedSapeurs[s.sapeur_id] ?? {}),
+      }));
+    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async send() {
       const params = {
         ...this.params,
-        numeros: this.computedSapeurs.map(s => s?.portable).filter(s => s),
+        numeros: this.computedSapeurs.map((s) => s?.portable).filter((s) => s),
       };
 
       if (params.numeros.length == 0) {
-        return this.$awn.alert("Aucun numéro disponible");
+        return this.$awn.alert('Aucun numéro disponible');
       }
 
       if (params.differe && new Date(params.date) < new Date()) {
-        return this.$awn.alert("Date invalide");
+        return this.$awn.alert('Date invalide');
       }
 
       AspsmsParamService.sendSms(params)
         .then(() => {
           this.errors = {};
           this.$store.dispatch('fetchAspsmsCredit');
-          return this.$awn.success("Message envoyé avec succès");
+          return this.$awn.success('Message envoyé avec succès');
         })
-        .catch(
-          (errors) => {
-            this.errors = { ...errors };
-            return this.$awn.alert(errors?.message ?? "Erreur lors de l'envoie des SMS");
-          }
-        );
+        .catch((errors) => {
+          this.errors = { ...errors };
+          return this.$awn.alert(
+            errors?.message ?? "Erreur lors de l'envoie des SMS"
+          );
+        });
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

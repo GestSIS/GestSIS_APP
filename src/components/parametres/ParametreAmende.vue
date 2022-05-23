@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Amendes</h3>
-      <button type="button" class="btn btn-primary" @click="save()">Enregistrer</button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        Enregistrer
+      </button>
     </div>
     <div class="card-body">
       <div class="row">
@@ -15,7 +17,9 @@
             class="form-select form-select-sm"
             :class="{ 'is-invalid': errors['compte_id_id'] }"
           >
-            <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+            <option v-for="c in listeCompte" :key="c.id" :value="c.id">
+              {{ compte(c) }}
+            </option>
           </select>
         </div>
         <div class="mb-3 col-6">
@@ -26,7 +30,9 @@
             class="form-select form-select-sm"
             :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
           >
-            <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
+            <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+              {{ c.designation }}
+            </option>
           </select>
         </div>
       </div>

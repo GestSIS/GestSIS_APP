@@ -53,27 +53,37 @@
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
-            >{{ e.nom }} {{ e.prenom }}</td>
+            >
+              {{ e.nom }} {{ e.prenom }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.date_naissance,
               }"
-            >{{ e.date_naissance }}</td>
+            >
+              {{ e.date_naissance }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.localite,
               }"
-            >{{ e.localite }}</td>
+            >
+              {{ e.localite }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.adresse,
               }"
-            >{{ e.adresse }}</td>
+            >
+              {{ e.adresse }}
+            </td>
             <td
               :class="{
                 'text-warning': e.changements.fonction,
               }"
-            >{{ e.fonction }}</td>
+            >
+              {{ e.fonction }}
+            </td>
             <td
               v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
@@ -86,8 +96,13 @@
                 'text-danger':
                   e.statut == 'modifie' && i >= e.changements.numerosSupprime,
               }"
-            >{{ n }}</td>
-            <td v-for="n in nbNumero - e.numeros.length" :key="'n-comp-' + n"></td>
+            >
+              {{ n }}
+            </td>
+            <td
+              v-for="n in nbNumero - e.numeros.length"
+              :key="'n-comp-' + n"
+            ></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
@@ -102,8 +117,13 @@
                   e.statut == 'modifie' &&
                   e.changements.groupesSupprime.includes(g.no),
               }"
-            >{{ g.no }}</td>
-            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
+            >
+              {{ g.no }}
+            </td>
+            <td
+              v-for="g in nbGroupes - e.groupes.length"
+              :key="'g-comp-' + g"
+            ></td>
           </tr>
         </tbody>
       </table>
@@ -173,77 +193,79 @@ export default {
     },
     mutations() {
       const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
-      const sapeurCompare = (a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
+      const sapeurCompare = (a, b) =>
+        (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
 
-      return this.actuel.map((s) => {
-        // Ajoute
-        if (!referenceIds.has(s.sapeur_id)) {
-          return {
-            ...s,
-            statut: 'ajoute',
-            changements: {},
-          };
-        }
-
-        // Modifie
-        const reference = this.reference.find(
-          (s2) => s2.sapeur_id == s.sapeur_id
-        );
-        const fields = [
-          'nom',
-          'prenom',
-          'fonction',
-          'localite',
-          'adresse',
-          'date_naissance',
-        ];
-        let changements = {};
-        // Fields
-        fields.forEach((f) => {
-          if (s[f] != reference[f]) {
-            changements[f] = true;
+      return this.actuel
+        .map((s) => {
+          // Ajoute
+          if (!referenceIds.has(s.sapeur_id)) {
+            return {
+              ...s,
+              statut: 'ajoute',
+              changements: {},
+            };
           }
-        });
 
-        // Groupes
-        const referenceGroupes = new Set(reference.groupes.map((g) => g.no));
-        const groupesAjoute = s.groupes
-          .map((g) => g.no)
-          .filter((g) => !referenceGroupes.has(g));
+          // Modifie
+          const reference = this.reference.find(
+            (s2) => s2.sapeur_id == s.sapeur_id
+          );
+          const fields = [
+            'nom',
+            'prenom',
+            'fonction',
+            'localite',
+            'adresse',
+            'date_naissance',
+          ];
+          let changements = {};
+          // Fields
+          fields.forEach((f) => {
+            if (s[f] != reference[f]) {
+              changements[f] = true;
+            }
+          });
 
-        const groupesReference = new Map(
-          reference.groupes.map((g) => [g.no, g.description])
-        );
-        const groupesModifie = s.groupes.filter(
-          (g) =>
-            groupesReference.has(g.no) &&
-            groupesReference.get(g.no) !== g.description
-        );
+          // Groupes
+          const referenceGroupes = new Set(reference.groupes.map((g) => g.no));
+          const groupesAjoute = s.groupes
+            .map((g) => g.no)
+            .filter((g) => !referenceGroupes.has(g));
 
-        changements = {
-          ...changements,
-          groupesAjoute,
-          groupesModifie,
-          groupesSupprime: [],
-        };
+          const groupesReference = new Map(
+            reference.groupes.map((g) => [g.no, g.description])
+          );
+          const groupesModifie = s.groupes.filter(
+            (g) =>
+              groupesReference.has(g.no) &&
+              groupesReference.get(g.no) !== g.description
+          );
 
-        // Numéros
-        const numerosAjoute = reference.numeros.length;
-        const numerosSupprime = s.numeros.length;
-        const numerosModifie = s.numeros
-          .slice(0, Math.min(numerosAjoute, numerosSupprime))
-          .map((n, index) => (reference.numeros[index] != n ? index : -1))
-          .filter((i) => i >= 0);
+          changements = {
+            ...changements,
+            groupesAjoute,
+            groupesModifie,
+            groupesSupprime: [],
+          };
 
-        changements = {
-          ...changements,
-          numerosAjoute,
-          numerosModifie,
-          numerosSupprime,
-        };
+          // Numéros
+          const numerosAjoute = reference.numeros.length;
+          const numerosSupprime = s.numeros.length;
+          const numerosModifie = s.numeros
+            .slice(0, Math.min(numerosAjoute, numerosSupprime))
+            .map((n, index) => (reference.numeros[index] != n ? index : -1))
+            .filter((i) => i >= 0);
 
-        return { ...s, statut: 'modifie', changements };
-      })
+          changements = {
+            ...changements,
+            numerosAjoute,
+            numerosModifie,
+            numerosSupprime,
+          };
+
+          return { ...s, statut: 'modifie', changements };
+        })
         .sort(sapeurCompare);
     },
   },

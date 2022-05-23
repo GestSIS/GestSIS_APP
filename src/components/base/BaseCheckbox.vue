@@ -1,10 +1,14 @@
 <template>
   <div class="form-check">
-    <input class="form-check-input" type="checkbox" :id="label" v-model="model" v-bind="$attrs" />
+    <input
+      class="form-check-input"
+      type="checkbox"
+      :id="label"
+      v-model="model"
+      v-bind="$attrs"
+    />
     <label v-if="label" class="form-check-label" :for="label">
-      {{
-        label
-      }}
+      {{ label }}
     </label>
   </div>
 </template>

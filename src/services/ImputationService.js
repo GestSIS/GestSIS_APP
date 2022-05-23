@@ -36,7 +36,10 @@ export default {
     return Api.api().post('/frais-indemnites-annuel', fraisIndemnite);
   },
   updateFraisIndemniteAnnuel(fraisIndemnite) {
-    return Api.api().put(`/frais-indemnites-annuel/${fraisIndemnite.id}`, fraisIndemnite);
+    return Api.api().put(
+      `/frais-indemnites-annuel/${fraisIndemnite.id}`,
+      fraisIndemnite
+    );
   },
   removeFraisIndemniteAnnuel(fraisIndemniteId) {
     return Api.api().delete(`/frais-indemnites-annuel/${fraisIndemniteId}`);
@@ -45,10 +48,15 @@ export default {
     return Api.api().post('/frais-indemnites-annuel-types', fraisIndemnite);
   },
   updateFraisIndemniteAnnuelType(fraisIndemnite) {
-    return Api.api().put(`/frais-indemnites-annuel-types/${fraisIndemnite.id}`, fraisIndemnite);
+    return Api.api().put(
+      `/frais-indemnites-annuel-types/${fraisIndemnite.id}`,
+      fraisIndemnite
+    );
   },
   removeFraisIndemniteAnnuelType(fraisIndemniteId) {
-    return Api.api().delete(`/frais-indemnites-annuel-types/${fraisIndemniteId}`);
+    return Api.api().delete(
+      `/frais-indemnites-annuel-types/${fraisIndemniteId}`
+    );
   },
   addIndemniteExercice(indemnite) {
     return Api.api().post('/indemnites-exercice-types', indemnite);

@@ -7,7 +7,9 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Paramètres utilisateur</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Paramètres utilisateur
+            </li>
           </ol>
         </nav>
       </div>
@@ -30,7 +32,9 @@
                 v-model="jeton"
               />
             </div>
-            <button class="btn btn-primary" @click="utiliserJeton">Utiliser</button>
+            <button class="btn btn-primary" @click="utiliserJeton">
+              Utiliser
+            </button>
           </div>
         </div>
       </div>
@@ -65,11 +69,15 @@
                 :class="{ 'is-invalid': errors.password }"
                 v-model="newPassword"
               />
-              <div class="invalid-feedback" v-if="errors.password">Taille minimum: 8</div>
+              <div class="invalid-feedback" v-if="errors.password">
+                Taille minimum: 8
+              </div>
             </div>
 
             <div class="mb-3">
-              <label for="new-password-repeated">Répéter le nouveau mot de passe</label>
+              <label for="new-password-repeated"
+                >Répéter le nouveau mot de passe</label
+              >
               <input
                 type="password"
                 id="newPasswordRepeated"
@@ -80,9 +88,13 @@
                 :class="{ 'is-invalid': !isPasswordIdentical }"
                 v-model="newPasswordRepeated"
               />
-              <div class="invalid-feedback" v-if="!isPasswordIdentical">Mot de passe différent</div>
+              <div class="invalid-feedback" v-if="!isPasswordIdentical">
+                Mot de passe différent
+              </div>
             </div>
-            <button class="btn btn-primary" @click="changerMotDePasse">Changer</button>
+            <button class="btn btn-primary" @click="changerMotDePasse">
+              Changer
+            </button>
           </div>
         </div>
       </div>
@@ -126,7 +138,7 @@ export default {
   computed: {
     isPasswordIdentical() {
       return this.newPassword === this.newPasswordRepeated;
-    }
+    },
   },
   methods: {
     async utiliserJeton() {
@@ -151,16 +163,17 @@ export default {
       }
 
       this.$store
-        .dispatch('changePassword', { password: this.oldPassword, newPassword: this.newPassword })
+        .dispatch('changePassword', {
+          password: this.oldPassword,
+          newPassword: this.newPassword,
+        })
         .then((response) => {
           this.$awn.success(response?.message || 'Mot de passe mis à jour');
           this.oldPassword = '';
           this.newPassword = '';
           this.newPasswordRepeated = '';
         })
-        .catch((e) =>
-          this.$awn.alert(e?.message || 'Mot de passe incorrect')
-        );
+        .catch((e) => this.$awn.alert(e?.message || 'Mot de passe incorrect'));
     },
   },
 };

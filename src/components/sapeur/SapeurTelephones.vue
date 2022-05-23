@@ -7,7 +7,9 @@
         @click.prevent="saveTelephones"
         class="btn btn-primary"
         v-if="hasEditPermission"
-      >Enregistrer</button>
+      >
+        Enregistrer
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table class="table table-sm">
@@ -38,7 +40,9 @@
               <td
                 class="text-center"
                 :class="{ 'd-none': telephones.length <= 1 }"
-              >{{ element.priorite }}</td>
+              >
+                {{ element.priorite }}
+              </td>
               <td>
                 <input
                   class="form-control form-control-sm"
@@ -54,7 +58,13 @@
                   v-model="element.telephone_type_id"
                   :disabled="!hasEditPermission"
                 >
-                  <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">{{ t.type }}</option>
+                  <option
+                    v-for="t in telephonesTypes"
+                    :value="t.id"
+                    :key="t.id"
+                  >
+                    {{ t.type }}
+                  </option>
                 </select>
               </td>
               <td class="align-middle text-center">
@@ -86,7 +96,8 @@
         :disabled="this.telephonesData.length >= 3"
         v-if="hasEditPermission"
       >
-        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un numéro
+        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un
+        numéro
       </button>
     </div>
   </div>
@@ -120,9 +131,8 @@ export default {
   computed: {
     ...mapState({
       telephonesTypes: (state) => state.baseData.telephoneTypes,
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     ...mapGetters(['activeSapeurTelephones']),
     telephones: {

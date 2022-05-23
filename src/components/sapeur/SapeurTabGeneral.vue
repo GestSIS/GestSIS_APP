@@ -8,7 +8,9 @@
             @click.prevent="saveSapeur"
             class="btn btn-primary"
             v-if="hasEditPermission"
-          >Enregistrer</button>
+          >
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <base-select
@@ -117,7 +119,10 @@
                   id="m-sap-cotisation_avs"
                   v-model="activeSapeur.cotisation_avs"
                 />
-                <label class="form-check-label" for="m-sap-cotisation_avs"></label>
+                <label
+                  class="form-check-label"
+                  for="m-sap-cotisation_avs"
+                ></label>
               </div>
             </div>
           </div>
@@ -204,7 +209,13 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Photo</h3>
-          <button @click="editPhoto" class="btn btn-primary" v-if="hasEditPermission">Modifier</button>
+          <button
+            @click="editPhoto"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >
+            Modifier
+          </button>
         </div>
         <div class="card-body text-center">
           <font-awesome-icon v-if="!photo" :icon="['fas', 'user']" size="10x" />
@@ -218,7 +229,9 @@
             @click.prevent="saveSapeurRefPro"
             class="btn btn-primary"
             v-if="hasEditPermission"
-          >Enregistrer</button>
+          >
+            Enregistrer
+          </button>
         </div>
         <form role="form">
           <div class="card-body">
@@ -276,7 +289,9 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">{{ f.nom }}</option>
+                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
+                  {{ f.nom }}
+                </option>
               </select>
             </div>
             <div class="mb-3">
@@ -287,7 +302,9 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="g in listGrades" :key="g.id" :value="g.id">{{ g.designation }}</option>
+                <option v-for="g in listGrades" :key="g.id" :value="g.id">
+                  {{ g.designation }}
+                </option>
               </select>
             </div>
             <!-- TODO Actif et Porteur checkbox -->
@@ -335,9 +352,8 @@ export default {
       listeCivilites: (state) => state.baseData.civilites,
       listeFonctions: (state) => state.fonction.liste,
       listGrades: (state) => state.grade.liste,
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     ...mapGetters(['activeSapeur', 'activeSapeurId', 'listeLocalitesSis']),
   },

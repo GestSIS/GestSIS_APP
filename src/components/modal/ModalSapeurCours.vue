@@ -25,7 +25,9 @@
           :class="{ 'is-invalid': errors['cours_id'] }"
           :disabled="!addMode"
         >
-          <option v-for="c in filteredCours" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in filteredCours" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
           <!-- TODO limiter le nombre de cours -->
         </select>
       </div>
@@ -37,7 +39,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in localites" :key="l.id" :value="l.id">{{ l.designation }}</option>
+          <option v-for="l in localites" :key="l.id" :value="l.id">
+            {{ l.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3" v-if="addMode">
@@ -49,7 +53,9 @@
           disabled
         >
           <option value="0">-</option>
-          <option v-for="c in cours" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in cours" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
           <!-- TODO Limiter le nombre de cours -->
         </select>
       </div>
@@ -65,7 +71,9 @@
               :class="{ 'is-invalid': errors['grade_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="g in grades" :key="g.id" :value="g.id">{{ g.designation }}</option>
+              <option v-for="g in grades" :key="g.id" :value="g.id">
+                {{ g.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -93,7 +101,9 @@
               :class="{ 'is-invalid': errors['fonction_id'] }"
             >
               <option value="0">-</option>
-              <option v-for="f in fonctions" :key="f.id" :value="f.id">{{ f.nom }}</option>
+              <option v-for="f in fonctions" :key="f.id" :value="f.id">
+                {{ f.nom }}
+              </option>
             </select>
           </div>
         </div>
@@ -124,19 +134,21 @@
                 v-for="f in activeSapeurFonctions"
                 :key="f.id"
                 :value="f.id"
-              >{{ fonctions.find((e) => e.id == f.fonction_id).nom }}</option>
+              >
+                {{ fonctions.find((e) => e.id == f.fonction_id).nom }}
+              </option>
             </select>
           </div>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ addMode ? 'Ajouter' : 'Modifier' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ addMode ? 'Ajouter' : 'Modifier' }}
+      </button>
     </div>
   </div>
 </template>
@@ -190,12 +202,13 @@ export default {
         return this.cours;
       } else {
         const date = new Date(this.activeCours.date);
-        return this.cours.filter(c =>
-          (c.validite_fin == null || new Date(c.validite_fin) >= date) &&
-          (c.validite_debut == null || new Date(c.validite_debut) <= date)
+        return this.cours.filter(
+          (c) =>
+            (c.validite_fin == null || new Date(c.validite_fin) >= date) &&
+            (c.validite_debut == null || new Date(c.validite_debut) <= date)
         );
       }
-    }
+    },
   },
   watch: {
     activeSapeurId(id) {

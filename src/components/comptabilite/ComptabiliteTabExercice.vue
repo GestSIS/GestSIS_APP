@@ -6,14 +6,30 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" v-if="!selectedItem || selectedItem?.statut == 3"
-            :disabled="!selectedItem" @click="imputer(selectedItem.id)">Imputer</button>
-          <button class="btn btn-outline-danger" v-if="selectedItem?.statut == 4"
-            @click="annulerImputer(selectedItem.id)">Annuler l'imputation</button>
-          <button class="btn btn-outline-primary" :disabled="selectedItem?.statut != 4" @click="genererDecompteExercice(
-            selectedItem.id,
-            selectedItem.designation
-          )">Créer un décompte</button>
+          <button
+            class="btn btn-outline-primary"
+            v-if="!selectedItem || selectedItem?.statut == 3"
+            :disabled="!selectedItem"
+            @click="imputer(selectedItem.id)"
+          >
+            Imputer
+          </button>
+          <button
+            class="btn btn-outline-danger"
+            v-if="selectedItem?.statut == 4"
+            @click="annulerImputer(selectedItem.id)"
+          >
+            Annuler l'imputation
+          </button>
+          <button
+            class="btn btn-outline-primary"
+            :disabled="selectedItem?.statut != 4"
+            @click="
+              genererDecompteExercice(selectedItem.id, selectedItem.designation)
+            "
+          >
+            Créer un décompte
+          </button>
         </div>
       </div>
     </div>
@@ -24,14 +40,33 @@
         </div>
         <form class="card-body">
           <div class="row">
-            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Localité&gt;"
-              :options="filteredLocalites" @input="(value) => onFilter('localite_id', value)" />
-            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Catégorie&gt;"
-              :options="filteredCategories" @input="(value) => onFilter('exercice_categorie_id', value)" />
-            <base-select class="col-md-4" valueKey="id" displayKey="designation" baseOption="&lt;Statut&gt;" :options="[
-              { id: '3', designation: 'Validé' },
-              { id: '4', designation: 'Imputé' },
-            ]" @input="(value) => onFilter('statut', value)" />
+            <base-select
+              class="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Localité&gt;"
+              :options="filteredLocalites"
+              @input="(value) => onFilter('localite_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Catégorie&gt;"
+              :options="filteredCategories"
+              @input="(value) => onFilter('exercice_categorie_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              valueKey="id"
+              displayKey="designation"
+              baseOption="&lt;Statut&gt;"
+              :options="[
+                { id: '3', designation: 'Validé' },
+                { id: '4', designation: 'Imputé' },
+              ]"
+              @input="(value) => onFilter('statut', value)"
+            />
           </div>
         </form>
       </div>
@@ -46,27 +81,55 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" detail-row-class="m-td-0"
-          no-data="Aucune écriture à afficher" :detail-row-component="detailRow" :data="filteredExercices"
-          @selected="selected" :selectable="true" selectKey="id" row-selected-class="table-primary">
+        <base-table
+          v-show="!loading"
+          :fields="fields"
+          :row-class="onRowClass"
+          detail-row-class="m-td-0"
+          no-data="Aucune écriture à afficher"
+          :detail-row-component="detailRow"
+          :data="filteredExercices"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
+        >
           <template v-slot:details="props">
-            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)"
-              v-if="props.rowData.statut === 4">
-              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
-              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+              v-if="props.rowData.statut === 4"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
             </button>
           </template>
           <template v-slot:actions="props">
-            <button class="btn btn-outline-primary border-0" v-if="props.rowData.statut === 3"
-              @click="imputer(props.rowData.id)">
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 3"
+              @click="imputer(props.rowData.id)"
+            >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
-            <button class="btn btn-outline-primary border-0" v-if="props.rowData.statut === 4" @click="
-              genererDecompteExercice(
-                props.rowData.id,
-                props.rowData.designation
-              )
-            " title="Décompte sapeur" :disabled="!props.rowData.aPayer">
+            <button
+              class="btn btn-outline-primary border-0"
+              v-if="props.rowData.statut === 4"
+              @click="
+                genererDecompteExercice(
+                  props.rowData.id,
+                  props.rowData.designation
+                )
+              "
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
+            >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
@@ -100,7 +163,7 @@ async function loadData(_, next) {
     loadSapeurs,
     loadLocalites,
     loadIndemnites,
-    loadComptes
+    loadComptes,
   ]).then(() => {
     next();
   });
@@ -153,7 +216,8 @@ export default {
         {
           title: 'Amende',
           field: 'total',
-          formatter: (total, ecriture) => (ecriture.module == 5 ? ecriture.total : '0.00'),
+          formatter: (total, ecriture) =>
+            ecriture.module == 5 ? ecriture.total : '0.00',
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -231,7 +295,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -305,7 +369,8 @@ export default {
         this.currentExerciceComptableId
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
-        this.selectedItem = this.exercices.find(e => e.id == this.selectedItem?.id) || null;
+        this.selectedItem =
+          this.exercices.find((e) => e.id == this.selectedItem?.id) || null;
         this.loading = false;
       });
     },
@@ -327,7 +392,7 @@ export default {
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
         size: 2,
-        callback: () => this.init()
+        callback: () => this.init(),
       });
     },
     annulerImputer(exerciceId) {
@@ -340,14 +405,19 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('annulerImputationExercice', exerciceId)
+            this.$store
+              .dispatch('annulerImputationExercice', exerciceId)
               .then(({ statut }) => {
-                this.exercices = [...this.exercices.filter((e) => e.id != exerciceId),
-                {
-                  ...this.exercices.find((e) => e.id == exerciceId),
-                  statut: statut,
-                }].sort((a, b) => a.date.localeCompare(b.date))
-                this.selectedItem = this.exercices.find(e => e.id == exerciceId);
+                this.exercices = [
+                  ...this.exercices.filter((e) => e.id != exerciceId),
+                  {
+                    ...this.exercices.find((e) => e.id == exerciceId),
+                    statut: statut,
+                  },
+                ].sort((a, b) => a.date.localeCompare(b.date));
+                this.selectedItem = this.exercices.find(
+                  (e) => e.id == exerciceId
+                );
               });
           }
         },
@@ -375,7 +445,7 @@ export default {
 </script>
 
 <style>
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 </style>

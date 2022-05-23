@@ -7,15 +7,36 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres exercices</h3>
         </div>
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <a class="nav-link" :class="{ active: tab === 'categorie' }" href="#" role="tab"
-            @click.prevent="tab = 'categorie'">
+        <nav
+          class="nav flex-column nav-pills"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'categorie' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'categorie'"
+          >
             Catégorie
           </a>
-          <a class="nav-link" :class="{ active: tab === 'excuse' }" href="#" role="tab" @click.prevent="tab = 'excuse'">
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'excuse' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'excuse'"
+          >
             Excuses
           </a>
-          <a class="nav-link" :class="{ active: tab === 'aspsms' }" href="#" role="tab" @click.prevent="tab = 'aspsms'">
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'aspsms' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'aspsms'"
+          >
             ASPSMS
           </a>
         </nav>
@@ -48,7 +69,11 @@ async function loadData(_, next) {
 
 export default {
   name: 'ParametreTabExercice',
-  components: { ParametreExcuseType, ParametreExerciceCategorie, ParametreAspsms },
+  components: {
+    ParametreExcuseType,
+    ParametreExerciceCategorie,
+    ParametreAspsms,
+  },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -75,5 +100,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

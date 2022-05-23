@@ -5,35 +5,40 @@
       <span
         class="badge"
         :class="{ 'bg-primary': convoque, 'bg-secondary': !convoque }"
-      >{{ convoque }}</span>
+        >{{ convoque }}</span
+      >
     </div>
     <div class="me-3">
       Présent
       <span
         class="badge"
         :class="{ 'bg-success': present, 'bg-secondary': !present }"
-      >{{ present }}</span>
+        >{{ present }}</span
+      >
     </div>
     <div class="me-3">
       Remplacé
       <span
         class="badge"
         :class="{ 'bg-success': remplace, 'bg-secondary': !remplace }"
-      >{{ remplace }}</span>
+        >{{ remplace }}</span
+      >
     </div>
     <div class="me-3">
       Excusé
       <span
         class="badge"
         :class="{ 'bg-warning': excuse, 'bg-secondary': !excuse }"
-      >{{ excuse }}</span>
+        >{{ excuse }}</span
+      >
     </div>
     <div class="me-3">
       Amende
       <span
         class="badge"
         :class="{ 'bg-danger': amende, 'bg-secondary': !amende }"
-      >{{ amende }}</span>
+        >{{ amende }}</span
+      >
     </div>
   </div>
 </template>

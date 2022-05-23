@@ -42,7 +42,9 @@
                   value="inactif"
                   v-model="filter"
                 />
-                <label class="form-check-label" for="statutInactif">Inactif</label>
+                <label class="form-check-label" for="statutInactif"
+                  >Inactif</label
+                >
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -57,7 +59,11 @@
               </div>
             </div>
           </div>
-          <ul class="list-group list-group-flush" id="liste-sapeurs" ref="liste-sapeurs">
+          <ul
+            class="list-group list-group-flush"
+            id="liste-sapeurs"
+            ref="liste-sapeurs"
+          >
             <router-link
               custom
               v-slot="{ navigate }"
@@ -73,14 +79,19 @@
                 }"
                 @click="navigate"
                 role="link"
-              >{{ sapeur.nom }} {{ sapeur.prenom }}</a>
+                >{{ sapeur.nom }} {{ sapeur.prenom }}</a
+              >
             </router-link>
-            <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
+            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+              Aucun sapeur
+            </li>
             <button
               class="btn btn-primary"
               v-if="!filteredSapeurs.length && hasEditPermission"
               @click="addSapeur"
-            >Ajouter un sapeur</button>
+            >
+              Ajouter un sapeur
+            </button>
           </ul>
         </div>
       </div>
@@ -164,20 +175,22 @@ export default {
   },
   mounted() {
     this.eventListener = (e) => {
-      if (e.key == "ArrowDown" || e.key == "ArrowUp") {
+      if (e.key == 'ArrowDown' || e.key == 'ArrowUp') {
         e.preventDefault();
       }
-    }
+    };
     this.$refs['liste-sapeurs'].addEventListener('keydown', this.eventListener);
-    this.$refs['liste-sapeurs'].addEventListener('keyup', this.navigationEventListener);
+    this.$refs['liste-sapeurs'].addEventListener(
+      'keyup',
+      this.navigationEventListener
+    );
   },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     filteredSapeurs() {
       return this.sapeurs.filter(this.filters[this.filter]);
@@ -186,15 +199,21 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     async navigationEventListener(e) {
-      const ids = this.filteredSapeurs.map(s => s.id);
+      const ids = this.filteredSapeurs.map((s) => s.id);
       const i = ids.indexOf(this.activeSapeurId);
-      if (e.key == "ArrowDown") {
+      if (e.key == 'ArrowDown') {
         if (i < ids.length - 1) {
-          this.$router.push({ name: 'sapeurs-details', params: { id: ids[i + 1] } })
+          this.$router.push({
+            name: 'sapeurs-details',
+            params: { id: ids[i + 1] },
+          });
         }
-      } else if (e.key == "ArrowUp") {
+      } else if (e.key == 'ArrowUp') {
         if (i > 0) {
-          this.$router.push({ name: 'sapeurs-details', params: { id: ids[i - 1] } })
+          this.$router.push({
+            name: 'sapeurs-details',
+            params: { id: ids[i - 1] },
+          });
         }
       }
     },

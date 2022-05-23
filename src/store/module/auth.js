@@ -107,7 +107,7 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
-      Api.setAccessToken("");
+      Api.setAccessToken('');
 
       state.user = null;
       state.email = null;
@@ -238,7 +238,7 @@ export default {
         })
           .catch((e) => {
             commit(types.AUTH_LOGOUT);
-            router.push({name:'login'})
+            router.push({ name: 'login' });
             return e;
           })
           .then(() => {

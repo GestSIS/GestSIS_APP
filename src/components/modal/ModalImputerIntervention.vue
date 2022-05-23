@@ -6,13 +6,22 @@
     </div>
     <div class="modal-body">
       <!-- fieldsets -->
-      <multi-step :steps="['Type de frais', 'Résultat']" :activeIndex="phase - 1" />
+      <multi-step
+        :steps="['Type de frais', 'Résultat']"
+        :activeIndex="phase - 1"
+      />
       <div v-if="phase === 1" class="row">
-        <div :class="{
-          'col-12': !activeIndemniteHasFonction,
-          'col-8': activeIndemniteHasFonction,
-        }">
-          <table class="table table-sm" @keydown.down="onKeyDown" @keydown.up="onKeyUp">
+        <div
+          :class="{
+            'col-12': !activeIndemniteHasFonction,
+            'col-8': activeIndemniteHasFonction,
+          }"
+        >
+          <table
+            class="table table-sm"
+            @keydown.down="onKeyDown"
+            @keydown.up="onKeyUp"
+          >
             <thead>
               <tr>
                 <th>Designation</th>
@@ -28,24 +37,50 @@
             </thead>
             <tbody>
               <tr v-if="indemnitesTypes.length == 0">
-                <td colspan="8">Aucune indemnité type pour intervention de configuré</td>
+                <td colspan="8">
+                  Aucune indemnité type pour intervention de configuré
+                </td>
               </tr>
-              <tr v-for="(indemnite, index) in indemnitesTypes" :key="indemnite.id" class
-                @click="selectIndemnite(index)" :class="{
+              <tr
+                v-for="(indemnite, index) in indemnitesTypes"
+                :key="indemnite.id"
+                class
+                @click="selectIndemnite(index)"
+                :class="{
                   'table-primary': index === activeIndemniteIndex,
-                }">
+                }"
+              >
                 <td>{{ indemnite.designation }}</td>
                 <td>{{ indemnite.tarif }}</td>
                 <td>{{ indemnite.tarif_min }}</td>
                 <td>{{ indemnite.tarif_min_pour }}</td>
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
-                <td>{{ unites.find(u => u.id == indemnite.type_unite_id)?.abreviation }}</td>
-                <td> {{ formatCompte(comptes.find((f) => f.id == indemnite.compte_id)) }} </td>
+                <td>
+                  {{
+                    unites.find((u) => u.id == indemnite.type_unite_id)
+                      ?.abreviation
+                  }}
+                </td>
+                <td>
+                  {{
+                    formatCompte(
+                      comptes.find((f) => f.id == indemnite.compte_id)
+                    )
+                  }}
+                </td>
                 <td class="text-center">
-                  <input type="checkbox" class="form-check-input" id="checkbox-fonction"
-                    :checked="indemnite.par_fonction" disabled />
-                  <label class="form-check-label" for="checkbox-fonction"></label>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="checkbox-fonction"
+                    :checked="indemnite.par_fonction"
+                    disabled
+                  />
+                  <label
+                    class="form-check-label"
+                    for="checkbox-fonction"
+                  ></label>
                 </td>
               </tr>
             </tbody>
@@ -61,7 +96,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="fonction in activeIndemnite.fonctions" :key="fonction.id">
+              <tr
+                v-for="fonction in activeIndemnite.fonctions"
+                :key="fonction.id"
+              >
                 <td>{{ fonctions.find((f) => f.id == fonction.id).nom }}</td>
                 <td>{{ fonction.tarif }}</td>
               </tr>
@@ -70,8 +108,15 @@
         </div>
       </div>
       <div v-if="phase === 2">
-        <div class="alert alert-dismissible alert-success" v-if="successMessageVisibility">
-          <button type="button" class="btn-close" @click="successMessageVisibility = false"></button>
+        <div
+          class="alert alert-dismissible alert-success"
+          v-if="successMessageVisibility"
+        >
+          <button
+            type="button"
+            class="btn-close"
+            @click="successMessageVisibility = false"
+          ></button>
           Imputations effectuées avec
           <strong>succès</strong>!
         </div>
@@ -91,9 +136,18 @@
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td> {{ formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id)) }} </td>
-              <td>{{ ecriture.quantite }} </td>
-              <td>{{ unites.find(u => u.id == ecriture.type_unite_id)?.abreviation }}</td>
+              <td>
+                {{
+                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                }}
+              </td>
+              <td>{{ ecriture.quantite }}</td>
+              <td>
+                {{
+                  unites.find((u) => u.id == ecriture.type_unite_id)
+                    ?.abreviation
+                }}
+              </td>
               <td>{{ ecriture.tarif }}</td>
               <td>{{ ecriture.tarif_min }}</td>
               <td>{{ ecriture.tarif_min_pour }}</td>
@@ -106,10 +160,18 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">{{ phase === 1 ? 'Annuler' : 'Fermer'
-      }}</button>
-      <button type="button" class="btn btn-primary" @click="imputer()" v-if="phase === 1"
-        :disabled="activeIndemnite === null">Imputer</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="imputer()"
+        v-if="phase === 1"
+        :disabled="activeIndemnite === null"
+      >
+        Imputer
+      </button>
     </div>
   </div>
 </template>
@@ -134,7 +196,8 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      indemnitesTypes: (state) => state.imputation.fraisIndemnites.interventions,
+      indemnitesTypes: (state) =>
+        state.imputation.fraisIndemnites.interventions,
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
@@ -202,5 +265,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

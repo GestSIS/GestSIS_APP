@@ -12,7 +12,9 @@
             class="btn btn-primary"
             @click="newPhase"
             v-if="hasEditPermission"
-          >Nouvelle phase</button>
+          >
+            Nouvelle phase
+          </button>
         </div>
         <div class="card-body">
           <table class="table table-sm">
@@ -74,7 +76,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Présences</h3>
-          <button type="button" class="btn btn-primary" @click="addPresences">Ajouter des présences</button>
+          <button type="button" class="btn btn-primary" @click="addPresences">
+            Ajouter des présences
+          </button>
         </div>
         <div class="card-body">
           <div class="badge-wrapper">
@@ -93,13 +97,31 @@
                     v-for="(col, i) in columns"
                     :key="i"
                     class="text-center ps-3 pe-3"
-                  >{{ col }}h</th>
+                  >
+                    {{ col }}h
+                  </th>
                 </tr>
                 <tr>
-                  <th v-for="(col, i) in columns" :key="'1' + i" class="ps-3 pe-3"></th>
-                  <th v-for="(col, i) in columns" :key="'2' + i" class="ps-3 pe-3"></th>
-                  <th v-for="(col, i) in columns" :key="'3' + i" class="ps-3 pe-3"></th>
-                  <th v-for="(col, i) in columns" :key="'4' + i" class="ps-3 pe-3"></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'1' + i"
+                    class="ps-3 pe-3"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'2' + i"
+                    class="ps-3 pe-3"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'3' + i"
+                    class="ps-3 pe-3"
+                  ></th>
+                  <th
+                    v-for="(col, i) in columns"
+                    :key="'4' + i"
+                    class="ps-3 pe-3"
+                  ></th>
                 </tr>
               </thead>
               <tbody v-if="sortedSapeurs.length <= 0">
@@ -110,7 +132,10 @@
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
                   <th class="ms-0 ps-1">
-                    <button class="btn btn-link border-0" @click="expandSap(s.id)">
+                    <button
+                      class="btn btn-link border-0"
+                      @click="expandSap(s.id)"
+                    >
                       <font-awesome-icon
                         v-if="toggles[s.id] || false"
                         :icon="['fas', 'angle-down']"
@@ -129,9 +154,8 @@
                       class="form-check-input"
                       :id="s.id"
                       :checked="
-                        quittances.filter(
-                          (q) => q.sapeur_id === parseInt(s.id)
-                        ).length === 1
+                        quittances.filter((q) => q.sapeur_id === parseInt(s.id))
+                          .length === 1
                       "
                       @click="(e) => editQuittance(e, s.id)"
                     />
@@ -181,7 +205,9 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <th :colspan="4 + 4 * columns.length">Nombre sapeurs : {{ sortedSapeurs.length }}</th>
+                  <th :colspan="4 + 4 * columns.length">
+                    Nombre sapeurs : {{ sortedSapeurs.length }}
+                  </th>
                 </tr>
               </tfoot>
             </table>
@@ -218,9 +244,10 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       phasesType: (state) => state.phaseType.liste,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
     listSapeurs() {
       return Array.from(
@@ -234,17 +261,19 @@ export default {
       return [
         ...Object.keys(this.computedPresences)
           .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
-          .sort((s1, s2) => (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)),
+          .sort((s1, s2) =>
+            (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
+          ),
       ];
     },
     computedPresences() {
       let temp = [];
       this.listSapeurs.forEach(
         (s) =>
-        (temp = {
-          ...temp,
-          [s.id]: this.computeSapeur(s.id),
-        })
+          (temp = {
+            ...temp,
+            [s.id]: this.computeSapeur(s.id),
+          })
       );
       return temp;
     },
@@ -255,7 +284,9 @@ export default {
     this.$store.dispatch('fetchInterventionPhases', this.id);
     this.$store.dispatch('fetchInterventionSapeurs', this.id);
 
-    let startFloored = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
+    let startFloored = new Date(
+      this.data.date_debut + ' ' + this.data.heure_debut
+    );
     let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
 
     startFloored.setMinutes(0);
@@ -303,7 +334,7 @@ export default {
     addPresences() {
       this.SHOW_MODAL({
         component: 'ModalPresence',
-        callback: () => { },
+        callback: () => {},
         data: {
           mode: 'add',
           id: this.data.id,
@@ -317,7 +348,7 @@ export default {
       Object.assign(clone, presence);
       this.SHOW_MODAL({
         component: 'ModalPresence',
-        callback: () => { },
+        callback: () => {},
         data: {
           mode: 'edit',
           sapeurs: [clone.sapeur_id],
@@ -334,7 +365,7 @@ export default {
       this.$store.dispatch('resetActivePhase');
       this.SHOW_MODAL({
         component: 'ModalPhase',
-        callback: () => { },
+        callback: () => {},
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin,
@@ -347,7 +378,7 @@ export default {
       this.$store.dispatch('updateActivePhase', clone);
       this.SHOW_MODAL({
         component: 'ModalPhase',
-        callback: () => { },
+        callback: () => {},
         data: {
           min: this.data.date_debut + ' ' + this.data.heure_debut,
           max: this.data.date_fin + ' ' + this.data.heure_fin,
@@ -372,7 +403,7 @@ export default {
     computeSapeur(id) {
       let res = {};
       let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
-      start.setMinutes(0)
+      start.setMinutes(0);
 
       this.presences
         .filter((s) => s.sapeur_id === id)
@@ -404,7 +435,13 @@ export default {
     getPhaseTypeAt(date) {
       let res = this.phases
         .filter((p) => p.debut == null || new Date(p.debut) <= date)
-        .sort((d1, d2) => d1.debut == null ? 1 : d2.debut == null ? -1: new Date(d1.debut) < new Date(d2.debut));
+        .sort((d1, d2) =>
+          d1.debut == null
+            ? 1
+            : d2.debut == null
+            ? -1
+            : new Date(d1.debut) < new Date(d2.debut)
+        );
       if (res.length > 0) {
         return res[0].phase_type_id;
       }

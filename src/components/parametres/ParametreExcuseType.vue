@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Excuses type</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutExcuse()">Ajouter une excuse</button>
+      <button type="button" class="btn btn-primary" @click="ajoutExcuse()">
+        Ajouter une excuse
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="excuses-types" class="table table-sm">
@@ -26,18 +28,38 @@
             <td>{{ e.abreviation }}</td>
             <td>{{ e.designation }}</td>
             <td class="text-center">
-              <input type="checkbox" class="form-check-input" id="amende" :checked="e.amende" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="amende"
+                :checked="e.amende"
+                disabled
+              />
               <label class="form-check-label" for="amende"></label>
             </td>
             <td class="text-center">
-              <input type="checkbox" class="form-check-input" id="statut" :checked="e.statut" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="statut"
+                :checked="e.statut"
+                disabled
+              />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateExcuse(e)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateExcuse(e)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteExcuse(e)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteExcuse(e)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -93,5 +115,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

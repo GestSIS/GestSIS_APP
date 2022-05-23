@@ -33,7 +33,9 @@
               <!-- TODO: Ajout sujet par défault - Nom SIS -->
               <a href="mailto:support@gestsis.ch">Contacter</a>
             </p>
-            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
+            <p>
+              GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
+            </p>
           </div>
         </div>
       </div>

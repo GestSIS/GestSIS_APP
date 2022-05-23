@@ -3,7 +3,9 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Indemnités intervention</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">Ajouter une indemnité</button>
+      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
+        Ajouter une indemnité
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table id="indemnites-anuelles" class="table table-sm">
@@ -40,10 +42,18 @@
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td>{{ formatType(i.type) }}</td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateIndemnite(i)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateIndemnite(i)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" disabled>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                disabled
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -88,7 +98,9 @@ export default {
   computed: {
     ...mapState({
       indemnitesIntervention: (state) =>
-        state.imputation.fraisIndemnites.interventions.sort((a, b) => a.tri - b.tri),
+        state.imputation.fraisIndemnites.interventions.sort(
+          (a, b) => a.tri - b.tri
+        ),
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
@@ -138,12 +150,11 @@ export default {
         3: 'Frais forfaitaire',
         4: 'Frais effectif',
         5: 'Charges AVS/AC',
-      }
+      };
       return mapping[type] || '';
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

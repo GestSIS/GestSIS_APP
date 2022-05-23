@@ -24,7 +24,9 @@
           :class="{ 'is-invalid': errors['sortie'] }"
           id="cours-date"
         />
-        <div class="invalid-feedback" v-if="errors['sortie']">Date invalide</div>
+        <div class="invalid-feedback" v-if="errors['sortie']">
+          Date invalide
+        </div>
       </div>
       <div class="mb-3" :class="{ 'd-none': finDeService }">
         <label for="localite">Localite</label>
@@ -34,7 +36,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listeLocalitesSis" :key="l.id" :value="l.id">{{ l.designation }}</option>
+          <option v-for="l in listeLocalitesSis" :key="l.id" :value="l.id">
+            {{ l.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -49,8 +53,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">{{ buttonValidateText }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ buttonValidateText }}
+      </button>
     </div>
   </div>
 </template>
@@ -133,9 +141,9 @@ export default {
                 (!this.mutationInitiale.sortie &&
                   !!this.activeMutation.sortie)) &&
               this.groupes.length +
-              this.exercices.length +
-              this.fonctions.length >
-              0
+                this.exercices.length +
+                this.fonctions.length >
+                0
             ) {
               this.SHOW_MODAL('ModalMutationDesactivation');
             } else {

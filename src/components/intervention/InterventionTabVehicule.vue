@@ -10,7 +10,9 @@
           class="btn btn-primary"
           @click="save"
           v-if="hasEditPermission"
-        >Enregistrer</button>
+        >
+          Enregistrer
+        </button>
       </div>
       <div class="card-body">
         <table id="int-vehicules" class="table table-sm">
@@ -73,9 +75,10 @@ export default {
       interventionVehicules: (state) => state.intervention.active.vehicules,
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
   },
   mounted() {

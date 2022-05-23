@@ -9,8 +9,12 @@
           <button
             class="btn btn-outline-primary"
             @click="justificatifIndividuel(activeCompteId)"
-          >Justificatif du compte</button>
-          <button class="btn btn-outline-primary" @click="justificatifComplet">Justificatif complet</button>
+          >
+            Justificatif du compte
+          </button>
+          <button class="btn btn-outline-primary" @click="justificatifComplet">
+            Justificatif complet
+          </button>
         </div>
       </div>
     </div>
@@ -35,7 +39,9 @@
                   class="dropdown-item"
                   :class="{ active: activeCompteId == c.id }"
                   type="button"
-                >{{ formatCompte(c) }}</button>
+                >
+                  {{ formatCompte(c) }}
+                </button>
               </template>
             </base-dropdown>
           </div>

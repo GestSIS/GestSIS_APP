@@ -21,7 +21,13 @@
             <td>{{ s.tri }}</td>
             <td>{{ s.designation }}</td>
             <td class="text-center">
-              <input type="checkbox" class="form-check-input" id="statut" :checked="s.statut" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="statut"
+                :checked="s.statut"
+                disabled
+              />
               <label class="form-check-label" for="statut"></label>
             </td>
             <td>{{ s.forfait }}</td>
@@ -40,11 +46,11 @@ export default {
   name: 'ParametreStatFederal',
   computed: {
     ...mapState({
-      statsFederales: (state) => state.statFederal.liste.sort((a, b) => a.tri - b.tri),
+      statsFederales: (state) =>
+        state.statFederal.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

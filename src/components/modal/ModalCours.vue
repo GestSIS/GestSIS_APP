@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5
-        class="modal-title"
-        id="exampleModalLabel"
-      >{{ activeCours.id ? 'Modifier' : 'Ajouter' }} un cours</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeCours.id ? 'Modifier' : 'Ajouter' }} un cours
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -47,7 +46,9 @@
           class="form-select form-select-sm"
         >
           <option :value="null">-</option>
-          <option v-for="c in listeCours" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in listeCours" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -59,7 +60,9 @@
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
           <option :value="null">-</option>
-          <option v-for="g in listeGrade" :key="g.id" :value="g.id">{{ g.designation }}</option>
+          <option v-for="g in listeGrade" :key="g.id" :value="g.id">
+            {{ g.designation }}
+          </option>
         </select>
       </div>
 
@@ -72,7 +75,9 @@
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
           <option :value="null">-</option>
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">{{ f.nom }}</option>
+          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
+            {{ f.nom }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -97,12 +102,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeCours.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeCours.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -158,9 +163,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

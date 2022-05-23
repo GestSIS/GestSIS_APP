@@ -24,56 +24,64 @@
             role="tab"
             exact-active-class="active"
             :to="{ name: 'comptabilite-decompte' }"
-          >Décomptes</router-link>
+            >Décomptes</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
             :to="{ name: 'comptabilite-compte' }"
-          >Comptes</router-link>
+            >Comptes</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-exercice' }"
-          >Exercices</router-link>
+            >Exercices</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-intervention' }"
-          >Interventions</router-link>
+            >Interventions</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-annuel' }"
-          >Indemnités et Frais annuels</router-link>
+            >Indemnités et Frais annuels</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-sapeurs' }"
-          >Sapeurs</router-link>
+            >Sapeurs</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-divers' }"
-          >Autres</router-link>
+            >Autres</router-link
+          >
           <router-link
             tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-amendes' }"
-          >Amendes</router-link>
+            >Amendes</router-link
+          >
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" role="tabpanel">

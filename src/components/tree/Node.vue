@@ -227,7 +227,7 @@ export default {
 }
 
 .tree-node.tree-node--parent::after {
-  content: "";
+  content: '';
   position: absolute;
   top: -3px;
   bottom: 0;
@@ -242,7 +242,7 @@ export default {
 }
 
 .tree-node--parent > .tree-node-header::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 15px;
   left: -15px;
