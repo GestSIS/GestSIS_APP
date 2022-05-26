@@ -11,11 +11,12 @@
             <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
             <select class="form-select form-select-sm" v-model="groupBy" id="group-by">
               <option value="none">Alphabétique</option>
-              <option value="localite">Localité</option>
-              <option value="fonction">Fonction</option>
-              <option value="grade">Grade</option>
-              <option value="civilite">Civilité</option>
+              <option value="localite_id">Localité</option>
+              <option value="fonction_id">Fonction</option>
+              <option value="grade_id">Grade</option>
+              <option value="civilite_id">Civilité</option>
               <option value="groupe">Groupes</option>
+              <option value="type">Type</option>
               <!-- TODO: Ajouter d'autres options -->
               <!-- TODO: Ajouter option permis -->
               <!-- TODO: Ajouter option Date incorporation -->
@@ -162,6 +163,7 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 //TODO:
+// - Par fonction -> effectif et non principale
 // - Par cours
 // - Date anniversaire
 // - Permis de conduire
@@ -175,17 +177,18 @@ export default {
       chosenSapeurs: [],
       selectedGeneric: {
         groupe: {},
-        fonction: {},
-        grade: {},
-        localite: {},
-        civilite: {},
+        fonction_id: {},
+        grade_id: {},
+        localite_id: {},
+        civilite_id: {},
+        type: {},
         sapeur: {},
       },
       expanded: {},
     };
   },
   mounted() {
-    this.chosenSapeurs = this.data.slice(0);
+    this.chosenSapeurs = this.data.ids.slice(0);
 
     if (this.localites.length <= 0) {
       this.$store.dispatch('fetchLocalites');
@@ -235,33 +238,40 @@ export default {
     availableSapeur() {
       return this.sapeurs
         .slice(0)
+        .filter(s => (this.data.filter ?? (() => true))(s))
         .filter((s) => !this.chosenSapeurs.includes(s.id));
     },
     listeSapeurSelect() {
       if (this.groupBy == 'groupe') {
         return this.flattenedSapeurGroupe;
-      } else if (this.groupBy == 'localite') {
+      } else if (this.groupBy == 'localite_id') {
         return this.flattenedSapeurGeneric(
           this.filteredLocalites,
           'localite_id',
           'designation'
         );
-      } else if (this.groupBy == 'fonction') {
+      } else if (this.groupBy == 'fonction_id') {
         return this.flattenedSapeurGeneric(
           this.fonctions,
           'fonction_id',
           'nom'
         );
-      } else if (this.groupBy == 'grade') {
+      } else if (this.groupBy == 'grade_id') {
         return this.flattenedSapeurGeneric(
           this.grades,
           'grade_id',
           'designation'
         );
-      } else if (this.groupBy == 'civilite') {
+      } else if (this.groupBy == 'civilite_id') {
         return this.flattenedSapeurGeneric(
           this.civilites,
           'civilite_id',
+          'designation'
+        );
+      } else if (this.groupBy == 'type') {
+        return this.flattenedSapeurGeneric(
+          [{ id: 0, designation: 'Sapeur' }, { id: 1, designation: 'Politique' }],
+          'type',
           'designation'
         );
       }
@@ -380,9 +390,9 @@ export default {
     },
     async save() {
       // Sapeurs ajoutés
-      const newSap = this.chosenSapeurs.filter((s) => !this.data.includes(s));
+      const newSap = this.chosenSapeurs.filter((s) => !this.data.ids.includes(s));
       // Sapeurs supprimés
-      const removedSap = this.data.filter(
+      const removedSap = this.data.ids.filter(
         (s) => !this.chosenSapeurs.includes(s)
       );
       // Sapeurs tous
@@ -422,7 +432,7 @@ export default {
       this.availableSapeur
         .filter(
           (s) =>
-            s[this.groupBy + '_id'] == id && !this.chosenSapeurs.includes(s.id)
+            s[this.groupBy] == id && !this.chosenSapeurs.includes(s.id)
         )
         .forEach((s) => (this.selectedGeneric.sapeur[s.id] = !state));
     },

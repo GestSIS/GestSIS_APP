@@ -7,12 +7,7 @@
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="piquet"
-            v-model="piquet"
-          />
+          <input type="checkbox" class="form-check-input" id="piquet" v-model="piquet" />
           <label class="form-check-label" for="piquet">Piquet</label>
         </div>
       </div>
@@ -24,16 +19,8 @@
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
-              <input
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_debut'] }"
-                type="date"
-                :min="dateDebutMin"
-                :max="dateDebutMax"
-                id="m-int-date-debut"
-                name="date_debut"
-                v-model="date_debut"
-              />
+              <input class="form-control form-control-sm" :class="{ 'is-invalid': errors['date_debut'] }" type="date"
+                :min="dateDebutMin" :max="dateDebutMax" id="m-int-date-debut" name="date_debut" v-model="date_debut" />
             </div>
           </div>
         </div>
@@ -44,16 +31,8 @@
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
-              <input
-                type="time"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['heure_debut'] }"
-                id="m-int-heure_debut"
-                name="heure_debut"
-                step="900"
-                v-model="heure_debut"
-                @focusout="roundDebut"
-              />
+              <input type="time" class="form-control form-control-sm" :class="{ 'is-invalid': errors['heure_debut'] }"
+                id="m-int-heure_debut" name="heure_debut" step="900" v-model="heure_debut" @focusout="roundDebut" />
             </div>
           </div>
         </div>
@@ -66,16 +45,9 @@
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
-              <input
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_fin'] }"
-                :min="dateFinMin"
-                :max="dateFinMax"
-                type="date"
-                id="m-int-date-fin"
-                name="date_fin"
-                v-model="date_fin"
-              />
+              <input class="form-control form-control-sm" :class="{ 'is-invalid': errors['date_fin'] }"
+                :min="dateFinMin" :max="dateFinMax" type="date" id="m-int-date-fin" name="date_fin"
+                v-model="date_fin" />
             </div>
           </div>
         </div>
@@ -86,18 +58,9 @@
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
-              <input
-                type="time"
-                class="form-control form-control-sm"
-                :class="{
-                  'is-invalid': errors['heure_fin'],
-                }"
-                id="m-int-heure_fin"
-                name="heure_fin"
-                step="900"
-                v-model="heure_fin"
-                @focusout="roundFin"
-              />
+              <input type="time" class="form-control form-control-sm" :class="{
+                'is-invalid': errors['heure_fin'],
+              }" id="m-int-heure_fin" name="heure_fin" step="900" v-model="heure_fin" @focusout="roundFin" />
             </div>
           </div>
         </div>
@@ -105,12 +68,7 @@
       <ul class="list-group" v-if="!editMode">
         <li v-for="s in sapeurs" :key="s.id" class="list-group-item">
           <div class="form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              :id="'sp' + s.id"
-              v-model="selectedSapeurs[s.id]"
-            />
+            <input type="checkbox" class="form-check-input" :id="'sp' + s.id" v-model="selectedSapeurs[s.id]" />
             <label class="form-check-label" :for="'sp' + s.id">
               {{ formatSapeur(s) }}
             </label>
@@ -122,12 +80,7 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-        :disabled="!nbSelectedSapeurs"
-      >
+      <button type="button" class="btn btn-primary" @click="save()" :disabled="!nbSelectedSapeurs">
         {{ editMode ? 'Enregistrer' : 'Ajouter' }}
       </button>
     </div>
@@ -161,7 +114,8 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
+      // Sapeurs actif et de type sapeur uniquement
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif && s.type == 0),
     }),
     heureDebut() {
       return null; //this.activeInterventionData.heure_debut
@@ -307,4 +261,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

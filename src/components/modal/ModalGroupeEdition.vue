@@ -13,13 +13,7 @@
       </div>
       <div class="row mb-2">
         <div class="col-12">
-          <editable-tree
-            :tree="groupeTree"
-            :_types="types"
-            :selectable="true"
-            @selected="selected"
-            >1</editable-tree
-          >
+          <editable-tree :tree="groupeTree" :_types="types" :selectable="true" @selected="selected">1</editable-tree>
         </div>
       </div>
     </div>
@@ -35,7 +29,7 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import EditableTree from '@/components/editable_tree/EditableTree.vue';
 
 export default {
-  name: 'ModalSapeurSelect',
+  name: 'ModalGroupeEdition',
   props: ['callback', 'data'],
   components: {
     EditableTree,
@@ -105,9 +99,10 @@ export default {
     close() {
       this.HIDE_MODAL();
     },
-    async save() {},
+    async save() { },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

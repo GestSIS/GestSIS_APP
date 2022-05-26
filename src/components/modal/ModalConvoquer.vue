@@ -15,28 +15,14 @@
           <base-checkbox label="Exercice détail" v-model="params.details" />
         </div>-->
         <div class="col-12 mb-3">
-          <span class="me-3" v-if="!params.sapeurIds.length"
-            >Tous les sapeurs actifs</span
-          >
-          <span class="me-3" v-else-if="params.sapeurIds.length == 1"
-            >1 sapeur sélectionné</span
-          >
-          <span class="me-3" v-else
-            >{{ params.sapeurIds.length }} sapeurs sélectionnés</span
-          >
-          <button
-            class="me-3 btn btn-outline-primary"
-            type="button"
-            @click="select()"
-          >
+          <span class="me-3" v-if="!params.sapeurIds.length">Tous les sapeurs actifs</span>
+          <span class="me-3" v-else-if="params.sapeurIds.length == 1">1 sapeur sélectionné</span>
+          <span class="me-3" v-else>{{ params.sapeurIds.length }} sapeurs sélectionnés</span>
+          <button class="me-3 btn btn-outline-primary" type="button" @click="select()">
             Sélection des sapeurs
           </button>
-          <button
-            v-if="params.sapeurIds.length"
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="resetSelection()"
-          >
+          <button v-if="params.sapeurIds.length" class="btn btn-outline-secondary" type="button"
+            @click="resetSelection()">
             Annuler la sélection
           </button>
         </div>
@@ -45,62 +31,32 @@
           <h6>Informations</h6>
           <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="titre">Titre</span>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              placeholder="Convocation"
-              aria-label="Convocation"
-              aria-describedby="titre"
-              v-model="params.titre"
-            />
+            <input type="text" class="form-control form-control-sm" placeholder="Convocation" aria-label="Convocation"
+              aria-describedby="titre" v-model="params.titre" />
           </div>
-          <base-checkbox
-            class="mb-3"
-            label="Affichage des personnes 'Pour information'"
-            v-model="params.info"
-          />
+          <base-checkbox class="mb-3" label="Affichage des personnes 'Pour information'" v-model="params.info" />
           <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="info">Info</span>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              :disabled="!params.info"
-              placeholder="Pour information"
-              aria-label="Pour information"
-              aria-describedby="info"
-              v-model="params.pourInfo"
-            />
+            <input type="text" class="form-control form-control-sm" :disabled="!params.info"
+              placeholder="Pour information" aria-label="Pour information" aria-describedby="info"
+              v-model="params.pourInfo" />
           </div>
         </div>
         <div class="col-4">
           <h6>Format</h6>
-          <base-radio
-            :advancedLabel="true"
-            v-model="params.format"
-            :options="formats"
-          />
+          <base-radio :advancedLabel="true" v-model="params.format" :options="formats" />
         </div>
       </div>
       <hr />
       <div class="mb-3">
         <label for="debut">Texte de début de convocation</label>
-        <textarea
-          v-model="params.texteDebut"
-          rows="4"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['textDebut'] }"
-          id="debut"
-        />
+        <textarea v-model="params.texteDebut" rows="4" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['textDebut'] }" id="debut" />
       </div>
       <div class="mb-3">
         <label for="fin">Texte de fin de convocation</label>
-        <textarea
-          v-model="params.texteFin"
-          rows="4"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['texteFin'] }"
-          id="fin"
-        />
+        <textarea v-model="params.texteFin" rows="4" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['texteFin'] }" id="fin" />
       </div>
     </div>
     <div class="modal-footer">
@@ -169,7 +125,9 @@ export default {
     },
     select() {
       const save = { ...this.data, remount: true, save: { ...this.params } };
-      const data = this.params.sapeurIds.slice(0);
+      const data = {
+        ids: this.params.sapeurIds.slice(0)
+      };
       const callback = (res) => {
         if (res) {
           save.save.sapeurIds = res.tous;
@@ -196,4 +154,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

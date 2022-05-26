@@ -52,6 +52,7 @@ export default {
           prenom: payload.prenom,
           actif: payload.actif,
           date_naissance: payload.date_naissance,
+          type: payload.type,
         },
       ];
     },
@@ -211,7 +212,6 @@ export default {
     },
   },
   getters: {
-    activeSapeur: (state) => state.active.data,
     activeSapeurPermis: (state) => state.active.permis,
     activeSapeurTelephones: (state) =>
       state.active.telephones
@@ -236,7 +236,6 @@ export default {
           (m1, m2) => new Date(m1.incorporation) - new Date(m2.incorporation)
         ),
     activeSapeurGroupes: (state) => state.active.groupes,
-    activeSapeurId: (state) => state.active.id || 0,
   },
   actions: {
     selectSapeur({ commit }, payload) {
@@ -307,6 +306,16 @@ export default {
     saveActiveSapeur({ state, commit }, payload) {
       //TODO Update store with new values
       return SapeurService.saveSapeur(
+        state.active.data.id,
+        payload || state.active.data
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_SAPEUR_DATA, data);
+        return data;
+      });
+    },
+    saveNonSapeurStatut({ state, commit }, payload) {
+      //TODO Update store with new values
+      return SapeurService.saveNonSapeurStatut(
         state.active.data.id,
         payload || state.active.data
       ).then((data) => {

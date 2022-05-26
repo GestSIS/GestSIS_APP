@@ -5,11 +5,7 @@
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button
-            @click.prevent="save"
-            class="btn btn-primary"
-            v-if="hasEditPermission"
-          >
+          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">
             Enregistrer
           </button>
         </div>
@@ -18,14 +14,8 @@
           <!-- IBAN -->
           <div class="mb-3">
             <label for="f-sap-nom">IBAN</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="f-sap-nom"
-              name="nom"
-              :readonly="!hasEditPermission"
-              v-model="activeSapeur.iban"
-            />
+            <input type="text" class="form-control form-control-sm" id="f-sap-nom" name="nom"
+              :readonly="!hasEditPermission" v-model="activeSapeur.iban" />
           </div>
         </div>
       </div>
@@ -41,10 +31,11 @@ export default {
   name: 'SapeurBanque',
   computed: {
     ...mapState({
+      activeSapeur: (state) => state.sapeur.active.data,
+      activeSapeurId: (state) => state.sapeur.active.id,
       hasEditPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-    ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },
   methods: {
     async save() {
@@ -75,4 +66,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

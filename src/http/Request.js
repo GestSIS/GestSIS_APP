@@ -1,4 +1,5 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 const API_URL = import.meta.env.VITE_API_ENDPOINT;
 const AUTH_URL = import.meta.env.VITE_AUTH_ENDPOINT;
@@ -11,9 +12,12 @@ const request = {
   _401interceptor: true,
   _refreshToken: null,
   _refreshFailed: null,
+  _accessTokenValidity: null,
 
-  setAccessToken: (token) => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  setAccessToken(accessToken) {
+    const { exp } = jwt_decode(accessToken);
+    this._accessTokenValidity = exp;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
 
   setSisKey: (sis_key) => {
@@ -66,6 +70,61 @@ const request = {
         'Access-Control-Allow-Origin': '*',
       },
     });
+
+    // api.interceptors.request.use(async (req) => {
+    //   // Test if expired
+    //   if (Date.now() < (this._accessTokenValidity || 0) * 1000) {
+    //     return req;
+    //   }
+
+    //   // Expired !
+    //   let response = null;
+
+    //   // Check if a refreshToken request has already been sent
+    //   if (refreshTokenPromise.value != '') {
+    //     refreshTokenCountAwait.value++;
+        
+    //     // Await the result of this request
+    //     try {
+    //       return await refreshTokenPromise.value;
+    //     } finally {
+    //       refreshTokenCountAwait.value--;
+    //       if (refreshTokenCountAwait.value == 0) {
+    //         refreshTokenPromise.value = '';
+    //       }
+    //     }
+    //   }
+
+    //   // Send a refresh token request
+    //   try {
+    //     refreshTokenPromise.value = this.auth().post('refresh-token', {
+    //       token: this._refreshToken,
+    //     });
+    //     response = await refreshTokenPromise.value;
+    //   } catch (e) {
+    //     if (e?.status === 401) {
+    //       await store.dispatch('logout')
+    //       // useRouter().push({ name: 'login' })
+    //       return Promise.reject(e);
+    //     }
+    //   } finally {
+    //     if (refreshTokenCountAwait.value == 0) {
+    //       refreshTokenPromise.value = '';
+    //     }
+    //   }
+
+    //   // TODO: Update tokens
+    //   // store.setTokens();
+    //   this.setAccessToken();
+
+    //   // Update axios
+    //   if (req.headers?.common) {
+    //     req.headers['Authorization'] = `Bearer ${response.accessToken}`;
+    //   }
+    //   this._refreshToken = response.refreshToken;
+
+    //   return req;
+    // });
 
     api.interceptors.response.use(
       (response) => {

@@ -23,11 +23,7 @@
             <!-- <button class="btn btn-outline-primary">Modifier</button> -->
           </div>
           <div class="card-body">
-            <groupe-edition
-              :editMode="editMode"
-              @selected="selected"
-              ref="groupeEdition"
-            />
+            <groupe-edition :editMode="editMode" @selected="selected" ref="groupeEdition" />
           </div>
         </div>
       </div>
@@ -37,34 +33,19 @@
             <h3>Actions</h3>
           </div>
           <div class="card-body pb-2">
-            <button
-              class="btn btn-info me-1"
-              @click="expand"
-              v-tooltip.top="'Tout développer'"
-            >
+            <button class="btn btn-info me-1" @click="expand" v-tooltip.top="'Tout développer'">
               <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
-            <button
-              class="btn btn-info me-1"
-              @click="contract"
-              v-tooltip.top="'Tout réduire'"
-            >
+            <button class="btn btn-info me-1" @click="contract" v-tooltip.top="'Tout réduire'">
               <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
-            <button
-              class="btn btn-info me-1"
-              @click="editMode = !editMode"
-              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
-            >
+            <button class="btn btn-info me-1" @click="editMode = !editMode"
+              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'">
               <font-awesome-icon :icon="['far', editMode ? 'eye' : 'edit']" />
             </button>
           </div>
           <div v-if="!editMode" class="card-body pt-0">
-            <button
-              class="btn btn-primary mb-2"
-              :disabled="!activeIsGroupe"
-              @click="addSapeurs(active)"
-            >
+            <button class="btn btn-primary mb-2" :disabled="!activeIsGroupe" @click="addSapeurs(active)">
               Ajouter/enlever des sapeurs
             </button>
           </div>
@@ -72,97 +53,57 @@
             <button class="btn btn-primary d-block mb-2" @click="addGroupe">
               Ajouter un groupe
             </button>
-            <button
-              class="btn btn-primary d-block mb-2"
-              :disabled="!activeIsGroupe"
-              @click="deleteGroupe"
-            >
+            <button class="btn btn-primary d-block mb-2" :disabled="!activeIsGroupe" @click="deleteGroupe">
               Supprimer
             </button>
           </div>
           <div v-if="editMode" class="card-body pt-0">
             <h3>Réorganiser le groupe</h3>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveLeft,
-                'btn-secondary': !canMoveLeft,
-              }"
-              @click.prevent="left"
-              :disabled="!canMoveLeft"
-            >
+            <button class="btn btn-sm" :class="{
+              'btn-primary': canMoveLeft,
+              'btn-secondary': !canMoveLeft,
+            }" @click.prevent="left" :disabled="!canMoveLeft">
               ←
             </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveRight,
-                'btn-secondary': !canMoveRight,
-              }"
-              @click.prevent="right"
-              :disabled="!canMoveRight"
-            >
+            <button class="btn btn-sm" :class="{
+              'btn-primary': canMoveRight,
+              'btn-secondary': !canMoveRight,
+            }" @click.prevent="right" :disabled="!canMoveRight">
               →
             </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveUp,
-                'btn-secondary': !canMoveUp,
-              }"
-              @click.prevent="up"
-              :disabled="!canMoveUp"
-            >
+            <button class="btn btn-sm" :class="{
+              'btn-primary': canMoveUp,
+              'btn-secondary': !canMoveUp,
+            }" @click.prevent="up" :disabled="!canMoveUp">
               ↑
             </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveDown,
-                'btn-secondary': !canMoveDown,
-              }"
-              @click.prevent="down"
-              :disabled="!canMoveDown"
-            >
+            <button class="btn btn-sm" :class="{
+              'btn-primary': canMoveDown,
+              'btn-secondary': !canMoveDown,
+            }" @click.prevent="down" :disabled="!canMoveDown">
               ↓
             </button>
           </div>
         </div>
-        <div
-          class="card card-primary card-outline mt-2"
-          v-if="editMode && active && groupesTypes.includes(active.data.type)"
-        >
+        <div class="card card-primary card-outline mt-2"
+          v-if="editMode && active && groupesTypes.includes(active.data.type)">
           <div class="card-header d-flex justify-content-between">
             <h3>Modifier</h3>
           </div>
           <div class="card-body">
             <div class="mb-3">
               <label for="abreviation">No</label>
-              <input
-                type="number"
-                v-model="groupeEdit.no"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['no'] }"
-                id="no"
-              />
+              <input type="number" v-model="groupeEdit.no" class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['no'] }" id="no" />
             </div>
             <div class="mb-3">
               <label for="abreviation">Nom</label>
-              <input
-                type="text"
-                v-model="groupeEdit.designation"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['designation'] }"
-                id="designation"
-              />
+              <input type="text" v-model="groupeEdit.designation" class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['designation'] }" id="designation" />
             </div>
             <div class="mb-3">
               <label for="cours-precedent">Groupe parent</label>
-              <select
-                id="pere_id"
-                v-model="groupeEdit.pere_id"
-                class="form-select form-select-sm"
-              >
+              <select id="pere_id" v-model="groupeEdit.pere_id" class="form-select form-select-sm">
                 <option :value="null">-</option>
                 <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
                   {{ (g.no ? g.no + ' ' : '') + g.designation }}
@@ -171,17 +112,9 @@
             </div>
             <div class="mb-3">
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="type"
-                  v-model="groupeEdit.type"
-                  :true-value="1"
-                  :false-value="0"
-                />
-                <label class="form-check-label" for="type"
-                  >Groupe d'alarme</label
-                >
+                <input type="checkbox" class="form-check-input" id="type" v-model="groupeEdit.type" :true-value="1"
+                  :false-value="0" />
+                <label class="form-check-label" for="type">Groupe d'alarme</label>
               </div>
             </div>
             <button class="btn btn-primary" @click="save">Modifier</button>
@@ -363,7 +296,9 @@ export default {
       }
       const id = node.data.id;
       const groupe = this.groupes.find((g) => g.id == id);
-      const data = groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0);
+      const data = {
+        ids: groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0)
+      };
 
       const svm = this;
       const callback = (res) => {
@@ -388,4 +323,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
