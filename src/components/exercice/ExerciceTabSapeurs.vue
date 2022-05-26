@@ -26,7 +26,7 @@
           <th class="text-center">Remplace</th>
           <th class="text-center">Excuse</th>
           <th class="text-center">Amende</th>
-          <th v-for="h in extendedHeureTypes" :key="h.id">
+          <th v-for="h in heureTypes" :key="h.id">
             {{ h.designation }}
           </th>
         </tr>
@@ -75,7 +75,7 @@
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
           </td>
-          <td v-for="h in extendedHeureTypes" :key="h.id">
+          <td v-for="h in heureTypes" :key="h.id">
             <div class="input-group input-group-sm">
               <input class="form-control form-control-sm" type="text" :readonly="!canEditPresence" :value="
                 getHeureValue(
@@ -94,7 +94,7 @@
           </td>
         </tr>
         <tr v-if="activeExerciceSapeurs.length === 0">
-          <td :colspan="6 + extendedHeureTypes.length">
+          <td :colspan="6 + heureTypes.length">
             Aucun sapeur
           </td>
         </tr>
@@ -106,7 +106,7 @@
         <th class="text-center">{{ presences.filter(s => s.remplace).length }}</th>
         <th class="text-center">{{ presences.filter(s => s.excuse_type_id).length }}</th>
         <th class="text-center">{{ presences.filter(s => s.amende).length }}</th>
-        <th class="text-center" v-for="h in extendedHeureTypes" :key="h.id">
+        <th class="text-center" v-for="h in heureTypes" :key="h.id">
           {{ presences
               .map(s => parseFloat(s.heures.find((e) => e.heure_exercice_type_id == h.id)?.quantite ?? 0))
               .reduce((acc, a) => acc + a, 0)
@@ -160,7 +160,9 @@ export default {
     },
     canEditAbsence() {
       // Possible de l'éditer si permission de validation ou si pas encore validé
-      return this.hasValidationPermission || (this.hasPresencePermission && this.activeExerciceData.statut < 2 && this.activeExerciceData.statut >= 0);
+      return this.activeExerciceData.statut >= 0 && (
+        this.hasValidationPermission || (this.hasPresencePermission && this.activeExerciceData.statut <= 2)
+      );
     },
     canEditPresence() {
       return this.activeExerciceData.statut >= 0 && (
@@ -169,9 +171,6 @@ export default {
     },
     canValidate() {
       return this.activeExerciceData.statut == 2;
-    },
-    extendedHeureTypes() {
-      return this.heureTypes;
     },
     computedExerciceSapeurs() {
       return this.activeExerciceSapeurs
