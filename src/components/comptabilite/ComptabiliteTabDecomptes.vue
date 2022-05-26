@@ -274,7 +274,6 @@ export default {
         decompteId,
         `decompte_${decompte.date}.xml`
       ).catch((err) => {
-        console.log(err)
         this.$awn.alert(
           err?.message ||
           "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"

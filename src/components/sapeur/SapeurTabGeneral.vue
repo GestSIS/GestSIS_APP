@@ -285,7 +285,6 @@ export default {
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch((err) => {
-          console.error(err)
           this.$awn.alert(
             err.message || "Erreur lors de l'enregistrement des données"
           );
