@@ -99,6 +99,20 @@
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <th>Nb sapeurs : {{ presences.length }}</th>
+        <th class="text-center">{{ presences.filter(s => s.convoque).length }}</th>
+        <th class="text-center">{{ presences.filter(s => s.present).length }}</th>
+        <th class="text-center">{{ presences.filter(s => s.remplace).length }}</th>
+        <th class="text-center">{{ presences.filter(s => s.excuse_type_id).length }}</th>
+        <th class="text-center">{{ presences.filter(s => s.amende).length }}</th>
+        <th class="text-center" v-for="h in extendedHeureTypes" :key="h.id">
+          {{ presences
+              .map(s => parseFloat(s.heures.find((e) => e.heure_exercice_type_id == h.id)?.quantite ?? 0))
+              .reduce((acc, a) => acc + a, 0)
+          }} {{ formatUnite(h.type_unite_id) }}
+        </th>
+      </tfoot>
     </table>
     <div class="card-footer">
       <button class="btn btn-outline-primary" @click="manageSapeurs" v-if="hasPresencePermission"
