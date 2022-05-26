@@ -26,6 +26,9 @@ export default {
     },
     [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
       state.liste = state.liste.map(e => e.id == id ? ({...e, statut}) : e);
+      if (state.active.id == id) {
+        state.active.data.statut = statut;
+      }
     },
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
