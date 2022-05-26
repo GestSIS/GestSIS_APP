@@ -8,30 +8,12 @@
         </div>
         <form class="card-body p-2 pb-0">
           <div class="row">
-            <base-multi-unselect
-              class="col-md-4"
-              label="Catégorie :"
-              valueKey="id"
-              displayKey="designation"
-              :options="categorieExercices"
-              v-model="unselectedCategories"
-            />
-            <base-multi-unselect
-              class="col-md-4"
-              label="Sapeur de :"
-              valueKey="id"
-              displayKey="designation"
-              :options="localiteSapeurs"
-              v-model="unselectedSapeurDe"
-            />
-            <base-multi-unselect
-              class="col-md-4"
-              label="Exercice à :"
-              valueKey="id"
-              displayKey="designation"
-              :options="localiteExercices"
-              v-model="unselectedExerciceA"
-            />
+            <base-multi-unselect class="col-md-4" label="Catégorie :" valueKey="id" displayKey="designation"
+              :options="categorieExercices" v-model="unselectedCategories" />
+            <base-multi-unselect class="col-md-4" label="Sapeur de :" valueKey="id" displayKey="designation"
+              :options="localiteSapeurs" v-model="unselectedSapeurDe" />
+            <base-multi-unselect class="col-md-4" label="Exercice à :" valueKey="id" displayKey="designation"
+              :options="localiteExercices" v-model="unselectedExerciceA" />
           </div>
         </form>
       </div>
@@ -88,11 +70,7 @@
                 <th>Localité</th>
                 <th>Fonction</th>
                 <!-- <th class="text-center">Groupes</th> -->
-                <th
-                  v-for="(e, index) in displayExercice"
-                  :key="e.id"
-                  class="text-center"
-                >
+                <th v-for="(e, index) in displayExercice" :key="e.id" class="text-center">
                   {{ index + 1 }}
                 </th>
                 <th>Nb Cvq</th>
@@ -104,10 +82,7 @@
             </thead>
             <tbody>
               <tr>
-                <td
-                  v-if="!computedData.length"
-                  :colspan="displayExercice.length + 8"
-                >
+                <td v-if="!computedData.length" :colspan="displayExercice.length + 8">
                   Aucun sapeur à afficher
                 </td>
               </tr>
@@ -115,12 +90,7 @@
                 <td>{{ s.nom }} {{ s.prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
                 <td>{{ formatFonction(s.fonction_id) }}</td>
-                <td
-                  v-for="(p, index) in s.presences"
-                  :key="index"
-                  class="text-center"
-                  :class="formatPresenceClass(p)"
-                >
+                <td v-for="(p, index) in s.presences" :key="index" class="text-center" :class="formatPresenceClass(p)">
                   {{ formatPresence(p) }}
                 </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
@@ -133,10 +103,7 @@
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th
-                  v-if="displayExercice.length"
-                  :colspan="displayExercice.length"
-                ></th>
+                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
@@ -198,6 +165,9 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
+  },
+  mounted() {
+    loadData("", () => { });
   },
   watch: {
     activeExerciceComptableId(newValue, _) {
@@ -401,6 +371,7 @@ export default {
 #legend-container {
   max-height: 140px;
 }
+
 #legend-excuse {
   overflow-y: scroll;
 }
