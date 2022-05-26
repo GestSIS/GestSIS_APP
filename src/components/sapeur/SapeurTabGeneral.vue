@@ -50,7 +50,7 @@
                 :class="{ 'is-invalid': errorsData['no_avs'] }" id="m-sap-avs" name="no_avs"
                 v-model="activeSapeur.no_avs" />
             </div>
-            <div class="col-6">
+            <div class="mb-3 col-6">
               <label for="m-sap-cotisation_avs">Cotisation AVS</label>
               <font-awesome-icon class="ms-1" v-tooltip.bottom="
                 'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
