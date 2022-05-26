@@ -10,17 +10,9 @@
           <div class="mb-3 d-flex align-items-center">
             <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
             <select class="form-select form-select-sm" v-model="groupBy" id="group-by">
-              <option value="none">Alphabétique</option>
-              <option value="localite_id">Localité</option>
-              <option value="fonction_id">Fonction</option>
-              <option value="grade_id">Grade</option>
-              <option value="civilite_id">Civilité</option>
-              <option value="groupe">Groupes</option>
-              <option value="type">Type</option>
-              <!-- TODO: Ajouter d'autres options -->
-              <!-- TODO: Ajouter option permis -->
-              <!-- TODO: Ajouter option Date incorporation -->
-              <!-- TODO: Ajouter option Date naissance -->
+              <option v-for="([key, { label }]) in Object.entries(selectOptions)" :key="key" :value="key">
+                {{ label }}
+              </option>
             </select>
           </div>
         </div>
@@ -172,6 +164,7 @@ export default {
   name: 'ModalSapeurSelect',
   props: ['callback', 'data'],
   data() {
+    const svm = this;
     return {
       groupBy: 'groupe',
       chosenSapeurs: [],
@@ -185,23 +178,56 @@ export default {
         sapeur: {},
       },
       expanded: {},
+      selectOptions: {
+        none: {
+          label: 'Alphabétique'
+        },
+        groupe: {
+          label: 'Groupes'
+        },
+        localite_id: {
+          generic: true,
+          label: 'Localité',
+          collection: () => svm.grades,
+          displayKey: 'designation',
+        },
+        fonction_id: {
+          generic: true,
+          label: 'Fonction',
+          collection: () => svm.fonctions,
+          displayKey: 'nom',
+        },
+        grade_id: {
+          generic: true,
+          label: 'Grade',
+          collection: () => svm.grades,
+          displayKey: 'designation',
+        },
+        civilite_id: {
+          generic: true,
+          label: 'Civilité',
+          collection: () => svm.civilites,
+          displayKey: 'designation',
+        },
+        type: {
+          generic: true,
+          label: 'Type',
+          collection: () => [
+            { id: 0, designation: 'Sapeur' },
+            { id: 1, designation: 'Politique' }
+          ],
+          displayKey: 'designation',
+        },
+      }
     };
   },
   mounted() {
     this.chosenSapeurs = this.data.ids.slice(0);
 
-    if (this.localites.length <= 0) {
-      this.$store.dispatch('fetchLocalites');
-    }
-    if (this.grades.length <= 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-    if (this.fonctions.length <= 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.civilites.length <= 0) {
-      this.$store.dispatch('fetchCivilites');
-    }
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchGrades');
+    this.$store.dispatch('fetchFonctions');
+    this.$store.dispatch('fetchCivilites');
 
     this.$store.dispatch('fetchGroupes').then(() => {
       let svm = this;
@@ -242,38 +268,17 @@ export default {
         .filter((s) => !this.chosenSapeurs.includes(s.id));
     },
     listeSapeurSelect() {
+      const option = this.selectOptions[this.groupBy];
+      if (option.generic) {
+        return this.flattenedSapeurGeneric(
+          option.collection(),
+          this.groupBy,
+          option.displayKey
+        );
+      }
+
       if (this.groupBy == 'groupe') {
         return this.flattenedSapeurGroupe;
-      } else if (this.groupBy == 'localite_id') {
-        return this.flattenedSapeurGeneric(
-          this.filteredLocalites,
-          'localite_id',
-          'designation'
-        );
-      } else if (this.groupBy == 'fonction_id') {
-        return this.flattenedSapeurGeneric(
-          this.fonctions,
-          'fonction_id',
-          'nom'
-        );
-      } else if (this.groupBy == 'grade_id') {
-        return this.flattenedSapeurGeneric(
-          this.grades,
-          'grade_id',
-          'designation'
-        );
-      } else if (this.groupBy == 'civilite_id') {
-        return this.flattenedSapeurGeneric(
-          this.civilites,
-          'civilite_id',
-          'designation'
-        );
-      } else if (this.groupBy == 'type') {
-        return this.flattenedSapeurGeneric(
-          [{ id: 0, designation: 'Sapeur' }, { id: 1, designation: 'Politique' }],
-          'type',
-          'designation'
-        );
       }
       return [];
     },
