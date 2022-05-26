@@ -104,9 +104,6 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     occurences() {
-      console.log(this.displayKey)
-      console.log("intervention_traitement_id")
-      console.log(this.displayKey === "intervention_traitement_id")
       if (this.displayKey === "intervention_traitement_id") {
         return this.interventions
           .map((i) => i[this.displayKey])
