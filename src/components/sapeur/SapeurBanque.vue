@@ -44,17 +44,10 @@ export default {
           iban: this.activeSapeur.iban,
         })
         .then(() => {
-          this.$notify({
-            group: 'succes',
-            title: 'Modification enregistrée',
-          });
+          this.$awn.success('Modification enregistrée');
         })
-        .catch(() => {
-          this.$notify({
-            group: 'erreur',
-            title: 'Erreur lors la sauvegarde',
-            text: 'Vérifier que les dates sont valides',
-          });
+        .catch((err) => {
+          this.$awn.alert(err?.message ?? 'Erreur lors la sauvegarde');
         });
     },
   },
