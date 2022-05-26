@@ -334,9 +334,9 @@ export default {
           groupes: s.groupes,
           formatedGroupes: s.groupes
             .map((g) => indexedGroupes.get(g.groupe_id))
-            .filter((g) => g.type == 1)
-            .sort((a, b) => a.tri - b.tri)
+            .sort((a, b) => a.no - b.no)
             .map((g) => g.no)
+            .filter(g => g)
             .join(', '),
         }))
         .sort((a, b) => b.fonction_tri - a.fonction_tri);
