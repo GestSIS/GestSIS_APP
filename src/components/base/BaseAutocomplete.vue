@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'autocomplete',
+  name: 'baseAutocomplete',
 
   props: {
     modelValue: {

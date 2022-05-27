@@ -168,7 +168,7 @@ export default {
         new_password: newPassword,
       });
     },
-    confirmation({}, token) {
+    confirmation(_, token) {
       return AuthService.confirmation(token).then((data) => {
         data.data;
       });
@@ -200,7 +200,7 @@ export default {
         return Promise.resolve();
       }
     },
-    newRegisterToken({}, token) {
+    newRegisterToken(_, token) {
       return AuthService.newRegisterToken(token).then((t) => t.data);
     },
     updateUserRoles({ commit, state }, user) {

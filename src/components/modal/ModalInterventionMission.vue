@@ -18,7 +18,7 @@
         :max="max"-->
       </div>
       <div class="mb-3">
-        <autocomplete
+        <base-autocomplete
           :items="listMissions.map((m) => m.titre)"
           :error="!!errors['titre']"
           title="Titre"
@@ -75,12 +75,12 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
-import Autocomplete from '@/components/Autocomplete.vue';
+import BaseAutocomplete from '@/components/base/BaseAutocomplete.vue';
 
 export default {
   name: 'ModalInterventionMission',
   components: {
-    Autocomplete,
+    BaseAutocomplete,
   },
   props: {
     data: {

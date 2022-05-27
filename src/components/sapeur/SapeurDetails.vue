@@ -4,16 +4,33 @@
       <div class="tab-pane fade show active" id="tab-sapeur-details">
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
               Exporter
             </button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
               Importer
             </button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
               Fiche sapeur
             </button>
-            <button type="button" class="btn btn-outline-primary ms-2" @click="addSapeur" v-if="hasEditPermission">
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2"
+              @click="addSapeur"
+              v-if="hasEditPermission"
+            >
               Ajouter un sapeur/politique
             </button>
           </div>
@@ -22,10 +39,15 @@
     </div>
     <nav>
       <nav class="nav nav-tabs mb-3">
-        <a v-for="tab in Object.keys(tabList)" :key="tab" class="nav-item nav-link"
-          :class="{ active: activeTab === tabList[tab] }" @click.prevent="selectTab(tabList[tab])" href="#">{{
-              tabList[tab]
-          }}</a>
+        <a
+          v-for="tab in Object.keys(tabList)"
+          :key="tab"
+          class="nav-item nav-link"
+          :class="{ active: activeTab === tabList[tab] }"
+          @click.prevent="selectTab(tabList[tab])"
+          href="#"
+          >{{ tabList[tab] }}</a
+        >
       </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -115,7 +137,7 @@ export default {
     SapeurPermis,
     SapeurBanque,
     SapeurExercice,
-    SapeurMutations
+    SapeurMutations,
   },
   data() {
     return {
@@ -170,5 +192,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

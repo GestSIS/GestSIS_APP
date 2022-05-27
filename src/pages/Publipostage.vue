@@ -45,7 +45,11 @@
             <h4 class="h5">Sélection actuel</h4>
             <p v-if="sapeurIds.length <= 0">Sapeurs actifs (défault)</p>
             <p v-else>{{ sapeurIds.length }} sapeurs sélectionnés</p>
-            <button v-if="sapeurIds.length > 0" class="btn btn-outline-secondary" @click="resetSelection">
+            <button
+              v-if="sapeurIds.length > 0"
+              class="btn btn-outline-secondary"
+              @click="resetSelection"
+            >
               Annuler la sélection
             </button>
           </div>
@@ -93,7 +97,7 @@ export default {
     select() {
       const svm = this;
       const data = {
-        ids: this.sapeurIds.slice(0)
+        ids: this.sapeurIds.slice(0),
       };
       const callback = (res) => {
         if (res) {
@@ -116,7 +120,7 @@ export default {
 </script>
 
 <style>
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 </style>

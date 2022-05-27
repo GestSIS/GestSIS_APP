@@ -139,7 +139,7 @@ export default {
         })
         .catch((e) => {
           this.errors = { ...e };
-          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
         });
     },
   },

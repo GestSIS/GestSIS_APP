@@ -44,23 +44,24 @@ export default {
       state.active.id = sapeurId;
     },
     [types.CREATE_SAPEUR](state, payload) {
-      state.liste = [
-        ...state.liste,
-        payload,
-      ].sort((s1, s2) =>
+      state.liste = [...state.liste, payload].sort((s1, s2) =>
         (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
       );
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
-      state.liste.map(s => s.id == payload.id ? ({
-        ...s,
-        fonction_id: payload.fonction_id,
-        nom: payload.nom,
-        prenom: payload.prenom,
-        actif: payload.actif,
-        date_naissance: payload.date_naissance,
-      }) : s)
+      state.liste.map((s) =>
+        s.id == payload.id
+          ? {
+              ...s,
+              fonction_id: payload.fonction_id,
+              nom: payload.nom,
+              prenom: payload.prenom,
+              actif: payload.actif,
+              date_naissance: payload.date_naissance,
+            }
+          : s
+      );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
       state.active.telephones = payload;

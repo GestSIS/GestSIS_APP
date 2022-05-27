@@ -3,7 +3,11 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button @click.prevent="saveTelephones" class="btn btn-primary" v-if="hasEditPermission">
+      <button
+        @click.prevent="saveTelephones"
+        class="btn btn-primary"
+        v-if="hasEditPermission"
+      >
         Enregistrer
       </button>
     </div>
@@ -16,9 +20,13 @@
             <th>Type</th>
             <th v-if="sapeurType === 0">
               RTA
-              <font-awesome-icon class="ms-1" v-tooltip.bottom="
-                'Cocher pour transmettre à la centrale d\'alarme RTA'
-              " :icon="['far', 'question-circle']" />
+              <font-awesome-icon
+                class="ms-1"
+                v-tooltip.bottom="
+                  'Cocher pour transmettre à la centrale d\'alarme RTA'
+                "
+                :icon="['far', 'question-circle']"
+              />
             </th>
             <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
@@ -29,27 +37,51 @@
         <draggable tag="tbody" v-model="telephones" item-key="priorite">
           <template #item="{ element }">
             <tr>
-              <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
+              <td
+                class="text-center"
+                :class="{ 'd-none': telephones.length <= 1 }"
+              >
                 {{ element.priorite }}
               </td>
               <td>
-                <input class="form-control form-control-sm" type="text" :readonly="!hasEditPermission"
-                  v-model="element.numero" placeholder="..." />
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  :readonly="!hasEditPermission"
+                  v-model="element.numero"
+                  placeholder="..."
+                />
               </td>
               <td>
-                <select class="form-select form-select-sm" v-model="element.telephone_type_id"
-                  :disabled="!hasEditPermission">
-                  <option v-for="t in telephonesTypes" :value="t.id" :key="t.id">
+                <select
+                  class="form-select form-select-sm"
+                  v-model="element.telephone_type_id"
+                  :disabled="!hasEditPermission"
+                >
+                  <option
+                    v-for="t in telephonesTypes"
+                    :value="t.id"
+                    :key="t.id"
+                  >
                     {{ t.type }}
                   </option>
                 </select>
               </td>
               <td class="align-middle text-center" v-if="sapeurType === 0">
-                <input type="checkbox" class="form-check-input" v-model="element.rta" :disabled="!hasEditPermission" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  v-model="element.rta"
+                  :disabled="!hasEditPermission"
+                />
               </td>
               <td class="align-middle text-center" v-if="hasEditPermission">
-                <button type="button" class="btn btn-outline-danger border-0" @click="removeTelephone(element.priorite)"
-                  required>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="removeTelephone(element.priorite)"
+                  required
+                >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
               </td>
@@ -57,8 +89,13 @@
           </template>
         </draggable>
       </table>
-      <button type="button" class="btn btn-outline-primary" @click="addTelephone()"
-        :disabled="this.telephonesData.length >= 3" v-if="hasEditPermission">
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        @click="addTelephone()"
+        :disabled="this.telephonesData.length >= 3"
+        v-if="hasEditPermission"
+      >
         <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un
         numéro
       </button>
@@ -154,5 +191,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

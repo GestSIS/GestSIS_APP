@@ -12,7 +12,7 @@ import NoSidebar from './layouts/NoSidebar.vue';
 
 // External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import FloatingVue from 'floating-vue'
+import FloatingVue from 'floating-vue';
 // import VueAWN from 'vue-awesome-notifications';
 import VueAWN from './plugins/vue-awesome-notifications';
 
@@ -91,7 +91,7 @@ app.use(VueAWN, {
     alert: 'Erreur',
   },
 });
-app.use(FloatingVue)
+app.use(FloatingVue);
 
 // Object.entries(import.meta.globEager('./modal/*.vue')).forEach(
 //   ([key, value]) => {

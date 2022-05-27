@@ -9,7 +9,11 @@
           <button class="btn btn-outline-primary" @click="generer">
             Nouveau
           </button>
-          <button class="btn btn-outline-danger" :disabled="!selectedId" @click="supprimer(selectedId)">
+          <button
+            class="btn btn-outline-danger"
+            :disabled="!selectedId"
+            @click="supprimer(selectedId)"
+          >
             Supprimer
           </button>
         </div>
@@ -21,10 +25,18 @@
           <h3 class="card-title">Impressions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" :disabled="!selectedId" @click="impression(selectedId)">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedId"
+            @click="impression(selectedId)"
+          >
             Impression
           </button>
-          <button class="btn btn-outline-primary" :disabled="!selectedId" @click="iso20022Decompte(selectedId)">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedId"
+            @click="iso20022Decompte(selectedId)"
+          >
             Fichier de paiement (ISO20022)
           </button>
         </div>
@@ -40,24 +52,50 @@
             Nouveau
           </button>
         </div>
-        <base-table :fields="fields" :data="computedDecomptes" :selectable="true" :detail-row-component="detailRow"
-          detail-row-class="m-td-0" selectKey="id"
+        <base-table
+          :fields="fields"
+          :data="computedDecomptes"
+          :selectable="true"
+          :detail-row-component="detailRow"
+          detail-row-class="m-td-0"
+          selectKey="id"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
-          @selected="selected" row-selected-class="table-primary">
+          @selected="selected"
+          row-selected-class="table-primary"
+        >
           <template v-slot:details="props">
-            <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
-              <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
-              <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
+            <button
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
             </button>
           </template>
           <template v-slot:checkbox="{ key, value, rowData }">
-            <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
+            <input
+              type="checkbox"
+              class="form-check-input"
+              :id="key + '-' + rowData.id"
+              :checked="value"
+              disabled
+            />
           </template>
           <template v-slot:actions="{ value }">
             <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
-            <button type="button" class="btn btn-outline-danger border-0" @click="supprimer(value)">
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(value)"
+            >
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
@@ -264,7 +302,7 @@ export default {
       ).catch((err) => {
         this.$awn.alert(
           err?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },
@@ -276,7 +314,7 @@ export default {
       ).catch((err) => {
         this.$awn.alert(
           err?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },
@@ -287,5 +325,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

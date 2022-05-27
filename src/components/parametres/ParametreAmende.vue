@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import store from '@/store/index';
 
 async function loadData(_, next) {
@@ -85,16 +85,11 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([
-    loadAmendes,
-    loadFrais,
-    loadIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-  ]).then(() => {
-    next();
-  });
+  Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {
@@ -156,7 +151,7 @@ export default {
         })
         .catch((e) => {
           this.errors = { ...e };
-          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
         });
     },
   },

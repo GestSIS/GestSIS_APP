@@ -1,7 +1,11 @@
 <template>
   <component :is="tag" class="nav-item dropdown" ref="root">
-    <button class="dropdown-toggle" :class="buttonClass" @click.prevent="dropdown = !dropdown"
-      data-bs-toggle="dropdown">
+    <button
+      class="dropdown-toggle"
+      :class="buttonClass"
+      @click.prevent="dropdown = !dropdown"
+      data-bs-toggle="dropdown"
+    >
       <slot name="title">{{ title }}</slot>
     </button>
     <div class="dropdown-menu" :class="[dropdown ? 'show' : '', menuClass]">

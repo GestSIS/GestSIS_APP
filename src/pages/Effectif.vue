@@ -19,16 +19,24 @@
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <button @click="vcard(filteredSapeurs)" class="btn btn-outline-primary">
+            <button
+              @click="vcard(filteredSapeurs)"
+              class="btn btn-outline-primary"
+            >
               VCard tous
             </button>
-            <a :disabled="filteredSapeurs.length == 0" :href="
-              'mailto:?bcc=' +
-              filteredSapeurs
-                .map((s) => s.email)
-                .filter((s) => s && s != null)
-                .join(',')
-            " class="btn btn-outline-primary">Email groupé</a>
+            <a
+              :disabled="filteredSapeurs.length == 0"
+              :href="
+                'mailto:?bcc=' +
+                filteredSapeurs
+                  .map((s) => s.email)
+                  .filter((s) => s && s != null)
+                  .join(',')
+              "
+              class="btn btn-outline-primary"
+              >Email groupé</a
+            >
           </div>
         </div>
       </div>
@@ -40,37 +48,53 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <select class="form-select form-select-sm" @change="
-                  (event) => onFilter('localite_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) => onFilter('localite_id', event.target.value)
+                  "
+                >
                   <option>&lt;Localité&gt;</option>
-                  <option v-for="loc in filteredLocalites" :key="loc.id" :value="loc.id">
+                  <option
+                    v-for="loc in filteredLocalites"
+                    :key="loc.id"
+                    :value="loc.id"
+                  >
                     {{ loc.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" @change="
-                  (event) =>
-                    onFilter(
-                      'fonctions',
-                      parseInt(event.target.value)
-                        ? (fonctions) =>
-                          fonctions.find(
-                            (f) => f.fonction_id == event.target.value
-                          ) != undefined
-                        : null
-                    )
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) =>
+                      onFilter(
+                        'fonctions',
+                        parseInt(event.target.value)
+                          ? (fonctions) =>
+                              fonctions.find(
+                                (f) => f.fonction_id == event.target.value
+                              ) != undefined
+                          : null
+                      )
+                  "
+                >
                   <option>&lt;Fonction&gt;</option>
-                  <option v-for="f in filteredFonctions" :key="f.id" :value="f.id">
+                  <option
+                    v-for="f in filteredFonctions"
+                    :key="f.id"
+                    :value="f.id"
+                  >
                     {{ f.nom }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm"
-                  @change="(event) => onFilter('grade_id', event.target.value)">
+                <select
+                  class="form-select form-select-sm"
+                  @change="(event) => onFilter('grade_id', event.target.value)"
+                >
                   <option>&lt;Grade&gt;</option>
                   <option v-for="f in filteredGrades" :key="f.id" :value="f.id">
                     {{ f.designation }}
@@ -78,20 +102,27 @@
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" @change="
-                  (event) =>
-                    onFilter(
-                      'groupes',
-                      parseInt(event.target.value)
-                        ? (groupes) =>
-                          groupes.find(
-                            (f) => f.groupe_id == event.target.value
-                          ) != undefined
-                        : undefined
-                    )
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  @change="
+                    (event) =>
+                      onFilter(
+                        'groupes',
+                        parseInt(event.target.value)
+                          ? (groupes) =>
+                              groupes.find(
+                                (f) => f.groupe_id == event.target.value
+                              ) != undefined
+                          : undefined
+                      )
+                  "
+                >
                   <option :value="undefined">&lt;Groupe&gt;</option>
-                  <option v-for="f in filteredGroupes" :key="f.id" :value="f.id">
+                  <option
+                    v-for="f in filteredGroupes"
+                    :key="f.id"
+                    :value="f.id"
+                  >
                     {{ (f.no ? f.no + ' ' : '') + f.designation }}
                   </option>
                 </select>
@@ -109,8 +140,16 @@
               <span class="sr-only">Chargement...</span>
             </div>
           </div>
-          <base-table v-show="!loading" :selectable="true" selectKey="id" row-selected-class="table-primary"
-            @selected="selectSapeur" :fields="fieldsBase" no-data="Aucun sapeur à afficher" :data="filteredSapeurs">
+          <base-table
+            v-show="!loading"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
+            @selected="selectSapeur"
+            :fields="fieldsBase"
+            no-data="Aucun sapeur à afficher"
+            :data="filteredSapeurs"
+          >
             <template v-slot:foot>
               <tr>
                 <th :colspan="fieldsBase.length">
@@ -120,19 +159,38 @@
               </tr>
             </template>
             <template v-slot:checkbox="{ key, value, rowData }">
-              <input type="checkbox" class="form-check-input" :id="key + '-' + rowData.id" :checked="value" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :id="key + '-' + rowData.id"
+                :checked="value"
+                disabled
+              />
             </template>
             <template v-slot:actions="props">
-              <router-link v-if="hasSapeurModificationPermission" :to="'/sapeurs/' + props.rowData.id" custom
-                v-slot="{ navigate }">
-                <button class="btn btn-outline-primary border-0" @click="navigate">
+              <router-link
+                v-if="hasSapeurModificationPermission"
+                :to="'/sapeurs/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="navigate"
+                >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
-              <a class="btn btn-outline-primary border-0" :href="'mailto:' + props.rowData.email">
+              <a
+                class="btn btn-outline-primary border-0"
+                :href="'mailto:' + props.rowData.email"
+              >
                 <font-awesome-icon :icon="['fas', 'envelope']" />
               </a>
-              <button class="btn btn-outline-primary border-0" @click="vcard([props.rowData])">
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="vcard([props.rowData])"
+              >
                 <font-awesome-icon :icon="['far', 'address-card']" />
               </button>
             </template>
@@ -336,7 +394,7 @@ export default {
             .map((g) => indexedGroupes.get(g.groupe_id))
             .sort((a, b) => a.no - b.no)
             .map((g) => g.no)
-            .filter(g => g)
+            .filter((g) => g)
             .join(', '),
         }))
         .sort((a, b) => b.fonction_tri - a.fonction_tri);
@@ -422,16 +480,17 @@ FN:${s.prenom} ${s.nom}
 LANG:fr-ch
 GENDER:${genderMapping[s.civilite_id]}
 ${s.telephones
-              .map(
-                (t) =>
-                  'TEL;TYPE=' +
-                  telephoneTypeMapping[t.telephone_type_id] +
-                  ';VALUE=uri:' +
-                  t.numero
-              )
-              .join('\n')}
-ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${indexedLocalite.get(s.localite_id)?.designation
-            };${indexedLocalite.get(s.localite_id)?.npa};Suisse
+  .map(
+    (t) =>
+      'TEL;TYPE=' +
+      telephoneTypeMapping[t.telephone_type_id] +
+      ';VALUE=uri:' +
+      t.numero
+  )
+  .join('\n')}
+ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${
+            indexedLocalite.get(s.localite_id)?.designation
+          };${indexedLocalite.get(s.localite_id)?.npa};Suisse
 EMAIL:${s.email}
 BDAY:${s.date_naissance}
 CATEGORIES:SIS
@@ -449,10 +508,10 @@ END:VCARD`
       a.download =
         sapeurs.length == 1
           ? sapeurs[0].nom_prenom
-            .replaceAll(' ', '_')
-            .normalize('NFD')
-            .replace(/\p{Diacritic}/gu, '')
-            .toLowerCase() + '.vcf'
+              .replaceAll(' ', '_')
+              .normalize('NFD')
+              .replace(/\p{Diacritic}/gu, '')
+              .toLowerCase() + '.vcf'
           : 'sis_vcard.vcf';
 
       document.body.appendChild(a);
@@ -481,7 +540,7 @@ table a.btn {
   padding-bottom: 0;
 }
 
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 </style>

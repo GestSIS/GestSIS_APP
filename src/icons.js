@@ -35,7 +35,7 @@ import {
   faBirthdayCake,
   faCopy,
   faFire,
-  faHandshake
+  faHandshake,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';

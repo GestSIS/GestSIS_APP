@@ -19,7 +19,6 @@
       <div class="col-md-12">
         <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
@@ -27,7 +26,6 @@
             >Décomptes</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
@@ -35,7 +33,6 @@
             >Comptes</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
@@ -43,7 +40,6 @@
             >Exercices</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
@@ -51,15 +47,14 @@
             >Interventions</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-annuel' }"
-            >Indemnités et Frais annuels</router-link
+          >
+            Indemnités et Frais annuels</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
@@ -67,15 +62,14 @@
             >Sapeurs</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-divers' }"
-            >Autres</router-link
+          >
+            Autres</router-link
           >
           <router-link
-            tag="a"
             class="nav-item nav-link"
             role="tab"
             active-class="active"

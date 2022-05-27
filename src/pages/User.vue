@@ -24,7 +24,13 @@
           <div class="card-body">
             <div class="mb-3">
               <label for="jeton">Jeton</label>
-              <input type="text" class="form-control form-control-sm" id="jeton" placeholder="jeton" v-model="jeton" />
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="jeton"
+                placeholder="jeton"
+                v-model="jeton"
+              />
             </div>
             <button class="btn btn-primary" @click="utiliserJeton">
               Utiliser
@@ -41,23 +47,47 @@
           <div class="card-body">
             <div class="mb-3">
               <label for="old-password">Ancien mot de passe</label>
-              <input type="password" id="old-password" placeholder="mot de passe" required autocomplete="off"
-                class="form-control form-control-sm" v-model="oldPassword" />
+              <input
+                type="password"
+                id="old-password"
+                placeholder="mot de passe"
+                required
+                autocomplete="off"
+                class="form-control form-control-sm"
+                v-model="oldPassword"
+              />
             </div>
             <div class="mb-3">
               <label for="new-password">Nouveau mot de passe</label>
-              <input type="password" id="newPassword" placeholder="mot de passe" required autocomplete="off"
-                class="form-control form-control-sm" :class="{ 'is-invalid': errors.password }" v-model="newPassword" />
+              <input
+                type="password"
+                id="newPassword"
+                placeholder="mot de passe"
+                required
+                autocomplete="off"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors.password }"
+                v-model="newPassword"
+              />
               <div class="invalid-feedback" v-if="errors.password">
                 Taille minimum: 8
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="new-password-repeated">Répéter le nouveau mot de passe</label>
-              <input type="password" id="newPasswordRepeated" placeholder="répéter mot de passe" required
-                autocomplete="off" class="form-control form-control-sm" :class="{ 'is-invalid': !isPasswordIdentical }"
-                v-model="newPasswordRepeated" />
+              <label for="new-password-repeated"
+                >Répéter le nouveau mot de passe</label
+              >
+              <input
+                type="password"
+                id="newPasswordRepeated"
+                placeholder="répéter mot de passe"
+                required
+                autocomplete="off"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': !isPasswordIdentical }"
+                v-model="newPasswordRepeated"
+              />
               <div class="invalid-feedback" v-if="!isPasswordIdentical">
                 Mot de passe différent
               </div>
@@ -150,11 +180,11 @@ export default {
 </script>
 
 <style>
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 </style>

@@ -9,10 +9,18 @@
           <button class="btn btn-outline-primary" @click="newEcriture">
             Nouveau
           </button>
-          <button class="btn btn-outline-primary" :disabled="!selectedItem" @click="editEcriture(selectedItem)">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedItem"
+            @click="editEcriture(selectedItem)"
+          >
             Modifier
           </button>
-          <button class="btn btn-outline-danger" :disabled="!selectedItem" @click="deleteEcriture(selectedItem?.id)">
+          <button
+            class="btn btn-outline-danger"
+            :disabled="!selectedItem"
+            @click="deleteEcriture(selectedItem?.id)"
+          >
             Supprimer
           </button>
         </div>
@@ -29,14 +37,30 @@
             <span class="sr-only">Chargement...</span>
           </div>
         </div>
-        <base-table v-show="!loading" :fields="fields" :row-class="onRowClass" no-data="Aucune écriture à afficher"
-          :data="computedData" @selected="selected" :selectable="true" selectKey="id"
-          row-selected-class="table-primary">
+        <base-table
+          v-show="!loading"
+          :fields="fields"
+          :row-class="onRowClass"
+          no-data="Aucune écriture à afficher"
+          :data="computedData"
+          @selected="selected"
+          :selectable="true"
+          selectKey="id"
+          row-selected-class="table-primary"
+        >
           <template v-slot:actions="{ rowData }">
-            <button type="button" class="btn btn-outline-primary border-0" @click="editEcriture(rowData)">
+            <button
+              type="button"
+              class="btn btn-outline-primary border-0"
+              @click="editEcriture(rowData)"
+            >
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
-            <button type="button" class="btn btn-outline-danger border-0" @click="deleteEcriture(rowData?.id)">
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="deleteEcriture(rowData?.id)"
+            >
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
@@ -233,5 +257,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

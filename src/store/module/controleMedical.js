@@ -33,7 +33,6 @@ export default {
         sapeur_id: '',
         medecin_id: '',
         consultation: '',
-        validite: '',
         filename: null,
         accepter: 0,
       };

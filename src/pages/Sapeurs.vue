@@ -23,35 +23,77 @@
             <h3 class="card-title">Filtres</h3>
             <div class="card-body px-0">
               <div class="form-check form-check-inline">
-                <input type="radio" id="statutActif" name="actif" class="form-check-input" value="actif"
-                  v-model="filter" />
+                <input
+                  type="radio"
+                  id="statutActif"
+                  name="actif"
+                  class="form-check-input"
+                  value="actif"
+                  v-model="filter"
+                />
                 <label class="form-check-label" for="statutActif">Actif</label>
               </div>
               <div class="form-check form-check-inline">
-                <input type="radio" id="statutInactif" name="actif" class="form-check-input" value="inactif"
-                  v-model="filter" />
-                <label class="form-check-label" for="statutInactif">Inactif</label>
+                <input
+                  type="radio"
+                  id="statutInactif"
+                  name="actif"
+                  class="form-check-input"
+                  value="inactif"
+                  v-model="filter"
+                />
+                <label class="form-check-label" for="statutInactif"
+                  >Inactif</label
+                >
               </div>
               <div class="form-check form-check-inline">
-                <input type="radio" id="statutTous" name="actif" class="form-check-input" value="all"
-                  v-model="filter" />
+                <input
+                  type="radio"
+                  id="statutTous"
+                  name="actif"
+                  class="form-check-input"
+                  value="all"
+                  v-model="filter"
+                />
                 <label class="form-check-label" for="statutTous">Tous</label>
               </div>
             </div>
           </div>
-          <ul class="list-group list-group-flush" id="liste-sapeurs" ref="liste-sapeurs">
-            <router-link custom v-slot="{ navigate }" v-for="sapeur in filteredSapeurs" :to="`/sapeurs/${sapeur.id}`"
-              :key="sapeur.id">
-              <a class="list-group-item list-group-item-action sapeur-item" href="#" :class="{
-                active: activeSapeurId === sapeur.id,
-              }" @click="navigate" role="link">{{ sapeur.nom }} {{ sapeur.prenom }}
-                <font-awesome-icon v-if="sapeur.type !== 0" :icon="['fas', 'handshake']" />
+          <ul
+            class="list-group list-group-flush"
+            id="liste-sapeurs"
+            ref="liste-sapeurs"
+          >
+            <router-link
+              custom
+              v-slot="{ navigate }"
+              v-for="sapeur in filteredSapeurs"
+              :to="`/sapeurs/${sapeur.id}`"
+              :key="sapeur.id"
+            >
+              <a
+                class="list-group-item list-group-item-action sapeur-item"
+                href="#"
+                :class="{
+                  active: activeSapeurId === sapeur.id,
+                }"
+                @click="navigate"
+                role="link"
+                >{{ sapeur.nom }} {{ sapeur.prenom }}
+                <font-awesome-icon
+                  v-if="sapeur.type !== 0"
+                  :icon="['fas', 'handshake']"
+                />
               </a>
             </router-link>
             <li v-if="filteredSapeurs.length === 0" class="list-group-item">
               Aucun sapeur
             </li>
-            <button class="btn btn-primary" v-if="!filteredSapeurs.length && hasEditPermission" @click="addSapeur">
+            <button
+              class="btn btn-primary"
+              v-if="!filteredSapeurs.length && hasEditPermission"
+              @click="addSapeur"
+            >
               Ajouter un sapeur
             </button>
           </ul>

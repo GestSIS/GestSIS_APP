@@ -13,7 +13,13 @@
       </div>
       <div class="row mb-2">
         <div class="col-12">
-          <editable-tree :tree="groupeTree" :_types="types" :selectable="true" @selected="selected">1</editable-tree>
+          <editable-tree
+            :tree="groupeTree"
+            :_types="types"
+            :selectable="true"
+            @selected="selected"
+            >1</editable-tree
+          >
         </div>
       </div>
     </div>
@@ -99,10 +105,9 @@ export default {
     close() {
       this.HIDE_MODAL();
     },
-    async save() { },
+    async save() {},
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

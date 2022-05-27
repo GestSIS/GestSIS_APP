@@ -5,7 +5,12 @@
       <div class="card-header d-flex justify-content-between">
         <h3>Stats interventions</h3>
         <div class="form-check form-switch mb-2">
-          <input type="checkbox" class="form-check-input" id="switch" v-model="allCategories" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="switch"
+            v-model="allCategories"
+          />
           <label class="form-check-label" for="switch">
             Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
           </label>
@@ -16,8 +21,16 @@
           <thead>
             <tr>
               <th>
-                <select class="form-select form-select-sm" id="select-categorie" v-model="displayKey">
-                  <option v-for="(label, key) in grouping" :key="key" :value="key">
+                <select
+                  class="form-select form-select-sm"
+                  id="select-categorie"
+                  v-model="displayKey"
+                >
+                  <option
+                    v-for="(label, key) in grouping"
+                    :key="key"
+                    :value="key"
+                  >
                     {{ label }}
                   </option>
                 </select>
@@ -39,7 +52,14 @@
           <thead>
             <tr>
               <th>Total :</th>
-              <th class="text-center">{{ Object.values(occurences).reduce((partialSum, a) => partialSum + a, 0) }}</th>
+              <th class="text-center">
+                {{
+                  Object.values(occurences).reduce(
+                    (partialSum, a) => partialSum + a,
+                    0
+                  )
+                }}
+              </th>
             </tr>
           </thead>
         </table>
@@ -104,14 +124,19 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     occurences() {
-      if (this.displayKey === "intervention_traitement_id") {
+      if (this.displayKey === 'intervention_traitement_id') {
         return this.interventions
           .map((i) => i[this.displayKey])
           .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
       } else {
         return this.interventions
           .map((i) => [i[this.displayKey], i.stat_nb])
-          .reduce((prev, [id, stat_nb]) => ((prev[id] = (prev[id] ?? 0) + stat_nb), prev), {});
+          .reduce(
+            (prev, [id, stat_nb]) => (
+              (prev[id] = (prev[id] ?? 0) + stat_nb), prev
+            ),
+            {}
+          );
       }
     },
     groupingLabel() {
@@ -134,5 +159,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

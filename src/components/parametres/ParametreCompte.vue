@@ -68,15 +68,11 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([
-    loadFrais,
-    loadIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-  ]).then(() => {
-    next();
-  });
+  Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {

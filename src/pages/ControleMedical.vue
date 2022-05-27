@@ -8,7 +8,9 @@
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'controles-medicaux' }">Controles médicaux</router-link>
+              <router-link :to="{ name: 'controles-medicaux' }"
+                >Controles médicaux</router-link
+              >
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               {{ breadcrumbFinal }}
@@ -33,15 +35,31 @@
             <!-- NOM -->
             <div class="mb-3" v-if="!modeAjout">
               <label for="m-exe-des">Sapeur</label>
-              <input type="text" class="form-control form-control-sm" :class="{ 'is-invalid': errors['designation'] }"
-                id="m-exe-des" name="nom" readonly :value="sapeurName" />
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['designation'] }"
+                id="m-exe-des"
+                name="nom"
+                readonly
+                :value="sapeurName"
+              />
             </div>
             <div class="mb-3" v-else>
               <label for="m-exe-des">Sapeur</label>
-              <select class="form-select form-select-sm" required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }" id="m-sap-cat" style="width: 100%"
-                v-model="controleMedical.sapeur_id">
-                <option v-for="sapeur in sapeurs" :key="sapeur.id" :value="sapeur.id">
+              <select
+                class="form-select form-select-sm"
+                required
+                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
+                id="m-sap-cat"
+                style="width: 100%"
+                v-model="controleMedical.sapeur_id"
+              >
+                <option
+                  v-for="sapeur in sapeurs"
+                  :key="sapeur.id"
+                  :value="sapeur.id"
+                >
                   {{ sapeur.nom }} {{ sapeur.prenom }}
                 </option>
               </select>
@@ -49,10 +67,19 @@
             <!-- MEDECIN -->
             <div class="mb-3">
               <label for="m-sap-cat">Médecin</label>
-              <select class="form-select form-select-sm" required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }" id="m-sap-cat" style="width: 100%"
-                v-model="controleMedical.medecin_id">
-                <option v-for="medecin in medecins" :key="medecin.id" :value="medecin.id">
+              <select
+                class="form-select form-select-sm"
+                required
+                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
+                id="m-sap-cat"
+                style="width: 100%"
+                v-model="controleMedical.medecin_id"
+              >
+                <option
+                  v-for="medecin in medecins"
+                  :key="medecin.id"
+                  :value="medecin.id"
+                >
                   {{ medecin.designation }}
                 </option>
               </select>
@@ -60,9 +87,14 @@
             <!-- TYPE -->
             <div class="mb-3">
               <label for="m-sap-cat">Type</label>
-              <select class="form-select form-select-sm" required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }" id="m-sap-cat" style="width: 100%"
-                v-model="controleMedical.controle_medical_type_id">
+              <select
+                class="form-select form-select-sm"
+                required
+                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
+                id="m-sap-cat"
+                style="width: 100%"
+                v-model="controleMedical.controle_medical_type_id"
+              >
                 <option v-for="t in controleTypes" :key="t.id" :value="t.id">
                   {{ t.designation }}
                 </option>
@@ -71,9 +103,15 @@
             <!-- ACCEPTER -->
             <div class="mb-3">
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="m-ctr-accepter"
-                  v-model="controleMedical.accepter" />
-                <label class="form-check-label" for="m-ctr-accepter">Accepté</label>
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="m-ctr-accepter"
+                  v-model="controleMedical.accepter"
+                />
+                <label class="form-check-label" for="m-ctr-accepter"
+                  >Accepté</label
+                >
               </div>
             </div>
             <div class="row">
@@ -85,8 +123,14 @@
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
-                    <input type="date" class="form-control form-control-sm" :class="{ 'is-invalid': errors['date'] }"
-                      id="m-exe-date" name="consultation" v-model="controleMedical.consultation" />
+                    <input
+                      type="date"
+                      class="form-control form-control-sm"
+                      :class="{ 'is-invalid': errors['date'] }"
+                      id="m-exe-date"
+                      name="consultation"
+                      v-model="controleMedical.consultation"
+                    />
                   </div>
                 </div>
               </div>
@@ -119,8 +163,14 @@
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
-                    <input type="date" class="form-control form-control-sm" :class="{ 'is-invalid': errors['date'] }"
-                      id="m-exe-date" name="validite" v-model="controleMedical.validite" />
+                    <input
+                      type="date"
+                      class="form-control form-control-sm"
+                      :class="{ 'is-invalid': errors['date'] }"
+                      id="m-exe-date"
+                      name="validite"
+                      v-model="controleMedical.validite"
+                    />
                   </div>
                 </div>
               </div>
@@ -148,9 +198,14 @@
             </div>
             <div class="mb-3">
               <label for="m-sap-communication">Désignation</label>
-              <textarea type="text" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['communications'] }" id="m-sap-communication" name="communications"
-                v-model="controleMedical.designation"></textarea>
+              <textarea
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['communications'] }"
+                id="m-sap-communication"
+                name="communications"
+                v-model="controleMedical.designation"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -161,10 +216,16 @@
             <h5>Document</h5>
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
-              <button class="btn btn-outline-primary ms-2" @click="downloadJustificatif()">
+              <button
+                class="btn btn-outline-primary ms-2"
+                @click="downloadJustificatif()"
+              >
                 Download
               </button>
-              <button class="btn btn-outline-primary ms-2" @click="removeJustificatif()">
+              <button
+                class="btn btn-outline-primary ms-2"
+                @click="removeJustificatif()"
+              >
                 Supprimer
               </button>
             </div>
@@ -172,11 +233,21 @@
           <div class="card-body" v-if="!controleMedical.filename">
             <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
-              <input type="file" class="form-control form-control-sm" id="inputGroupFile01"
-                aria-describedby="inputGroupFileAddon01" accept="application/pdf" ref="file-justificatif"
-                @change="onFileChange" />
-              <button class="btn btn-outline-primary" @click="ajoutJustificatif" v-if="!controleMedical.filename"
-                :disabled="!file">
+              <input
+                type="file"
+                class="form-control form-control-sm"
+                id="inputGroupFile01"
+                aria-describedby="inputGroupFileAddon01"
+                accept="application/pdf"
+                ref="file-justificatif"
+                @change="onFileChange"
+              />
+              <button
+                class="btn btn-outline-primary"
+                @click="ajoutJustificatif"
+                v-if="!controleMedical.filename"
+                :disabled="!file"
+              >
                 Ajouter
               </button>
             </div>
@@ -274,7 +345,7 @@ export default {
     ...mapState({
       controleMedical: (state) => state.controleMedical.active.data,
       medecins: (state) => state.medecin.liste,
-      sapeurs: (state) => state.sapeur.liste.filter(s => s.type === 0),
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.type === 0),
       controleTypes: (state) => state.controlesMedicauxType.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -365,5 +436,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

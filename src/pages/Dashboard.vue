@@ -13,20 +13,18 @@
             class="col-6 col-sm-4 col-md-3 p-1"
           >
             <div class="d-grid">
-              <router-link
-                tag="button"
-                :to="m.to"
-                class="card text-white bg-primary"
-              >
-                <div class="card-body w-100">
-                  <div
-                    class="d-flex justify-content-center flex-column align-items-center"
-                  >
-                    <font-awesome-icon :icon="m.icon" size="2x" />
-                    <h3 class="h4 card-title mt-3">{{ m.nom }}</h3>
-                    {{ m.label }}
+              <router-link :to="m.to" custom v-slot="{ navigate }">
+                <button class="card text-white bg-primary" @click="navigate">
+                  <div class="card-body w-100">
+                    <div
+                      class="d-flex justify-content-center flex-column align-items-center"
+                    >
+                      <font-awesome-icon :icon="m.icon" size="2x" />
+                      <h3 class="h4 card-title mt-3">{{ m.nom }}</h3>
+                      {{ m.label }}
+                    </div>
                   </div>
-                </div>
+                </button>
               </router-link>
             </div>
           </div>

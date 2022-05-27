@@ -76,7 +76,6 @@ async function loadData(_, next) {
   const loadPhases = store.dispatch('fetchPhaseTypes');
 
   Promise.all([
-    loadFrais,
     loadIndemnites,
     loadFonctions,
     loadComptes,

@@ -20,7 +20,7 @@
         />
       </div>
       <div class="mb-3">
-        <autocomplete
+        <base-autocomplete
           v-model="activeAppel.nom"
           :items="listTelephones.map((t) => t.nom)"
           :error="!!errors['nom']"
@@ -62,12 +62,12 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
-import Autocomplete from '@/components/Autocomplete.vue';
+import BaseAutocomplete from '@/components/base/BaseAutocomplete.vue';
 
 export default {
   name: 'ModalAppel',
   components: {
-    Autocomplete,
+    BaseAutocomplete,
   },
   props: {
     data: {

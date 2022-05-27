@@ -46,8 +46,8 @@ export default {
     [types.REMOVE_INTERVENTION](state, interventionId) {
       state.liste = state.liste.filter((i) => i.id != interventionId);
     },
-    [types.UPDATE_INTERVENTION_STATUT](state, {id, statut}) {
-      state.liste = state.liste.map(i => i.id == id ? ({...i, statut}) : i);
+    [types.UPDATE_INTERVENTION_STATUT](state, { id, statut }) {
+      state.liste = state.liste.map((i) => (i.id == id ? { ...i, statut } : i));
     },
     [types.SELECT_CURRENT_INTERVENTION](state, payload) {
       state.active.id = payload;

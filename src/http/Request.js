@@ -83,7 +83,7 @@ const request = {
     //   // Check if a refreshToken request has already been sent
     //   if (refreshTokenPromise.value != '') {
     //     refreshTokenCountAwait.value++;
-        
+
     //     // Await the result of this request
     //     try {
     //       return await refreshTokenPromise.value;
