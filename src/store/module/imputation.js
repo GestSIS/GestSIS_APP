@@ -297,17 +297,13 @@ export default {
         (data) => commit(types.UPDATE_ECRITURES_AMENDES, data)
       );
     },
-    genererAmendesPourSapeur(
-      { commit },
-      { exerciceComptableId, sapeurId, tarifs }
-    ) {
+    genererAmendesPourSapeur(_, { exerciceComptableId, sapeurId, tarifs }) {
       return ImputationService.genererAmendesAnnuels(
         exerciceComptableId,
         sapeurId,
         tarifs
       )
-        .then //data =>
-        // commit(types.UPDATE_COURS_LISTE, data)
+        .then //data => commit(types.UPDATE_COURS_LISTE, data)
         //TODO:
         ();
     },
