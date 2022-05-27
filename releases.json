@@ -42,11 +42,19 @@
       ]
     },
     {
+      "date": "10.05.2022",
+      "version": "1.0",
+      "app": "GestSIS_Mobile 2.0.6",
+      "changes": [
+        "Nouvelle version de GestSIS Mobile en production"
+      ]
+    },
+    {
       "date": "09.05.2022",
       "version": "1.0",
       "app": "GestionRTA-Jura",
       "changes": [
-        "Correction d'un problème pour gérer les sapeurs supprimés dans localité"
+        "Correction d'un problème pour gérer les sapeurs supprimés sans localité"
       ]
     },
     {

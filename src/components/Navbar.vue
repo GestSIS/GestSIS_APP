@@ -9,9 +9,9 @@
       </li>
     </ul>
     <ul class="navbar-nav me-2">
-      <router-link :to="{ name: 'about' }" class="nav-link" custom v-slot="{ navigate }">
+      <router-link :to="{ name: 'about' }" custom v-slot="{ navigate }">
         <li class="position-relative me-2">
-          <button :href="href" class="btn btn-link nav-link" @click="clickInfo(navigate)">
+          <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
             <font-awesome-icon :icon="['fas', 'bell']" />
             <span class="position-absolute translate-middle p-1 bg-danger rounded-circle" v-if="showNotif">
               <span class="visually-hidden">Notifications</span>
