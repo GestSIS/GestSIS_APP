@@ -24,7 +24,7 @@
             <tr v-for="e in filteredVehicules" :key="e.id">
               <td>{{ e.designation }}</td>
               <td class="text-center">
-                {{ occurences[e.id] || 0 }}
+                {{ occurences[e.id] ?? 0 }}
               </td>
             </tr>
           </tbody>
@@ -52,8 +52,7 @@ export default {
     occurences() {
       return this.vehiculesIntervention.reduce(
         (prev, vehicule) => (
-          (prev[vehicule.vehicule_id] =
-            (prev[vehicule.vehicule_id] ?? 0) + vehicule.nb),
+          (prev[vehicule.vehicule_id] = (prev[vehicule.vehicule_id] ?? 0) + parseInt(vehicule.nb)),
           prev
         ),
         {}

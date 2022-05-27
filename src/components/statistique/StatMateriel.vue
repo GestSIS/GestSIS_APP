@@ -52,8 +52,7 @@ export default {
     }),
     occurences() {
       return this.materielsIntervention
-        .map((e) => e.materiel_id)
-        .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+        .reduce((prev, { materiel_id, nb }) => ((prev[materiel_id] = (prev[materiel_id] ?? 0) + parseFloat(nb)), prev), {});
     },
     filteredMateriel() {
       return this.materiels.filter(

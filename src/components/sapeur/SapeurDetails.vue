@@ -70,6 +70,7 @@ const sapeurTabList = {
 
 const politiqueTabList = {
   GENERAL: 'General',
+  ORGANISATION: 'Organisation',
   BANQUE: 'Banque',
   EXERCICE: 'Exercice',
 };
@@ -162,10 +163,8 @@ export default {
               params: { id: sapeurId },
             });
           });
-          //TODO
         },
       });
-      // this.activeTab = tabList.GENERAL;
     },
   },
 };
