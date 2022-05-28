@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "28.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Statistiques de présences, affichage du libellé de l'exercice à la place du numéro"
+      ]
+    },
+    {
       "date": "27.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",

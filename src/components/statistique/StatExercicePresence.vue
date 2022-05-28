@@ -8,30 +8,12 @@
         </div>
         <form class="card-body p-2 pb-0">
           <div class="row">
-            <base-multi-unselect
-              class="col-md-4"
-              label="Catégorie :"
-              valueKey="id"
-              displayKey="designation"
-              :options="categorieExercices"
-              v-model="unselectedCategories"
-            />
-            <base-multi-unselect
-              class="col-md-4"
-              label="Sapeur de :"
-              valueKey="id"
-              displayKey="designation"
-              :options="localiteSapeurs"
-              v-model="unselectedSapeurDe"
-            />
-            <base-multi-unselect
-              class="col-md-4"
-              label="Exercice à :"
-              valueKey="id"
-              displayKey="designation"
-              :options="localiteExercices"
-              v-model="unselectedExerciceA"
-            />
+            <base-multi-unselect class="col-md-4" label="Catégorie :" valueKey="id" displayKey="designation"
+              :options="categorieExercices" v-model="unselectedCategories" />
+            <base-multi-unselect class="col-md-4" label="Sapeur de :" valueKey="id" displayKey="designation"
+              :options="localiteSapeurs" v-model="unselectedSapeurDe" />
+            <base-multi-unselect class="col-md-4" label="Exercice à :" valueKey="id" displayKey="designation"
+              :options="localiteExercices" v-model="unselectedExerciceA" />
           </div>
         </form>
       </div>
@@ -61,14 +43,18 @@
           </div>
           <div class="col-6" id="legend-excuse">
             <table class="table table-sm">
-              <tr>
-                <th>Abr</th>
-                <th>Excuse</th>
-              </tr>
-              <tr v-for="excuse in excuses" :key="excuse.id">
-                <td>{{ excuse.abreviation }}</td>
-                <td>{{ excuse.designation }}</td>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Abr</th>
+                  <th>Excuse</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="excuse in excuses" :key="excuse.id">
+                  <td>{{ excuse.abreviation }}</td>
+                  <td>{{ excuse.designation }}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -81,33 +67,26 @@
           <h3>Stats Présences aux exercices</h3>
         </div>
         <div class="table-responsive">
-          <table class="table table-sm">
+          <table class="table table-sm table-header-rotated">
             <thead>
               <tr>
-                <th>Sapeur</th>
-                <th>Localité</th>
-                <th>Fonction</th>
+                <th class="rotate">Sapeur</th>
+                <th class="rotate">Localité</th>
+                <th class="rotate">Fonction</th>
                 <!-- <th class="text-center">Groupes</th> -->
-                <th
-                  v-for="(e, index) in displayExercice"
-                  :key="e.id"
-                  class="text-center"
-                >
-                  {{ index + 1 }}
+                <th v-for="(e, index) in displayExercice" :key="e.id" class="rotate">
+                  <div><span>{{ e.designation }}</span></div>
                 </th>
-                <th>Nb Cvq</th>
-                <th>Nb Pre</th>
-                <th>Nb Rpl</th>
-                <th>Nb Exc</th>
-                <th>Nb Abs</th>
+                <th class="text-center">Nb Cvq</th>
+                <th class="text-center">Nb Pre</th>
+                <th class="text-center">Nb Rpl</th>
+                <th class="text-center">Nb Exc</th>
+                <th class="text-center">Nb Abs</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td
-                  v-if="!computedData.length"
-                  :colspan="displayExercice.length + 8"
-                >
+                <td v-if="!computedData.length" :colspan="displayExercice.length + 8">
                   Aucun sapeur à afficher
                 </td>
               </tr>
@@ -115,12 +94,7 @@
                 <td>{{ s.nom }} {{ s.prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
                 <td>{{ formatFonction(s.fonction_id) }}</td>
-                <td
-                  v-for="(p, index) in s.presences"
-                  :key="index"
-                  class="text-center"
-                  :class="formatPresenceClass(p)"
-                >
+                <td v-for="(p, index) in s.presences" :key="index" class="text-center" :class="formatPresenceClass(p)">
                   {{ formatPresence(p) }}
                 </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
@@ -133,10 +107,7 @@
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th
-                  v-if="displayExercice.length"
-                  :colspan="displayExercice.length"
-                ></th>
+                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
@@ -200,7 +171,7 @@ export default {
     loadData(routeTo, next);
   },
   mounted() {
-    loadData('', () => {});
+    loadData('', () => { });
   },
   watch: {
     activeExerciceComptableId(newValue, _) {
@@ -406,5 +377,36 @@ export default {
 
 #legend-excuse {
   overflow-y: scroll;
+}
+
+.table-header-rotated {
+  border-collapse: collapse;
+}
+
+.table-header-rotated th.rotate {
+  height: 250px;
+  min-width: 40px;
+  white-space: nowrap;
+}
+
+.table-header-rotated th {
+  white-space: nowrap;
+}
+
+.table-header-rotated th.rotate>div {
+  -webkit-transform: translate(25px, 1px) rotate(315deg);
+  -ms-transform: translate(25px, 1px) rotate(315deg);
+  transform: translate(25px, 1px) rotate(315deg);
+  width: 10px;
+}
+
+.table-header-rotated th.rotate>div>span {
+  border-bottom: 1px solid #000;
+  padding: 5px 10px 5px 0px;
+}
+
+.table-header-rotated th.row-header {
+  padding: 0 10px;
+  border-bottom: 1px solid #ccc;
 }
 </style>

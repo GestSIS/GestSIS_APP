@@ -15,8 +15,12 @@ const request = {
   _accessTokenValidity: null,
 
   setAccessToken(accessToken) {
-    const { exp } = jwt_decode(accessToken);
-    this._accessTokenValidity = exp;
+    if (accessToken !== ''){
+      const { exp } = jwt_decode(accessToken);
+      this._accessTokenValidity = exp;
+    } else {
+      this._accessTokenValidity = null;
+    }
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
 
