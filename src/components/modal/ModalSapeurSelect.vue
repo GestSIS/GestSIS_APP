@@ -8,9 +8,19 @@
       <div class="row mt-2">
         <div class="col-12">
           <div class="mb-3 d-flex align-items-center">
-            <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
-            <select class="form-select form-select-sm" v-model="groupBy" id="group-by">
-              <option v-for="[key, { label }] in Object.entries(selectOptions)" :key="key" :value="key">
+            <label class="form-select-label mb-0 me-2" for="group-by"
+              >Afficher&nbsp;par</label
+            >
+            <select
+              class="form-select form-select-sm"
+              v-model="groupBy"
+              id="group-by"
+            >
+              <option
+                v-for="[key, { label }] in Object.entries(selectOptions)"
+                :key="key"
+                :value="key"
+              >
                 {{ label }}
               </option>
             </select>
@@ -22,13 +32,21 @@
           <h6 class="mb-0">
             Sapeurs sélectionnés ({{ chosenSapeurs.length }})
           </h6>
-          <button class="btn btn-outline-danger" @click="removeSapeurs" :disabled="!removeSapeurState">
+          <button
+            class="btn btn-outline-danger"
+            @click="removeSapeurs"
+            :disabled="!removeSapeurState"
+          >
             Enlever ces sapeurs
           </button>
         </div>
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Sapeurs disponibles</h6>
-          <button class="btn btn-outline-primary" @click="addSapeurs" :disabled="!addSapeurState">
+          <button
+            class="btn btn-outline-primary"
+            @click="addSapeurs"
+            :disabled="!addSapeurState"
+          >
             Ajouter ces sapeurs
           </button>
         </div>
@@ -47,19 +65,31 @@
               <tr v-if="computedChosenSapeurs.length <= 0">
                 <td colspan="3">Aucun sapeur sélectioné</td>
               </tr>
-              <tr v-for="item in computedChosenSapeurs" :key="item.id" :class="{
-                'table-primary': selectedGeneric.sapeur[item.id],
-              }">
+              <tr
+                v-for="item in computedChosenSapeurs"
+                :key="item.id"
+                :class="{
+                  'table-primary': selectedGeneric.sapeur[item.id],
+                }"
+              >
                 <td class="text-center">
                   <div class="form-check d-inline-block ps-0">
-                    <input type="checkbox" class="form-check-input ms-0" :id="item.id"
-                      v-model="selectedGeneric.sapeur[item.id]" @click="select(item.id, true)" />
+                    <input
+                      type="checkbox"
+                      class="form-check-input ms-0"
+                      :id="item.id"
+                      v-model="selectedGeneric.sapeur[item.id]"
+                      @click="select(item.id, true)"
+                    />
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ item.nomPrenom }}</td>
                 <td>
-                  <button class="btn btn-outline-danger border-0" @click="removeSingleSapeur(item.id)">
+                  <button
+                    class="btn btn-outline-danger border-0"
+                    @click="removeSingleSapeur(item.id)"
+                  >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
                 </td>
@@ -79,27 +109,51 @@
               <tr v-if="listeSapeurSelect.length <= 0">
                 <td colspan="2">Aucun sapeur ne possède de fonction</td>
               </tr>
-              <tr v-for="item in listeSapeurSelect" :key="item.parent_id + '-' + item.id" class="clickable" :class="{
-                'table-primary':
-                  selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id],
-                'text-muted': item.empty,
-              }" @dblclick="toggleGroupe(item.id)">
+              <tr
+                v-for="item in listeSapeurSelect"
+                :key="item.parent_id + '-' + item.id"
+                class="clickable"
+                :class="{
+                  'table-primary':
+                    selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id],
+                  'text-muted': item.empty,
+                }"
+                @dblclick="toggleGroupe(item.id)"
+              >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-                  <font-awesome-icon class="me-2 ms-2" :icon="[
-                    'fas',
-                    item.expanded ? 'angle-down' : 'angle-right',
-                  ]" v-if="!item.leaf" @click="toggleGroupe(item.id)" />
+                  <font-awesome-icon
+                    class="me-2 ms-2"
+                    :icon="[
+                      'fas',
+                      item.expanded ? 'angle-down' : 'angle-right',
+                    ]"
+                    v-if="!item.leaf"
+                    @click="toggleGroupe(item.id)"
+                  />
 
                   <div class="form-check d-inline-block">
-                    <input type="checkbox" class="form-check-input" :id="computeId(item)" v-model="
-                      selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]
-                    " @click="select(item.id, item.leaf)" />
-                    <label class="form-check-label" :for="computeId(item)"></label>
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      :id="computeId(item)"
+                      v-model="
+                        selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]
+                      "
+                      @click="select(item.id, item.leaf)"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="computeId(item)"
+                    ></label>
                   </div>
                   {{ item.designation }}
                 </td>
                 <td>
-                  <button class="btn btn-outline-primary border-0" @click="addSingleSapeur(item.id)" v-if="item.leaf">
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="addSingleSapeur(item.id)"
+                    v-if="item.leaf"
+                  >
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
@@ -123,18 +177,29 @@
                   Aucun sapeur dans GestSIS
                 </td>
               </tr>
-              <tr v-for="item in availableSapeur.filter((s) => s && s.actif)" :key="item.id"
-                :class="{ 'table-primary': selectedGeneric.sapeur[item.id] }">
+              <tr
+                v-for="item in availableSapeur.filter((s) => s && s.actif)"
+                :key="item.id"
+                :class="{ 'table-primary': selectedGeneric.sapeur[item.id] }"
+              >
                 <td>
                   <div class="form-check d-inline-block">
-                    <input type="checkbox" class="form-check-input" :id="item.id"
-                      v-model="selectedGeneric.sapeur[item.id]" @click="select(item.id)" />
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      :id="item.id"
+                      v-model="selectedGeneric.sapeur[item.id]"
+                      @click="select(item.id)"
+                    />
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
                 <td>{{ sapeurFormatter(item) }}</td>
                 <td>
-                  <button class="btn btn-outline-primary border-0" @click="addSingleSapeur(item.id)">
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="addSingleSapeur(item.id)"
+                  >
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
@@ -308,16 +373,16 @@ export default {
             .map((s) => svm.sapeurs.find((sap) => sap.id == s))
             .forEach(
               (s) =>
-              (flaten = [
-                ...flaten,
-                {
-                  designation: svm.sapeurFormatter(s),
-                  leaf: true,
-                  level: level + 1,
-                  parent_id: groupe.id,
-                  id: s.id,
-                },
-              ])
+                (flaten = [
+                  ...flaten,
+                  {
+                    designation: svm.sapeurFormatter(s),
+                    leaf: true,
+                    level: level + 1,
+                    parent_id: groupe.id,
+                    id: s.id,
+                  },
+                ])
             );
         }
         return flaten;

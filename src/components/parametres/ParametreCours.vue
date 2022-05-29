@@ -14,6 +14,7 @@
             <th>Tri</th>
             <th>Abréviation</th>
             <th>Désignation</th>
+            <th>Durée [jours]</th>
             <th>Pré-requis</th>
             <th>Grade</th>
             <th>Fonction</th>
@@ -30,6 +31,7 @@
             <td>{{ c.tri }}</td>
             <td>{{ c.abreviation }}</td>
             <td>{{ c.designation }}</td>
+            <td class="text-center">{{ c.duree }}</td>
             <td>{{ coursPrecedent(c.precedent_id) }}</td>
             <td>{{ grade(c.grade_id) }}</td>
             <td>{{ fonction(c.fonction_id) }}</td>

@@ -15,7 +15,7 @@ const request = {
   _accessTokenValidity: null,
 
   setAccessToken(accessToken) {
-    if (accessToken !== ''){
+    if (accessToken !== '') {
       const { exp } = jwt_decode(accessToken);
       this._accessTokenValidity = exp;
     } else {

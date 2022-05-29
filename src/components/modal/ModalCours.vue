@@ -37,6 +37,19 @@
           id="designation"
         />
       </div>
+      <div class="mb-3">
+        <label for="duree">Durée</label>
+        <div class="input-group">
+          <input
+            type="text"
+            v-model="activeCours.duree"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['duree'] }"
+            id="duree"
+          />
+          <span class="input-group-text">jours</span>
+        </div>
+      </div>
 
       <div class="mb-3">
         <label for="cours-precedent">Cours précédent</label>

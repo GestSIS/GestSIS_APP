@@ -32,6 +32,19 @@
         </select>
       </div>
       <div class="mb-3">
+        <label for="duree">Durée</label>
+        <div class="input-group">
+          <input
+            type="text"
+            v-model="activeCours.duree"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['duree'] }"
+            id="duree"
+          />
+          <span class="input-group-text">jours</span>
+        </div>
+      </div>
+      <div class="mb-3">
         <label for="cours-localite">Localité</label>
         <select
           id="cours-localite"
@@ -220,6 +233,7 @@ export default {
       this.activeCours.grade_id = cours.grade_id || 0;
       this.activeCours.precedent_id = cours.precedent_id || 0;
       this.activeCours.fonction_sapeur_id = 0;
+      this.activeCours.duree = cours?.duree ?? 0;
 
       if (this.activeCours.fonction_id !== 0) {
         let fonction = this.fonctions.find(

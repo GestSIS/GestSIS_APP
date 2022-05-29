@@ -1,5 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between">
+  <nav
+    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
+  >
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -13,13 +15,21 @@
         <li class="position-relative me-2">
           <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
             <font-awesome-icon :icon="['fas', 'bell']" />
-            <span class="position-absolute translate-middle p-1 bg-danger rounded-circle" v-if="showNotif">
+            <span
+              class="position-absolute translate-middle p-1 bg-danger rounded-circle"
+              v-if="showNotif"
+            >
               <span class="visually-hidden">Notifications</span>
             </span>
           </button>
         </li>
       </router-link>
-      <base-dropdown tag="li" buttonClass="btn btn-link nav-link" menuClass="dropdown-menu-end" ref="dropdown">
+      <base-dropdown
+        tag="li"
+        buttonClass="btn btn-link nav-link"
+        menuClass="dropdown-menu-end"
+        ref="dropdown"
+      >
         <template #title>
           <font-awesome-icon :icon="['fas', 'user']" />
         </template>
@@ -41,7 +51,7 @@ export default {
   data: () => {
     return {
       releases: data.releases,
-      showNotif: false
+      showNotif: false,
     };
   },
   mounted() {

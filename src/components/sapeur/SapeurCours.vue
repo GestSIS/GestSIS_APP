@@ -20,6 +20,7 @@
             <th data-field="date">Date</th>
             <th data-field="designation">Désignation</th>
             <th data-field="lieu">Lieu</th>
+            <th class="text-center" data-field="duree">Durée [jours]</th>
             <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
         </thead>
@@ -35,6 +36,7 @@
             <td>
               {{ localites.find((l) => l.id == c.localite_id).designation }}
             </td>
+            <td class="text-center">{{ c.duree }}</td>
             <td class="align-middle text-center" v-if="hasEditPermission">
               <button
                 type="button"

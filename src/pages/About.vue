@@ -22,15 +22,24 @@
             <h3>Notes de mise à jour</h3>
           </div>
           <div class="card-body">
-            <div v-for="{ changes, date, app }, i in (all ? releases : releases.slice(0, 5))" :key="i">
+            <div
+              v-for="({ changes, date, app }, i) in all
+                ? releases
+                : releases.slice(0, 5)"
+              :key="i"
+            >
               <h5>{{ date }} - {{ app }}</h5>
               <ul>
-                <li v-for="change, j in changes" :key="j">
-                  <span v-for="t, i in change.split('`')">{{ !(i % 2) ? t : '' }}<em v-if="(i % 2)">{{ t }}</em></span>
+                <li v-for="(change, j) in changes" :key="j">
+                  <span v-for="(t, i) in change.split('`')"
+                    >{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span
+                  >
                 </li>
               </ul>
             </div>
-            <button class="btn btn-primary" @click="all = true" v-if="!all">Tout afficher</button>
+            <button class="btn btn-primary" @click="all = true" v-if="!all">
+              Tout afficher
+            </button>
           </div>
         </div>
         <div class="timeline"></div>
@@ -50,7 +59,9 @@
             <p>Auteur : Bastien Wermeille</p>
             <!-- TODO: Ajout sujet par défault - Nom SIS -->
             <p><a href="mailto:support@gestsis.ch">Contacter</a></p>
-            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
+            <p>
+              GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
+            </p>
           </div>
         </div>
       </div>
@@ -68,7 +79,7 @@ export default {
     return {
       releases: data.releases,
       all: false,
-    }
+    };
   },
   mounted() {
     localStorage.setItem('latestReleaseDate', this.releases[0].date);
@@ -76,9 +87,8 @@ export default {
   },
   components: {
     ExerciceComptable,
-  }
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
