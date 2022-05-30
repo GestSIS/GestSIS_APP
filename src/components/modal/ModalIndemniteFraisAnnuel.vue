@@ -19,7 +19,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">{{ f.nom }}</option>
+          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
+            {{ f.nom }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -50,17 +52,19 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
-          <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
+          <option v-for="u in unites" :key="u.id" :value="u.id">
+            {{ u.unite }}
+          </option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ active.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ active.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -108,9 +112,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

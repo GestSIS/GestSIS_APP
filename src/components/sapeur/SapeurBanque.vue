@@ -5,7 +5,13 @@
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
+          <button
+            @click.prevent="save"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >
+            Enregistrer
+          </button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -28,18 +34,18 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurBanque',
   computed: {
     ...mapState({
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      activeSapeur: (state) => state.sapeur.active.data,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-    ...mapGetters(['activeSapeur', 'activeSapeurId']),
   },
   methods: {
     async save() {
@@ -48,17 +54,10 @@ export default {
           iban: this.activeSapeur.iban,
         })
         .then(() => {
-          this.$notify({
-            group: 'succes',
-            title: 'Modification enregistrée',
-          });
+          this.$awn.success('Modification enregistrée');
         })
-        .catch(() => {
-          this.$notify({
-            group: 'erreur',
-            title: 'Erreur lors la sauvegarde',
-            text: 'Vérifier que les dates sont valides',
-          });
+        .catch((err) => {
+          this.$awn.alert(err?.message ?? 'Erreur lors la sauvegarde');
         });
     },
   },

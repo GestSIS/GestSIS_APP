@@ -6,17 +6,23 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="newEcriture">Nouveau</button>
+          <button class="btn btn-outline-primary" @click="newEcriture">
+            Nouveau
+          </button>
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedItem"
             @click="editEcriture(selectedItem)"
-          >Modifier</button>
+          >
+            Modifier
+          </button>
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedItem"
             @click="deleteEcriture(selectedItem?.id)"
-          >Supprimer</button>
+          >
+            Supprimer
+          </button>
         </div>
       </div>
     </div>
@@ -80,7 +86,13 @@ async function loadData(routeTo, next) {
 
   const loadEcrituresDivers = store.dispatch('fetchEcrituresDivers');
 
-  Promise.all([loadSapeurs, loadUnites, loadComptes, loadEcritureCategorie, loadEcrituresDivers]).then(() => {
+  Promise.all([
+    loadSapeurs,
+    loadUnites,
+    loadComptes,
+    loadEcritureCategorie,
+    loadEcrituresDivers,
+  ]).then(() => {
     next();
   });
 }
@@ -168,7 +180,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -183,16 +195,19 @@ export default {
     }),
     computedData() {
       let svm = this;
-      const formatCompte = (compte) => compte?.numero + " " + compte?.designation
+      const formatCompte = (compte) =>
+        compte?.numero + ' ' + compte?.designation;
       return this.ecritures.map((e) => ({
         ...e,
         sapeur: [svm.sapeurs.find((s) => s.id == e.sapeur_id)].map((s) =>
           s ? `${s.nom} ${s.prenom}` : ''
         )[0],
-        unite: svm.unites.find(u => u.id == e.type_unite_id)?.unite,
-        ecriture_categorie: svm.categories.find(c => c.id == e.ecriture_categorie_id)?.designation,
-        compte: formatCompte(svm.comptes.find(c => c.id == e.compte_id)),
-        ecritureType: svm.formatType(e.type)
+        unite: svm.unites.find((u) => u.id == e.type_unite_id)?.unite,
+        ecriture_categorie: svm.categories.find(
+          (c) => c.id == e.ecriture_categorie_id
+        )?.designation,
+        compte: formatCompte(svm.comptes.find((c) => c.id == e.compte_id)),
+        ecritureType: svm.formatType(e.type),
       }));
     },
     ...mapGetters(['currentExerciceComptableId']),
@@ -206,7 +221,7 @@ export default {
       this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
     },
     deleteEcriture(ecritureId) {
-      this.$store.dispatch('removeEcriture', ecritureId)
+      this.$store.dispatch('removeEcriture', ecritureId);
       // TODO: Supprimer écriture si pas déjà liée à un décompte
     },
     selected(item) {
@@ -223,7 +238,7 @@ export default {
         3: 'Frais forfaitaire',
         4: 'Frais effectif',
         5: 'Charges AVS/AC',
-      }
+      };
       return mapping[type] || '';
     },
     onRowClass(dataItem, isSelected) {
@@ -233,8 +248,8 @@ export default {
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'En attente de validation',
-        2: '', // 'Validée',
-        3: 'table-success', //'Imputée'
+        2: '', // 'Validé',
+        3: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
     },

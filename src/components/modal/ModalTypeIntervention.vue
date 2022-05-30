@@ -36,17 +36,19 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['stat_intervention_id'] }"
         >
-          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">{{ s.designation }}</option>
+          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">
+            {{ s.designation }}
+          </option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

@@ -1,0 +1,92 @@
+<template>
+  <div class="row">
+    <div class="col-12 col-xl-6">
+      <div class="card card-primary card-outline">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">ASPSMS</h3>
+          <button type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="user">Utilisateur</label>
+            <input
+              type="text"
+              v-model="params.username"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['username'] }"
+              id="username"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password">Mot de passe</label>
+            <input
+              type="password"
+              v-model="params.password"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['password'] }"
+              id="password"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="credit">Crédit actuel</label>
+            <input
+              type="number"
+              readonly
+              :value="credit"
+              class="form-control form-control-sm"
+              id="credit"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations } from 'vuex';
+
+export default {
+  name: 'ParametreAspsms',
+  data() {
+    return {
+      errors: {},
+      params: {
+        username: null,
+        password: null,
+      },
+    };
+  },
+  mounted() {
+    this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
+  },
+  computed: {
+    ...mapState({
+      aspsmsParams: (state) => state.aspsmsParam.params,
+      credit: (state) => state.aspsmsParam.credit,
+    }),
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    async save() {
+      this.$store
+        .dispatch('updateAspsmsParams', { ...this.params })
+        .then((res) => {
+          this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
+        })
+        .catch((e) => {
+          this.errors = { ...e };
+          this.$awn.alert(
+            this.errors?.message || "Erreur lors de l'enregistrement"
+          );
+        });
+    },
+  },
+};
+</script>
+
+<style scoped></style>

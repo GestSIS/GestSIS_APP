@@ -44,16 +44,10 @@ export default {
       state.active.id = payload.id;
     },
     [types.REMOVE_INTERVENTION](state, interventionId) {
-      state.liste = [...state.liste.filter((i) => i.id != interventionId)];
+      state.liste = state.liste.filter((i) => i.id != interventionId);
     },
-    [types.UPDATE_INTERVENTION_STATUT](state, payload) {
-      state.liste = [
-        ...state.liste.filter((e) => e.id != payload.id),
-        {
-          ...state.liste.find((e) => e.id == payload.id),
-          statut: payload.statut,
-        },
-      ];
+    [types.UPDATE_INTERVENTION_STATUT](state, { id, statut }) {
+      state.liste = state.liste.map((i) => (i.id == id ? { ...i, statut } : i));
     },
     [types.SELECT_CURRENT_INTERVENTION](state, payload) {
       state.active.id = payload;

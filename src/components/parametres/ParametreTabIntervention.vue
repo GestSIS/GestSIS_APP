@@ -7,51 +7,62 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres interventions</h3>
         </div>
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+        <nav
+          class="nav flex-column nav-pills"
+          role="tablist"
+          aria-orientation="vertical"
+        >
           <a
             class="nav-link"
             :class="{ active: tab === 'vehicule' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'vehicule'"
-          >Véhicules</a>
+            >Véhicules</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'materiel' }"
             href="#"
             role="tab"
             @click.prevent="tab = 'materiel'"
-          >Matériel</a>
+            >Matériel</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'mission' }"
             href="#"
             @click.prevent="tab = 'mission'"
-          >Missions</a>
+            >Missions</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'telephone' }"
             href="#"
             @click.prevent="tab = 'telephone'"
-          >Téléphones</a>
+            >Téléphones</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'traitement' }"
             href="#"
             @click.prevent="tab = 'traitement'"
-          >Traitement</a>
+            >Traitement</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'type' }"
             href="#"
             @click.prevent="tab = 'type'"
-          >Type d'intervention</a>
+            >Type d'intervention</a
+          >
           <a
             class="nav-link"
             :class="{ active: tab === 'stat' }"
             href="#"
             @click.prevent="tab = 'stat'"
-          >Statistique fédéral</a>
+            >Statistique fédéral</a
+          >
         </nav>
       </div>
     </div>

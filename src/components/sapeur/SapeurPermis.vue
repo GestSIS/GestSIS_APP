@@ -6,7 +6,9 @@
         @click.prevent="savePermis"
         class="btn btn-primary flex-shrink-1"
         v-if="hasEditPermission"
-      >Enregistrer</button>
+      >
+        Enregistrer
+      </button>
     </div>
     <div class="card-body">
       <table class="table table-sm">
@@ -21,8 +23,8 @@
               />
               <img
                 :src="`${publicPath}permis/${permis.type
-                .toLowerCase()
-                .replace(' ', '_')}.gif`"
+                  .toLowerCase()
+                  .replace(' ', '_')}.gif`"
               />
             </td>
             <td>
@@ -75,10 +77,9 @@ export default {
   computed: {
     ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId']),
     ...mapState({
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
-    })
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+    }),
   },
   mounted() {
     if (this.listPermisType.length === 0) {
@@ -173,7 +174,7 @@ export default {
         else if (
           p.id !== null &&
           p.date !==
-          this.activeSapeurPermis.find((permis) => permis.id == p.id).date
+            this.activeSapeurPermis.find((permis) => permis.id == p.id).date
         ) {
           this.$store
             .dispatch('editPermis', { id: p.id, date: p.date })

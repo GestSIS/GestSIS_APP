@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Comptes</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCompte">Ajouter un compte</button>
+      <button type="button" class="btn btn-primary" @click="ajoutCompte">
+        Ajouter un compte
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="indemnites-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -41,7 +43,11 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" disabled>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                disabled
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -62,15 +68,11 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([
-    loadFrais,
-    loadIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-  ]).then(() => {
-    next();
-  });
+  Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {
@@ -83,7 +85,8 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCompte: (state) => state.compte.liste.sort((a, b) => a.numero.localeCompare(b.numero)),
+      listeCompte: (state) =>
+        state.compte.liste.sort((a, b) => a.numero.localeCompare(b.numero)),
     }),
   },
   methods: {

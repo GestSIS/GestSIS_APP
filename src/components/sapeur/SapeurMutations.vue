@@ -60,7 +60,8 @@
           @click="finService"
           v-if="finServiceButtonState && hasEditPermission"
         >
-          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin de service
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin
+          de service
         </button>
         <button
           type="button"
@@ -68,7 +69,10 @@
           @click="incorporation"
           v-else-if="hasEditPermission"
         >
-          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
+          <font-awesome-icon
+            class="me-1"
+            :icon="['fas', 'door-closed']"
+          />Incorporation
         </button>
       </div>
     </form>
@@ -84,9 +88,8 @@ export default {
     ...mapState({
       localites: (state) => state.localite.liste,
       mutations: (state) => state.sapeur.active.mutations,
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     finServiceButtonState() {
       return (

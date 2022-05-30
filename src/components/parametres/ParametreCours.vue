@@ -3,15 +3,18 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCours()">Ajouter un cours</button>
+      <button type="button" class="btn btn-primary" @click="ajoutCours()">
+        Ajouter un cours
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Tri</th>
             <th>Abréviation</th>
             <th>Désignation</th>
+            <th>Durée [jours]</th>
             <th>Pré-requis</th>
             <th>Grade</th>
             <th>Fonction</th>
@@ -28,6 +31,7 @@
             <td>{{ c.tri }}</td>
             <td>{{ c.abreviation }}</td>
             <td>{{ c.designation }}</td>
+            <td class="text-center">{{ c.duree }}</td>
             <td>{{ coursPrecedent(c.precedent_id) }}</td>
             <td>{{ grade(c.grade_id) }}</td>
             <td>{{ fonction(c.fonction_id) }}</td>
@@ -41,7 +45,11 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteCours(c)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteCours(c)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>

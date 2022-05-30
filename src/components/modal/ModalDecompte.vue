@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Paramètres pour le décompte</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        Paramètres pour le décompte
+      </h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -30,7 +32,9 @@
             v-for="exercice in listeExerciceComptable"
             :value="exercice.id"
             :key="exercice.id"
-          >{{ exercice.designation }}</option>
+          >
+            {{ exercice.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -44,6 +48,57 @@
           v-model="params.date"
         />
       </div>
+      <div class="mb-3" v-if="this.mode === 'genererDecompteAnnuel'">
+        <label>Sélection des écritures</label>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="ecritures-exercice"
+            v-model="params.ecrituresExercice"
+          />
+          <label class="form-check-label" for="ecritures-exercice"
+            >Exercices</label
+          >
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="ecritures-intervention"
+            v-model="params.ecrituresIntervention"
+          />
+          <label class="form-check-label" for="ecritures-intervention"
+            >Interventions</label
+          >
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="ecritures-divers"
+            v-model="params.ecrituresDivers"
+          />
+          <label class="form-check-label" for="ecritures-divers"
+            >Ecritures diverses</label
+          >
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="ecritures-annuel"
+            v-model="params.ecrituresAnnuel"
+          />
+          <label class="form-check-label" for="ecritures-annuel"
+            >Indemnités et frais annuels</label
+          >
+        </div>
+      </div>
       <div class="mb-3" v-if="this.params.exercice_id">
         <div class="form-check">
           <input
@@ -52,7 +107,9 @@
             id="m-sap-cotisation_avs"
             v-model="params.deduction"
           />
-          <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
+          <label class="form-check-label" for="m-sap-cotisation_avs"
+            >Déduction</label
+          >
         </div>
       </div>
     </div>
@@ -64,7 +121,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalDecompte',
@@ -80,6 +137,12 @@ export default {
         sapeur_id: null,
         exercice_id: null,
         deduction: false,
+
+        // Types d'écritures
+        ecrituresExercice: true,
+        ecrituresIntervention: true,
+        ecrituresDivers: true,
+        ecrituresAnnuel: true,
       },
     };
   },
@@ -114,11 +177,17 @@ export default {
       this.$store
         .dispatch(this.mode, this.params)
         .then(() => {
-          this.HIDE_MODAL();
-          this.callback();
+          (this.callback() ?? Promise.resolve()).then((close) => {
+            if (close ?? true) {
+              this.HIDE_MODAL();
+            }
+          });
         })
         .catch((errors) => {
           this.errorsData = errors;
+          this.$awn.alert(
+            errors?.message ?? 'Erreur lors de la création du décompte'
+          );
         });
     },
   },

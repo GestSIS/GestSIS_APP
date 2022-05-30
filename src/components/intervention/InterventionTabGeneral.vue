@@ -4,7 +4,13 @@
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
-          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
+          <button
+            @click.prevent="save"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >
+            Enregistrer
+          </button>
         </div>
       </div>
     </div>
@@ -143,7 +149,9 @@
                 v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-              >{{ localite.npa + ' ' + localite.designation }}</option>
+              >
+                {{ localite.npa + ' ' + localite.designation }}
+              </option>
             </select>
           </div>
           <!-- Chef d'intervention -->
@@ -162,7 +170,9 @@
                 v-for="sapeur in listSapeur"
                 :key="sapeur.id"
                 :value="sapeur.id"
-              >{{ sapeur.nom + ' ' + sapeur.prenom }}</option>
+              >
+                {{ sapeur.nom + ' ' + sapeur.prenom }}
+              </option>
             </select>
           </div>
         </div>
@@ -193,26 +203,52 @@
                 v-for="traitement in listInterventionTraitement"
                 :key="traitement.id"
                 :value="traitement.id"
-              >{{ traitement.designation }}</option>
+              >
+                {{ traitement.designation }}
+              </option>
             </select>
           </div>
           <!-- TYPE D'INTERVENTION -->
-          <div class="mb-3">
-            <label for="m-int-type">Type d'intervention</label>
-            <select
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['type_intervention_id'] }"
-              id="m-int-type"
-              name="type_intervention_id"
-              :disabled="!hasEditPermission"
-              v-model="activeInterventionData.type_intervention_id"
-            >
-              <option
-                v-for="type in listTypeIntervention"
-                :value="type.id"
-                :key="type.id"
-              >{{ type.designation }}</option>
-            </select>
+          <div class="row mb-3">
+            <div class="col-9">
+              <label for="m-int-type">Type d'intervention</label>
+              <select
+                class="form-select form-select-sm"
+                :class="{ 'is-invalid': errors['type_intervention_id'] }"
+                id="m-int-type"
+                name="type_intervention_id"
+                :disabled="!hasEditPermission"
+                v-model="activeInterventionData.type_intervention_id"
+              >
+                <option
+                  v-for="t in listTypeIntervention"
+                  :value="t.id"
+                  :key="t.id"
+                >
+                  {{ t.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label for="m-sap-suffixe">Nb intervention</label>
+              <font-awesome-icon
+                class="ms-1"
+                v-tooltip.bottom="{
+                  content:
+                    'Permet de créer un unique rapport d\'intervention pour plusieurs interventions,<br /> tout en ayant des statistiques d\'interventions correctes.',
+                  html: true,
+                }"
+                :icon="['far', 'question-circle']"
+              />
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': false }"
+                id="m-sap-suffixe"
+                name="suffixe"
+                v-model="activeInterventionData.stat_nb"
+              />
+            </div>
           </div>
           <!-- STAT FEDERAL -->
           <div class="mb-3">
@@ -230,7 +266,9 @@
                 v-for="stat in listStatFederal"
                 :key="stat.id"
                 :value="stat.id"
-              >{{ stat.designation }}</option>
+              >
+                {{ stat.designation }}
+              </option>
             </select>
           </div>
 
@@ -277,7 +315,9 @@
               :disabled="!hasEditPermission"
               v-model="activeInterventionData.degre"
             >
-              <option v-for="deg in degre" :key="deg.id" :value="deg.id">{{ deg.type }}</option>
+              <option v-for="deg in degre" :key="deg.id" :value="deg.id">
+                {{ deg.type }}
+              </option>
             </select>
           </div>
         </div>
@@ -361,9 +401,10 @@ export default {
       activeInterventionData: (state) => state.intervention.active.data,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
     ...mapGetters([
       'listeLocalitesSis',

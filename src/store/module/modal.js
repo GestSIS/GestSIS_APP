@@ -13,12 +13,12 @@ export default {
       state.modalVisible = true;
       if (typeof payload === 'string') {
         state.modalComponent = payload;
-        state.modalCallback = () => {};
+        state.modalCallback = () => Promise.resolve();
         state.modalSize = 0;
         state.modalData = {};
       } else {
         state.modalComponent = payload.component;
-        state.modalCallback = payload.callback || function () {};
+        state.modalCallback = payload.callback || (() => Promise.resolve());
         state.modalSize = payload?.size ?? 0;
         state.modalData = payload?.data ?? {};
       }

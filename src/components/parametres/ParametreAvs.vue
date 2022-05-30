@@ -5,7 +5,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">AVS</h3>
-          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+          <button type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -39,7 +41,9 @@
             />
           </div>
           <div class="mb-3">
-            <label for="franchise_imposition">Franchise imposition fédéral</label>
+            <label for="franchise_imposition"
+              >Franchise imposition fédéral</label
+            >
             <input
               type="text"
               v-model="params.franchise_imposition"
@@ -56,7 +60,9 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['compte_id_id'] }"
             >
-              <option v-for="c in listeCompte" :key="c.id" :value="c.id">{{ compte(c) }}</option>
+              <option v-for="c in listeCompte" :key="c.id" :value="c.id">
+                {{ compte(c) }}
+              </option>
             </select>
           </div>
           <div class="mb-3">
@@ -67,7 +73,9 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             >
-              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">{{ c.designation }}</option>
+              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
+                {{ c.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -131,7 +139,7 @@ export default {
         })
         .catch((e) => {
           this.errors = { ...e };
-          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
         });
     },
   },

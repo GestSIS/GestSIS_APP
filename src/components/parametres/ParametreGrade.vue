@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Grades</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutGrade()">Ajouter un grade</button>
+      <button type="button" class="btn btn-primary" @click="ajoutGrade()">
+        Ajouter un grade
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -33,7 +35,11 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteGrade(g)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteGrade(g)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>

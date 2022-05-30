@@ -7,7 +7,9 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Interventions</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Interventions
+            </li>
           </ol>
         </nav>
       </div>
@@ -28,21 +30,31 @@
                 @click="navigate"
                 class="btn btn-outline-primary"
                 v-if="hasEditPermission"
-              >Ajouter une intervention</button>
+              >
+                Ajouter une intervention
+              </button>
             </router-link>
-            <router-link custom :to="'/interventions/' + selectedId" v-slot="{ navigate }">
+            <router-link
+              custom
+              :to="'/interventions/' + selectedId"
+              v-slot="{ navigate }"
+            >
               <button
                 :disabled="!selectedId"
                 @click="navigate"
                 class="btn btn-outline-primary"
-              >{{ hasEditPermission ? "Modifier" : "Aperçu" }}</button>
+              >
+                {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
+              </button>
             </router-link>
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
               class="btn btn-outline-primary"
               v-if="hasEditPermission"
-            >Supprimer</button>
+            >
+              Supprimer
+            </button>
           </div>
         </div>
       </div>
@@ -57,7 +69,9 @@
               :disabled="!selectedId"
               @click="rapportIntervention"
               class="btn btn-outline-primary"
-            >Rapport d'intervention</button>
+            >
+              Rapport d'intervention
+            </button>
           </div>
         </div>
       </div>
@@ -82,7 +96,9 @@
                     v-for="loc in filteredLocalites"
                     :key="loc.id"
                     :value="loc.id"
-                  >{{ loc.designation }}</option>
+                  >
+                    {{ loc.designation }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -99,7 +115,9 @@
                     v-for="type in filteredInterventionsTypes"
                     :key="type.id"
                     :value="type.id"
-                  >{{ type.designation }}</option>
+                  >
+                    {{ type.designation }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -115,7 +133,9 @@
                     v-for="stat in filteredStatFederal"
                     :key="stat.id"
                     :value="stat.id"
-                  >{{ stat.designation }}</option>
+                  >
+                    {{ stat.designation }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -132,7 +152,9 @@
                     v-for="traitement in traitements"
                     :key="traitement.id"
                     :value="traitement.id"
-                  >{{ traitement.designation }}</option>
+                  >
+                    {{ traitement.designation }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -176,8 +198,15 @@
             row-selected-class="table-primary"
           >
             <template v-slot:actions="props">
-              <router-link :to="'/interventions/' + props.rowData.id" custom v-slot="{ navigate }">
-                <button class="btn btn-outline-primary border-0" @click="navigate">
+              <router-link
+                :to="'/interventions/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="navigate"
+                >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
@@ -344,7 +373,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -363,9 +392,10 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.VALIDATION
         ),
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
     ...mapGetters(['currentExerciceComptableId']),
     filteredInterventionsTypes() {
@@ -434,12 +464,14 @@ export default {
       this.$store.dispatch('validerIntervention', id);
     },
     rapportIntervention() {
+      const statut = this.interventions.find(
+        (i) => i.id == this.selectedId
+      )?.statut;
       this.SHOW_MODAL({
         component: 'ModalRapportIntervention',
         size: 1,
-        data: { interventionId: this.selectedId },
+        data: { interventionId: this.selectedId, statut },
       });
-      //TODO: imprimer le rapport d'intervention -> modal
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

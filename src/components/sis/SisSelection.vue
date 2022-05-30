@@ -10,7 +10,13 @@
           @change="selectSis($event)"
           v-model="sisId"
         >
-          <option v-for="sis in availableSisListe" :key="sis.id" :value="sis.id">{{ sis.nom }}</option>
+          <option
+            v-for="sis in availableSisListe"
+            :key="sis.id"
+            :value="sis.id"
+          >
+            {{ sis.nom }}
+          </option>
         </select>
       </div>
       <!-- <a href="#" class="d-block">
@@ -153,14 +159,14 @@ a:focus {
   transition: all 0.3s;
 }
 
-@import "node_modules/bootswatch/dist/cosmo/variables.scss";
+@import 'node_modules/bootswatch/dist/cosmo/variables.scss';
 ul li a:hover {
   color: $primary;
   background: #fff;
 }
 
 .router-link-active,
-a[aria-expanded="true"] {
+a[aria-expanded='true'] {
   color: #fff;
   background: $primary;
 }

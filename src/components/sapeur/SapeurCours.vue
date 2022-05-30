@@ -9,15 +9,18 @@
         class="btn btn-primary"
         @click="newCours"
         v-if="hasEditPermission"
-      >Ajouter un cours</button>
+      >
+        Ajouter un cours
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th data-field="date">Date</th>
             <th data-field="designation">Désignation</th>
             <th data-field="lieu">Lieu</th>
+            <th class="text-center" data-field="duree">Durée [jours]</th>
             <th class="text-center" v-if="hasEditPermission">Actions</th>
           </tr>
         </thead>
@@ -27,8 +30,13 @@
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
             <td>{{ c.date }}</td>
-            <td>{{ cours.find((cours) => cours.id == c.cours_id).designation }}</td>
-            <td>{{ localites.find((l) => l.id == c.localite_id).designation }}</td>
+            <td>
+              {{ cours.find((cours) => cours.id == c.cours_id).designation }}
+            </td>
+            <td>
+              {{ localites.find((l) => l.id == c.localite_id).designation }}
+            </td>
+            <td class="text-center">{{ c.duree }}</td>
             <td class="align-middle text-center" v-if="hasEditPermission">
               <button
                 type="button"
@@ -60,13 +68,13 @@ export default {
   name: 'SapeurCours',
   computed: {
     ...mapState({
-      activeSapeurCours: (state) => state.sapeur.active.cours.sort((a, b) => b.date.localeCompare(a.date)),
+      activeSapeurCours: (state) =>
+        state.sapeur.active.cours.sort((a, b) => b.date.localeCompare(a.date)),
       activeSapeurId: (state) => state.sapeur.active.id,
       cours: (state) => state.cours.liste,
       localites: (state) => state.localite.liste,
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
   },
   mounted() {

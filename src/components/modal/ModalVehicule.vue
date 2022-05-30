@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5
-        class="modal-title"
-        id="exampleModalLabel"
-      >{{ activeVehicule.id ? 'Modifier' : 'Ajouter' }} un véhicule</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeVehicule.id ? 'Modifier' : 'Ajouter' }} un véhicule
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -57,7 +56,9 @@
           :class="{ 'is-invalid': errors['type_unite_id'] }"
         >
           <option :value="0">-</option>
-          <option v-for="u in listeUnite" :key="u.id" :value="u.id">{{ u.unite }}</option>
+          <option v-for="u in listeUnite" :key="u.id" :value="u.id">
+            {{ u.unite }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -69,17 +70,19 @@
             v-model="activeVehicule.statut"
             :true-value="1"
           />
-          <label class="form-check-label" for="vehicule-status-modal">Actif</label>
+          <label class="form-check-label" for="vehicule-status-modal"
+            >Actif</label
+          >
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeVehicule.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeVehicule.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -129,9 +132,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

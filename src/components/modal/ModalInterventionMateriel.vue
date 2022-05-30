@@ -14,7 +14,9 @@
           :class="{ 'is-invalid': errors['materiel_id'] }"
           :disabled="activeMateriel.id"
         >
-          <option v-for="m in listMateriels" :key="m.id" :value="m.id">{{ m.designation }}</option>
+          <option v-for="m in listMateriels" :key="m.id" :value="m.id">
+            {{ m.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -29,12 +31,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeMateriel.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

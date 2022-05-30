@@ -11,11 +11,9 @@
             id="switch"
             v-model="allCategories"
           />
-          <label class="form-check-label" for="switch"
-            >Afficher les
-            {{ groupingLabel.toLowerCase() }}
-            sans intervention</label
-          >
+          <label class="form-check-label" for="switch">
+            Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
+          </label>
         </div>
       </div>
       <div class="card-body">
@@ -54,7 +52,14 @@
           <thead>
             <tr>
               <th>Total :</th>
-              <th class="text-center">{{ interventions.length }}</th>
+              <th class="text-center">
+                {{
+                  Object.values(occurences).reduce(
+                    (partialSum, a) => partialSum + a,
+                    0
+                  )
+                }}
+              </th>
             </tr>
           </thead>
         </table>
@@ -119,9 +124,20 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     occurences() {
-      return this.interventions
-        .map((e) => e[this.displayKey])
-        .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+      if (this.displayKey === 'intervention_traitement_id') {
+        return this.interventions
+          .map((i) => i[this.displayKey])
+          .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+      } else {
+        return this.interventions
+          .map((i) => [i[this.displayKey], i.stat_nb])
+          .reduce(
+            (prev, [id, stat_nb]) => (
+              (prev[id] = (prev[id] ?? 0) + stat_nb), prev
+            ),
+            {}
+          );
+      }
     },
     groupingLabel() {
       return this.grouping[this.displayKey];

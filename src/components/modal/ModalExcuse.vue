@@ -38,12 +38,18 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     selectExcuseType(excuseTypeId) {
-      this.callback(excuseTypeId);
-      this.HIDE_MODAL();
+      (this.callback(excuseTypeId) ?? Promise.resolve()).then((close) => {
+        if (close ?? true) {
+          this.HIDE_MODAL();
+        }
+      });
     },
     close() {
-      this.callback(null);
-      this.HIDE_MODAL();
+      (this.callback(null) ?? Promise.resolve()).then((close) => {
+        if (close ?? true) {
+          this.HIDE_MODAL();
+        }
+      });
     },
   },
 };

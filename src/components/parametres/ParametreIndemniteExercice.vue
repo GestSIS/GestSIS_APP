@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Indemnités exercice</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">Ajouter une indemnite</button>
+      <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
+        Ajouter une indemnite
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="indemnites-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -40,7 +42,9 @@
             <td v-else>-</td>-->
             <td v-if="!i.solde_undefined">
               {{
-                i.compte_solde_id ? compte(i.compte_solde_id) : 'Plus d\'un compte'
+                i.compte_solde_id
+                  ? compte(i.compte_solde_id)
+                  : "Plus d'un compte"
               }}
             </td>
             <td v-else>-</td>
@@ -53,7 +57,9 @@
             <td v-else>-</td>-->
             <td v-if="!i.indemnite_undefined">
               {{
-                i.compte_indemnite_id ? compte(i.compte_indemnite_id) : 'Plus d\'un compte'
+                i.compte_indemnite_id
+                  ? compte(i.compte_indemnite_id)
+                  : "Plus d'un compte"
               }}
             </td>
             <td v-else>-</td>
@@ -76,7 +82,11 @@
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" disabled>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                disabled
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -97,14 +107,11 @@ async function loadData(_, next) {
   const loadComptes = store.dispatch('fetchComptes');
   const loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([
-    loadIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-  ]).then(() => {
-    next();
-  });
+  Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {
@@ -118,35 +125,69 @@ export default {
   computed: {
     ...mapState({
       indemnitesExercice: (state) =>
-        state.imputation.fraisIndemnites.exercices.sort((a, b) => a.tri - b.tri),
+        state.imputation.fraisIndemnites.exercices.sort(
+          (a, b) => a.tri - b.tri
+        ),
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
     }),
     computedIndemnites() {
-      return this.indemnitesExercice.map(e => {
-        const indemniteBase = e.fonctions.filter(f => !f.fonction_id);
-        const soldes = indemniteBase.filter(e => e.type == 1)
-        const indemnites = indemniteBase.filter(e => e.type == 2)
+      return this.indemnitesExercice.map((e) => {
+        const indemniteBase = e.fonctions.filter((f) => !f.fonction_id);
+        const soldes = indemniteBase.filter((e) => e.type == 1);
+        const indemnites = indemniteBase.filter((e) => e.type == 2);
 
         const sumReducer = (acc, a) => acc + parseFloat(a);
 
         return {
           ...e,
-          total_solde: soldes.map(e => e.tarif).reduce(sumReducer, 0.0),
-          total_indemnite: indemnites.map(e => e.tarif).reduce(sumReducer, 0.0),
+          total_solde: soldes.map((e) => e.tarif).reduce(sumReducer, 0.0),
+          total_indemnite: indemnites
+            .map((e) => e.tarif)
+            .reduce(sumReducer, 0.0),
           solde_undefined: soldes.length == 0,
-          min_solde: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min || 0) : NaN,
-          min_solde_pour: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min_pour || 0) : NaN,
-          compte_solde_id: soldes.length == 0 ? null : soldes.length == 1 ? soldes[0].compte_id : NaN,
+          min_solde:
+            soldes.length == 0
+              ? 0
+              : soldes.length == 1
+              ? soldes[0].tarif_min || 0
+              : NaN,
+          min_solde_pour:
+            soldes.length == 0
+              ? 0
+              : soldes.length == 1
+              ? soldes[0].tarif_min_pour || 0
+              : NaN,
+          compte_solde_id:
+            soldes.length == 0
+              ? null
+              : soldes.length == 1
+              ? soldes[0].compte_id
+              : NaN,
           indemnite_undefined: indemnites.length == 0,
-          min_indemnite: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min || 0) : NaN,
-          min_indemnite_pour: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min_pour || 0) : NaN,
-          compte_indemnite_id: indemnites.length == 0 ? null : indemnites.length == 1 ? indemnites[0].compte_id : NaN,
-        }
-      })
-    }
+          min_indemnite:
+            indemnites.length == 0
+              ? 0
+              : indemnites.length == 1
+              ? indemnites[0].tarif_min || 0
+              : NaN,
+          min_indemnite_pour:
+            indemnites.length == 0
+              ? 0
+              : indemnites.length == 1
+              ? indemnites[0].tarif_min_pour || 0
+              : NaN,
+          compte_indemnite_id:
+            indemnites.length == 0
+              ? null
+              : indemnites.length == 1
+              ? indemnites[0].compte_id
+              : NaN,
+        };
+      });
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

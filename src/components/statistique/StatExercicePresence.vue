@@ -61,14 +61,18 @@
           </div>
           <div class="col-6" id="legend-excuse">
             <table class="table table-sm">
-              <tr>
-                <th>Abr</th>
-                <th>Excuse</th>
-              </tr>
-              <tr v-for="excuse in excuses" :key="excuse.id">
-                <td>{{ excuse.abreviation }}</td>
-                <td>{{ excuse.designation }}</td>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Abr</th>
+                  <th>Excuse</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="excuse in excuses" :key="excuse.id">
+                  <td>{{ excuse.abreviation }}</td>
+                  <td>{{ excuse.designation }}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -81,23 +85,27 @@
           <h3>Stats Présences aux exercices</h3>
         </div>
         <div class="table-responsive">
-          <table class="table table-sm">
+          <table class="table table-sm table-header-rotated">
             <thead>
               <tr>
-                <th>Sapeur</th>
-                <th>Localité</th>
-                <th>Fonction</th>
+                <th class="rotate">Sapeur</th>
+                <th class="rotate">Localité</th>
+                <th class="rotate">Fonction</th>
                 <!-- <th class="text-center">Groupes</th> -->
                 <th
                   v-for="(e, index) in displayExercice"
                   :key="e.id"
-                  class="text-center"
-                >{{ index + 1 }}</th>
-                <th>Nb Cvq</th>
-                <th>Nb Pre</th>
-                <th>Nb Rpl</th>
-                <th>Nb Exc</th>
-                <th>Nb Abs</th>
+                  class="rotate"
+                >
+                  <div>
+                    <span>{{ e.designation }}</span>
+                  </div>
+                </th>
+                <th class="text-center">Nb Cvq</th>
+                <th class="text-center">Nb Pre</th>
+                <th class="text-center">Nb Rpl</th>
+                <th class="text-center">Nb Exc</th>
+                <th class="text-center">Nb Abs</th>
               </tr>
             </thead>
             <tbody>
@@ -105,7 +113,9 @@
                 <td
                   v-if="!computedData.length"
                   :colspan="displayExercice.length + 8"
-                >Aucun sapeur à afficher</td>
+                >
+                  Aucun sapeur à afficher
+                </td>
               </tr>
               <tr v-for="s in computedData" :key="s.id">
                 <td>{{ s.nom }} {{ s.prenom }}</td>
@@ -116,7 +126,9 @@
                   :key="index"
                   class="text-center"
                   :class="formatPresenceClass(p)"
-                >{{ formatPresence(p) }}</td>
+                >
+                  {{ formatPresence(p) }}
+                </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
                 <td class="text-center">{{ s.stats.present }}</td>
                 <td class="text-center">{{ s.stats.remplace }}</td>
@@ -127,7 +139,10 @@
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
+                <th
+                  v-if="displayExercice.length"
+                  :colspan="displayExercice.length"
+                ></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
@@ -190,6 +205,9 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  mounted() {
+    loadData('', () => {});
+  },
   watch: {
     activeExerciceComptableId(newValue, _) {
       this.$store.dispatch('fetchListeExercice');
@@ -199,17 +217,21 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      indexedSapeursLocaliteId: (state) => state.sapeur.liste.reduce((map, e) => {
-        map.set(e.id, e.localite_id)
-        return map;
-      }, new Map()),
+      indexedSapeursLocaliteId: (state) =>
+        state.sapeur.liste.reduce((map, e) => {
+          map.set(e.id, e.localite_id);
+          return map;
+        }, new Map()),
       fonctions: (state) => state.fonction.liste,
-      localites: (state) => state.localites.liste,
-      exercices: (state) => state.exercice.liste.sort((a, b) => new Date(a.date) - new Date(b.date)),
-      indexedExercices: (state) => state.exercice.liste.reduce((map, e) => {
-        map.set(e.id, e)
-        return map;
-      }, new Map()),
+      exercices: (state) =>
+        state.exercice.liste.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        ),
+      indexedExercices: (state) =>
+        state.exercice.liste.reduce((map, e) => {
+          map.set(e.id, e);
+          return map;
+        }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
       presences: (state) => state.statistique.presences,
       excuses: (state) => state.excuseType.liste,
@@ -265,20 +287,22 @@ export default {
             this.indexedSapeursLocaliteId.get(p.sapeur_id)
           )
         );
-      })
+      });
       const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
         const sapeurList = map[e.sapeur_id] || [];
         map[e.sapeur_id] = [...sapeurList, e];
         return map;
       }, {});
 
-      const sapeurExerciceIndexedPresence = filteredPresences.reduce((map, e) => {
-        const sapeurMap = map.get(e.sapeur_id) || new Map();
-        sapeurMap.set(e.exercice_id, e);
-        map.set(e.sapeur_id, sapeurMap);
-        return map;
-      }, new Map());
-
+      const sapeurExerciceIndexedPresence = filteredPresences.reduce(
+        (map, e) => {
+          const sapeurMap = map.get(e.sapeur_id) || new Map();
+          sapeurMap.set(e.exercice_id, e);
+          map.set(e.sapeur_id, sapeurMap);
+          return map;
+        },
+        new Map()
+      );
 
       return this.filteredSapeurs
         .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
@@ -287,10 +311,8 @@ export default {
           presences: this.displayExercice.map((e) =>
             sapeurExerciceIndexedPresence.get(s.id)?.get(e.id)
           ),
-          stats: this.computeStats(
-            sapeurIndexedPresence[s.id] || []
-          ),
-          temp: sapeurIndexedPresence[s.id] || []
+          stats: this.computeStats(sapeurIndexedPresence[s.id] || []),
+          temp: sapeurIndexedPresence[s.id] || [],
         }));
     },
     computedStats() {
@@ -387,7 +409,39 @@ export default {
 #legend-container {
   max-height: 140px;
 }
+
 #legend-excuse {
   overflow-y: scroll;
+}
+
+.table-header-rotated {
+  border-collapse: collapse;
+}
+
+.table-header-rotated th.rotate {
+  height: 250px;
+  min-width: 40px;
+  white-space: nowrap;
+}
+
+.table-header-rotated th {
+  white-space: nowrap;
+}
+
+.table-header-rotated th.rotate > div {
+  -webkit-transform: translate(25px, 1px) rotate(315deg);
+  -ms-transform: translate(25px, 1px) rotate(315deg);
+  transform: translate(25px, 1px) rotate(315deg);
+  width: 10px;
+}
+
+.table-header-rotated th.rotate > div > span {
+  border-bottom: 1px solid #000;
+  padding: 5px 10px 5px 0px;
+}
+
+.table-header-rotated th.row-header {
+  padding: 0 10px;
+  border-bottom: 1px solid #ccc;
 }
 </style>

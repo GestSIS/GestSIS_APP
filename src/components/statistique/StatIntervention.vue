@@ -15,16 +15,21 @@ import StatVehicule from '@/components/statistique/StatVehicule.vue';
 import StatMateriel from '@/components/statistique/StatMateriel.vue';
 
 async function loadData(_, next) {
-  const loadInterventions = store.dispatch('fetchListeIntervention');
   const loadTypes = store.dispatch('fetchTypeInterventions');
   const loadStats = store.dispatch('fetchStatFederals');
   const loadTraitements = store.dispatch('fetchInterventionTraitements');
   const loadVehicules = store.dispatch('fetchVehicules');
   const loadMateriels = store.dispatch('fetchMateriels');
+  let loadInterventions = Promise.resolve();
+  let loadStatVehicules = Promise.resolve();
+  let loadStatMateriel = Promise.resolve();
 
-  // Ajouter ces deux nouvelles interfaces pour les statistiques
-  const loadStatVehicules = store.dispatch('fetchStatistiqueMateriel');
-  const loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
+  // Chargement des données uniquement si exerciceComptableId défini
+  if (store.state.exerciceComptable.activeId) {
+    loadInterventions = store.dispatch('fetchListeIntervention');
+    loadStatVehicules = store.dispatch('fetchStatistiqueMateriel');
+    loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
+  }
 
   Promise.all([
     loadInterventions,

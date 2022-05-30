@@ -6,7 +6,9 @@
         class="btn btn-outline-primary"
         @click="save"
         v-if="hasEditPermission"
-      >{{ newMode ? 'Ajouter' : 'Sauvegarder' }}</button>
+      >
+        {{ newMode ? 'Ajouter' : 'Sauvegarder' }}
+      </button>
     </div>
     <div class="card-body">
       <!-- NOM -->
@@ -38,7 +40,9 @@
             v-for="categorie in listeCategories"
             :key="categorie.id"
             :value="categorie.id"
-          >{{ categorie.designation }}</option>
+          >
+            {{ categorie.designation }}
+          </option>
         </select>
       </div>
       <div class="row">
@@ -127,7 +131,9 @@
                 v-for="localite in listeLocalitesSis"
                 :key="localite.id"
                 :value="localite.id"
-              >{{ localite.npa + ' ' + localite.designation }}</option>
+              >
+                {{ localite.npa + ' ' + localite.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -179,9 +185,8 @@ export default {
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       // TODO: Check si exercice pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.EXERCICE.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
     }),
     ...mapGetters(['listeLocalitesSis']),
     exerciceCategorie() {
@@ -223,11 +228,11 @@ export default {
           .then((data) => {
             this.$router.push('/exercices/' + data.id);
             this.errors = {};
-            this.$awn.success(data?.message || 'Exercice créé')
+            this.$awn.success(data?.message || 'Exercice créé');
           })
           .catch((err) => {
-            this.errors = err
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+            this.errors = err;
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
           });
       } else {
         this.$store

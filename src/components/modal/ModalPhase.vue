@@ -83,17 +83,19 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['phase_type_id'] }"
         >
-          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">{{ p.designation }}</option>
+          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">
+            {{ p.designation }}
+          </option>
         </select>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activePhase.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activePhase.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>

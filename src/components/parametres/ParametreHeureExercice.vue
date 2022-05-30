@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Heures additionnelles pour exercice</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutHeure">Ajouter une heure</button>
+      <button type="button" class="btn btn-primary" @click="ajoutHeure">
+        Ajouter une heure
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="heures-anuelles" class="table table-sm">
         <thead>
           <tr>
@@ -130,7 +132,7 @@ export default {
         3: 'Frais forfaitaire',
         4: 'Frais effectif',
         5: 'Charges AVS/AC',
-      }
+      };
       return mapping[type] || '';
     },
   },

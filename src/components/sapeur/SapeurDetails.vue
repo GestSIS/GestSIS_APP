@@ -4,15 +4,35 @@
       <div class="tab-pane fade show active" id="tab-sapeur-details">
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Exporter</button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Importer</button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>Fiche sapeur</button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Exporter
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Importer
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Fiche sapeur
+            </button>
             <button
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
               v-if="hasEditPermission"
-            >Ajouter un sapeur</button>
+            >
+              Ajouter un sapeur/politique
+            </button>
           </div>
         </div>
       </div>
@@ -26,7 +46,8 @@
           :class="{ active: activeTab === tabList[tab] }"
           @click.prevent="selectTab(tabList[tab])"
           href="#"
-        >{{ tabList[tab] }}</a>
+          >{{ tabList[tab] }}</a
+        >
       </nav>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -34,6 +55,7 @@
         <div class="row">
           <div class="col-12">
             <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
+            <SapeurMutations v-if="activeTab === tabList.MUTATION" />
             <SapeurFonction v-if="activeTab === tabList.FONCTION" />
             <SapeurCours v-if="activeTab === tabList.COURS" />
             <SapeurPromotion v-if="activeTab === tabList.PROMOTION" />
@@ -55,14 +77,22 @@ import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
 //TODO Implémenter Matériel personnel
-const tabList = {
+const sapeurTabList = {
   GENERAL: 'General',
+  MUTATION: 'Mutations',
   FONCTION: 'Fonctions',
   COURS: 'Cours',
   PROMOTION: 'Promotion',
   // MATERIAL: 'Materiel',
   ORGANISATION: 'Organisation',
   PERMIS: 'Permis',
+  BANQUE: 'Banque',
+  EXERCICE: 'Exercice',
+};
+
+const politiqueTabList = {
+  GENERAL: 'General',
+  ORGANISATION: 'Organisation',
   BANQUE: 'Banque',
   EXERCICE: 'Exercice',
 };
@@ -76,6 +106,7 @@ import SapeurOrganisation from '@/components/sapeur/SapeurOrganisation.vue';
 import SapeurPermis from '@/components/sapeur/SapeurPermis.vue';
 import SapeurBanque from '@/components/sapeur/SapeurBanque.vue';
 import SapeurExercice from '@/components/sapeur/SapeurExercice.vue';
+import SapeurMutations from '@/components/sapeur/SapeurMutations.vue';
 
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
@@ -106,11 +137,11 @@ export default {
     SapeurPermis,
     SapeurBanque,
     SapeurExercice,
+    SapeurMutations,
   },
   data() {
     return {
-      activeTab: tabList.GENERAL,
-      tabList: tabList,
+      activeTab: sapeurTabList.GENERAL,
     };
   },
   props: {
@@ -127,10 +158,13 @@ export default {
   },
   computed: {
     ...mapState({
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      activeSapeur: (state) => state.sapeur.active.data,
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+    tabList() {
+      return this.activeSapeur.type === 0 ? sapeurTabList : politiqueTabList;
+    },
     modeAjout() {
       return this.id == 'ajout';
     },
@@ -151,10 +185,8 @@ export default {
               params: { id: sapeurId },
             });
           });
-          //TODO
         },
       });
-      // this.activeTab = tabList.GENERAL;
     },
   },
 };

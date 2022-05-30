@@ -11,12 +11,16 @@
             v-if="!selectedItem || selectedItem?.statut == 2"
             :disabled="!selectedItem"
             @click="imputer(selectedItem.id)"
-          >Imputer</button>
+          >
+            Imputer
+          </button>
           <button
             class="btn btn-outline-danger"
             v-if="selectedItem?.statut == 3"
             @click="annulerImputer(selectedItem.id)"
-          >Annuler l'imputation</button>
+          >
+            Annuler l'imputation
+          </button>
         </div>
       </div>
     </div>
@@ -72,7 +76,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
+      <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Interventions</h3>
           <!--          <button @click.prevent="save" class="btn btn-primary">-->
@@ -208,26 +212,39 @@ export default {
           className: 'text-end',
         },
         {
+          title: 'Tarif min',
+          field: 'tarif_min',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
+          title: 'Pour',
+          field: 'tarif_min_pour',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
+          title: 'Unité',
+          field: 'type_unite_id',
+          headerClassName: 'text-center',
+          className: 'text-end',
+          formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
+        },
+        {
           title: 'Taux',
           field: 'taux',
           headerClassName: 'text-center',
           className: 'text-end',
         },
         {
+          title: 'Taux description',
+          field: 'taux_description',
+          headerClassName: 'text-center',
+          className: 'text-end',
+        },
+        {
           title: 'Quantité',
           field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Solde',
-          field: 'solde',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Indemnité',
-          field: 'indemnite',
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -312,7 +329,7 @@ export default {
             const statuts = {
               0: 'A saisir',
               1: 'A valider',
-              2: 'A imputer',
+              2: 'Validée',
               3: 'Imputée',
             };
             return statuts[value];
@@ -324,7 +341,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -353,6 +370,7 @@ export default {
       traitements: (state) => state.interventionTraitement.liste,
       localites: (state) => state.localite.liste,
       activeInterventionId: (state) => state.intervention.active.id,
+      unites: (state) => state.unite.liste,
     }),
     computedData() {
       return this.interventions.map((i) => ({
@@ -428,7 +446,10 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('annulerImputationIntervention', interventionId);
+            this.$store.dispatch(
+              'annulerImputationIntervention',
+              interventionId
+            );
           }
         },
       });
@@ -441,7 +462,7 @@ export default {
       const statutsClass = {
         0: '', //'A saisir',
         1: '', //'A valider',
-        2: 'table-warning', //'A imputer',
+        2: 'table-warning', //'Validée',
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];

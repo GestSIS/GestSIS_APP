@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutFonction()">Ajouter une fonction</button>
+      <button type="button" class="btn btn-primary" @click="ajoutFonction()">
+        Ajouter une fonction
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="fonctions" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>

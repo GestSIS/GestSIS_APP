@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Matériel consommable et en prêt</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutMateriel()">Ajouter du matériel</button>
+      <button type="button" class="btn btn-primary" @click="ajoutMateriel()">
+        Ajouter du matériel
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="materiel" class="table table-sm">
         <thead>
           <tr>

@@ -6,7 +6,9 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" disabled>Créer un décompte individuel</button>
+          <button class="btn btn-outline-primary" disabled>
+            Créer un décompte individuel
+          </button>
         </div>
       </div>
     </div>
@@ -16,7 +18,9 @@
           <h3 class="card-title">Impressions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" :disabled="!selected">Résumé des frais</button>
+          <button class="btn btn-outline-primary" :disabled="!selected">
+            Résumé des frais
+          </button>
         </div>
       </div>
     </div>
@@ -41,10 +45,9 @@
           :detail-row-component="detailRow"
           detail-row-class="m-td-0"
           row-selected-class="table-primary"
-          no-data="Aucun exercice/séance à afficher"
+          no-data="Aucun sapeur à afficher"
           :data="computedData"
           @selected="select"
-          :row-class="onRowClass"
         >
           <template v-slot:details="props">
             <button
@@ -65,10 +68,7 @@
             <button
               class="btn btn-outline-primary border-0"
               @click="
-                genererDecompteSapeur(
-                  props.rowData.id,
-                  props.rowData.nomPrenom
-                )
+                genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
               "
               title="Décompte sapeur"
               :disabled="!props.rowData.aPayer"
@@ -217,7 +217,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -280,15 +280,6 @@ export default {
     },
     select(id) {
       this.selected = id;
-    },
-    onRowClass(dataItem) {
-      const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'A valider',
-        2: 'table-warning', //'A imputer',
-        3: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
     },
   },
 };

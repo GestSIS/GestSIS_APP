@@ -44,32 +44,24 @@ export default {
       state.active.id = sapeurId;
     },
     [types.CREATE_SAPEUR](state, payload) {
-      state.liste = [
-        ...state.liste,
-        {
-          fonction_id: payload.fonction_id,
-          nom: payload.nom,
-          prenom: payload.prenom,
-          actif: payload.actif,
-          date_naissance: payload.date_naissance,
-        },
-      ];
+      state.liste = [...state.liste, payload].sort((s1, s2) =>
+        (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
+      );
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
-      let index = state.liste.map((s) => s.id).indexOf(payload.id);
-      state.liste = [
-        ...state.liste.slice(0, index),
-        {
-          ...state.liste[index],
-          fonction_id: payload.fonction_id,
-          nom: payload.nom,
-          prenom: payload.prenom,
-          actif: payload.actif,
-          date_naissance: payload.date_naissance,
-        },
-        ...state.liste.slice(index + 1),
-      ];
+      state.liste.map((s) =>
+        s.id == payload.id
+          ? {
+              ...s,
+              fonction_id: payload.fonction_id,
+              nom: payload.nom,
+              prenom: payload.prenom,
+              actif: payload.actif,
+              date_naissance: payload.date_naissance,
+            }
+          : s
+      );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
       state.active.telephones = payload;
@@ -211,7 +203,6 @@ export default {
     },
   },
   getters: {
-    activeSapeur: (state) => state.active.data,
     activeSapeurPermis: (state) => state.active.permis,
     activeSapeurTelephones: (state) =>
       state.active.telephones
@@ -236,7 +227,6 @@ export default {
           (m1, m2) => new Date(m1.incorporation) - new Date(m2.incorporation)
         ),
     activeSapeurGroupes: (state) => state.active.groupes,
-    activeSapeurId: (state) => state.active.id || 0,
   },
   actions: {
     selectSapeur({ commit }, payload) {
@@ -307,6 +297,16 @@ export default {
     saveActiveSapeur({ state, commit }, payload) {
       //TODO Update store with new values
       return SapeurService.saveSapeur(
+        state.active.data.id,
+        payload || state.active.data
+      ).then((data) => {
+        commit(types.UPDATE_CURRENT_SAPEUR_DATA, data);
+        return data;
+      });
+    },
+    saveNonSapeurStatut({ state, commit }, payload) {
+      //TODO Update store with new values
+      return SapeurService.saveNonSapeurStatut(
         state.active.data.id,
         payload || state.active.data
       ).then((data) => {

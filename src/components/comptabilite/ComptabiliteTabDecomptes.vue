@@ -6,12 +6,16 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
+          <button class="btn btn-outline-primary" @click="generer">
+            Nouveau
+          </button>
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedId"
             @click="supprimer(selectedId)"
-          >Supprimer</button>
+          >
+            Supprimer
+          </button>
         </div>
       </div>
     </div>
@@ -25,12 +29,16 @@
             class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="impression(selectedId)"
-          >Impression</button>
+          >
+            Impression
+          </button>
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedId"
             @click="iso20022Decompte(selectedId)"
-          >Fichier de paiement (ISO20022)</button>
+          >
+            Fichier de paiement (ISO20022)
+          </button>
         </div>
       </div>
     </div>
@@ -40,7 +48,9 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
-          <button @click.prevent="generer" class="btn btn-primary">Nouveau</button>
+          <button @click.prevent="generer" class="btn btn-primary">
+            Nouveau
+          </button>
         </div>
         <base-table
           :fields="fields"
@@ -81,7 +91,11 @@
             <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
-            <button type="button" class="btn btn-outline-danger border-0" @click="supprimer(value)">
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(value)"
+            >
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
@@ -142,9 +156,9 @@ export default {
           title: 'Sapeur',
           field: 'sapeur_id',
           formatter: (sapeurId) => {
-            const sapeur = svm.sapeurs.find(e => e.id == sapeurId);
-            return sapeur.nom + " " + sapeur.prenom;
-          }
+            const sapeur = svm.sapeurs.find((e) => e.id == sapeurId);
+            return sapeur.nom + ' ' + sapeur.prenom;
+          },
         },
         {
           title: 'Quantité',
@@ -153,7 +167,7 @@ export default {
         {
           title: 'Unité',
           field: 'type_unite_id',
-          formatter: (id) => svm.unites.find(u => u.id == id)?.abreviation
+          formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
         },
         {
           title: 'Tarif',
@@ -178,7 +192,7 @@ export default {
               3: 'Frais forfaitaire',
               4: 'Frais effectif',
               5: 'Charges AVS/AC',
-            }
+            };
             return mapping[type] || '';
           },
         },
@@ -253,8 +267,12 @@ export default {
       unites: (state) => state.unite.liste,
     }),
     computedDecomptes() {
-      return this.decomptes.map(d => ({ ...d, columns: this.ecritureColumns, getEcritures: () => DecompteService.getEcritures(d.id) }))
-    }
+      return this.decomptes.map((d) => ({
+        ...d,
+        columns: this.ecritureColumns,
+        getEcritures: () => DecompteService.getEcritures(d.id),
+      }));
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -283,8 +301,8 @@ export default {
         `decompte_${decompte.date}.xml`
       ).catch((err) => {
         this.$awn.alert(
-          err?.data?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          err?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },
@@ -295,8 +313,8 @@ export default {
         `decompte_${decompte.date}.xml`
       ).catch((err) => {
         this.$awn.alert(
-          err?.data?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          err?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
         );
       });
     },

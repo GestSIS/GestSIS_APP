@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Véhicules</h3>
-      <button type="button" class="btn btn-primary" @click="ajouterVehicule()">Ajouter un véhicule</button>
+      <button type="button" class="btn btn-primary" @click="ajouterVehicule()">
+        Ajouter un véhicule
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="vehicules" class="table table-sm">
         <thead>
           <tr>

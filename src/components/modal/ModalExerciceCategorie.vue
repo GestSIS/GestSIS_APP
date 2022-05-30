@@ -46,7 +46,9 @@
             id="amendable-modal"
             v-model="activeCategorie.amendable"
           />
-          <label class="form-check-label" for="amendable-modal">Amendable</label>
+          <label class="form-check-label" for="amendable-modal"
+            >Amendable</label
+          >
         </div>
       </div>
       <div class="mb-3">
@@ -63,12 +65,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -116,9 +118,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

@@ -1,0 +1,191 @@
+{
+  "releases": [
+    {
+      "date": "29.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout du champ `durée` pour les cours"
+      ]
+    },
+    {
+      "date": "28.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Statistiques de présences, affichage du libellé de l'exercice à la place du numéro"
+      ]
+    },
+    {
+      "date": "27.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Système de notification pour les mise à jours"
+      ]
+    },
+    {
+      "date": "26.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout des politiques",
+        "Sélection des sapeurs filtre additionnel pour type (sapeur/politique)",
+        "Liste exercice et intervention ordré après modification",
+        "Affichage des politiques uniquement dans exercices",
+        "Améliorations graphiques diverses",
+        "Ajout champ `Nb intervention` dans intervention pour pouvoir rapport contenant plusieurs interventions",
+        "Prise en compte de `Nb intervention` dans l'affichage des statistiques",
+        "Correction d'un problème avec les tooltips d'aide",
+        "Possibilité de changer le type d'absences des sapeurs aux exercices après l'imputation",
+        "Vérification des droits d'édition des présences une fois un exercice validé",
+        "Affichage du nombre de sapeurs et des statistiques de présence dans l'interface de saisie",
+        "Résolution d'un problème de chargement de la page statistiques interventions",
+        "Correction d'un problème d'affichage pour les statistiques véhicules et matériel "
+      ]
+    },
+    {
+      "date": "23.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "SMS pour convocation aux exercices",
+        "Feuilles de convocation, sélection des sapeurs",
+        "Fix couleur pour phase intervention avec Chrome",
+        "Déplacement du bouton valider",
+        "Amélioration de la redirection lors de la déconnexion",
+        "Choix des écritures pour décomptes "
+      ]
+    },
+    {
+      "date": "10.05.2022",
+      "version": "1.0",
+      "app": "GestSIS_Mobile 2.0.6",
+      "changes": [
+        "Nouvelle version de GestSIS Mobile en production"
+      ]
+    },
+    {
+      "date": "09.05.2022",
+      "version": "1.0",
+      "app": "GestionRTA-Jura",
+      "changes": [
+        "Correction d'un problème pour gérer les sapeurs supprimés sans localité"
+      ]
+    },
+    {
+      "date": "09.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour les statistiques véhicules",
+        "Homogénéisation des statuts pour intervention et exercice",
+        "Description de rôle obligatoire",
+        "Possibilité d'afficher les montants pour les rapports d'intervention "
+      ]
+    },
+    {
+      "date": "05.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de la modale pour l'imputation des interventions",
+        "Ajout de colonnes dans la table comptabilité-intervention",
+        "Suppression des colonnes inutiles de la modale pour l'imputation des exercices",
+        "Correction d'un problème lié à l'imputation avec les tarifs min et taux nuit/week-end",
+        "Arrondi des montants pour les écriture à 5 centimes "
+      ]
+    },
+    {
+      "date": "04.05.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème d'affichage des localités dans la fenêtre de sélection des sapeurs",
+        "Correction d'un problème pour cocher les catégories dans la fenêtre de sélection des sapeurs "
+      ]
+    },
+    {
+      "date": "29.04.2022",
+      "version": "1.0",
+      "app": "GestSIS_Mobile 2.0.6 (beta)",
+      "changes": [
+        "Choix du thème résilient au redémarrage de l'application"
+      ]
+    },
+    {
+      "date": "28.04.2022",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.5 (beta)",
+      "changes": [
+        "Ecran de chargement pour exercices et interventions",
+        "Affichage des heures supplémentaires pour exercices",
+        "Ajout de l'icône",
+        "Correction d'un problème pour la saisie des heure supplémentaires d'un exercice",
+        "Correction d'un bug pour le renouvellement de l'authentification "
+      ]
+    },
+    {
+      "date": "28.04.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour les mutations RTA",
+        "Correction des permissions pour GestSIS Mobile",
+        "Correction d'un problème pour l'export des heures supplémentaires depuis GestSIS Mobile"
+      ]
+    },
+    {
+      "date": "24.04.2022",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.4 (beta)",
+      "changes": [
+        "Affichage des en-têtes pour la saisie des présences",
+        "Résolution d'un problème lié au renouvellement des accès",
+        "Amélioration des performances d'affichage pour la saisie des présences "
+      ]
+    },
+    {
+      "date": "24.04.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Affichage des titres du tableau de saisie des présences lors du défilement",
+        "Correction d'un problème lié au rafraichissement des droits d'accès",
+        "Correction d'un bug pour la suppression de frais/indemnité annuel type "
+      ]
+    },
+    {
+      "date": "24.04.2022",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.3 (beta)",
+      "changes": [
+        "Ajout du logo et écran de démarrage",
+        "Augmentation de  la taille des champs descriptions et responsables",
+        "Correction d'un label dans le formulaire de création d'une intervention",
+        "Affichage des exercices par date croissante",
+        "Ajout d'un espace entre l'adresse et la localité pour l'export des infos du responsable dans interventions",
+        "Affichage des sapeurs par ordre alphabétique pour l'ajout des présences à une intervention"
+      ]
+    },
+    {
+      "date": "28.03.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction des droits pour l'affichage des exercices et interventions en mode lecture seule "
+      ]
+    },
+    {
+      "date": "23.03.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mode lecture pour sapeurs",
+        "Mode lecture pour exercices",
+        "Mode lecture pour interventions",
+        "Correction du type de droit requis pour la visualisation de l’effectif "
+      ]
+    }
+  ]
+}

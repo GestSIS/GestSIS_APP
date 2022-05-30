@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">{{ data ? 'Modifier' : 'Ajouter' }} une photo</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ data ? 'Modifier' : 'Ajouter' }} une photo
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -29,13 +31,17 @@
       ></cropper>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
       <button
         type="button"
         class="btn btn-primary"
         @click="save()"
         :disabled="!img"
-      >{{ data ? 'Modifier' : 'Ajouter' }}</button>
+      >
+        {{ data ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -91,8 +97,10 @@ export default {
         };
 
         this.callback({ image, blob })
-          .then((res) => {
-            this.HIDE_MODAL();
+          .then((close) => {
+            if (close ?? true) {
+              this.HIDE_MODAL();
+            }
           })
           .catch((err) => {
             this.$awn.alert(

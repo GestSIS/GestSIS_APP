@@ -25,13 +25,7 @@ export default {
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
     [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
-      state.liste = [
-        ...state.liste.filter((e) => e.id != id),
-        {
-          ...state.liste.find((e) => e.id == id),
-          statut: statut,
-        },
-      ];
+      state.liste = state.liste.map((e) => (e.id == id ? { ...e, statut } : e));
       if (state.active.id == id) {
         state.active.data.statut = statut;
       }

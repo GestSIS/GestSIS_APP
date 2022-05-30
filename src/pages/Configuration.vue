@@ -25,7 +25,6 @@
             class="nav-item nav-link"
             exact-active-class="active"
             role="tab"
-            tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
             <span>{{ setting.name }}</span>

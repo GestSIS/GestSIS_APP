@@ -4,67 +4,119 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Frais &amp; indemnités annuels</h3>
       <div class="form-check form-switch mb-2">
-        <input type="checkbox" class="form-check-input" id="switch" v-model="detailsTypes" />
-        <label class="form-check-label" for="switch">Afficher les détails</label>
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="switch"
+          v-model="detailsTypes"
+        />
+        <label class="form-check-label" for="switch"
+          >Afficher les détails</label
+        >
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="frais-annuels" class="table table-sm">
         <thead>
           <tr>
             <th></th>
-            <th v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-center">
+            <th
+              v-for="type in typesAnnuel"
+              :key="type.id + '-' + type.type"
+              class="text-center"
+            >
               {{ type.designation }}
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateType(type)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateType(type)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteType(type)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteType(type)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </th>
             <th rowspan="4" class="text-center align-middle">
-              <button type="button" class="btn btn-outline-primary border-0" @click="ajoutType()">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="ajoutType()"
+              >
                 <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
               </button>
             </th>
           </tr>
           <tr>
             <th>Compte</th>
-            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">{{ compte(type.compte_id) }}</td>
+            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
+              {{ compte(type.compte_id) }}
+            </td>
           </tr>
           <tr>
             <th>Catégorie</th>
-            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">{{
-              categorie(type.ecriture_categorie_id)
-            }}</td>
+            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
+              {{ categorie(type.ecriture_categorie_id) }}
+            </td>
           </tr>
           <tr>
             <th>Type</th>
-            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">{{ formatType(type.type) }}</td>
+            <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
+              {{ formatType(type.type) }}
+            </td>
           </tr>
           <tr>
             <th>Cumulable</th>
             <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
-              <input type="checkbox" class="form-check-input" :checked="type.cumulable" disabled />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                :checked="type.cumulable"
+                disabled
+              />
             </td>
           </tr>
         </thead>
         <tbody>
           <tr v-for="fonction in fonctions" :key="fonction.id">
             <td>{{ fonction.nom }}</td>
-            <td v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-end">
-              <template v-if="!detailsTypes">{{ montantAnnuelTypePourFonction(type, fonction) }}</template>
-              <template v-if="detailsTypes">{{ montantAnnuelTypePourFonctionDetails(type, fonction) }}</template>
-              <button type="button" v-if="!type.fonctions.find((f) => f.fonction_id == fonction.id)"
-                class="btn btn-outline-primary border-0" @click="addFonction(type, fonction)">
+            <td
+              v-for="type in typesAnnuel"
+              :key="type.id + '-' + type.type"
+              class="text-end"
+            >
+              <template v-if="!detailsTypes">{{
+                montantAnnuelTypePourFonction(type, fonction)
+              }}</template>
+              <template v-if="detailsTypes">{{
+                montantAnnuelTypePourFonctionDetails(type, fonction)
+              }}</template>
+              <button
+                type="button"
+                v-if="!type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                class="btn btn-outline-primary border-0"
+                @click="addFonction(type, fonction)"
+              >
                 <font-awesome-icon :icon="['far', 'plus-square']" />
               </button>
-              <button v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)" type="button"
-                class="btn btn-outline-primary border-0" @click="updateFonction(type, fonction)">
+              <button
+                v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateFonction(type, fonction)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)" type="button"
-                class="btn btn-outline-danger border-0" @click="deleteFonction(type, fonction)">
+              <button
+                v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteFonction(type, fonction)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -112,7 +164,8 @@ export default {
   },
   computed: {
     ...mapState({
-      fraisIndemnitesAnnuel: (state) => state.imputation.fraisIndemnites.annuels,
+      fraisIndemnitesAnnuel: (state) =>
+        state.imputation.fraisIndemnites.annuels,
       fonctions: (state) =>
         state.fonction.liste.slice(0).sort((a, b) => b.tri - a.tri),
       comptes: (state) => state.compte.liste,
@@ -138,7 +191,7 @@ export default {
         3: 'Frais forfaitaire',
         4: 'Frais effectif',
         5: 'Charges AVS/AC',
-      }
+      };
       return mapping[type] || '';
     },
     montantAnnuelTypePourFonction(type, fonction) {
@@ -248,5 +301,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

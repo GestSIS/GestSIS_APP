@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Excuses type</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutExcuse()">Ajouter une excuse</button>
+      <button type="button" class="btn btn-primary" @click="ajoutExcuse()">
+        Ajouter une excuse
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="excuses-types" class="table table-sm">
         <thead>
           <tr>

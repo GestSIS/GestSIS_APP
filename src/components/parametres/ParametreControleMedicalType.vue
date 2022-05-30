@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Contrôles médicaux types</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutType">Ajouter une nouveau type</button>
+      <button type="button" class="btn btn-primary" @click="ajoutType">
+        Ajouter une nouveau type
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="exercice-categories" class="table table-sm">
         <thead>
           <tr>
@@ -35,10 +37,18 @@
               <label class="form-check-label" for="expirable"></label>
             </td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateType(t)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateType(t)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteType(t)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteType(t)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>

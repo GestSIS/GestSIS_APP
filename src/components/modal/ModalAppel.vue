@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5
-        class="modal-title"
-        id="exampleModalLabel"
-      >{{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -21,7 +20,7 @@
         />
       </div>
       <div class="mb-3">
-        <autocomplete
+        <base-autocomplete
           v-model="activeAppel.nom"
           :items="listTelephones.map((t) => t.nom)"
           :error="!!errors['nom']"
@@ -49,12 +48,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeAppel.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -63,12 +62,12 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
-import Autocomplete from '@/components/Autocomplete.vue';
+import BaseAutocomplete from '@/components/base/BaseAutocomplete.vue';
 
 export default {
   name: 'ModalAppel',
   components: {
-    Autocomplete,
+    BaseAutocomplete,
   },
   props: {
     data: {

@@ -9,13 +9,21 @@
           <i class="fa fa-bars"></i>
         </a>
       </li>
-      <!-- <li class="nav-item d-none d-sm-inline-block me-auto">
-        <router-link :to="{ name: 'accueil' }" class="nav-link">
-          Accueil
-        </router-link>
-      </li> -->
     </ul>
     <ul class="navbar-nav me-2">
+      <router-link :to="{ name: 'about' }" custom v-slot="{ navigate }">
+        <li class="position-relative me-2">
+          <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
+            <font-awesome-icon :icon="['fas', 'bell']" />
+            <span
+              class="position-absolute translate-middle p-1 bg-danger rounded-circle"
+              v-if="showNotif"
+            >
+              <span class="visually-hidden">Notifications</span>
+            </span>
+          </button>
+        </li>
+      </router-link>
       <base-dropdown
         tag="li"
         buttonClass="btn btn-link nav-link"
@@ -36,16 +44,33 @@
 </template>
 
 <script>
+import * as data from '../../releases.json';
+
 export default {
   name: 'Navbar',
+  data: () => {
+    return {
+      releases: data.releases,
+      showNotif: false,
+    };
+  },
+  mounted() {
+    this.showNotif =
+      localStorage.getItem('latestReleaseDate') != this.releases[0].date ||
+      localStorage.getItem('latestSeenVersion') != this.releases[0].version;
+  },
   methods: {
+    clickInfo(navigate) {
+      this.showNotif = false;
+      navigate();
+    },
     parametres() {
       this.$refs.dropdown.close();
       this.$router.push({ name: 'utilisateur' });
     },
     logout() {
       this.$store.dispatch('logout').then(() => {
-        this.$router.push('/');
+        this.$router.push({ name: 'login' });
       });
     },
   },

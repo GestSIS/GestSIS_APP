@@ -1,4 +1,4 @@
-<template >
+<template>
   <!-- <transition :css="false" @enter="onEnter" @afterEnter="onAfterEnter" @leave="onLeave"> -->
   <slot></slot>
   <!-- </transition> -->

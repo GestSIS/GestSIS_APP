@@ -4,6 +4,9 @@ export default {
   getEffectif() {
     return Api.api().get('/effectif');
   },
+  getSapeurPourConvocationSms() {
+    return Api.api().get('/sapeurs-convocation');
+  },
   getSapeurs() {
     return Api.api().get('/sapeurs');
   },
@@ -41,6 +44,9 @@ export default {
   },
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
+  },
+  saveNonSapeurStatut(sapeurId, sapeurData) {
+    return Api.api().put('/sapeurs/' + sapeurId + '/autre-statut', sapeurData);
   },
   fetchPhoto(sapeurId) {
     return Api.api()

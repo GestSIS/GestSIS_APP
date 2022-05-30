@@ -11,20 +11,25 @@
             v-if="!selectedItem || selectedItem?.statut == 3"
             :disabled="!selectedItem"
             @click="imputer(selectedItem.id)"
-          >Imputer</button>
+          >
+            Imputer
+          </button>
           <button
             class="btn btn-outline-danger"
             v-if="selectedItem?.statut == 4"
             @click="annulerImputer(selectedItem.id)"
-          >Annuler l'imputation</button>
+          >
+            Annuler l'imputation
+          </button>
           <button
             class="btn btn-outline-primary"
             :disabled="selectedItem?.statut != 4"
-            @click="genererDecompteExercice(
-              selectedItem.id,
-              selectedItem.designation
-            )"
-          >Créer un décompte</button>
+            @click="
+              genererDecompteExercice(selectedItem.id, selectedItem.designation)
+            "
+          >
+            Créer un décompte
+          </button>
         </div>
       </div>
     </div>
@@ -57,8 +62,8 @@
               displayKey="designation"
               baseOption="&lt;Statut&gt;"
               :options="[
-                { id: '3', designation: 'A imputer' },
-                { id: '4', designation: 'Imputée' },
+                { id: '3', designation: 'Validé' },
+                { id: '4', designation: 'Imputé' },
               ]"
               @input="(value) => onFilter('statut', value)"
             />
@@ -158,7 +163,7 @@ async function loadData(_, next) {
     loadSapeurs,
     loadLocalites,
     loadIndemnites,
-    loadComptes
+    loadComptes,
   ]).then(() => {
     next();
   });
@@ -211,7 +216,8 @@ export default {
         {
           title: 'Amende',
           field: 'total',
-          formatter: (total, ecriture) => (ecriture.module == 5 ? ecriture.total : '0.00'),
+          formatter: (total, ecriture) =>
+            ecriture.module == 5 ? ecriture.total : '0.00',
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -278,8 +284,8 @@ export default {
               0: 'Annulé',
               1: 'A saisir',
               2: 'En attente de validation',
-              3: 'A imputer',
-              4: 'Imputée',
+              3: 'Validé',
+              4: 'Imputé',
             };
             return statuts[value];
           },
@@ -289,7 +295,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -363,7 +369,8 @@ export default {
         this.currentExerciceComptableId
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
-        this.selectedItem = this.exercices.find(e => e.id == this.selectedItem?.id) || null;
+        this.selectedItem =
+          this.exercices.find((e) => e.id == this.selectedItem?.id) || null;
         this.loading = false;
       });
     },
@@ -385,7 +392,7 @@ export default {
         component: 'ModalImputerExercice',
         data: { id: exerciceId },
         size: 2,
-        callback: () => this.init()
+        callback: () => this.init(),
       });
     },
     annulerImputer(exerciceId) {
@@ -398,14 +405,19 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('annulerImputationExercice', exerciceId)
+            this.$store
+              .dispatch('annulerImputationExercice', exerciceId)
               .then(({ statut }) => {
-                this.exercices = [...this.exercices.filter((e) => e.id != exerciceId),
-                {
-                  ...this.exercices.find((e) => e.id == exerciceId),
-                  statut: statut,
-                }].sort((a, b) => a.date.localeCompare(b.date))
-                this.selectedItem = this.exercices.find(e => e.id == exerciceId);
+                this.exercices = [
+                  ...this.exercices.filter((e) => e.id != exerciceId),
+                  {
+                    ...this.exercices.find((e) => e.id == exerciceId),
+                    statut: statut,
+                  },
+                ].sort((a, b) => a.date.localeCompare(b.date));
+                this.selectedItem = this.exercices.find(
+                  (e) => e.id == exerciceId
+                );
               });
           }
         },
@@ -420,8 +432,8 @@ export default {
         0: '', //'Annulé',
         1: '', //'A saisir',
         2: '', //'En attente de validation',
-        3: 'table-warning', //'A imputer',
-        4: 'table-success', //'Imputée'
+        3: 'table-warning', //'Validé',
+        4: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
     },

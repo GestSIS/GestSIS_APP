@@ -9,7 +9,12 @@
         :value="option.value"
         v-model="model"
       />
-      <label v-if="!advancedLabel" class="form-check-label" :for="option.value">{{ option.label }}</label>
+      <label
+        v-if="!advancedLabel"
+        class="form-check-label"
+        :for="option.value"
+        >{{ option.label }}</label
+      >
       <label
         v-else
         class="form-check-label"

@@ -7,7 +7,9 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Contrôles Medicaux</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Contrôles Medicaux
+            </li>
           </ol>
         </nav>
       </div>
@@ -23,8 +25,14 @@
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <router-link custom to="/controles-medicaux/ajout" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary">Ajouter un contrôle</button>
+            <router-link
+              custom
+              to="/controles-medicaux/ajout"
+              v-slot="{ navigate }"
+            >
+              <button @click="navigate" class="btn btn-outline-primary">
+                Ajouter un contrôle
+              </button>
             </router-link>
             <router-link
               custom
@@ -35,7 +43,9 @@
                 :disabled="!selectedItem"
                 @click="navigate"
                 class="btn btn-outline-primary"
-              >Modifier</button>
+              >
+                Modifier
+              </button>
             </router-link>
           </div>
         </div>
@@ -51,7 +61,9 @@
               :disabled="!selectedItem?.filename"
               @click="downloadJustificatif(selectedItem)"
               class="btn btn-outline-primary"
-            >Justificatif</button>
+            >
+              Justificatif
+            </button>
           </div>
         </div>
       </div>
@@ -67,7 +79,8 @@
                 <select
                   class="form-select form-select-sm"
                   @change="
-                    (event) => onFilter('controle_medical_type_id', event.target.value)
+                    (event) =>
+                      onFilter('controle_medical_type_id', event.target.value)
                   "
                 >
                   <option>&lt;Type&gt;</option>
@@ -75,15 +88,16 @@
                     v-for="type in filteredTypes"
                     :key="type.id"
                     :value="type.id"
-                  >{{ type.designation }}</option>
+                  >
+                    {{ type.designation }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-6">
                 <select
                   class="form-select form-select-sm"
                   @change="
-                    (event) =>
-                      onFilter('medecin_id', event.target.value)
+                    (event) => onFilter('medecin_id', event.target.value)
                   "
                 >
                   <option>&lt;Médecin&gt;</option>
@@ -91,7 +105,9 @@
                     v-for="medecin in filteredMedecins"
                     :key="medecin.id"
                     :value="medecin.id"
-                  >{{ medecin.designation }}</option>
+                  >
+                    {{ medecin.designation }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -108,7 +124,9 @@
                     v-for="annee in filteredAnneesConsultation"
                     :key="annee"
                     :value="annee"
-                  >{{ annee }}</option>
+                  >
+                    {{ annee }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-6">
@@ -123,7 +141,9 @@
                     v-for="annee in filteredAnneesExpiration"
                     :key="annee"
                     :value="annee"
-                  >{{ annee }}</option>
+                  >
+                    {{ annee }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -182,7 +202,10 @@
                 custom
                 v-slot="{ navigate }"
               >
-                <button class="btn btn-outline-primary border-0" @click="navigate">
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="navigate"
+                >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
@@ -331,9 +354,9 @@ export default {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           const age = Math.floor(
             (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-            1000 /
-            (60 * 60 * 24) /
-            365.25
+              1000 /
+              (60 * 60 * 24) /
+              365.25
           );
           return {
             ...s,
@@ -351,14 +374,10 @@ export default {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0 || typeof val == 'function')
-          .map(
-            ([key, value]) =>
-              typeof value == 'function' ?
-                (x) =>
-                  value(x[key])
-                :
-                (x) =>
-                  x[key] == value
+          .map(([key, value]) =>
+            typeof value == 'function'
+              ? (x) => value(x[key])
+              : (x) => x[key] == value
           )
           .reduce(
             (f, g) => (x) => f(x) && g(x),
@@ -367,18 +386,34 @@ export default {
       );
     },
     filteredTypes() {
-      const ids = new Set(this.controlesMedicaux.map(e => e.controle_medical_type_id));
-      return this.types.filter(t => ids.has(t.id));
+      const ids = new Set(
+        this.controlesMedicaux.map((e) => e.controle_medical_type_id)
+      );
+      return this.types.filter((t) => ids.has(t.id));
     },
     filteredMedecins() {
-      const ids = new Set(this.controlesMedicaux.map(e => e.medecin_id));
-      return this.medecins.filter(t => ids.has(t.id));
+      const ids = new Set(this.controlesMedicaux.map((e) => e.medecin_id));
+      return this.medecins.filter((t) => ids.has(t.id));
     },
     filteredAnneesConsultation() {
-      return new Set(this.controlesMedicaux.map(e => e.consultation).filter(e => e).map(d => new Date(d).getFullYear()).sort().reverse());
+      return new Set(
+        this.controlesMedicaux
+          .map((e) => e.consultation)
+          .filter((e) => e)
+          .map((d) => new Date(d).getFullYear())
+          .sort()
+          .reverse()
+      );
     },
     filteredAnneesExpiration() {
-      return new Set(this.controlesMedicaux.map(e => e.validite).filter(e => e).map(d => new Date(d).getFullYear()).sort().reverse());
+      return new Set(
+        this.controlesMedicaux
+          .map((e) => e.validite)
+          .filter((e) => e)
+          .map((d) => new Date(d).getFullYear())
+          .sort()
+          .reverse()
+      );
     },
   },
   methods: {
@@ -409,7 +444,10 @@ export default {
         return;
       }
 
-      if (dataItem.validite && Date.parse(dataItem.validite) < new Date() || !dataItem.accepter) {
+      if (
+        (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
+        !dataItem.accepter
+      ) {
         return 'table-danger';
       }
       // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
@@ -417,15 +455,18 @@ export default {
       //   0: 'text-danger', //'Annulé',
       //   1: '', //'A saisir',
       //   2: '', //'En attente de validation',
-      //   3: '', //'A imputer',
-      //   4: 'table-success', //'Imputée'
+      //   3: '', //'Validé',
+      //   4: 'table-success', //'Imputé'
       // };
       // return statutsClass[dataItem.statut];
       return '';
     },
     onAnneeFilter(key, value) {
       if (parseInt(value)) {
-        this.filters = { ...this.filters, [key]: (e) => e && new Date(e).getFullYear() == value };
+        this.filters = {
+          ...this.filters,
+          [key]: (e) => e && new Date(e).getFullYear() == value,
+        };
       } else {
         this.filters = { ...this.filters, [key]: undefined };
       }
@@ -442,6 +483,7 @@ table button.btn {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .m-td-0 > td {
   padding: 0 !important;
 }

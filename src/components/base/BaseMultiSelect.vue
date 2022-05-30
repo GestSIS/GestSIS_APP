@@ -13,11 +13,9 @@
         formatter ? true : false
       }}
       <option v-if="baseOption" :value="undefined">{{ baseOption }}</option>
-      <option
-        v-for="o in options"
-        :key="o[valueKey]"
-        :value="o[valueKey]"
-      >{{ formatter ? formatter(o) : o[displayKey] }}</option>
+      <option v-for="o in options" :key="o[valueKey]" :value="o[valueKey]">
+        {{ formatter ? formatter(o) : o[displayKey] }}
+      </option>
     </select>
   </div>
 </template>

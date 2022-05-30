@@ -3,9 +3,11 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutTelephone()">Ajouter une numéro</button>
+      <button type="button" class="btn btn-primary" @click="ajoutTelephone()">
+        Ajouter une numéro
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="telephones" class="table table-sm">
         <thead>
           <tr>

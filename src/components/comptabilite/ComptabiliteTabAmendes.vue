@@ -5,7 +5,9 @@
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Amendes</h3>
-          <button class="btn btn-primary" @click="generer">Générer les amendes</button>
+          <button class="btn btn-primary" @click="generer">
+            Générer les amendes
+          </button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -132,7 +134,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };

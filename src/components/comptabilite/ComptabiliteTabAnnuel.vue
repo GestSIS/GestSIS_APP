@@ -4,7 +4,9 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Indemnités et Frais annuels</h3>
-          <button @click.prevent="generer" class="btn btn-primary">Générer</button>
+          <button @click.prevent="generer" class="btn btn-primary">
+            Générer
+          </button>
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
@@ -175,7 +177,7 @@ export default {
           key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center'
+          columnClass: 'align-middle text-center',
         },
       ],
     };

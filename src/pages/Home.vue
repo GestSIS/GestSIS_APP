@@ -7,7 +7,10 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div class="card col-md-3 col-sm-6 col-xs-12" v-if="availableSisListe.length <= 0">
+          <div
+            class="card col-md-3 col-sm-6 col-xs-12"
+            v-if="availableSisListe.length <= 0"
+          >
             <div class="align-vertical">
               <p>
                 Vous n'avez actuellement aucun droit, demandez des droits à
@@ -61,7 +64,7 @@ export default {
   },
   methods: {
     getImageUrl(sis) {
-      return new URL(`../assets/sis/${sis.api_key}.jpg`, import.meta.url).href
+      return new URL(`../assets/sis/${sis.api_key}.jpg`, import.meta.url).href;
     },
     connectToSis(sis) {
       this.$store.dispatch('selectSis', sis).then(() => {

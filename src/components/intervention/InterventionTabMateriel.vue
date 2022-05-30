@@ -10,10 +10,17 @@
           class="btn btn-primary"
           @click="newMateriel"
           v-if="hasEditPermission"
-        >Ajouter du matériel</button>
+        >
+          Ajouter du matériel
+        </button>
       </div>
       <div class="card-body">
-        <table id="int-materiel" class="table table-sm" cellspacing="0" width="100%">
+        <table
+          id="int-materiel"
+          class="table table-sm"
+          cellspacing="0"
+          width="100%"
+        >
           <thead>
             <tr>
               <th>Matériel</th>
@@ -23,7 +30,9 @@
           </thead>
           <tbody id="materiels">
             <tr v-if="activeMateriels.length <= 0">
-              <td :colspan="hasEditPermission ? 3 : 2">Aucun matériel ajouté.</td>
+              <td :colspan="hasEditPermission ? 3 : 2">
+                Aucun matériel ajouté.
+              </td>
             </tr>
             <tr v-for="m in activeMateriels" :key="m.id">
               <td>
@@ -70,9 +79,10 @@ export default {
       activeMateriels: (state) => state.intervention.active.materiels,
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
   },
   mounted() {

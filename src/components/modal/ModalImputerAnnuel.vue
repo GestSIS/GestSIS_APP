@@ -1,21 +1,30 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Imputer indemnités et frais annuels</h5>
+      <h5 class="modal-title" id="exampleModalLabel">
+        Imputer indemnités et frais annuels
+      </h5>
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <!--progress bar-->
-      <multi-step :steps="['Type de frais', 'Résultat']" :activeIndex="phase - 1" />
+      <multi-step
+        :steps="['Type de frais', 'Résultat']"
+        :activeIndex="phase - 1"
+      />
       <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
         <h4 class="alert-heading">Aide</h4>
         <p class="mb-0">
           Les frais et indemnités annuels ci-dessous seront imputés
           automatiquement pour
-          <strong>chaque</strong> sapeur selon ses
-          fonctions. Pour effectuer l'imputation, cliquez sur le bouton
-          <strong>Imputer</strong> en bas de la fenêtre.
+          <strong>chaque</strong> sapeur selon ses fonctions. Pour effectuer
+          l'imputation, cliquez sur le bouton <strong>Imputer</strong> en bas de
+          la fenêtre.
         </p>
       </div>
       <div v-if="phase === 1" class="row">
@@ -28,7 +37,9 @@
                   v-for="type in typesAnnuel"
                   :key="type.id + '-' + type.type"
                   class="text-center"
-                >{{ type.designation }}</th>
+                >
+                  {{ type.designation }}
+                </th>
               </tr>
               <tr>
                 <th>Compte</th>
@@ -36,7 +47,9 @@
                   v-for="type in typesAnnuel"
                   :key="type.id + '-' + type.type"
                   class="text-center"
-                >{{ compte(type.compte_id) }}</td>
+                >
+                  {{ compte(type.compte_id) }}
+                </td>
               </tr>
               <tr>
                 <th>Cumulable</th>
@@ -57,11 +70,17 @@
             <tbody>
               <tr v-for="fonction in filteredFonctions" :key="fonction.id">
                 <td>{{ fonction.nom }}</td>
-                <td v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-end">
-                  <template v-if="!detailsTypes">{{ montantAnnuelTypePourFonction(type, fonction) }}</template>
-                  <template
-                    v-if="detailsTypes"
-                  >{{ montantAnnuelTypePourFonctionDetails(type, fonction) }}</template>
+                <td
+                  v-for="type in typesAnnuel"
+                  :key="type.id + '-' + type.type"
+                  class="text-end"
+                >
+                  <template v-if="!detailsTypes">{{
+                    montantAnnuelTypePourFonction(type, fonction)
+                  }}</template>
+                  <template v-if="detailsTypes">{{
+                    montantAnnuelTypePourFonctionDetails(type, fonction)
+                  }}</template>
                 </td>
               </tr>
             </tbody>
@@ -70,7 +89,11 @@
       </div>
       <div v-if="phase === 2">
         <div class="alert alert-dismissible alert-success">
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
           Imputations effectuées avec
           <strong>succès</strong>!
         </div>
@@ -88,7 +111,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
+                  formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
                 }}
               </td>
               <td>{{ ecriture.designation }}</td>
@@ -101,12 +124,17 @@
       </div>
     </div>
     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
+      </button>
       <button
         type="button"
-        class="btn btn-secondary"
-        @click="HIDE_MODAL()"
-      >{{ phase === 1 ? 'Annuler' : 'Fermer' }}</button>
-      <button type="button" class="btn btn-primary" @click="imputer()" v-if="phase === 1">Imputer</button>
+        class="btn btn-primary"
+        @click="imputer()"
+        v-if="phase === 1"
+      >
+        Imputer
+      </button>
     </div>
   </div>
 </template>

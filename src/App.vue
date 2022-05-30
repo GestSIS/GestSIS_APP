@@ -21,10 +21,9 @@ export default {
 };
 </script>
 
-
 <style lang="scss">
-@import "vue-directive-tooltip/src/css/index.scss";
-@import "nprogress/nprogress.css";
+@import 'floating-vue/dist/style.css';
+@import 'nprogress/nprogress.css';
 
-@import "./assets/sass/main.scss";
+@import './assets/sass/main.scss';
 </style>

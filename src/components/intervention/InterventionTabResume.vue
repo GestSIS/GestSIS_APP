@@ -4,7 +4,13 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
-          <button @click.prevent="save" class="btn btn-primary" v-if="hasEditPermission">Enregistrer</button>
+          <button
+            @click.prevent="save"
+            class="btn btn-primary"
+            v-if="hasEditPermission"
+          >
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <label for="m-int-resume">Description</label>
@@ -50,9 +56,10 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
       // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.INTERVENTION.MODIFICATION
-      ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(
+          permissions.INTERVENTION.MODIFICATION
+        ),
     }),
   },
   methods: {
@@ -64,11 +71,11 @@ export default {
         })
         .then((res) => {
           this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées')
+          this.$awn.success(res?.message || 'Modifications enregistrées');
         })
         .catch((err) => {
-          this.errors = err
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          this.errors = err;
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
         });
     },
   },

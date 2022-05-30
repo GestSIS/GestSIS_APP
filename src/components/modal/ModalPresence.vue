@@ -7,7 +7,12 @@
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="piquet" v-model="piquet" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="piquet"
+            v-model="piquet"
+          />
           <label class="form-check-label" for="piquet">Piquet</label>
         </div>
       </div>
@@ -107,28 +112,30 @@
               v-model="selectedSapeurs[s.id]"
             />
             <label class="form-check-label" :for="'sp' + s.id">
-              {{
-              formatSapeur(s)
-              }}
+              {{ formatSapeur(s) }}
             </label>
           </div>
         </li>
       </ul>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
       <button
         type="button"
         class="btn btn-primary"
         @click="save()"
         :disabled="!nbSelectedSapeurs"
-      >{{ editMode ? 'Enregistrer' : 'Ajouter' }}</button>
+      >
+        {{ editMode ? 'Enregistrer' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalPresence',
@@ -154,7 +161,9 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
+      // Sapeurs actif et de type sapeur uniquement
+      sapeurs: (state) =>
+        state.sapeur.liste.filter((s) => s.actif && s.type == 0),
     }),
     heureDebut() {
       return null; //this.activeInterventionData.heure_debut
@@ -243,8 +252,11 @@ export default {
         this.$store
           .dispatch('editPresence', presence)
           .then(() => {
-            this.callback();
-            this.HIDE_MODAL();
+            (this.callback() ?? Promise.resolve()).then((close) => {
+              if (close ?? true) {
+                this.HIDE_MODAL();
+              }
+            });
           })
           .catch((error) => {
             let debut = error['sapeurs.0.debut'];
@@ -270,8 +282,11 @@ export default {
         this.$store
           .dispatch('addPresences', presences)
           .then(() => {
-            this.callback();
-            this.HIDE_MODAL();
+            (this.callback() ?? Promise.resolve()).then((close) => {
+              if (close ?? true) {
+                this.HIDE_MODAL();
+              }
+            });
           })
           .catch((error) => {
             let debut = error['sapeurs.0.debut'];

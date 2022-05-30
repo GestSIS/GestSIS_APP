@@ -16,7 +16,35 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
+        <div class="card card-primary card-outline mb-5">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Notes de mise à jour</h3>
+          </div>
+          <div class="card-body">
+            <div
+              v-for="({ changes, date, app }, i) in all
+                ? releases
+                : releases.slice(0, 5)"
+              :key="i"
+            >
+              <h5>{{ date }} - {{ app }}</h5>
+              <ul>
+                <li v-for="(change, j) in changes" :key="j">
+                  <span v-for="(t, i) in change.split('`')"
+                    >{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span
+                  >
+                </li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" @click="all = true" v-if="!all">
+              Tout afficher
+            </button>
+          </div>
+        </div>
+        <div class="timeline"></div>
+      </div>
+      <div class="col-md-4">
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5">
           <div class="card-header d-flex justify-content-between">
@@ -29,11 +57,11 @@
               secours.
             </p>
             <p>Auteur : Bastien Wermeille</p>
+            <!-- TODO: Ajout sujet par défault - Nom SIS -->
+            <p><a href="mailto:support@gestsis.ch">Contacter</a></p>
             <p>
-              <!-- TODO: Ajout sujet par défault - Nom SIS -->
-              <a href="mailto:support@gestsis.ch">Contacter</a>
+              GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
             </p>
-            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
           </div>
         </div>
       </div>
@@ -43,17 +71,24 @@
 
 <script>
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import * as data from '../../releases.json';
 
 export default {
   name: 'about',
+  data: () => {
+    return {
+      releases: data.releases,
+      all: false,
+    };
+  },
+  mounted() {
+    localStorage.setItem('latestReleaseDate', this.releases[0].date);
+    localStorage.setItem('latestSeenVersion', this.releases[0].version);
+  },
   components: {
     ExerciceComptable,
   },
 };
 </script>
 
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>
+<style></style>

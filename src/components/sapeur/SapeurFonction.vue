@@ -8,10 +8,17 @@
         class="btn btn-primary"
         @click="newFonction"
         v-if="hasEditPermission"
-      >Ajouter une fonction</button>
+      >
+        Ajouter une fonction
+      </button>
     </div>
-    <div class="card-body">
-      <table id="sap-fonctions" class="table table-sm" cellspacing="0" width="100%">
+    <div class="card-body table-responsive">
+      <table
+        id="sap-fonctions"
+        class="table table-sm"
+        cellspacing="0"
+        width="100%"
+      >
         <thead>
           <tr>
             <th>Début</th>
@@ -28,7 +35,9 @@
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
             <td>{{ f.debut }}</td>
             <td>{{ f.fin }}</td>
-            <td>{{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}</td>
+            <td>
+              {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
+            </td>
             <td>{{ f.remarque }}</td>
             <td class="align-middle text-center" v-if="hasEditPermission">
               <button
@@ -63,10 +72,12 @@ export default {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurFonctions: (state) => state.sapeur.active.fonctions.sort((a, b) => b.debut.localeCompare(a.debut)),
-      hasEditPermission: (state) => state.auth.sis.permissions.includes(
-        permissions.SAPEUR.MODIFICATION
-      ),
+      activeSapeurFonctions: (state) =>
+        state.sapeur.active.fonctions.sort((a, b) =>
+          b.debut.localeCompare(a.debut)
+        ),
+      hasEditPermission: (state) =>
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
   },
   mounted() {

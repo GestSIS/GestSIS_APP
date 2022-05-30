@@ -8,9 +8,11 @@
         type="button"
         class="btn btn-primary"
         @click="newExerciceComptable"
-      >Ajouter un exercice comptable</button>
+      >
+        Ajouter un exercice comptable
+      </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -23,7 +25,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-if="!listeExerciceComptable.length">Aucun exercice comptable</tr>
+          <tr v-if="!listeExerciceComptable.length">
+            Aucun exercice comptable
+          </tr>
           <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>
@@ -48,7 +52,12 @@
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <!-- TODO Implement Suppression exercice comptable -->
-              <button type="button" class="btn btn-outline-danger border-0" disabled v-if="false">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                disabled
+                v-if="false"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -81,7 +90,8 @@ export default {
   },
   computed: {
     ...mapState({
-      listeExerciceComptable: (state) => state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
+      listeExerciceComptable: (state) =>
+        state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },

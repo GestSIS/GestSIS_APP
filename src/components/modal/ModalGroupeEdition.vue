@@ -18,7 +18,8 @@
             :_types="types"
             :selectable="true"
             @selected="selected"
-          >1</editable-tree>
+            >1</editable-tree
+          >
         </div>
       </div>
     </div>
@@ -34,7 +35,7 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import EditableTree from '@/components/editable_tree/EditableTree.vue';
 
 export default {
-  name: 'ModalSapeurSelect',
+  name: 'ModalGroupeEdition',
   props: ['callback', 'data'],
   components: {
     EditableTree,

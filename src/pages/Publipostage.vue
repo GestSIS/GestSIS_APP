@@ -7,7 +7,9 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Publipostage</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Publipostage
+            </li>
           </ol>
         </nav>
       </div>
@@ -23,7 +25,9 @@
           </div>
           <div class="card-body">
             <h4 class="h5">Télécharger fichier Excel pour publipostage.</h4>
-            <button class="btn btn-primary mb-2" @click="publipostage">Fichier Excel</button>
+            <button class="btn btn-primary mb-2" @click="publipostage">
+              Fichier Excel
+            </button>
             <!-- <p>TODO: Aide pour réaliser le publipostage</p> -->
           </div>
         </div>
@@ -34,7 +38,9 @@
             <h3>Options</h3>
           </div>
           <div class="card-body">
-            <button class="btn btn-outline-primary mb-2" @click="select">Sélection des sapeurs</button>
+            <button class="btn btn-outline-primary mb-2" @click="select">
+              Sélection des sapeurs
+            </button>
 
             <h4 class="h5">Sélection actuel</h4>
             <p v-if="sapeurIds.length <= 0">Sapeurs actifs (défault)</p>
@@ -43,7 +49,9 @@
               v-if="sapeurIds.length > 0"
               class="btn btn-outline-secondary"
               @click="resetSelection"
-            >Annuler la sélection</button>
+            >
+              Annuler la sélection
+            </button>
           </div>
         </div>
       </div>
@@ -88,9 +96,11 @@ export default {
     },
     select() {
       const svm = this;
-      const data = this.sapeurIds.slice(0);
+      const data = {
+        ids: this.sapeurIds.slice(0),
+      };
       const callback = (res) => {
-        if (!!res) {
+        if (res) {
           svm.sapeurIds = res.tous;
         }
         return Promise.resolve();

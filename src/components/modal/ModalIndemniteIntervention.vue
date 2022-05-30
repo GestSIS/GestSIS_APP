@@ -50,7 +50,9 @@
             value="taux"
             v-model="imputationType"
           />
-          <label class="form-check-label" for="taux">Taux week-end et taux nuit</label>
+          <label class="form-check-label" for="taux"
+            >Taux week-end et taux nuit</label
+          >
         </div>
       </div>
       <div class="container-fluid">
@@ -83,7 +85,9 @@
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
-              <option v-for="u in unites" :key="u.id" :value="u.id">{{ u.unite }}</option>
+              <option v-for="u in unites" :key="u.id" :value="u.id">
+                {{ u.unite }}
+              </option>
             </select>
           </div>
           <div class="mb-3 col-12">
@@ -95,11 +99,9 @@
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
               <option :value="null">toutes les phases</option>
-              <option
-                v-for="p in phases"
-                :key="p.id"
-                :value="p.id"
-              >uniquement phase {{ p.designation }}</option>
+              <option v-for="p in phases" :key="p.id" :value="p.id">
+                uniquement phase {{ p.designation }}
+              </option>
             </select>
           </div>
         </div>
@@ -154,7 +156,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
-          <option v-for="c in comptes" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in comptes" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
@@ -165,7 +169,9 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
-          <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.designation }}</option>
+          <option v-for="c in categories" :key="c.id" :value="c.id">
+            {{ c.designation }}
+          </option>
         </select>
       </div>
       <base-select
@@ -182,12 +188,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">Fermer</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >{{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}</button>
+      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+        Fermer
+      </button>
+      <button type="button" class="btn btn-primary" @click="save()">
+        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </div>
 </template>
@@ -217,7 +223,7 @@ export default {
       ...this.activeIndemnite,
       ...this.data,
       debut: this.data?.debut?.slice(0, 5),
-      fin: this.data?.fin?.slice(0, 5)
+      fin: this.data?.fin?.slice(0, 5),
     };
     this.imputationType =
       this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
@@ -257,9 +263,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store

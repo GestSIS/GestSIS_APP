@@ -5,6 +5,7 @@ import { TokenService } from '../../services/StorageService.js';
 import AuthService from '../../services/AuthService.js';
 import Api from '../../http/Request';
 import jwt_decode from 'jwt-decode';
+import router from '../../router/index';
 
 export default {
   state: {
@@ -106,7 +107,7 @@ export default {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
-      Api.setAccessToken("");
+      Api.setAccessToken('');
 
       state.user = null;
       state.email = null;
@@ -167,7 +168,7 @@ export default {
         new_password: newPassword,
       });
     },
-    confirmation({}, token) {
+    confirmation(_, token) {
       return AuthService.confirmation(token).then((data) => {
         data.data;
       });
@@ -199,7 +200,7 @@ export default {
         return Promise.resolve();
       }
     },
-    newRegisterToken({}, token) {
+    newRegisterToken(_, token) {
       return AuthService.newRegisterToken(token).then((t) => t.data);
     },
     updateUserRoles({ commit, state }, user) {
@@ -237,7 +238,7 @@ export default {
         })
           .catch((e) => {
             commit(types.AUTH_LOGOUT);
-            //TODO: Redirect to home page or login page
+            router.push({ name: 'login' });
             return e;
           })
           .then(() => {

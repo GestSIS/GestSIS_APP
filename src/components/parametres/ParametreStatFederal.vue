@@ -4,7 +4,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Statistique fédéral</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table id="materiel" class="table table-sm">
         <thead>
           <tr>
@@ -46,7 +46,8 @@ export default {
   name: 'ParametreStatFederal',
   computed: {
     ...mapState({
-      statsFederales: (state) => state.statFederal.liste.sort((a, b) => a.tri - b.tri),
+      statsFederales: (state) =>
+        state.statFederal.liste.sort((a, b) => a.tri - b.tri),
     }),
   },
 };
