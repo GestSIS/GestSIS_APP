@@ -128,6 +128,35 @@
         </div>
       </div>
     </div>
+    <div class="col-sm-12 col-xl-6" v-if="false">
+      <!-- general form elements -->
+      <div class="card card-primary card-outline mb-3">
+        <!-- /.card-header -->
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Localités du sis</h3>
+          <button type="button" class="btn btn-primary" @click="ajouter()">
+            Ajouter
+          </button>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Localité</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2873 Saulcy</td>
+                <td>Supprimer</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">

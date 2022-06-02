@@ -86,6 +86,7 @@ import permissions from '@/store/permissions.js';
 export default {
   computed: {
     ...mapState({
+      activeSapeurId: (state) => state.sapeur.active.id,
       localites: (state) => state.localite.liste,
       mutations: (state) => state.sapeur.active.mutations,
       hasEditPermission: (state) =>
@@ -96,6 +97,14 @@ export default {
         this.mutations.length > 0 &&
         (this.mutations[this.mutations.length - 1].sortie || '') === ''
       );
+    },
+  },
+  mounted() {
+    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurMutations', id);
     },
   },
   methods: {
