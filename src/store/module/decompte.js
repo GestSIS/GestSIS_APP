@@ -51,7 +51,7 @@ export default {
       // TODO: Refresh data en cas de succès afin d'avoir des données à jour
       // Update les écritures afin de refresh l'interface
     },
-    fetchPaiementsPourDecompte({ state, commit }, decompteId) {},
+    // fetchPaiementsPourDecompte({ state, commit }, decompteId) {},
     //     updateAvsParams({ commit }, params) {
     //       return AvsParamService.updateParams(params).then((data) => {
     //         commit(types.UPDATE_AVS_PARAMS, data);

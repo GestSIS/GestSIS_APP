@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Paramètres, ajout de la configuration des localités du SIS"
+        "Paramètres, ajout de la configuration des localités du SIS",
+        "Refonte de la page d'accueil"
       ]
     },
     {

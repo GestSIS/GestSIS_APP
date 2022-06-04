@@ -231,7 +231,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalSapeur',

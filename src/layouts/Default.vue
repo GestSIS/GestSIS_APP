@@ -3,14 +3,12 @@
     <div class="wrapper">
       <!-- Main Sidebar Container -->
       <main-sidebar class="custom-sidebar" />
-
       <div class="content">
-        <navbar />
+        <app-navbar />
         <slot />
       </div>
       <app-modal />
     </div>
-    <footer />
   </div>
 
   <!-- Control Sidebar -->
@@ -27,14 +25,14 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue';
+import AppNavbar from '@/components/AppNavbar.vue';
 import AppModal from '@/components/AppModal.vue';
 import MainSidebar from '@/components/MainSidebar.vue';
 
 export default {
   components: {
-    Navbar,
     MainSidebar,
+    AppNavbar,
     AppModal,
   },
 };
@@ -50,9 +48,11 @@ export default {
 }
 
 .content {
-  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
+  flex-grow: 1;
+  /*ensures that the container will take up the full height of the parent container*/
   // overflow-y: auto; /*adds scroll to this container*/
-  overflow: hidden; /*adds scroll to this container*/
+  overflow: hidden;
+  /*adds scroll to this container*/
   display: flex;
   flex-flow: column;
   height: 100vh;

@@ -29,7 +29,7 @@
           </div>
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
-              <span class="sr-only">Chargement...</span>
+              <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
           <table class="table">
@@ -150,6 +150,7 @@ table button.btn {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .m-td-0 > td {
   padding: 0 !important;
 }

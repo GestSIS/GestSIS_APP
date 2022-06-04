@@ -4,7 +4,7 @@
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous enregistrer</h1>
-      <label for="inputName" class="sr-only">Nom d'utilisateur</label>
+      <label for="inputName" class="visually-hidden">Nom d'utilisateur</label>
       <input
         v-model="name"
         type="text"
@@ -17,7 +17,7 @@
         :class="{ 'is-invalid': error.name }"
       />
       <div class="invalid-feedback" v-if="error.name">Nom invalide</div>
-      <label for="inputEmail" class="sr-only">Email</label>
+      <label for="inputEmail" class="visually-hidden">Email</label>
       <input
         v-model="email"
         type="email"
@@ -29,7 +29,7 @@
         :class="{ 'is-invalid': error.email }"
       />
       <div class="invalid-feedback" v-if="error.email">Email déjà existant</div>
-      <label for="inputPassword" class="sr-only">Mot de passe</label>
+      <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
         v-model="password"
         type="password"
@@ -43,7 +43,7 @@
       <div class="invalid-feedback" v-if="error.password">
         Taille minimum: 8
       </div>
-      <label for="inputPasswordConfirmation" class="sr-only"
+      <label for="inputPasswordConfirmation" class="visually-hidden"
         >Confirmation</label
       >
       <input
@@ -71,7 +71,9 @@
       </button>
       <transition-expand>
         <div v-show="avance">
-          <label for="inputToken" class="sr-only">Jeton d'enregistrement</label>
+          <label for="inputToken" class="visually-hidden"
+            >Jeton d'enregistrement</label
+          >
           <input
             v-model="token"
             type="text"

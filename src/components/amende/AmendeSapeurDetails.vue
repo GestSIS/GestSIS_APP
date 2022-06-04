@@ -1,7 +1,7 @@
 <template>
   <div class="detail-row">
     <div class="spinner-border" role="status" v-if="loading">
-      <span class="sr-only">Chargement...</span>
+      <span class="visually-hidden">Chargement...</span>
     </div>
     <table class="table mb-0" v-else-if="!amendes.length">
       <tr>

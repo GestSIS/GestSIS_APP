@@ -44,10 +44,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import * as data from '../../releases.json';
 
 export default {
-  name: 'Navbar',
+  name: 'AppNavbar',
   data: () => {
     return {
       releases: data.releases,
@@ -58,6 +59,9 @@ export default {
     this.showNotif =
       localStorage.getItem('latestReleaseDate') != this.releases[0].date ||
       localStorage.getItem('latestSeenVersion') != this.releases[0].version;
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
   },
   methods: {
     clickInfo(navigate) {
