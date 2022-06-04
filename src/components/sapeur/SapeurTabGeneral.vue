@@ -21,7 +21,8 @@
             displayKey="designation"
             :options="civilites"
             v-model="activeSapeur.civilite_id"
-          />fonctions NOM -->
+          />
+          <!-- NOM -->
           <div class="mb-3">
             <label for="m-sap-nom">Nom</label>
             <input
