@@ -146,7 +146,7 @@
               v-model="activeInterventionData.localite_id"
             >
               <option
-                v-for="localite in listeLocalitesSis"
+                v-for="localite in localites"
                 :key="localite.id"
                 :value="localite.id"
               >
@@ -167,7 +167,7 @@
               v-model="activeInterventionData.sapeur_id"
             >
               <option
-                v-for="sapeur in listSapeur"
+                v-for="sapeur in sapeurs"
                 :key="sapeur.id"
                 :value="sapeur.id"
               >
@@ -200,7 +200,7 @@
               v-model="activeInterventionData.intervention_traitement_id"
             >
               <option
-                v-for="traitement in listInterventionTraitement"
+                v-for="traitement in interventionTraitements"
                 :key="traitement.id"
                 :value="traitement.id"
               >
@@ -221,7 +221,7 @@
                 v-model="activeInterventionData.type_intervention_id"
               >
                 <option
-                  v-for="t in listTypeIntervention"
+                  v-for="t in typesIntervention"
                   :value="t.id"
                   :key="t.id"
                 >
@@ -263,7 +263,7 @@
               v-model="activeInterventionData.stat_federal_id"
             >
               <option
-                v-for="stat in listStatFederal"
+                v-for="stat in statsFederales"
                 :key="stat.id"
                 :value="stat.id"
               >
@@ -393,10 +393,11 @@ export default {
   },
   computed: {
     ...mapState({
-      listTypeIntervention: (state) => state.typeIntervention.liste,
-      listStatFederal: (state) => state.statFederal.liste,
-      listInterventionTraitement: (state) => state.interventionTraitement.liste,
-      listSapeur: (state) => state.sapeur.liste,
+      localites: (state) => state.localite.liste,
+      typesIntervention: (state) => state.typeIntervention.liste,
+      statsFederales: (state) => state.statFederal.liste,
+      interventionTraitements: (state) => state.interventionTraitement.liste,
+      sapeurs: (state) => state.sapeur.liste,
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
@@ -406,11 +407,7 @@ export default {
           permissions.INTERVENTION.MODIFICATION
         ),
     }),
-    ...mapGetters([
-      'listeLocalitesSis',
-      'exerciceComptableDebut',
-      'exerciceComptableFin',
-    ]),
+    ...mapGetters(['exerciceComptableDebut', 'exerciceComptableFin']),
     description() {
       return this.activeInterventionData.description;
     },

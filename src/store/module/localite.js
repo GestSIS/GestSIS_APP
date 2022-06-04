@@ -17,11 +17,14 @@ export default {
     },
   },
   getters: {
-    listeLocalitesSis: (state) => state.liste,
+    listeLocalitesSis: (state) => {
+      const index = new Set(state.listeSis);
+      return state.liste.filter((l) => index.has(l.id));
+    },
   },
   actions: {
     addLocalitesSis({ commit }, localiteIds) {
-      return LocaliteService.addLocalitesSis(localiteIds).then((data) => 
+      return LocaliteService.addLocalitesSis(localiteIds).then((data) =>
         commit(types.UPDATE_LOCALITE_SIS_LISTE, data)
       );
     },

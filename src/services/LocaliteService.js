@@ -11,6 +11,6 @@ export default {
     return Api.api().post('/localites-sis', ids);
   },
   removeLocalitesSis(ids) {
-    return Api.api().delete('/localites-sis', {data:ids});
+    return Api.api().delete('/localites-sis', { data: ids });
   },
 };

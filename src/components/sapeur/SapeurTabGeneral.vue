@@ -19,10 +19,9 @@
             valueKey="id"
             :disabled="!hasEditPermission"
             displayKey="designation"
-            :options="listeCivilites"
+            :options="civilites"
             v-model="activeSapeur.civilite_id"
-          />
-          <!-- NOM -->
+          />fonctions NOM -->
           <div class="mb-3">
             <label for="m-sap-nom">Nom</label>
             <input
@@ -82,7 +81,7 @@
             valueKey="id"
             required
             :disabled="!hasEditPermission"
-            :options="listeLocalitesSis"
+            :options="localites"
             :formatter="(l) => l.npa + ' ' + l.designation"
             v-model="activeSapeur.localite_id"
           />
@@ -326,7 +325,7 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="g in listGrades" :key="g.id" :value="g.id">
+                <option v-for="g in grades" :key="g.id" :value="g.id">
                   {{ g.designation }}
                 </option>
               </select>
@@ -378,13 +377,13 @@ export default {
       activeSapeur: (state) => state.sapeur.active.data,
       activeSapeurId: (state) => state.sapeur.active.id ?? 0,
       estSapeur: (state) => state.sapeur.active.data.type === 0,
-      listeCivilites: (state) => state.baseData.civilites,
-      listeFonctions: (state) => state.fonction.liste,
-      listGrades: (state) => state.grade.liste,
+      civilites: (state) => state.baseData.civilites,
+      localites: (state) => state.localite.liste,
+      fonctions: (state) => state.fonction.liste,
+      grades: (state) => state.grade.liste,
       hasEditPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-    ...mapGetters(['listeLocalitesSis']),
   },
   watch: {
     activeSapeurId(id) {

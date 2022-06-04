@@ -36,7 +36,7 @@
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['localite_id'] }"
         >
-          <option v-for="l in listeLocalitesSis" :key="l.id" :value="l.id">
+          <option v-for="l in localites" :key="l.id" :value="l.id">
             {{ l.designation }}
           </option>
         </select>
@@ -82,8 +82,8 @@ export default {
     ...mapState({
       activeSapeurId: (state) => state.sapeur.active.id,
       activeMutation: (state) => state.mutation.active,
+      localites: (state) => state.localite.liste,
     }),
-    ...mapGetters(['listeLocalitesSis']),
     finDeService() {
       return this.activeMutation.action == 'finService';
     },
@@ -99,7 +99,7 @@ export default {
     if (this.finDeService) {
       this.modalTitle = 'Fin de service';
     }
-    if (this.listeLocalitesSis.length === 0) {
+    if (this.localites.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
 

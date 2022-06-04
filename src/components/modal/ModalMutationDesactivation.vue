@@ -147,6 +147,7 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       groupes: (state) => state.groupe.liste,
       fonctions: (state) => state.fonction.liste,
+      localites: (state) => state.localite.liste,
       activeSapeurId: (state) => state.sapeur.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
       activeSapeurGroupe: (state) => state.sapeur.active.groupes,
@@ -154,7 +155,6 @@ export default {
       activeSapeurFonction: (state) =>
         state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
-    ...mapGetters(['listeLocalitesSis']),
     exercicesSelectedState() {
       return this.exercices.length
         ? this.exercices
@@ -178,7 +178,7 @@ export default {
     },
   },
   mounted() {
-    if (this.listeLocalitesSis.length === 0) {
+    if (this.localites.length === 0) {
       this.$store.dispatch('fetchLocalites');
     }
 
@@ -310,6 +310,7 @@ export default {
 #mutation-desactivation-table tbody tr:nth-child(n + 2) td:nth-child(2) {
   padding-left: 2rem;
 }
+
 #mutation-desactivation-table tbody tr td {
   padding: 0.4rem 0.75rem;
 }

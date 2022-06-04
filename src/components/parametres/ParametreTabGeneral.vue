@@ -13,59 +13,118 @@
         <div class="card-body">
           <div class="mb-3">
             <label for="nom">Nom du SIS</label>
-            <input type="text" v-model="sisParam.nom" class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['nom'] }" id="nom" />
+            <input
+              type="text"
+              v-model="sisParam.nom"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['nom'] }"
+              id="nom"
+            />
           </div>
           <div class="row mb-3">
             <div class="col-8">
               <label for="district">District</label>
-              <input type="text" v-model="sisParam.district" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['district'] }" id="district" />
+              <input
+                type="text"
+                v-model="sisParam.district"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['district'] }"
+                id="district"
+              />
             </div>
             <div class="col-4">
               <label for="no_arrondissement">No arrondissement</label>
-              <input type="text" v-model="sisParam.no_arrondissement" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['no_arrondissement'] }" id="no_arrondissement" />
+              <input
+                type="text"
+                v-model="sisParam.no_arrondissement"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['no_arrondissement'] }"
+                id="no_arrondissement"
+              />
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-8">
               <label for="rue">Rue</label>
-              <input type="text" v-model="sisParam.rue" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['rue'] }" id="rue" />
+              <input
+                type="text"
+                v-model="sisParam.rue"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['rue'] }"
+                id="rue"
+              />
             </div>
             <div class="col-4">
               <label for="numero">Numéro</label>
-              <input type="text" v-model="sisParam.numero" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['numero'] }" id="numero" />
+              <input
+                type="text"
+                v-model="sisParam.numero"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['numero'] }"
+                id="numero"
+              />
             </div>
           </div>
-          <base-select class="mb-3" valueKey="id" label="Localité" :formatter="formatLocalite" :options="localites"
-            v-model="sisParam.localite_id" :select-class="{ 'is-invalid': errors['localite_id'] }" />
-          <base-select class="mb-3" valueKey="id" label="Commandant" :formatter="formatSapeur" :options="sapeurs"
-            v-model="sisParam.sapeur_id" :select-class="{ 'is-invalid': errors['sapeur_id'] }" />
+          <base-select
+            class="mb-3"
+            valueKey="id"
+            label="Localité"
+            :formatter="formatLocalite"
+            :options="localites"
+            v-model="sisParam.localite_id"
+            :select-class="{ 'is-invalid': errors['localite_id'] }"
+          />
+          <base-select
+            class="mb-3"
+            valueKey="id"
+            label="Commandant"
+            :formatter="formatSapeur"
+            :options="sapeurs"
+            v-model="sisParam.sapeur_id"
+            :select-class="{ 'is-invalid': errors['sapeur_id'] }"
+          />
           <div class="row mb-3">
             <div class="col-6">
               <label for="telephone">Téléphone</label>
-              <input type="text" v-model="sisParam.telephone" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['telephone'] }" id="telephone" />
+              <input
+                type="text"
+                v-model="sisParam.telephone"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['telephone'] }"
+                id="telephone"
+              />
             </div>
             <div class="col-6">
               <label for="email">Email</label>
-              <input type="text" v-model="sisParam.email" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['email'] }" id="email" />
+              <input
+                type="text"
+                v-model="sisParam.email"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['email'] }"
+                id="email"
+              />
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-6">
               <label for="iban">Iban</label>
-              <input type="text" v-model="sisParam.iban" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['iban'] }" id="iban" />
+              <input
+                type="text"
+                v-model="sisParam.iban"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['iban'] }"
+                id="iban"
+              />
             </div>
             <div class="col-6">
               <label for="bic">BIC</label>
-              <input type="text" v-model="sisParam.bic" class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['bic'] }" id="bic" />
+              <input
+                type="text"
+                v-model="sisParam.bic"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['bic'] }"
+                id="bic"
+              />
             </div>
           </div>
         </div>
@@ -77,7 +136,11 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Localités du sis</h3>
-          <button type="button" class="btn btn-primary" @click="updateLocalitesSis()">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="updateLocalitesSis()"
+          >
             Modifier
           </button>
         </div>
@@ -95,7 +158,7 @@
                 <td>{{ indexedLocalites[id].designation }}</td>
               </tr>
               <tr v-if="!localitesSis.length">
-                <td colspan="2">Aucun SIS</td>
+                <td colspan="2">Aucune localité</td>
               </tr>
             </tbody>
           </table>
@@ -162,6 +225,7 @@ export default {
   },
   mounted() {
     this.sisParam = { ...this.params };
+    this.$store.dispatch('fetchLocalitesSis');
   },
   computed: {
     ...mapState({
@@ -172,8 +236,11 @@ export default {
         state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
     }),
     indexedLocalites() {
-      return this.localites.reduce((acc, l) => { acc[l.id] = l; return acc }, {});
-    }
+      return this.localites.reduce((acc, l) => {
+        acc[l.id] = l;
+        return acc;
+      }, {});
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -184,7 +251,6 @@ export default {
       return `${sapeur?.nom} ${sapeur?.prenom}`;
     },
     updateLocalitesSis() {
-
       const callback = (res) => {
         if (!res) {
           return;
@@ -193,7 +259,7 @@ export default {
         if (ajoute.length) {
           this.$store.dispatch('addLocalitesSis', ajoute);
         }
-        console.log(supprime)
+        console.log(supprime);
         if (supprime.length) {
           this.$store.dispatch('removeLocalitesSis', supprime);
         }
@@ -201,7 +267,12 @@ export default {
         return Promise.resolve();
       };
 
-      this.SHOW_MODAL({ component: 'ModalLocaliteSelect', callback, size: 1, data: { ids: this.localitesSis } });
+      this.SHOW_MODAL({
+        component: 'ModalLocaliteSelect',
+        callback,
+        size: 1,
+        data: { ids: this.localitesSis },
+      });
     },
     async save() {
       this.$store
@@ -221,5 +292,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

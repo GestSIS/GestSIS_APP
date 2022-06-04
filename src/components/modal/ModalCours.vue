@@ -59,7 +59,7 @@
           class="form-select form-select-sm"
         >
           <option :value="null">-</option>
-          <option v-for="c in listeCours" :key="c.id" :value="c.id">
+          <option v-for="c in cours" :key="c.id" :value="c.id">
             {{ c.designation }}
           </option>
         </select>
@@ -73,7 +73,7 @@
           :class="{ 'is-invalid': errors['grade_id'] }"
         >
           <option :value="null">-</option>
-          <option v-for="g in listeGrade" :key="g.id" :value="g.id">
+          <option v-for="g in grades" :key="g.id" :value="g.id">
             {{ g.designation }}
           </option>
         </select>
@@ -88,7 +88,7 @@
           :class="{ 'is-invalid': errors['fonction_id'] }"
         >
           <option :value="null">-</option>
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
+          <option v-for="f in fonctions" :key="f.id" :value="f.id">
             {{ f.nom }}
           </option>
         </select>
@@ -146,9 +146,9 @@ export default {
   },
   computed: {
     ...mapState({
-      listeGrade: (state) => state.grade.liste,
-      listeFonction: (state) => state.fonction.liste,
-      listeCours: (state) => state.cours.liste,
+      grades: (state) => state.grade.liste,
+      fonctions: (state) => state.fonction.liste,
+      cours: (state) => state.cours.liste,
     }),
   },
   mounted() {
@@ -159,9 +159,6 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    cours(id) {
-      return id ? liste.find((c) => c.id === id)?.designation : '';
-    },
     localite(localite) {
       return localite?.designation;
     },

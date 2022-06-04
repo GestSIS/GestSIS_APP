@@ -31,16 +31,6 @@ import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseRadio from '@/components/base/BaseRadio.vue';
 import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
 
-// Vue.filter('sapeur', function (sapeur) {
-//   if (!sapeur) return '';
-//   return sapeur.nom + ' ' + sapeur.prenom;
-// });
-
-// Vue.filter('compte', function (compte) {
-//   if (!compte) return '';
-//   return compte?.numero + ' - ' + compte?.designation;
-// });
-
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {
     store.dispatch('loadSisListe').then(() => {
