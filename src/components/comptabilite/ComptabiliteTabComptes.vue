@@ -6,10 +6,7 @@
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button
-            class="btn btn-outline-primary"
-            @click="justificatifIndividuel(activeCompteId)"
-          >
+          <button class="btn btn-outline-primary" @click="justificatifIndividuel(activeCompteId)">
             Justificatif du compte
           </button>
           <button class="btn btn-outline-primary" @click="justificatifComplet">
@@ -25,44 +22,26 @@
         <div class="card-header d-flex justify-content-between">
           <div class="card-title">
             <h3 class="card-title">Comptes</h3>
-            <base-dropdown
-              buttonClass="ms-1 btn btn-outline-secondary dropdown-toggle"
-              menuClass="dropdown-menu"
-              ref="dropdown"
-              :title="formatCompte(comptes.find((f) => f.id == activeCompteId))"
-            >
+            <base-dropdown buttonClass="ms-1 btn btn-outline-secondary dropdown-toggle" menuClass="dropdown-menu"
+              ref="dropdown" :title="formatCompte(comptes.find((f) => f.id == activeCompteId))">
               <template #default>
-                <button
-                  v-for="c in comptes"
-                  :key="c.id"
-                  @click="selectCompte(c.id)"
-                  class="dropdown-item"
-                  :class="{ active: activeCompteId == c.id }"
-                  type="button"
-                >
+                <button v-for="c in comptes" :key="c.id" @click="selectCompte(c.id)" class="dropdown-item"
+                  :class="{ active: activeCompteId == c.id }" type="button">
                   {{ formatCompte(c) }}
                 </button>
               </template>
             </base-dropdown>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          no-data="Aucune écriture à afficher"
-          @selected="selected"
-          :selectable="true"
-          selectKey="id"
-          row-selected-class="table-primary"
-          :data="computedData"
-        ></base-table>
+        <base-table v-show="!loading" :fields="fields" no-data="Aucune écriture à afficher" @selected="selected"
+          :selectable="true" selectKey="id" row-selected-class="table-primary" :data="computedData"></base-table>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import store from '@/store/index';
 
 import CompteService from '@/services/CompteService.js';
@@ -168,9 +147,8 @@ export default {
     },
     justificatifIndividuel(compteId) {
       const compte = this.comptes.find((f) => f.id == this.activeCompteId);
-      const filename = `${this.formatedDate()}_justificatif-compte-${
-        compte.numero
-      }.pdf`;
+      const filename = `${this.formatedDate()}_justificatif-compte-${compte.numero
+        }.pdf`;
 
       CompteService.downloadJustificatifIndividuel(
         filename,
@@ -189,7 +167,7 @@ export default {
     selectCompte(id) {
       this.$refs.dropdown.close();
       this.selectedId = null;
-      this.$store.dispatch('selectActiveCompte', id).then(() => {});
+      this.$store.dispatch('selectActiveCompte', id).then(() => { });
       this.dropdown = false;
     },
     init() {
@@ -198,13 +176,12 @@ export default {
         this.selectedId = null;
       });
     },
-    ...mapMutations(['SHOW_MODAL']),
   },
 };
 </script>
 
 <style>
-.m-td-0 > td {
+.m-td-0>td {
   padding: 0 !important;
 }
 </style>
