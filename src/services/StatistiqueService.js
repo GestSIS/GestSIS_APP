@@ -1,13 +1,22 @@
 import Api from '@/http/Request';
 
 export default {
-  getVehiculeOccurence(exercieComptableId) {
+  getStatVehicule(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/vehicule`);
   },
-  getMaterielOccurence(exercieComptableId) {
+  getStatMateriel(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/materiel`);
   },
-  getPresences(exercieComptableId) {
+  getStatPresences(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/presence`);
+  },
+  getStatTypeIntervention(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/type-intervention`);
+  },
+  getStatStatFederal(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/stat-federal`);
+  },
+  getStatTraitementIntervention(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/intervention-traitement`);
   },
 };

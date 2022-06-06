@@ -37,7 +37,7 @@
           v-model="activeExerciceData.exercice_categorie_id"
         >
           <option
-            v-for="categorie in listeCategories"
+            v-for="categorie in categories"
             :key="categorie.id"
             :value="categorie.id"
           >
@@ -127,7 +127,11 @@
               style="width: 100%"
               v-model="activeExerciceData.localite_id"
             >
-              <option>
+              <option
+                v-for="localite in localites"
+                :key="localite.id"
+                :value="localite.id"
+              >
                 {{ localite.npa + ' ' + localite.designation }}
               </option>
             </select>
@@ -177,7 +181,6 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listeCategories: (state) => state.exerciceCategorie.liste,
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,

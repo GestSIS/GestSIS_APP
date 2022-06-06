@@ -5,12 +5,7 @@
       <div class="card-header d-flex justify-content-between">
         <h3>Stats interventions</h3>
         <div class="form-check form-switch mb-2">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="switch"
-            v-model="allCategories"
-          />
+          <input type="checkbox" class="form-check-input" id="switch" v-model="allCategories" />
           <label class="form-check-label" for="switch">
             Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
           </label>
@@ -21,21 +16,14 @@
           <thead>
             <tr>
               <th>
-                <select
-                  class="form-select form-select-sm"
-                  id="select-categorie"
-                  v-model="displayKey"
-                >
-                  <option
-                    v-for="(label, key) in grouping"
-                    :key="key"
-                    :value="key"
-                  >
+                <select class="form-select form-select-sm" id="select-categorie" v-model="displayKey">
+                  <option v-for="(label, key) in grouping" :key="key" :value="key">
                     {{ label }}
                   </option>
                 </select>
               </th>
               <th class="text-center">Nombre</th>
+              <th class="text-center" v-if="displayKey != statistiquesInterventionTraitement">Heures</th>
             </tr>
           </thead>
           <tbody>
@@ -45,23 +33,34 @@
             <tr v-for="e in filteredData" :key="e.id">
               <td>{{ e.designation }}</td>
               <td class="text-center">
-                {{ occurences[e.id] || 0 }}
+                {{ occurences[e.id]?.nb ?? 0 }}
               </td>
+              <td class="text-center" v-if="displayKey != statistiquesInterventionTraitement">{{
+                  Number.parseFloat(occurences[e.id]?.heures ?? 0)?.toFixed(2)
+              }}</td>
             </tr>
           </tbody>
-          <thead>
+          <tfoot>
             <tr>
               <th>Total :</th>
               <th class="text-center">
                 {{
-                  Object.values(occurences).reduce(
-                    (partialSum, a) => partialSum + a,
-                    0
-                  )
+                    Object.values(occurences).reduce(
+                      (partialSum, a) => partialSum + (a?.nb ?? 0),
+                      0
+                    )
+                }}
+              </th>
+              <th class="text-center">
+                {{
+                    Object.values(occurences).reduce(
+                      (partialSum, a) => partialSum + Number.parseFloat(a?.heures ?? 0),
+                      0.0
+                    )?.toFixed(2)
                 }}
               </th>
             </tr>
-          </thead>
+          </tfoot>
         </table>
         <!-- <h4>TODO:</h4>
           <ul>
@@ -96,11 +95,11 @@ export default {
   data() {
     return {
       allCategories: false,
-      displayKey: 'type_intervention_id',
+      displayKey: 'statistiquesTypeIntervention',
       grouping: {
-        type_intervention_id: 'Types',
-        stat_federal_id: 'Statistiques fédéral',
-        intervention_traitement_id: 'Traitements',
+        statistiquesTypeIntervention: 'Types',
+        statistiquesStatFederal: 'Statistiques fédéral',
+        statistiquesInterventionTraitement: 'Traitements',
       },
     };
   },
@@ -122,31 +121,21 @@ export default {
       traitements: (state) => state.interventionTraitement.liste,
       statsFederal: (state) => state.statFederal.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      statistiquesStatFederal: (state) => state.statistique.statFederal,
+      statistiquesTypeIntervention: (state) => state.statistique.typeIntervention,
+      statistiquesInterventionTraitement: (state) => state.statistique.interventionTraitement,
     }),
     occurences() {
-      if (this.displayKey === 'intervention_traitement_id') {
-        return this.interventions
-          .map((i) => i[this.displayKey])
-          .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
-      } else {
-        return this.interventions
-          .map((i) => [i[this.displayKey], i.stat_nb])
-          .reduce(
-            (prev, [id, stat_nb]) => (
-              (prev[id] = (prev[id] ?? 0) + stat_nb), prev
-            ),
-            {}
-          );
-      }
+      return this[this.displayKey].reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
     },
     groupingLabel() {
       return this.grouping[this.displayKey];
     },
     groupingData() {
       const mapping = {
-        type_intervention_id: this.types,
-        stat_federal_id: this.statsFederal,
-        intervention_traitement_id: this.traitements,
+        statistiquesTypeIntervention: this.types,
+        statistiquesStatFederal: this.statsFederal,
+        statistiquesInterventionTraitement: this.traitements,
       };
       return mapping[this.displayKey];
     },
@@ -159,4 +148,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
