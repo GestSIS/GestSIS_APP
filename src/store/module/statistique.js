@@ -57,7 +57,9 @@ export default {
     fetchStatistiqueTypeIntervention({ getters, commit }) {
       return StatistiqueService.getStatTypeIntervention(
         getters.currentExerciceComptableId
-      ).then((data) => commit(types.UPDATE_STATISTIQUE_TYPE_INTERVENTION, data));
+      ).then((data) =>
+        commit(types.UPDATE_STATISTIQUE_TYPE_INTERVENTION, data)
+      );
     },
     fetchStatistiqueStatFederal({ getters, commit }) {
       return StatistiqueService.getStatStatFederal(
@@ -67,7 +69,9 @@ export default {
     fetchStatistiqueTraitementIntervention({ getters, commit }) {
       return StatistiqueService.getStatTraitementIntervention(
         getters.currentExerciceComptableId
-      ).then((data) => commit(types.UPDATE_STATISTIQUE_INTERVENTION_TRAITEMENT, data));
+      ).then((data) =>
+        commit(types.UPDATE_STATISTIQUE_INTERVENTION_TRAITEMENT, data)
+      );
     },
   },
 };

@@ -11,12 +11,16 @@ export default {
     return Api.api().get(`/statistiques/${exercieComptableId}/presence`);
   },
   getStatTypeIntervention(exercieComptableId) {
-    return Api.api().get(`/statistiques/${exercieComptableId}/type-intervention`);
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/type-intervention`
+    );
   },
   getStatStatFederal(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/stat-federal`);
   },
   getStatTraitementIntervention(exercieComptableId) {
-    return Api.api().get(`/statistiques/${exercieComptableId}/intervention-traitement`);
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/intervention-traitement`
+    );
   },
 };

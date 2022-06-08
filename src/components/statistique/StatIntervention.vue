@@ -34,7 +34,9 @@ async function loadData(_, next) {
     loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
     loadTypeIntervention = store.dispatch('fetchStatistiqueTypeIntervention');
     loadStatFederal = store.dispatch('fetchStatistiqueStatFederal');
-    loadTraitementIntervention = store.dispatch('fetchStatistiqueTraitementIntervention');
+    loadTraitementIntervention = store.dispatch(
+      'fetchStatistiqueTraitementIntervention'
+    );
   }
 
   Promise.all([
@@ -85,5 +87,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -33,6 +33,9 @@ export default {
     [types.ADD_EXERCICE](state, payload) {
       state.liste = [...state.liste, payload];
     },
+    [types.REMOVE_EXERCICE](state, exerciceId) {
+      state.liste = state.liste.filter((e) => e.id != exerciceId);
+    },
     [types.SELECT_CURRENT_EXERCICE](state, payload) {
       state.active.id = payload;
     },
@@ -102,8 +105,36 @@ export default {
     },
     validerExercice({ commit }, payload) {
       return ExerciceService.validerExercice(payload).then(async (data) => {
-        await commit(types.UPDATE_EXERCICE_STATUT, data);
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: payload,
+          statut: data,
+        });
         return data;
+      });
+    },
+    annulerExercice({ commit }, payload) {
+      return ExerciceService.cancelExercice(payload).then(async (data) => {
+        console.log(data);
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: payload,
+          statut: data?.statut,
+        });
+        return data;
+      });
+    },
+    reactiverExercice({ commit }, payload) {
+      return ExerciceService.reactivateExercice(payload).then(async (data) => {
+        console.log(data);
+        await commit(types.UPDATE_EXERCICE_STATUT, {
+          id: payload,
+          statut: data?.statut,
+        });
+        return data;
+      });
+    },
+    supprimerExercice({ commit }, exerciceId) {
+      return ExerciceService.deleteExercice(exerciceId).then(() => {
+        commit(types.REMOVE_EXERCICE, exerciceId);
       });
     },
     saveActiveExercice({ state, commit }) {

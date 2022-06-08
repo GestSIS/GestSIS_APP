@@ -15,6 +15,15 @@ export default {
   createExercice(exerciceData) {
     return Api.api().post('/exercices', exerciceData);
   },
+  deleteExercice(exerciceId) {
+    return Api.api().delete('/exercices/' + exerciceId);
+  },
+  cancelExercice(exerciceId) {
+    return Api.api().post('/exercices/' + exerciceId + '/annuler');
+  },
+  reactivateExercice(exerciceId) {
+    return Api.api().post('/exercices/' + exerciceId + '/reactiver');
+  },
   validerExercice(exerciceId) {
     return Api.api().post('/exercices/' + exerciceId + '/valider');
   },

@@ -22,13 +22,21 @@
             <h3>Notes de mise à jour</h3>
           </div>
           <div class="card-body">
-            <div v-for="({ changes, date, app }, i) in all
-            ? releases
-            : releases.slice(0, Math.max(5, nbNew))" :key="i">
-              <h5>{{ date }} - {{ app }} <span class="badge bg-danger" v-if="i < nbNew">Nouveau</span></h5>
+            <div
+              v-for="({ changes, date, app }, i) in all
+                ? releases
+                : releases.slice(0, Math.max(5, nbNew))"
+              :key="i"
+            >
+              <h5>
+                {{ date }} - {{ app }}
+                <span class="badge bg-danger" v-if="i < nbNew">Nouveau</span>
+              </h5>
               <ul>
                 <li v-for="(change, j) in changes" :key="j">
-                  <span v-for="(t, i) in change.split('`')">{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span>
+                  <span v-for="(t, i) in change.split('`')"
+                    >{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span
+                  >
                 </li>
               </ul>
             </div>
@@ -78,9 +86,15 @@ export default {
     };
   },
   mounted() {
-    const date = localStorage.getItem('latestReleaseDate', this.releases[0].date);
-    const version = localStorage.getItem('latestSeenVersion', this.releases[0].version);
-    const latestReadIndex = this.releases.findIndex(r => r.date == date);
+    const date = localStorage.getItem(
+      'latestReleaseDate',
+      this.releases[0].date
+    );
+    const version = localStorage.getItem(
+      'latestSeenVersion',
+      this.releases[0].version
+    );
+    const latestReadIndex = this.releases.findIndex((r) => r.date == date);
     if (latestReadIndex < 0) {
       this.nbNew = this.releases.length;
     } else {
@@ -99,5 +113,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
