@@ -26,17 +26,33 @@
           </div>
           <div class="card-body d-grid gap-1">
             <router-link custom to="/interventions/new" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary" v-if="hasEditPermission">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+                v-if="hasEditPermission"
+              >
                 Ajouter une intervention
               </button>
             </router-link>
-            <router-link custom :to="'/interventions/' + selectedId" v-slot="{ navigate }">
-              <button :disabled="!selectedId" @click="navigate" class="btn btn-outline-primary">
+            <router-link
+              custom
+              :to="'/interventions/' + selectedId"
+              v-slot="{ navigate }"
+            >
+              <button
+                :disabled="!selectedId"
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >
                 {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
               </button>
             </router-link>
-            <button :disabled="!canDelete" @click="supprimerIntervention(selectedId)" class="btn btn-outline-danger"
-              v-if="hasEditPermission">
+            <button
+              :disabled="!canDelete"
+              @click="supprimerIntervention(selectedId)"
+              class="btn btn-outline-danger"
+              v-if="hasEditPermission"
+            >
               Supprimer
             </button>
           </div>
@@ -49,7 +65,11 @@
             <h5>Impressions</h5>
           </div>
           <div class="card-body d-grid gap-1">
-            <button :disabled="!selectedId" @click="rapportIntervention" class="btn btn-outline-primary">
+            <button
+              :disabled="!selectedId"
+              @click="rapportIntervention"
+              class="btn btn-outline-primary"
+            >
               Rapport d'intervention
             </button>
           </div>
@@ -64,51 +84,87 @@
           <div class="card-body">
             <div class="row">
               <div class="mb-3 col-md-4">
-                <select class="form-select form-select-sm" id="filterLocalite" @change="
-                  (event) => onFilter('localite_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterLocalite"
+                  @change="
+                    (event) => onFilter('localite_id', event.target.value)
+                  "
+                >
                   <option>&lt;Localité&gt;</option>
-                  <option v-for="loc in filteredLocalites" :key="loc.id" :value="loc.id">
+                  <option
+                    v-for="loc in filteredLocalites"
+                    :key="loc.id"
+                    :value="loc.id"
+                  >
                     {{ loc.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterType" @change="
-                  (event) =>
-                    onFilter('type_intervention_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterType"
+                  @change="
+                    (event) =>
+                      onFilter('type_intervention_id', event.target.value)
+                  "
+                >
                   <option>&lt;Type&gt;</option>
-                  <option v-for="type in filteredInterventionsTypes" :key="type.id" :value="type.id">
+                  <option
+                    v-for="type in filteredInterventionsTypes"
+                    :key="type.id"
+                    :value="type.id"
+                  >
                     {{ type.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterStatistique" @change="
-                  (event) => onFilter('stat_federal_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterStatistique"
+                  @change="
+                    (event) => onFilter('stat_federal_id', event.target.value)
+                  "
+                >
                   <option>&lt;Statistique fédérale&gt;</option>
-                  <option v-for="stat in filteredStatFederal" :key="stat.id" :value="stat.id">
+                  <option
+                    v-for="stat in filteredStatFederal"
+                    :key="stat.id"
+                    :value="stat.id"
+                  >
                     {{ stat.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterTraitement" @change="
-                  (event) =>
-                    onFilter('intervention_traitement_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterTraitement"
+                  @change="
+                    (event) =>
+                      onFilter('intervention_traitement_id', event.target.value)
+                  "
+                >
                   <option>&lt;Traitement&gt;</option>
-                  <option v-for="traitement in traitements" :key="traitement.id" :value="traitement.id">
+                  <option
+                    v-for="traitement in traitements"
+                    :key="traitement.id"
+                    :value="traitement.id"
+                  >
                     {{ traitement.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterEtendue" @change="
-                  (event) => onFilter('degre', parseInt(event.target.value))
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterEtendue"
+                  @change="
+                    (event) => onFilter('degre', parseInt(event.target.value))
+                  "
+                >
                   <option>&lt;Etendue&gt;</option>
                   <option value="1">Fausse alarme</option>
                   <option value="2">Petite</option>
@@ -130,21 +186,43 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table :class="{ 'd-none': loading }" :fields="fields" :row-class="onRowClass"
-            no-data="Aucune intervention à afficher" :data="filteredInterventions" @selected="select" :selectable="true"
-            selectKey="id" row-selected-class="table-primary">
+          <base-table
+            :class="{ 'd-none': loading }"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune intervention à afficher"
+            :data="filteredInterventions"
+            @selected="select"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
+          >
             <template v-slot:actions="props">
-              <router-link :to="'/interventions/' + props.rowData.id" custom v-slot="{ navigate }">
-                <button class="btn btn-outline-primary border-0" @click="navigate">
+              <router-link
+                :to="'/interventions/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button
+                  class="btn btn-outline-primary border-0"
+                  @click="navigate"
+                >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
-              <button class="btn btn-outline-primary border-0" @click="validerIntervention(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut === 1">
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="validerIntervention(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut === 1"
+              >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
-              <button title="supprimer" class="btn btn-outline-danger border-0"
-                @click="supprimerIntervention(props.rowData.id)" v-if="hasEditPermission && props.rowData.statut <= 3">
+              <button
+                title="supprimer"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerIntervention(props.rowData.id)"
+                v-if="hasEditPermission && props.rowData.statut <= 3"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
@@ -422,5 +500,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

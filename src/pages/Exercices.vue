@@ -26,12 +26,24 @@
           </div>
           <div class="card-body d-grid gap-2">
             <router-link custom to="/exercices/new" v-slot="{ navigate }">
-              <button @click="navigate" class="btn btn-outline-primary" v-if="hasEditPermission">
+              <button
+                @click="navigate"
+                class="btn btn-outline-primary"
+                v-if="hasEditPermission"
+              >
                 Ajouter un exercice
               </button>
             </router-link>
-            <router-link custom :to="'/exercices/' + selectedId" v-slot="{ navigate }">
-              <button :disabled="!selectedId" @click="navigate" class="btn btn-outline-primary">
+            <router-link
+              custom
+              :to="'/exercices/' + selectedId"
+              v-slot="{ navigate }"
+            >
+              <button
+                :disabled="!selectedId"
+                @click="navigate"
+                class="btn btn-outline-primary"
+              >
                 {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
               </button>
             </router-link>
@@ -43,7 +55,11 @@
               class="btn btn-outline-primary">
               Annuler
             </button> -->
-            <button :disabled="!selectedId" @click="sms({ id: selectedId })" class="btn btn-outline-primary">
+            <button
+              :disabled="!selectedId"
+              @click="sms({ id: selectedId })"
+              class="btn btn-outline-primary"
+            >
               SMS
             </button>
           </div>
@@ -56,13 +72,25 @@
             <h5>Impressions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <button class="btn btn-outline-primary" :disabled="!exercices.length" @click="convoquer">
+            <button
+              class="btn btn-outline-primary"
+              :disabled="!exercices.length"
+              @click="convoquer"
+            >
               Convocations
             </button>
-            <button :disabled="!selectedId" @click="listePresences({ id: selectedId })" class="btn btn-outline-primary">
+            <button
+              :disabled="!selectedId"
+              @click="listePresences({ id: selectedId })"
+              class="btn btn-outline-primary"
+            >
               Liste de présences
             </button>
-            <button :disabled="!selectedId" @click="listeAppel({ id: selectedId })" class="btn btn-outline-primary">
+            <button
+              :disabled="!selectedId"
+              @click="listeAppel({ id: selectedId })"
+              class="btn btn-outline-primary"
+            >
               Liste d'appel
             </button>
           </div>
@@ -77,30 +105,50 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterLocalite" @change="
-                  (event) => onFilter('localite_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterLocalite"
+                  @change="
+                    (event) => onFilter('localite_id', event.target.value)
+                  "
+                >
                   <option>&lt;Localité&gt;</option>
-                  <option v-for="loc in filteredLocalites" :key="loc.id" :value="loc.id">
+                  <option
+                    v-for="loc in filteredLocalites"
+                    :key="loc.id"
+                    :value="loc.id"
+                  >
                     {{ loc.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterCategorie" @change="
-                  (event) =>
-                    onFilter('exercice_categorie_id', event.target.value)
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterCategorie"
+                  @change="
+                    (event) =>
+                      onFilter('exercice_categorie_id', event.target.value)
+                  "
+                >
                   <option>&lt;Catégorie&gt;</option>
-                  <option v-for="categorie in filteredExercicesCategories" :key="categorie.id" :value="categorie.id">
+                  <option
+                    v-for="categorie in filteredExercicesCategories"
+                    :key="categorie.id"
+                    :value="categorie.id"
+                  >
                     {{ categorie.designation }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4">
-                <select class="form-select form-select-sm" id="filterStatus" @change="
-                  (event) => onFilter('statut', parseInt(event.target.value))
-                ">
+                <select
+                  class="form-select form-select-sm"
+                  id="filterStatus"
+                  @change="
+                    (event) => onFilter('statut', parseInt(event.target.value))
+                  "
+                >
                   <option value="-1">&lt;Statut&gt;</option>
                   <option value="0">Annulé</option>
                   <option value="1">Sapeurs à ajouter</option>
@@ -122,44 +170,85 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table v-show="!loading" ref="basetable_exercices" :selectable="true" selectKey="id"
-            row-selected-class="table-primary" @selected="selectExercice" :fields="fieldsBase"
-            :detail-row-component="detailRow" detail-row-class="m-td-0" no-data="Aucun exercice/séance à afficher"
-            :data="filteredExercices" :row-class="onRowClass">
+          <base-table
+            v-show="!loading"
+            ref="basetable_exercices"
+            :selectable="true"
+            selectKey="id"
+            row-selected-class="table-primary"
+            @selected="selectExercice"
+            :fields="fieldsBase"
+            :detail-row-component="detailRow"
+            detail-row-class="m-td-0"
+            no-data="Aucun exercice/séance à afficher"
+            :data="filteredExercices"
+            :row-class="onRowClass"
+          >
             <template v-slot:details="props">
               <div class="d-flex">
-                <button class="btn btn-link border-0" @click="props.actions.toggleDetailRow(props.rowData.id)">
-                  <font-awesome-icon v-if="props.status.detailRowVisible || false" :icon="['fas', 'angle-down']" />
-                  <font-awesome-icon v-if="!props.status.detailRowVisible || false" :icon="['fas', 'angle-right']" />
+                <button
+                  class="btn btn-link border-0"
+                  @click="props.actions.toggleDetailRow(props.rowData.id)"
+                >
+                  <font-awesome-icon
+                    v-if="props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-down']"
+                  />
+                  <font-awesome-icon
+                    v-if="!props.status.detailRowVisible || false"
+                    :icon="['fas', 'angle-right']"
+                  />
                 </button>
               </div>
             </template>
             <template v-slot:actions="props">
-              <router-link :to="'/exercices/' + props.rowData.id" custom v-slot="{ navigate }">
-                <button title="modifier" class="btn btn-outline-primary border-0" @click="navigate">
+              <router-link
+                :to="'/exercices/' + props.rowData.id"
+                custom
+                v-slot="{ navigate }"
+              >
+                <button
+                  title="modifier"
+                  class="btn btn-outline-primary border-0"
+                  @click="navigate"
+                >
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
               </router-link>
-              <button title="valider" class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)" v-if="hasValidationPermission && props.rowData.statut == 2">
+              <button
+                title="valider"
+                class="btn btn-outline-primary border-0"
+                @click="validerExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut == 2"
+              >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
-              <button title="annuler" class="btn btn-outline-warning border-0"
-                @click="annulerExercice(props.rowData.id)" v-if="
+              <button
+                title="annuler"
+                class="btn btn-outline-warning border-0"
+                @click="annulerExercice(props.rowData.id)"
+                v-if="
                   hasValidationPermission &&
                   props.rowData.statut <= 3 &&
                   props.rowData.statut > 0
-                ">
+                "
+              >
                 <font-awesome-icon :icon="['fas', 'ban']" />
               </button>
-              <button title="réactiver" class="btn btn-outline-success border-0"
+              <button
+                title="réactiver"
+                class="btn btn-outline-success border-0"
                 @click="reactiverExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut == 0">
+                v-if="hasValidationPermission && props.rowData.statut == 0"
+              >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
-              <button title="supprimer" class="btn btn-outline-danger border-0"
+              <button
+                title="supprimer"
+                class="btn btn-outline-danger border-0"
                 @click="supprimerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut <= 3">
+                v-if="hasValidationPermission && props.rowData.statut <= 3"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
@@ -415,7 +504,7 @@ table button.btn {
   padding-bottom: 0;
 }
 
-.m-td-0>td {
+.m-td-0 > td {
   padding: 0 !important;
 }
 </style>
