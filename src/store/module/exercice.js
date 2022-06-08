@@ -107,7 +107,7 @@ export default {
       return ExerciceService.validerExercice(payload).then(async (data) => {
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload,
-          statut: data,
+          statut: data?.statut,
         });
         return data;
       });
