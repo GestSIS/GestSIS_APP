@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 import EditableTree from '@/components/editable_tree/EditableTree.vue';
 

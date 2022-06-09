@@ -9,7 +9,7 @@
     <div class="modal-body">
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
-          <span class="sr-only">Chargement...</span>
+          <span class="visually-hidden">Chargement...</span>
         </div>
       </div>
     </div>

@@ -47,6 +47,14 @@
                 {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
               </button>
             </router-link>
+            <!-- <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
+              class="btn btn-outline-primary">
+              Annuler
+            </button>
+            <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
+              class="btn btn-outline-primary">
+              Annuler
+            </button> -->
             <button
               :disabled="!selectedId"
               @click="sms({ id: selectedId })"
@@ -159,7 +167,7 @@
         <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
-              <span class="sr-only">Chargement...</span>
+              <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
           <base-table
@@ -200,6 +208,7 @@
                 v-slot="{ navigate }"
               >
                 <button
+                  title="modifier"
                   class="btn btn-outline-primary border-0"
                   @click="navigate"
                 >
@@ -207,16 +216,41 @@
                 </button>
               </router-link>
               <button
+                title="valider"
                 class="btn btn-outline-primary border-0"
                 @click="validerExercice(props.rowData.id)"
                 v-if="hasValidationPermission && props.rowData.statut == 2"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
-              <!-- <button class="btn btn-outline-primary border-0" @click="validerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut <= 3">
+              <button
+                title="annuler"
+                class="btn btn-outline-warning border-0"
+                @click="annulerExercice(props.rowData.id)"
+                v-if="
+                  hasValidationPermission &&
+                  props.rowData.statut <= 3 &&
+                  props.rowData.statut > 0
+                "
+              >
+                <font-awesome-icon :icon="['fas', 'ban']" />
+              </button>
+              <button
+                title="réactiver"
+                class="btn btn-outline-success border-0"
+                @click="reactiverExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut == 0"
+              >
+                <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
+              <button
+                title="supprimer"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerExercice(props.rowData.id)"
+                v-if="hasValidationPermission && props.rowData.statut <= 3"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button> -->
+              </button>
             </template>
           </base-table>
         </div>
@@ -412,6 +446,27 @@ export default {
     },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
+    },
+    annulerExercice(id) {
+      this.$store.dispatch('annulerExercice', id);
+    },
+    reactiverExercice(id) {
+      this.$store.dispatch('reactiverExercice', id);
+    },
+    supprimerExercice(id) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cet exercice ?',
+          question:
+            "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('supprimerExercice', id);
+          }
+        },
+      });
     },
     selectExercice(row) {
       this.selectedId = row?.id;

@@ -23,12 +23,20 @@ async function loadData(_, next) {
   let loadInterventions = Promise.resolve();
   let loadStatVehicules = Promise.resolve();
   let loadStatMateriel = Promise.resolve();
+  let loadTypeIntervention = Promise.resolve();
+  let loadStatFederal = Promise.resolve();
+  let loadTraitementIntervention = Promise.resolve();
 
   // Chargement des données uniquement si exerciceComptableId défini
   if (store.state.exerciceComptable.activeId) {
     loadInterventions = store.dispatch('fetchListeIntervention');
     loadStatVehicules = store.dispatch('fetchStatistiqueMateriel');
     loadStatMateriel = store.dispatch('fetchStatistiqueVehicule');
+    loadTypeIntervention = store.dispatch('fetchStatistiqueTypeIntervention');
+    loadStatFederal = store.dispatch('fetchStatistiqueStatFederal');
+    loadTraitementIntervention = store.dispatch(
+      'fetchStatistiqueTraitementIntervention'
+    );
   }
 
   Promise.all([
@@ -40,6 +48,9 @@ async function loadData(_, next) {
     loadMateriels,
     loadStatVehicules,
     loadStatMateriel,
+    loadTypeIntervention,
+    loadStatFederal,
+    loadTraitementIntervention,
   ]).then(() => {
     next();
   });
@@ -68,6 +79,9 @@ export default {
       this.$store.dispatch('fetchListeIntervention');
       this.$store.dispatch('fetchStatistiqueMateriel');
       this.$store.dispatch('fetchStatistiqueVehicule');
+      this.$store.dispatch('fetchStatistiqueTypeIntervention');
+      this.$store.dispatch('fetchStatistiqueStatFederal');
+      this.$store.dispatch('fetchStatistiqueTraitementIntervention');
     },
   },
 };

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import store from '@/store/index';
 
 import CompteService from '@/services/CompteService.js';
@@ -198,7 +198,6 @@ export default {
         this.selectedId = null;
       });
     },
-    ...mapMutations(['SHOW_MODAL']),
   },
 };
 </script>

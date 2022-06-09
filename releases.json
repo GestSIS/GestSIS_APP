@@ -1,6 +1,34 @@
 {
   "releases": [
     {
+      "date": "08.06.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Annuler et réactiver exercice",
+        "Suppression d'exercice"
+      ]
+    },
+    {
+      "date": "06.06.2022",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout statistiques nombre d'heures par type d'intervention et par statistique fédéral",
+        "Amélioration du système de notification pour les nouveautés",
+        "Suppression de Web GestSIS"
+      ]
+    },
+    {
+      "date": "04.06.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Paramètres, ajout de la configuration des localités du SIS",
+        "Refonte de la page d'accueil"
+      ]
+    },
+    {
       "date": "29.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
@@ -30,6 +58,7 @@
       "app": "GestSIS APP",
       "changes": [
         "Ajout des politiques",
+        "Réorganisation de l'interface pour les sapeurs",
         "Sélection des sapeurs filtre additionnel pour type (sapeur/politique)",
         "Liste exercice et intervention ordré après modification",
         "Affichage des politiques uniquement dans exercices",

@@ -187,8 +187,9 @@ export default {
         return message;
       });
     },
-    selectSis({ commit }, sis) {
+    selectSis({ commit, dispatch }, sis) {
       commit(types.AUTH_SELECT_SIS, sis);
+      dispatch('fetchLocalitesSis');
       return Promise.resolve(commit(types.CLEAR_CACHE));
     },
     loadSisListe({ commit, state }) {

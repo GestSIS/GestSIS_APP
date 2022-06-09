@@ -4,11 +4,7 @@
       <div class="navbar navbar-dark bg-dark">
         <div class="container d-flex justify-content-between">
           <a href="#" class="navbar-brand">www.gestsis.ch</a>
-          <a
-            href="&#109;&#097;&#105;&#108;&#116;&#111;:&#105;&#110;&#102;&#111;&#064;&#103;&#101;&#115;&#116;&#115;&#105;&#115;&#046;&#099;&#104;"
-            class="text-white"
-            >&#105;&#110;&#102;&#111;&#064;&#103;&#101;&#115;&#116;&#115;&#105;&#115;&#046;&#099;&#104;</a
-          >
+          <a class="text-white" :href="prefix + decoded">{{ decoded }}</a>
         </div>
       </div>
     </header>
@@ -17,15 +13,12 @@
         <div class="container">
           <h1 class="jumbotron-heading">GestSIS</h1>
           <p class="lead text-muted">
-            Le logiciel GestSIS est un programme de gestion spécialement élaboré
-            pour vous aider à gèrer les données de votre SIS.
+            Programme de gestion spécialement élaboré pour vous aider à gèrer
+            les données de votre SIS.
           </p>
           <p>
             <button @click="login" class="btn btn-primary me-1">
               Accès GestSIS 2.0
-            </button>
-            <button href="#C2" class="btn btn-secondary ms-1">
-              En savoir plus
             </button>
           </p>
         </div>
@@ -33,19 +26,21 @@
 
       <div class="album text-muted">
         <div class="container">
-          <h2 id="C2">Documentation</h2>
+          <h2 id="C2">GestSIS Mobile</h2>
           <div class="row">
             <div class="card col-12">
-              <ul>
-                <li>
-                  <a href="files/manuelWebGestSIS.pdf">Manuel WebGestSIS</a>
-                </li>
-                <li>
-                  <a href="files/GestSIS-2011.ppsx"
-                    >Présentation du 07.10.2011</a
-                  >
-                </li>
-              </ul>
+              <p>
+                Saisissez vous rapports d'intervention ainsi que vos présences
+                aux exercices en mode déconnecté directement sur une tablette ou
+                un smartphone.
+              </p>
+              <p class="text-center">
+                <a
+                  class="btn btn-secondary"
+                  href="https://play.google.com/store/apps/details?id=ch.gestsis.app"
+                  >Télécharger</a
+                >
+              </p>
             </div>
           </div>
         </div>
@@ -57,7 +52,7 @@
         <p class="float-right">
           <a href="#">Back to top</a>
         </p>
-        <p>All rights reserved © 2020 GestSIS</p>
+        <p>All rights reserved © {{ new Date().getFullYear() }} GestSIS</p>
       </div>
     </footer>
   </div>
@@ -69,6 +64,12 @@ import { mapGetters } from 'vuex';
 export default {
   computed: {
     ...mapGetters(['isLoggedIn']),
+  },
+  data() {
+    return {
+      decoded: atob('c3VwcG9ydEBnZXN0c2lzLmNo'),
+      prefix: atob('bWFpbHRvOg=='),
+    };
   },
   methods: {
     login() {

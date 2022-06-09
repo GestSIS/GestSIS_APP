@@ -37,7 +37,7 @@
           v-model="activeExerciceData.exercice_categorie_id"
         >
           <option
-            v-for="categorie in listeCategories"
+            v-for="categorie in categories"
             :key="categorie.id"
             :value="categorie.id"
           >
@@ -128,7 +128,7 @@
               v-model="activeExerciceData.localite_id"
             >
               <option
-                v-for="localite in listeLocalitesSis"
+                v-for="localite in localites"
                 :key="localite.id"
                 :value="localite.id"
               >
@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
@@ -179,8 +179,8 @@ export default {
   computed: {
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
+      localites: (state) => state.localite.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      listeCategories: (state) => state.exerciceCategorie.liste,
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
@@ -188,7 +188,6 @@ export default {
       hasEditPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
     }),
-    ...mapGetters(['listeLocalitesSis']),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id;
     },

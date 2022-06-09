@@ -50,7 +50,7 @@
             <button
               :disabled="!canDelete"
               @click="supprimerIntervention(selectedId)"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-danger"
               v-if="hasEditPermission"
             >
               Supprimer
@@ -183,7 +183,7 @@
         <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-body d-flex justify-content-center" v-if="loading">
             <div class="spinner-border" role="status">
-              <span class="sr-only">Chargement...</span>
+              <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
           <base-table
@@ -216,6 +216,14 @@
                 v-if="hasValidationPermission && props.rowData.statut === 1"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
+              </button>
+              <button
+                title="supprimer"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerIntervention(props.rowData.id)"
+                v-if="hasEditPermission && props.rowData.statut <= 3"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
           </base-table>
@@ -455,7 +463,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeIntervention', this.selectedId);
+            this.$store.dispatch('removeIntervention', id);
           }
         },
       });

@@ -69,7 +69,7 @@ export default {
       );
     },
     deleteGroupe({ commit }, groupeId) {
-      return GroupeService.deleteGroupe(groupeId).then((data) =>
+      return GroupeService.deleteGroupe(groupeId).then(() =>
         commit(types.DELETE_GROUPE, groupeId)
       );
     },

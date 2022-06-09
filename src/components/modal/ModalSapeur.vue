@@ -47,7 +47,7 @@
           v-model="sapeur.civilite_id"
         >
           <option
-            v-for="civilite in listeCivilites"
+            v-for="civilite in civilites"
             :value="civilite.id"
             :key="civilite.id"
           >
@@ -94,7 +94,7 @@
             v-model="sapeur.localite_id"
           >
             <option
-              v-for="localite in listeLocalitesSis"
+              v-for="localite in localites"
               :key="localite.id"
               :value="localite.id"
             >
@@ -231,7 +231,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalSapeur',
@@ -258,9 +258,9 @@ export default {
   },
   computed: {
     ...mapState({
-      listeCivilites: (state) => state.baseData.civilites,
+      civilites: (state) => state.baseData.civilites,
+      localites: (state) => state.localite.liste,
     }),
-    ...mapGetters(['listeLocalitesSis']),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

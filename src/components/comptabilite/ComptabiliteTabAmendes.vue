@@ -11,7 +11,7 @@
         </div>
         <div class="card-body d-flex justify-content-center" v-if="loading">
           <div class="spinner-border" role="status">
-            <span class="sr-only">Chargement...</span>
+            <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
         <base-table

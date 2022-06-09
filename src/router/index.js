@@ -33,7 +33,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
+      meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
       component: () => import('@/pages/Login.vue'),
     },
     {
@@ -45,7 +45,7 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      meta: { layout: 'no-sidebar', public: true, onlyWhenLoggedOut: true },
+      meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
       component: () => import('@/pages/Register.vue'),
     },
     {
