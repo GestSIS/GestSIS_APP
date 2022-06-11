@@ -55,7 +55,22 @@
           selectKey="id"
           row-selected-class="table-primary"
           :data="computedData"
-        ></base-table>
+        >
+          <template v-slot:foot>
+            <tr>
+              <th colspan="2">Total</th>
+              <th>
+                {{
+                  computedData
+                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                    ?.toFixed(2)
+                }}
+                CHF
+              </th>
+              <th></th>
+            </tr>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>

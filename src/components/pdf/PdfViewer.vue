@@ -1,12 +1,19 @@
 <template>
   <iframe
-    v-show="pdfData"
     id="pdf-viewer"
     src=""
     type="application/pdf"
     width="100%"
-    height="500px"
-  ></iframe>
+    height="800px"
+  >
+    <html>
+      <body>
+        <object :data="pdfData" type="application/pdf">
+          <div>No online PDF viewer installed</div>
+        </object>
+      </body>
+    </html>
+  </iframe>
 </template>
 
 <script>

@@ -40,13 +40,16 @@
     <nav>
       <nav class="nav nav-tabs mb-3">
         <a
-          v-for="tab in Object.keys(tabList)"
+          v-for="[key, label] in Object.entries(tabList).filter(
+            ([key]) =>
+              !requiredPermission[key] || hasPermission(requiredPermission[key])
+          )"
           :key="tab"
           class="nav-item nav-link"
-          :class="{ active: activeTab === tabList[tab] }"
-          @click.prevent="selectTab(tabList[tab])"
+          :class="{ active: activeTab === label }"
+          @click.prevent="selectTab(label)"
           href="#"
-          >{{ tabList[tab] }}</a
+          >{{ label }}</a
         >
       </nav>
     </nav>
@@ -56,6 +59,9 @@
           <div class="col-12">
             <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
             <SapeurMutations v-if="activeTab === tabList.MUTATION" />
+            <SapeurControlesMedicaux
+              v-if="activeTab === tabList.CONTROLE_MEDICAL"
+            />
             <SapeurFonction v-if="activeTab === tabList.FONCTION" />
             <SapeurCours v-if="activeTab === tabList.COURS" />
             <SapeurPromotion v-if="activeTab === tabList.PROMOTION" />
@@ -80,6 +86,7 @@ import permissions from '@/store/permissions.js';
 const sapeurTabList = {
   GENERAL: 'General',
   MUTATION: 'Mutations',
+  CONTROLE_MEDICAL: 'Contrôles médicaux',
   FONCTION: 'Fonctions',
   COURS: 'Cours',
   PROMOTION: 'Promotion',
@@ -97,6 +104,10 @@ const politiqueTabList = {
   EXERCICE: 'Exercice',
 };
 
+const requiredPermission = {
+  CONTROLE_MEDICAL: permissions.CONTROLE_MEDICAL.TOUT,
+};
+
 import SapeurTabGeneral from '@/components/sapeur/SapeurTabGeneral.vue';
 import SapeurFonction from '@/components/sapeur/SapeurFonction.vue';
 import SapeurCours from '@/components/sapeur/SapeurCours.vue';
@@ -107,6 +118,7 @@ import SapeurPermis from '@/components/sapeur/SapeurPermis.vue';
 import SapeurBanque from '@/components/sapeur/SapeurBanque.vue';
 import SapeurExercice from '@/components/sapeur/SapeurExercice.vue';
 import SapeurMutations from '@/components/sapeur/SapeurMutations.vue';
+import SapeurControlesMedicaux from '@/components/sapeur/SapeurControlesMedicaux.vue';
 
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
@@ -138,10 +150,12 @@ export default {
     SapeurBanque,
     SapeurExercice,
     SapeurMutations,
+    SapeurControlesMedicaux,
   },
   data() {
     return {
       activeTab: sapeurTabList.GENERAL,
+      requiredPermission,
     };
   },
   props: {
@@ -159,6 +173,7 @@ export default {
   computed: {
     ...mapState({
       activeSapeur: (state) => state.sapeur.active.data,
+      permissions: (state) => state.auth.sis.permissions,
       hasEditPermission: (state) =>
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
@@ -171,6 +186,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    hasPermission(permission) {
+      return this.permissions.includes(permission);
+    },
     selectTab(tab) {
       this.activeTab = tab;
     },

@@ -418,6 +418,11 @@ export default {
                 this.selectedItem = this.exercices.find(
                   (e) => e.id == exerciceId
                 );
+              })
+              .catch((err) => {
+                this.$awn.alert(
+                  err?.message ?? "Erreur impossible d'annuler l'imputation"
+                );
               });
           }
         },

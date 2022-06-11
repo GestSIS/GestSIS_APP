@@ -44,7 +44,9 @@ const request = {
         return response;
       },
       function (error) {
-        throw error.response.data;
+        const decoder = new TextDecoder('utf-8');
+        const res = decoder.decode(error.response.data);
+        throw JSON.parse(res)?.data;
       }
     );
 

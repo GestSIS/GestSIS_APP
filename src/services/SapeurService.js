@@ -31,6 +31,9 @@ export default {
   getCours(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId + '/cours');
   },
+  getControlesMedicaux(sapeurId) {
+    return Api.api().get('/sapeurs/' + sapeurId + '/controles-medicaux');
+  },
   getMutations(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
   },

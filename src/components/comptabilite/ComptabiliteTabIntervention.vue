@@ -446,10 +446,13 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch(
-              'annulerImputationIntervention',
-              interventionId
-            );
+            this.$store
+              .dispatch('annulerImputationIntervention', interventionId)
+              .catch((err) => {
+                this.$awn.alert(
+                  err?.message ?? "Erreur impossible d'annuler l'imputation"
+                );
+              });
           }
         },
       });
