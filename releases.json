@@ -2,14 +2,15 @@
   "releases": [
     {
       "date": "11.06.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Amélioration de la gestion des erreurs pour la création de décomptes",
         "Amélioration de la gestion des erreurs pour l'imputation des frais d'exercices et interventions",
         "Ajout de la date des exercices et interventions dans le décompte",
         "Ajout du total dans les onglets `compte` et `sapeur` de la comptabilité",
-        "Ajout d'un nouvel onglet contrôles médicaux dans le module sapeur"
+        "Ajout d'un nouvel onglet `Contrôles médicaux` dans le module `sapeur`",
+        "Ajout d'un nouveau filtre dans `Contrôles médicaux` afin d'afficher uniquement les derniers contrôles médicaux de chaque type par sapeur"
       ]
     },
     {

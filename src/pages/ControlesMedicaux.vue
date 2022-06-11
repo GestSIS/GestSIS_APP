@@ -75,6 +75,17 @@
           </div>
           <div class="card-body">
             <div class="row">
+              <div class="col-md-12 mb-2">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="only_latest"
+                  v-model="latest"
+                />
+                <label class="form-check-label ms-2" for="only_latest"
+                  >Derniers contrôles de chaque sapeurs</label
+                >
+              </div>
               <div class="col-md-6">
                 <select
                   class="form-select form-select-sm"
@@ -264,6 +275,7 @@ export default {
   },
   data() {
     return {
+      latest: true,
       loading: true,
       selectedItem: null,
       filters: {},
@@ -345,7 +357,7 @@ export default {
     }),
     computedData() {
       const now = Date.now();
-      return this.controlesMedicaux
+      const data = this.controlesMedicaux
         .map((s) => {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           const age = Math.floor(
@@ -364,7 +376,25 @@ export default {
               ?.designation,
           };
         })
-        .sort((a, b) => a.sapeur.localeCompare(b.sapeur));
+        .sort(
+          (a, b) =>
+            a.sapeur.localeCompare(b.sapeur) ||
+            b.consultation.localeCompare(a.consultation)
+        );
+
+      // Additional filter check
+      if (!this.latest) {
+        return data;
+      }
+
+      const index = new Set();
+      return data.reduce((acc, e) => {
+        if (!index.has(e.sapeur + '_' + e.controle_medical_type_id)) {
+          index.add(e.sapeur + '_' + e.controle_medical_type_id);
+          acc.push(e);
+        }
+        return acc;
+      }, []);
     },
     filteredControles() {
       return this.computedData.filter(
