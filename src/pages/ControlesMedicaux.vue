@@ -84,12 +84,8 @@
                   "
                 >
                   <option>&lt;Type&gt;</option>
-                  <option
-                    v-for="type in filteredTypes"
-                    :key="type.id"
-                    :value="type.id"
-                  >
-                    {{ type.designation }}
+                  <option v-for="t in filteredTypes" :key="t.id" :value="t.id">
+                    {{ t.designation }}
                   </option>
                 </select>
               </div>

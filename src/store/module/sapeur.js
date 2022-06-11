@@ -6,15 +6,16 @@ export default {
     liste: [],
     active: {
       id: 0,
-      permis: [],
       data: {},
-      telephones: [],
-      groupes: [],
+      cours: [],
+      permis: [],
       grades: [],
+      groupes: [],
       fonctions: [],
       mutations: [],
-      cours: [],
       exercices: [],
+      controles: [],
+      telephones: [],
     },
   },
   mutations: {
@@ -22,15 +23,16 @@ export default {
       state.liste = [];
       state.active = {
         id: 0,
-        permis: [],
         data: {},
-        telephones: [],
-        groupes: [],
+        cours: [],
+        permis: [],
         grades: [],
+        groupes: [],
         fonctions: [],
         mutations: [],
-        cours: [],
         exercices: [],
+        controles: [],
+        telephones: [],
       };
     },
     [types.UPDATE_SAPEURS_LISTE](state, payload) {
@@ -83,6 +85,9 @@ export default {
     },
     [types.UPDATE_CURRENT_SAPEUR_MUTATIONS](state, payload) {
       state.active.mutations = payload;
+    },
+    [types.UPDATE_CURRENT_SAPEUR_CONTROLES_MEDICAUX](state, payload) {
+      state.active.controles = payload;
     },
     [types.UPDATE_CURRENT_SAPEUR_EXERCICES](state, payload) {
       state.active.exercices = payload;
@@ -266,6 +271,11 @@ export default {
     fetchSapeurCours({ commit, state }) {
       return SapeurService.getCours(state.active.id).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
+      );
+    },
+    fetchSapeurControlesMedicaux({ commit, state }) {
+      return SapeurService.getControlesMedicaux(state.active.id).then((data) =>
+        commit(types.UPDATE_CURRENT_SAPEUR_CONTROLES_MEDICAUX, data)
       );
     },
     fetchSapeurMutations({ commit, state }) {

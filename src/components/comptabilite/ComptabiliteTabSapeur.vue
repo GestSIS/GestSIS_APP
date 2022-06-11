@@ -79,7 +79,7 @@
           <template v-slot:foot>
             <tr>
               <th></th>
-              <th colspan="3">Total</th>
+              <th colspan="2">Total</th>
               <th>
                 {{
                   computedData

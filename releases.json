@@ -8,7 +8,8 @@
         "Amélioration de la gestion des erreurs pour la création de décomptes",
         "Amélioration de la gestion des erreurs pour l'imputation des frais d'exercices et interventions",
         "Ajout de la date des exercices et interventions dans le décompte",
-        "Ajout du total dans les onglets `compte` et `sapeur` de la comptabilité"
+        "Ajout du total dans les onglets `compte` et `sapeur` de la comptabilité",
+        "Ajout d'un nouvel onglet contrôles médicaux dans le module sapeur"
       ]
     },
     {
