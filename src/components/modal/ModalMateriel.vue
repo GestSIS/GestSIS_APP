@@ -69,6 +69,7 @@
             id="medecin-status-modal"
             v-model="activeMateriel.statut"
             :true-value="1"
+            :false-value="0"
           />
           <label class="form-check-label" for="medecin-status-modal"
             >Actif</label
@@ -101,7 +102,7 @@ export default {
     return {
       errors: {},
       activeMateriel: {
-        actif: 1,
+        statut: 1,
       },
     };
   },
