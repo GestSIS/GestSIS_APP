@@ -84,7 +84,7 @@
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Présences aux exercices</h3>
         </div>
-        <div class="table-responsive">
+        <div class="">
           <table class="table table-sm table-header-rotated">
             <thead>
               <tr>
@@ -117,14 +117,14 @@
                   Aucun sapeur à afficher
                 </td>
               </tr>
-              <tr v-for="s in computedData" :key="s.id">
+              <tr v-for="s in computedData" :key="s.id" @click="selectedSapeurId = s.id" :class="{'table-primary' : selectedSapeurId == s.id}">
                 <td>{{ s.nom }} {{ s.prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
                 <td>{{ formatFonction(s.fonction_id) }}</td>
                 <td
                   v-for="(p, index) in s.presences"
                   :key="index"
-                  class="text-center"
+                  class="text-center table-border"
                   :class="formatPresenceClass(p)"
                 >
                   {{ formatPresence(p) }}
@@ -194,6 +194,7 @@ export default {
   name: 'stat-exercice-presences',
   data() {
     return {
+      selectedSapeurId: null,
       unselectedCategories: [],
       unselectedSapeurDe: [],
       unselectedExerciceA: [],
@@ -428,6 +429,10 @@ export default {
   white-space: nowrap;
 }
 
+.table-border {
+  border-width: 1px;
+}
+
 .table-header-rotated th.rotate > div {
   -webkit-transform: translate(25px, 1px) rotate(315deg);
   -ms-transform: translate(25px, 1px) rotate(315deg);
@@ -443,5 +448,12 @@ export default {
 .table-header-rotated th.row-header {
   padding: 0 10px;
   border-bottom: 1px solid #ccc;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  background-color: white;
 }
 </style>
