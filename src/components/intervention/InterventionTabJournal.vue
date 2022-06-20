@@ -31,7 +31,12 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Appels</h3>
-            <button type="button" class="btn btn-primary" @click="newAppel" v-if="hasEditPermission">
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="newAppel"
+              v-if="hasEditPermission"
+            >
               Ajouter un appel
             </button>
           </div>
@@ -57,10 +62,18 @@
                   <td>{{ a.commentaire }}</td>
                   <td v-if="hasEditPermission">
                     <div class="d-flex justify-content-center">
-                      <button type="button" class="btn btn-outline-primary border-0" @click="editAppel(a.id)">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0"
+                        @click="editAppel(a.id)"
+                      >
                         <font-awesome-icon :icon="['far', 'edit']" />
                       </button>
-                      <button type="button" class="btn btn-outline-danger border-0" @click="supprimerAppel(a.id)">
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="supprimerAppel(a.id)"
+                      >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
                     </div>
@@ -76,7 +89,12 @@
           <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Missions</h3>
-            <button type="button" class="btn btn-primary" @click="newMission" v-if="hasEditPermission">
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="newMission"
+              v-if="hasEditPermission"
+            >
               Ajouter une mission
             </button>
           </div>
@@ -106,10 +124,18 @@
                   <td>{{ m.resume }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
-                      <button type="button" class="btn btn-outline-primary border-0" @click="editMission(m.id)">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary border-0"
+                        @click="editMission(m.id)"
+                      >
                         <font-awesome-icon :icon="['far', 'edit']" />
                       </button>
-                      <button type="button" class="btn btn-outline-danger border-0" @click="supprimerMission(m.id)">
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger border-0"
+                        @click="supprimerMission(m.id)"
+                      >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
                     </div>
@@ -150,8 +176,10 @@ export default {
     },
     events() {
       let events = [];
-      const missionAction = this.hasEditPermission ? this.editMission : () => { };
-      const appelAction = this.hasEditPermission ? this.editAppel : () => { };
+      const missionAction = this.hasEditPermission
+        ? this.editMission
+        : () => {};
+      const appelAction = this.hasEditPermission ? this.editAppel : () => {};
       this.missions.forEach((m) => {
         events.push({
           id: m.id,
@@ -199,13 +227,13 @@ export default {
         title: "Debut de l'intervention",
         description: chefIntervention
           ? "Chef d'intervention : " +
-          chefIntervention.nom +
-          ' ' +
-          chefIntervention.prenom
+            chefIntervention.nom +
+            ' ' +
+            chefIntervention.prenom
           : '',
         type: 'start',
         colorClass: 'default',
-        action: () => { }
+        action: () => {},
       };
 
       let duree = Math.abs(new Date(endDate) - new Date(startDate)) / 36e5;
@@ -215,7 +243,7 @@ export default {
         description: 'Durée ' + duree + ' heures',
         type: 'end',
         colorClass: 'default',
-        action: () => { }
+        action: () => {},
       };
 
       return [
@@ -350,7 +378,7 @@ export default {
     margin-top: 25px;
   }
 
-  >li {
+  > li {
     margin-bottom: 20px;
     position: relative;
 
@@ -364,7 +392,7 @@ export default {
       clear: both;
     }
 
-    >.timeline-panel {
+    > .timeline-panel {
       border-radius: 2px;
       border: 1px solid #d4d4d4;
       box-shadow: 0 1px 2px rgba(100, 100, 100, 0.2);
@@ -400,7 +428,7 @@ export default {
             }
           }
 
-          .controls+.timestamp {
+          .controls + .timestamp {
             padding-left: 5px;
           }
         }
@@ -423,7 +451,7 @@ export default {
       z-index: 100;
     }
 
-    .timeline-badge+.timeline-panel {
+    .timeline-badge + .timeline-panel {
       &:before {
         border-bottom: 15px solid transparent;
         border-left: 0 solid #ccc;
@@ -457,17 +485,17 @@ export default {
 
 .timeline-badge {
   &.mission-ended {
-    background-color: $success  !important;
+    background-color: $success !important;
     opacity: 0.8;
   }
 
   &.mission-running {
-    background-color: $warning  !important;
+    background-color: $warning !important;
     opacity: 0.8;
   }
 
   &.appel {
-    background-color: $primary  !important;
+    background-color: $primary !important;
     opacity: 0.8;
   }
 }
@@ -478,13 +506,12 @@ export default {
 }
 
 .timeline-body {
-
-  >p,
-  >ul {
+  > p,
+  > ul {
     margin-bottom: 0;
   }
 
-  >p+p {
+  > p + p {
     margin-top: 5px;
   }
 }
@@ -496,7 +523,7 @@ export default {
   color: #aaa;
   font-size: 11px;
 
-  >* {
+  > * {
     color: #444;
   }
 }

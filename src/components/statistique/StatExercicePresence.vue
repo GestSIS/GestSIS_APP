@@ -117,7 +117,12 @@
                   Aucun sapeur à afficher
                 </td>
               </tr>
-              <tr v-for="s in computedData" :key="s.id" @click="selectedSapeurId = s.id" :class="{'table-primary' : selectedSapeurId == s.id}">
+              <tr
+                v-for="s in computedData"
+                :key="s.id"
+                @click="selectedSapeurId = s.id"
+                :class="{ 'table-primary': selectedSapeurId == s.id }"
+              >
                 <td>{{ s.nom }} {{ s.prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
                 <td>{{ formatFonction(s.fonction_id) }}</td>
