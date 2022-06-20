@@ -9,42 +9,22 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="heure">Heure</label>
-        <input
-          type="datetime-local"
-          v-model="activeAppel.date2"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date'] }"
-          id="heure"
-          :min="min"
-          :max="max"
-        />
+        <input type="datetime-local" v-model="activeAppel.date2" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['date'] }" id="heure" :min="min" :max="max" />
       </div>
       <div class="mb-3">
-        <base-autocomplete
-          v-model="activeAppel.nom"
-          :items="listTelephones.map((t) => t.nom)"
-          :error="!!errors['nom']"
-          title="Correspondant"
-        />
+        <base-autocomplete v-model="activeAppel.nom" :items="listTelephones.map((t) => t.nom)" :error="!!errors['nom']"
+          title="Correspondant" />
       </div>
       <div class="mb-3">
         <label for="numero">Numéro</label>
-        <input
-          type="text"
-          v-model="activeAppel.numero"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['numero'] }"
-          id="numero"
-        />
+        <input type="text" v-model="activeAppel.numero" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['numero'] }" id="numero" />
       </div>
       <div class="mb-3">
         <label for="commentaire">Commentaire</label>
-        <textarea
-          v-model="activeAppel.commentaire"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['commentaire'] }"
-          id="commentaire"
-        ></textarea>
+        <textarea v-model="activeAppel.commentaire" class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['commentaire'] }" id="commentaire"></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -108,12 +88,12 @@ export default {
     }
     this.activeAppel = this.data.appel;
 
-    this.min = DateTime.fromSQL(this.data.min).toISO();
-    this.max = DateTime.fromSQL(this.data.max).toISO();
+    this.min = DateTime.fromSQL(this.data.min)?.toISO();
+    this.max = DateTime.fromSQL(this.data.max)?.toISO();
 
     this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date)
-      .toISO()
-      .slice(0, 16);
+      ?.toISO()
+      ?.slice(0, 16);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -132,13 +112,13 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-                date: errors['appels.0.date'],
-                nom: errors['appels.0.nom'],
-                numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire'],
-              })
+            (this.errors = {
+              ...errors,
+              date: errors['appels.0.date'],
+              nom: errors['appels.0.nom'],
+              numero: errors['appels.0.numero'],
+              commentaire: errors['appels.0.commentaire'],
+            })
           );
       } else {
         this.$store
@@ -152,13 +132,13 @@ export default {
           })
           .catch(
             (errors) =>
-              (this.errors = {
-                ...errors,
-                date: errors['appels.0.date'],
-                nom: errors['appels.0.nom'],
-                numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire'],
-              })
+            (this.errors = {
+              ...errors,
+              date: errors['appels.0.date'],
+              nom: errors['appels.0.nom'],
+              numero: errors['appels.0.numero'],
+              commentaire: errors['appels.0.commentaire'],
+            })
           );
       }
     },
@@ -166,4 +146,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
