@@ -31,18 +31,9 @@
 
     <!-- Sidebar Menu -->
     <nav class="menu-options mt-2">
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="false"
-      >
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
-          <router-link
-            :to="link.to"
-            class="nav-link internal-link"
-            active-class="active"
-          >
+          <router-link :to="link.to" class="nav-link internal-link" active-class="active">
             <font-awesome-icon :icon="link.icon" />
             <span>{{ link.nom }}</span>
           </router-link>
@@ -89,9 +80,12 @@ export default {
 hr {
   width: 100%;
 }
+
 .menu-otpions {
-  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto; /*adds scroll to this container*/
+  flex-grow: 1;
+  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;
+  /*adds scroll to this container*/
 }
 
 /* Shrinking the sidebar from 250px to 80px and center aligining its content*/
@@ -107,10 +101,14 @@ hr {
   height: 100%;
   flex-direction: column;
 }
+
 .sidebar {
-  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto; /*adds scroll to this container*/
+  flex-grow: 1;
+  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;
+  /*adds scroll to this container*/
 }
+
 svg {
   margin-right: 0.8rem;
 }
@@ -119,13 +117,16 @@ svg {
   padding: 1rem;
   font-size: 1.6em;
 }
+
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 .sidebar-header strong {
   display: none;
 }
+
 #sidebar.active .sidebar-header h3 {
   display: none;
 }
+
 #sidebar.active .sidebar-header strong {
   display: block;
 }
@@ -175,7 +176,8 @@ a:focus {
   transition: all 0.3s;
 }
 
-@import 'node_modules/bootswatch/dist/cosmo/variables.scss';
+@import 'bootswatch/dist/cosmo/variables.scss';
+
 ul li a:hover {
   color: $primary;
   background: #fff;

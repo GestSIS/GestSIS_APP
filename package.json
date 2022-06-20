@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
+    "preview": "vite preview",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
@@ -37,6 +37,7 @@
     "eslint": "^8.18.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^9.1.1",
+    "lodash.camelcase": "^4.3.0",
     "prettier": "^2.7.1",
     "sass": "^1.52.3",
     "vite": "^2.9.12"

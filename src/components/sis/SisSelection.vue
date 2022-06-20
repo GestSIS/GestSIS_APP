@@ -4,17 +4,8 @@
     <div class="info">
       <div class="mb-3">
         <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
-        <select
-          class="form-select form-select-sm"
-          id="inputGroupSelect01"
-          @change="selectSis($event)"
-          v-model="sisId"
-        >
-          <option
-            v-for="sis in availableSisListe"
-            :key="sis.id"
-            :value="sis.id"
-          >
+        <select class="form-select form-select-sm" id="inputGroupSelect01" @change="selectSis($event)" v-model="sisId">
+          <option v-for="sis in availableSisListe" :key="sis.id" :value="sis.id">
             {{ sis.nom }}
           </option>
         </select>
@@ -73,9 +64,12 @@ export default {
 hr {
   width: 100%;
 }
+
 .menu-otpions {
-  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto; /*adds scroll to this container*/
+  flex-grow: 1;
+  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;
+  /*adds scroll to this container*/
 }
 
 /* Shrinking the sidebar from 250px to 80px and center aligining its content*/
@@ -91,10 +85,14 @@ hr {
   height: 100%;
   flex-direction: column;
 }
+
 .sidebar {
-  flex-grow: 1; /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto; /*adds scroll to this container*/
+  flex-grow: 1;
+  /*ensures that the container will take up the full height of the parent container*/
+  overflow-y: auto;
+  /*adds scroll to this container*/
 }
+
 svg {
   margin-right: 0.8rem;
 }
@@ -103,13 +101,16 @@ svg {
   padding: 1rem;
   font-size: 1.6em;
 }
+
 /* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
 .sidebar-header strong {
   display: none;
 }
+
 #sidebar.active .sidebar-header h3 {
   display: none;
 }
+
 #sidebar.active .sidebar-header strong {
   display: block;
 }
@@ -159,7 +160,8 @@ a:focus {
   transition: all 0.3s;
 }
 
-@import 'node_modules/bootswatch/dist/cosmo/variables.scss';
+@import 'bootswatch/dist/cosmo/variables.scss';
+
 ul li a:hover {
   color: $primary;
   background: #fff;

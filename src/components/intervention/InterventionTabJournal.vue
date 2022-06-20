@@ -453,7 +453,7 @@ export default {
   }
 }
 
-@import 'node_modules/bootswatch/dist/cosmo/variables.scss';
+@import 'bootswatch/dist/cosmo/variables.scss';
 
 .timeline-badge {
   &.mission-ended {

@@ -1411,6 +1411,7 @@ __metadata:
     eslint-plugin-vue: ^9.1.1
     floating-vue: ^2.0.0-y.0
     jwt-decode: ^3.1.2
+    lodash.camelcase: ^4.3.0
     luxon: ^2.4.0
     nprogress: ^0.2.0
     prettier: ^2.7.1
@@ -1724,6 +1725,13 @@ __metadata:
     prelude-ls: ^1.2.1
     type-check: ~0.4.0
   checksum: 12c5021c859bd0f5248561bf139121f0358285ec545ebf48bb3d346820d5c61a4309535c7f387ed7d84361cf821e124ce346c6b7cef8ee09a67c1473b46d0fc4
+  languageName: node
+  linkType: hard
+
+"lodash.camelcase@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "lodash.camelcase@npm:4.3.0"
+  checksum: cb9227612f71b83e42de93eccf1232feeb25e705bdb19ba26c04f91e885bfd3dd5c517c4a97137658190581d3493ea3973072ca010aab7e301046d90740393d1
   languageName: node
   linkType: hard
 

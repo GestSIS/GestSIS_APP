@@ -1,4 +1,4 @@
-import camelCase from 'lodash/camelCase';
+import camelCase from 'lodash.camelcase';
 // Storing in variable a context with all files in this folder
 // ending with `.js`.
 const requireModule = import.meta.globEager('./*.js');
