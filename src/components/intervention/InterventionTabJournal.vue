@@ -35,7 +35,7 @@
               Ajouter un appel
             </button>
           </div>
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table id="int-appels" class="table table-sm">
               <thead>
                 <tr>
@@ -80,7 +80,7 @@
               Ajouter une mission
             </button>
           </div>
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table id="int-mission" class="table table-sm">
               <thead>
                 <tr>
