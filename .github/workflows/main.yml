@@ -23,6 +23,16 @@ jobs:
       - name: Yarn install
         run: yarn
 
+      - name: Configure environement variables
+        run: |
+          cat >>.env <<END
+          VITE_API_ENDPOINT=$VITE_API_ENDPOINT
+          VITE_AUTH_ENDPOINT=$VITE_AUTH_ENDPOINT
+          END
+        env:
+          SSH_USER: ${{ secrets.VITE_API_ENDPOINT }}
+          SSH_KEY: ${{ secrets.VITE_AUTH_ENDPOINT }}
+
       - name: build
         run: yarn build
 
