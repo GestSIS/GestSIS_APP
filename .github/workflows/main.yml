@@ -16,16 +16,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - run: npm add -g yarn
-      - run: yarn
-      - run: yarn build
-  
-  deploy:
-    needs: build
-    name: "Deploy"
-    runs-on: ubuntu-latest
 
-    steps:
+      - name: Install yarn
+        run: npm add -g yarn
+
+      - name: Yarn install
+        run: yarn
+
+      - name: build
+        run: yarn build
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
