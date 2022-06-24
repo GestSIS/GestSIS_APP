@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "25.06.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout d'un paramètre `pro-rata` pour le calcul du tarif min dans les indemnités d'intervention"
+      ]
+    },
+    {
       "date": "20.06.2022",
       "version": "2.0",
       "app": "GestSIS APP",

@@ -28,6 +28,7 @@
                 <th>Tarif</th>
                 <th>Tarif min</th>
                 <th>Pour</th>
+                <th class="text-center">Pro-rata</th>
                 <th>Taux nuit</th>
                 <th>Taux weekend</th>
                 <th>Unité</th>
@@ -54,6 +55,13 @@
                 <td>{{ indemnite.tarif }}</td>
                 <td>{{ indemnite.tarif_min }}</td>
                 <td>{{ indemnite.tarif_min_pour }}</td>
+                <td class="text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    v-model="indemnite.tarif_min_pro_rata"
+                  />
+                </td>
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
                 <td>
@@ -129,6 +137,7 @@
               <th>Tarif</th>
               <th>Tarif min</th>
               <th>Pour</th>
+              <th class="text-center">Pro-rata</th>
               <th>Taux weekend</th>
               <th>Taux nuit</th>
               <th>Total</th>
@@ -151,6 +160,13 @@
               <td>{{ ecriture.tarif }}</td>
               <td>{{ ecriture.tarif_min }}</td>
               <td>{{ ecriture.tarif_min_pour }}</td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  v-model="ecriture.tarif_min_pro_rata"
+                />
+              </td>
               <td>{{ ecriture.taux_weekend }}</td>
               <td>{{ ecriture.taux_nuit }}</td>
               <td>{{ ecriture.total }}</td>
