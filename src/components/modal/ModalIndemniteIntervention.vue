@@ -77,7 +77,7 @@
               id="tarif_min_pour"
             />
           </div>
-          <div class="mb-3 col-7">
+          <div class="mb-3 col-4">
             <label for="unite">Unité</label>
             <select
               id="unite"
@@ -89,6 +89,25 @@
                 {{ u.unite }}
               </option>
             </select>
+          </div>
+          <div class="mb-3 col-3">
+            <label for="pro-rata">Pro-rata</label>
+            <font-awesome-icon
+              class="ms-1"
+              v-tooltip.bottom="
+                'A cocher si le montant du tarif min doit être calculé au pro-rata du nombre d\'heures effectuées.'
+              "
+              :icon="['far', 'question-circle']"
+            />
+            <div class="form-check text-center col-6">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="pro-rata"
+                v-model="activeIndemnite.tarif_min_pro_rata"
+              />
+              <label class="form-check-label" for="pro-rata"></label>
+            </div>
           </div>
           <div class="mb-3 col-12">
             <label for="phase_id">Tarif min pour phase</label>
@@ -214,6 +233,7 @@ export default {
       activeIndemnite: {
         phase_id: 0,
         par_fonction: 0,
+        tarif_min_pro_rata: false,
       },
       imputationType: 1,
     };

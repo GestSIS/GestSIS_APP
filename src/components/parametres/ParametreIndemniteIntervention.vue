@@ -15,6 +15,7 @@
             <th>Tarif</th>
             <th>Tarif min</th>
             <th>Pour</th>
+            <th class="text-center">Pro-rata</th>
             <th>Unité</th>
             <th>Phase</th>
             <th>Taux week-end</th>
@@ -34,6 +35,13 @@
             <td>{{ i.tarif }}</td>
             <td>{{ i.tarif_min }}</td>
             <td>{{ i.tarif_min_pour }}</td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                v-model="i.tarif_min_pro_rata"
+              />
+            </td>
             <td>{{ unite(i.type_unite_id) }}</td>
             <td>{{ phase(i.phase_id) }}</td>
             <td>{{ i.taux_weekend }}</td>

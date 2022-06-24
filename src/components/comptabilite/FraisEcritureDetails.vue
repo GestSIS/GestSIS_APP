@@ -28,7 +28,16 @@
             :key="index"
             :class="column.className || ''"
           >
-            {{ computeColumn(column, ecriture) }}
+            {{
+              column?.slot != 'checkbox' ? computeColumn(column, ecriture) : ''
+            }}
+            <input
+              v-if="column?.slot == 'checkbox'"
+              type="checkbox"
+              disabled
+              :checked="computeColumn(column, ecriture)"
+              class="form-check-input"
+            />
           </td>
         </tr>
       </tbody>

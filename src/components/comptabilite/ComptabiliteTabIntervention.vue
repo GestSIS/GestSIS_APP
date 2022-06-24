@@ -126,6 +126,15 @@
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
+          <template v-slot:checkbox="{ key, value, rowData }">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              :id="key + '-' + rowData.id"
+              :checked="value"
+              disabled
+            />
+          </template>
         </base-table>
       </div>
     </div>
@@ -222,6 +231,13 @@ export default {
           field: 'tarif_min_pour',
           headerClassName: 'text-center',
           className: 'text-end',
+        },
+        {
+          title: 'Pro-rata',
+          field: 'tarif_min_pro_rata',
+          headerClassName: 'text-center',
+          className: 'text-center',
+          slot: 'checkbox',
         },
         {
           title: 'Unité',
