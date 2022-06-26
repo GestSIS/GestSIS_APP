@@ -27,6 +27,16 @@ export default {
   downloadDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(`/decomptes/${decompteId}/print`);
   },
+  downloadDecompteParSapeur(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/print-par-sapeur`
+    );
+  },
+  downloadDecompteParCompte(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/print-par-compte`
+    );
+  },
   downloadIso20022PourDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
       `/decomptes/${decompteId}/iso20022`
