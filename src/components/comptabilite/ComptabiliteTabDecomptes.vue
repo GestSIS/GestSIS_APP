@@ -28,10 +28,16 @@
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedId"
-            @click="impression(selectedId)"
+            @click="impressionStandard(selectedId)"
           >
             Impression
           </button>
+          <!-- <button class="btn btn-outline-primary" :disabled="!selectedId" @click="impressionParSapeur(selectedId)">
+            Impression par sapeur
+          </button>
+          <button class="btn btn-outline-primary" :disabled="!selectedId" @click="impressionParCompte(selectedId)">
+            Impression par compte
+          </button> -->
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedId"
@@ -294,9 +300,33 @@ export default {
         },
       });
     },
-    impression(decompteId) {
+    impressionStandard(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
       DecompteService.downloadDecompte(
+        decompteId,
+        `decompte_${decompte.date}.xml`
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
+    impressionParSapeur(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
+      DecompteService.downloadDecompteParSapeur(
+        decompteId,
+        `decompte_${decompte.date}.xml`
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.message ||
+            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
+    impressionParCompte(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
+      DecompteService.downloadDecompteParCompte(
         decompteId,
         `decompte_${decompte.date}.xml`
       ).catch((err) => {

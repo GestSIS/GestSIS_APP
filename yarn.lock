@@ -107,7 +107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/vue-fontawesome@npm:^3.0.0-5":
+"@fortawesome/vue-fontawesome@npm:^3.0.1":
   version: 3.0.1
   resolution: "@fortawesome/vue-fontawesome@npm:3.0.1"
   peerDependencies:
@@ -1283,7 +1283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"floating-vue@npm:^2.0.0-y.0":
+"floating-vue@npm:^2.0.0-beta.17":
   version: 2.0.0-y.0
   resolution: "floating-vue@npm:2.0.0-y.0"
   dependencies:
@@ -1396,7 +1396,7 @@ __metadata:
     "@fortawesome/free-brands-svg-icons": ^6.1.1
     "@fortawesome/free-regular-svg-icons": ^6.1.1
     "@fortawesome/free-solid-svg-icons": ^6.1.1
-    "@fortawesome/vue-fontawesome": ^3.0.0-5
+    "@fortawesome/vue-fontawesome": ^3.0.1
     "@popperjs/core": ^2.11.5
     "@vitejs/plugin-vue": ^2.3.3
     "@vue/compiler-sfc": ^3.2.37
@@ -1409,16 +1409,16 @@ __metadata:
     eslint: ^8.18.0
     eslint-plugin-prettier: ^4.0.0
     eslint-plugin-vue: ^9.1.1
-    floating-vue: ^2.0.0-y.0
+    floating-vue: ^2.0.0-beta.17
     jwt-decode: ^3.1.2
     lodash.camelcase: ^4.3.0
     luxon: ^2.4.0
     nprogress: ^0.2.0
     prettier: ^2.7.1
-    sass: ^1.52.3
+    sass: ^1.53.0
     vite: ^2.9.12
     vue: ^3.2.37
-    vue-advanced-cropper: ^2.8.2
+    vue-advanced-cropper: ^2.8.3
     vue-router: ^4.0.16
     vuedraggable: ^4.1.0
     vuex: ^4.0.2
@@ -2294,16 +2294,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.52.3":
-  version: 1.52.3
-  resolution: "sass@npm:1.52.3"
+"sass@npm:^1.53.0":
+  version: 1.53.0
+  resolution: "sass@npm:1.53.0"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 175a073c0e7b67d1baff6d3969431228002ece681886cebc2a354c241134ff120fda5c12a0465989966dacfb1ca518d85507304f4d4cd03d4a91d71dbc77d978
+  checksum: 4bcb0617d6a4d1f2c089a1cb5c32f65a9ee874b23559f2742fab07cf8478fb74ad20c0730cf9f93915d7dbfc258901f89970674228c3ac91c3883a0a62a0ddab
   languageName: node
   linkType: hard
 
@@ -2588,16 +2588,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-advanced-cropper@npm:^2.8.2":
-  version: 2.8.2
-  resolution: "vue-advanced-cropper@npm:2.8.2"
+"vue-advanced-cropper@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "vue-advanced-cropper@npm:2.8.3"
   dependencies:
     classnames: ^2.2.6
     debounce: ^1.2.0
     easy-bem: ^1.0.2
   peerDependencies:
     vue: ^3.0.0
-  checksum: 4b415d0b0dc101ea600a1ca2984de305a4d488927e1d010205ae381745e54c00e43f6ecd525bd9cdb286fd83ac9220fa21ba076c1dea1aba84b5e4aafb31d15b
+  checksum: 5194f39eaa270739b5b73ac77a1a7bef98e9179a9f77544520c86373dafd1bba8fcc2d465681409252adc3c28415e160094a67e0307adba17f7b31542b13f558
   languageName: node
   linkType: hard
 

@@ -1,6 +1,21 @@
 {
   "releases": [
     {
+      "date": "26.06.2022",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.7",
+      "changes": [
+        "Fenêtre de reconnexion en cas d'expiration de login",
+        "Changement de l'heure d'arrivée des sapeurs lors du changement de l'heure de début d'intervention",
+        "Tri des missions par date dans l'onglet mission",
+        "Ajout d'un filtre dans l'onglet mission pour filtrer sur les missions en cours",
+        "Amélioration de l'affiche de la fenêtre de saisie de date en mode sombre",
+        "Filtre des politiques pour les interventions",
+        "Pré-filtre sur les sapeurs présents pour l'assignation de missions",
+        "Pré-filtre sur les localités du SIS pour les interventions"
+      ]
+    },
+    {
       "date": "25.06.2022",
       "version": "1.0",
       "app": "GestSIS APP",
