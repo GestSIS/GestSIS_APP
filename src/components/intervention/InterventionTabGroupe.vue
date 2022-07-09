@@ -19,7 +19,7 @@
           <thead>
             <tr>
               <th>Groupe</th>
-              <th>Alarmé</th>
+              <th class="text-center">Alarmé</th>
             </tr>
           </thead>
           <tbody id="groupes">

@@ -28,10 +28,12 @@ jobs:
           cat >>.env <<END
           VITE_API_ENDPOINT=$VITE_API_ENDPOINT
           VITE_AUTH_ENDPOINT=$VITE_AUTH_ENDPOINT
+          VITE_PRINT_ENDPOINT=$VITE_PRINT_ENDPOINT
           END
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
           VITE_AUTH_ENDPOINT: ${{ secrets.VITE_AUTH_ENDPOINT }}
+          VITE_PRINT_ENDPOINT: ${{ secrets.VITE_PRINT_ENDPOINT }}
 
       - name: build
         run: yarn build
