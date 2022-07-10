@@ -2,9 +2,9 @@ import Api from '@/http/Request';
 
 export default {
   downloadConvocations(exerciceComptableId, params) {
-    return Api.apiFileDownload('convocations.pdf').post(
+    return Api.print('convocations.pdf').get(
       '/convocation/' + exerciceComptableId,
-      params
+      { params }
     );
   },
 };

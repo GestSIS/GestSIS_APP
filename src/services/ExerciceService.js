@@ -42,12 +42,12 @@ export default {
     });
   },
   downloadListPresence(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(
+    return Api.print(filename).get(
       `/exercices/${exerciceId}/liste-presence`
     );
   },
   downloadListAppel(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(
+    return Api.print(filename).get(
       `/exercices/${exerciceId}/liste-appel`
     );
   },

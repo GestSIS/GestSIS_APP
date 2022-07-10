@@ -25,15 +25,15 @@ export default {
     return Api.api().get(`decomptes/${decompteId}/ecritures`);
   },
   downloadDecompte(decompteId, filename) {
-    return Api.apiFileDownload(filename).get(`/decomptes/${decompteId}/print`);
+    return Api.print(filename).get(`/decomptes/${decompteId}/print`);
   },
   downloadDecompteParSapeur(decompteId, filename) {
-    return Api.apiFileDownload(filename).get(
+    return Api.print(filename).get(
       `/decomptes/${decompteId}/print-par-sapeur`
     );
   },
   downloadDecompteParCompte(decompteId, filename) {
-    return Api.apiFileDownload(filename).get(
+    return Api.print(filename).get(
       `/decomptes/${decompteId}/print-par-compte`
     );
   },
