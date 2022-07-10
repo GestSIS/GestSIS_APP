@@ -313,7 +313,7 @@
                 class="form-select form-select-sm"
                 disabled
               >
-                <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
+                <option v-for="f in fonctions" :key="f.id" :value="f.id">
                   {{ f.nom }}
                 </option>
               </select>
