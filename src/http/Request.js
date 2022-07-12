@@ -27,7 +27,7 @@ const request = {
     axios.defaults.headers.common['Sis-Id'] = sis_key;
   },
 
-  print(filename) {
+  print(filename, options = {}) {
     let api = axios.create({
       baseURL: PRINT_URL,
       responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
@@ -40,7 +40,6 @@ const request = {
 
     api.interceptors.request.use(
       (config) => {
-        // TODO: Encore params inside the URI
         const valueFormatter = (value) => {
           switch (true) {
             case value === true:
@@ -53,19 +52,20 @@ const request = {
         };
 
         config.params = {
+          ...options,
           url: encodeURIComponent(
             API_URL +
-              config.url +
-              '?' +
-              Object.entries(config.params ?? {})
-                .map(([key, value]) => key + '=' + valueFormatter(value))
-                .join('&')
+            config.url +
+            '?' +
+            Object.entries(config.params ?? {})
+              .map(([key, value]) => key + '=' + valueFormatter(value))
+              .join('&')
           ),
         };
         config.url = '/print';
         return config;
       },
-      (error) => {}
+      (error) => { }
     );
 
     api.interceptors.response.use(
