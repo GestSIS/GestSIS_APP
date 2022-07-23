@@ -20,8 +20,8 @@
           </div>
           <div class="card-body d-grid gap-2">
             <button
-              @click="vcard(filteredSapeurs)"
               class="btn btn-outline-primary"
+              @click="vcard(filteredSapeurs)"
             >
               VCard tous
             </button>
@@ -135,7 +135,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card card-primary card-outline mb-5 table-responsive">
-          <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
@@ -143,14 +143,14 @@
           <base-table
             v-show="!loading"
             :selectable="true"
-            selectKey="id"
+            select-key="id"
             row-selected-class="table-primary"
-            @selected="selectSapeur"
             :fields="fieldsBase"
             no-data="Aucun sapeur à afficher"
             :data="filteredSapeurs"
+            @selected="selectSapeur"
           >
-            <template v-slot:foot>
+            <template #foot>
               <tr>
                 <th :colspan="fieldsBase.length">
                   Nombre sapeurs : {{ filteredSapeurs.length }} /
@@ -158,21 +158,21 @@
                 </th>
               </tr>
             </template>
-            <template v-slot:checkbox="{ key, value, rowData }">
+            <template #checkbox="{ key, value, rowData }">
               <input
+                :id="key + '-' + rowData.id"
                 type="checkbox"
                 class="form-check-input"
-                :id="key + '-' + rowData.id"
                 :checked="value"
                 disabled
               />
             </template>
-            <template v-slot:actions="props">
+            <template #actions="props">
               <router-link
                 v-if="hasSapeurModificationPermission"
+                v-slot="{ navigate }"
                 :to="'/sapeurs/' + props.rowData.id"
                 custom
-                v-slot="{ navigate }"
               >
                 <button
                   class="btn btn-outline-primary border-0"
@@ -224,7 +224,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'effectif',
+  name: 'PageEffectif',
   components: {
     BaseTable,
   },
@@ -233,14 +233,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  beforeMount() {
-    SapeurService.getEffectif().then((effectif) => {
-      this.sapeurs = effectif;
-    });
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     return {
@@ -336,6 +328,14 @@ export default {
       ],
     };
   },
+  beforeMount() {
+    SapeurService.getEffectif().then((effectif) => {
+      this.sapeurs = effectif;
+    });
+  },
+  mounted() {
+    this.loading = false;
+  },
   computed: {
     ...mapState({
       localites: (state) =>
@@ -346,6 +346,7 @@ export default {
       fonctions: (state) => state.fonction.liste,
       grades: (state) => state.grade.liste,
       hasSapeurModificationPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     computedData() {

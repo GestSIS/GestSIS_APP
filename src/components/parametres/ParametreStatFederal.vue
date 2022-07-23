@@ -22,9 +22,9 @@
             <td>{{ s.designation }}</td>
             <td class="text-center">
               <input
+                id="statut"
                 type="checkbox"
                 class="form-check-input"
-                id="statut"
                 :checked="s.statut"
                 disabled
               />

@@ -1,28 +1,28 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter un groupe</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter un groupe</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="abreviation">No</label>
         <input
-          type="number"
+          id="no"
           v-model="groupe.no"
+          type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['no'] }"
-          id="no"
         />
       </div>
       <div class="mb-3">
         <label for="abreviation">Nom</label>
         <input
-          type="text"
+          id="designation"
           v-model="groupe.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
@@ -41,10 +41,10 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="modal-type"
             v-model="groupe.type"
+            type="checkbox"
+            class="form-check-input"
             :true-value="1"
             :false-value="0"
           />

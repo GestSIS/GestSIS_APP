@@ -23,11 +23,11 @@
         <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
-            <button @click="invite" class="btn btn-outline-primary">
+            <button class="btn btn-outline-primary" @click="invite">
               Inviter
             </button>
           </div>
-          <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
@@ -92,7 +92,7 @@ function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'utilisateurs',
+  name: 'PageUtilisateurs',
   components: {
     // ExerciceComptable,
   },
@@ -102,14 +102,14 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  mounted() {
-    this.loading = false;
-  },
   data() {
     return {
       toggles: {},
       loading: true,
     };
+  },
+  mounted() {
+    this.loading = false;
   },
   computed: {
     ...mapState({

@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Imputer l'exercice</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Imputer l'exercice</h5>
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <multi-step
         :steps="['Type de frais', 'Résultat']"
-        :activeIndex="phase - 1"
+        :active-index="phase - 1"
       />
       <div v-if="phase === 1" class="row">
         <div
@@ -43,10 +43,10 @@
               <tr
                 v-for="(i, index) in computedIndemnites"
                 :key="index"
-                @click="selectIndemnite(index)"
                 :class="{
                   'table-primary': index === activeIndemniteIndex,
                 }"
+                @click="selectIndemnite(index)"
               >
                 <td>{{ i.designation }}</td>
                 <td>{{ formatUnite(i.type_unite_id) }}</td>
@@ -84,9 +84,9 @@
                 <td v-else>-</td>
                 <td class="text-center">
                   <input
+                    id="par_fonction"
                     type="checkbox"
                     class="form-check-input"
-                    id="par_fonction"
                     :checked="i.par_fonction"
                     disabled
                   />
@@ -96,7 +96,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-4" v-if="activeIndemniteHasFonction">
+        <div v-if="activeIndemniteHasFonction" class="col-4">
           <table class="table table-sm">
             <thead>
               <tr>
@@ -128,8 +128,8 @@
       </div>
       <div v-if="phase === 2">
         <div
-          class="alert alert-dismissible alert-success"
           v-if="successMessageVisibility"
+          class="alert alert-dismissible alert-success"
         >
           <button
             type="button"
@@ -171,11 +171,11 @@
         {{ phase === 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
+        v-if="phase === 1"
         type="button"
         class="btn btn-primary"
-        @click="imputer()"
-        v-if="phase === 1"
         :disabled="activeIndemnite === null"
+        @click="imputer()"
       >
         Imputer
       </button>

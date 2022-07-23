@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }} une catégorie
         d'exercice
       </h5>
@@ -11,40 +11,40 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeCategorie.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeCategorie.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="duree_base">Durée standard</label>
         <input
-          type="text"
+          id="duree_base"
           v-model="activeCategorie.duree_base"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['duree_base'] }"
-          id="duree_base"
         />
       </div>
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="amendable-modal"
             v-model="activeCategorie.amendable"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="amendable-modal"
             >Amendable</label
@@ -54,10 +54,10 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="status-modal"
             v-model="activeCategorie.statut"
+            type="checkbox"
+            class="form-check-input"
             :true-value="1"
           />
           <label class="form-check-label" for="status-modal">Actif</label>

@@ -26,23 +26,23 @@
           </div>
           <div class="card-body d-grid gap-2">
             <router-link
+              v-slot="{ navigate }"
               custom
               to="/controles-medicaux/ajout"
-              v-slot="{ navigate }"
             >
-              <button @click="navigate" class="btn btn-outline-primary">
+              <button class="btn btn-outline-primary" @click="navigate">
                 Ajouter un contrôle
               </button>
             </router-link>
             <router-link
+              v-slot="{ navigate }"
               custom
               :to="'/controles-medicaux/' + selectedItem?.id"
-              v-slot="{ navigate }"
             >
               <button
                 :disabled="!selectedItem"
-                @click="navigate"
                 class="btn btn-outline-primary"
+                @click="navigate"
               >
                 Modifier
               </button>
@@ -59,8 +59,8 @@
           <div class="card-body d-grid gap-2">
             <button
               :disabled="!selectedItem?.filename"
-              @click="downloadJustificatif(selectedItem)"
               class="btn btn-outline-primary"
+              @click="downloadJustificatif(selectedItem)"
             >
               Justificatif
             </button>
@@ -77,10 +77,10 @@
             <div class="row">
               <div class="col-md-12 mb-2">
                 <input
-                  type="checkbox"
-                  class="form-check-input"
                   id="only_latest"
                   v-model="latest"
+                  type="checkbox"
+                  class="form-check-input"
                 />
                 <label class="form-check-label ms-2" for="only_latest"
                   >Derniers contrôles de chaque sapeurs</label
@@ -165,7 +165,7 @@
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des contrôles médicaux</h3>
           </div>
-          <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
@@ -177,37 +177,37 @@
             :row-class="onRowClass"
             :data="filteredControles"
             :selectable="true"
-            selectKey="id"
+            select-key="id"
             row-selected-class="table-primary"
             @selected="selected"
           >
-            <template v-slot:checkbox="props">
+            <template #checkbox="props">
               <input
+                :id="props.key"
                 type="checkbox"
                 class="form-check-input"
-                :id="props.key"
                 :checked="props.rowData[props.key]"
                 disabled
               />
               <label class="form-check-label" :for="props.key"></label>
             </template>
-            <template v-slot:doc="props">
+            <template #doc="props">
               <button
-                class="btn"
                 v-if="props.rowData.filename"
+                class="btn"
                 @click="downloadJustificatif(props.rowData)"
               >
                 <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
             </template>
-            <template v-slot:actions="props">
+            <template #actions="props">
               <router-link
+                v-slot="{ navigate }"
                 :to="{
                   name: 'controle-medical',
                   params: { id: props.rowData.id },
                 }"
                 custom
-                v-slot="{ navigate }"
               >
                 <button
                   class="btn btn-outline-primary border-0"
@@ -259,7 +259,7 @@ function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'controles-medicaux',
+  name: 'PageControlesMedicaux',
   components: {
     BaseTable,
     ExerciceComptable,
@@ -269,9 +269,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     return {
@@ -346,6 +343,9 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    this.loading = false;
   },
   computed: {
     ...mapState({

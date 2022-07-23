@@ -6,10 +6,10 @@
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Matériel consommable et en prêt</h3>
         <button
+          v-if="hasEditPermission"
           type="button"
           class="btn btn-primary"
           @click="newMateriel"
-          v-if="hasEditPermission"
         >
           Ajouter du matériel
         </button>
@@ -25,7 +25,7 @@
             <tr>
               <th>Matériel</th>
               <th>Quantité</th>
-              <th class="text-center" v-if="hasEditPermission">Actions</th>
+              <th v-if="hasEditPermission" class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody id="materiels">
@@ -80,6 +80,7 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),

@@ -32,7 +32,7 @@
         <div class="card-header d-flex justify-content-between">
           <h3>Autres</h3>
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -43,12 +43,12 @@
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
           :data="computedData"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:actions="{ rowData }">
+          <template #actions="{ rowData }">
             <button
               type="button"
               class="btn btn-outline-primary border-0"
@@ -98,7 +98,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'comptabiliteDivers',
+  name: 'ComptabiliteDivers',
   components: {
     BaseTable,
   },
@@ -107,17 +107,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresDivers').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     return {
@@ -184,6 +173,17 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchEcrituresDivers').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   computed: {
     ...mapState({

@@ -8,8 +8,8 @@
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
           <div
-            class="card col-md-3 col-sm-6 col-xs-12"
             v-if="availableSisListe.length <= 0"
+            class="card col-md-3 col-sm-6 col-xs-12"
           >
             <div class="align-vertical">
               <p>
@@ -19,9 +19,9 @@
             </div>
           </div>
           <div
-            class="card col-md-3 col-sm-6 col-xs-12"
             v-for="sis in availableSisListe"
             :key="sis.id"
+            class="card col-md-3 col-sm-6 col-xs-12"
           >
             <div class="align-vertical">
               <button class="btn btn-link" @click="connectToSis(sis)">
@@ -39,6 +39,7 @@
 import { mapState, mapGetters } from 'vuex';
 
 export default {
+  name: 'PageHome',
   data() {
     return {
       loading: false,

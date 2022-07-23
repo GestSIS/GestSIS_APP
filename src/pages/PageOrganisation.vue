@@ -24,9 +24,9 @@
           </div>
           <div class="card-body">
             <groupe-edition
-              :editMode="editMode"
-              @selected="selected"
               ref="groupeEdition"
+              :edit-mode="editMode"
+              @selected="selected"
             />
           </div>
         </div>
@@ -38,23 +38,23 @@
           </div>
           <div class="card-body pb-2">
             <button
+              v-tooltip.top="'Tout développer'"
               class="btn btn-info me-1"
               @click="expand"
-              v-tooltip.top="'Tout développer'"
             >
               <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
             <button
+              v-tooltip.top="'Tout réduire'"
               class="btn btn-info me-1"
               @click="contract"
-              v-tooltip.top="'Tout réduire'"
             >
               <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
             <button
+              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
               class="btn btn-info me-1"
               @click="editMode = !editMode"
-              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
             >
               <font-awesome-icon :icon="['far', editMode ? 'eye' : 'edit']" />
             </button>
@@ -88,8 +88,8 @@
                 'btn-primary': canMoveLeft,
                 'btn-secondary': !canMoveLeft,
               }"
-              @click.prevent="left"
               :disabled="!canMoveLeft"
+              @click.prevent="left"
             >
               ←
             </button>
@@ -99,8 +99,8 @@
                 'btn-primary': canMoveRight,
                 'btn-secondary': !canMoveRight,
               }"
-              @click.prevent="right"
               :disabled="!canMoveRight"
+              @click.prevent="right"
             >
               →
             </button>
@@ -110,8 +110,8 @@
                 'btn-primary': canMoveUp,
                 'btn-secondary': !canMoveUp,
               }"
-              @click.prevent="up"
               :disabled="!canMoveUp"
+              @click.prevent="up"
             >
               ↑
             </button>
@@ -121,16 +121,16 @@
                 'btn-primary': canMoveDown,
                 'btn-secondary': !canMoveDown,
               }"
-              @click.prevent="down"
               :disabled="!canMoveDown"
+              @click.prevent="down"
             >
               ↓
             </button>
           </div>
         </div>
         <div
-          class="card card-primary card-outline mt-2"
           v-if="editMode && active && groupesTypes.includes(active.data.type)"
+          class="card card-primary card-outline mt-2"
         >
           <div class="card-header d-flex justify-content-between">
             <h3>Modifier</h3>
@@ -139,21 +139,21 @@
             <div class="mb-3">
               <label for="abreviation">No</label>
               <input
-                type="number"
+                id="no"
                 v-model="groupeEdit.no"
+                type="number"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no'] }"
-                id="no"
               />
             </div>
             <div class="mb-3">
               <label for="abreviation">Nom</label>
               <input
-                type="text"
+                id="designation"
                 v-model="groupeEdit.designation"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['designation'] }"
-                id="designation"
               />
             </div>
             <div class="mb-3">
@@ -172,10 +172,10 @@
             <div class="mb-3">
               <div class="form-check">
                 <input
-                  type="checkbox"
-                  class="form-check-input"
                   id="type"
                   v-model="groupeEdit.type"
+                  type="checkbox"
+                  class="form-check-input"
                   :true-value="1"
                   :false-value="0"
                 />
@@ -209,7 +209,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'organisation',
+  name: 'PageOrganisation',
   components: {
     GroupeEdition,
     ExerciceComptable,
@@ -315,7 +315,7 @@ export default {
         .catch((errors) => {
           this.errorsData = { ...errors };
           this.$awn.alert(
-            error.message || 'Erreur lors de la modification du groupe'
+            errors.message || 'Erreur lors de la modification du groupe'
           );
         });
     },
@@ -347,7 +347,7 @@ export default {
           },
         });
       } else {
-        svm.$awn.warning(
+        this.$awn.warning(
           'Sélectionnez un groupe afin de pouvoir le supprimer.'
         );
       }

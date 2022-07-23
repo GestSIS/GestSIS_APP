@@ -9,7 +9,7 @@
             Générer les amendes
           </button>
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -22,12 +22,12 @@
           no-data="Aucune amende à afficher"
           :detail-row-component="detailRow"
           :data="filteredAmendes"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
@@ -68,7 +68,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'amendes',
+  name: 'ComptabiliteTabAmendes',
   components: {
     BaseTable,
   },
@@ -77,17 +77,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     return {
@@ -98,6 +87,10 @@ export default {
         {
           title: 'Exercice',
           field: 'designation',
+        },
+        {
+          title: 'Excuse',
+          field: 'complement',
         },
         {
           title: 'Date',
@@ -138,6 +131,17 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   computed: {
     ...mapState({

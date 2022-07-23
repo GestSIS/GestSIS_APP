@@ -6,9 +6,9 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
           <button
-            @click.prevent="save"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="save"
           >
             Enregistrer
           </button>
@@ -19,12 +19,12 @@
           <div class="mb-3">
             <label for="f-sap-nom">IBAN</label>
             <input
+              id="f-sap-nom"
+              v-model="activeSapeur.iban"
               type="text"
               class="form-control form-control-sm"
-              id="f-sap-nom"
               name="nom"
               :readonly="!hasEditPermission"
-              v-model="activeSapeur.iban"
             />
           </div>
         </div>
@@ -44,8 +44,14 @@ export default {
       activeSapeur: (state) => state.sapeur.active.data,
       activeSapeurId: (state) => state.sapeur.active.id,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeur', id);
+    },
   },
   methods: {
     async save() {
@@ -59,11 +65,6 @@ export default {
         .catch((err) => {
           this.$awn.alert(err?.message ?? 'Erreur lors la sauvegarde');
         });
-    },
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeur', id);
     },
   },
 };

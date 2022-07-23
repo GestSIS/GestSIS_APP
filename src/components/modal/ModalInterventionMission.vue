@@ -1,28 +1,28 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter une mission</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter une mission</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="debut">Début</label>
         <input
-          type="datetime-local"
+          id="debut"
           v-model="activeMission.debut2"
+          type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
-          id="debut"
         />
         <!-- :min="min"
         :max="max"-->
       </div>
       <div class="mb-3">
         <base-autocomplete
+          v-model="activeMission.titre"
           :items="listMissions.map((m) => m.titre)"
           :error="!!errors['titre']"
           title="Titre"
-          v-model="activeMission.titre"
         />
       </div>
       <div class="mb-3">
@@ -41,11 +41,11 @@
       <div class="mb-3">
         <label for="fin">Quittance</label>
         <input
-          type="datetime-local"
+          id="fin"
           v-model="activeMission.fin2"
+          type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
-          id="fin"
         />
         <!-- :min="activeMission.debut2 || min"
         :max="max"-->
@@ -53,10 +53,10 @@
       <div class="mb-3">
         <label for="resume">Résumé</label>
         <textarea
+          id="resume"
           v-model="activeMission.resume"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['resume'] }"
-          id="resume"
         ></textarea>
       </div>
     </div>

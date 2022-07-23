@@ -8,7 +8,6 @@
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        @click.prevent="() => expand(data)"
         v-if="computedChildren.length > 0"
         aria-hidden="true"
         role="presentation"
@@ -16,6 +15,7 @@
         viewBox="0 0 24 24"
         class="q-tree__arrow q-mr-xs q-icon notranslate tree-node-arrow"
         :class="[expanded ? 'tree-node-arrow--rotate' : '']"
+        @click.prevent="() => expand(data)"
       >
         <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
       </svg>
@@ -51,7 +51,7 @@
 import TransitionExpand from '@/components/transition/TransitionExpand.vue';
 
 export default {
-  name: 'Node',
+  name: 'TreeNode',
   components: {
     TransitionExpand,
   },
@@ -160,6 +160,7 @@ export default {
 .focus-helper:before {
   background: #fff;
 }
+
 .focus-helper:after {
   background: #000;
 }
@@ -170,16 +171,19 @@ export default {
   background: currentColor;
   opacity: 0.15;
 }
+
 .focusable:focus > .focus-helper:before,
 .q-hoverable:hover > .focus-helper:before,
 .q-manual-focusable--focused > .focus-helper:before {
   opacity: 0.1;
 }
+
 .focusable:focus > .focus-helper:after,
 .q-hoverable:hover > .focus-helper:after,
 .q-manual-focusable--focused > .focus-helper:after {
   opacity: 0.4;
 }
+
 .focusable:focus > .focus-helper,
 .q-manual-focusable--focused > .focus-helper {
   opacity: 0.22;

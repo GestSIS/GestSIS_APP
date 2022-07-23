@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         Ajouter un {{ sapeur.type == 0 ? 'sapeur' : 'politique' }}
       </h5>
       <button type="button" class="btn-close" @click="close"></button>
@@ -15,23 +15,23 @@
       <div class="mb-3">
         <div class="form-check form-check-inline">
           <input
+            id="inlineRadio1"
+            v-model="sapeur.type"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
-            id="inlineRadio1"
             :value="0"
-            v-model="sapeur.type"
           />
           <label class="form-check-label" for="inlineRadio1">Sapeur</label>
         </div>
         <div class="form-check form-check-inline">
           <input
+            id="inlineRadio2"
+            v-model="sapeur.type"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
-            id="inlineRadio2"
             :value="1"
-            v-model="sapeur.type"
           />
           <label class="form-check-label" for="inlineRadio2">Politique</label>
         </div>
@@ -40,16 +40,16 @@
       <div class="mb-3">
         <label for="m-sap-civilite">Civilité</label>
         <select
-          class="form-select form-select-sm"
           id="m-sap-civilite"
+          v-model="sapeur.civilite_id"
+          class="form-select form-select-sm"
           :class="{ 'is-invalid': errorsData['civilite_id'] }"
           name="civilite_id"
-          v-model="sapeur.civilite_id"
         >
           <option
             v-for="civilite in civilites"
-            :value="civilite.id"
             :key="civilite.id"
+            :value="civilite.id"
           >
             {{ civilite.designation }}
           </option>
@@ -60,23 +60,23 @@
         <div class="col-6">
           <label for="m-sap-nom">Nom</label>
           <input
+            id="m-sap-nom"
+            v-model="sapeur.nom"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['nom'] }"
-            id="m-sap-nom"
             name="nom"
-            v-model="sapeur.nom"
           />
         </div>
         <div class="col-6">
           <label for="m-sap-prenom">Prénom</label>
           <input
+            id="m-sap-prenom"
+            v-model="sapeur.prenom"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['prenom'] }"
-            id="m-sap-prenom"
             name="prenom"
-            v-model="sapeur.prenom"
           />
         </div>
       </div>
@@ -85,13 +85,13 @@
         <div class="col-4">
           <label for="m-sap-localite">NPA Localité</label>
           <select
+            id="m-sap-localite"
+            v-model="sapeur.localite_id"
             class="form-select form-select-sm"
             required
-            id="m-sap-localite"
             :class="{ 'is-invalid': errorsData['localite_id'] }"
             name="localite_id"
             style="width: 100%"
-            v-model="sapeur.localite_id"
           >
             <option
               v-for="localite in localites"
@@ -105,23 +105,23 @@
         <div class="col-6">
           <label for="m-sap-rue">Rue</label>
           <input
+            id="m-sap-rue"
+            v-model="sapeur.rue"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['rue'] }"
-            id="m-sap-rue"
             name="rue"
-            v-model="sapeur.rue"
           />
         </div>
         <div class="col-2">
           <label for="m-sap-no-rue">N°</label>
           <input
+            id="m-sap-no-rue"
+            v-model="sapeur.no_rue"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['no_rue'] }"
-            id="m-sap-no-rue"
             name="no_rue"
-            v-model="sapeur.no_rue"
           />
         </div>
       </div>
@@ -131,12 +131,12 @@
       <div class="mb-3">
         <label for="m-sap-avs">N° AVS</label>
         <input
+          id="m-sap-avs"
+          v-model="sapeur.no_avs"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errorsData['no_avs'] }"
-          id="m-sap-avs"
           name="no_avs"
-          v-model="sapeur.no_avs"
         />
       </div>
       <!-- Email -->
@@ -147,17 +147,17 @@
             <font-awesome-icon icon="envelope" />
           </div>
           <input
+            id="m-sap-email"
+            v-model="sapeur.email"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['email'] }"
             type="email"
-            id="m-sap-email"
             name="email"
-            v-model="sapeur.email"
           />
         </div>
       </div>
       <!-- DATE NAISSANCE + SUFFIXE -->
-      <div class="row mb-3" v-if="sapeur.type === 0">
+      <div v-if="sapeur.type === 0" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
           <div class="input-group input-group-sm">
@@ -165,48 +165,48 @@
               <font-awesome-icon :icon="['far', 'calendar-alt']" />
             </div>
             <input
+              id="m-sap-date-naissance"
+              v-model="sapeur.date_naissance"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['date_naissance'] }"
               type="date"
-              id="m-sap-date-naissance"
               name="date_naissance"
-              v-model="sapeur.date_naissance"
             />
           </div>
         </div>
         <div class="col-6">
           <label for="m-sap-suffixe">Suffixe</label>
           <font-awesome-icon
-            class="ms-1"
             v-tooltip.bottom="
               'Permet de différencier deux personnes ayant le même nom et prénom.'
             "
+            class="ms-1"
             :icon="['far', 'question-circle']"
           />
           <input
+            id="m-sap-suffixe"
+            v-model="sapeur.suffixe"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['suffixe'] }"
-            id="m-sap-suffixe"
             name="suffixe"
-            v-model="sapeur.suffixe"
           />
         </div>
       </div>
       <!-- DATE INCORPORATION -->
-      <div class="mb-3" v-if="sapeur.type === 0">
+      <div v-if="sapeur.type === 0" class="mb-3">
         <label for="m-sap-email">Date incorporation</label>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-text">
             <font-awesome-icon :icon="['far', 'calendar-alt']" />
           </div>
           <input
+            id="m-sap-incorporation"
+            v-model="sapeur.incorporation"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['incorporation'] }"
             type="date"
-            id="m-sap-incorporation"
             name="date_incorporation"
-            v-model="sapeur.incorporation"
           />
         </div>
       </div>
@@ -214,12 +214,12 @@
       <div class="mb-3">
         <label for="m-sap-remarques">Remarques</label>
         <textarea
+          id="m-sap-remarques"
+          v-model="sapeur.remarque"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errorsData['remarque'] }"
           rows="3"
-          id="m-sap-remarques"
           name="remarques"
-          v-model="sapeur.remarque"
         ></textarea>
       </div>
     </div>

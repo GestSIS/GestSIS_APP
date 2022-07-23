@@ -42,13 +42,9 @@ export default {
     });
   },
   downloadListPresence(exerciceId, filename) {
-    return Api.print(filename).get(
-      `/exercices/${exerciceId}/liste-presence`
-    );
+    return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
   },
   downloadListAppel(exerciceId, filename) {
-    return Api.print(filename).get(
-      `/exercices/${exerciceId}/liste-appel`
-    );
+    return Api.print(filename).get(`/exercices/${exerciceId}/liste-appel`);
   },
 };

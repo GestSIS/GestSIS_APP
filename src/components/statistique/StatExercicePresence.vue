@@ -9,28 +9,28 @@
         <form class="card-body p-2 pb-0">
           <div class="row">
             <base-multi-unselect
+              v-model="unselectedCategories"
               class="col-md-4"
               label="Catégorie :"
-              valueKey="id"
-              displayKey="designation"
+              value-key="id"
+              display-key="designation"
               :options="categorieExercices"
-              v-model="unselectedCategories"
             />
             <base-multi-unselect
+              v-model="unselectedSapeurDe"
               class="col-md-4"
               label="Sapeur de :"
-              valueKey="id"
-              displayKey="designation"
+              value-key="id"
+              display-key="designation"
               :options="localiteSapeurs"
-              v-model="unselectedSapeurDe"
             />
             <base-multi-unselect
+              v-model="unselectedExerciceA"
               class="col-md-4"
               label="Exercice à :"
-              valueKey="id"
-              displayKey="designation"
+              value-key="id"
+              display-key="designation"
               :options="localiteExercices"
-              v-model="unselectedExerciceA"
             />
           </div>
         </form>
@@ -42,7 +42,7 @@
         <div class="card-header d-flex justify-content-between">
           <h4>Légende</h4>
         </div>
-        <div class="d-flex mt-2" id="legend-container">
+        <div id="legend-container" class="d-flex mt-2">
           <div class="col-6">
             <table class="table table-sm">
               <tr>
@@ -59,7 +59,7 @@
               </tr>
             </table>
           </div>
-          <div class="col-6" id="legend-excuse">
+          <div id="legend-excuse" class="col-6">
             <table class="table table-sm">
               <thead>
                 <tr>
@@ -92,11 +92,7 @@
                 <th class="rotate">Localité</th>
                 <th class="rotate">Fonction</th>
                 <!-- <th class="text-center">Groupes</th> -->
-                <th
-                  v-for="(e, index) in displayExercice"
-                  :key="e.id"
-                  class="rotate"
-                >
+                <th v-for="e in displayExercice" :key="e.id" class="rotate">
                   <div>
                     <span>{{ e.designation }}</span>
                   </div>
@@ -120,8 +116,8 @@
               <tr
                 v-for="s in computedData"
                 :key="s.id"
-                @click="selectedSapeurId = s.id"
                 :class="{ 'table-primary': selectedSapeurId == s.id }"
+                @click="selectedSapeurId = s.id"
               >
                 <td>{{ s.nom }} {{ s.prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
@@ -189,14 +185,20 @@ async function loadData(_, next) {
     // loadPresences,
     loadExercicesComptables,
   ]).then(() => {
-    const loadExercies = store.dispatch('fetchListeExercice');
+    store.dispatch('fetchListeExercice');
     store.dispatch('fetchStatistiquePresence');
     next();
   });
 }
 
 export default {
-  name: 'stat-exercice-presences',
+  name: 'StatExercicePresences',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       selectedSapeurId: null,
@@ -205,20 +207,14 @@ export default {
       unselectedExerciceA: [],
     };
   },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  mounted() {
-    loadData('', () => {});
-  },
   watch: {
-    activeExerciceComptableId(newValue, _) {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchListeExercice');
       this.$store.dispatch('fetchStatistiquePresence').then();
     },
+  },
+  mounted() {
+    loadData('', () => {});
   },
   computed: {
     ...mapState({

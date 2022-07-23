@@ -12,9 +12,9 @@
               >Afficher&nbsp;par</label
             >
             <select
-              class="form-select form-select-sm"
-              v-model="groupBy"
               id="group-by"
+              v-model="groupBy"
+              class="form-select form-select-sm"
             >
               <option
                 v-for="[key, { label }] in Object.entries(selectOptions)"
@@ -34,8 +34,8 @@
           </h6>
           <button
             class="btn btn-outline-danger"
-            @click="removeSapeurs"
             :disabled="!removeSapeurState"
+            @click="removeSapeurs"
           >
             Enlever ces sapeurs
           </button>
@@ -44,8 +44,8 @@
           <h6 class="mb-0">Sapeurs disponibles</h6>
           <button
             class="btn btn-outline-primary"
-            @click="addSapeurs"
             :disabled="!addSapeurState"
+            @click="addSapeurs"
           >
             Ajouter ces sapeurs
           </button>
@@ -75,10 +75,10 @@
                 <td class="text-center">
                   <div class="form-check d-inline-block ps-0">
                     <input
-                      type="checkbox"
-                      class="form-check-input ms-0"
                       :id="item.id"
                       v-model="selectedGeneric.sapeur[item.id]"
+                      type="checkbox"
+                      class="form-check-input ms-0"
                       @click="select(item.id, true)"
                     />
                     <label class="form-check-label" :for="item.id"></label>
@@ -98,7 +98,7 @@
           </table>
         </div>
         <div class="col-6">
-          <table class="table table-sm" v-if="groupBy !== 'none'">
+          <table v-if="groupBy !== 'none'" class="table table-sm">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -122,23 +122,23 @@
               >
                 <td :style="{ 'padding-left': item.level * 25 + 'px' }">
                   <font-awesome-icon
+                    v-if="!item.leaf"
                     class="me-2 ms-2"
                     :icon="[
                       'fas',
                       item.expanded ? 'angle-down' : 'angle-right',
                     ]"
-                    v-if="!item.leaf"
                     @click="toggleGroupe(item.id)"
                   />
 
                   <div class="form-check d-inline-block">
                     <input
-                      type="checkbox"
-                      class="form-check-input"
                       :id="computeId(item)"
                       v-model="
                         selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]
                       "
+                      type="checkbox"
+                      class="form-check-input"
                       @click="select(item.id, item.leaf)"
                     />
                     <label
@@ -150,9 +150,9 @@
                 </td>
                 <td>
                   <button
+                    v-if="item.leaf"
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"
-                    v-if="item.leaf"
                   >
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
@@ -160,7 +160,7 @@
               </tr>
             </tbody>
           </table>
-          <table class="table table-sm table-striped" v-if="groupBy === 'none'">
+          <table v-if="groupBy === 'none'" class="table table-sm table-striped">
             <thead>
               <tr>
                 <th></th>
@@ -170,10 +170,10 @@
             </thead>
             <tbody>
               <tr v-if="availableSapeur.length == 0">
-                <td colspan="3" v-if="sapeurs.length > 0">
+                <td v-if="sapeurs.length > 0" colspan="3">
                   Tous les sapeurs sont déjà présent dans l'exercice
                 </td>
-                <td colspan="3" v-if="sapeurs.length == 0">
+                <td v-if="sapeurs.length == 0" colspan="3">
                   Aucun sapeur dans GestSIS
                 </td>
               </tr>
@@ -185,10 +185,10 @@
                 <td>
                   <div class="form-check d-inline-block">
                     <input
-                      type="checkbox"
-                      class="form-check-input"
                       :id="item.id"
                       v-model="selectedGeneric.sapeur[item.id]"
+                      type="checkbox"
+                      class="form-check-input"
                       @click="select(item.id)"
                     />
                     <label class="form-check-label" :for="item.id"></label>
@@ -308,7 +308,6 @@ export default {
       groupes: (state) => state.groupe.liste,
       localites: (state) => state.localite.liste,
       grades: (state) => state.grade.liste,
-      civilites: (state) => state.baseData.civilites,
       fonctions: (state) => state.fonction.liste,
       sapeurs: (state) => state.sapeur.liste,
       civilites: (state) => state.baseData.civilites,
@@ -557,16 +556,16 @@ export default {
         new Set([
           ...this.chosenSapeurs,
           ...Object.entries(this.selectedGeneric.sapeur)
-            .filter(([_, selected]) => selected)
-            .map(([id, _]) => parseInt(id)),
+            .filter(([, selected]) => selected)
+            .map(([id]) => parseInt(id)),
         ])
       );
     },
     removeSapeurs() {
       const sapeursToRemove = new Set([
         ...Object.entries(this.selectedGeneric.sapeur)
-          .filter(([_, selected]) => selected)
-          .map(([id, _]) => parseInt(id)),
+          .filter(([, selected]) => selected)
+          .map(([id]) => parseInt(id)),
       ]);
       this.chosenSapeurs = this.chosenSapeurs.filter(
         (id) => !sapeursToRemove.has(id)

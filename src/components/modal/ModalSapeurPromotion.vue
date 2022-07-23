@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter une promotion</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter une promotion</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="cours-date">Date de la promotion</label>
         <input
-          type="date"
+          id="cours-date"
           v-model="activeGrade.date"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
-          id="cours-date"
         />
       </div>
       <div class="mb-3">
@@ -31,11 +31,11 @@
       <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input
-          type="text"
+          id="remarque"
           v-model="activeGrade.remarque"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
-          id="remarque"
         />
       </div>
     </div>

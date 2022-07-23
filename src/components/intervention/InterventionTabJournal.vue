@@ -32,10 +32,10 @@
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Appels</h3>
             <button
+              v-if="hasEditPermission"
               type="button"
               class="btn btn-primary"
               @click="newAppel"
-              v-if="hasEditPermission"
             >
               Ajouter un appel
             </button>
@@ -48,7 +48,7 @@
                   <th>Numéro</th>
                   <th>Nom</th>
                   <th>Commentaire</th>
-                  <th class="text-center" v-if="hasEditPermission">Actions</th>
+                  <th v-if="hasEditPermission" class="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody id="appels">
@@ -90,10 +90,10 @@
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Missions</h3>
             <button
+              v-if="hasEditPermission"
               type="button"
               class="btn btn-primary"
               @click="newMission"
-              v-if="hasEditPermission"
             >
               Ajouter une mission
             </button>
@@ -165,6 +165,7 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),

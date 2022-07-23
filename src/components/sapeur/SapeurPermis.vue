@@ -3,9 +3,9 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Permis de conduire</h3>
       <button
-        @click.prevent="savePermis"
-        class="btn btn-primary flex-shrink-1"
         v-if="hasEditPermission"
+        class="btn btn-primary flex-shrink-1"
+        @click.prevent="savePermis"
       >
         Enregistrer
       </button>
@@ -16,8 +16,8 @@
           <tr v-for="permis in permisData" :key="permis.permis_type_id">
             <td class="text-end">
               <font-awesome-icon
-                class="text-danger"
                 v-if="permis.type.toLowerCase().includes('118')"
+                class="text-danger"
                 style="font-size: 1.7em"
                 :icon="['fab', 'gripfire']"
               />
@@ -36,9 +36,9 @@
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
+                  v-model="prmis.date"
                   type="date"
                   class="form-control form-control-sm"
-                  v-model="permis.date"
                   :readonly="!hasEditPermission"
                   :class="{
                     'is-invalid': isInvalid(permis.permis_type_id),
@@ -78,8 +78,19 @@ export default {
     ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId']),
     ...mapState({
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+  },
+  watch: {
+    activeSapeurPermis() {
+      this.initPermisData();
+    },
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurPermis', id).then(() => {
+        this.initPermisData();
+      });
+    },
   },
   mounted() {
     if (this.listPermisType.length === 0) {
@@ -97,16 +108,6 @@ export default {
           this.initPermisData();
         });
     }
-  },
-  watch: {
-    activeSapeurPermis() {
-      this.initPermisData();
-    },
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurPermis', id).then(() => {
-        this.initPermisData();
-      });
-    },
   },
   methods: {
     initPermisData() {

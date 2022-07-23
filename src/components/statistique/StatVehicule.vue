@@ -5,10 +5,10 @@
         <h3>Stats véhicules pour interventions</h3>
         <div class="form-check form-switch mb-2">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="switch-vehicule"
             v-model="allVehicules"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="switch-vehicule"
             >Afficher les véhicules n'ayant pas effectué d'interventions</label
@@ -44,7 +44,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'stat-vehicule',
+  name: 'StatVehicule',
   data() {
     return {
       allVehicules: false,

@@ -5,8 +5,8 @@
         <th
           v-for="f in fields"
           :key="f.key"
-          @click="sort(f)"
           :class="f.titleClass"
+          @click="sort(f)"
         >
           {{ f.title }}
         </th>
@@ -18,7 +18,6 @@
       </tr>
       <template v-for="r in computedData" :key="'main-' + r.id">
         <tr
-          @click="select(r)"
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',
             rowClass,
@@ -26,6 +25,7 @@
               ? rowClass(r, selected == r[selectKey])
               : rowClass,
           ]"
+          @click="select(r)"
         >
           <td v-for="f in fields" :key="f.key" :class="f.columnClass">
             <slot
@@ -72,7 +72,7 @@
 
 <script>
 export default {
-  name: 'base-table',
+  name: 'BaseTable',
   props: {
     fields: {
       type: Array,
@@ -127,17 +127,6 @@ export default {
       defaultFormatter: (e) => e,
     };
   },
-  watch: {
-    data(val) {
-      if (this.selected) {
-        // Watcher pour déselectionner l'élément actif en cas de suppression
-        const selectedKey = this.selected; //[this.selectKey];
-        if (val.filter((e) => e[this.selectKey] === selectedKey).length <= 0) {
-          this.$emit('selected', null);
-        }
-      }
-    },
-  },
   computed: {
     computedData() {
       const sorted = [...this.data];
@@ -157,6 +146,17 @@ export default {
         hideDetailRow: this.hideDetailRow,
         toggleDetailRow: this.toggleDetailRow,
       };
+    },
+  },
+  watch: {
+    data(val) {
+      if (this.selected) {
+        // Watcher pour déselectionner l'élément actif en cas de suppression
+        const selectedKey = this.selected; //[this.selectKey];
+        if (val.filter((e) => e[this.selectKey] === selectedKey).length <= 0) {
+          this.$emit('selected', null);
+        }
+      }
     },
   },
   methods: {

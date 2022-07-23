@@ -29,9 +29,9 @@
             <td>{{ c.duree_base }}</td>
             <td class="text-center">
               <input
+                id="amendable"
                 type="checkbox"
                 class="form-check-input"
-                id="amendable"
                 :checked="c.amendable"
                 disabled
               />
@@ -39,9 +39,9 @@
             </td>
             <td class="text-center">
               <input
+                id="statut"
                 type="checkbox"
                 class="form-check-input"
-                id="statut"
                 :checked="c.statut"
                 disabled
               />

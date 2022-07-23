@@ -74,7 +74,7 @@ function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'publipostage',
+  name: 'PagePublipostage',
   components: {
     ExerciceComptable,
   },

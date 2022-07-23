@@ -54,8 +54,8 @@
               <input
                 class="form-control form-control-sm"
                 type="text"
-                @change="(e) => updateAmende(index, e)"
                 :value="params.amendes[index].montant"
+                @change="(e) => updateAmende(index, e)"
               />
             </td>
             <td class="align-middle text-center">
@@ -131,7 +131,6 @@ export default {
   methods: {
     removeAmende(index) {
       this.params.amendes.splice(index, 1);
-      this.params.amendes = this.params.amendes;
     },
     updateAmende(index, e) {
       this.params.amendes[index].montant = e.target.value;

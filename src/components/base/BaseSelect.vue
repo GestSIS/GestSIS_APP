@@ -2,9 +2,9 @@
   <div>
     <label v-if="label" :for="label">{{ label }}</label>
     <select
-      :class="['form-select form-select-sm', selectClass]"
       :id="label"
       v-model="model"
+      :class="['form-select form-select-sm', selectClass]"
       v-bind="{ ...$attrs }"
     >
       <option v-if="baseOption" :value="undefined">{{ baseOption }}</option>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'base-select',
+  name: 'BaseSelect',
   inheritsAttrs: false,
   props: {
     label: {

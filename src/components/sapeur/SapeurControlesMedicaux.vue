@@ -45,9 +45,9 @@
               <td>{{ c.designation }}</td>
               <td class="text-center">
                 <input
+                  :id="'accepte_' + c.id"
                   type="checkbox"
                   class="form-check-input"
-                  :id="'accepte_' + c.id"
                   :checked="c.accepter"
                   disabled
                 />
@@ -58,9 +58,9 @@
               </td>
               <td class="text-center">
                 <input
+                  :id="'en_cours_' + c.id"
                   type="checkbox"
                   class="form-check-input"
-                  :id="'en_cours_' + c.id"
                   :checked="c.en_cours"
                   disabled
                 />
@@ -71,8 +71,8 @@
               </td>
               <td>
                 <button
-                  class="btn"
                   v-if="c.filename"
+                  class="btn"
                   @click="downloadJustificatif(c)"
                 >
                   <font-awesome-icon :icon="['far', 'file-pdf']" />
@@ -95,10 +95,10 @@
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    v-if="controles.length > 1"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeMutation(c.id)"
-                    v-if="controles.length > 1"
                   >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
@@ -108,19 +108,19 @@
           </tbody>
         </table>
         <button
+          v-if="finServiceButtonState && hasEditPermission"
           type="button"
           class="btn btn-outline-primary"
           @click="finService"
-          v-if="finServiceButtonState && hasEditPermission"
         >
           <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin
           de service
         </button>
         <button
+          v-else-if="hasEditPermission"
           type="button"
           class="btn btn-outline-primary"
           @click="incorporation"
-          v-else-if="hasEditPermission"
         >
           <font-awesome-icon
             class="me-1"
@@ -146,15 +146,15 @@ export default {
       controles: (state) => state.sapeur.active.controles,
     }),
   },
-  mounted() {
-    this.$store.dispatch('fetchSapeurControlesMedicaux', this.activeSapeurId);
-    this.$store.dispatch('fetchMedecins', this.activeSapeurId);
-    this.$store.dispatch('fetchControlesMedicauxTypes', this.activeSapeurId);
-  },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurControlesMedicaux', id);
     },
+  },
+  mounted() {
+    this.$store.dispatch('fetchSapeurControlesMedicaux', this.activeSapeurId);
+    this.$store.dispatch('fetchMedecins', this.activeSapeurId);
+    this.$store.dispatch('fetchControlesMedicauxTypes', this.activeSapeurId);
   },
   methods: {
     downloadJustificatif({ id, filename }) {

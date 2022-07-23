@@ -28,9 +28,9 @@
             <td>{{ localite(m.localite_id) }}</td>
             <td class="text-center">
               <input
+                :id="`actif-${m.id}`"
                 type="checkbox"
                 class="form-check-input"
-                :id="`actif-${m.id}`"
                 :checked="m.actif"
                 disabled
               />

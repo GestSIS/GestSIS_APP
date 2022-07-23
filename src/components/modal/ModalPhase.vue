@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter une phase</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter une phase</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -14,12 +14,12 @@
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
+                id="m-int-date-debut"
+                v-model="date"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['debut'] }"
                 type="date"
-                id="m-int-date-debut"
                 name="date_debut"
-                v-model="date"
               />
             </div>
           </div>
@@ -32,13 +32,13 @@
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
+                id="m-int-heure_debut"
+                v-model="heure"
                 type="time"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['debut'] }"
-                id="m-int-heure_debut"
                 name="heure_debut"
                 step="900"
-                v-model="heure"
                 @focusout="roundHour"
               />
             </div>
@@ -106,6 +106,11 @@ import { DateTime } from 'luxon';
 
 export default {
   name: 'ModalPhase',
+  props: {
+    data: {
+      type: Object,
+    },
+  },
   data() {
     return {
       errors: {},
@@ -115,11 +120,6 @@ export default {
       date: null,
       heure: null,
     };
-  },
-  props: {
-    data: {
-      type: Object,
-    },
   },
   computed: {
     ...mapState({

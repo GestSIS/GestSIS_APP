@@ -11,13 +11,13 @@
       </li>
     </ul>
     <ul class="navbar-nav me-2">
-      <router-link :to="{ name: 'about' }" custom v-slot="{ navigate }">
+      <router-link v-slot="{ navigate }" :to="{ name: 'about' }" custom>
         <li class="position-relative me-2">
           <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
             <font-awesome-icon :icon="['fas', 'bell']" />
             <span
-              class="position-absolute translate-middle p-1 bg-danger rounded-circle"
               v-if="showNotif"
+              class="position-absolute translate-middle p-1 bg-danger rounded-circle"
             >
               <span class="visually-hidden">Notifications</span>
             </span>
@@ -25,10 +25,10 @@
         </li>
       </router-link>
       <base-dropdown
-        tag="li"
-        buttonClass="btn btn-link nav-link"
-        menuClass="dropdown-menu-end"
         ref="dropdown"
+        tag="li"
+        button-class="btn btn-link nav-link"
+        menu-class="dropdown-menu-end"
       >
         <template #title>
           <font-awesome-icon :icon="['fas', 'user']" />

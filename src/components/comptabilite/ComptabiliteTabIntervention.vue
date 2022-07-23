@@ -7,16 +7,16 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button
-            class="btn btn-outline-primary"
             v-if="!selectedItem || selectedItem?.statut == 2"
+            class="btn btn-outline-primary"
             :disabled="!selectedItem"
             @click="imputer(selectedItem.id)"
           >
             Imputer
           </button>
           <button
-            class="btn btn-outline-danger"
             v-if="selectedItem?.statut == 3"
+            class="btn btn-outline-danger"
             @click="annulerImputer(selectedItem.id)"
           >
             Annuler l'imputation
@@ -33,41 +33,41 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Localité&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @input="(value) => onFilter('localite_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Type&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Type&gt;"
               :options="filteredTypesIntervention"
               @input="(value) => onFilter('type_intervention_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Statistique fédérale&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Statistique fédérale&gt;"
               :options="filteredStatFederal"
               @input="(value) => onFilter('stat_federal_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Traitement&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Traitement&gt;"
               :options="traitements"
               @input="(value) => onFilter('intervention_traitement_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Etendue&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Etendue&gt;"
               :options="degres"
               @input="(value) => onFilter('degre', value)"
             />
@@ -83,7 +83,7 @@
           <!--            Enregistrer-->
           <!--          </button>-->
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -96,16 +96,16 @@
           no-data="Aucune écriture à afficher"
           :detail-row-component="detailRow"
           :data="filteredInterventions"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
+              v-if="props.rowData.statut === 3"
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
-              v-if="props.rowData.statut === 3"
             >
               <font-awesome-icon
                 v-if="props.status.detailRowVisible || false"
@@ -117,20 +117,20 @@
               />
             </button>
           </template>
-          <template v-slot:actions="props">
+          <template #actions="props">
             <button
-              class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 2"
+              class="btn btn-outline-primary border-0"
               @click="imputer(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
-          <template v-slot:checkbox="{ key, value, rowData }">
+          <template #checkbox="{ key, value, rowData }">
             <input
+              :id="key + '-' + rowData.id"
               type="checkbox"
               class="form-check-input"
-              :id="key + '-' + rowData.id"
               :checked="value"
               disabled
             />
@@ -184,13 +184,10 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  mounted() {
-    //TODO Fetch only if neccessary
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    } else {
-      this.loading = false;
-    }
+  props: {
+    id: {
+      type: String,
+    },
   },
   data() {
     let svm = this;
@@ -362,15 +359,18 @@ export default {
       ],
     };
   },
-  props: {
-    id: {
-      type: String,
-    },
-  },
   watch: {
     currentExerciceComptableId() {
       this.$store.dispatch('fetchListeIntervention');
     },
+  },
+  mounted() {
+    //TODO Fetch only if neccessary
+    if (this.exercicesComptable.length === 0) {
+      //console.log('Warning')
+    } else {
+      this.loading = false;
+    }
   },
   computed: {
     ...mapState({

@@ -19,7 +19,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
           <router-link
             v-for="action in filteredActions"
             :key="action.name"
@@ -27,13 +27,12 @@
             class="nav-item nav-link"
             exact-active-class="active"
             role="tab"
-            tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <span>{{ action.name }}</span>
+            <a>{{ action.name }}</a>
           </router-link>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel"></div>
         </div>
       </div>
@@ -48,7 +47,7 @@ import { mapState } from 'vuex';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
-  name: 'statistiques',
+  name: 'PageStatistiques',
   components: {
     ExerciceComptable,
   },
@@ -104,11 +103,15 @@ export default {
   },
   computed: {
     ...mapState({
+      isAdmin: (state) => state.auth.admin,
       permissions: (state) => state.auth.sis.permissions,
     }),
     filteredActions() {
       return this.actions.filter(
-        (s) => !s.permission || this.permissions.includes(s.permission)
+        (s) =>
+          !s.permission ||
+          this.permissions.includes(s.permission) ||
+          this.isAdmin
       );
     },
   },

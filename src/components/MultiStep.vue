@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'multiStep',
+  name: 'MultiStep',
   props: ['steps', 'activeIndex'],
 };
 </script>

@@ -26,19 +26,19 @@
           <div class="card-title">
             <h3 class="card-title">Comptes</h3>
             <base-dropdown
-              buttonClass="ms-1 btn btn-outline-secondary dropdown-toggle"
-              menuClass="dropdown-menu"
               ref="dropdown"
+              button-class="ms-1 btn btn-outline-secondary dropdown-toggle"
+              menu-class="dropdown-menu"
               :title="formatCompte(comptes.find((f) => f.id == activeCompteId))"
             >
               <template #default>
                 <button
                   v-for="c in comptes"
                   :key="c.id"
-                  @click="selectCompte(c.id)"
                   class="dropdown-item"
                   :class="{ active: activeCompteId == c.id }"
                   type="button"
+                  @click="selectCompte(c.id)"
                 >
                   {{ formatCompte(c) }}
                 </button>
@@ -50,13 +50,13 @@
           v-show="!loading"
           :fields="fields"
           no-data="Aucune écriture à afficher"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
           :data="computedData"
+          @selected="selected"
         >
-          <template v-slot:foot>
+          <template #foot>
             <tr>
               <th colspan="2">Total</th>
               <th>
@@ -152,10 +152,6 @@ export default {
       }));
     },
   },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
   watch: {
     activeExerciceComptableId() {
       this.loading = true;
@@ -166,6 +162,10 @@ export default {
         this.init();
       }
     },
+  },
+  mounted() {
+    this.loading = true;
+    this.init();
   },
   methods: {
     formatCompte(compte) {

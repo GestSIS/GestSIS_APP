@@ -22,8 +22,8 @@
       <div class="col-md-12">
         <nav
           v-if="!newMode"
-          class="nav nav-tabs mb-3"
           id="nav-tab"
+          class="nav nav-tabs mb-3"
           role="tablist"
         >
           <a
@@ -67,15 +67,15 @@
             >Matériels &amp; Véhicules</a
           >
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div
+            v-if="!loading"
             class="tab-pane fade show active"
             role="tabpanel"
-            v-if="!loading"
           >
             <InterventionTabGeneral
-              :newMode="newMode"
               v-if="activeTab === 'general'"
+              :new-mode="newMode"
               >General</InterventionTabGeneral
             >
             <InterventionTabResume v-else-if="activeTab === 'resume'"
@@ -87,7 +87,7 @@
             <InterventionTabJournal v-else-if="activeTab === 'journal'"
               >Journal</InterventionTabJournal
             >
-            <div class="row" v-else-if="activeTab === 'mat-veh'">
+            <div v-else-if="activeTab === 'mat-veh'" class="row">
               <InterventionTabMateriel>Materiels</InterventionTabMateriel>
               <InterventionTabVehicule>Véhicules</InterventionTabVehicule>
             </div>
@@ -140,7 +140,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'intervention',
+  name: 'PageIntervention',
   components: {
     InterventionTabGeneral,
     InterventionTabResume,
@@ -156,16 +156,16 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  props: {
+    id: {
+      type: String,
+    },
+  },
   data() {
     return {
       activeTab: 'general',
       loading: true,
     };
-  },
-  props: {
-    id: {
-      type: String,
-    },
   },
   computed: {
     ...mapState({
@@ -177,6 +177,23 @@ export default {
     },
     breadcrumbFinal() {
       return this.newMode ? 'Nouveau' : this.activeInterventionData.objet;
+    },
+  },
+  watch: {
+    id() {
+      let svm = this;
+      if (!this.newMode) {
+        let id = parseInt(this.id);
+
+        this.$store.dispatch('selectIntervention', id);
+        this.$store
+          .dispatch('fetchIntervention', id)
+          .then(() => (svm.loading = false));
+      } else {
+        this.$store
+          .dispatch('resetActiveIntervention')
+          .then(() => (svm.loading = false));
+      }
     },
   },
   mounted() {
@@ -199,23 +216,6 @@ export default {
         .dispatch('fetchIntervention', id)
         .then(() => (svm.loading = false));
     }
-  },
-  watch: {
-    id() {
-      let svm = this;
-      if (!this.newMode) {
-        let id = parseInt(this.id);
-
-        this.$store.dispatch('selectIntervention', id);
-        this.$store
-          .dispatch('fetchIntervention', id)
-          .then(() => (svm.loading = false));
-      } else {
-        this.$store
-          .dispatch('resetActiveIntervention')
-          .then(() => (svm.loading = false));
-      }
-    },
   },
 };
 </script>

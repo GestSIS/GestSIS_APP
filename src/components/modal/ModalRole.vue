@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ role.id ? 'Modifier' : 'Ajouter' }} un rôle
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,37 +10,37 @@
       <div class="mb-3">
         <label for="nom">Nom</label>
         <input
-          type="text"
+          id="nom"
           v-model="role.nom"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
-          id="nom"
         />
       </div>
       <div class="mb-3">
         <label for="description">Description</label>
         <input
+          id="description"
+          v-model="role.description"
           type="text"
           required
-          v-model="role.description"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['description'] }"
-          id="description"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Permissions</label>
         <div
-          class="form-check"
           v-for="permission in permissions"
           :key="permission.id"
+          class="form-check"
         >
           <input
+            :id="'r' + permission.id"
+            v-model="role.permissions"
             type="checkbox"
             class="form-check-input"
             :value="permission.id"
-            v-model="role.permissions"
-            :id="'r' + permission.id"
           />
           <label class="form-check-label" :for="'r' + permission.id">{{
             permission.nom

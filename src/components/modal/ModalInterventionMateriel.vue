@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter du materiel</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter du materiel</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -22,11 +22,11 @@
       <div class="mb-3">
         <label for="remarque">Quantité</label>
         <input
-          type="number"
+          id="remarque"
           v-model="activeMateriel.quantite"
+          type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['quantite'] }"
-          id="remarque"
         />
       </div>
     </div>

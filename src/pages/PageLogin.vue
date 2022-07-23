@@ -6,9 +6,9 @@
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous connectez</h1>
       <label for="inputEmail" class="visually-hidden">Email</label>
       <input
+        id="inputEmail"
         v-model="email"
         type="email"
-        id="inputEmail"
         class="form-control form-control-sm"
         placeholder="Email"
         required
@@ -18,16 +18,16 @@
       />
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
+        id="inputPassword"
         v-model="password"
         type="password"
-        id="inputPassword"
         class="form-control form-control-sm"
         placeholder="Mot de passe"
         required
         autocomplete="off"
         :class="{ 'is-invalid': error }"
       />
-      <div class="invalid-feedback" v-if="error">
+      <div v-if="error" class="invalid-feedback">
         Informations de connexion invalides
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">
@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'PageLogin',
   data() {
     return {
       email: null,

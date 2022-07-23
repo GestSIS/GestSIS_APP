@@ -5,9 +5,9 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
           <button
-            @click.prevent="save"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="save"
           >
             Enregistrer
           </button>
@@ -15,10 +15,10 @@
         <div class="card-body">
           <label for="m-int-resume">Description</label>
           <textarea
-            :readonly="!hasEditPermission"
             id="m-int-resume"
-            class="form-control form-control-sm"
             v-model="activeInterventionData.description"
+            :readonly="!hasEditPermission"
+            class="form-control form-control-sm"
             rows="30"
           ></textarea>
         </div>
@@ -57,6 +57,7 @@ export default {
       activeInterventionData: (state) => state.intervention.active.data,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),

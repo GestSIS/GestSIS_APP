@@ -17,7 +17,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
           <router-link
             v-for="setting in filteredSettings"
             :key="setting.name"
@@ -30,7 +30,7 @@
             <span>{{ setting.name }}</span>
           </router-link>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view></router-view>
           </div>
@@ -45,7 +45,7 @@ import permissions from '@/store/permissions.js';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'configuration',
+  name: 'PageConfiguration',
   data() {
     return {
       settings: [
@@ -93,11 +93,12 @@ export default {
   },
   computed: {
     ...mapState({
+      isAdmin: (state) => state.auth.admin,
       permissions: (state) => state.auth.sis.permissions,
     }),
     filteredSettings() {
-      return this.settings.filter((s) =>
-        this.permissions.includes(s.permission)
+      return this.settings.filter(
+        (s) => this.permissions.includes(s.permission) || this.isAdmin
       );
     },
   },

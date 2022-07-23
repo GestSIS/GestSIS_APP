@@ -9,24 +9,24 @@
       <div class="row g-3 align-items-center mb-3">
         <div class="col-auto">
           <input
+            id="m-user"
+            v-model="username"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData.username }"
-            id="m-user"
             name="username"
             placeholder="Utilisateur"
-            v-model="username"
           />
         </div>
         <div class="col-auto mx-sm-3">
           <input
+            id="m-password"
+            v-model="password"
             type="password"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData.password }"
-            id="m-password"
             name="password"
             placeholder="Mot de passe"
-            v-model="password"
           />
         </div>
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
@@ -37,14 +37,14 @@
         <div class="input-group input-group-sm">
           <label for="m-communication"></label>
           <textarea
+            id="m-communication"
+            v-model="communication"
             type="text"
             rows="2"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errorsData['communication'] }"
-            id="m-communication"
             name="communication"
             placeholder="Communication"
-            v-model="communication"
           />
         </div>
       </div>
@@ -79,10 +79,10 @@
           >
             <td class="text-center">
               <input
-                type="checkbox"
-                class="form-check-input"
                 :id="'select-' + e.sapeur_id"
                 v-model="unselected[e.sapeur_id]"
+                type="checkbox"
+                class="form-check-input"
                 :false-value="true"
                 :true-value="false"
               />
@@ -177,7 +177,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'Mutations',
+  name: 'MutationsRta',
   data() {
     return {
       maxNbNumero: 3,
@@ -187,6 +187,16 @@ export default {
       communication: '',
       errorsData: {},
     };
+  },
+  watch: {
+    mutations() {
+      this.unselected = {
+        ...this.mutations
+          .map((m) => ({ [m.sapeur_id]: false }))
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+        ...this.unselected,
+      };
+    },
   },
   mounted() {
     this.$store.dispatch('fetchLocalites');
@@ -202,16 +212,6 @@ export default {
         .reduce((a, b) => ({ ...a, ...b }), {}),
       ...this.unselected,
     };
-  },
-  watch: {
-    mutations() {
-      this.unselected = {
-        ...this.mutations
-          .map((m) => ({ [m.sapeur_id]: false }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
-        ...this.unselected,
-      };
-    },
   },
   computed: {
     ...mapState({
@@ -429,7 +429,7 @@ export default {
       this.loading = true;
       this.$store
         .dispatch('updateReferenceRta', data)
-        .then((_) => {
+        .then(() => {
           this.$awn.success('Mutation transmise avec succès');
         })
         .catch((error) => {

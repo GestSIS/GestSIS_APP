@@ -25,24 +25,24 @@
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <router-link custom to="/exercices/new" v-slot="{ navigate }">
+            <router-link v-slot="{ navigate }" custom to="/exercices/new">
               <button
-                @click="navigate"
-                class="btn btn-outline-primary"
                 v-if="hasEditPermission"
+                class="btn btn-outline-primary"
+                @click="navigate"
               >
                 Ajouter un exercice
               </button>
             </router-link>
             <router-link
+              v-slot="{ navigate }"
               custom
               :to="'/exercices/' + selectedId"
-              v-slot="{ navigate }"
             >
               <button
                 :disabled="!selectedId"
-                @click="navigate"
                 class="btn btn-outline-primary"
+                @click="navigate"
               >
                 {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
               </button>
@@ -57,8 +57,8 @@
             </button> -->
             <button
               :disabled="!selectedId"
-              @click="sms({ id: selectedId })"
               class="btn btn-outline-primary"
+              @click="sms({ id: selectedId })"
             >
               SMS
             </button>
@@ -81,15 +81,15 @@
             </button>
             <button
               :disabled="!selectedId"
-              @click="listePresences({ id: selectedId })"
               class="btn btn-outline-primary"
+              @click="listePresences({ id: selectedId })"
             >
               Liste de présences
             </button>
             <button
               :disabled="!selectedId"
-              @click="listeAppel({ id: selectedId })"
               class="btn btn-outline-primary"
+              @click="listeAppel({ id: selectedId })"
             >
               Liste d'appel
             </button>
@@ -106,8 +106,8 @@
             <div class="row">
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterLocalite"
+                  class="form-select form-select-sm"
                   @change="
                     (event) => onFilter('localite_id', event.target.value)
                   "
@@ -124,8 +124,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterCategorie"
+                  class="form-select form-select-sm"
                   @change="
                     (event) =>
                       onFilter('exercice_categorie_id', event.target.value)
@@ -143,8 +143,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterStatus"
+                  class="form-select form-select-sm"
                   @change="
                     (event) => onFilter('statut', parseInt(event.target.value))
                   "
@@ -165,7 +165,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card card-primary card-outline mb-5 table-responsive">
-          <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
@@ -174,17 +174,17 @@
             v-show="!loading"
             ref="basetable_exercices"
             :selectable="true"
-            selectKey="id"
+            select-key="id"
             row-selected-class="table-primary"
-            @selected="selectExercice"
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
             no-data="Aucun exercice/séance à afficher"
             :data="filteredExercices"
             :row-class="onRowClass"
+            @selected="selectExercice"
           >
-            <template v-slot:details="props">
+            <template #details="props">
               <div class="d-flex">
                 <button
                   class="btn btn-link border-0"
@@ -201,11 +201,11 @@
                 </button>
               </div>
             </template>
-            <template v-slot:actions="props">
+            <template #actions="props">
               <router-link
+                v-slot="{ navigate }"
                 :to="'/exercices/' + props.rowData.id"
                 custom
-                v-slot="{ navigate }"
               >
                 <button
                   title="modifier"
@@ -216,38 +216,38 @@
                 </button>
               </router-link>
               <button
+                v-if="hasValidationPermission && props.rowData.statut == 2"
                 title="valider"
                 class="btn btn-outline-primary border-0"
                 @click="validerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut == 2"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
-                title="annuler"
-                class="btn btn-outline-warning border-0"
-                @click="annulerExercice(props.rowData.id)"
                 v-if="
                   hasValidationPermission &&
                   props.rowData.statut <= 3 &&
                   props.rowData.statut > 0
                 "
+                title="annuler"
+                class="btn btn-outline-warning border-0"
+                @click="annulerExercice(props.rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'ban']" />
               </button>
               <button
+                v-if="hasValidationPermission && props.rowData.statut == 0"
                 title="réactiver"
                 class="btn btn-outline-success border-0"
                 @click="reactiverExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut == 0"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
+                v-if="hasValidationPermission && props.rowData.statut <= 3"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerExercice(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut <= 3"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -287,7 +287,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'exercices',
+  name: 'PageExercices',
   components: {
     BaseTable,
     ExerciceComptable,
@@ -297,17 +297,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeExercice').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     return {
@@ -385,6 +374,17 @@ export default {
       ],
     };
   },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchListeExercice').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
+  },
   computed: {
     ...mapState({
       exercices: (state) => state.exercice.liste,
@@ -395,8 +395,10 @@ export default {
         ),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
       hasValidationPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
     ...mapGetters(['activeExerciceId']),

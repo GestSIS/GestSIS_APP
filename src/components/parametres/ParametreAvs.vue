@@ -13,31 +13,31 @@
           <div class="mb-3">
             <label for="taux_avs">Taux AVS</label>
             <input
-              type="text"
+              id="taux_avs"
               v-model="params.taux_avs"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_avs'] }"
-              id="taux_avs"
             />
           </div>
           <div class="mb-3">
             <label for="taux_ac">Taux AC</label>
             <input
-              type="text"
+              id="taux_ac"
               v-model="params.taux_ac"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_ac'] }"
-              id="taux_ac"
             />
           </div>
           <div class="mb-3">
             <label for="franchise_avs">Franchise AVS</label>
             <input
-              type="text"
+              id="franchise_avs"
               v-model="params.franchise_avs"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['franchise_avs'] }"
-              id="franchise_avs"
             />
           </div>
           <div class="mb-3">
@@ -45,11 +45,11 @@
               >Franchise imposition fédéral</label
             >
             <input
-              type="text"
+              id="franchise_imposition"
               v-model="params.franchise_imposition"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['franchise_imposition'] }"
-              id="franchise_imposition"
             />
           </div>
           <div class="mb-3">

@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Convoquer par SMS</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Convoquer par SMS</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
         <div class="col-8">
           <base-table :fields="fields" :data="computedSapeurs">
-            <template v-slot:checkbox="{ key, value, rowData }">
+            <template #checkbox="{ key, value, rowData }">
               <input
+                :id="key + '-' + rowData.id"
                 type="checkbox"
                 class="form-check-input"
-                :id="key + '-' + rowData.id"
                 :checked="value"
                 disabled
               />
@@ -21,18 +21,18 @@
         </div>
         <div class="col-4">
           <base-checkbox
+            v-model="params.differe"
             class="mb-3"
             label="Envoie différé"
-            v-model="params.differe"
           />
           <div class="mb-3">
             <label for="date">Date</label>
             <input
-              type="datetime-local"
+              id="date"
               v-model="params.date"
+              type="datetime-local"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date'] }"
-              id="date"
             />
           </div>
           <!-- <div class="mb-3">
@@ -45,11 +45,11 @@
               >Message ({{ 500 - params.message.length }})</label
             >
             <textarea
-              maxlength="500"
+              id="commentaire"
               v-model="params.message"
+              maxlength="500"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['commentaire'] }"
-              id="commentaire"
               rows="6"
             ></textarea>
           </div>

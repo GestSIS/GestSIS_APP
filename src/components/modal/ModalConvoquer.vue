@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Convocations</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Convocations</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
@@ -15,13 +15,13 @@
           <base-checkbox label="Exercice détail" v-model="params.details" />
         </div>-->
         <div class="col-12 mb-3">
-          <span class="me-3" v-if="!params.sapeurIds.length"
+          <span v-if="!params.sapeurIds.length" class="me-3"
             >Tous les sapeurs actifs</span
           >
-          <span class="me-3" v-else-if="params.sapeurIds.length == 1"
+          <span v-else-if="params.sapeurIds.length == 1" class="me-3"
             >1 sapeur sélectionné</span
           >
-          <span class="me-3" v-else
+          <span v-else class="me-3"
             >{{ params.sapeurIds.length }} sapeurs sélectionnés</span
           >
           <button
@@ -44,39 +44,39 @@
         <div class="col-8">
           <h6>Informations</h6>
           <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="titre">Titre</span>
+            <span id="titre" class="input-group-text">Titre</span>
             <input
+              v-model="params.titre"
               type="text"
               class="form-control form-control-sm"
               placeholder="Convocation"
               aria-label="Convocation"
               aria-describedby="titre"
-              v-model="params.titre"
             />
           </div>
           <base-checkbox
+            v-model="params.info"
             class="mb-3"
             label="Affichage des personnes 'Pour information'"
-            v-model="params.info"
           />
           <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="info">Info</span>
+            <span id="info" class="input-group-text">Info</span>
             <input
+              v-model="params.pourInfo"
               type="text"
               class="form-control form-control-sm"
               :disabled="!params.info"
               placeholder="Pour information"
               aria-label="Pour information"
               aria-describedby="info"
-              v-model="params.pourInfo"
             />
           </div>
         </div>
         <div class="col-4">
           <h6>Format</h6>
           <base-radio
-            :advancedLabel="true"
             v-model="params.format"
+            :advanced-label="true"
             :options="formats"
           />
         </div>
@@ -85,21 +85,21 @@
       <div class="mb-3">
         <label for="debut">Texte de début de convocation</label>
         <textarea
+          id="debut"
           v-model="params.texteDebut"
           rows="4"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['textDebut'] }"
-          id="debut"
         />
       </div>
       <div class="mb-3">
         <label for="fin">Texte de fin de convocation</label>
         <textarea
+          id="fin"
           v-model="params.texteFin"
           rows="4"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['texteFin'] }"
-          id="fin"
         />
       </div>
     </div>

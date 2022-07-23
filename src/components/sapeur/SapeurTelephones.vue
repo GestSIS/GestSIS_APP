@@ -4,9 +4,9 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
       <button
-        @click.prevent="saveTelephones"
-        class="btn btn-primary"
         v-if="hasEditPermission"
+        class="btn btn-primary"
+        @click.prevent="saveTelephones"
       >
         Enregistrer
       </button>
@@ -21,20 +21,20 @@
             <th v-if="sapeurType === 0">
               RTA
               <font-awesome-icon
-                class="ms-1"
                 v-tooltip.bottom="
                   'Cocher pour transmettre à la centrale d\'alarme RTA'
                 "
+                class="ms-1"
                 :icon="['far', 'question-circle']"
               />
             </th>
-            <th class="text-center" v-if="hasEditPermission">Actions</th>
+            <th v-if="hasEditPermission" class="text-center">Actions</th>
           </tr>
         </thead>
         <tr v-if="telephones.length <= 0">
           <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
         </tr>
-        <draggable tag="tbody" v-model="telephones" item-key="priorite">
+        <draggable v-model="telephones" tag="tbody" item-key="priorite">
           <template #item="{ element }">
             <tr>
               <td
@@ -45,42 +45,42 @@
               </td>
               <td>
                 <input
+                  v-model="element.numero"
                   class="form-control form-control-sm"
                   type="text"
                   :readonly="!hasEditPermission"
-                  v-model="element.numero"
                   placeholder="..."
                 />
               </td>
               <td>
                 <select
-                  class="form-select form-select-sm"
                   v-model="element.telephone_type_id"
+                  class="form-select form-select-sm"
                   :disabled="!hasEditPermission"
                 >
                   <option
                     v-for="t in telephonesTypes"
-                    :value="t.id"
                     :key="t.id"
+                    :value="t.id"
                   >
                     {{ t.type }}
                   </option>
                 </select>
               </td>
-              <td class="align-middle text-center" v-if="sapeurType === 0">
+              <td v-if="sapeurType === 0" class="align-middle text-center">
                 <input
+                  v-model="element.rta"
                   type="checkbox"
                   class="form-check-input"
-                  v-model="element.rta"
                   :disabled="!hasEditPermission"
                 />
               </td>
-              <td class="align-middle text-center" v-if="hasEditPermission">
+              <td v-if="hasEditPermission" class="align-middle text-center">
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  @click="removeTelephone(element.priorite)"
                   required
+                  @click="removeTelephone(element.priorite)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
@@ -90,11 +90,11 @@
         </draggable>
       </table>
       <button
+        v-if="hasEditPermission"
         type="button"
         class="btn btn-outline-primary"
+        :disabled="telephonesData.length >= 3"
         @click="addTelephone()"
-        :disabled="this.telephonesData.length >= 3"
-        v-if="hasEditPermission"
       >
         <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un
         numéro
@@ -112,11 +112,6 @@ export default {
   components: {
     draggable,
   },
-  mounted() {
-    this.telephonesData = [
-      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
-    ];
-  },
   data() {
     return {
       telephonesData: [],
@@ -128,11 +123,17 @@ export default {
       this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
     },
   },
+  mounted() {
+    this.telephonesData = [
+      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
+    ];
+  },
   computed: {
     ...mapState({
       sapeurType: (state) => state.sapeur.active.data.type,
       telephonesTypes: (state) => state.baseData.telephoneTypes,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     ...mapGetters(['activeSapeurTelephones']),

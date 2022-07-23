@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,11 +10,11 @@
       <div class="mb-3">
         <label for="titre">Titre</label>
         <input
-          type="text"
+          id="titre"
           v-model="activeMission.titre"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['titre'] }"
-          id="titre"
         />
       </div>
     </div>

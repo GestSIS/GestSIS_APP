@@ -30,6 +30,7 @@ import AppModal from '@/components/AppModal.vue';
 import MainSidebar from '@/components/MainSidebar.vue';
 
 export default {
+  name: 'DefaultLayout',
   components: {
     MainSidebar,
     AppNavbar,

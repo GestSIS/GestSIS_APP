@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
         intervention
       </h5>
@@ -11,44 +11,44 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeIndemnite.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="tarif">Tarif</label>
         <input
-          type="text"
+          id="tarif"
           v-model="activeIndemnite.tarif"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tarif'] }"
-          id="tarif"
         />
       </div>
       <div class="mb-3">
         <label class="d-block">Type d'imputation</label>
         <div class="form-check form-check-inline">
           <input
+            id="tarif-min"
+            v-model="imputationType"
             class="form-check-input"
             type="radio"
             name="tarif-min"
-            id="tarif-min"
             value="tarif-min"
-            v-model="imputationType"
           />
           <label class="form-check-label" for="tarif-min">Tarif min</label>
         </div>
         <div class="form-check form-check-inline">
           <input
+            id="taux"
+            v-model="imputationType"
             class="form-check-input"
             type="radio"
             name="taux"
-            id="taux"
             value="taux"
-            v-model="imputationType"
           />
           <label class="form-check-label" for="taux"
             >Taux week-end et taux nuit</label
@@ -56,25 +56,25 @@
         </div>
       </div>
       <div class="container-fluid">
-        <div class="row" v-if="imputationType != 'taux'">
+        <div v-if="imputationType != 'taux'" class="row">
           <div class="mb-3 col-3">
             <label for="tarif_min">Tarif min</label>
             <input
-              type="text"
+              id="tarif_min"
               v-model="activeIndemnite.tarif_min"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif_min'] }"
-              id="tarif_min"
             />
           </div>
           <div class="mb-3 col-2">
             <label for="tarif_min_pour">Pour</label>
             <input
-              type="text"
+              id="tarif_min_pour"
               v-model="activeIndemnite.tarif_min_pour"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif_min_pour'] }"
-              id="tarif_min_pour"
             />
           </div>
           <div class="mb-3 col-4">
@@ -93,18 +93,18 @@
           <div class="mb-3 col-3">
             <label for="pro-rata">Pro-rata</label>
             <font-awesome-icon
-              class="ms-1"
               v-tooltip.bottom="
                 'A cocher si le montant du tarif min doit être calculé au pro-rata du nombre d\'heures effectuées.'
               "
+              class="ms-1"
               :icon="['far', 'question-circle']"
             />
             <div class="form-check text-center col-6">
               <input
-                type="checkbox"
-                class="form-check-input"
                 id="pro-rata"
                 v-model="activeIndemnite.tarif_min_pro_rata"
+                type="checkbox"
+                class="form-check-input"
               />
               <label class="form-check-label" for="pro-rata"></label>
             </div>
@@ -124,45 +124,45 @@
             </select>
           </div>
         </div>
-        <div class="row" v-if="imputationType == 'taux'">
+        <div v-if="imputationType == 'taux'" class="row">
           <div class="mb-3 col-6">
             <label for="taux_nuit">Taux nuit</label>
             <input
-              type="text"
+              id="taux_nuit"
               v-model="activeIndemnite.taux_nuit"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_nuit'] }"
-              id="taux_nuit"
             />
           </div>
           <div class="mb-3 col-6">
             <label for="taux_weekend">Taux weekend</label>
             <input
-              type="text"
+              id="taux_weekend"
               v-model="activeIndemnite.taux_weekend"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_weekend'] }"
-              id="taux_weekend"
             />
           </div>
           <div class="mb-3 col-6">
             <label for="debut">Début nuit</label>
             <input
-              type="time"
+              id="debut"
               v-model="activeIndemnite.debut"
+              type="time"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['debut'] }"
-              id="debut"
             />
           </div>
           <div class="mb-3 col-6">
             <label for="fin">Fin nuit</label>
             <input
-              type="time"
+              id="fin"
               v-model="activeIndemnite.fin"
+              type="time"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['fin'] }"
-              id="fin"
             />
           </div>
         </div>
@@ -194,16 +194,16 @@
         </select>
       </div>
       <base-select
+        v-model="activeIndemnite.type"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
         label="Type comptable"
-        valueKey="value"
-        displayKey="label"
+        value-key="value"
+        display-key="label"
         :options="[
           { value: 1, label: 'Solde' },
           { value: 2, label: 'Indemnite' },
         ]"
-        v-model="activeIndemnite.type"
       />
     </div>
     <div class="modal-footer">

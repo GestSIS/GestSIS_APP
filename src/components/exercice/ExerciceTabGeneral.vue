@@ -3,9 +3,9 @@
     <div class="card-header d-flex justify-content-between">
       <span></span>
       <button
+        v-if="hasEditPermission"
         class="btn btn-outline-primary"
         @click="save"
-        v-if="hasEditPermission"
       >
         {{ newMode ? 'Ajouter' : 'Sauvegarder' }}
       </button>
@@ -15,26 +15,26 @@
       <div class="mb-3">
         <label for="m-exe-des">Designation</label>
         <input
+          id="m-exe-des"
+          v-model="activeExerciceData.designation"
           type="text"
           :readonly="!hasEditPermission"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="m-exe-des"
           name="nom"
-          v-model="activeExerciceData.designation"
         />
       </div>
       <!-- CATEGORIE -->
       <div class="mb-3">
         <label for="m-sap-cat">Categorie</label>
         <select
+          id="m-sap-cat"
+          v-model="activeExerciceData.exercice_categorie_id"
           :disabled="!hasEditPermission"
           class="form-select form-select-sm"
           required
           :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-          id="m-sap-cat"
           style="width: 100%"
-          v-model="activeExerciceData.exercice_categorie_id"
         >
           <option
             v-for="categorie in categories"
@@ -55,13 +55,13 @@
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
+                id="m-exe-date"
+                v-model="activeExerciceData.date"
                 type="date"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date'] }"
-                id="m-exe-date"
                 name="nom"
-                v-model="activeExerciceData.date"
               />
             </div>
           </div>
@@ -75,13 +75,13 @@
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
+                id="m-exe-heure"
+                v-model="activeExerciceData.heure"
                 type="time"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure'] }"
-                id="m-exe-heure"
                 name="nom"
-                v-model="activeExerciceData.heure"
               />
             </div>
           </div>
@@ -97,15 +97,15 @@
                 <font-awesome-icon :icon="['fas', 'hourglass-end']" />
               </div>
               <input
+                id="m-exe-duree"
+                v-model="activeExerciceData.duree"
                 type="number"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['duree'] }"
                 min="1"
                 max="780"
-                id="m-exe-duree"
                 name="nom"
-                v-model="activeExerciceData.duree"
               />
               <span class="input-group-text">min</span>
             </div>
@@ -118,14 +118,14 @@
           <div class="mb-3">
             <label for="m-sap-localite">Localité</label>
             <select
+              id="m-sap-localite"
+              v-model="activeExerciceData.localite_id"
               :disabled="!hasEditPermission"
               class="form-select form-select-sm"
               required
               :class="{ 'is-invalid': errors['localite_id'] }"
-              id="m-sap-localite"
               name="localite_id"
               style="width: 100%"
-              v-model="activeExerciceData.localite_id"
             >
               <option
                 v-for="localite in localites"
@@ -142,13 +142,13 @@
           <div class="mb-3">
             <label for="m-exe-lieu">Lieu</label>
             <input
+              id="m-exe-lieu"
+              v-model="activeExerciceData.lieu"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
-              id="m-exe-lieu"
               name="nom"
-              v-model="activeExerciceData.lieu"
             />
           </div>
         </div>
@@ -157,13 +157,13 @@
       <div class="mb-3">
         <label for="m-sap-communication">Communications</label>
         <textarea
+          id="m-sap-communication"
+          v-model="activeExerciceData.communications"
           type="text"
           :readonly="!hasEditPermission"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['communications'] }"
-          id="m-sap-communication"
           name="communications"
-          v-model="activeExerciceData.communications"
         ></textarea>
       </div>
     </div>
@@ -186,6 +186,7 @@ export default {
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       // TODO: Check si exercice pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
     }),
     exerciceCategorie() {

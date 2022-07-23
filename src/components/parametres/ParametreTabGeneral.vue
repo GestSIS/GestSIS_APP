@@ -14,32 +14,32 @@
           <div class="mb-3">
             <label for="nom">Nom du SIS</label>
             <input
-              type="text"
+              id="nom"
               v-model="sisParam.nom"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['nom'] }"
-              id="nom"
             />
           </div>
           <div class="row mb-3">
             <div class="col-8">
               <label for="district">District</label>
               <input
-                type="text"
+                id="district"
                 v-model="sisParam.district"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['district'] }"
-                id="district"
               />
             </div>
             <div class="col-4">
               <label for="no_arrondissement">No arrondissement</label>
               <input
-                type="text"
+                id="no_arrondissement"
                 v-model="sisParam.no_arrondissement"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no_arrondissement'] }"
-                id="no_arrondissement"
               />
             </div>
           </div>
@@ -47,61 +47,61 @@
             <div class="col-8">
               <label for="rue">Rue</label>
               <input
-                type="text"
+                id="rue"
                 v-model="sisParam.rue"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['rue'] }"
-                id="rue"
               />
             </div>
             <div class="col-4">
               <label for="numero">Numéro</label>
               <input
-                type="text"
+                id="numero"
                 v-model="sisParam.numero"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['numero'] }"
-                id="numero"
               />
             </div>
           </div>
           <base-select
+            v-model="sisParam.localite_id"
             class="mb-3"
-            valueKey="id"
+            value-key="id"
             label="Localité"
             :formatter="formatLocalite"
             :options="localites"
-            v-model="sisParam.localite_id"
             :select-class="{ 'is-invalid': errors['localite_id'] }"
           />
           <base-select
+            v-model="sisParam.sapeur_id"
             class="mb-3"
-            valueKey="id"
+            value-key="id"
             label="Commandant"
             :formatter="formatSapeur"
             :options="sapeurs"
-            v-model="sisParam.sapeur_id"
             :select-class="{ 'is-invalid': errors['sapeur_id'] }"
           />
           <div class="row mb-3">
             <div class="col-6">
               <label for="telephone">Téléphone</label>
               <input
-                type="text"
+                id="telephone"
                 v-model="sisParam.telephone"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['telephone'] }"
-                id="telephone"
               />
             </div>
             <div class="col-6">
               <label for="email">Email</label>
               <input
-                type="text"
+                id="email"
                 v-model="sisParam.email"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['email'] }"
-                id="email"
               />
             </div>
           </div>
@@ -109,21 +109,21 @@
             <div class="col-6">
               <label for="iban">Iban</label>
               <input
-                type="text"
+                id="iban"
                 v-model="sisParam.iban"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['iban'] }"
-                id="iban"
               />
             </div>
             <div class="col-6">
               <label for="bic">BIC</label>
               <input
-                type="text"
+                id="bic"
                 v-model="sisParam.bic"
+                type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['bic'] }"
-                id="bic"
               />
             </div>
           </div>

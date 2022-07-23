@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeTraitement.id ? 'Modifier' : 'Ajouter' }} un traitement
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,21 +10,21 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeTraitement.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeTraitement.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
     </div>

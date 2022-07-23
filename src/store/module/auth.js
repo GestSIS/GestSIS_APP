@@ -1,5 +1,4 @@
 import types from '../mutationTypes';
-import permissions from '../permissions';
 
 import { TokenService } from '../../services/StorageService.js';
 import AuthService from '../../services/AuthService.js';
@@ -12,6 +11,7 @@ export default {
     authenticated: !!TokenService.getAccessToken(),
     user: null,
     email: null,
+    admin: false,
     refreshTokenPromise: null,
     permissions: [],
     roles: [],
@@ -43,6 +43,7 @@ export default {
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       state.email = jwt.data.email;
+      state.admin = jwt.data.admin;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -93,6 +94,7 @@ export default {
       const availableSis = Object.keys(permissionsParSis);
       state.sis.available = availableSis;
       state.email = jwt.data.email;
+      state.admin = jwt.data.admin;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -111,6 +113,7 @@ export default {
 
       state.user = null;
       state.email = null;
+      state.admin = false;
       state.sis.activeId = null;
       state.sis.activeKey = null;
       state.sis.permissions = [];
@@ -204,7 +207,7 @@ export default {
     newRegisterToken(_, token) {
       return AuthService.newRegisterToken(token).then((t) => t.data);
     },
-    updateUserRoles({ commit, state }, user) {
+    updateUserRoles({ commit }, user) {
       return AuthService.updateUserRoles(user).then((data) => {
         return commit(types.UPDATE_USER_ROLE, {
           user_id: user.id,

@@ -37,9 +37,9 @@
             <td>{{ i.tarif_min_pour }}</td>
             <td class="text-center">
               <input
+                v-model="i.tarif_min_pro_rata"
                 type="checkbox"
                 class="form-check-input"
-                v-model="i.tarif_min_pro_rata"
               />
             </td>
             <td>{{ unite(i.type_unite_id) }}</td>

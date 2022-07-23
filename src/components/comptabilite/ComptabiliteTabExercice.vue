@@ -7,16 +7,16 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button
-            class="btn btn-outline-primary"
             v-if="!selectedItem || selectedItem?.statut == 3"
+            class="btn btn-outline-primary"
             :disabled="!selectedItem"
             @click="imputer(selectedItem.id)"
           >
             Imputer
           </button>
           <button
-            class="btn btn-outline-danger"
             v-if="selectedItem?.statut == 4"
+            class="btn btn-outline-danger"
             @click="annulerImputer(selectedItem.id)"
           >
             Annuler l'imputation
@@ -42,25 +42,25 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Localité&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @input="(value) => onFilter('localite_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Catégorie&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Catégorie&gt;"
               :options="filteredCategories"
               @input="(value) => onFilter('exercice_categorie_id', value)"
             />
             <base-select
               class="col-md-4"
-              valueKey="id"
-              displayKey="designation"
-              baseOption="&lt;Statut&gt;"
+              value-key="id"
+              display-key="designation"
+              base-option="&lt;Statut&gt;"
               :options="[
                 { id: '3', designation: 'Validé' },
                 { id: '4', designation: 'Imputé' },
@@ -76,7 +76,7 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Exercices</h3>
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -89,16 +89,16 @@
           no-data="Aucune écriture à afficher"
           :detail-row-component="detailRow"
           :data="filteredExercices"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
+              v-if="props.rowData.statut === 4"
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
-              v-if="props.rowData.statut === 4"
             >
               <font-awesome-icon
                 v-if="props.status.detailRowVisible || false"
@@ -110,25 +110,25 @@
               />
             </button>
           </template>
-          <template v-slot:actions="props">
+          <template #actions="props">
             <button
-              class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 3"
+              class="btn btn-outline-primary border-0"
               @click="imputer(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
             <button
-              class="btn btn-outline-primary border-0"
               v-if="props.rowData.statut === 4"
+              class="btn btn-outline-primary border-0"
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
               @click="
                 genererDecompteExercice(
                   props.rowData.id,
                   props.rowData.designation
                 )
               "
-              title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -180,9 +180,10 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  mounted() {
-    this.loading = true;
-    this.init();
+  props: {
+    id: {
+      type: String,
+    },
   },
   data() {
     let svm = this;
@@ -300,16 +301,15 @@ export default {
       ],
     };
   },
-  props: {
-    id: {
-      type: String,
-    },
-  },
   watch: {
     currentExerciceComptableId() {
       this.loading = true;
       this.init();
     },
+  },
+  mounted() {
+    this.loading = true;
+    this.init();
   },
   computed: {
     ...mapState({

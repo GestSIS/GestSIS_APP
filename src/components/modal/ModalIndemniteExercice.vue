@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
         exercice
       </h5>
@@ -18,11 +18,11 @@
           <div class="mb-3">
             <label for="designation">Désignation</label>
             <input
-              type="text"
+              id="designation"
               v-model="activeIndemnite.designation"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['designation'] }"
-              id="designation"
             />
           </div>
           <div class="mb-3">
@@ -53,44 +53,44 @@
                 <tr v-for="(indemnite, i) in base" :key="i">
                   <td :class="uniteComptable ? 'col-2' : 'col-4'">
                     <base-select
+                      v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
-                      valueKey="value"
-                      displayKey="label"
+                      value-key="value"
+                      display-key="label"
                       :options="[
                         { value: 1, label: 'Solde' },
                         { value: 2, label: 'Indemnite' },
                       ]"
-                      v-model="base[i].type"
                     />
                   </td>
                   <td :class="uniteComptable ? 'col-2' : 'col-4'">
                     <input
-                      type="text"
+                      id="tarif"
                       v-model="base[i].tarif"
+                      type="text"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['base-tarif' + i] }"
-                      id="tarif"
                     />
                   </td>
-                  <td class="col-2" v-if="uniteComptable">
+                  <td v-if="uniteComptable" class="col-2">
                     <input
-                      type="text"
+                      id="tarif_min"
                       v-model="base[i].tarif_min"
+                      type="text"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['base-tarif-min' + i] }"
-                      id="tarif_min"
                     />
                   </td>
-                  <td class="col-2" v-if="uniteComptable">
+                  <td v-if="uniteComptable" class="col-2">
                     <div class="input-group input-group-sm">
                       <input
-                        type="text"
+                        id="tarif_min_pour"
                         v-model="base[i].tarif_min_pour"
+                        type="text"
                         class="form-control form-control-sm"
                         :class="{
                           'is-invalid': errors['base-tarif-min-pour' + i],
                         }"
-                        id="tarif_min_pour"
                       />
                       <span class="input-group-text">{{
                         unite(activeIndemnite.type_unite_id)
@@ -109,7 +109,7 @@
                       </option>
                     </select>
                   </td>
-                  <td class="text-center" v-if="base.length > 1">
+                  <td v-if="base.length > 1" class="text-center">
                     <button
                       type="button"
                       class="btn btn-outline-danger border-0"
@@ -140,10 +140,10 @@
           <div class="mb-3">
             <div class="form-check">
               <input
-                type="checkbox"
-                class="form-check-input"
                 id="par-fonction-modal"
                 v-model="activeIndemnite.par_fonction"
+                type="checkbox"
+                class="form-check-input"
               />
               <label class="form-check-label" for="par-fonction-modal"
                 >Par fonction</label
@@ -166,12 +166,12 @@
           </div>
         </div>
 
-        <div class="col-6" v-if="activeIndemnite.par_fonction">
+        <div v-if="activeIndemnite.par_fonction" class="col-6">
           <table class="table table-sm">
             <thead>
               <tr v-if="Object.keys(columns).length > 1">
                 <th></th>
-                <th class="text-center" v-for="(column, i) in columns" :key="i">
+                <th v-for="(column, i) in columns" :key="i" class="text-center">
                   <button
                     type="button"
                     class="btn btn-outline-danger border-0"
@@ -185,14 +185,14 @@
                 <th>Type</th>
                 <th v-for="(column, i) in columns" :key="i">
                   <base-select
+                    v-model="columns[i].type"
                     :class="{ 'is-invalid': errors['type'] }"
-                    valueKey="value"
-                    displayKey="label"
+                    value-key="value"
+                    display-key="label"
                     :options="[
                       { value: 1, label: 'Solde' },
                       { value: 2, label: 'Indemnite' },
                     ]"
-                    v-model="columns[i].type"
                   />
                 </th>
                 <th rowspan="2">
@@ -239,10 +239,10 @@
                       'is-invalid': errors['column-tarif' + i + '-' + f.id],
                     }"
                     type="text"
+                    :value="columns[i].fonctions[f.id] || 0.0"
                     @change="
                       (e) => (columns[i].fonctions[f.id] = e.target.value)
                     "
-                    :value="columns[i].fonctions[f.id] || 0.0"
                   />
                 </td>
               </tr>
@@ -353,12 +353,12 @@ export default {
       return this.activeIndemnite.par_fonction;
     },
     uniteComptable() {
-      return false;
       // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
-      const uniteId = this.activeIndemnite.type_unite_id;
-      return (
-        this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
-      ); // Comptable ou par pièces
+      return false;
+      // const uniteId = this.activeIndemnite.type_unite_id;
+      // return (
+      //   this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
+      // ); // Comptable ou par pièces
     },
   },
   watch: {

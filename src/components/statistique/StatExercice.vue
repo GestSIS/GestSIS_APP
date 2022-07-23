@@ -7,10 +7,10 @@
           <h3>Stats Exercice</h3>
           <div class="form-check form-switch mb-2">
             <input
-              type="checkbox"
-              class="form-check-input"
               id="switch"
               v-model="allCategories"
+              type="checkbox"
+              class="form-check-input"
             />
             <label class="form-check-label" for="switch"
               >Afficher les catégories sans exercice</label
@@ -34,9 +34,9 @@
                 <td>{{ c.designation }}</td>
                 <td class="text-center">
                   <input
+                    :id="'amendable' + c.id"
                     type="checkbox"
                     class="form-check-input"
-                    :id="'amendable' + c.id"
                     :checked="c.amendable"
                     disabled
                   />
@@ -83,20 +83,20 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'stat-exercice-simple',
-  data() {
-    return {
-      allCategories: false,
-    };
-  },
+  name: 'StatExerciceSimple',
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      allCategories: false,
+    };
+  },
   watch: {
-    activeExerciceComptableId(newValue, _) {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchListeExercice');
     },
   },

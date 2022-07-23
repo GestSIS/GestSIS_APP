@@ -2,10 +2,10 @@
   <div class="mb-3">
     <label v-if="label" :for="label">{{ label }}</label>
     <select
-      multiple
-      class="form-select form-select-sm"
       :id="label"
       v-model="model"
+      multiple
+      class="form-select form-select-sm"
       v-bind="{
         ...$attrs,
       }"
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'base-multi-unselect',
+  name: 'BaseMultiUnselect',
   props: {
     label: {
       type: String,
@@ -62,7 +62,7 @@ export default {
     };
   },
   watch: {
-    options(newValue, oldValue) {
+    options(newValue) {
       const oldOnes = new Set(this.cachedUnselected);
       const addedValues = newValue
         .map((e) => e[this.valueKey])

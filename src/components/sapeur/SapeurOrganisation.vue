@@ -50,6 +50,11 @@ export default {
       });
     },
   },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurGroupes', id);
+    },
+  },
   mounted() {
     if (this.groupes.length === 0) {
       this.$store.dispatch('fetchGroupes').then(() => {
@@ -58,11 +63,6 @@ export default {
     } else {
       this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
     }
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGroupes', id);
-    },
   },
 };
 </script>

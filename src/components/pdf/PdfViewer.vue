@@ -25,7 +25,7 @@ export default {
     };
   },
   watch: {
-    pdfData(next, prev) {
+    pdfData(next) {
       this.displayPdf(next);
     },
   },

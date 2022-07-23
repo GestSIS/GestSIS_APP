@@ -30,17 +30,17 @@
             >
               <h5>
                 {{ date }} - {{ app }}
-                <span class="badge bg-danger" v-if="i < nbNew">Nouveau</span>
+                <span v-if="i < nbNew" class="badge bg-danger">Nouveau</span>
               </h5>
               <ul>
                 <li v-for="(change, j) in changes" :key="j">
-                  <span v-for="(t, i) in change.split('`')"
+                  <span v-for="(t, i) in change.split('`')" :key="i"
                     >{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span
                   >
                 </li>
               </ul>
             </div>
-            <button class="btn btn-primary" @click="all = true" v-if="!all">
+            <button v-if="!all" class="btn btn-primary" @click="all = true">
               Tout afficher
             </button>
           </div>
@@ -77,7 +77,10 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 import * as data from '../../releases.json';
 
 export default {
-  name: 'about',
+  name: 'PageAbout',
+  components: {
+    ExerciceComptable,
+  },
   data: () => {
     return {
       releases: data.releases,
@@ -106,9 +109,6 @@ export default {
 
     localStorage.setItem('latestReleaseDate', this.releases[0].date);
     localStorage.setItem('latestSeenVersion', this.releases[0].version);
-  },
-  components: {
-    ExerciceComptable,
   },
 };
 </script>

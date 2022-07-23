@@ -28,9 +28,9 @@
             <td>{{ f.nom }}</td>
             <td class="text-center">
               <input
+                id="en_cours"
                 type="checkbox"
                 class="form-check-input"
-                id="en_cours"
                 :checked="f.cumulable"
                 disabled
               />

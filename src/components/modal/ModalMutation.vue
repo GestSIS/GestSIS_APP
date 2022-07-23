@@ -1,30 +1,30 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
+      <h5 id="exampleModalLabel" class="modal-title">{{ modalTitle }}</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="mb-3" v-bind:class="{ 'd-none': finDeService }">
+      <div class="mb-3" :class="{ 'd-none': finDeService }">
         <label for="cours-date">Incorporation</label>
         <input
-          type="date"
+          id="incorporation"
           v-model="activeMutation.incorporation"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['incorporation'] }"
-          id="incorporation"
         />
       </div>
       <div class="mb-3">
         <label for="cours-date">Fin de service</label>
         <input
-          type="date"
+          id="cours-date"
           v-model="activeMutation.sortie"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['sortie'] }"
-          id="cours-date"
         />
-        <div class="invalid-feedback" v-if="errors['sortie']">
+        <div v-if="errors['sortie']" class="invalid-feedback">
           Date invalide
         </div>
       </div>
@@ -44,11 +44,11 @@
       <div class="mb-3">
         <label for="motif">Motif</label>
         <input
-          type="text"
+          id="motif"
           v-model="activeMutation.motif"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['motif'] }"
-          id="motif"
         />
       </div>
     </div>

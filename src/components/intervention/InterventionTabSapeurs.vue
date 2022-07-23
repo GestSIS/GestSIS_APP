@@ -8,10 +8,10 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Phases de l'intervention</h3>
           <button
+            v-if="hasEditPermission"
             type="button"
             class="btn btn-primary"
             @click="newPhase"
-            v-if="hasEditPermission"
           >
             Nouvelle phase
           </button>
@@ -48,18 +48,18 @@
                 </td>
                 <td v-if="hasEditPermission">
                   <button
+                    v-if="phase.debut !== null"
                     type="button"
                     class="btn btn-outline-primary border-0 ms-2"
                     @click="editPhase(phase)"
-                    v-if="phase.debut !== null"
                   >
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    v-if="phase.debut !== null"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removePhase(phase.id)"
-                    v-if="phase.debut !== null"
                   >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
@@ -86,16 +86,16 @@
             <span class="badge bg-primary me-2">Entretient</span>
             <span class="badge bg-success me-2">Piquet</span>
           </div>
-          <div class="table-wrapper" ref="wrapper">
+          <div ref="wrapper" class="table-wrapper">
             <table class="table table-sm table-bordered">
               <thead>
                 <tr>
                   <th rowspan="2">Sapeurs</th>
                   <th rowspan="2">Quittance</th>
                   <th
-                    colspan="4"
                     v-for="(col, i) in columns"
                     :key="i"
+                    colspan="4"
                     class="text-center ps-3 pe-3"
                   >
                     {{ col }}h
@@ -149,10 +149,10 @@
                   </th>
                   <td class="text-center">
                     <input
+                      :id="s.id"
                       type="checkbox"
                       :disabled="!hasEditPermission"
                       class="form-check-input"
-                      :id="s.id"
                       :checked="
                         quittances.filter((q) => q.sapeur_id === parseInt(s.id))
                           .length === 1
@@ -184,18 +184,18 @@
                       {{ formatDatePresence(p.debut) }} -
                       {{ formatDatePresence(p.fin) }}
                       <button
+                        v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-primary border-0 ms-2"
                         @click="editPresence(p)"
-                        v-if="hasEditPermission"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />
                       </button>
                       <button
+                        v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-danger border-0"
                         @click="removePresence(p.id)"
-                        v-if="hasEditPermission"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
@@ -245,6 +245,7 @@ export default {
       phasesType: (state) => state.phaseType.liste,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),

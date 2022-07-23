@@ -1,7 +1,7 @@
 <template>
   <div
-    class="alert alert-dismissible alert-warning"
     v-if="!dismissedWarning && canEditAbsence && !canEditPresence"
+    class="alert alert-dismissible alert-warning"
   >
     <button
       type="button"
@@ -19,17 +19,17 @@
         {{ activeExerciceData.date }}
       </h3>
       <button
-        class="btn btn-outline-primary me-2"
-        @click="validate"
-        :disabled="!canValidate"
         v-if="hasValidationPermission"
+        class="btn btn-outline-primary me-2"
+        :disabled="!canValidate"
+        @click="validate"
       >
         Valider
       </button>
       <button
+        v-if="hasPresencePermission"
         class="btn btn-outline-primary"
         @click="save"
-        v-if="hasPresencePermission"
       >
         Sauvegarder
       </button>
@@ -54,11 +54,11 @@
           <td>
             <div class="text-center">
               <input
+                :id="sap.id + 'convoque'"
+                v-model="sap.convoque"
                 type="checkbox"
                 :disabled="!canEditPresence"
                 class="form-check-input"
-                :id="sap.id + 'convoque'"
-                v-model="sap.convoque"
                 :true-value="1"
                 :false-value="0"
               />
@@ -67,11 +67,11 @@
           <td>
             <div class="text-center">
               <input
+                :id="sap.id + 'present'"
+                v-model="sap.present"
                 type="checkbox"
                 :disabled="!canEditPresence"
                 class="form-check-input"
-                :id="sap.id + 'present'"
-                v-model="sap.present"
                 :true-value="1"
                 :false-value="0"
                 @change="selectPresent(sap)"
@@ -82,11 +82,11 @@
           <td>
             <div class="text-center">
               <input
+                :id="sap.id + 'remplace'"
+                v-model="sap.remplace"
                 type="checkbox"
                 :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
                 class="form-check-input"
-                :id="sap.id + 'remplace'"
-                v-model="sap.remplace"
                 :true-value="1"
                 :false-value="0"
                 @change="selectRemplace(sap)"
@@ -100,10 +100,10 @@
           <td>
             <div class="text-center">
               <input
+                :id="sap.id + 'excuse'"
                 type="checkbox"
                 :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
                 class="form-check-input"
-                :id="sap.id + 'excuse'"
                 :checked="!!sap.excuse_type_id"
                 @change.stop.prevent="selectExcuse(sap)"
               />
@@ -118,10 +118,10 @@
           <td>
             <div class="text-center">
               <input
-                type="checkbox"
-                class="form-check-input"
                 :id="sap.id + 'amende'"
                 v-model="sap.amende"
+                type="checkbox"
+                class="form-check-input"
                 :true-value="true"
                 :false-value="false"
                 :disabled="
@@ -179,7 +179,7 @@
         <th class="text-center">
           {{ presences.filter((s) => s.amende).length }}
         </th>
-        <th class="text-center" v-for="h in heureTypes" :key="h.id">
+        <th v-for="h in heureTypes" :key="h.id" class="text-center">
           {{
             presences
               .map((s) =>
@@ -196,10 +196,10 @@
     </table>
     <div class="card-footer">
       <button
-        class="btn btn-outline-primary"
-        @click="manageSapeurs"
         v-if="hasPresencePermission"
+        class="btn btn-outline-primary"
         :disabled="!canEditPresence"
+        @click="manageSapeurs"
       >
         Gérer la liste des sapeurs
       </button>
@@ -224,8 +224,10 @@ export default {
       excusesTypes: (state) => state.excuseType.liste,
       sapeurs: (state) => state.sapeur.liste,
       hasPresencePermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
       hasValidationPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
@@ -266,13 +268,13 @@ export default {
         .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
     },
   },
-  mounted() {
-    this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
-  },
   watch: {
     computedExerciceSapeurs() {
       this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
     },
+  },
+  mounted() {
+    this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -373,7 +375,7 @@ export default {
             svm.$store
               .dispatch('removeSapeurs', supprime)
               .then(resolve)
-              .catch((error) => {
+              .catch(() => {
                 reject("Erreur lors de l'opération");
               });
           }

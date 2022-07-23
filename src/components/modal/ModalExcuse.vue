@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         Sélectionner une excuse
       </h5>
       <button type="button" class="btn-close" @click="close"></button>
@@ -9,9 +9,9 @@
     <div class="mb-3">
       <ul class="list-group list-group-flush">
         <li
-          class="list-group-item list-group-item-action"
           v-for="excuse in listeExcuseTypes"
           :key="excuse.id"
+          class="list-group-item list-group-item-action"
           @click="selectExcuseType(excuse.id)"
         >
           {{ excuse.designation }}

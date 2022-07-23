@@ -65,9 +65,9 @@
             <td v-else>-</td>
             <td class="text-center">
               <input
+                id="par_fonction"
                 type="checkbox"
                 class="form-check-input"
-                id="par_fonction"
                 :checked="i.par_fonction"
                 disabled
               />

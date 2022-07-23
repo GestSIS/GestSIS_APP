@@ -31,9 +31,9 @@
             <td>{{ r.description }}</td>
             <td v-for="p in permissions" :key="p.id" class="text-center">
               <input
+                :id="p.id + '-' + r.id"
                 type="checkbox"
                 class="form-check-input"
-                :id="p.id + '-' + r.id"
                 :checked="r.permissions.includes(p.id)"
                 readonly
                 disabled

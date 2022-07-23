@@ -8,7 +8,6 @@
     >
       <div tabindex="-1" class="focus-helper"></div>
       <svg
-        @click.prevent="expanded = !expanded"
         v-if="node.children && node.children.length > 0"
         aria-hidden="true"
         role="presentation"
@@ -16,6 +15,7 @@
         viewBox="0 0 24 24"
         class="q-tree__arrow q-mr-xs q-icon notranslate tree-node-arrow"
         :class="[expanded ? 'tree-node-arrow--rotate' : '']"
+        @click.prevent="expanded = !expanded"
       >
         <path d="M8,5.14V19.14L19,12.14L8,5.14Z"></path>
       </svg>
@@ -31,7 +31,7 @@
         <div class="user-select-none">{{ data.label }}</div>
         <slot
           name:default
-          v-bind:node="{
+          :node="{
             isRoot,
             isFirst,
             isFirstOfLevel,
@@ -53,13 +53,13 @@
           class="tree-node--parent"
           :select="select"
           :active="active"
-          :isFirst="isFirst && index == 0"
-          :isFirstOfLevel="index == 0"
-          :isLast="isLast && index + 1 == node.children.length"
-          :isLastOfLevel="index + 1 == node.children.length"
+          :is-first="isFirst && index == 0"
+          :is-first-of-level="index == 0"
+          :is-last="isLast && index + 1 == node.children.length"
+          :is-last-of-level="index + 1 == node.children.length"
         >
           <template #default="props">
-            <slot name:default v-bind:node="props.node"></slot>
+            <slot name:default :node="props.node"></slot>
           </template>
         </editable-node>
       </div>

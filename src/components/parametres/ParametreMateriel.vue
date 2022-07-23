@@ -28,9 +28,9 @@
             <td>{{ m.tri }}</td>
             <td class="text-center">
               <input
+                id="statut"
                 type="checkbox"
                 class="form-check-input"
-                id="statut"
                 :checked="m.statut"
                 disabled
               />

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         Chargement en cours ...
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" v-if="done">
+    <div v-if="done" class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
