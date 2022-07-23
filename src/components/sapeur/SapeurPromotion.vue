@@ -5,10 +5,10 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Promotions</h3>
       <button
+        v-if="hasEditPermission"
         type="button"
         class="btn btn-primary"
         @click="newGrade"
-        v-if="hasEditPermission"
       >
         Ajouter une promotion
       </button>
@@ -25,7 +25,7 @@
             <th>Date</th>
             <th>Désignation</th>
             <th>Remarques</th>
-            <th class="text-center" v-if="hasEditPermission">Actions</th>
+            <th v-if="hasEditPermission" class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -36,7 +36,7 @@
             <td>{{ g.date }}</td>
             <td>{{ formatGrade(grades.find((e) => e.id == g.grade_id)) }}</td>
             <td>{{ g.remarque }}</td>
-            <td class="align-middle text-center" v-if="hasEditPermission">
+            <td v-if="hasEditPermission" class="align-middle text-center">
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
@@ -72,19 +72,20 @@ export default {
       activeSapeurGrades: (state) =>
         state.sapeur.active.grades.sort((a, b) => b.date.localeCompare(a.date)),
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurGrades', id);
+    },
   },
   mounted() {
     if (this.grades.length === 0) {
       this.$store.dispatch('fetchGrades');
     }
     this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGrades', id);
-    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

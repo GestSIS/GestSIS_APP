@@ -5,9 +5,9 @@
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
           <button
-            @click.prevent="save"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="save"
           >
             Enregistrer
           </button>
@@ -29,15 +29,15 @@
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
+                    id="m-int-date-debut"
+                    v-model="activeInterventionData.date_debut"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_debut'] }"
                     type="date"
                     :readonly="!hasEditPermission"
                     :min="dateDebutMin"
                     :max="dateDebutMax"
-                    id="m-int-date-debut"
                     name="date_debut"
-                    v-model="activeInterventionData.date_debut"
                   />
                 </div>
               </div>
@@ -50,13 +50,15 @@
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
+                    id="m-int-heure_debut"
+                    v-model="activeInterventionData.heure_debut"
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
-                    :class="{ 'is-invalid': errors['heure_debut'] }"
-                    id="m-int-heure_debut"
+                    :class="{
+                      'is-invalid': errors['heure_debut'],
+                    }"
                     name="heure_debut"
-                    v-model="activeInterventionData.heure_debut"
                   />
                 </div>
               </div>
@@ -71,15 +73,15 @@
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
+                    id="m-int-date-fin"
+                    v-model="activeInterventionData.date_fin"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_fin'] }"
                     :min="dateFinMin"
                     :max="dateFinMax"
                     type="date"
                     :readonly="!hasEditPermission"
-                    id="m-int-date-fin"
                     name="date_fin"
-                    v-model="activeInterventionData.date_fin"
                   />
                 </div>
               </div>
@@ -92,15 +94,15 @@
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
+                    id="m-int-heure_fin"
+                    v-model="activeInterventionData.heure_fin"
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
                     :class="{
                       'is-invalid': errors['heure_fin'],
                     }"
-                    id="m-int-heure_fin"
                     name="heure_fin"
-                    v-model="activeInterventionData.heure_fin"
                   />
                 </div>
               </div>
@@ -110,13 +112,13 @@
           <div class="mb-3">
             <label for="m-int-objet">Objet</label>
             <input
+              id="m-int-objet"
+              v-model="activeInterventionData.objet"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['objet'] }"
-              id="m-int-objet"
               name="objet"
-              v-model="activeInterventionData.objet"
             />
           </div>
 
@@ -124,26 +126,26 @@
           <div class="mb-3">
             <label for="m-int-lieu">Lieu (Rue, N°)</label>
             <input
+              id="m-int-lieu"
+              v-model="activeInterventionData.lieu"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['lieu'] }"
-              id="m-int-lieu"
               name="lieu"
-              v-model="activeInterventionData.lieu"
             />
           </div>
           <!-- NPA + LOCALITE -->
           <div class="mb-3">
             <label for="m-int-localite">Localité</label>
             <select
+              id="m-int-localite"
+              v-model="activeInterventionData.localite_id"
               class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['localite_id'] }"
-              id="m-int-localite"
               name="localite_id"
               style="width: 100%"
               :disabled="!hasEditPermission"
-              v-model="activeInterventionData.localite_id"
             >
               <option
                 v-for="localite in localites"
@@ -158,13 +160,13 @@
           <div class="mb-3">
             <label for="m-int-sapeur">Chef d'intervention</label>
             <select
+              id="m-int-sapeur"
+              v-model="activeInterventionData.sapeur_id"
               class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['sapeur_id'] }"
-              id="m-int-sapeur"
               name="localite_id"
               style="width: 100%"
               :disabled="!hasEditPermission"
-              v-model="activeInterventionData.sapeur_id"
             >
               <option
                 v-for="sapeur in sapeurs"
@@ -189,15 +191,15 @@
           <div class="mb-3">
             <label for="m-int-traitement">Traitement</label>
             <select
+              id="m-int-traitement"
+              v-model="activeInterventionData.intervention_traitement_id"
               class="form-select form-select-sm required"
               :class="{
                 'is-invalid': errors['intervention_traitement_id'],
               }"
-              id="m-int-traitement"
               name="localite_id"
               style="width: 100%"
               :disabled="!hasEditPermission"
-              v-model="activeInterventionData.intervention_traitement_id"
             >
               <option
                 v-for="traitement in interventionTraitements"
@@ -213,17 +215,17 @@
             <div class="col-9">
               <label for="m-int-type">Type d'intervention</label>
               <select
+                id="m-int-type"
+                v-model="activeInterventionData.type_intervention_id"
                 class="form-select form-select-sm"
                 :class="{ 'is-invalid': errors['type_intervention_id'] }"
-                id="m-int-type"
                 name="type_intervention_id"
                 :disabled="!hasEditPermission"
-                v-model="activeInterventionData.type_intervention_id"
               >
                 <option
                   v-for="t in typesIntervention"
-                  :value="t.id"
                   :key="t.id"
+                  :value="t.id"
                 >
                   {{ t.designation }}
                 </option>
@@ -232,21 +234,21 @@
             <div class="col-3">
               <label for="m-sap-suffixe">Nb intervention</label>
               <font-awesome-icon
-                class="ms-1"
                 v-tooltip.bottom="{
                   content:
                     'Permet de créer un unique rapport d\'intervention pour plusieurs interventions,<br /> tout en ayant des statistiques d\'interventions correctes.',
                   html: true,
                 }"
+                class="ms-1"
                 :icon="['far', 'question-circle']"
               />
               <input
+                id="m-sap-suffixe"
+                v-model="activeInterventionData.stat_nb"
                 type="number"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': false }"
-                id="m-sap-suffixe"
                 name="suffixe"
-                v-model="activeInterventionData.stat_nb"
               />
             </div>
           </div>
@@ -254,13 +256,13 @@
           <div class="mb-3">
             <label for="m-int-stat">Statistique fédérale</label>
             <select
+              id="m-int-stat"
+              v-model="activeInterventionData.stat_federal_id"
               class="form-select form-select-sm required"
               :class="{ 'is-invalid': errors['stat_federal_id'] }"
-              id="m-int-stat"
               name="stat"
               style="width: 100%"
               :disabled="!hasEditPermission"
-              v-model="activeInterventionData.stat_federal_id"
             >
               <option
                 v-for="stat in statsFederales"
@@ -276,28 +278,28 @@
           <div class="mb-3">
             <label for="m-int-save-pers">Nb de personnes sauvées</label>
             <input
+              id="m-int-save-pers"
+              v-model="activeInterventionData.sauve_personne"
               type="number"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_personne'] }"
-              id="m-int-save-pers"
               name="sauve_personne"
               min="0"
-              v-model="activeInterventionData.sauve_personne"
             />
           </div>
           <!-- Sauve animaux -->
           <div class="mb-3">
             <label for="m-int-save-ani">Nb d'animaux sauvés</label>
             <input
+              id="m-int-save-ani"
+              v-model="activeInterventionData.sauve_animaux"
               type="number"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['sauve_animaux'] }"
-              id="m-int-save-ani"
               name="sauve_animaux"
               min="0"
-              v-model="activeInterventionData.sauve_animaux"
             />
           </div>
 
@@ -305,15 +307,15 @@
           <div class="mb-3">
             <label for="m-int-degre">Degre</label>
             <select
+              id="m-int-degre"
+              v-model="activeInterventionData.degre"
               class="form-select form-select-sm required"
               :class="{
                 'is-invalid': errors['degre'],
               }"
-              id="m-int-degre"
               name="degre"
               style="width: 100%"
               :disabled="!hasEditPermission"
-              v-model="activeInterventionData.degre"
             >
               <option v-for="deg in degre" :key="deg.id" :value="deg.id">
                 {{ deg.type }}
@@ -336,13 +338,13 @@
               <div class="mb-3">
                 <label for="m-int-save-ani">Propriétaire</label>
                 <textarea
+                  id="m-int-proprietaire"
+                  v-model="activeInterventionData.proprietaire"
                   type="text"
                   :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['proprietaire'] }"
-                  id="m-int-proprietaire"
                   name="proprietaire"
-                  v-model="activeInterventionData.proprietaire"
                   rows="5"
                 ></textarea>
               </div>
@@ -350,13 +352,13 @@
               <div class="mb-3">
                 <label for="m-int-save-ani">Responsable</label>
                 <textarea
+                  id="m-int-responsable"
+                  v-model="activeInterventionData.responsable"
                   type="text"
                   :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['responsable'] }"
-                  id="m-int-responsable"
                   name="responsable"
-                  v-model="activeInterventionData.responsable"
                   rows="5"
                 ></textarea>
               </div>
@@ -403,6 +405,7 @@ export default {
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),
@@ -451,23 +454,6 @@ export default {
       );
     },
   },
-  mounted() {
-    this.activeInterventionData.responsable = this.replaceBr(
-      this.activeInterventionData.responsable
-    );
-    this.activeInterventionData.description = this.replaceBr(
-      this.activeInterventionData.description
-    );
-    this.activeInterventionData.proprietaire = this.replaceBr(
-      this.activeInterventionData.proprietaire
-    );
-    this.activeInterventionData.heure_debut = this.formatHeure(
-      this.activeInterventionData.heure_debut
-    );
-    this.activeInterventionData.heure_fin = this.formatHeure(
-      this.activeInterventionData.heure_fin
-    );
-  },
   watch: {
     responsable(value) {
       this.activeInterventionData.responsable = this.replaceBr(value);
@@ -484,6 +470,23 @@ export default {
     heureFin(value) {
       this.activeInterventionData.heure_fin = this.formatHeure(value);
     },
+  },
+  mounted() {
+    this.activeInterventionData.responsable = this.replaceBr(
+      this.activeInterventionData.responsable
+    );
+    this.activeInterventionData.description = this.replaceBr(
+      this.activeInterventionData.description
+    );
+    this.activeInterventionData.proprietaire = this.replaceBr(
+      this.activeInterventionData.proprietaire
+    );
+    this.activeInterventionData.heure_debut = this.formatHeure(
+      this.activeInterventionData.heure_debut
+    );
+    this.activeInterventionData.heure_fin = this.formatHeure(
+      this.activeInterventionData.heure_fin
+    );
   },
   methods: {
     async save() {

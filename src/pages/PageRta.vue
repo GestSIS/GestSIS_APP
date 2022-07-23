@@ -15,13 +15,12 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
           <router-link
             :to="{ name: 'rta-mutations' }"
             class="nav-item nav-link"
             exact-active-class="active"
             role="tab"
-            tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
             <span>Mutations</span>
@@ -31,7 +30,6 @@
             class="nav-item nav-link"
             active-class="active"
             role="tab"
-            tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
             <span>GestSIS</span>
@@ -41,13 +39,12 @@
             class="nav-item nav-link"
             active-class="active"
             role="tab"
-            tag="a"
           >
             <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
             <span>Référence</span>
           </router-link>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view></router-view>
           </div>
@@ -59,7 +56,7 @@
 
 <script>
 export default {
-  name: 'rta',
+  name: 'PageRta',
 };
 </script>
 

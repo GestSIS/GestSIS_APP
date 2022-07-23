@@ -9,13 +9,13 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Rôles</label>
-        <div class="form-check" v-for="role in roles" :key="role.id">
+        <div v-for="role in roles" :key="role.id" class="form-check">
           <input
+            :id="'r' + role.id"
+            v-model="user.roles"
             type="checkbox"
             class="form-check-input"
             :value="role.id"
-            v-model="user.roles"
-            :id="'r' + role.id"
           />
           <label class="form-check-label" :for="'r' + role.id">{{
             role.nom

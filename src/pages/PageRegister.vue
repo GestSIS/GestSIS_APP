@@ -6,9 +6,9 @@
       <h1 class="h3 mb-3 fwnormal">Veuillez-vous enregistrer</h1>
       <label for="inputName" class="visually-hidden">Nom d'utilisateur</label>
       <input
+        id="inputName"
         v-model="name"
         type="text"
-        id="inputName"
         class="form-control form-control-sm"
         placeholder="Nom d'utilisateur"
         required
@@ -16,40 +16,40 @@
         autocomplete="off"
         :class="{ 'is-invalid': error.name }"
       />
-      <div class="invalid-feedback" v-if="error.name">Nom invalide</div>
+      <div v-if="error.name" class="invalid-feedback">Nom invalide</div>
       <label for="inputEmail" class="visually-hidden">Email</label>
       <input
+        id="inputEmail"
         v-model="email"
         type="email"
-        id="inputEmail"
         class="form-control form-control-sm"
         placeholder="Email"
         required
         autocomplete="off"
         :class="{ 'is-invalid': error.email }"
       />
-      <div class="invalid-feedback" v-if="error.email">Email déjà existant</div>
+      <div v-if="error.email" class="invalid-feedback">Email déjà existant</div>
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
+        id="inputPassword"
         v-model="password"
         type="password"
-        id="inputPassword"
         class="form-control form-control-sm"
         placeholder="Mot de passe"
         required
         autocomplete="off"
         :class="{ 'is-invalid': error.password }"
       />
-      <div class="invalid-feedback" v-if="error.password">
+      <div v-if="error.password" class="invalid-feedback">
         Taille minimum: 8
       </div>
       <label for="inputPasswordConfirmation" class="visually-hidden"
         >Confirmation</label
       >
       <input
+        id="inputPasswordConfirmation"
         v-model="password_confirmation"
         type="password"
-        id="inputPasswordConfirmation"
         class="form-control form-control-sm"
         placeholder="Confirmation"
         required
@@ -59,7 +59,7 @@
             error.password_confirmation || password !== password_confirmation,
         }"
       />
-      <div class="invalid-feedback" v-if="error.password_confirmation">
+      <div v-if="error.password_confirmation" class="invalid-feedback">
         Mot de passe différent
       </div>
       <button
@@ -75,9 +75,9 @@
             >Jeton d'enregistrement</label
           >
           <input
+            id="inputToken"
             v-model="token"
             type="text"
-            id="inputToken"
             class="form-control form-control-sm"
             placeholder="Jeton (optionnel)"
             autocomplete="off"
@@ -102,7 +102,7 @@
 import TransitionExpand from '@/components/transition/TransitionExpand.vue';
 
 export default {
-  name: 'register',
+  name: 'PageRegister',
   components: {
     TransitionExpand,
   },

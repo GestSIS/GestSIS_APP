@@ -10,11 +10,11 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeEcriture.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
@@ -33,11 +33,11 @@
       <div class="mb-3">
         <label for="date">Date</label>
         <input
-          type="date"
+          id="date"
           v-model="activeEcriture.date"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
-          id="date"
         />
       </div>
       <div class="mb-3 col-12">
@@ -54,15 +54,15 @@
         </select>
       </div>
       <div class="row">
-        <div class="mb-3 col-4" v-if="activeUnite?.comptable">
+        <div v-if="activeUnite?.comptable" class="mb-3 col-4">
           <label for="quantite">Quantité</label>
           <div class="input-group input-group-sm">
             <input
-              type="string"
+              id="quantite"
               v-model="activeEcriture.quantite"
+              type="string"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
-              id="quantite"
             />
             <span class="input-group-text">{{ activeUnite.abreviation }}</span>
           </div>
@@ -74,29 +74,29 @@
           <label for="tarif">Tarif</label>
           <div class="input-group input-group-sm">
             <input
-              type="text"
+              id="tarif"
               v-model="activeEcriture.tarif"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
-              id="tarif"
             />
             <span class="input-group-text">CHF</span>
           </div>
         </div>
         <div
+          v-if="activeUnite?.comptable"
           class="mb-3 col-4"
           :class="activeUnite?.comptable ? 'col-4' : 'col-12'"
-          v-if="activeUnite?.comptable"
         >
           <label for="tarif">Total</label>
           <div class="input-group input-group-sm">
             <input
+              id="tarif"
               type="text"
               readonly
               :value="activeEcriture?.quantite * activeEcriture?.tarif || 0"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
-              id="tarif"
             />
             <span class="input-group-text">CHF</span>
           </div>

@@ -37,9 +37,9 @@
             <td>{{ e.designation }}</td>
             <td class="text-center">
               <input
+                id="convoque"
                 type="checkbox"
                 class="form-check-input"
-                id="convoque"
                 :checked="e.convoque"
                 disabled
               />
@@ -47,9 +47,9 @@
             </td>
             <td class="text-center">
               <input
+                id="present"
                 type="checkbox"
                 class="form-check-input"
-                id="present"
                 :checked="e.present"
                 disabled
               />
@@ -57,9 +57,9 @@
             </td>
             <td class="text-center">
               <input
+                id="excuse"
                 type="checkbox"
                 class="form-check-input"
-                id="excuse"
                 :checked="e.excuse_type_id"
                 disabled
               />
@@ -74,9 +74,9 @@
             </td>
             <td class="text-center">
               <input
+                id="amende"
                 type="checkbox"
                 class="form-check-input"
-                id="amende"
                 :checked="e.amende_id"
                 disabled
               />
@@ -122,13 +122,6 @@ export default {
         .sort((a, b) => new Date(a.date) - new Date(b.date));
     },
   },
-  mounted() {
-    //TODO: Load before any display
-    //TODO: Affichage solde ? Droits ?
-    this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
-    this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-    this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
-  },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurExercices', id);
@@ -136,6 +129,13 @@ export default {
     currentExerciceComptableId() {
       this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
     },
+  },
+  mounted() {
+    //TODO: Load before any display
+    //TODO: Affichage solde ? Droits ?
+    this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
+    this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
+    this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
   },
 };
 </script>

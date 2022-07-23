@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Imputer l'intervention</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Imputer l'intervention</h5>
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <!-- fieldsets -->
       <multi-step
         :steps="['Type de frais', 'Résultat']"
-        :activeIndex="phase - 1"
+        :active-index="phase - 1"
       />
       <div v-if="phase === 1" class="row">
         <div
@@ -46,10 +46,10 @@
                 v-for="(indemnite, index) in indemnitesTypes"
                 :key="indemnite.id"
                 class
-                @click="selectIndemnite(index)"
                 :class="{
                   'table-primary': index === activeIndemniteIndex,
                 }"
+                @click="selectIndemnite(index)"
               >
                 <td>{{ indemnite.designation }}</td>
                 <td>{{ indemnite.tarif }}</td>
@@ -57,9 +57,9 @@
                 <td>{{ indemnite.tarif_min_pour }}</td>
                 <td class="text-center">
                   <input
+                    v-model="indemnite.tarif_min_pro_rata"
                     type="checkbox"
                     class="form-check-input"
-                    v-model="indemnite.tarif_min_pro_rata"
                   />
                 </td>
                 <td>{{ indemnite.taux_nuit }}</td>
@@ -79,9 +79,9 @@
                 </td>
                 <td class="text-center">
                   <input
+                    id="checkbox-fonction"
                     type="checkbox"
                     class="form-check-input"
-                    id="checkbox-fonction"
                     :checked="indemnite.par_fonction"
                     disabled
                   />
@@ -94,7 +94,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-4" v-if="activeIndemniteHasFonction">
+        <div v-if="activeIndemniteHasFonction" class="col-4">
           <table class="table table-sm">
             <thead>
               <tr>
@@ -117,8 +117,8 @@
       </div>
       <div v-if="phase === 2">
         <div
-          class="alert alert-dismissible alert-success"
           v-if="successMessageVisibility"
+          class="alert alert-dismissible alert-success"
         >
           <button
             type="button"
@@ -138,8 +138,8 @@
               <th>Tarif min</th>
               <th>Pour</th>
               <th class="text-center">Pro-rata</th>
-              <th>Taux weekend</th>
-              <th>Taux nuit</th>
+              <th>Taux</th>
+              <th>Taux description</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -162,13 +162,13 @@
               <td>{{ ecriture.tarif_min_pour }}</td>
               <td class="text-center">
                 <input
+                  v-model="ecriture.tarif_min_pro_rata"
                   type="checkbox"
                   class="form-check-input"
-                  v-model="ecriture.tarif_min_pro_rata"
                 />
               </td>
-              <td>{{ ecriture.taux_weekend }}</td>
-              <td>{{ ecriture.taux_nuit }}</td>
+              <td>{{ ecriture.taux }}</td>
+              <td>{{ ecriture.taux_description }}</td>
               <td>{{ ecriture.total }}</td>
             </tr>
           </tbody>
@@ -180,11 +180,11 @@
         {{ phase === 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
+        v-if="phase === 1"
         type="button"
         class="btn btn-primary"
-        @click="imputer()"
-        v-if="phase === 1"
         :disabled="activeIndemnite === null"
+        @click="imputer()"
       >
         Imputer
       </button>

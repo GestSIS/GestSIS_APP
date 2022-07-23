@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }} du matériel
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,41 +10,41 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeMateriel.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeMateriel.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="forfait">Forfait</label>
         <input
-          type="text"
+          id="forfait"
           v-model="activeMateriel.forfait"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['forfait'] }"
-          id="forfait"
         />
       </div>
       <div class="mb-3">
         <label for="unite">Unité</label>
         <input
-          type="text"
+          id="unite"
           v-model="activeMateriel.unite"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['unite'] }"
-          id="unite"
         />
       </div>
       <div class="mb-3">
@@ -64,10 +64,10 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="medecin-status-modal"
             v-model="activeMateriel.statut"
+            type="checkbox"
+            class="form-check-input"
             :true-value="1"
             :false-value="0"
           />

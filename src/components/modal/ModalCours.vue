@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeCours.id ? 'Modifier' : 'Ajouter' }} un cours
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,42 +10,42 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeCours.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="abreviation">Abréviation</label>
         <input
-          type="text"
+          id="abreviation"
           v-model="activeCours.abreviation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
-          id="abreviation"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeCours.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="duree">Durée</label>
         <div class="input-group">
           <input
-            type="text"
+            id="duree"
             v-model="activeCours.duree"
+            type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['duree'] }"
-            id="duree"
           />
           <span class="input-group-text">jours</span>
         </div>
@@ -96,21 +96,21 @@
       <div class="mb-3">
         <label for="validite_debut">Validité début</label>
         <input
-          type="date"
+          id="validite_debut"
           v-model="activeCours.validite_debut"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite_debut'] }"
-          id="validite_debut"
         />
       </div>
       <div class="mb-3">
         <label for="validite_fin">Validité fin</label>
         <input
-          type="date"
+          id="validite_fin"
           v-model="activeCours.validite_fin"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite_fin'] }"
-          id="validite_fin"
         />
       </div>
     </div>

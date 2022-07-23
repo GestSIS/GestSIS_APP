@@ -10,8 +10,8 @@
           <h6 class="mb-0">Localités sélectionnés ({{ chosen.length }})</h6>
           <button
             class="btn btn-outline-danger"
-            @click="removeSelected"
             :disabled="!canRemoveSelected"
+            @click="removeSelected"
           >
             Enlever ces localités
           </button>
@@ -20,8 +20,8 @@
           <h6 class="mb-0">Localités disponibles</h6>
           <button
             class="btn btn-outline-primary"
-            @click="addSelected"
             :disabled="!canAddSelected"
+            @click="addSelected"
           >
             Ajouter ces localités
           </button>
@@ -52,10 +52,10 @@
                 <td class="text-center">
                   <div class="form-check d-inline-block ps-0">
                     <input
-                      type="checkbox"
-                      class="form-check-input ms-0"
                       :id="item"
                       v-model="selected[item]"
+                      type="checkbox"
+                      class="form-check-input ms-0"
                       @click="select(item)"
                     />
                     <label class="form-check-label" :for="item"></label>
@@ -87,10 +87,10 @@
             </thead>
             <tbody>
               <tr v-if="availableLocalites.length == 0">
-                <td colspan="3" v-if="localites.length > 0">
+                <td v-if="localites.length > 0" colspan="3">
                   Toutes les localités sont déjà sélectionnées
                 </td>
-                <td colspan="3" v-if="localites.length == 0">
+                <td v-if="localites.length == 0" colspan="3">
                   Aucune localité de disponible dans GestSIS, veuillez prendre
                   contact avec l'administrateur de GestSIS
                 </td>
@@ -103,10 +103,10 @@
                 <td>
                   <div class="form-check d-inline-block">
                     <input
-                      type="checkbox"
-                      class="form-check-input"
                       :id="item.id"
                       v-model="selected[item.id]"
+                      type="checkbox"
+                      class="form-check-input"
                       @click="select(item.id)"
                     />
                     <label class="form-check-label" :for="item.id"></label>
@@ -232,8 +232,8 @@ export default {
         new Set([
           ...this.chosen,
           ...Object.entries(this.selected)
-            .filter(([_, selected]) => selected)
-            .map(([id, _]) => parseInt(id)),
+            .filter(([, selected]) => selected)
+            .map(([id]) => parseInt(id)),
         ])
       );
     },

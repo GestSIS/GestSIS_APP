@@ -1,6 +1,6 @@
 <template>
   <div class="tree">
-    <node
+    <tree-node
       v-for="item in tree"
       :key="item.id"
       :node="item"
@@ -8,17 +8,17 @@
       :is-root="true"
       :select="select"
       :active="active"
-    ></node>
+    ></tree-node>
   </div>
 </template>
 
 <script>
-import Node from '@/components/tree/Node.vue';
+import TreeNode from '@/components/tree/TreeNode.vue';
 
 export default {
-  name: 'tree',
+  name: 'TreeRoot',
   components: {
-    Node,
+    TreeNode,
   },
   props: {
     _types: {

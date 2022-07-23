@@ -6,10 +6,10 @@
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Groupes</h3>
         <button
+          v-if="hasEditPermission"
           type="button"
           class="btn btn-primary"
           @click="save"
-          v-if="hasEditPermission"
         >
           Enregistrer
         </button>
@@ -38,11 +38,11 @@
               <td>
                 <div class="text-center">
                   <input
+                    :id="'g-' + g.id"
+                    v-model="selected[g.no]"
                     type="checkbox"
                     :disabled="!hasEditPermission"
                     class="form-check-input"
-                    :id="'g-' + g.id"
-                    v-model="selected[g.no]"
                   />
                   <label class="form-check-label" :for="'g-' + g.id"></label>
                 </div>
@@ -73,6 +73,7 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),
@@ -88,6 +89,11 @@ export default {
       return 0;
     },
   },
+  watch: {
+    interventionGroupes(value) {
+      this.updateGroupes(value);
+    },
+  },
   mounted() {
     if (this.groupes.length === 0) {
       this.$store.dispatch('fetchGroupes');
@@ -97,11 +103,6 @@ export default {
       .then(() => {
         this.updateGroupes(this.interventionGroupes);
       });
-  },
-  watch: {
-    interventionGroupes(value) {
-      this.updateGroupes(value);
-    },
   },
   methods: {
     async save() {

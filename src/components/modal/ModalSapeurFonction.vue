@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une fonction
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,21 +10,21 @@
       <div class="mb-3">
         <label for="debut">Début</label>
         <input
-          type="date"
+          id="debut"
           v-model="activeFonction.debut"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
-          id="debut"
         />
       </div>
       <div class="mb-3">
         <label for="fin">Fin</label>
         <input
-          type="date"
+          id="fin"
           v-model="activeFonction.fin"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
-          id="fin"
         />
       </div>
       <div class="mb-3">
@@ -44,11 +44,11 @@
       <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input
-          type="text"
+          id="remarque"
           v-model="activeFonction.remarque"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
-          id="remarque"
         />
       </div>
     </div>

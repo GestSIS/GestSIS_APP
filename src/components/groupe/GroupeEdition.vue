@@ -7,33 +7,33 @@
     :active="active"
     @selected="selected"
   >
-    <template v-slot:default="{ node }" v-if="editMode">
+    <template v-if="editMode" #default="{ node }">
       <div v-if="node.data.type == 'groupe' || node.data.type == 'groupeInter'">
         <button
+          v-if="!node.isRoot"
           class="btn btn-sm pt-0 pb-0"
           @click.prevent="left(node)"
-          v-if="!node.isRoot"
         >
           ←
         </button>
         <button
+          v-if="!node.isFirstOfLevel"
           class="btn btn-sm pt-0 pb-0"
           @click.prevent="right(node)"
-          v-if="!node.isFirstOfLevel"
         >
           →
         </button>
         <button
+          v-if="!node.isFirst"
           class="btn btn-sm pt-0 pb-0"
           @click.prevent="up(node)"
-          v-if="!node.isFirst"
         >
           ↑
         </button>
         <button
+          v-if="!node.isLast"
           class="btn btn-sm pt-0 pb-0"
           @click.prevent="down(node)"
-          v-if="!node.isLast"
         >
           ↓
         </button>
@@ -49,10 +49,10 @@ import EditableTree from '@/components/editable_tree/EditableTree.vue';
 
 export default {
   name: 'GroupeEdition',
-  props: ['callback', 'data', 'editMode'],
   components: {
     EditableTree,
   },
+  props: ['callback', 'data', 'editMode'],
   data() {
     return {
       active: null,

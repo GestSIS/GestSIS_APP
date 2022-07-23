@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Ajouter des présences</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter des présences</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="piquet"
             v-model="piquet"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="piquet">Piquet</label>
         </div>
@@ -25,14 +25,14 @@
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
+                id="m-int-date-debut"
+                v-model="date_debut"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_debut'] }"
                 type="date"
                 :min="dateDebutMin"
                 :max="dateDebutMax"
-                id="m-int-date-debut"
                 name="date_debut"
-                v-model="date_debut"
               />
             </div>
           </div>
@@ -45,13 +45,13 @@
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
+                id="m-int-heure_debut"
+                v-model="heure_debut"
                 type="time"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure_debut'] }"
-                id="m-int-heure_debut"
                 name="heure_debut"
                 step="900"
-                v-model="heure_debut"
                 @focusout="roundDebut"
               />
             </div>
@@ -67,14 +67,14 @@
                 <font-awesome-icon :icon="['far', 'calendar-alt']" />
               </div>
               <input
+                id="m-int-date-fin"
+                v-model="date_fin"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_fin'] }"
                 :min="dateFinMin"
                 :max="dateFinMax"
                 type="date"
-                id="m-int-date-fin"
                 name="date_fin"
-                v-model="date_fin"
               />
             </div>
           </div>
@@ -87,29 +87,29 @@
                 <font-awesome-icon :icon="['far', 'clock']" />
               </div>
               <input
+                id="m-int-heure_fin"
+                v-model="heure_fin"
                 type="time"
                 class="form-control form-control-sm"
                 :class="{
                   'is-invalid': errors['heure_fin'],
                 }"
-                id="m-int-heure_fin"
                 name="heure_fin"
                 step="900"
-                v-model="heure_fin"
                 @focusout="roundFin"
               />
             </div>
           </div>
         </div>
       </div>
-      <ul class="list-group" v-if="!editMode">
+      <ul v-if="!editMode" class="list-group">
         <li v-for="s in sapeurs" :key="s.id" class="list-group-item">
           <div class="form-check">
             <input
-              type="checkbox"
-              class="form-check-input"
               :id="'sp' + s.id"
               v-model="selectedSapeurs[s.id]"
+              type="checkbox"
+              class="form-check-input"
             />
             <label class="form-check-label" :for="'sp' + s.id">
               {{ formatSapeur(s) }}
@@ -125,8 +125,8 @@
       <button
         type="button"
         class="btn btn-primary"
-        @click="save()"
         :disabled="!nbSelectedSapeurs"
+        @click="save()"
       >
         {{ editMode ? 'Enregistrer' : 'Ajouter' }}
       </button>

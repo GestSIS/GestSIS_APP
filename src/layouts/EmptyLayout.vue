@@ -1,22 +1,14 @@
 <template>
   <div class="wrapper">
     <div class="content">
-      <app-navbar />
-      <slot />
+      <slot></slot>
     </div>
-    <app-modal />
   </div>
 </template>
 
 <script>
-import AppNavbar from '@/components/AppNavbar.vue';
-import AppModal from '@/components/AppModal.vue';
-
 export default {
-  components: {
-    AppNavbar,
-    AppModal,
-  },
+  name: 'EmptyLayout',
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ data ? 'Modifier' : 'Ajouter' }} une photo
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,9 +10,9 @@
       <div class="mb-3">
         <div class="input-group input-group-sm">
           <input
+            id="photoAjout"
             type="file"
             class="form-control form-control-sm"
-            id="photoAjout"
             @change="loadFile"
           />
         </div>
@@ -37,8 +37,8 @@
       <button
         type="button"
         class="btn btn-primary"
-        @click="save()"
         :disabled="!img"
+        @click="save()"
       >
         {{ data ? 'Modifier' : 'Ajouter' }}
       </button>
@@ -54,6 +54,9 @@ import 'vue-advanced-cropper/dist/style.css';
 
 export default {
   name: 'ModalPhotoSapeur',
+  components: {
+    Cropper,
+  },
   props: {
     data: {
       type: [Object, String],
@@ -67,7 +70,7 @@ export default {
   data() {
     const fr = new FileReader();
     const self = this;
-    fr.onload = function (e) {
+    fr.onload = function () {
       self.img = this.result;
     };
     return {
@@ -75,9 +78,6 @@ export default {
       defaultSize: null,
       fileReader: fr,
     };
-  },
-  components: {
-    Cropper,
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

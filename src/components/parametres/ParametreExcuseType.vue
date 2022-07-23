@@ -29,9 +29,9 @@
             <td>{{ e.designation }}</td>
             <td class="text-center">
               <input
+                id="amende"
                 type="checkbox"
                 class="form-check-input"
-                id="amende"
                 :checked="e.amende"
                 disabled
               />
@@ -39,9 +39,9 @@
             </td>
             <td class="text-center">
               <input
+                id="statut"
                 type="checkbox"
                 class="form-check-input"
-                id="statut"
                 :checked="e.statut"
                 disabled
               />

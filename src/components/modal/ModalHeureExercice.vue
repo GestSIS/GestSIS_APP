@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,58 +10,59 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeHeure.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="montant">Montant</label>
         <input
-          type="text"
+          id="montant"
           v-model="activeHeure.montant"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['montant'] }"
-          id="montant"
         />
       </div>
       <base-select
-        class="mb-3"
-        valueKey="id"
-        label="Unité"
-        displayKey="unite"
-        baseOption="&lt;Unité&gt;"
-        :options="unites"
         v-model="activeHeure.type_unite_id"
+        class="mb-3"
+        value-key="id"
+        label="Unité"
+        display-key="unite"
+        base-option="&lt;Unité&gt;"
+        :options="unites"
         :select-class="{ 'is-invalid': errors['type_unite_id'] }"
       />
       <base-select
-        class="mb-3"
-        valueKey="id"
-        label="Compte"
-        displayKey="designation"
-        baseOption="&lt;Compte&gt;"
-        :options="comptes"
         v-model="activeHeure.compte_id"
+        class="mb-3"
+        value-key="id"
+        label="Compte"
+        display-key="designation"
+        base-option="&lt;Compte&gt;"
+        :options="comptes"
         :select-class="{ 'is-invalid': errors['compte_id'] }"
       />
       <base-select
-        class="mb-3"
-        valueKey="id"
-        label="Ecriture catégorie"
-        displayKey="designation"
-        baseOption="&lt;Catégorie&gt;"
-        :options="categories"
         v-model="activeHeure.ecriture_categorie_id"
+        class="mb-3"
+        value-key="id"
+        label="Ecriture catégorie"
+        display-key="designation"
+        base-option="&lt;Catégorie&gt;"
+        :options="categories"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />
       <base-select
+        v-model="activeHeure.type"
         class="mb-3"
-        valueKey="id"
+        value-key="id"
         label="Type"
-        displayKey="label"
+        display-key="label"
         :options="[
           // { id: 0, label: 'Autre' },
           { id: 1, label: 'Solde' },
@@ -70,7 +71,6 @@
           // { id: 4, label: 'Frais effectif' },
           // { id: 5, label: 'Charges AVS/AC' },
         ]"
-        v-model="activeHeure.type"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />
     </div>

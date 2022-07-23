@@ -1,32 +1,34 @@
 <template>
   <div
-    class="exercice-comptable d-flex align-items-center"
     v-if="currentExerciceComptableId"
+    class="exercice-comptable d-flex align-items-center"
   >
     <span>Exercice comptable</span>
     <base-dropdown
-      :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
-      menuClass="dropdown-menu-end"
-      buttonClass="ms-1 btn btn-outline-secondary"
       ref="dropdown"
+      :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
+      menu-class="dropdown-menu-end"
+      button-class="ms-1 btn btn-outline-secondary"
     >
       <template #default>
         <button
           v-for="e in listeExerciceComptable"
           :key="e.id"
-          @click="selectExercice(e.id)"
           class="dropdown-item"
           :class="{ active: currentExerciceComptableId === e.id }"
           :type="getExerciceComptable(currentExerciceComptableId).annee"
+          @click="selectExercice(e.id)"
         >
           {{ e.annee }}
         </button>
-        <div class="dropdown-divider" v-if="hasConfigPermission"></div>
+        <div v-if="hasConfigPermission" class="dropdown-divider"></div>
         <router-link
-          :to="{ name: 'param-exercice-comptable' }"
-          custom
-          v-slot="{ navigate }"
           v-if="hasConfigPermission"
+          v-slot="{ navigate }"
+          :to="{
+            name: 'param-exercice-comptable',
+          }"
+          custom
         >
           <button class="dropdown-item" @click="navigate">Paramètres</button>
         </router-link>
@@ -47,6 +49,7 @@ export default {
         state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasConfigPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),
     }),
     ...mapGetters(['getExerciceComptable']),

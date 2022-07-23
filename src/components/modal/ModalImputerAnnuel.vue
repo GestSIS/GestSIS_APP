@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         Imputer indemnités et frais annuels
       </h5>
       <button type="button" class="btn-close" @click="cancel"></button>
@@ -10,9 +10,9 @@
       <!--progress bar-->
       <multi-step
         :steps="['Type de frais', 'Résultat']"
-        :activeIndex="phase - 1"
+        :active-index="phase - 1"
       />
-      <div class="alert alert-dismissible alert-primary" v-if="phase === 1">
+      <div v-if="phase === 1" class="alert alert-dismissible alert-primary">
         <button
           type="button"
           class="btn-close"
@@ -128,10 +128,10 @@
         {{ phase === 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
+        v-if="phase === 1"
         type="button"
         class="btn btn-primary"
         @click="imputer()"
-        v-if="phase === 1"
       >
         Imputer
       </button>

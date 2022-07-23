@@ -35,9 +35,9 @@
             <td>{{ e.fin }}</td>
             <td class="text-center">
               <input
+                id="en_cours"
                 type="checkbox"
                 class="form-check-input"
-                id="en_cours"
                 :checked="e.boucle"
                 disabled
               />
@@ -53,10 +53,10 @@
               </button>
               <!-- TODO Implement Suppression exercice comptable -->
               <button
+                v-if="false"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 disabled
-                v-if="false"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>

@@ -5,10 +5,10 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
       <button
+        v-if="hasEditPermission"
         type="button"
         class="btn btn-primary"
         @click="newCours"
-        v-if="hasEditPermission"
       >
         Ajouter un cours
       </button>
@@ -21,7 +21,7 @@
             <th data-field="designation">Désignation</th>
             <th data-field="lieu">Lieu</th>
             <th class="text-center" data-field="duree">Durée [jours]</th>
-            <th class="text-center" v-if="hasEditPermission">Actions</th>
+            <th v-if="hasEditPermission" class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +37,7 @@
               {{ localites.find((l) => l.id == c.localite_id).designation }}
             </td>
             <td class="text-center">{{ c.duree }}</td>
-            <td class="align-middle text-center" v-if="hasEditPermission">
+            <td v-if="hasEditPermission" class="align-middle text-center">
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
@@ -74,19 +74,20 @@ export default {
       cours: (state) => state.cours.liste,
       localites: (state) => state.localite.liste,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurCours', id);
+    },
   },
   mounted() {
     if (this.cours.length === 0) {
       this.$store.dispatch('fetchCours');
     }
     this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id);
-    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

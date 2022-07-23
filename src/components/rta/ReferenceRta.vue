@@ -3,7 +3,10 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">GestSIS</h3>
+      <h3 class="card-title">Référence RTA</h3>
+      <button class="btn btn-outline-primary" @click="reset">
+        Réinitialiser
+      </button>
     </div>
     <div class="card-body">
       <table class="table table-sm" cellspacing="0">
@@ -21,10 +24,8 @@
         </thead>
         <tbody>
           <tr v-if="!mutations.length">
-            <td></td>
             <td colspan="5">
-              Aucun sapeur possédant un numéro rta dans GestSIS n'appartient à
-              un groupe d'alarme.
+              Aucun sapeur présent actuellement dans la référence RTA.
             </td>
           </tr>
           <tr
@@ -135,7 +136,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'GestSis',
+  name: 'ReferenceRta',
   data() {
     return {
       maxNbNumero: 3,
@@ -192,69 +193,78 @@ export default {
       return numCount.length > 0 ? Math.max(...numCount) : 0;
     },
     mutations() {
-      const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
+      const actuelsIds = new Set(this.reference.map((s) => s.sapeur_id));
+      const fields = [
+        'nom',
+        'prenom',
+        'fonction',
+        'localite',
+        'adresse',
+        'date_naissance',
+      ];
       const sapeurCompare = (a, b) =>
         (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
 
-      return this.actuel
+      return this.reference
         .map((s) => {
           // Ajoute
-          if (!referenceIds.has(s.sapeur_id)) {
+          if (!actuelsIds.has(s.sapeur_id)) {
             return {
               ...s,
-              statut: 'ajoute',
+              statut: 'supprime',
               changements: {},
             };
           }
 
           // Modifie
-          const reference = this.reference.find(
-            (s2) => s2.sapeur_id == s.sapeur_id
-          );
-          const fields = [
-            'nom',
-            'prenom',
-            'fonction',
-            'localite',
-            'adresse',
-            'date_naissance',
-          ];
+          const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
+          if (!actuel) {
+            return {
+              ...s,
+              statut: 'supprime',
+              changements: {},
+            };
+          }
+
           let changements = {};
           // Fields
           fields.forEach((f) => {
-            if (s[f] != reference[f]) {
+            if (s[f] != actuel[f]) {
               changements[f] = true;
             }
           });
 
           // Groupes
-          const referenceGroupes = new Set(reference.groupes.map((g) => g.no));
-          const groupesAjoute = s.groupes
-            .map((g) => g.no)
-            .filter((g) => !referenceGroupes.has(g));
+          const actuelGroupes = new Set(actuel.groupes.map((g) => g.no));
 
-          const groupesReference = new Map(
-            reference.groupes.map((g) => [g.no, g.description])
+          const groupesSupprime = s.groupes
+            .map((g) => g.no)
+            .filter((g) => !actuelGroupes.has(g));
+
+          const groupesActuel = new Map(
+            actuel.groupes.map((g) => [g.no, g.description])
           );
           const groupesModifie = s.groupes.filter(
             (g) =>
-              groupesReference.has(g.no) &&
-              groupesReference.get(g.no) !== g.description
+              groupesActuel.has(g.no) &&
+              groupesActuel.get(g.no) !== g.description
           );
 
           changements = {
             ...changements,
-            groupesAjoute,
+            groupesAjoute: [],
             groupesModifie,
-            groupesSupprime: [],
+            groupesSupprime,
           };
 
+          const groupes = [...s.groupes];
+
           // Numéros
-          const numerosAjoute = reference.numeros.length;
-          const numerosSupprime = s.numeros.length;
+          const numerosAjoute = s.numeros.length;
+          const numerosSupprime = actuel.numeros.length;
           const numerosModifie = s.numeros
             .slice(0, Math.min(numerosAjoute, numerosSupprime))
-            .map((n, index) => (reference.numeros[index] != n ? index : -1))
+            .map((n, index) => (actuel.numeros[index] != n ? index : -1))
             .filter((i) => i >= 0);
 
           changements = {
@@ -264,9 +274,14 @@ export default {
             numerosSupprime,
           };
 
-          return { ...s, statut: 'modifie', changements };
+          return { ...s, groupes, statut: 'modifie', changements };
         })
         .sort(sapeurCompare);
+    },
+  },
+  methods: {
+    reset() {
+      this.$store.dispatch('resetReferenceRta');
     },
   },
 };

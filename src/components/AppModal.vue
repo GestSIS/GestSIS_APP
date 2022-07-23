@@ -2,11 +2,11 @@
   <div>
     <!-- Modal -->
     <div
-      class="modal fade show d-block"
+      v-if="visible"
       id="exampleModal"
+      class="modal fade show d-block"
       tabindex="-1"
       role="dialog"
-      v-if="visible"
     >
       <div
         class="modal-dialog modal-dialog-scrollable"
@@ -23,9 +23,9 @@
     </div>
     <!-- Overlay -->
     <div
+      v-if="visible"
       id="modal-overlay"
       class="modal-backdrop fade show"
-      v-if="visible"
     ></div>
   </div>
 </template>

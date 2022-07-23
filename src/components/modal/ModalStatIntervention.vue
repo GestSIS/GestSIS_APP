@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeStatIntervention.id ? 'Modifier' : 'Ajouter' }} une catégorie
         statistique
       </h5>
@@ -11,21 +11,21 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeStatIntervention.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeStatIntervention.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
     </div>

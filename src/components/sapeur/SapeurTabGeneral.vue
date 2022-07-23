@@ -5,47 +5,47 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données personnelles</h3>
           <button
-            @click.prevent="saveSapeur"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="saveSapeur"
           >
             Enregistrer
           </button>
         </div>
         <div class="card-body">
           <base-select
+            v-model="activeSapeur.civilite_id"
             class="mb-3"
             label="Civilité"
-            valueKey="id"
+            value-key="id"
             :disabled="!hasEditPermission"
-            displayKey="designation"
+            display-key="designation"
             :options="civilites"
-            v-model="activeSapeur.civilite_id"
           />
           <!-- NOM -->
           <div class="mb-3">
             <label for="m-sap-nom">Nom</label>
             <input
+              id="m-sap-nom"
+              v-model="activeSapeur.nom"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['nom'] }"
-              id="m-sap-nom"
               name="nom"
-              v-model="activeSapeur.nom"
             />
           </div>
           <!-- PRENOM -->
           <div class="mb-3">
             <label for="m-sap-prenom">Prénom</label>
             <input
+              id="m-sap-prenom"
+              v-model="activeSapeur.prenom"
               type="text"
-              :readonly="!hasEditPermission"
+              :readonly="!asEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['prenom'] }"
-              id="m-sap-prenom"
               name="prenom"
-              v-model="activeSapeur.prenom"
             />
           </div>
           <!-- RUE -->
@@ -53,69 +53,69 @@
             <div class="col-8">
               <label for="m-sap-rue">Rue</label>
               <input
+                id="m-sap-rue"
+                v-model="activeSapeur.rue"
                 type="text"
-                :readonly="!hasEditPermission"
+                :readonly="!asEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['rue'] }"
-                id="m-sap-rue"
                 name="rue"
-                v-model="activeSapeur.rue"
               />
             </div>
             <div class="col-4">
               <label for="m-sap-no-rue">N°</label>
               <input
+                id="m-sap-no-rue"
+                v-model="activeSapeur.no_rue"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['no_rue'] }"
-                id="m-sap-no-rue"
                 name="no_rue"
-                v-model="activeSapeur.no_rue"
               />
             </div>
           </div>
           <!-- NPA + LOCALITE -->
           <base-select
+            v-model="activeSapeur.localite_id"
             class="mb-3"
             label="NPA Localité"
-            valueKey="id"
+            value-key="id"
             required
             :disabled="!hasEditPermission"
             :options="localites"
             :formatter="(l) => l.npa + ' ' + l.designation"
-            v-model="activeSapeur.localite_id"
           />
           <!-- N° AVS -->
           <div class="row">
             <div class="mb-3 col-6">
               <label for="m-sap-avs">N° AVS</label>
               <input
+                id="m-sap-avs"
+                v-model="activeSapeur.no_avs"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['no_avs'] }"
-                id="m-sap-avs"
                 name="no_avs"
-                v-model="activeSapeur.no_avs"
               />
             </div>
             <div class="mb-3 col-6">
               <label for="m-sap-cotisation_avs">Cotisation AVS</label>
               <font-awesome-icon
-                class="ms-1"
                 v-tooltip.bottom="
                   'A cocher si le sapeur veut côtiser à l\'avs dès le premier Franc au lieu de la franchise défini dans la loi.'
                 "
+                class="ms-1"
                 :icon="['far', 'question-circle']"
               />
               <div class="form-check text-center col-6">
                 <input
+                  id="m-sap-cotisation_avs"
+                  v-model="activeSapeur.cotisation_avs"
                   type="checkbox"
                   :disabled="!hasEditPermission"
                   class="form-check-input"
-                  id="m-sap-cotisation_avs"
-                  v-model="activeSapeur.cotisation_avs"
                 />
                 <label
                   class="form-check-label"
@@ -132,18 +132,18 @@
                 <font-awesome-icon icon="envelope" />
               </div>
               <input
+                id="m-sap-email"
+                v-model="activeSapeur.email"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['email'] }"
                 type="email"
                 :readonly="!hasEditPermission"
-                id="m-sap-email"
                 name="email"
-                v-model="activeSapeur.email"
               />
             </div>
           </div>
           <!-- DATE NAISSANCE + SUFFIXE -->
-          <div class="row mb-3" v-if="activeSapeur.type === 0">
+          <div v-if="activeSapeur.type === 0" class="row mb-3">
             <div class="col-6">
               <label for="m-sap-date-naissance">Date de naissance</label>
               <div class="input-group input-group-sm">
@@ -151,33 +151,33 @@
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
+                  id="m-sap-date-naissance"
+                  v-model="activeSapeur.date_naissance"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errorsData['date_naissance'] }"
                   type="date"
                   :readonly="!hasEditPermission"
-                  id="m-sap-date-naissance"
                   name="date_naissance"
-                  v-model="activeSapeur.date_naissance"
                 />
               </div>
             </div>
             <div class="col-6">
               <label for="m-sap-suffixe">Suffixe</label>
               <font-awesome-icon
-                class="ms-1"
                 v-tooltip.bottom="
                   'Permet de différencier deux personnes ayant le même nom et prénom.'
                 "
+                class="ms-1"
                 :icon="['far', 'question-circle']"
               />
               <input
+                id="m-sap-suffixe"
+                v-model="activeSapeur.suffixe"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errorsData['suffixe'] }"
-                id="m-sap-suffixe"
                 name="suffixe"
-                v-model="activeSapeur.suffixe"
               />
             </div>
           </div>
@@ -185,24 +185,24 @@
           <div class="mb-3">
             <label for="m-sap-remarques">Remarques</label>
             <textarea
+              id="m-sap-remarques"
+              v-model="activeSapeur.remarque"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errorsData['remarque'] }"
               rows="3"
-              id="m-sap-remarques"
               name="remarques"
-              v-model="activeSapeur.remarque"
             ></textarea>
           </div>
         </div>
       </div>
-      <div class="card card-primary card-outline mb-3" v-if="estSapeur">
+      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
           <button
-            @click.prevent="saveSapeurRefPro"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="saveSapeurRefPro"
           >
             Enregistrer
           </button>
@@ -212,34 +212,34 @@
             <div class="mb-3">
               <label for="m-sap-profession">Profession</label>
               <input
+                id="m-sap-profession"
+                v-model="activeSapeur.profession"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                id="m-sap-profession"
                 name="profession"
-                v-model="activeSapeur.profession"
               />
             </div>
             <div class="mb-3">
               <label for="m-sap-employeur">Employeur</label>
               <input
+                id="m-sap-employeur"
+                v-model="activeSapeur.employeur"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                id="m-sap-employeur"
                 name="employeur"
-                v-model="activeSapeur.employeur"
               />
             </div>
             <div class="mb-3">
               <label for="m-sap-lieu-travail">Lieu de travail</label>
               <input
+                id="m-sap-lieu-travail"
+                v-model="activeSapeur.lieu_de_travail"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                id="m-sap-lieu-travail"
                 name="lieu_travail"
-                v-model="activeSapeur.lieu_de_travail"
               />
             </div>
           </div>
@@ -247,13 +247,13 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline mb-3" v-if="!estSapeur">
+      <div v-if="!estSapeur" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Politique</h3>
           <button
-            @click.prevent="saveNonSapeurStatut"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="saveNonSapeurStatut"
           >
             Enregistrer
           </button>
@@ -263,11 +263,11 @@
             <div class="mb-3">
               <div class="form-check form-switch">
                 <input
+                  id="politiqueActif"
+                  v-model="activeSapeur.actif"
                   class="form-check-input"
                   type="checkbox"
                   role="switch"
-                  id="politiqueActif"
-                  v-model="activeSapeur.actif"
                   :true-value="1"
                   :false-value="0"
                 />
@@ -280,13 +280,13 @@
         </form>
       </div>
 
-      <div class="card card-primary card-outline mb-3" v-if="estSapeur">
+      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Photo</h3>
           <button
-            @click="editPhoto"
-            class="btn btn-primary"
             v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click="editPhoto"
           >
             Modifier
           </button>
@@ -299,7 +299,7 @@
 
       <SapeurTelephones />
 
-      <div class="card card-primary card-outline mb-3" v-if="estSapeur">
+      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
         <div class="card-header">
           <h3 class="card-title">Informations</h3>
         </div>
@@ -340,17 +340,15 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
-import SapeurMutations from '@/components/sapeur/SapeurMutations.vue';
 import SapeurTelephones from '@/components/sapeur/SapeurTelephones.vue';
 
 export default {
   name: 'SapeurTabGeneral',
   components: {
-    SapeurMutations,
     SapeurTelephones,
   },
   data() {
@@ -383,11 +381,12 @@ export default {
       fonctions: (state) => state.fonction.liste,
       grades: (state) => state.grade.liste,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
   },
   watch: {
-    activeSapeurId(id) {
+    activeSapeurId() {
       this.errorsData = {};
       if (this.activeSapeur.type === 0) {
         SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
@@ -459,9 +458,9 @@ export default {
         .then((res) => {
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
-        .catch(() => {
+        .catch((err) => {
           this.$awn.alert(
-            res.message || "Erreur lors de l'enregistrement des données"
+            err.message || "Erreur lors de l'enregistrement des données"
           );
         });
     },
@@ -477,7 +476,7 @@ export default {
           return SapeurService.updatePhoto(
             this.activeSapeurId,
             data?.blob
-          ).then((res) => {
+          ).then(() => {
             this.photo = data?.image;
           });
         },

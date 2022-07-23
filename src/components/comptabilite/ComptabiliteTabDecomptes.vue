@@ -32,12 +32,20 @@
           >
             Impression
           </button>
-          <!-- <button class="btn btn-outline-primary" :disabled="!selectedId" @click="impressionParSapeur(selectedId)">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedId"
+            @click="impressionParSapeur(selectedId)"
+          >
             Impression par sapeur
           </button>
-          <button class="btn btn-outline-primary" :disabled="!selectedId" @click="impressionParCompte(selectedId)">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!selectedId"
+            @click="impressionParCompte(selectedId)"
+          >
             Impression par compte
-          </button> -->
+          </button>
           <button
             class="btn btn-outline-primary"
             :disabled="!selectedId"
@@ -54,7 +62,7 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
-          <button @click.prevent="generer" class="btn btn-primary">
+          <button class="btn btn-primary" @click.prevent="generer">
             Nouveau
           </button>
         </div>
@@ -64,12 +72,12 @@
           :selectable="true"
           :detail-row-component="detailRow"
           detail-row-class="m-td-0"
-          selectKey="id"
+          select-key="id"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
-          @selected="selected"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
@@ -84,16 +92,16 @@
               />
             </button>
           </template>
-          <template v-slot:checkbox="{ key, value, rowData }">
+          <template #checkbox="{ key, value, rowData }">
             <input
+              :id="key + '-' + rowData.id"
               type="checkbox"
               class="form-check-input"
-              :id="key + '-' + rowData.id"
               :checked="value"
               disabled
             />
           </template>
-          <template v-slot:actions="{ value }">
+          <template #actions="{ value }">
             <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->

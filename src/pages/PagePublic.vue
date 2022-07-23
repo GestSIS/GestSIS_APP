@@ -17,7 +17,7 @@
             les données de votre SIS.
           </p>
           <p>
-            <button @click="login" class="btn btn-primary me-1">
+            <button class="btn btn-primary me-1" @click="login">
               Accès GestSIS 2.0
             </button>
           </p>
@@ -62,6 +62,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
+  name: 'PagePublic',
   computed: {
     ...mapGetters(['isLoggedIn']),
   },

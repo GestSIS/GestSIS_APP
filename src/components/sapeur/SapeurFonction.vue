@@ -4,10 +4,10 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
       <button
+        v-if="hasEditPermission"
         type="button"
         class="btn btn-primary"
         @click="newFonction"
-        v-if="hasEditPermission"
       >
         Ajouter une fonction
       </button>
@@ -25,7 +25,7 @@
             <th>Fin</th>
             <th>Fonction</th>
             <th>Remarques</th>
-            <th class="text-center" v-if="hasEditPermission">Actions</th>
+            <th v-if="hasEditPermission" class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +39,7 @@
               {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
             </td>
             <td>{{ f.remarque }}</td>
-            <td class="align-middle text-center" v-if="hasEditPermission">
+            <td v-if="hasEditPermission" class="align-middle text-center">
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
@@ -77,19 +77,20 @@ export default {
           b.debut.localeCompare(a.debut)
         ),
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+  },
+  watch: {
+    activeSapeurId(id) {
+      this.$store.dispatch('fetchSapeurFonctions', id);
+    },
   },
   mounted() {
     if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
     this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurFonctions', id);
-    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

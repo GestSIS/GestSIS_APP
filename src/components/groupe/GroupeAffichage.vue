@@ -1,5 +1,5 @@
 <template>
-  <tree
+  <tree-root
     :tree="groupeTree"
     :_types="types"
     :selectable="true"
@@ -10,12 +10,12 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
-import Tree from '@/components/tree/Tree.vue';
+import TreeRoot from '@/components/tree/TreeRoot.vue';
 
 export default {
-  name: 'groupes',
+  name: 'GroupeAffichage',
   components: {
-    Tree,
+    TreeRoot,
   },
   data() {
     return {

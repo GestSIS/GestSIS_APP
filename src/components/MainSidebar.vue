@@ -37,7 +37,7 @@
         role="menu"
         data-accordion="false"
       >
-        <li class="nav-item" v-for="link in filteredLinks" :key="link.nom">
+        <li v-for="link in filteredLinks" :key="link.nom" class="nav-item">
           <router-link
             :to="link.to"
             class="nav-link internal-link"
@@ -71,11 +71,13 @@ export default {
   },
   computed: {
     ...mapState({
+      isAdmin: (state) => state.auth.admin,
       perms: (state) => state.auth.sis.permissions,
     }),
     filteredLinks() {
       return this.links.filter(
-        (l) => !l.permission || this.perms.includes(l.permission)
+        (l) =>
+          !l.permission || this.perms.includes(l.permission) || this.isAdmin
       );
     },
   },

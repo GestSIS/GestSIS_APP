@@ -19,7 +19,7 @@ export default {
     },
   },
   actions: {
-    fetchAspsmsCredit({ state, commit }) {
+    fetchAspsmsCredit({ commit }) {
       return AspsmsParamService.getCredit().then((data) =>
         commit(types.UPDATE_ASPSMS_CREDIT, data)
       );

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="tab-sapeur-details">
+    <div id="nav-tabContent" class="tab-content">
+      <div id="tab-sapeur-details" class="tab-pane fade show active">
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
             <button
@@ -26,10 +26,10 @@
               Fiche sapeur
             </button>
             <button
+              v-if="hasEditPermission"
               type="button"
               class="btn btn-outline-primary ms-2"
               @click="addSapeur"
-              v-if="hasEditPermission"
             >
               Ajouter un sapeur/politique
             </button>
@@ -44,17 +44,17 @@
             ([key]) =>
               !requiredPermission[key] || hasPermission(requiredPermission[key])
           )"
-          :key="tab"
+          :key="key"
           class="nav-item nav-link"
           :class="{ active: activeTab === label }"
-          @click.prevent="selectTab(label)"
           href="#"
+          @click.prevent="selectTab(label)"
           >{{ label }}</a
         >
       </nav>
     </nav>
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="tab-sapeur-details">
+    <div id="nav-tabContent" class="tab-content">
+      <div id="tab-sapeur-details" class="tab-pane fade show active">
         <div class="row">
           <div class="col-12">
             <SapeurTabGeneral v-if="activeTab === tabList.GENERAL" />
@@ -152,11 +152,11 @@ export default {
     SapeurMutations,
     SapeurControlesMedicaux,
   },
-  data() {
-    return {
-      activeTab: sapeurTabList.GENERAL,
-      requiredPermission,
-    };
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   props: {
     id: {
@@ -164,17 +164,18 @@ export default {
       required: true,
     },
   },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
+  data() {
+    return {
+      activeTab: sapeurTabList.GENERAL,
+      requiredPermission,
+    };
   },
   computed: {
     ...mapState({
       activeSapeur: (state) => state.sapeur.active.data,
       permissions: (state) => state.auth.sis.permissions,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     tabList() {

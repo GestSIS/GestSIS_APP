@@ -17,7 +17,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
           <router-link
             class="nav-item nav-link"
             role="tab"
@@ -77,7 +77,7 @@
             >Amendes</router-link
           >
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view />
           </div>
@@ -91,7 +91,7 @@
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
-  name: 'comptabilite',
+  name: 'PageComptabilite',
   components: {
     ExerciceComptable,
   },

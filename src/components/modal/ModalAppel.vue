@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,11 +10,11 @@
       <div class="mb-3">
         <label for="heure">Heure</label>
         <input
-          type="datetime-local"
+          id="heure"
           v-model="activeAppel.date2"
+          type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
-          id="heure"
           :min="min"
           :max="max"
         />
@@ -30,20 +30,20 @@
       <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
-          type="text"
+          id="numero"
           v-model="activeAppel.numero"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
-          id="numero"
         />
       </div>
       <div class="mb-3">
         <label for="commentaire">Commentaire</label>
         <textarea
+          id="commentaire"
           v-model="activeAppel.commentaire"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['commentaire'] }"
-          id="commentaire"
         ></textarea>
       </div>
     </div>

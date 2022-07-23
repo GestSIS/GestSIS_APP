@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Saisie d'un cours</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Saisie d'un cours</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="cours-date">Date du cours</label>
         <input
-          type="date"
+          id="cours-date"
           v-model="activeCours.date"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
-          id="cours-date"
           @focusout="dateChange"
         />
       </div>
@@ -35,11 +35,11 @@
         <label for="duree">Durée</label>
         <div class="input-group">
           <input
-            type="text"
+            id="duree"
             v-model="activeCours.duree"
+            type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['duree'] }"
-            id="duree"
           />
           <span class="input-group-text">jours</span>
         </div>
@@ -57,7 +57,7 @@
           </option>
         </select>
       </div>
-      <div class="mb-3" v-if="addMode">
+      <div v-if="addMode" class="mb-3">
         <label for="cours-precedent">Cours précédent</label>
         <select
           id="cours-precedent"
@@ -72,10 +72,10 @@
           <!-- TODO Limiter le nombre de cours -->
         </select>
       </div>
-      <div class="mb-3" v-if="addMode">
+      <div v-if="addMode" class="mb-3">
         <label>Grade</label>
       </div>
-      <div class="row" v-if="addMode">
+      <div v-if="addMode" class="row">
         <div class="col-md-8">
           <div class="mb-3">
             <select
@@ -93,19 +93,19 @@
         <div class="col-md-4">
           <div class="mb-3">
             <input
+              v-model="activeCours.date_grade"
               type="date"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_grade'] }"
-              v-model="activeCours.date_grade"
             />
           </div>
         </div>
       </div>
 
-      <div class="mb-3" v-if="addMode">
+      <div v-if="addMode" class="mb-3">
         <label>Fonction</label>
       </div>
-      <div class="row" v-if="addMode">
+      <div v-if="addMode" class="row">
         <div class="col-md-8">
           <div class="mb-3">
             <select
@@ -123,24 +123,24 @@
         <div class="col-md-4">
           <div class="mb-3">
             <input
+              v-model="activeCours.date_fonction"
               type="date"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_fonction'] }"
-              v-model="activeCours.date_fonction"
             />
           </div>
         </div>
       </div>
-      <div class="mb-3" v-if="addMode">
+      <div v-if="addMode" class="mb-3">
         <label>Fonction remplacé</label>
       </div>
-      <div class="row" v-if="addMode">
+      <div v-if="addMode" class="row">
         <div class="col-md-8">
           <div class="mb-3">
             <select
+              v-model="activeCours.fonction_sapeur_id"
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
-              v-model="activeCours.fonction_sapeur_id"
             >
               <option value="0">-</option>
               <option

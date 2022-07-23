@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Public from '@/pages/Public.vue';
-import Home from '@/pages/Home.vue';
+import Public from '@/pages/PagePublic.vue';
+import Home from '@/pages/PageHome.vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
@@ -11,8 +11,9 @@ import NProgress from 'nprogress';
 const permissionGuard = (permission) => {
   return function (to, from, next) {
     try {
+      const isAdmin = store.state.auth.admin;
       const permissions = store.state.auth.sis.permissions;
-      if (permissions.includes(permission)) {
+      if (permissions.includes(permission) || isAdmin) {
         next();
       }
     } catch (e) {
@@ -34,19 +35,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('@/pages/Login.vue'),
+      component: () => import('@/pages/PageLogin.vue'),
     },
     {
       path: '/confirmation',
       name: 'confirmation',
       meta: { layout: 'no-sidebar', public: true },
-      component: () => import('@/pages/Confirmation.vue'),
+      component: () => import('@/pages/PageConfirmation.vue'),
     },
     {
       path: '/register',
       name: 'register',
       meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('@/pages/Register.vue'),
+      component: () => import('@/pages/PageRegister.vue'),
     },
     {
       path: '/',
@@ -64,18 +65,18 @@ const router = createRouter({
       path: '/utilisateur',
       name: 'utilisateur',
       meta: { layout: 'no-sidebar' },
-      component: () => import('@/pages/User.vue'),
+      component: () => import('@/pages/PageUser.vue'),
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/pages/Dashboard.vue'),
+      component: () => import('@/pages/PageDashboard.vue'),
     },
     {
       path: '/sapeurs',
       name: 'sapeurs',
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-      component: () => import('@/pages/Sapeurs.vue'),
+      component: () => import('@/pages/PageSapeurs.vue'),
       children: [
         {
           path: ':id',
@@ -90,45 +91,45 @@ const router = createRouter({
       path: '/effectif',
       name: 'effectif',
       beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
-      component: () => import('@/pages/Effectif.vue'),
+      component: () => import('@/pages/PageEffectif.vue'),
     },
     {
       path: '/exercices/:id',
       name: 'exercice',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
-      component: () => import('@/pages/Exercice.vue'),
+      component: () => import('@/pages/PageExercice.vue'),
     },
     {
       path: '/exercices',
       name: 'exercices',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-      component: () => import('@/pages/Exercices.vue'),
+      component: () => import('@/pages/PageExercices.vue'),
     },
     {
       path: '/organisation',
       name: 'organisation',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-      component: () => import('@/pages/Organisation.vue'),
+      component: () => import('@/pages/PageOrganisation.vue'),
     },
     {
       path: '/interventions/:id',
       name: 'intervention',
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
-      component: () => import('@/pages/Intervention.vue'),
+      component: () => import('@/pages/PageIntervention.vue'),
     },
     {
       path: '/interventions',
       name: 'interventions',
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-      component: () => import('@/pages/Interventions.vue'),
+      component: () => import('@/pages/PageInterventions.vue'),
     },
     {
       path: '/comptabilite',
       name: 'comptabilite',
       beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
-      component: () => import('@/pages/Comptabilite.vue'),
+      component: () => import('@/pages/PageComptabilite.vue'),
       children: [
         {
           path: '',
@@ -191,13 +192,13 @@ const router = createRouter({
     {
       path: '/publipostage',
       name: 'publipostage',
-      component: () => import('@/pages/Publipostage.vue'),
+      component: () => import('@/pages/PagePublipostage.vue'),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
     },
     {
       path: '/statistique',
       name: 'statistique',
-      component: () => import('@/pages/Statistique.vue'),
+      component: () => import('@/pages/PageStatistique.vue'),
       children: [
         {
           path: '',
@@ -231,27 +232,27 @@ const router = createRouter({
       path: '/controles-medicaux',
       name: 'controles-medicaux',
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
-      component: () => import('@/pages/ControlesMedicaux.vue'),
+      component: () => import('@/pages/PageControlesMedicaux.vue'),
     },
     {
       path: '/controles-medicaux/:id',
       name: 'controle-medical',
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
       props: true,
-      component: () => import('@/pages/ControleMedical.vue'),
+      component: () => import('@/pages/PageControleMedical.vue'),
     },
     {
       path: '/utilisateurs',
       name: 'users',
       beforeEnter: permissionGuard(permissions.ADMIN.TOUT),
       props: true,
-      component: () => import('@/pages/Utilisateurs.vue'),
+      component: () => import('@/pages/PageUtilisateurs.vue'),
     },
     {
       path: '/configuration',
       name: 'configuration',
       beforeEnter: permissionGuard(permissions.SIS.CONFIG),
-      component: () => import('@/pages/Configuration.vue'),
+      component: () => import('@/pages/PageConfiguration.vue'),
       children: [
         {
           path: '',
@@ -316,7 +317,8 @@ const router = createRouter({
       path: '/rta',
       name: 'rta',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-      component: () => import(/* webpackChunkName: "rta" */ '@/pages/Rta.vue'),
+      component: () =>
+        import(/* webpackChunkName: "rta" */ '@/pages/PageRta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
@@ -325,7 +327,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/Mutations.vue'
+              /* webpackChunkName: "rta" */ '@/components/rta/MutationsRta.vue'
             ),
         },
         {
@@ -334,7 +336,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/Reference.vue'
+              /* webpackChunkName: "rta" */ '@/components/rta/ReferenceRta.vue'
             ),
         },
         {
@@ -343,7 +345,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/GestSis.vue'
+              /* webpackChunkName: "rta" */ '@/components/rta/GestSisRta.vue'
             ),
         },
       ],
@@ -351,7 +353,7 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/pages/About.vue'),
+      component: () => import('@/pages/PageAbout.vue'),
     },
   ],
 });

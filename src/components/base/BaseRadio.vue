@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="form-check" v-for="option in options" :key="option.value">
+    <div v-for="option in options" :key="option.value" class="form-check">
       <input
+        :id="option.value"
+        v-model="model"
         class="form-check-input"
         type="radio"
         :name="uuid"
-        :id="option.value"
         :value="option.value"
-        v-model="model"
       />
       <label
         v-if="!advancedLabel"
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'base-checkbox',
+  name: 'BaseCheckbox',
   props: {
     label: {
       type: String,

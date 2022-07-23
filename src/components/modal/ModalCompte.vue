@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeCompte.id ? 'Modifier' : 'Ajouter' }} un compte
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,33 +10,33 @@
       <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
-          type="text"
+          id="numero"
           v-model="activeCompte.numero"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
-          id="numero"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeCompte.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <base-select
+        v-model="activeCompte.produit"
         class="mb-3"
         label="Type comptable"
-        valueKey="value"
-        displayKey="designation"
+        value-key="value"
+        display-key="designation"
         :options="[
           { value: 0, designation: 'Charge' },
           { value: 1, designation: 'Produit' },
         ]"
-        v-model="activeCompte.produit"
       />
     </div>
     <div class="modal-footer">

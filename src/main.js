@@ -6,9 +6,9 @@ import store from './store/index';
 import { TokenService } from './services/StorageService.js';
 
 // Page layouts
-import Default from './layouts/Default.vue';
-import Empty from './layouts/Empty.vue';
-import NoSidebar from './layouts/NoSidebar.vue';
+import Default from './layouts/DefaultLayout.vue';
+import Empty from './layouts/EmptyLayout.vue';
+import NoSidebar from './layouts/NoSidebarLayout.vue';
 
 // External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -90,14 +90,14 @@ app.use(FloatingVue);
 //   }
 // );
 
-app.component('base-dropdown', BaseDropdown);
-app.component('base-select', BaseSelect);
-app.component('base-checkbox', BaseCheckbox);
-app.component('base-radio', BaseRadio);
-app.component('base-multi-unselect', BaseMultiUnselect);
-app.component('default-layout', Default);
-app.component('empty-layout', Empty);
-app.component('no-sidebar-layout', NoSidebar);
-app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('BaseDropdown', BaseDropdown);
+app.component('BaseSelect', BaseSelect);
+app.component('BaseCheckbox', BaseCheckbox);
+app.component('BaseRadio', BaseRadio);
+app.component('BaseMultiUnselect', BaseMultiUnselect);
+app.component('DefaultLayout', Default);
+app.component('EmptyLayout', Empty);
+app.component('NoSidebarLayout', NoSidebar);
+app.component('FontAwesomeIcon', FontAwesomeIcon);
 
 app.mount('#app');

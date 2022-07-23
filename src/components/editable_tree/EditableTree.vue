@@ -16,7 +16,7 @@
       :is-last-of-level="index + 1 == tree.length"
     >
       <template #default="props">
-        <slot v-bind:node="props.node"></slot>
+        <slot :node="props.node"></slot>
       </template>
     </editable-node>
   </div>
@@ -56,13 +56,13 @@ export default {
       localActive: null,
     };
   },
-  mounted() {
-    this.localActive = this.active?.data;
-  },
   watch: {
-    active(newValue, _) {
+    active(newValue) {
       this.localActive = newValue.data;
     },
+  },
+  mounted() {
+    this.localActive = this.active?.data;
   },
   methods: {
     contract() {

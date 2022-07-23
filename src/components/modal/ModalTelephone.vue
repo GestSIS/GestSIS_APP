@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeTelephone.id ? 'Modifier' : 'Ajouter' }} un téléphone
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,31 +10,31 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeTelephone.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="nom">Nom</label>
         <input
-          type="text"
+          id="nom"
           v-model="activeTelephone.nom"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
-          id="nom"
         />
       </div>
       <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
-          type="text"
+          id="numero"
           v-model="activeTelephone.numero"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
-          id="numero"
         />
       </div>
     </div>

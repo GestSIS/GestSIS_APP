@@ -28,9 +28,9 @@
             <td>{{ t.duree_validite }}</td>
             <td class="text-center">
               <input
+                id="expirable"
                 type="checkbox"
                 class="form-check-input"
-                id="expirable"
                 :checked="t.expirable"
                 disabled
               />

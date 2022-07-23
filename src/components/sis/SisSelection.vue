@@ -5,10 +5,10 @@
       <div class="mb-3">
         <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
         <select
-          class="form-select form-select-sm"
           id="inputGroupSelect01"
-          @change="selectSis($event)"
           v-model="sisId"
+          class="form-select form-select-sm"
+          @change="selectSis($event)"
         >
           <option
             v-for="sis in availableSisListe"
@@ -41,13 +41,13 @@ export default {
       sisId: null,
     };
   },
-  mounted() {
-    this.sisId = this.activeSisId;
-  },
   watch: {
     activeSisId() {
       this.sisId = this.activeSisId;
     },
+  },
+  mounted() {
+    this.sisId = this.activeSisId;
   },
   computed: {
     ...mapGetters(['availableSisListe']),

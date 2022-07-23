@@ -25,11 +25,11 @@
             <div class="mb-3">
               <label for="jeton">Jeton</label>
               <input
+                id="jeton"
+                v-model="jeton"
                 type="text"
                 class="form-control form-control-sm"
-                id="jeton"
                 placeholder="jeton"
-                v-model="jeton"
               />
             </div>
             <button class="btn btn-primary" @click="utiliserJeton">
@@ -48,28 +48,28 @@
             <div class="mb-3">
               <label for="old-password">Ancien mot de passe</label>
               <input
-                type="password"
                 id="old-password"
+                v-model="oldPassword"
+                type="password"
                 placeholder="mot de passe"
                 required
                 autocomplete="off"
                 class="form-control form-control-sm"
-                v-model="oldPassword"
               />
             </div>
             <div class="mb-3">
               <label for="new-password">Nouveau mot de passe</label>
               <input
-                type="password"
                 id="newPassword"
+                v-model="newPassword"
+                type="password"
                 placeholder="mot de passe"
                 required
                 autocomplete="off"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors.password }"
-                v-model="newPassword"
               />
-              <div class="invalid-feedback" v-if="errors.password">
+              <div v-if="errors.password" class="invalid-feedback">
                 Taille minimum: 8
               </div>
             </div>
@@ -79,16 +79,16 @@
                 >Répéter le nouveau mot de passe</label
               >
               <input
-                type="password"
                 id="newPasswordRepeated"
+                v-model="newPasswordRepeated"
+                type="password"
                 placeholder="répéter mot de passe"
                 required
                 autocomplete="off"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': !isPasswordIdentical }"
-                v-model="newPasswordRepeated"
               />
-              <div class="invalid-feedback" v-if="!isPasswordIdentical">
+              <div v-if="!isPasswordIdentical" class="invalid-feedback">
                 Mot de passe différent
               </div>
             </div>
@@ -125,7 +125,7 @@
 
 <script>
 export default {
-  name: 'utilisateur',
+  name: 'PageUser',
   data() {
     return {
       jeton: '',

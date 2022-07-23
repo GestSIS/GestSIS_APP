@@ -4,12 +4,13 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended',
     '@vue/prettier',
-    'eslint:recommended',
   ],
   plugins: ["vue", "prettier"],
+  parser: "vue-eslint-parser",
   parserOptions: {
     sourceType: "module",
   },

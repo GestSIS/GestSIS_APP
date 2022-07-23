@@ -32,7 +32,7 @@
           <!--            Enregistrer-->
           <!--          </button>-->
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -40,7 +40,7 @@
         <base-table
           v-show="!loading"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           :fields="fields"
           :detail-row-component="detailRow"
           detail-row-class="m-td-0"
@@ -49,7 +49,7 @@
           :data="computedData"
           @selected="select"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
@@ -64,19 +64,19 @@
               />
             </button>
           </template>
-          <template v-slot:actions="props">
+          <template #actions="props">
             <button
               class="btn btn-outline-primary border-0"
+              title="Décompte sapeur"
+              :disabled="!props.rowData.aPayer"
               @click="
                 genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
               "
-              title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
-          <template v-slot:foot>
+          <template #foot>
             <tr>
               <th></th>
               <th colspan="2">Total</th>
@@ -126,25 +126,10 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      ImputationService.getEcrituresForExerciceComptable(
-        this.currentExerciceComptableId
-      ).then((data) => {
-        this.ecritures = data;
-        this.loading = false;
-      });
+  props: {
+    id: {
+      type: String,
     },
-  },
-  mounted() {
-    this.loading = true;
-    ImputationService.getEcrituresForExerciceComptable(
-      this.currentExerciceComptableId
-    ).then((data) => {
-      this.ecritures = data;
-      this.loading = false;
-    });
   },
   data() {
     return {
@@ -237,10 +222,25 @@ export default {
       ],
     };
   },
-  props: {
-    id: {
-      type: String,
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      ImputationService.getEcrituresForExerciceComptable(
+        this.currentExerciceComptableId
+      ).then((data) => {
+        this.ecritures = data;
+        this.loading = false;
+      });
     },
+  },
+  mounted() {
+    this.loading = true;
+    ImputationService.getEcrituresForExerciceComptable(
+      this.currentExerciceComptableId
+    ).then((data) => {
+      this.ecritures = data;
+      this.loading = false;
+    });
   },
   computed: {
     ...mapState({

@@ -3,26 +3,26 @@
     <label :for="'d1_' + _uid">{{ title }}</label>
     <input
       :id="'d1_' + _uid"
+      v-model="search"
       class="form-control form-control-sm"
       :class="{ 'is-invalid': error }"
       type="text"
       @input="onChange"
-      v-model="search"
       @keydown.down="onArrowDown"
       @keydown.up="onArrowUp"
       @keydown.enter="onEnter"
     />
     <ul
-      id="autocomplete-results"
       v-show="isOpen && results.length"
+      id="autocomplete-results"
       class="list-group autocomplete-results"
     >
       <li
         v-for="(result, i) in results"
         :key="i"
-        @click="setResult(result)"
         class="autocomplete-result list-group-item list-group-item-action"
         :class="{ active: i === arrowCounter }"
+        @click="setResult(result)"
       >
         {{ result }}
       </li>
@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'baseAutocomplete',
+  name: 'BaseAutocomplete',
 
   props: {
     modelValue: {
@@ -61,6 +61,23 @@ export default {
       isLoading: false,
       arrowCounter: 0,
     };
+  },
+  watch: {
+    items: function (val, oldValue) {
+      // actually compare them
+      if (val.length !== oldValue.length) {
+        this.results = val;
+      }
+    },
+    modelValue: function (val) {
+      this.search = val;
+    },
+  },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  unmounted() {
+    document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
     onChange() {
@@ -107,23 +124,6 @@ export default {
         this.arrowCounter = -1;
       }
     },
-  },
-  watch: {
-    items: function (val, oldValue) {
-      // actually compare them
-      if (val.length !== oldValue.length) {
-        this.results = val;
-      }
-    },
-    modelValue: function (val) {
-      this.search = val;
-    },
-  },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside);
-  },
-  unmounted() {
-    document.removeEventListener('click', this.handleClickOutside);
   },
 };
 </script>

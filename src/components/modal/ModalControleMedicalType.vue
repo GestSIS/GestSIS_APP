@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeType.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,40 +10,40 @@
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
-          type="text"
+          id="tri"
           v-model="activeType.tri"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
-          id="tri"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeType.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="validite">Validité</label>
         <input
-          type="text"
+          id="validite"
           v-model="activeType.duree_validite"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite'] }"
-          id="validite"
         />
       </div>
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="type-expirable-modal"
             v-model="activeType.expirable"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="type-expirable-modal"
             >Expirable</label

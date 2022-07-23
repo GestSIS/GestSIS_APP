@@ -5,10 +5,10 @@
       <h3 class="card-title">Frais &amp; indemnités annuels</h3>
       <div class="form-check form-switch mb-2">
         <input
-          type="checkbox"
-          class="form-check-input"
           id="switch"
           v-model="detailsTypes"
+          type="checkbox"
+          class="form-check-input"
         />
         <label class="form-check-label" for="switch"
           >Afficher les détails</label
@@ -96,8 +96,8 @@
                 montantAnnuelTypePourFonctionDetails(type, fonction)
               }}</template>
               <button
-                type="button"
                 v-if="!type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                type="button"
                 class="btn btn-outline-primary border-0"
                 @click="addFonction(type, fonction)"
               >

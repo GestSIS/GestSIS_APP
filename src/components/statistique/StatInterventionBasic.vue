@@ -6,10 +6,10 @@
         <h3>Stats interventions</h3>
         <div class="form-check form-switch mb-2">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="switch"
             v-model="allCategories"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="switch">
             Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
@@ -22,9 +22,9 @@
             <tr>
               <th>
                 <select
-                  class="form-select form-select-sm"
                   id="select-categorie"
                   v-model="displayKey"
+                  class="form-select form-select-sm"
                 >
                   <option
                     v-for="(label, key) in grouping"
@@ -37,8 +37,8 @@
               </th>
               <th class="text-center">Nombre</th>
               <th
-                class="text-center"
                 v-if="displayKey != 'statistiquesInterventionTraitement'"
+                class="text-center"
               >
                 Heures
               </th>
@@ -54,8 +54,8 @@
                 {{ occurences[e.id]?.nb ?? 0 }}
               </td>
               <td
-                class="text-center"
                 v-if="displayKey != 'statistiquesInterventionTraitement'"
+                class="text-center"
               >
                 {{
                   Number.parseFloat(occurences[e.id]?.heures ?? 0)?.toFixed(2)
@@ -75,8 +75,8 @@
                 }}
               </th>
               <th
-                class="text-center"
                 v-if="displayKey != 'statistiquesInterventionTraitement'"
+                class="text-center"
               >
                 {{
                   Object.values(occurences)
@@ -120,7 +120,13 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'statInterventionBasic',
+  name: 'StatInterventionBasic',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       allCategories: false,
@@ -132,14 +138,8 @@ export default {
       },
     };
   },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
   watch: {
-    activeExerciceComptableId(newValue, _) {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchListeIntervention');
     },
   },

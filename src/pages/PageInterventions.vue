@@ -25,33 +25,33 @@
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-1">
-            <router-link custom to="/interventions/new" v-slot="{ navigate }">
+            <router-link v-slot="{ navigate }" custom to="/interventions/new">
               <button
-                @click="navigate"
-                class="btn btn-outline-primary"
                 v-if="hasEditPermission"
+                class="btn btn-outline-primary"
+                @click="navigate"
               >
                 Ajouter une intervention
               </button>
             </router-link>
             <router-link
+              v-slot="{ navigate }"
               custom
               :to="'/interventions/' + selectedId"
-              v-slot="{ navigate }"
             >
               <button
                 :disabled="!selectedId"
-                @click="navigate"
                 class="btn btn-outline-primary"
+                @click="navigate"
               >
                 {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
               </button>
             </router-link>
             <button
-              :disabled="!canDelete"
-              @click="supprimerIntervention(selectedId)"
-              class="btn btn-outline-danger"
               v-if="hasEditPermission"
+              :disabled="!canDelete"
+              class="btn btn-outline-danger"
+              @click="supprimerIntervention(selectedId)"
             >
               Supprimer
             </button>
@@ -67,8 +67,8 @@
           <div class="card-body d-grid gap-1">
             <button
               :disabled="!selectedId"
-              @click="rapportIntervention"
               class="btn btn-outline-primary"
+              @click="rapportIntervention"
             >
               Rapport d'intervention
             </button>
@@ -85,8 +85,8 @@
             <div class="row">
               <div class="mb-3 col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterLocalite"
+                  class="form-select form-select-sm"
                   @change="
                     (event) => onFilter('localite_id', event.target.value)
                   "
@@ -103,8 +103,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterType"
+                  class="form-select form-select-sm"
                   @change="
                     (event) =>
                       onFilter('type_intervention_id', event.target.value)
@@ -122,8 +122,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterStatistique"
+                  class="form-select form-select-sm"
                   @change="
                     (event) => onFilter('stat_federal_id', event.target.value)
                   "
@@ -140,8 +140,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterTraitement"
+                  class="form-select form-select-sm"
                   @change="
                     (event) =>
                       onFilter('intervention_traitement_id', event.target.value)
@@ -159,8 +159,8 @@
               </div>
               <div class="col-md-4">
                 <select
-                  class="form-select form-select-sm"
                   id="filterEtendue"
+                  class="form-select form-select-sm"
                   @change="
                     (event) => onFilter('degre', parseInt(event.target.value))
                   "
@@ -181,7 +181,7 @@
       <div class="col-md-12">
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5 table-responsive">
-          <div class="card-body d-flex justify-content-center" v-if="loading">
+          <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
@@ -192,16 +192,16 @@
             :row-class="onRowClass"
             no-data="Aucune intervention à afficher"
             :data="filteredInterventions"
-            @selected="select"
             :selectable="true"
-            selectKey="id"
+            select-key="id"
             row-selected-class="table-primary"
+            @selected="select"
           >
-            <template v-slot:actions="props">
+            <template #actions="props">
               <router-link
+                v-slot="{ navigate }"
                 :to="'/interventions/' + props.rowData.id"
                 custom
-                v-slot="{ navigate }"
               >
                 <button
                   class="btn btn-outline-primary border-0"
@@ -211,17 +211,17 @@
                 </button>
               </router-link>
               <button
+                v-if="hasValidationPermission && props.rowData.statut === 1"
                 class="btn btn-outline-primary border-0"
                 @click="validerIntervention(props.rowData.id)"
-                v-if="hasValidationPermission && props.rowData.statut === 1"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
+                v-if="hasEditPermission && props.rowData.statut <= 3"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerIntervention(props.rowData.id)"
-                v-if="hasEditPermission && props.rowData.statut <= 3"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -267,7 +267,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'interventions',
+  name: 'PageInterventions',
   components: {
     BaseTable,
     ExerciceComptable,
@@ -277,17 +277,6 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
   },
   data() {
     const self = this;
@@ -386,6 +375,17 @@ export default {
       ],
     };
   },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchListeIntervention').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
+  },
   computed: {
     ...mapState({
       interventions: (state) => state.intervention.liste,
@@ -397,10 +397,12 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       hasValidationPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.VALIDATION
         ),
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),

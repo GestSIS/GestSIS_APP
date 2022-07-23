@@ -57,7 +57,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'statIntervention',
+  name: 'StatIntervention',
   components: {
     StatInterventionBasic,
     StatVehicule,
@@ -75,7 +75,7 @@ export default {
     }),
   },
   watch: {
-    activeExerciceComptableId(newValue, _) {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchListeIntervention');
       this.$store.dispatch('fetchStatistiqueMateriel');
       this.$store.dispatch('fetchStatistiqueVehicule');

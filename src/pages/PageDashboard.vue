@@ -13,7 +13,7 @@
             class="col-6 col-sm-4 col-md-3 p-1"
           >
             <div class="d-grid">
-              <router-link :to="m.to" custom v-slot="{ navigate }">
+              <router-link v-slot="{ navigate }" :to="m.to" custom>
                 <button class="card text-white bg-primary" @click="navigate">
                   <div class="card-body w-100">
                     <div
@@ -39,6 +39,7 @@ import { mapState, mapGetters } from 'vuex';
 import links from '@/router/menu.js';
 
 export default {
+  name: 'PageDashboard',
   data() {
     return {
       links,
@@ -60,12 +61,14 @@ export default {
       sisKey: (state) => state.auth.sis.activeKey,
       sis: (state) =>
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
+      isAdmin: (state) => state.auth.admin,
       perms: (state) => state.auth.sis.permissions,
     }),
     ...mapGetters(['availableSisListe']),
     filteredLinks() {
       return this.links.filter(
-        (l) => !l.permission || this.perms.includes(l.permission)
+        (l) =>
+          !l.permission || this.perms.includes(l.permission) || this.isAdmin
       );
     },
   },

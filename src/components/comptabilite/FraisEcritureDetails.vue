@@ -1,15 +1,15 @@
 <template>
   <div class="detail-row">
-    <div class="spinner-border" role="status" v-if="loading">
+    <div v-if="loading" class="spinner-border" role="status">
       <span class="visually-hidden">Chargement...</span>
     </div>
-    <table class="table mb-0" v-else-if="!ecritures.length">
+    <table v-else-if="!ecritures.length" class="table mb-0">
       <tr>
         <th>Aucune écriture</th>
       </tr>
     </table>
 
-    <table class="table table-sm mb-0" v-else>
+    <table v-else class="table table-sm mb-0">
       <thead>
         <tr>
           <th

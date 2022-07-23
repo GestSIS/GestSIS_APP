@@ -5,10 +5,10 @@
         <h3>Stats matériel pour interventions</h3>
         <div class="form-check form-switch mb-2">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="switch-materiel"
             v-model="allMateriels"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="switch-materiel"
             >Afficher le matériel disponible mais pas référencé durant au moins
@@ -45,7 +45,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'stat-materiel',
+  name: 'StatMateriel',
   data() {
     return {
       allMateriels: false,

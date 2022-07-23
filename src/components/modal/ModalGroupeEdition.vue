@@ -36,10 +36,10 @@ import EditableTree from '@/components/editable_tree/EditableTree.vue';
 
 export default {
   name: 'ModalGroupeEdition',
-  props: ['callback', 'data'],
   components: {
     EditableTree,
   },
+  props: ['callback', 'data'],
   data() {
     return {
       active: null,

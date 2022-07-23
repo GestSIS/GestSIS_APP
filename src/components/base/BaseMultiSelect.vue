@@ -2,9 +2,9 @@
   <div class="mb-3" multiple>
     <label v-if="label" :for="label">{{ label }}</label>
     <select
-      class="form-select form-select-sm"
       :id="label"
       v-model="model"
+      class="form-select form-select-sm"
       v-bind="{
         ...$attrs,
       }"
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'base-select',
+  name: 'BaseSelect',
   props: {
     label: {
       type: String,

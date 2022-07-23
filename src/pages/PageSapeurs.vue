@@ -24,23 +24,23 @@
             <div class="card-body px-0">
               <div class="form-check form-check-inline">
                 <input
-                  type="radio"
                   id="statutActif"
+                  v-model="filter"
+                  type="radio"
                   name="actif"
                   class="form-check-input"
                   value="actif"
-                  v-model="filter"
                 />
                 <label class="form-check-label" for="statutActif">Actif</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
-                  type="radio"
                   id="statutInactif"
+                  v-model="filter"
+                  type="radio"
                   name="actif"
                   class="form-check-input"
                   value="inactif"
-                  v-model="filter"
                 />
                 <label class="form-check-label" for="statutInactif"
                   >Inactif</label
@@ -48,28 +48,28 @@
               </div>
               <div class="form-check form-check-inline">
                 <input
-                  type="radio"
                   id="statutTous"
+                  v-model="filter"
+                  type="radio"
                   name="actif"
                   class="form-check-input"
                   value="all"
-                  v-model="filter"
                 />
                 <label class="form-check-label" for="statutTous">Tous</label>
               </div>
             </div>
           </div>
           <ul
-            class="list-group list-group-flush"
             id="liste-sapeurs"
             ref="liste-sapeurs"
+            class="list-group list-group-flush"
           >
             <router-link
-              custom
-              v-slot="{ navigate }"
               v-for="sapeur in filteredSapeurs"
-              :to="`/sapeurs/${sapeur.id}`"
+              v-slot="{ navigate }"
               :key="sapeur.id"
+              custom
+              :to="`/sapeurs/${sapeur.id}`"
             >
               <a
                 class="list-group-item list-group-item-action sapeur-item"
@@ -77,8 +77,8 @@
                 :class="{
                   active: activeSapeurId === sapeur.id,
                 }"
-                @click="navigate"
                 role="link"
+                @click="navigate"
                 >{{ sapeur.nom }} {{ sapeur.prenom }}
                 <font-awesome-icon
                   v-if="sapeur.type !== 0"
@@ -90,8 +90,8 @@
               Aucun sapeur
             </li>
             <button
-              class="btn btn-primary"
               v-if="!filteredSapeurs.length && hasEditPermission"
+              class="btn btn-primary"
               @click="addSapeur"
             >
               Ajouter un sapeur
@@ -143,6 +143,7 @@ const redirectToLastestOpennedSapeur = (routeTo, routeFrom, next) => {
 };
 
 export default {
+  name: 'PageSapeurs',
   components: {
     ExerciceComptable,
   },
@@ -151,6 +152,17 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
+  },
+  data() {
+    return {
+      filter: 'actif',
+      filters: {
+        actif: (s) => parseInt(s.actif) === 1,
+        inactif: (s) => parseInt(s.actif) === 0,
+        all: () => true,
+      },
+      eventListener: null,
+    };
   },
   beforeCreate() {
     this.$store.dispatch('fetchListeSapeur').then(() => {
@@ -165,17 +177,6 @@ export default {
         });
       }
     });
-  },
-  data() {
-    return {
-      filter: 'actif',
-      filters: {
-        actif: (s) => parseInt(s.actif) === 1,
-        inactif: (s) => parseInt(s.actif) === 0,
-        all: () => true,
-      },
-      eventListener: null,
-    };
   },
   mounted() {
     this.eventListener = (e) => {
@@ -194,6 +195,7 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     filteredSapeurs() {

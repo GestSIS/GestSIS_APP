@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
           active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
@@ -14,11 +14,11 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="active.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
@@ -61,10 +61,10 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="fonction-actif-modal"
             v-model="active.cumulable"
+            type="checkbox"
+            class="form-check-input"
           />
           <label class="form-check-label" for="fonction-actif-modal"
             >Cumulable</label

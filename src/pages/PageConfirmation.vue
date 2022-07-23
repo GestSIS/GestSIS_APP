@@ -4,11 +4,11 @@
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h1 mb-3 fwnormal">Confirmation de votre email</h1>
-      <h2 class="h3 mb-3" v-if="success">
+      <h2 v-if="success" class="h3 mb-3">
         Email validé avec succès, vous allez être redirigé dans
         {{ sec }} secondes
       </h2>
-      <div class="h3 mb-3" v-if="error">{{ error }}</div>
+      <div v-if="error" class="h3 mb-3">{{ error }}</div>
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: 'confirmation',
+  name: 'PageConfirmation',
   data() {
     return {
       error: null,

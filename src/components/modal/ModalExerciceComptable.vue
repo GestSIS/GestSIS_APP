@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,51 +10,51 @@
       <div class="mb-3">
         <label for="annee">Année</label>
         <input
-          type="number"
+          id="annee"
           v-model="activeExercice.annee"
+          type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['annee'] }"
-          id="annee"
           @focusout="presetDebutFin"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeExercice.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="debut">Début</label>
         <input
-          type="date"
+          id="debut"
           v-model="activeExercice.debut"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
-          id="debut"
         />
       </div>
       <div class="mb-3">
         <label for="fin">Fin</label>
         <input
-          type="date"
+          id="fin"
           v-model="activeExercice.fin"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
-          id="fin"
         />
       </div>
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="exercice-comptable-boucle-modal"
             v-model="activeExercice.boucle"
+            type="checkbox"
+            class="form-check-input"
             :true-value="1"
           />
           <label class="form-check-label" for="exercice-comptable-boucle-modal"

@@ -1,32 +1,32 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         Suppression des groupes, exercices et fonctions
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <form class="row g-3 align-items-center mb-2" v-if="fonctions.length">
+      <form v-if="fonctions.length" class="row g-3 align-items-center mb-2">
         <div class="col-auto">
           <label for="fin">Date</label>
         </div>
         <div class="col-auto">
           <input
+            id="fin"
+            v-model="mutationDate"
             type="date"
             class="form-control mx-sm-3"
             :class="{ 'is-invalid': erreurs.date }"
-            id="fin"
-            v-model="mutationDate"
           />
         </div>
         <div class="col-auto">
-          <small class="invalid-feedback" v-if="erreurs.date">
+          <small v-if="erreurs.date" class="invalid-feedback">
             Date requise
           </small>
         </div>
       </form>
-      <table class="table table-sm" id="mutation-desactivation-table">
+      <table id="mutation-desactivation-table" class="table table-sm">
         <thead>
           <tr>
             <th>Sel</th>
@@ -38,8 +38,8 @@
           <tr>
             <td>
               <input
-                type="checkbox"
                 id="sel-exercices-mut"
+                type="checkbox"
                 name="exercices"
                 :indeterminate.prop="exercicesSelectedState == undefined"
                 :checked="exercicesSelectedState"
@@ -65,8 +65,8 @@
           <tr>
             <td>
               <input
-                type="checkbox"
                 id="sel-groupes-mut"
+                type="checkbox"
                 name="groupes"
                 :indeterminate.prop="groupesSelectedState == undefined"
                 :checked="groupesSelectedState"
@@ -92,8 +92,8 @@
           <tr>
             <td>
               <input
-                type="checkbox"
                 id="sel-fonctions-mut"
+                type="checkbox"
                 name="fonctions"
                 :indeterminate.prop="fonctionsSelectedState == undefined"
                 :checked="fonctionsSelectedState"

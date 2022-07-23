@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
         {{
           active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
@@ -27,21 +27,21 @@
       <div class="mb-3">
         <label for="montant">Montant</label>
         <input
-          type="text"
+          id="montant"
           v-model="active.montant"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['montant'] }"
-          id="montant"
         />
       </div>
       <div class="mb-3">
         <label for="quantite">Quantité</label>
         <input
-          type="text"
+          id="quantite"
           v-model="active.quantite"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['quantite'] }"
-          id="quantite"
         />
       </div>
       <div class="mb-3">

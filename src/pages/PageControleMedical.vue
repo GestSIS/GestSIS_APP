@@ -33,27 +33,27 @@
           </div>
           <div class="card-body">
             <!-- NOM -->
-            <div class="mb-3" v-if="!modeAjout">
+            <div v-if="!modeAjout" class="mb-3">
               <label for="m-exe-des">Sapeur</label>
               <input
+                id="m-exe-des"
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['designation'] }"
-                id="m-exe-des"
                 name="nom"
                 readonly
                 :value="sapeurName"
               />
             </div>
-            <div class="mb-3" v-else>
+            <div v-else class="mb-3">
               <label for="m-exe-des">Sapeur</label>
               <select
+                id="m-sap-cat"
+                v-model="controleMedical.sapeur_id"
                 class="form-select form-select-sm"
                 required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                id="m-sap-cat"
                 style="width: 100%"
-                v-model="controleMedical.sapeur_id"
               >
                 <option
                   v-for="sapeur in sapeurs"
@@ -68,12 +68,12 @@
             <div class="mb-3">
               <label for="m-sap-cat">Médecin</label>
               <select
+                id="m-sap-cat"
+                v-model="controleMedical.medecin_id"
                 class="form-select form-select-sm"
                 required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                id="m-sap-cat"
                 style="width: 100%"
-                v-model="controleMedical.medecin_id"
               >
                 <option
                   v-for="medecin in medecins"
@@ -88,12 +88,12 @@
             <div class="mb-3">
               <label for="m-sap-cat">Type</label>
               <select
+                id="m-sap-cat"
+                v-model="controleMedical.controle_medical_type_id"
                 class="form-select form-select-sm"
                 required
                 :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                id="m-sap-cat"
                 style="width: 100%"
-                v-model="controleMedical.controle_medical_type_id"
               >
                 <option v-for="t in controleTypes" :key="t.id" :value="t.id">
                   {{ t.designation }}
@@ -104,10 +104,10 @@
             <div class="mb-3">
               <div class="form-check">
                 <input
-                  type="checkbox"
-                  class="form-check-input"
                   id="m-ctr-accepter"
                   v-model="controleMedical.accepter"
+                  type="checkbox"
+                  class="form-check-input"
                 />
                 <label class="form-check-label" for="m-ctr-accepter"
                   >Accepté</label
@@ -124,38 +124,38 @@
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
+                      id="m-exe-date"
+                      v-model="controleMedical.consultation"
                       type="date"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
-                      id="m-exe-date"
                       name="consultation"
-                      v-model="controleMedical.consultation"
                     />
                   </div>
                 </div>
               </div>
-              <div class="col-4 d-xl-none" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-xl-none">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(1)">
                     +1
                   </button>
                 </div>
               </div>
-              <div class="col-4 d-xl-none" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-xl-none">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(2)">
                     +2
                   </button>
                 </div>
               </div>
-              <div class="col-4 d-xl-none" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-xl-none">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(5)">
                     +5
                   </button>
                 </div>
               </div>
-              <div class="col-12 col-xl-6" v-if="expirable">
+              <div v-if="expirable" class="col-12 col-xl-6">
                 <!-- Validité -->
                 <div class="mb-3">
                   <label for="m-exe-date">Validité</label>
@@ -164,32 +164,32 @@
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
+                      id="m-exe-date"
+                      v-model="controleMedical.validite"
                       type="date"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['date'] }"
-                      id="m-exe-date"
                       name="validite"
-                      v-model="controleMedical.validite"
                     />
                   </div>
                 </div>
               </div>
-              <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-none d-xl-block">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(1)">
                     +1
                   </button>
                 </div>
               </div>
-              <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-none d-xl-block">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(2)">
                     +2
                   </button>
                 </div>
               </div>
-              <div class="col-4 d-none d-xl-block" v-if="expirable">
-                <div class="d-grid" v-if="expirable">
+              <div v-if="expirable" class="col-4 d-none d-xl-block">
+                <div v-if="expirable" class="d-grid">
                   <button class="btn btn-primary" @click="validite(5)">
                     +5
                   </button>
@@ -199,18 +199,18 @@
             <div class="mb-3">
               <label for="m-sap-communication">Désignation</label>
               <textarea
+                id="m-sap-communication"
+                v-model="controleMedical.designation"
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['communications'] }"
-                id="m-sap-communication"
                 name="communications"
-                v-model="controleMedical.designation"
               ></textarea>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-8 col-12" v-if="controleMedical.id">
+      <div v-if="controleMedical.id" class="col-lg-8 col-12">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Document</h5>
@@ -230,23 +230,23 @@
               </button>
             </div>
           </div>
-          <div class="card-body" v-if="!controleMedical.filename">
+          <div v-if="!controleMedical.filename" class="card-body">
             <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input
+                id="inputGroupFile01"
+                ref="file-justificatif"
                 type="file"
                 class="form-control form-control-sm"
-                id="inputGroupFile01"
                 aria-describedby="inputGroupFileAddon01"
                 accept="application/pdf"
-                ref="file-justificatif"
                 @change="onFileChange"
               />
               <button
-                class="btn btn-outline-primary"
-                @click="ajoutJustificatif"
                 v-if="!controleMedical.filename"
+                class="btn btn-outline-primary"
                 :disabled="!file"
+                @click="ajoutJustificatif"
               >
                 Ajouter
               </button>
@@ -292,7 +292,7 @@ function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'controleMedical',
+  name: 'PageControleMedical',
   components: {
     ExerciceComptable,
     PdfViewer,
@@ -303,8 +303,18 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  mounted() {
-    this.displayJustificatif();
+  props: {
+    id: {
+      type: [String, Number],
+    },
+  },
+  data() {
+    return {
+      errors: {},
+      loading: true,
+      pdfData: null,
+      file: null,
+    };
   },
   watch: {
     controleMedical(next, prev) {
@@ -321,19 +331,6 @@ export default {
       if (!next) {
         this.controleMedical.validite = null;
       }
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      loading: true,
-      pdfData: null,
-      file: null,
-    };
-  },
-  props: {
-    id: {
-      type: [String, Number],
     },
   },
   mounted() {

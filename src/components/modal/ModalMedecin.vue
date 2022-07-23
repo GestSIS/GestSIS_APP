@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">
+      <h5 id="exampleModalLabel" class="modal-title">
         {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }} un médecin
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
@@ -10,21 +10,21 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          type="text"
+          id="designation"
           v-model="activeMedecin.designation"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="adresse">Adresse</label>
         <input
-          type="text"
+          id="adresse"
           v-model="activeMedecin.adresse"
+          type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['adresse'] }"
-          id="adresse"
         />
       </div>
       <div class="mb-3">
@@ -43,10 +43,10 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            type="checkbox"
-            class="form-check-input"
             id="medecin-actif-modal"
             v-model="activeMedecin.actif"
+            type="checkbox"
+            class="form-check-input"
             :true-value="1"
           />
           <label class="form-check-label" for="medecin-actif-modal"

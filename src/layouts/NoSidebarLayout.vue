@@ -1,10 +1,25 @@
 <template>
   <div class="wrapper">
     <div class="content">
+      <app-navbar />
       <slot />
     </div>
+    <app-modal />
   </div>
 </template>
+
+<script>
+import AppNavbar from '@/components/AppNavbar.vue';
+import AppModal from '@/components/AppModal.vue';
+
+export default {
+  name: 'NoSidebarLayout',
+  components: {
+    AppNavbar,
+    AppModal,
+  },
+};
+</script>
 
 <style scoped>
 .content {

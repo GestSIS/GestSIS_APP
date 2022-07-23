@@ -14,7 +14,7 @@
               <th>Sortie</th>
               <th>Motif</th>
               <th>Localité</th>
-              <th class="text-center" v-if="hasEditPermission">Actions</th>
+              <th v-if="hasEditPermission" class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -42,10 +42,10 @@
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    v-if="mutations.length > 1"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeMutation(m.id)"
-                    v-if="mutations.length > 1"
                   >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
@@ -55,19 +55,19 @@
           </tbody>
         </table>
         <button
+          v-if="finServiceButtonState && hasEditPermission"
           type="button"
           class="btn btn-outline-primary"
           @click="finService"
-          v-if="finServiceButtonState && hasEditPermission"
         >
           <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin
           de service
         </button>
         <button
+          v-else-if="hasEditPermission"
           type="button"
           class="btn btn-outline-primary"
           @click="incorporation"
-          v-else-if="hasEditPermission"
         >
           <font-awesome-icon
             class="me-1"
@@ -90,6 +90,7 @@ export default {
       localites: (state) => state.localite.liste,
       mutations: (state) => state.sapeur.active.mutations,
       hasEditPermission: (state) =>
+        state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     finServiceButtonState() {
@@ -99,13 +100,13 @@ export default {
       );
     },
   },
-  mounted() {
-    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
-  },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurMutations', id);
     },
+  },
+  mounted() {
+    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),

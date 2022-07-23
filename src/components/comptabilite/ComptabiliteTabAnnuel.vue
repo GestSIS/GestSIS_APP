@@ -4,11 +4,11 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Indemnités et Frais annuels</h3>
-          <button @click.prevent="generer" class="btn btn-primary">
+          <button class="btn btn-primary" @click.prevent="generer">
             Générer
           </button>
         </div>
-        <div class="card-body d-flex justify-content-center" v-if="loading">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -21,12 +21,12 @@
           no-data="Aucune écriture à afficher"
           detail-row-class="m-td-0 p-0"
           :detail-row-component="detailRow"
-          @selected="selected"
           :selectable="true"
-          selectKey="id"
+          select-key="id"
           row-selected-class="table-primary"
+          @selected="selected"
         >
-          <template v-slot:details="props">
+          <template #details="props">
             <button
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
@@ -41,7 +41,7 @@
               />
             </button>
           </template>
-          <template v-slot:actions="props">
+          <template #actions="props">
             <button
               title="Regénérer les frais de ce sapeur"
               class="btn btn-outline-primary border-0"
@@ -85,30 +85,11 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.selectedId = null;
-        this.loading = false;
-      });
+  props: {
+    id: {
+      type: String,
+      required: true,
     },
-  },
-  mounted() {
-    this.$store.dispatch('fetchListeSapeur');
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    }
-
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.loading = false;
-        this.selectedId = null;
-      });
-    }
   },
   data() {
     let svm = this;
@@ -182,10 +163,30 @@ export default {
       ],
     };
   },
-  props: {
-    id: {
-      type: String,
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
+        this.selectedId = null;
+        this.loading = false;
+      });
     },
+  },
+  mounted() {
+    this.$store.dispatch('fetchListeSapeur');
+    if (this.fonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions');
+    }
+    if (this.exercicesComptable.length === 0) {
+      //console.log('Warning')
+    }
+
+    if (this.currentExerciceComptableId || 0 !== 0) {
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
+        this.loading = false;
+        this.selectedId = null;
+      });
+    }
   },
   computed: {
     ...mapState({

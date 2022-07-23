@@ -24,8 +24,8 @@
       <div class="col-md-12">
         <nav
           v-if="!newMode"
-          class="nav nav-tabs mb-3"
           id="nav-tab"
+          class="nav nav-tabs mb-3"
           role="tablist"
         >
           <a
@@ -45,12 +45,12 @@
             >Présences</a
           >
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <ExerciceTabSapeurs v-if="tabPresence"></ExerciceTabSapeurs>
             <ExerciceTabGeneral
-              :newMode="newMode"
               v-if="!tabPresence"
+              :new-mode="newMode"
             ></ExerciceTabGeneral>
           </div>
         </div>
@@ -67,22 +67,22 @@ import ExerciceTabGeneral from '@/components/exercice/ExerciceTabGeneral.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
-  name: 'exercice',
+  name: 'PageExercice',
   components: {
     ExerciceTabSapeurs,
     ExerciceTabGeneral,
     ExerciceComptable,
+  },
+  props: {
+    id: {
+      type: String,
+    },
   },
   data() {
     return {
       tabPresence: true,
       loading: true,
     };
-  },
-  props: {
-    id: {
-      type: String,
-    },
   },
   computed: {
     ...mapGetters(['activeExerciceData']),
@@ -91,6 +91,15 @@ export default {
     },
     breadcrumbFinal() {
       return this.newMode ? 'Nouveau' : this.activeExerciceData.designation;
+    },
+  },
+  watch: {
+    activeExerciceId() {
+      let id = parseInt(this.id);
+
+      this.$store.dispatch('selectExercice', id);
+      this.$store.dispatch('fetchExercice', id);
+      this.$store.dispatch('fetchExerciceSapeurs', id);
     },
   },
   mounted() {
@@ -114,15 +123,6 @@ export default {
       this.$store.dispatch('fetchExerciceSapeurs', id);
     }
     this.tabPresence = !this.newMode;
-  },
-  watch: {
-    activeExerciceId() {
-      let id = parseInt(this.id);
-
-      this.$store.dispatch('selectExercice', id);
-      this.$store.dispatch('fetchExercice', id);
-      this.$store.dispatch('fetchExerciceSapeurs', id);
-    },
   },
 };
 </script>

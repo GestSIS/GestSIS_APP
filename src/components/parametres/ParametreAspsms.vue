@@ -13,31 +13,31 @@
           <div class="mb-3">
             <label for="user">Utilisateur</label>
             <input
-              type="text"
+              id="username"
               v-model="params.username"
+              type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['username'] }"
-              id="username"
             />
           </div>
           <div class="mb-3">
             <label for="password">Mot de passe</label>
             <input
-              type="password"
+              id="password"
               v-model="params.password"
+              type="password"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['password'] }"
-              id="password"
             />
           </div>
           <div class="mb-3">
             <label for="credit">Crédit actuel</label>
             <input
+              id="credit"
               type="number"
               readonly
               :value="credit"
               class="form-control form-control-sm"
-              id="credit"
             />
           </div>
         </div>

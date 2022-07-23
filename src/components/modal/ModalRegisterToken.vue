@@ -4,37 +4,37 @@
       <h5 class="modal-title">Nouveau jeton d'inscription</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
-    <div class="modal-body" v-if="step === 1">
+    <div v-if="step === 1" class="modal-body">
       <div class="mb-3">
         <label for="desc">Description</label>
         <input
-          type="text"
-          v-model="token.description"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['description'] }"
           id="desc"
           ref="desc"
+          v-model="token.description"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['description'] }"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Validité</label>
         <input
-          type="date"
+          id="designation"
           v-model="token.validite"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite'] }"
-          id="designation"
         />
       </div>
       <div class="mb-3">
         <label for="designation">Rôles</label>
-        <div class="form-check" v-for="role in roles" :key="role.id">
+        <div v-for="role in roles" :key="role.id" class="form-check">
           <input
+            :id="'r' + role.id"
+            v-model="token.roles"
             type="checkbox"
             class="form-check-input"
             :value="role.id"
-            v-model="token.roles"
-            :id="'r' + role.id"
           />
           <label class="form-check-label" :for="'r' + role.id">
             {{ role.nom }}
@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="modal-body" v-if="step === 2">
+    <div v-if="step === 2" class="modal-body">
       <p>
         Votre token a été généré avec succès, vous pouvez le transmettre à votre
         contact qui pourra alors l'utiliser lors de la création d'un nouveau
@@ -55,12 +55,12 @@
       <div class="mb-3">
         <div class="input-group input-group-sm mb-3">
           <input
+            id="desc"
+            ref="displayedToken"
+            v-model="token.token"
             type="text"
             class="form-control form-control-sm"
             readonly
-            id="desc"
-            v-model="token.token"
-            ref="displayedToken"
           />
           <button
             class="btn btn-outline-secondary"
@@ -77,10 +77,10 @@
         {{ step == 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
+        v-if="step === 1"
         type="button"
         class="btn btn-primary"
         @click="save()"
-        v-if="step === 1"
       >
         Créer
       </button>

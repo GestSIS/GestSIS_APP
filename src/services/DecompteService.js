@@ -28,14 +28,10 @@ export default {
     return Api.print(filename).get(`/decomptes/${decompteId}/print`);
   },
   downloadDecompteParSapeur(decompteId, filename) {
-    return Api.print(filename).get(
-      `/decomptes/${decompteId}/print-par-sapeur`
-    );
+    return Api.print(filename).get(`/decomptes/${decompteId}/print-par-sapeur`);
   },
   downloadDecompteParCompte(decompteId, filename) {
-    return Api.print(filename).get(
-      `/decomptes/${decompteId}/print-par-compte`
-    );
+    return Api.print(filename).get(`/decomptes/${decompteId}/print-par-compte`);
   },
   downloadIso20022PourDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
