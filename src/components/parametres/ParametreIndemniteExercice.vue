@@ -14,13 +14,9 @@
             <th>Désignation</th>
             <th>Unité</th>
             <th>Solde</th>
-            <!-- <th>Solde min</th>
-            <th>Pour</th>-->
-            <th>Compte</th>
+            <th>Compte solde</th>
             <th>Indemnité</th>
-            <!-- <th>Indemnité min</th>
-            <th>Pour</th>-->
-            <th>Compte</th>
+            <th>Compte indemnité</th>
             <th>Par fonction</th>
             <th>Catégorie</th>
             <th class="text-center">Actions</th>
@@ -42,9 +38,9 @@
             <td v-else>-</td>-->
             <td v-if="!i.solde_undefined">
               {{
-                i.compte_solde_id
-                  ? compte(i.compte_solde_id)
-                  : "Plus d'un compte"
+                  i.compte_solde_id
+                    ? compte(i.compte_solde_id)
+                    : "Plus d'un compte"
               }}
             </td>
             <td v-else>-</td>
@@ -57,36 +53,22 @@
             <td v-else>-</td>-->
             <td v-if="!i.indemnite_undefined">
               {{
-                i.compte_indemnite_id
-                  ? compte(i.compte_indemnite_id)
-                  : "Plus d'un compte"
+                  i.compte_indemnite_id
+                    ? compte(i.compte_indemnite_id)
+                    : "Plus d'un compte"
               }}
             </td>
             <td v-else>-</td>
             <td class="text-center">
-              <input
-                id="par_fonction"
-                type="checkbox"
-                class="form-check-input"
-                :checked="i.par_fonction"
-                disabled
-              />
+              <input id="par_fonction" type="checkbox" class="form-check-input" :checked="i.par_fonction" disabled />
               <label class="form-check-label" for="par_fonction"></label>
             </td>
             <td>{{ categorie(i.ecriture_categorie_id) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateIndemnite(i)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateIndemnite(i)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                disabled
-              >
+              <button type="button" class="btn btn-outline-danger border-0" disabled>
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -152,39 +134,39 @@ export default {
             soldes.length == 0
               ? 0
               : soldes.length == 1
-              ? soldes[0].tarif_min || 0
-              : NaN,
+                ? soldes[0].tarif_min || 0
+                : NaN,
           min_solde_pour:
             soldes.length == 0
               ? 0
               : soldes.length == 1
-              ? soldes[0].tarif_min_pour || 0
-              : NaN,
+                ? soldes[0].tarif_min_pour || 0
+                : NaN,
           compte_solde_id:
             soldes.length == 0
               ? null
               : soldes.length == 1
-              ? soldes[0].compte_id
-              : NaN,
+                ? soldes[0].compte_id
+                : NaN,
           indemnite_undefined: indemnites.length == 0,
           min_indemnite:
             indemnites.length == 0
               ? 0
               : indemnites.length == 1
-              ? indemnites[0].tarif_min || 0
-              : NaN,
+                ? indemnites[0].tarif_min || 0
+                : NaN,
           min_indemnite_pour:
             indemnites.length == 0
               ? 0
               : indemnites.length == 1
-              ? indemnites[0].tarif_min_pour || 0
-              : NaN,
+                ? indemnites[0].tarif_min_pour || 0
+                : NaN,
           compte_indemnite_id:
             indemnites.length == 0
               ? null
               : indemnites.length == 1
-              ? indemnites[0].compte_id
-              : NaN,
+                ? indemnites[0].compte_id
+                : NaN,
         };
       });
     },
@@ -226,4 +208,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

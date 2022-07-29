@@ -8,7 +8,7 @@
       <p>{{ data.question }}</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="cancel()">
+      <button type="button" class="btn btn-secondary" @click="cancel()" ref="cancelButton">
         Annuler
       </button>
       <button type="button" class="btn btn-primary" @click="confirmer()">
@@ -31,6 +31,9 @@ export default {
       type: Function,
     },
   },
+  mounted() {
+    this.$refs.cancelButton.focus();
+  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     cancel() {
@@ -51,4 +54,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
