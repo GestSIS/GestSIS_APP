@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "date": "XX.07.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout action pour supprimer un compte",
+        "Ajout action pour supprimer une catégorie comptable",
+        "Correction d'un bug pour les indemnités annuelles",
+        "Inclusion des amendes pour décomptes",
+        "Refonte du système de permission pour les administrateurs",
+        "Focus automatique pour modal confirmation"
+      ]
+    },
+    {
       "date": "09.07.2022",
       "version": "1.0",
       "app": "GestSIS APP",
