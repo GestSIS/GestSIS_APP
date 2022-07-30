@@ -24,10 +24,18 @@
             <td>{{ c.tri }}</td>
             <td>{{ c.designation }}</td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="updateCategorie(c)">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateCategorie(c)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="deleteCategorie(c.id)">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteCategorie(c.id)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -76,13 +84,14 @@ export default {
       });
     },
     deleteCategorie(compteId) {
-      this.$store.dispatch('removeEcritureCategorie', compteId).catch((res) =>
-        this.$awn.alert(res.message || 'Erreur lors de la suppression')
-      );
+      this.$store
+        .dispatch('removeEcritureCategorie', compteId)
+        .catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+        );
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

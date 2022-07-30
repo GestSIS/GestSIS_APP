@@ -8,7 +8,12 @@
       <p>{{ data.question }}</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="cancel()" ref="cancelButton">
+      <button
+        ref="cancelButton"
+        type="button"
+        class="btn btn-secondary"
+        @click="cancel()"
+      >
         Annuler
       </button>
       <button type="button" class="btn btn-primary" @click="confirmer()">
@@ -54,5 +59,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
