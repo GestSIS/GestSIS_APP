@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "date": "XX.07.2022",
+      "date": "30.07.2022",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -12,7 +12,8 @@
         "Inclusion des amendes pour décomptes",
         "Refonte du système de permission pour les administrateurs",
         "Focus automatique pour modal confirmation",
-        "Ajout de messages d'erreurs manquant"
+        "Ajout de messages d'erreurs manquant",
+        "Mise à jour du thème graphique"
       ]
     },
     {
