@@ -7,10 +7,12 @@
       "changes": [
         "Ajout action pour supprimer un compte",
         "Ajout action pour supprimer une catégorie comptable",
+        "Amélioration du décompte par sapeur",
         "Correction d'un bug pour les indemnités annuelles",
         "Inclusion des amendes pour décomptes",
         "Refonte du système de permission pour les administrateurs",
-        "Focus automatique pour modal confirmation"
+        "Focus automatique pour modal confirmation",
+        "Ajout de messages d'erreurs manquant"
       ]
     },
     {
