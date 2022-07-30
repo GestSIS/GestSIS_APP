@@ -31,9 +31,18 @@
 
     <!-- Sidebar Menu -->
     <nav class="menu-options mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+      <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false"
+      >
         <li v-for="link in filteredLinks" :key="link.nom" class="nav-item">
-          <router-link :to="link.to" class="nav-link text-white" active-class="active">
+          <router-link
+            :to="link.to"
+            class="nav-link text-white"
+            active-class="active"
+          >
             <font-awesome-icon :icon="link.icon" />
             <span class="ms-3">{{ link.nom }}</span>
           </router-link>

@@ -4,8 +4,17 @@
     <div class="info">
       <div class="mb-3">
         <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
-        <select id="inputGroupSelect01" v-model="sisId" class="form-select form-select-sm" @change="selectSis($event)">
-          <option v-for="sis in availableSisListe" :key="sis.id" :value="sis.id">
+        <select
+          id="inputGroupSelect01"
+          v-model="sisId"
+          class="form-select form-select-sm"
+          @change="selectSis($event)"
+        >
+          <option
+            v-for="sis in availableSisListe"
+            :key="sis.id"
+            :value="sis.id"
+          >
             {{ sis.nom }}
           </option>
         </select>
@@ -58,5 +67,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -49,7 +49,7 @@
       </div>
       <div class="col-md-4">
         <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>A propos</h3>
           </div>
@@ -60,10 +60,25 @@
               secours.
             </p>
             <p>Auteur : Bastien Wermeille</p>
-            <!-- TODO: Ajout sujet par défault - Nom SIS -->
-            <p><a href="mailto:support@gestsis.ch">Contacter</a></p>
             <p>
               GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
+            </p>
+          </div>
+        </div>
+        <div class="card card-primary card-outline mb-5">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Support</h3>
+          </div>
+          <div class="card-body">
+            <!-- TODO: Ajout sujet par défault - Nom SIS -->
+            <p>Contacter par <a href="mailto:support@gestsis.ch">email</a></p>
+            <p>
+              Télécharger
+              <a
+                target="_blank"
+                href="https://anydesk.com/fr/downloads/thank-you?dv=win_exe"
+                >anydesk</a
+              >
             </p>
           </div>
         </div>
