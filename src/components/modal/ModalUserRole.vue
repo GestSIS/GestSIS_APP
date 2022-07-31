@@ -10,9 +10,15 @@
       <div class="mb-3">
         <label for="designation">Rôles</label>
         <div v-for="role in roles" :key="role.id" class="form-check">
-          <input :id="'r' + role.id" v-model="user.roles" type="checkbox" class="form-check-input" :value="role.id" />
+          <input
+            :id="'r' + role.id"
+            v-model="user.roles"
+            type="checkbox"
+            class="form-check-input"
+            :value="role.id"
+          />
           <label class="form-check-label" :for="'r' + role.id">{{
-              role.nom
+            role.nom
           }}</label>
         </div>
         <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">
@@ -78,5 +84,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

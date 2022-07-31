@@ -36,7 +36,7 @@
                   <font-awesome-icon :icon="['far', 'calendar-alt']" />
                 </div>
                 <input
-                  v-model="prmis.date"
+                  v-model="permis.date"
                   type="date"
                   class="form-control form-control-sm"
                   :readonly="!hasEditPermission"
