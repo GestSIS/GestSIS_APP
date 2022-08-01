@@ -46,9 +46,9 @@ export default {
         return data;
       });
     },
-    removeCompte({ commit }, compte) {
-      return CompteService.removeCompte(compte).then((data) => {
-        commit(types.REMOVE_COMPTE, data);
+    removeCompte({ commit }, compteId) {
+      return CompteService.removeCompte(compteId).then((data) => {
+        commit(types.REMOVE_COMPTE, compteId);
         return data;
       });
     },

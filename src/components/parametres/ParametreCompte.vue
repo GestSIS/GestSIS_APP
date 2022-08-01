@@ -36,18 +36,10 @@
             </td>-->
             <td>{{ formatType(c.produit) }}</td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCompte(c)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="updateCompte(c)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCompte(c.id)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="deleteCompte(c.id)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>
@@ -113,7 +105,7 @@ export default {
     },
     deleteCompte(compteId) {
       this.$store
-        .dispatch('deleteCompte', compteId)
+        .dispatch('removeCompte', compteId)
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
@@ -122,4 +114,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

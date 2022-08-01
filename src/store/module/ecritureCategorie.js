@@ -48,10 +48,10 @@ export default {
         }
       );
     },
-    removeEcritureCategorie({ commit }, categorie) {
-      return EcritureCategorieService.removeCategorie(categorie).then(
+    removeEcritureCategorie({ commit }, categorieId) {
+      return EcritureCategorieService.removeCategorie(categorieId).then(
         (data) => {
-          commit(types.REMOVE_ECRITURE_CATEGORIE, data);
+          commit(types.REMOVE_ECRITURE_CATEGORIE, categorieId);
           return data;
         }
       );
