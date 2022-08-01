@@ -2,10 +2,12 @@
   "releases": [
     {
       "date": "01.08.2022",
-      "version": "1.0",
+      "version": "1.1",
       "app": "GestSIS APP",
       "changes": [
-        "Correction de l'extension de fichiers pour les décomptes"
+        "Correction de l'extension de fichiers pour les décomptes",
+        "Nouveau bouton pour annuler l'imputation des frais et indemnités annuels",
+        "Amélioration de l'affichage des écritures dans la compatbilité"
       ]
     },
     {

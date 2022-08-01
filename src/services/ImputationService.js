@@ -67,8 +67,8 @@ export default {
       indemnite
     );
   },
-  removeIndemniteExercice(indemnite_id) {
-    return Api.api().delete(`/indemnites-exercice-types/${indemnite_id}`);
+  removeIndemniteExercice(indemniteId) {
+    return Api.api().delete(`/indemnites-exercice-types/${indemniteId}`);
   },
   addIndemniteIntervention(indemnite) {
     return Api.api().post('/indemnites-intervention-types', indemnite);
@@ -79,11 +79,14 @@ export default {
       indemnite
     );
   },
-  removeIndemniteIntervention(indemnite_id) {
-    return Api.api().delete(`/indemnites-intervention-types/${indemnite_id}`);
+  removeIndemniteIntervention(indemniteId) {
+    return Api.api().delete(`/indemnites-intervention-types/${indemniteId}`);
   },
   imputerAnnuel(exerciceComptableId) {
     return Api.api().post('/imputation/annuel/' + exerciceComptableId);
+  },
+  annulerImputationAnnuel(exerciceComptableId) {
+    return Api.api().delete(`/imputation/annuel/${exerciceComptableId}`);
   },
   getEcritureForCompte(compteId, exerciceComptableId) {
     return Api.api().get(

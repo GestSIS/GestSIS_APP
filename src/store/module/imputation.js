@@ -292,6 +292,11 @@ export default {
         return data;
       });
     },
+    annulerImputationAnnuel({ commit }, exerciceComptableId) {
+      return ImputationService.annulerImputationAnnuel(
+        exerciceComptableId
+      ).then(() => commit(types.UPDATE_ECRITURES_ANNUEL_TYPES_LISTE, []));
+    },
     genererAmendesAnnuels({ commit }, exerciceComptableId) {
       return ImputationService.genererAmendesAnnuels(exerciceComptableId).then(
         (data) => commit(types.UPDATE_ECRITURES_AMENDES, data)

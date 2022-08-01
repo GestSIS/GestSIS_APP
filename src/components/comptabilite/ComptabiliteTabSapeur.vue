@@ -18,7 +18,7 @@
           <h3 class="card-title">Impressions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" :disabled="!selected">
+          <button class="btn btn-outline-primary" :disabled="!selected || true">
             Résumé des frais
           </button>
         </div>
@@ -147,27 +147,14 @@ export default {
           field: 'designation',
         },
         {
-          title: 'Solde',
-          field: 'solde',
+          title: 'Tarif',
+          field: 'tarif',
           headerClassName: 'text-center',
           className: 'text-end',
         },
         {
-          title: 'Indemnité',
+          title: 'Tarif min',
           field: 'indemnite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Frais',
-          field: 'frais',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Amende',
-          field: 'amende',
-          formatter: (amende, ecriture) => (amende ? ecriture.total : '0.00'),
           headerClassName: 'text-center',
           className: 'text-end',
         },
@@ -246,6 +233,7 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
       exercicesComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeInterventionId: (state) => state.intervention.active.id,
@@ -271,10 +259,21 @@ export default {
             aPayer:
               ecrituresBySapeur
                 .get(s.id)
-                .findIndex((e) => e.decompte_id == null && !e.amende) >= 0,
+                .findIndex(
+                  (e) =>
+                    e.decompte_id == null &&
+                    !this.comptes.find((c) => c.id === e.compte_id)?.produit
+                ) >= 0,
             total: ecrituresBySapeur
               .get(s.id)
-              .reduce((a, b) => a + (b.amende ? -b.total : +b.total), 0),
+              .reduce(
+                (a, b) =>
+                  a +
+                  (this.comptes.find((c) => c.id === b.compte_id)?.produit
+                    ? -b.total
+                    : +b.total),
+                0
+              ),
             getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
             columns: this.ecritureColumns,
           };

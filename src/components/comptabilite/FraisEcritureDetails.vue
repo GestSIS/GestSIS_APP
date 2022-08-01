@@ -26,7 +26,12 @@
           <td
             v-for="(column, index) in columns"
             :key="index"
-            :class="column.className || ''"
+            :class="{
+              [column.className]: column.className,
+              'text-danger':
+                column.field === 'total' &&
+                comptes.find((c) => c.id === ecriture.compte_id)?.produit,
+            }"
           >
             {{
               column?.slot != 'checkbox' ? computeColumn(column, ecriture) : ''
@@ -46,6 +51,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'FraisEcritureDetails',
   props: {
@@ -67,6 +74,11 @@ export default {
       columns: [],
       ecritures: [],
     };
+  },
+  computed: {
+    ...mapState({
+      comptes: (state) => state.compte.liste,
+    }),
   },
   mounted() {
     this.loading = true;

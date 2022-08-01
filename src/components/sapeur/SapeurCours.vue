@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr v-if="activeSapeurCours.length <= 0">
-            <td :colspan="hasEditPermission ? 4 : 3">Aucun cours suivi</td>
+            <td :colspan="hasEditPermission ? 5 : 4">Aucun cours suivi</td>
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
             <td>{{ c.date }}</td>

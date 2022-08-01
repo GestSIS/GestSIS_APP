@@ -3,9 +3,20 @@
     <div class="col-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Indemnités et Frais annuels</h3>
-          <button class="btn btn-primary" @click.prevent="generer">
-            Générer
+          <h3 class="card-title me-auto">Indemnités et Frais annuels</h3>
+          <button
+            class="btn btn-outline-primary me-2"
+            :title="computedData.length ? 'Regénérer tous' : 'Générer'"
+            @click.prevent="generer"
+          >
+            {{ computedData.length ? 'Regénérer' : 'Générer' }}
+          </button>
+          <button
+            v-if="computedData.length"
+            class="btn btn-outline-danger"
+            @click.prevent="annulerImputation"
+          >
+            Tout supprimer
           </button>
         </div>
         <div v-if="loading" class="card-body d-flex justify-content-center">
@@ -248,6 +259,24 @@ export default {
     },
     regenererSapeur() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
+    },
+    async annulerImputation() {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: "Voulez-vous annuler l'imputation annuel des frais ?",
+          question:
+            'Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.',
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch(
+              'annulerImputationAnnuel',
+              this.currentExerciceComptableId
+            );
+          }
+        },
+      });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
