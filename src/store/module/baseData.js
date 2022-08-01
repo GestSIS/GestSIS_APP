@@ -23,7 +23,10 @@ export default {
     listTelephoneTypes: (state) => state.telephoneTypes,
   },
   actions: {
-    fetchPermisType({ commit }) {
+    fetchPermisType({ commit, state }) {
+      if (state.permisTypes.length) {
+        return Promise.resolve();
+      }
       return BaseDataService.getPermisType().then((data) =>
         commit(types.UPDATE_PERMIS_LISTE, data)
       );
@@ -36,7 +39,10 @@ export default {
         commit(types.UPDATE_CIVILITE_LISTE, data)
       );
     },
-    fetchTelephoneTypes({ commit }) {
+    fetchTelephoneTypes({ commit, state }) {
+      if (state.telephoneTypes.length) {
+        return Promise.resolve();
+      }
       return BaseDataService.getTelephones().then((data) =>
         commit(types.UPDATE_TELEPHONE_TYPE_LISTE, data)
       );

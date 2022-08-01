@@ -264,14 +264,18 @@ export default {
         return state.refreshTokenPromise;
       }
     },
-    fetchPermissions({ state, commit }) {
-      if (state.permissions.length <= 0) {
-        return AuthService.getPermissions().then((permissions) => {
-          return commit(types.AUTH_PERMISSIONS_LISTE, permissions);
-        });
+    fetchPermissions({ commit, state }) {
+      if (state.permissions.length > 0) {
+        return Promise.resolve();
       }
+      return AuthService.getPermissions().then((permissions) => {
+        return commit(types.AUTH_PERMISSIONS_LISTE, permissions);
+      });
     },
-    fetchRoles({ commit }) {
+    fetchRoles({ commit, state }) {
+      if (state.roles.length > 0) {
+        return Promise.resolve();
+      }
       return AuthService.getRoles().then((roles) => {
         return commit(types.AUTH_ROLES_LISTE, roles);
       });

@@ -25,7 +25,10 @@ export default {
     },
   },
   actions: {
-    fetchMedecins({ commit }) {
+    fetchMedecins({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      }
       return MedecinService.getMedecins().then((data) =>
         commit(types.UPDATE_MEDECIN_LISTE, data)
       );

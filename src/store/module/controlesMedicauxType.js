@@ -23,7 +23,10 @@ export default {
     },
   },
   actions: {
-    fetchControlesMedicauxTypes({ commit }) {
+    fetchControlesMedicauxTypes({ commit, state }) {
+      if (state.liste.length > 0) {
+        return Promise.resolve();
+      }
       return ControlesMedicauxTypeService.getTypes().then((data) =>
         commit(types.UPDATE_CONTROLE_MEDICAUX_TYPES_LISTE, data)
       );
