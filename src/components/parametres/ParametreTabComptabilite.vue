@@ -48,7 +48,7 @@
             :class="{ active: tab === 'indemnite-exercice' }"
             href="#"
             @click.prevent="tab = 'indemnite-exercice'"
-            >Indemnité exercice</a
+            >Indemnité exercice &amp; séance</a
           >
           <a
             class="nav-link"
