@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "02.08.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de saisir des cours de demi-journées",
+        "Correction d'un problème pour l'imputation d'exercice facturé à l'heure"
+      ]
+    },
+    {
       "date": "01.08.2022",
       "version": "1.1",
       "app": "GestSIS APP",
