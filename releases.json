@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "06.08.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Groupement des permissions par module pour la gestion des rôles",
+        "Déployement et configuration de GestSIS Alarme"
+      ]
+    },
+    {
       "date": "02.08.2022",
       "version": "1.0",
       "app": "GestSIS APP",

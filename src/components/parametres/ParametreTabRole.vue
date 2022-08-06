@@ -11,18 +11,40 @@
     <div class="card-body table-responsive">
       <table
         id="sap-cours"
-        class="table table-sm table-responsive"
+        class="table table-sm table-responsive table-bordered"
         cellspacing="0"
         width="100%"
       >
         <thead>
           <tr>
+            <th colspan="2"></th>
+            <th
+              v-for="[key, permissions] in groupedPermissions"
+              :key="key"
+              class="text-center text-capitalize"
+              :colspan="permissions.length"
+              :rowspan="permissions.length === 1 ? 2 : 1"
+            >
+              {{ keyMapping(key) }}
+            </th>
+            <th data-field="actions" rowspan="2">Actions</th>
+          </tr>
+          <tr>
             <th data-field="date">Rôle</th>
             <th data-field="designation">Désignation</th>
-            <th v-for="p in permissions" :key="p.id" class="text-center">
-              {{ p.nom }}
-            </th>
-            <th data-field="actions">Actions</th>
+            <template
+              v-for="[key, permissions] in groupedPermissions"
+              :key="key"
+            >
+              <th
+                v-for="p in permissions"
+                v-if="permissions.length !== 1"
+                :key="key"
+                class="text-center text-capitalize"
+              >
+                {{ p.permission }}
+              </th>
+            </template>
           </tr>
         </thead>
         <tbody>
@@ -81,7 +103,8 @@ export default {
   mounted() {},
   computed: {
     ...mapState({
-      permissions: (state) => state.auth.permissions,
+      permissions: (state) =>
+        state.auth.permissions.sort((a, b) => a.tri - b.tri),
       roles: (state) => state.auth.roles,
     }),
     formattedRoles() {
@@ -89,6 +112,20 @@ export default {
         ...r,
         permissions: r.permission_roles.map((p) => parseInt(p.permission_id)),
       }));
+    },
+    groupedPermissions() {
+      return Object.entries(
+        this.permissions.reduce((acc, p) => {
+          const keyParts = p.api_key.split('.');
+          const key = keyParts[0];
+          const permission = keyParts[1];
+          if (!(key in acc)) {
+            acc[key] = [];
+          }
+          acc[key].push({ ...p, permission });
+          return acc;
+        }, {})
+      );
     },
   },
   beforeRouteEnter(routeTo, _, next) {
@@ -107,6 +144,19 @@ export default {
     },
     remove(role) {
       this.$store.dispatch('deleteRole', role.id);
+    },
+    keyMapping(key) {
+      // Permet d'améliorer certains textes à afficher
+      const mapping = {
+        controle_medical: 'Contrôles médicaux',
+        comptabilite: 'Comptabilité',
+        organisation: 'Groupes',
+        sis: 'Config générale',
+      };
+      if (key in mapping) {
+        return mapping[key];
+      }
+      return key;
     },
   },
 };

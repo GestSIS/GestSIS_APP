@@ -95,7 +95,8 @@ export default {
   },
   computed: {
     ...mapState({
-      permissions: (state) => state.auth.permissions,
+      permissions: (state) =>
+        state.auth.permissions.sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {

@@ -9,19 +9,30 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div :class="{
-          'col-6': activeIndemnite.par_fonction,
-          'col-12': !activeIndemnite.par_fonction,
-        }">
+        <div
+          :class="{
+            'col-6': activeIndemnite.par_fonction,
+            'col-12': !activeIndemnite.par_fonction,
+          }"
+        >
           <div class="mb-3">
             <label for="designation">Désignation</label>
-            <input id="designation" v-model="activeIndemnite.designation" type="text"
-              class="form-control form-control-sm" :class="{ 'is-invalid': errors['designation'] }" />
+            <input
+              id="designation"
+              v-model="activeIndemnite.designation"
+              type="text"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['designation'] }"
+            />
           </div>
           <div class="mb-3">
             <label for="unite">Unité</label>
-            <select id="unite" v-model="activeIndemnite.type_unite_id" class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['type_unite_id'] }">
+            <select
+              id="unite"
+              v-model="activeIndemnite.type_unite_id"
+              class="form-select form-select-sm"
+              :class="{ 'is-invalid': errors['type_unite_id'] }"
+            >
               <option v-for="u in unites" :key="u.id" :value="u.id">
                 {{ u.unite }}
               </option>
@@ -39,35 +50,60 @@
               <tbody>
                 <tr v-for="(indemnite, i) in base" :key="i">
                   <td class="col-4">
-                    <base-select v-model="base[i].type" :class="{ 'is-invalid': errors['base-type' + i] }"
-                      value-key="value" display-key="label" :options="[
+                    <base-select
+                      v-model="base[i].type"
+                      :class="{ 'is-invalid': errors['base-type' + i] }"
+                      value-key="value"
+                      display-key="label"
+                      :options="[
                         { value: 1, label: 'Solde' },
                         { value: 2, label: 'Indemnite' },
-                      ]" />
+                      ]"
+                    />
                   </td>
                   <td class="col-4">
-                    <input id="tarif" v-model="base[i].tarif" type="text" class="form-control form-control-sm"
-                      :class="{ 'is-invalid': errors['base-tarif' + i] }" />
+                    <input
+                      id="tarif"
+                      v-model="base[i].tarif"
+                      type="text"
+                      class="form-control form-control-sm"
+                      :class="{ 'is-invalid': errors['base-tarif' + i] }"
+                    />
                   </td>
                   <td class="col-4">
-                    <select id="compte" v-model="base[i].compte_id" class="form-select form-select-sm"
-                      :class="{ 'is-invalid': errors['base-compte' + i] }">
+                    <select
+                      id="compte"
+                      v-model="base[i].compte_id"
+                      class="form-select form-select-sm"
+                      :class="{ 'is-invalid': errors['base-compte' + i] }"
+                    >
                       <option v-for="c in comptes" :key="c.id" :value="c.id">
                         {{ compte(c) }}
                       </option>
                     </select>
                   </td>
                   <td v-if="base.length > 1" class="text-center">
-                    <button type="button" class="btn btn-outline-danger border-0" @click="supprimerType(i)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger border-0"
+                      @click="supprimerType(i)"
+                    >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />
                     </button>
                   </td>
                 </tr>
                 <tr>
                   <td :colspan="base.length > 1 ? 6 : 5">
-                    <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary"
+                      @click="ajoutType()"
+                    >
                       Ajouter
-                      <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
+                      <font-awesome-icon
+                        size="1x"
+                        :icon="['far', 'plus-square']"
+                      />
                     </button>
                   </td>
                 </tr>
@@ -76,16 +112,26 @@
           </div>
           <div class="mb-3">
             <div class="form-check">
-              <input id="par-fonction-modal" v-model="activeIndemnite.par_fonction" type="checkbox"
-                class="form-check-input" />
-              <label class="form-check-label" for="par-fonction-modal">Par fonction</label>
+              <input
+                id="par-fonction-modal"
+                v-model="activeIndemnite.par_fonction"
+                type="checkbox"
+                class="form-check-input"
+              />
+              <label class="form-check-label" for="par-fonction-modal"
+                >Par fonction</label
+              >
             </div>
           </div>
 
           <div class="mb-3">
             <label for="categorie">Catégorie</label>
-            <select id="categorie" v-model="activeIndemnite.ecriture_categorie_id" class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }">
+            <select
+              id="categorie"
+              v-model="activeIndemnite.ecriture_categorie_id"
+              class="form-select form-select-sm"
+              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            >
               <option v-for="c in categories" :key="c.id" :value="c.id">
                 {{ c.designation }}
               </option>
@@ -99,7 +145,11 @@
               <tr v-if="Object.keys(columns).length > 1">
                 <th></th>
                 <th v-for="(column, i) in columns" :key="i" class="text-center">
-                  <button type="button" class="btn btn-outline-danger border-0" @click="supprimerTypePourFonction(i)">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerTypePourFonction(i)"
+                  >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
                 </th>
@@ -107,23 +157,39 @@
               <tr>
                 <th>Type</th>
                 <th v-for="(column, i) in columns" :key="i">
-                  <base-select v-model="columns[i].type" :class="{ 'is-invalid': errors['type'] }" value-key="value"
-                    display-key="label" :options="[
+                  <base-select
+                    v-model="columns[i].type"
+                    :class="{ 'is-invalid': errors['type'] }"
+                    value-key="value"
+                    display-key="label"
+                    :options="[
                       { value: 1, label: 'Solde' },
                       { value: 2, label: 'Indemnite' },
-                    ]" />
+                    ]"
+                  />
                 </th>
                 <th rowspan="2">
-                  <button type="button" class="btn btn-outline-primary border-0" @click="ajoutTypePourFonction()">
-                    <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    @click="ajoutTypePourFonction()"
+                  >
+                    <font-awesome-icon
+                      size="2x"
+                      :icon="['far', 'plus-square']"
+                    />
                   </button>
                 </th>
               </tr>
               <tr>
                 <th>Compte</th>
                 <th v-for="(column, i) in columns" :key="i">
-                  <select id="compte" v-model="columns[i].compte_id" class="form-select form-select-sm"
-                    :class="{ 'is-invalid': errors['column-compte' + i] }">
+                  <select
+                    id="compte"
+                    v-model="columns[i].compte_id"
+                    class="form-select form-select-sm"
+                    :class="{ 'is-invalid': errors['column-compte' + i] }"
+                  >
                     <option v-for="c in comptes" :key="c.id" :value="c.id">
                       {{ compte(c) }}
                     </option>
@@ -140,11 +206,17 @@
                   {{ fonction(f.id) }}
                 </td>
                 <td v-for="(column, i) in columns" :key="i">
-                  <input class="form-control form-control-sm" :class="{
-                    'is-invalid': errors['column-tarif' + i + '-' + f.id],
-                  }" type="text" :value="columns[i].fonctions[f.id] || 0.0" @change="
-  (e) => (columns[i].fonctions[f.id] = e.target.value)
-" />
+                  <input
+                    class="form-control form-control-sm"
+                    :class="{
+                      'is-invalid': errors['column-tarif' + i + '-' + f.id],
+                    }"
+                    type="text"
+                    :value="columns[i].fonctions[f.id] || 0.0"
+                    @change="
+                      (e) => (columns[i].fonctions[f.id] = e.target.value)
+                    "
+                  />
                 </td>
               </tr>
             </tbody>
@@ -387,9 +459,9 @@ export default {
           })
           .catch(
             (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+              (this.errors = {
+                ...errors,
+              })
           );
       } else {
         this.$store
@@ -409,5 +481,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
