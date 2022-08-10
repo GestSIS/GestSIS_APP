@@ -177,7 +177,7 @@ export default {
       types: [
         { id: 0, designation: 'Autre' },
         { id: 1, designation: 'Solde' },
-        { id: 2, designation: 'indemnité' },
+        { id: 2, designation: 'Indemnité' },
         { id: 3, designation: 'Frais forfaitaire' },
         { id: 4, designation: 'Frais effectif' },
       ],

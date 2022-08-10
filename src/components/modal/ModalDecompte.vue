@@ -59,7 +59,7 @@
             role="switch"
           />
           <label class="form-check-label" for="ecritures-exercice"
-            >Exercices</label
+            >Exercices &amp; séances</label
           >
         </div>
         <div class="form-check form-switch">

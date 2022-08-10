@@ -53,7 +53,7 @@
           <tr>
             <th></th>
             <th>Nom Prénom</th>
-            <th>Date naissance</th>
+            <th>Date de naissance</th>
             <th>Localité</th>
             <th>Adresse</th>
             <th>Fonction</th>
@@ -103,7 +103,7 @@
                 'text-warning': e.changements.date_naissance,
               }"
             >
-              {{ e.date_naissance }}
+              {{ new Date(e.date_naissance).toLocaleDateString() }}
             </td>
             <td
               :class="{

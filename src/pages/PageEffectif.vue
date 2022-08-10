@@ -317,6 +317,9 @@ export default {
           title: 'Naissance',
           key: 'date_naissance',
           sortKey: 'date_naissance',
+          formatter(value) {
+            return new Date(value).toLocaleDateString();
+          },
         },
         {
           title: 'Actions',

@@ -177,6 +177,41 @@
               </option>
             </select>
           </div>
+          <!-- Coordonées -->
+          <div class="mb-3">
+            <label for="m-int-wgs84">Coordonées (format wgs84)</label>
+            <div class="input-group">
+              <input
+                id="m-int-wgs84"
+                v-model="activeInterventionData.wgs84"
+                type="text"
+                :readonly="!hasEditPermission"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['wgs84'] }"
+                name="wgs84"
+              />
+              <btn
+                v-if="!isValidWgs84"
+                id="button-addon2"
+                class="btn btn-outline-secondary"
+                type="button"
+                disabled
+                >GPS
+              </btn>
+              <a
+                v-else
+                id="button-gps"
+                class="btn btn-outline-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+                :href="
+                  'https://www.google.com/maps/place/' +
+                  activeInterventionData.wgs84
+                "
+                >GPS</a
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -411,6 +446,11 @@ export default {
         ),
     }),
     ...mapGetters(['exerciceComptableDebut', 'exerciceComptableFin']),
+    isValidWgs84() {
+      const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
+      console.log(regex.test(this.activeInterventionData?.wgs84));
+      return regex.test(this.activeInterventionData?.wgs84);
+    },
     description() {
       return this.activeInterventionData.description;
     },

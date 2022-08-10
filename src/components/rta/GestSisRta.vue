@@ -11,7 +11,7 @@
           <tr>
             <!-- <th></th> -->
             <th>Nom Prénom</th>
-            <th>Date naissance</th>
+            <th>Date de naissance</th>
             <th>Localité</th>
             <th>Adresse</th>
             <th>Fonction</th>

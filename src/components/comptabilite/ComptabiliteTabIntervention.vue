@@ -278,6 +278,9 @@ export default {
           title: 'Date',
           key: 'date_debut',
           sortKey: 'date_debut',
+          formatter(value) {
+            return new Date(value).toLocaleDateString();
+          },
         },
         {
           title: 'Heure',
