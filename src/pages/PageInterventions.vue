@@ -112,11 +112,11 @@
                 >
                   <option>&lt;Type&gt;</option>
                   <option
-                    v-for="type in filteredInterventionsTypes"
-                    :key="type.id"
-                    :value="type.id"
+                    v-for="t in filteredInterventionsTypes"
+                    :key="t.id"
+                    :value="t.id"
                   >
-                    {{ type.designation }}
+                    {{ t.designation }}
                   </option>
                 </select>
               </div>

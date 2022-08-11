@@ -13,13 +13,9 @@
           </ol>
         </nav>
       </div>
-      <!-- <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>-->
     </div>
     <div class="row">
       <div class="col-md-12">
-        <!-- /.card-header -->
         <div class="card card-primary card-outline mb-5 table-responsive">
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
@@ -32,44 +28,32 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Utilisateur</th>
-                <!-- <th>Dernière connexion</th> -->
-                <th>Sapeur</th>
-                <th>Email</th>
-                <th>Rôles</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="u in users" :key="u.id">
-                <td>{{ u.name }}</td>
-                <td>{{ formatSapeur(u) }}</td>
-                <td>{{ u.email }}</td>
-                <td>
-                  <span
-                    v-for="r in u.user_roles"
-                    :key="r.id"
-                    class="badge bg-primary me-1"
-                    >{{ formatRole(r.role_id) }}</span
-                  >
-                </td>
-                <!-- <td>{{ u }}</td> -->
-                <td>
-                  <div class="d-flex">
-                    <button
-                      class="btn btn-outline-primary border-0"
-                      @click="edit(u)"
-                    >
-                      <font-awesome-icon :icon="['far', 'edit']" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            no-data="Aucun utilisateur"
+            :data="users"
+            :selectable="true"
+            select-key="id"
+            row-selected-class="table-primary"
+          >
+            <template #badges="props">
+              <span
+                v-for="r in props.rowData.user_roles"
+                :key="r.id"
+                class="badge bg-primary me-1"
+                >{{ formatRole(r.role_id) }}</span
+              >
+            </template>
+            <template #actions="props">
+              <button
+                class="btn btn-outline-primary border-0"
+                @click="edit(props.rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+            </template>
+          </base-table>
         </div>
       </div>
     </div>
@@ -79,6 +63,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
+
+import BaseTable from '@/components/table/BaseTable.vue';
 
 function loadData(routeTo, next) {
   let loadUsers = store.dispatch('fetchUsers');
@@ -94,7 +80,7 @@ function loadData(routeTo, next) {
 export default {
   name: 'PageUtilisateurs',
   components: {
-    // ExerciceComptable,
+    BaseTable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -106,6 +92,36 @@ export default {
     return {
       toggles: {},
       loading: true,
+      fields: [
+        {
+          title: 'Utilisateur',
+          key: 'name',
+          sortKey: 'name',
+        },
+        {
+          title: 'Sapeur',
+          key: 'sapeur_id',
+          formatter: (_, data) => this.formatSapeur(data),
+        },
+        {
+          title: 'Email',
+          key: 'email',
+          sortKey: 'email',
+        },
+        {
+          title: 'Rôles',
+          key: 'roles',
+          sortKey: 'roles',
+          slot: 'badges',
+        },
+        {
+          title: 'Actions',
+          key: 'actions',
+          slot: 'actions',
+          titleClass: 'align-middle text-center',
+          columnClass: 'align-middle text-center',
+        },
+      ],
     };
   },
   mounted() {

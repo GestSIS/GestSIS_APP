@@ -41,7 +41,7 @@
                 rowData: r,
               }"
             >
-              {{ (f.formatter || defaultFormatter)(r[f.key]) }}
+              {{ (f.formatter || defaultFormatter)(r[f.key], r) }}
             </slot>
           </td>
         </tr>
