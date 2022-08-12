@@ -34,11 +34,11 @@
             <th data-field="designation">Désignation</th>
             <template
               v-for="[key, permissions] in groupedPermissions"
-              v-if="permissions.length !== 1"
               :key="key"
             >
               <th
                 v-for="(p, i) in permissions"
+                v-if="permissions.length !== 1"
                 :key="i"
                 class="text-center text-capitalize"
               >
