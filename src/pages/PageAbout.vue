@@ -65,7 +65,7 @@
             </p>
           </div>
         </div>
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>Support</h3>
           </div>
@@ -82,6 +82,37 @@
             </p>
           </div>
         </div>
+        <div v-if="isAdmin" class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Admin</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="copy-to-clipboard" class="form-label"
+                >JWT Token</label
+              >
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder=""
+                  :value="jwt"
+                  readonly
+                  aria-label="Copier dans le press-papier"
+                  aria-describedby="copy-to-clipboard"
+                />
+                <button
+                  id="copy-to-clipboard"
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="copyToClipboard(jwt)"
+                >
+                  <font-awesome-icon :icon="['far', 'clipboard']" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -89,6 +120,8 @@
 
 <script>
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import { TokenService } from '../services/StorageService.js';
+import { mapState } from 'vuex';
 import * as data from '../../releases.json';
 
 export default {
@@ -101,9 +134,18 @@ export default {
       releases: data.releases,
       all: false,
       nbNew: 0,
+      jwt: '',
     };
   },
+  computed: {
+    ...mapState({
+      isAdmin: (state) => state.auth.admin,
+    }),
+  },
   mounted() {
+    this.jwt = TokenService.getAccessToken();
+    console.log(this.jwt);
+
     const date = localStorage.getItem(
       'latestReleaseDate',
       this.releases[0].date
@@ -124,6 +166,11 @@ export default {
 
     localStorage.setItem('latestReleaseDate', this.releases[0].date);
     localStorage.setItem('latestSeenVersion', this.releases[0].version);
+  },
+  methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+    },
   },
 };
 </script>

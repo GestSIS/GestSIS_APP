@@ -54,6 +54,7 @@ import {
   faEye,
   faAddressCard,
   faAddressBook,
+  faClipboard,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
@@ -107,5 +108,6 @@ library.add(
   faMinusSquare,
   faEye,
   faAddressCard,
-  faAddressBook
+  faAddressBook,
+  faClipboard
 );
