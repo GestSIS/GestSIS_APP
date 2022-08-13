@@ -1,5 +1,19 @@
 <template>
   <div class="row">
+    <div class="col-xs-12 col-md-12">
+      <div
+        v-if="!dismissedWarning && data.statut > 2 && hasEditPermission"
+        class="alert alert-dismissible alert-warning"
+      >
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          @click="dismissedWarning = true"
+        ></button>
+        Intervention déjà imputée, impossible de modifier les présences.
+      </div>
+    </div>
     <InterventionTabGroupe />
     <div class="col-xs-12 col-md-6">
       <!-- general form elements -->
@@ -76,7 +90,12 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Présences</h3>
-          <button type="button" class="btn btn-primary" @click="addPresences">
+          <button
+            type="button"
+            class="btn btn-primary"
+            :disabled="data.statut > 2"
+            @click="addPresences"
+          >
             Ajouter des présences
           </button>
         </div>
@@ -187,6 +206,7 @@
                         v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-primary border-0 ms-2"
+                        :disabled="data.statut > 2"
                         @click="editPresence(p)"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />
@@ -195,6 +215,7 @@
                         v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-danger border-0"
+                        :disabled="data.statut > 2"
                         @click="removePresence(p.id)"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
@@ -232,6 +253,7 @@ export default {
     return {
       columns: [],
       toggles: {},
+      dismissedWarning: false,
     };
   },
   computed: {

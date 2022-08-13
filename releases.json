@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "13.08.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout d'un message d'avertissement pour la modification d'une intervention déjà imputée",
+        "Ajout d'un message d'erreur pour la modification d'une écriture `divers` déjà payée"
+      ]
+    },
+    {
       "date": "10.08.2022",
       "version": "1.0",
       "app": "GestSIS APP",

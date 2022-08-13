@@ -221,11 +221,20 @@ export default {
       this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: {} });
     },
     editEcriture(ecriture) {
-      this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
+      if (!ecriture.decompte_id) {
+        this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
+      } else {
+        this.$awn.alert(
+          'Impossible de modifier une écriture déjà présente dans un décompte'
+        );
+      }
     },
     deleteEcriture(ecritureId) {
-      this.$store.dispatch('removeEcriture', ecritureId);
-      // TODO: Supprimer écriture si pas déjà liée à un décompte
+      this.$store.dispatch('removeEcriture', ecritureId).catch((err) => {
+        this.$awn.alert(
+          err?.message ?? 'Erreur, impossible de supprimer cette écriture'
+        );
+      });
     },
     selected(item) {
       this.selectedItem = item;
