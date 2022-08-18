@@ -83,7 +83,7 @@
       <div class="form-check">
         <input
           id="statut"
-          v-model="prams.statut"
+          v-model="params.statut"
           type="checkbox"
           class="form-check-input"
         />
