@@ -180,7 +180,7 @@
           <!-- Coordonées -->
           <div class="mb-3">
             <label for="m-int-wgs84">Coordonées (format wgs84)</label>
-            <div class="input-group">
+            <div class="input-group input-group-sm">
               <input
                 id="m-int-wgs84"
                 v-model="activeInterventionData.wgs84"
@@ -210,6 +210,31 @@
                 "
                 >GPS</a
               >
+            </div>
+          </div>
+          <!-- Rapport police -->
+          <div class="mb-3 row">
+            <label for="m-sap-cotisation_avs">Rapport police</label>
+            <div class="input-group input-group-sm">
+              <div class="input-group-text">
+                <input
+                  id="m-sap-cotisation_avs"
+                  v-model="activeInterventionData.rapport_police"
+                  type="checkbox"
+                  :disabled="!hasEditPermission"
+                  class="form-check-input"
+                />
+              </div>
+              <input
+                v-if="activeInterventionData.rapport_police"
+                id="m-int-agent"
+                v-model="activeInterventionData.agent"
+                type="text"
+                :readonly="!hasEditPermission"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['agent'] }"
+                name="agent"
+              />
             </div>
           </div>
         </div>
@@ -247,7 +272,7 @@
           </div>
           <!-- TYPE D'INTERVENTION -->
           <div class="row mb-3">
-            <div class="col-9">
+            <div class="col-8">
               <label for="m-int-type">Type d'intervention</label>
               <select
                 id="m-int-type"
@@ -266,7 +291,7 @@
                 </option>
               </select>
             </div>
-            <div class="col-3">
+            <div class="col-4">
               <label for="m-sap-suffixe">Nb intervention</label>
               <font-awesome-icon
                 v-tooltip.bottom="{
