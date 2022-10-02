@@ -34,7 +34,7 @@
             <th>Info</th>
           </tr>
         </thead>
-        <tbody v-if="exercices.length">
+        <tbody v-if="exercices && exercices.length">
           <tr>
             <td>
               <input
@@ -43,7 +43,7 @@
                 name="exercices"
                 :indeterminate.prop="exercicesSelectedState == undefined"
                 :checked="exercicesSelectedState"
-                @click="selectExercice"
+                @click="selectExercice($event.target.checked)"
               />
             </td>
             <td>Exercices</td>
@@ -53,15 +53,15 @@
             <td>
               <input
                 type="checkbox"
-                :checked="exercice.selected"
-                @click="(e) => selectExercice(e, exercice.id)"
+                :checked="selectedExercices[exercice.id]"
+                @click="selectExercice($event.target.checked, exercice.id)"
               />
             </td>
             <td>{{ exercice.date }}</td>
             <td>{{ exercice.info }}</td>
           </tr>
         </tbody>
-        <tbody v-if="sapGroupes.length">
+        <tbody v-if="sapGroupes && sapGroupes.length">
           <tr>
             <td>
               <input
@@ -70,7 +70,7 @@
                 name="groupes"
                 :indeterminate.prop="groupesSelectedState == undefined"
                 :checked="groupesSelectedState"
-                @click="selectGroupe"
+                @click="selectGroupe($event.target.checked)"
               />
             </td>
             <td>Groupes</td>
@@ -80,15 +80,15 @@
             <td>
               <input
                 type="checkbox"
-                :checked="groupe.selected"
-                @click="(e) => selectGroupe(e, groupe.id)"
+                :checked="selectedGroupes[groupe.id]"
+                @click="selectGroupe($event.target.checked, groupe.id)"
               />
             </td>
             <td>{{ groupe.designation }}</td>
             <td>{{ groupe.no }}</td>
           </tr>
         </tbody>
-        <tbody v-if="sapFonctions.length">
+        <tbody v-if="sapFonctions && sapFonctions.length">
           <tr>
             <td>
               <input
@@ -97,7 +97,7 @@
                 name="fonctions"
                 :indeterminate.prop="fonctionsSelectedState == undefined"
                 :checked="fonctionsSelectedState"
-                @click="selectFonction"
+                @click="selectFonction($event.target.checked)"
               />
             </td>
             <td>Fonctions</td>
@@ -107,8 +107,8 @@
             <td>
               <input
                 type="checkbox"
-                :checked="fonction.selected"
-                @click="(e) => selectFonction(e, fonction.id)"
+                :checked="selectedFonctions[fonction.id]"
+                @click="selectFonction($event.target.checked, fonction.id)"
               />
             </td>
             <td>{{ fonction.nom }}</td>
@@ -135,9 +135,9 @@ export default {
   name: 'ModalMutationDesactivation',
   data() {
     return {
-      exercices: [],
-      sapGroupes: [],
-      sapFonctions: [],
+      selectedExercices: {},
+      selectedGroupes: {},
+      selectedFonctions: {},
       mutationDate: null,
       erreurs: {},
     };
@@ -156,25 +156,40 @@ export default {
         state.sapeur.active.fonctions.filter((f) => !f.fin),
     }),
     exercicesSelectedState() {
-      return this.exercices.length
-        ? this.exercices
-            .map((e) => e.selected)
-            .reduce((v, e) => (v === e ? v : undefined))
-        : true;
+      return Object.values(this.selectedExercices).every((e) => e);
     },
     groupesSelectedState() {
-      return this.groupes.length
-        ? this.groupes
-            .map((g) => g.selected)
-            .reduce((v, g) => (v === g ? v : undefined))
-        : true;
+      return Object.values(this.selectedGroupes).every((e) => e);
     },
     fonctionsSelectedState() {
-      return this.fonctions.length
-        ? this.fonctions
-            .map((f) => f.selected)
-            .reduce((v, f) => (v === f ? v : undefined))
-        : true;
+      return Object.values(this.selectedFonctions).every((e) => e);
+    },
+    exercices() {
+      return this.activeSapeurExercice
+        .filter(
+          (e) => e.statut <= 2 && e.statut > 0 && e.date > this.mutationDate // Saisie ou vide et pas annulé
+        )
+        .map((e) => ({
+          ...e,
+          info: `${
+            this.categories.find((c) => c.id == e.exercice_categorie_id)
+              .designation
+          } : ${e.communications}`,
+        }));
+    },
+    sapGroupes() {
+      return this.activeSapeurGroupe.map((g) => ({
+        ...this.groupes.find((f) => f.id == g.groupe_id),
+        id: g.id,
+      }));
+    },
+    sapFonctions() {
+      return this.activeSapeurFonction.map((f) => ({
+        ...this.fonctions.find((e) => e.id == f.fonction_id),
+        debut: f.debut,
+        id: f.id,
+        info: `Début ${this.formatDate(new Date(f.debut))}`,
+      }));
     },
   },
   mounted() {
@@ -182,32 +197,16 @@ export default {
       this.$store.dispatch('fetchLocalites');
     }
 
-    this.exercices = this.activeSapeurExercice.map((e) => ({
-      ...e,
-      info: `${
-        this.categories.find((c) => c.id == e.exercice_categorie_id).designation
-      } : ${e.communications}`,
-      selected: true,
-    }));
-    this.sapGroupes = this.activeSapeurGroupe.map((g) => ({
-      ...this.groupes.find((f) => f.id == g.groupe_id),
-      id: g.id,
-      selected: true,
-    }));
-    this.sapFonctions = this.activeSapeurFonction.map((f) => ({
-      ...this.fonctions.find((e) => e.id == f.fonction_id),
-      debut: f.debut,
-      id: f.id,
-      info: `Début ${this.formatDate(new Date(f.debut))}`,
-      selected: true,
-    }));
-
     // Récupère la date de la dernière mutation
-    if (this.sapFonctions.length) {
+    if (this.activeSapeurMutations.length) {
       this.mutationDate = this.activeSapeurMutations.sort(
         (a, b) => new Date(b.sortie) - new Date(a.sortie)
       )[0].sortie;
     }
+
+    this.selectGroupe(true);
+    this.selectExercice(true);
+    this.selectFonction(true);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -248,53 +247,61 @@ export default {
         return;
       }
 
-      let isSelected = (e) => e.selected;
       let mapToId = (e) => e.id;
 
-      if (this.sapFonctions.filter(isSelected).length) {
+      if (
+        this.sapFonctions.filter((e) => this.selectedFonctions[e.id]).length
+      ) {
         this.$store.dispatch('finFonctions', {
           fin: this.mutationDate,
-          ids: this.sapFonctions.filter(isSelected).map(mapToId),
+          ids: this.sapFonctions
+            .filter((e) => this.selectedFonctions[e.id])
+            .map(mapToId),
         });
       }
-      if (this.exercices.filter(isSelected).length) {
+      if (this.exercices.filter((e) => this.selectedExercices[e.id]).length) {
         this.$store.dispatch(
           'supprimerConvocation',
-          this.exercices.filter(isSelected).map(mapToId)
+          this.exercices
+            .filter((e) => this.selectedExercices[e.id])
+            .map(mapToId)
         );
       }
-      if (this.sapGroupes.filter(isSelected).length) {
+      if (this.sapGroupes.filter((e) => this.selectedGroupes[e.id]).length) {
         this.$store.dispatch(
           'quitterGroupes',
-          this.sapGroupes.filter(isSelected).map(mapToId)
+          this.sapGroupes.filter((e) => this.selectedGroupes[e.id]).map(mapToId)
         );
       }
 
       this.errors = {};
       this.HIDE_MODAL();
     },
-    selectGroupe(event, groupeId) {
-      let state = event.target.checked;
+    selectGroupe(state, groupeId) {
       if (groupeId) {
-        this.sapGroupes.find((g) => g.id == groupeId).selected = state;
+        this.selectedGroupes[groupeId] = state;
       } else {
-        this.sapGroupes.forEach((e) => (e.selected = state));
+        this.selectedGroupes = Object.fromEntries(
+          this.activeSapeurGroupe.map((g) => [g.id, state])
+        );
       }
     },
-    selectExercice(event, exerciceId) {
-      let state = event.target.checked;
+    selectExercice(state, exerciceId) {
       if (exerciceId) {
-        this.exercices.find((g) => g.id == exerciceId).selected = state;
+        this.selectedExercices[exerciceId] = state;
       } else {
-        this.exercices.forEach((e) => (e.selected = state));
+        this.selectedExercices = Object.fromEntries(
+          this.activeSapeurExercice.map((g) => [g.id, state])
+        );
       }
     },
-    selectFonction(event, fonctionId) {
-      let state = event.target.checked;
+    selectFonction(state, fonctionId) {
       if (fonctionId) {
-        this.sapFonctions.find((g) => g.id == fonctionId).selected = state;
+        this.selectedFonctions[fonctionId] = state;
       } else {
-        this.sapFonctions.forEach((e) => (e.selected = state));
+        this.selectedFonctions = Object.fromEntries(
+          this.activeSapeurFonction.map((g) => [g.id, state])
+        );
       }
     },
   },
