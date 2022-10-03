@@ -49,7 +49,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="sap in presences" :key="sap.id">
+        <tr
+          v-for="sap in presences"
+          :key="sap.id"
+          :class="{ 'table-danger': !sap.actif }"
+        >
           <td>{{ sap.nomPrenom }}</td>
           <td>
             <div class="text-center">
@@ -264,7 +268,15 @@ export default {
     },
     computedExerciceSapeurs() {
       return this.activeExerciceSapeurs
-        .map((s) => ({ ...s, nomPrenom: this.formatSapeur(s.sapeur_id) }))
+        .map((s) => {
+          const sapeur = this.sapeurs.find((sap) => sap.id == s.id);
+          console.log(sapeur.actif);
+          return {
+            ...s,
+            nomPrenom: sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...',
+            actif: sapeur?.actif,
+          };
+        })
         .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
     },
   },
@@ -325,10 +337,6 @@ export default {
     },
     formatUnite(type_unite_id) {
       return this.unites.find((u) => u.id == type_unite_id)?.abreviation;
-    },
-    formatSapeur(sapeur_id) {
-      const sapeur = this.sapeurs.find((s) => s.id == sapeur_id);
-      return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...';
     },
     formatExcuseType(id) {
       return this.excusesTypes.find((e) => e.id == id)?.designation;
