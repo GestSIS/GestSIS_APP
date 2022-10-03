@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "02.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction de l'interface de mutation pour empêcher la suppressions d'exercices effectuées",
+        "Mise en valeur des sapeurs inactifs dans les exercices"
+      ]
+    },
+    {
       "date": "23.08.2022",
       "version": "1.0",
       "app": "GestSIS APP",
