@@ -269,7 +269,7 @@ export default {
     computedExerciceSapeurs() {
       return this.activeExerciceSapeurs
         .map((s) => {
-          const sapeur = this.sapeurs.find((sap) => sap.id == s.id);
+          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           return {
             ...s,
             nomPrenom: sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...',
