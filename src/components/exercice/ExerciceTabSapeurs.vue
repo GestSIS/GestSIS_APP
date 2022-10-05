@@ -270,7 +270,6 @@ export default {
       return this.activeExerciceSapeurs
         .map((s) => {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.id);
-          console.log(sapeur.actif);
           return {
             ...s,
             nomPrenom: sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...',

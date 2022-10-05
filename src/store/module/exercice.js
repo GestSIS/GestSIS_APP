@@ -114,7 +114,6 @@ export default {
     },
     annulerExercice({ commit }, payload) {
       return ExerciceService.cancelExercice(payload).then(async (data) => {
-        console.log(data);
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload,
           statut: data?.statut,
@@ -124,7 +123,6 @@ export default {
     },
     reactiverExercice({ commit }, payload) {
       return ExerciceService.reactivateExercice(payload).then(async (data) => {
-        console.log(data);
         await commit(types.UPDATE_EXERCICE_STATUT, {
           id: payload,
           statut: data?.statut,

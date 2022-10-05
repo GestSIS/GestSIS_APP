@@ -473,7 +473,6 @@ export default {
     ...mapGetters(['exerciceComptableDebut', 'exerciceComptableFin']),
     isValidWgs84() {
       const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
-      console.log(regex.test(this.activeInterventionData?.wgs84));
       return regex.test(this.activeInterventionData?.wgs84);
     },
     description() {
