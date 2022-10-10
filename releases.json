@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "10.10.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Ajout réinitialisation du mot de passe",
-        "Correction permissions comptabilité sans visualisation des interventions"
+        "Correction permissions comptabilité sans visualisation des interventions",
+        "Rapport d'intervention, ajout des champs GPS, rapport police et agent"
       ]
     },
     {
