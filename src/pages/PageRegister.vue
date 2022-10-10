@@ -3,7 +3,7 @@
     <form class="text-center form-signin d-grid" @submit.prevent="register">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3 fwnormal">Veuillez-vous enregistrer</h1>
+      <h1 class="h3 mb-3">Veuillez-vous enregistrer</h1>
       <label for="inputName" class="visually-hidden">Nom d'utilisateur</label>
       <input
         id="inputName"
@@ -91,7 +91,7 @@
         © GestSIS {{ new Date().getFullYear() }}
       </p>
 
-      <router-link to="/login" class="btn btn-link is-active"
+      <router-link :to="{ name: 'login' }" class="btn btn-link is-active"
         >Se connecter</router-link
       >
     </form>

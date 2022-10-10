@@ -164,6 +164,12 @@ export default {
         return commit(types.AUTH_SUCCESSFULL, data);
       });
     },
+    forgottenPassword(_, email) {
+      return AuthService.forgottenPassword(email);
+    },
+    resetPassword(_, { token, password }) {
+      return AuthService.resetPassword(token, password);
+    },
     changePassword({ state }, { password, newPassword }) {
       return AuthService.changePassword({
         email: state.email,

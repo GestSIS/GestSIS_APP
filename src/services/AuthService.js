@@ -7,6 +7,12 @@ export default {
   register(credentials) {
     return Api.auth().post('/register', credentials);
   },
+  forgottenPassword(email) {
+    return Api.auth().post('/forgotten-password', { email });
+  },
+  resetPassword(token, password) {
+    return Api.auth().post('/reset-password', { token, password });
+  },
   changePassword(data) {
     return Api.auth().post('/change-password', data);
   },

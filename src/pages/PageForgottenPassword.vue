@@ -1,11 +1,12 @@
 <template>
   <div class="centered">
-    <form class="text-center form-signin" @submit.prevent="login">
+    <form class="text-center form-signin" @submit.prevent="request">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3">Veuillez-vous connectez</h1>
-      <label for="inputEmail" class="visually-hidden">Email</label>
+      <h1 class="h3 mb-3">Récupération de votre mot de passe</h1>
+      <label v-if="!sent" for="inputEmail" class="visually-hidden">Email</label>
       <input
+        v-if="!sent"
         id="inputEmail"
         v-model="email"
         type="email"
@@ -14,33 +15,30 @@
         required
         autofocus
         autocomplete="off"
-        :class="{ 'is-invalid': error }"
+        :class="{ 'is-invalid': error['email'] }"
       />
-      <label for="inputPassword" class="visually-hidden">Mot de passe</label>
-      <input
-        id="inputPassword"
-        v-model="password"
-        type="password"
-        class="form-control form-control-sm"
-        placeholder="Mot de passe"
-        required
-        autocomplete="off"
-        :class="{ 'is-invalid': error }"
-      />
-      <div v-if="error" class="invalid-feedback">
-        Informations de connexion invalides
+      <div v-if="!sent && error['email']" class="invalid-feedback">
+        {{ error['email'] }}
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        Se connecter
+      <button
+        v-if="!sent"
+        class="btn btn-lg btn-primary btn-block mt-3"
+        type="submit"
+      >
+        M'envoyer un lien de récupération
       </button>
+      <div v-if="sent">
+        <p>
+          Un email a été envoyé à <strong>{{ email }}</strong> si cette email
+          est valide. Cliquez sur le lien reçu afin de réinitialiser votre de
+          mot de passe puis reconnectez-vous.
+        </p>
+      </div>
       <p class="mt-5 mb-3 text-muted">
         © GestSIS {{ new Date().getFullYear() }}
       </p>
-
-      <router-link
-        :to="{ name: 'forgotten-password' }"
-        class="btn btn-link is-active"
-        >Mot de passe oublié</router-link
+      <router-link :to="{ name: 'login' }" class="btn btn-link is-active"
+        >Se connecter</router-link
       >
       <router-link :to="{ name: 'register' }" class="btn btn-link is-active"
         >S'enregistrer</router-link
@@ -51,16 +49,17 @@
 
 <script>
 export default {
-  name: 'PageLogin',
+  name: 'PageForgottenPassword',
   data() {
     return {
       email: null,
       password: null,
-      error: null,
+      error: {},
+      sent: false,
     };
   },
   methods: {
-    async login() {
+    async request() {
       if (this.email?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
         this.error = {
           email: 'Email invalid',
@@ -69,12 +68,14 @@ export default {
       }
 
       this.$store
-        .dispatch('login', { email: this.email, password: this.password })
+        .dispatch('forgottenPassword', { email: this.email })
         .then(() => {
-          this.error = null;
-          this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
-          );
+          this.error = {};
+          this.sent = true;
+          // TODO:
+          // this.$router.push(
+          //   this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
+          // );
         })
         .catch((error) => {
           this.error = error;

@@ -44,6 +44,18 @@ const router = createRouter({
       component: () => import('@/pages/PageConfirmation.vue'),
     },
     {
+      path: '/reset-pwd',
+      name: 'reset-pwd',
+      meta: { layout: 'no-sidebar', public: true },
+      component: () => import('@/pages/PageResetPassword.vue'),
+    },
+    {
+      path: '/forgotten-pwd',
+      name: 'forgotten-password',
+      meta: { layout: 'no-sidebar', public: true },
+      component: () => import('@/pages/PageForgottenPassword.vue'),
+    },
+    {
       path: '/register',
       name: 'register',
       meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },

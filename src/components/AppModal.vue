@@ -67,6 +67,13 @@ export default {
       return sizesClass[this.size];
     },
   },
+  watch: {
+    modalComponent(componentName) {
+      if (!componentName) return;
+
+      this.component = componentName;
+    },
+  },
   mounted() {
     this.escapeHandler = (e) => {
       if (e.key === 'Escape' && this.visible) {
@@ -85,13 +92,6 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-  },
-  watch: {
-    modalComponent(componentName) {
-      if (!componentName) return;
-
-      this.component = componentName;
-    },
   },
 };
 </script>

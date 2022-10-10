@@ -28,7 +28,7 @@
             <router-link
               v-slot="{ navigate }"
               custom
-              to="/controles-medicaux/ajout"
+              :to="{ name: 'controles-medical', params: { id: 'ajout' } }"
             >
               <button class="btn btn-outline-primary" @click="navigate">
                 Ajouter un contrôle

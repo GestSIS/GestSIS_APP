@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "10.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout réinitialisation du mot de passe"]
+    },
+    {
       "date": "02.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
@@ -149,10 +155,7 @@
       "date": "08.06.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Annuler et réactiver exercice",
-        "Suppression d'exercice"
-      ]
+      "changes": ["Annuler et réactiver exercice", "Suppression d'exercice"]
     },
     {
       "date": "06.06.2022",
@@ -177,9 +180,7 @@
       "date": "29.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout du champ `durée` pour les cours"
-      ]
+      "changes": ["Ajout du champ `durée` pour les cours"]
     },
     {
       "date": "28.05.2022",
@@ -193,9 +194,7 @@
       "date": "27.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Système de notification pour les mise à jours"
-      ]
+      "changes": ["Système de notification pour les mise à jours"]
     },
     {
       "date": "26.05.2022",
@@ -235,9 +234,7 @@
       "date": "10.05.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6",
-      "changes": [
-        "Nouvelle version de GestSIS Mobile en production"
-      ]
+      "changes": ["Nouvelle version de GestSIS Mobile en production"]
     },
     {
       "date": "09.05.2022",
@@ -283,9 +280,7 @@
       "date": "29.04.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6 (beta)",
-      "changes": [
-        "Choix du thème résilient au redémarrage de l'application"
-      ]
+      "changes": ["Choix du thème résilient au redémarrage de l'application"]
     },
     {
       "date": "28.04.2022",

@@ -25,7 +25,11 @@
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <router-link v-slot="{ navigate }" custom to="/exercices/new">
+            <router-link
+              v-slot="{ navigate }"
+              custom
+              :to="{ name: 'exercice', params: { id: 'new' } }"
+            >
               <button
                 v-if="hasEditPermission"
                 class="btn btn-outline-primary"
