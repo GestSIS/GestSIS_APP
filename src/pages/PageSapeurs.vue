@@ -164,6 +164,18 @@ export default {
       eventListener: null,
     };
   },
+  computed: {
+    ...mapState({
+      sapeurs: (state) => state.sapeur.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+    }),
+    filteredSapeurs() {
+      return this.sapeurs.filter(this.filters[this.filter]);
+    },
+  },
   beforeCreate() {
     this.$store.dispatch('fetchListeSapeur').then(() => {
       if (
@@ -189,18 +201,6 @@ export default {
       'keyup',
       this.navigationEventListener
     );
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-    filteredSapeurs() {
-      return this.sapeurs.filter(this.filters[this.filter]);
-    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

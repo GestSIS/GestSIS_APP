@@ -67,9 +67,6 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.tree.children = this.groupeTree;
-  },
   computed: {
     ...mapState({
       groupes: (state) => state.groupe.liste,
@@ -88,6 +85,9 @@ export default {
 
       return this.groupes.filter(groupFilter(null)).map(groupeMapping);
     },
+  },
+  mounted() {
+    this.tree.children = this.groupeTree;
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

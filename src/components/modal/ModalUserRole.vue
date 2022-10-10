@@ -57,13 +57,13 @@ export default {
       },
     };
   },
-  mounted() {
-    this.user = { ...this.$props.data };
-  },
   computed: {
     ...mapState({
       roles: (state) => state.auth.roles,
     }),
+  },
+  mounted() {
+    this.user = { ...this.$props.data };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

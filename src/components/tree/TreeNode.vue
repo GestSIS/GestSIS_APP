@@ -59,7 +59,7 @@ export default {
     _types: {
       required: false,
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     node: {
       required: true,
@@ -78,6 +78,7 @@ export default {
     active: {
       type: Object,
       required: false,
+      default: () => ({}),
     },
   },
   data() {

@@ -358,19 +358,6 @@ export default {
       photo: null, //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
     };
   },
-  mounted() {
-    this.$store.dispatch('fetchCivilites');
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchGrades');
-    this.$store.dispatch('fetchFonctions');
-
-    //TODO Only if sapeur anm not if politique
-    if (this.activeSapeur.type === 0) {
-      SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
-        this.photo = photo;
-      });
-    }
-  },
   computed: {
     ...mapState({
       activeSapeur: (state) => state.sapeur.active.data,
@@ -394,6 +381,19 @@ export default {
         });
       }
     },
+  },
+  mounted() {
+    this.$store.dispatch('fetchCivilites');
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchGrades');
+    this.$store.dispatch('fetchFonctions');
+
+    //TODO Only if sapeur anm not if politique
+    if (this.activeSapeur.type === 0) {
+      SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
+        this.photo = photo;
+      });
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),

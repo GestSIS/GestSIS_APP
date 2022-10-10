@@ -207,15 +207,6 @@ export default {
       unselectedExerciceA: [],
     };
   },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeExercice');
-      this.$store.dispatch('fetchStatistiquePresence').then();
-    },
-  },
-  mounted() {
-    loadData('', () => {});
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -335,6 +326,15 @@ export default {
         })
       );
     },
+  },
+  watch: {
+    activeExerciceComptableId() {
+      this.$store.dispatch('fetchListeExercice');
+      this.$store.dispatch('fetchStatistiquePresence').then();
+    },
+  },
+  mounted() {
+    loadData('', () => {});
   },
   methods: {
     computeStats(presences) {

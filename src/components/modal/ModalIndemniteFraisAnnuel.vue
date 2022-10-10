@@ -77,18 +77,13 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
     return {
       errors: {},
       active: {},
-    };
-  },
-  mounted() {
-    this.active = {
-      ...this.active,
-      ...this.data,
     };
   },
   computed: {
@@ -98,6 +93,12 @@ export default {
       unites: (state) => state.unite.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
     }),
+  },
+  mounted() {
+    this.active = {
+      ...this.active,
+      ...this.data,
+    };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

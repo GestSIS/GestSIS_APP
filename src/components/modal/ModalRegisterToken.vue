@@ -106,16 +106,16 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      roles: (state) => state.auth.roles,
+    }),
+  },
   mounted() {
     var d = new Date();
     d.setMonth(d.getMonth() + 1);
     this.token.validite = d.toISOString().substring(0, 10);
     this.$refs.desc.focus();
-  },
-  computed: {
-    ...mapState({
-      roles: (state) => state.auth.roles,
-    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

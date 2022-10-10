@@ -95,11 +95,6 @@ export default {
       allCategories: false,
     };
   },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeExercice');
-    },
-  },
   computed: {
     ...mapState({
       exercices: (state) => state.exercice.liste,
@@ -119,6 +114,11 @@ export default {
       return this.categories.filter(
         (c) => this.allCategories || this.categoriesOccurence[c.id]
       );
+    },
+  },
+  watch: {
+    activeExerciceComptableId() {
+      this.$store.dispatch('fetchListeExercice');
     },
   },
 };

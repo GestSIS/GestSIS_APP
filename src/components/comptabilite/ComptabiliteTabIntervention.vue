@@ -187,6 +187,7 @@ export default {
   props: {
     id: {
       type: String,
+      default: '',
     },
   },
   data() {
@@ -362,19 +363,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.$store.dispatch('fetchListeIntervention');
-    },
-  },
-  mounted() {
-    //TODO Fetch only if neccessary
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    } else {
-      this.loading = false;
-    }
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -442,6 +430,19 @@ export default {
           }
         });
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.$store.dispatch('fetchListeIntervention');
+    },
+  },
+  mounted() {
+    //TODO Fetch only if neccessary
+    if (this.exercicesComptable.length === 0) {
+      //console.log('Warning')
+    } else {
+      this.loading = false;
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

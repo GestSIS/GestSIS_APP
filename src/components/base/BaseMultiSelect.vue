@@ -50,8 +50,10 @@ export default {
     },
     formatter: {
       type: Function,
+      default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       model: this.modelValue,

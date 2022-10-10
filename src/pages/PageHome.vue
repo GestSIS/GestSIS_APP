@@ -45,15 +45,6 @@ export default {
       loading: false,
     };
   },
-  created() {
-    if (this.listeSis.length <= 0) {
-      const self = this;
-      this.loading = true;
-      this.$store.dispatch('loadSisListe').then(() => {
-        self.loading = false;
-      });
-    }
-  },
   computed: {
     ...mapState({
       listeSis: (state) => state.auth.sis.liste,
@@ -62,6 +53,15 @@ export default {
       sisKey: (state) => state.auth.sis.activeKey,
     }),
     ...mapGetters(['availableSisListe']),
+  },
+  created() {
+    if (this.listeSis.length <= 0) {
+      const self = this;
+      this.loading = true;
+      this.$store.dispatch('loadSisListe').then(() => {
+        self.loading = false;
+      });
+    }
   },
   methods: {
     getImageUrl(sis) {

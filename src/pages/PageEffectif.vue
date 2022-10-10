@@ -331,14 +331,6 @@ export default {
       ],
     };
   },
-  beforeMount() {
-    SapeurService.getEffectif().then((effectif) => {
-      this.sapeurs = effectif;
-    });
-  },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       localites: (state) =>
@@ -448,6 +440,14 @@ export default {
           )
       );
     },
+  },
+  beforeMount() {
+    SapeurService.getEffectif().then((effectif) => {
+      this.sapeurs = effectif;
+    });
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

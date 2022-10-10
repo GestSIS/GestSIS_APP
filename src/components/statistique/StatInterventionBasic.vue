@@ -138,11 +138,6 @@ export default {
       },
     };
   },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeIntervention');
-    },
-  },
   computed: {
     ...mapState({
       interventions: (state) => state.intervention.liste,
@@ -177,6 +172,11 @@ export default {
       return this.groupingData.filter(
         (e) => this.allCategories || this.occurences[e.id]
       );
+    },
+  },
+  watch: {
+    activeExerciceComptableId() {
+      this.$store.dispatch('fetchListeIntervention');
     },
   },
 };

@@ -225,6 +225,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -238,6 +239,15 @@ export default {
       imputationType: 1,
     };
   },
+  computed: {
+    ...mapState({
+      fonctions: (state) => state.fonction.liste,
+      comptes: (state) => state.compte.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.ecritureCategorie.liste,
+      phases: (state) => state.phaseType.liste,
+    }),
+  },
   mounted() {
     this.activeIndemnite = {
       ...this.activeIndemnite,
@@ -249,15 +259,6 @@ export default {
       this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
         ? 'taux'
         : 'tarif-min';
-  },
-  computed: {
-    ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      phases: (state) => state.phaseType.liste,
-    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

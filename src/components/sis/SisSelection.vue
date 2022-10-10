@@ -41,6 +41,13 @@ export default {
       sisId: null,
     };
   },
+  computed: {
+    ...mapGetters(['availableSisListe']),
+    ...mapState({
+      activeSisId: (state) => state.auth.sis.activeId,
+      listeSis: (state) => state.auth.sis.liste,
+    }),
+  },
   watch: {
     activeSisId() {
       this.sisId = this.activeSisId;
@@ -48,13 +55,6 @@ export default {
   },
   mounted() {
     this.sisId = this.activeSisId;
-  },
-  computed: {
-    ...mapGetters(['availableSisListe']),
-    ...mapState({
-      activeSisId: (state) => state.auth.sis.activeId,
-      listeSis: (state) => state.auth.sis.liste,
-    }),
   },
   methods: {
     selectSis(event) {

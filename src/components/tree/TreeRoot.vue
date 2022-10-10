@@ -36,6 +36,7 @@ export default {
       default: () => false,
     },
   },
+  emits: ['selected'],
   data() {
     return {
       active: null,

@@ -60,14 +60,14 @@ export default {
       },
     };
   },
-  mounted() {
-    this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
-  },
   computed: {
     ...mapState({
       aspsmsParams: (state) => state.aspsmsParam.params,
       credit: (state) => state.aspsmsParam.credit,
     }),
+  },
+  mounted() {
+    this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

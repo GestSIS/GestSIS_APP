@@ -161,6 +161,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -183,13 +184,6 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.activeEcriture = {
-      ...this.activeEcriture,
-      exercice_comptable_id: this.activeExerciceComptableId,
-      ...this.data,
-    };
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
@@ -204,6 +198,13 @@ export default {
     activeUnite() {
       return this.unites.find((u) => u.id == this.activeEcriture.type_unite_id);
     },
+  },
+  mounted() {
+    this.activeEcriture = {
+      ...this.activeEcriture,
+      exercice_comptable_id: this.activeExerciceComptableId,
+      ...this.data,
+    };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

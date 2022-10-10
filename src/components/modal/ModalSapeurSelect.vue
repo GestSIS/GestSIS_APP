@@ -286,23 +286,6 @@ export default {
       },
     };
   },
-  mounted() {
-    this.chosenSapeurs = this.data.ids.slice(0);
-
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchGrades');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchCivilites');
-
-    this.$store.dispatch('fetchGroupes').then(() => {
-      let svm = this;
-      let recursive = (item) => {
-        svm.expanded = { ...svm.expanded, [item.id]: false };
-        item.groupes.forEach(recursive);
-      };
-      this.treeGroupesSapeurs.forEach(recursive);
-    });
-  },
   computed: {
     ...mapState({
       groupes: (state) => state.groupe.liste,
@@ -408,6 +391,23 @@ export default {
         ) != null
       );
     },
+  },
+  mounted() {
+    this.chosenSapeurs = this.data.ids.slice(0);
+
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchGrades');
+    this.$store.dispatch('fetchFonctions');
+    this.$store.dispatch('fetchCivilites');
+
+    this.$store.dispatch('fetchGroupes').then(() => {
+      let svm = this;
+      let recursive = (item) => {
+        svm.expanded = { ...svm.expanded, [item.id]: false };
+        item.groupes.forEach(recursive);
+      };
+      this.treeGroupesSapeurs.forEach(recursive);
+    });
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

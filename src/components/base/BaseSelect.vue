@@ -26,6 +26,7 @@ export default {
     },
     selectClass: {
       type: [String, Array, Object],
+      default: '',
     },
     modelValue: {
       type: [String, Number],
@@ -49,8 +50,10 @@ export default {
     },
     formatter: {
       type: Function,
+      default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       model: this.modelValue,

@@ -60,17 +60,17 @@ export default {
       errors: {},
     };
   },
-  mounted() {
-    if (this.grades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-  },
   computed: {
     ...mapState({
       grades: (state) => state.grade.liste,
       activeGrade: (state) => state.grade.active,
     }),
     ...mapGetters(['activeSapeurId']),
+  },
+  mounted() {
+    if (this.grades.length === 0) {
+      this.$store.dispatch('fetchGrades');
+    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

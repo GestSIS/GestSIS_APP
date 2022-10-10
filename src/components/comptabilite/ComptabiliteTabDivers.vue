@@ -177,17 +177,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresDivers').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -214,6 +203,17 @@ export default {
       }));
     },
     ...mapGetters(['currentExerciceComptableId']),
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchEcrituresDivers').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

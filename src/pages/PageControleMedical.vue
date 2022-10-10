@@ -306,6 +306,7 @@ export default {
   props: {
     id: {
       type: [String, Number],
+      default: '0',
     },
   },
   data() {
@@ -315,28 +316,6 @@ export default {
       pdfData: null,
       file: null,
     };
-  },
-  watch: {
-    controleMedical(next, prev) {
-      if (
-        (this.pdfData === null && next.filename) ||
-        (prev.filename !== next.filename && next.filename)
-      ) {
-        this.displayJustificatif();
-      } else if (!next.filename) {
-        this.pdfData = null;
-      }
-    },
-    expirable(next) {
-      if (!next) {
-        this.controleMedical.validite = null;
-      }
-    },
-  },
-  mounted() {
-    if (this.controleMedical.filename) {
-      this.displayJustificatif();
-    }
   },
   computed: {
     ...mapState({
@@ -364,6 +343,28 @@ export default {
       );
       return types.length > 0 && types[0].expirable;
     },
+  },
+  watch: {
+    controleMedical(next, prev) {
+      if (
+        (this.pdfData === null && next.filename) ||
+        (prev.filename !== next.filename && next.filename)
+      ) {
+        this.displayJustificatif();
+      } else if (!next.filename) {
+        this.pdfData = null;
+      }
+    },
+    expirable(next) {
+      if (!next) {
+        this.controleMedical.validite = null;
+      }
+    },
+  },
+  mounted() {
+    if (this.controleMedical.filename) {
+      this.displayJustificatif();
+    }
   },
   methods: {
     onFileChange(event) {

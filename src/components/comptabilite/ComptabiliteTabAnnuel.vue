@@ -174,31 +174,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.selectedId = null;
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchListeSapeur');
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    }
-
-    if (this.currentExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.loading = false;
-        this.selectedId = null;
-      });
-    }
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -251,6 +226,31 @@ export default {
           }))
       );
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
+        this.selectedId = null;
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.$store.dispatch('fetchListeSapeur');
+    if (this.fonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions');
+    }
+    if (this.exercicesComptable.length === 0) {
+      //console.log('Warning')
+    }
+
+    if (this.currentExerciceComptableId || 0 !== 0) {
+      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
+        this.loading = false;
+        this.selectedId = null;
+      });
+    }
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

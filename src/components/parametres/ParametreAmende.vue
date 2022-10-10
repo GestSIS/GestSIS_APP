@@ -110,6 +110,14 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      listeAmende: (state) =>
+        state.amende.liste.sort((a, b) => a.order - b.order),
+      listeCompte: (state) => state.compte.liste,
+      listeCategorie: (state) => state.ecritureCategorie.liste,
+    }),
+  },
   mounted() {
     if (this.listeAmende.length > 0) {
       this.params.compte_id = this.listeAmende[0]?.compte_id;
@@ -119,14 +127,6 @@ export default {
         montant: a.montant,
       }));
     }
-  },
-  computed: {
-    ...mapState({
-      listeAmende: (state) =>
-        state.amende.liste.sort((a, b) => a.order - b.order),
-      listeCompte: (state) => state.compte.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-    }),
   },
   methods: {
     removeAmende(index) {

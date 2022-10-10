@@ -267,15 +267,6 @@ export default {
       ],
     };
   },
-  watch: {
-    decomptes() {
-      this.loading = false;
-    },
-    activeExerciceComptableId() {
-      this.loading = true;
-      store.dispatch('fetchDecomptes');
-    },
-  },
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
@@ -289,6 +280,15 @@ export default {
         columns: this.ecritureColumns,
         getEcritures: () => DecompteService.getEcritures(d.id),
       }));
+    },
+  },
+  watch: {
+    decomptes() {
+      this.loading = false;
+    },
+    activeExerciceComptableId() {
+      this.loading = true;
+      store.dispatch('fetchDecomptes');
     },
   },
   methods: {

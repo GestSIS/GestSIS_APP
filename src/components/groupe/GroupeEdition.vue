@@ -53,6 +53,7 @@ export default {
     EditableTree,
   },
   props: ['callback', 'data', 'editMode'],
+  emits: ['selected'],
   data() {
     return {
       active: null,
@@ -87,9 +88,6 @@ export default {
         },
       ],
     };
-  },
-  mounted() {
-    this.tree.children = this.groupeTree;
   },
   computed: {
     ...mapState({
@@ -128,6 +126,9 @@ export default {
 
       return this.groupes.filter(groupFilter(null)).map(groupeMapping);
     },
+  },
+  mounted() {
+    this.tree.children = this.groupeTree;
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

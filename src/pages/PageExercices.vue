@@ -381,17 +381,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeExercice').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       exercices: (state) => state.exercice.liste,
@@ -443,6 +432,17 @@ export default {
           )
       );
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchListeExercice').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

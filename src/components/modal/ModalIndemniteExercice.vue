@@ -243,6 +243,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -257,6 +258,30 @@ export default {
         type_unite_id: null,
       },
     };
+  },
+  computed: {
+    ...mapState({
+      fonctions: (state) => state.fonction.liste,
+      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
+      comptes: (state) => state.compte.liste,
+      categories: (state) => state.ecritureCategorie.liste,
+    }),
+    parFonction() {
+      return this.activeIndemnite.par_fonction;
+    },
+    uniteComptable() {
+      // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
+      return false;
+      // const uniteId = this.activeIndemnite.type_unite_id;
+      // return (
+      //   this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
+      // ); // Comptable ou par pièces
+    },
+  },
+  watch: {
+    parFonction: function (val) {
+      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
+    },
   },
   mounted() {
     // Calcul des différentes combinaisons existantes
@@ -314,30 +339,6 @@ export default {
         fonction_id: null,
       });
     }
-  },
-  computed: {
-    ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
-      comptes: (state) => state.compte.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-    }),
-    parFonction() {
-      return this.activeIndemnite.par_fonction;
-    },
-    uniteComptable() {
-      // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
-      return false;
-      // const uniteId = this.activeIndemnite.type_unite_id;
-      // return (
-      //   this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
-      // ); // Comptable ou par pièces
-    },
-  },
-  watch: {
-    parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
-    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),

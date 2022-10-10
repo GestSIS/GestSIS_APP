@@ -95,6 +95,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -106,6 +107,11 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      listeUnite: (state) => state.unite.liste,
+    }),
+  },
   mounted() {
     this.activeVehicule = {
       ...this.activeVehicule,
@@ -114,11 +120,6 @@ export default {
     if (this.data.type_unite_id === null) {
       this.activeVehicule.type_unite_id = 0;
     }
-  },
-  computed: {
-    ...mapState({
-      listeUnite: (state) => state.unite.liste,
-    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

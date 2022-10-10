@@ -188,31 +188,6 @@ export default {
       errorsData: {},
     };
   },
-  watch: {
-    mutations() {
-      this.unselected = {
-        ...this.mutations
-          .map((m) => ({ [m.sapeur_id]: false }))
-          .reduce((a, b) => ({ ...a, ...b }), {}),
-        ...this.unselected,
-      };
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchGroupes');
-    this.$store.dispatch('fetchReferenceGestSis');
-    if (!this.reference.length) {
-      this.$store.dispatch('fetchReferenceRta');
-    }
-    this.unselected = {
-      ...this.mutations
-        .map((m) => ({ [m.sapeur_id]: false }))
-        .reduce((a, b) => ({ ...a, ...b }), {}),
-      ...this.unselected,
-    };
-  },
   computed: {
     ...mapState({
       reference: (state) =>
@@ -378,6 +353,31 @@ export default {
 
       return [...ajoutes, ...modifies, ...supprimes];
     },
+  },
+  watch: {
+    mutations() {
+      this.unselected = {
+        ...this.mutations
+          .map((m) => ({ [m.sapeur_id]: false }))
+          .reduce((a, b) => ({ ...a, ...b }), {}),
+        ...this.unselected,
+      };
+    },
+  },
+  mounted() {
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchFonctions');
+    this.$store.dispatch('fetchGroupes');
+    this.$store.dispatch('fetchReferenceGestSis');
+    if (!this.reference.length) {
+      this.$store.dispatch('fetchReferenceRta');
+    }
+    this.unselected = {
+      ...this.mutations
+        .map((m) => ({ [m.sapeur_id]: false }))
+        .reduce((a, b) => ({ ...a, ...b }), {}),
+      ...this.unselected,
+    };
   },
   methods: {
     mutate() {

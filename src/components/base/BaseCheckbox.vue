@@ -26,6 +26,7 @@ export default {
       default: undefined,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       model: this.modelValue,

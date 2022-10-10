@@ -33,9 +33,9 @@
 <script>
 export default {
   name: 'BaseAutocomplete',
-
   props: {
     modelValue: {
+      type: [Object, Number, String],
       default: '',
     },
     items: {
@@ -51,8 +51,10 @@ export default {
     title: {
       type: String,
       required: false,
+      default: '',
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       isOpen: false,

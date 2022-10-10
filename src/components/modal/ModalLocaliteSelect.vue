@@ -154,10 +154,6 @@ export default {
       selected: {},
     };
   },
-  mounted() {
-    this.chosen = this.data.ids.slice(0);
-    this.$store.dispatch('fetchLocalites');
-  },
   computed: {
     ...mapState({
       localites: (state) => state.localite.liste,
@@ -189,6 +185,10 @@ export default {
     canRemoveSelected() {
       return this.chosen.find((l) => this.selected[l]) != null;
     },
+  },
+  mounted() {
+    this.chosen = this.data.ids.slice(0);
+    this.$store.dispatch('fetchLocalites');
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

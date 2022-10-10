@@ -85,6 +85,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -140,6 +141,33 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState({
+      credit: (state) => state.aspsmsParam.credit,
+      localites: (state) => state.localite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+    }),
+    computedSapeurs() {
+      if (!this.loadingSapeurs) {
+        return [];
+      }
+      const indexedSapeurs = {};
+      this.sapeurs.forEach(
+        (s) =>
+          (indexedSapeurs[s.id] = {
+            nomPrenom: `${s.nom} ${s.prenom}`,
+            portable: s.telephones
+              .filter((a) => a.telephone_type_id === 3)
+              .sort((a, b) => a.priorite - b.priorite)
+              .find(() => true)?.numero,
+          })
+      );
+      return this.presences.map((s) => ({
+        ...s,
+        ...(indexedSapeurs[s.sapeur_id] ?? {}),
+      }));
+    },
+  },
   beforeMount() {
     let resolvedCount = 0;
     SapeurService.getSapeurPourConvocationSms().then((sapeurs) => {
@@ -176,33 +204,6 @@ export default {
         localite?.designation ?? ''
       } \n` +
       `${categorie?.designation} : ${this.data.communications}`;
-  },
-  computed: {
-    ...mapState({
-      credit: (state) => state.aspsmsParam.credit,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-    }),
-    computedSapeurs() {
-      if (!this.loadingSapeurs) {
-        return [];
-      }
-      const indexedSapeurs = {};
-      this.sapeurs.forEach(
-        (s) =>
-          (indexedSapeurs[s.id] = {
-            nomPrenom: `${s.nom} ${s.prenom}`,
-            portable: s.telephones
-              .filter((a) => a.telephone_type_id === 3)
-              .sort((a, b) => a.priorite - b.priorite)
-              .find(() => true)?.numero,
-          })
-      );
-      return this.presences.map((s) => ({
-        ...s,
-        ...(indexedSapeurs[s.sapeur_id] ?? {}),
-      }));
-    },
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

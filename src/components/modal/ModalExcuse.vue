@@ -29,7 +29,12 @@ import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalExcuse',
-  props: ['callback'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+  },
   computed: {
     ...mapState({
       listeExcuseTypes: (state) => state.excuseType.liste,

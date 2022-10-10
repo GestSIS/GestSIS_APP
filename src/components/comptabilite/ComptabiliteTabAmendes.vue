@@ -132,17 +132,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -183,6 +172,17 @@ export default {
         columns: this.amendeColumns,
       }));
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     selected(id) {

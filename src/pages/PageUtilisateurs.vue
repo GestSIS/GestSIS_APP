@@ -124,9 +124,6 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       users: (state) => state.auth.users,
@@ -134,6 +131,9 @@ export default {
       permissions: (state) => state.auth.permissions,
       sapeurs: (state) => state.sapeur.liste,
     }),
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

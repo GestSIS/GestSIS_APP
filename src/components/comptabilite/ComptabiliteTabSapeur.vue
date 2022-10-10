@@ -129,6 +129,7 @@ export default {
   props: {
     id: {
       type: String,
+      default: '',
     },
   },
   data() {
@@ -209,26 +210,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      ImputationService.getEcrituresForExerciceComptable(
-        this.currentExerciceComptableId
-      ).then((data) => {
-        this.ecritures = data;
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = true;
-    ImputationService.getEcrituresForExerciceComptable(
-      this.currentExerciceComptableId
-    ).then((data) => {
-      this.ecritures = data;
-      this.loading = false;
-    });
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -279,6 +260,26 @@ export default {
           };
         });
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      ImputationService.getEcrituresForExerciceComptable(
+        this.currentExerciceComptableId
+      ).then((data) => {
+        this.ecritures = data;
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = true;
+    ImputationService.getEcrituresForExerciceComptable(
+      this.currentExerciceComptableId
+    ).then((data) => {
+      this.ecritures = data;
+      this.loading = false;
+    });
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

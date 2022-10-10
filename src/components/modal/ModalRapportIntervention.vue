@@ -150,6 +150,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -169,6 +170,13 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      hasComptabilitePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.COMPTABILITE.TOUT),
+    }),
+  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     generer() {
@@ -179,13 +187,6 @@ export default {
       );
       this.HIDE_MODAL();
     },
-  },
-  computed: {
-    ...mapState({
-      hasComptabilitePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.COMPTABILITE.TOUT),
-    }),
   },
 };
 </script>

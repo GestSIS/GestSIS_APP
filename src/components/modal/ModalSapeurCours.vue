@@ -176,21 +176,6 @@ export default {
       errors: {},
     };
   },
-  mounted() {
-    if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-    }
-
-    if (this.cours.length === 0) {
-      this.$store.dispatch('fetchCours');
-    }
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.grades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-  },
   computed: {
     ...mapState({
       cours: (state) => state.cours.liste,
@@ -250,6 +235,21 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    if (this.activeSapeurFonctions.length === 0) {
+      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
+    }
+
+    if (this.cours.length === 0) {
+      this.$store.dispatch('fetchCours');
+    }
+    if (this.fonctions.length === 0) {
+      this.$store.dispatch('fetchFonctions');
+    }
+    if (this.grades.length === 0) {
+      this.$store.dispatch('fetchGrades');
+    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

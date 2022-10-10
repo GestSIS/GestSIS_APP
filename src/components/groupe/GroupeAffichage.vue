@@ -17,6 +17,7 @@ export default {
   components: {
     TreeRoot,
   },
+  emits: ['selected'],
   data() {
     return {
       active: null,

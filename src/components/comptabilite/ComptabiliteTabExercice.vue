@@ -183,6 +183,7 @@ export default {
   props: {
     id: {
       type: String,
+      default: '',
     },
   },
   data() {
@@ -304,16 +305,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -364,6 +355,16 @@ export default {
       const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
       return this.categories.filter((t) => ids.has(t.id));
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.init();
+    },
+  },
+  mounted() {
+    this.loading = true;
+    this.init();
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

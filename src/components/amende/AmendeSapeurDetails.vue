@@ -46,9 +46,11 @@ export default {
     },
     rowIndex: {
       type: Number,
+      default: null,
     },
     options: {
       type: Object,
+      default: () => {},
     },
   },
   data() {

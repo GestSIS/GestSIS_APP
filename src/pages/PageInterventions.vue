@@ -382,17 +382,6 @@ export default {
       ],
     };
   },
-  watch: {
-    currentExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       interventions: (state) => state.intervention.liste,
@@ -456,6 +445,17 @@ export default {
         ).length > 0
       );
     },
+  },
+  watch: {
+    currentExerciceComptableId() {
+      this.loading = true;
+      this.$store.dispatch('fetchListeIntervention').then(() => {
+        this.loading = false;
+      });
+    },
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

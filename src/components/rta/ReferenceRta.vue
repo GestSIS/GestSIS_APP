@@ -147,15 +147,6 @@ export default {
       errorsData: {},
     };
   },
-  mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchGroupes');
-    this.$store.dispatch('fetchReferenceGestSis');
-    if (!this.reference.length) {
-      this.$store.dispatch('fetchReferenceRta');
-    }
-  },
   computed: {
     ...mapState({
       reference: (state) =>
@@ -278,6 +269,15 @@ export default {
         })
         .sort(sapeurCompare);
     },
+  },
+  mounted() {
+    this.$store.dispatch('fetchLocalites');
+    this.$store.dispatch('fetchFonctions');
+    this.$store.dispatch('fetchGroupes');
+    this.$store.dispatch('fetchReferenceGestSis');
+    if (!this.reference.length) {
+      this.$store.dispatch('fetchReferenceRta');
+    }
   },
   methods: {
     reset() {

@@ -51,6 +51,7 @@ export default {
       default: () => null,
     },
   },
+  emits: ['selected'],
   data() {
     return {
       localActive: null,

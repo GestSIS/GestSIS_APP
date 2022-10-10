@@ -15,12 +15,12 @@
         :for="option.value"
         >{{ option.label }}</label
       >
-      <label
-        v-else
-        class="form-check-label"
-        :for="option.value"
-        v-html="replaceNewLines(option.label)"
-      ></label>
+      <label v-else class="form-check-label" :for="option.value">
+        <template v-for="(l, i) in splittedLabel" :key="i">
+          {{ l }}<br v-if="i != splittedLabel.length - 1" />
+        </template>
+      </label>
+      <!-- v-html="replaceNewLines(option.label)" -->
     </div>
   </div>
 </template>
@@ -46,6 +46,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     const generateQuickGuid = () => {
       return (
@@ -59,6 +60,11 @@ export default {
       model: this.modelValue,
     };
   },
+  computed: {
+    splittedLabel() {
+      return (this.label ?? '').split('\n');
+    },
+  },
   watch: {
     modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
@@ -70,7 +76,7 @@ export default {
     },
   },
   methods: {
-    replaceNewLines(text) {
+    splitNewLines(text) {
       return text.replace('\n', '<br />');
     },
   },

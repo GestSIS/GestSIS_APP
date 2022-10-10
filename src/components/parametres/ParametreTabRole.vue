@@ -100,7 +100,12 @@ async function loadData(_, next) {
 
 export default {
   name: 'ParametreTabRoles',
-  mounted() {},
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
   computed: {
     ...mapState({
       permissions: (state) =>
@@ -127,12 +132,6 @@ export default {
         }, {})
       );
     },
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

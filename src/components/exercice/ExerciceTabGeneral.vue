@@ -176,6 +176,15 @@ import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ExerciceTabGeneral',
+  props: {
+    newMode: Boolean,
+  },
+  data() {
+    return {
+      errors: {},
+      loading: true,
+    };
+  },
   computed: {
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
@@ -195,15 +204,6 @@ export default {
     exerciceHeure() {
       return this.activeExerciceData.heure;
     },
-  },
-  props: {
-    newMode: Boolean,
-  },
-  data() {
-    return {
-      errors: {},
-      loading: true,
-    };
   },
   watch: {
     exerciceCategorie(id) {

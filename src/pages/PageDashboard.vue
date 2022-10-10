@@ -45,15 +45,6 @@ export default {
       links,
     };
   },
-  created() {
-    if (this.listeSis.length <= 0) {
-      const self = this;
-      this.loading = true;
-      this.$store.dispatch('loadSisListe').then(() => {
-        self.loading = false;
-      });
-    }
-  },
   computed: {
     ...mapState({
       listeSis: (state) => state.auth.sis.liste,
@@ -71,6 +62,15 @@ export default {
           !l.permission || this.perms.includes(l.permission) || this.isAdmin
       );
     },
+  },
+  created() {
+    if (this.listeSis.length <= 0) {
+      const self = this;
+      this.loading = true;
+      this.$store.dispatch('loadSisListe').then(() => {
+        self.loading = false;
+      });
+    }
   },
 };
 </script>

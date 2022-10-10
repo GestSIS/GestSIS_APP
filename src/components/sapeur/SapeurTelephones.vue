@@ -118,16 +118,6 @@ export default {
       errorsTel: {},
     };
   },
-  watch: {
-    activeSapeurTelephones() {
-      this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
-    },
-  },
-  mounted() {
-    this.telephonesData = [
-      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
-    ];
-  },
   computed: {
     ...mapState({
       sapeurType: (state) => state.sapeur.active.data.type,
@@ -149,6 +139,16 @@ export default {
         );
       },
     },
+  },
+  watch: {
+    activeSapeurTelephones() {
+      this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
+    },
+  },
+  mounted() {
+    this.telephonesData = [
+      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
+    ];
   },
   methods: {
     saveTelephones() {

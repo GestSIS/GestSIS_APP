@@ -114,6 +114,7 @@ export default {
     active: {
       type: Object,
       required: false,
+      default: () => {},
     },
   },
   data() {

@@ -34,8 +34,8 @@
               </h5>
               <ul>
                 <li v-for="(change, j) in changes" :key="j">
-                  <span v-for="(t, i) in change.split('`')" :key="i"
-                    >{{ !(i % 2) ? t : '' }}<em v-if="i % 2">{{ t }}</em></span
+                  <span v-for="(t, k) in change.split('`')" :key="k"
+                    >{{ !(k % 2) ? t : '' }}<em v-if="k % 2">{{ t }}</em></span
                   >
                 </li>
               </ul>

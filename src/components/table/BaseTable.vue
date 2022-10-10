@@ -115,6 +115,7 @@ export default {
       default: () => '',
     },
   },
+  emits: ['selected'],
   data() {
     return {
       sorted: {

@@ -73,6 +73,7 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -84,6 +85,12 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      permissions: (state) =>
+        state.auth.permissions.sort((a, b) => a.tri - b.tri),
+    }),
+  },
   mounted() {
     if (!this.data.sis_id) {
       this.role.sis_id = this.$store.state.auth.sis.activeId;
@@ -92,12 +99,6 @@ export default {
       ...this.role,
       ...this.data,
     };
-  },
-  computed: {
-    ...mapState({
-      permissions: (state) =>
-        state.auth.permissions.sort((a, b) => a.tri - b.tri),
-    }),
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

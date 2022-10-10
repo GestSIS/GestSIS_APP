@@ -63,14 +63,14 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'PagePublic',
-  computed: {
-    ...mapGetters(['isLoggedIn']),
-  },
   data() {
     return {
       decoded: atob('c3VwcG9ydEBnZXN0c2lzLmNo'),
       prefix: atob('bWFpbHRvOg=='),
     };
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
   },
   methods: {
     login() {

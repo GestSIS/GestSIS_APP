@@ -51,8 +51,10 @@ export default {
     },
     formatter: {
       type: Function,
+      default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     const selected = this.options.map((o) => o[this.valueKey]);
     const unselected = new Set(this.modelValue);

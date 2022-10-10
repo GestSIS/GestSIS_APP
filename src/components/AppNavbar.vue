@@ -55,13 +55,13 @@ export default {
       showNotif: false,
     };
   },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
+  },
   mounted() {
     this.showNotif =
       localStorage.getItem('latestReleaseDate') != this.releases[0].date ||
       localStorage.getItem('latestSeenVersion') != this.releases[0].version;
-  },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
   },
   methods: {
     clickInfo(navigate) {

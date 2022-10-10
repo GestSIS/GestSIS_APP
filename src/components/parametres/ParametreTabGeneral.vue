@@ -223,10 +223,6 @@ export default {
       sisParam: {},
     };
   },
-  mounted() {
-    this.sisParam = { ...this.params };
-    this.$store.dispatch('fetchLocalitesSis');
-  },
   computed: {
     ...mapState({
       params: (state) => state.sisParam.params,
@@ -241,6 +237,10 @@ export default {
         return acc;
       }, {});
     },
+  },
+  mounted() {
+    this.sisParam = { ...this.params };
+    this.$store.dispatch('fetchLocalitesSis');
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

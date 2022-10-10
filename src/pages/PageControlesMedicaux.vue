@@ -28,7 +28,7 @@
             <router-link
               v-slot="{ navigate }"
               custom
-              :to="{ name: 'controles-medical', params: { id: 'ajout' } }"
+              :to="{ name: 'controle-medical', params: { id: 'ajout' } }"
             >
               <button class="btn btn-outline-primary" @click="navigate">
                 Ajouter un contrôle
@@ -344,9 +344,6 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.loading = false;
-  },
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
@@ -441,6 +438,9 @@ export default {
           .reverse()
       );
     },
+  },
+  mounted() {
+    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

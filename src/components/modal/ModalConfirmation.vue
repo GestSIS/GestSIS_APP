@@ -31,9 +31,11 @@ export default {
   props: {
     data: {
       type: Object,
+      default: () => {},
     },
     callback: {
       type: Function,
+      default: () => {},
     },
   },
   mounted() {
