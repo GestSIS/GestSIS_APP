@@ -144,7 +144,6 @@ export default {
   },
   mounted() {
     this.jwt = TokenService.getAccessToken();
-    console.log(this.jwt);
 
     const date = localStorage.getItem(
       'latestReleaseDate',

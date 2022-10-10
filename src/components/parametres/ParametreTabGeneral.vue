@@ -259,7 +259,6 @@ export default {
         if (ajoute.length) {
           this.$store.dispatch('addLocalitesSis', ajoute);
         }
-        console.log(supprime);
         if (supprime.length) {
           this.$store.dispatch('removeLocalitesSis', supprime);
         }

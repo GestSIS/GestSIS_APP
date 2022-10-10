@@ -121,8 +121,6 @@ export default {
           }
         })
         .catch((data) => {
-          console.log(data.error);
-          console.log({ ...(data?.error ?? {}) });
           this.error = { ...(data?.error ?? {}) };
         });
     },
