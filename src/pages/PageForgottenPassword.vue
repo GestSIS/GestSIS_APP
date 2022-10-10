@@ -68,14 +68,10 @@ export default {
       }
 
       this.$store
-        .dispatch('forgottenPassword', { email: this.email })
+        .dispatch('forgottenPassword', this.email)
         .then(() => {
           this.error = {};
           this.sent = true;
-          // TODO:
-          // this.$router.push(
-          //   this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
-          // );
         })
         .catch((error) => {
           this.error = error;
