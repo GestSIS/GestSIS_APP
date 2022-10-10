@@ -38,7 +38,7 @@
             </thead>
             <tbody>
               <tr v-if="indemnitesTypes.length == 0">
-                <td colspan="9">
+                <td colspan="10">
                   Aucune indemnité type pour intervention de configuré
                 </td>
               </tr>
