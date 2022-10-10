@@ -44,13 +44,13 @@ const router = createRouter({
       component: () => import('@/pages/PageConfirmation.vue'),
     },
     {
-      path: '/reset-pwd',
-      name: 'reset-pwd',
+      path: '/reset-mdp',
+      name: 'reset-password',
       meta: { layout: 'no-sidebar', public: true },
       component: () => import('@/pages/PageResetPassword.vue'),
     },
     {
-      path: '/forgotten-pwd',
+      path: '/mdp-oublie',
       name: 'forgotten-password',
       meta: { layout: 'no-sidebar', public: true },
       component: () => import('@/pages/PageForgottenPassword.vue'),
