@@ -2,7 +2,7 @@
   <editable-tree
     ref="tree"
     :tree="groupeTree"
-    :_types="types"
+    :types="types"
     :selectable="true"
     :active="active"
     @selected="selected"
@@ -52,7 +52,20 @@ export default {
   components: {
     EditableTree,
   },
-  props: ['callback', 'data', 'editMode'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+    data: {
+      type: Object,
+      default: () => {},
+    },
+    editMode: {
+      type: Boolean,
+      default: false,
+    },
+  },
   emits: ['selected'],
   data() {
     return {

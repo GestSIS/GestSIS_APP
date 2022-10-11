@@ -135,7 +135,16 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalDecompte',
-  props: ['data', 'callback'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       errorsData: {},

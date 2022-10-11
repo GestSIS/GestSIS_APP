@@ -115,15 +115,15 @@ export default {
       },
     };
   },
-  mounted() {
-    this.params = this.avsParams ? this.avsParams : this.params;
-  },
   computed: {
     ...mapState({
       listeCompte: (state) => state.compte.liste,
       listeCategorie: (state) => state.ecritureCategorie.liste,
       avsParams: (state) => state.avsParam.params,
     }),
+  },
+  mounted() {
+    this.params = this.avsParams ? this.avsParams : this.params;
   },
   methods: {
     compte(compte) {

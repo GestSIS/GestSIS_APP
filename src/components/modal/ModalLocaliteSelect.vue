@@ -146,7 +146,16 @@ import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalLocaliteSelect',
-  props: ['callback', 'data'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       groupBy: 'groupe',

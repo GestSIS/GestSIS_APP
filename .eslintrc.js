@@ -9,9 +9,12 @@ module.exports = {
     'plugin:prettier/recommended',
     '@vue/prettier',
   ],
-  plugins: ["vue", "prettier"],
-  parser: "vue-eslint-parser",
+  rules: {
+    'vue/script-setup-uses-vars': 'error',
+  },
+  plugins: ['vue', 'prettier'],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    sourceType: "module",
+    sourceType: 'module',
   },
 };

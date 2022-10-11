@@ -18,7 +18,12 @@
 
 <script>
 export default {
-  props: ['pdfData'],
+  props: {
+    pdfData: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       url: null,

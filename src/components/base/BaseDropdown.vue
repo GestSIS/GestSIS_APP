@@ -17,7 +17,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, defineExpose } from 'vue';
 
-const props = defineProps({
+defineProps({
   tag: {
     type: String,
     default: () => 'div',

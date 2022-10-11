@@ -6,7 +6,7 @@
       ref="node"
       :key="item.id"
       :node="item"
-      :_types="_types"
+      :types="types"
       :select="select"
       :active="localActive"
       :is-root="true"
@@ -31,7 +31,7 @@ export default {
     EditableNode,
   },
   props: {
-    _types: {
+    types: {
       type: Object,
       required: false,
       default: () => {},

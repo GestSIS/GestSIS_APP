@@ -4,7 +4,7 @@
       v-for="item in tree"
       :key="item.id"
       :node="item"
-      :_types="_types"
+      :types="types"
       :is-root="true"
       :select="select"
       :active="active"
@@ -21,7 +21,7 @@ export default {
     TreeNode,
   },
   props: {
-    _types: {
+    types: {
       type: Object,
       required: false,
       default: () => {},

@@ -199,7 +199,12 @@ import MultiStep from '@/components/MultiStep.vue';
 export default {
   name: 'ModalImputerIntervention',
   components: { MultiStep },
-  props: ['data'],
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       phase: 1,

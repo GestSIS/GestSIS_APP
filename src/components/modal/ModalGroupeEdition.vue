@@ -15,7 +15,7 @@
         <div class="col-12">
           <editable-tree
             :tree="groupeTree"
-            :_types="types"
+            :types="types"
             :selectable="true"
             @selected="selected"
             >1</editable-tree
@@ -39,7 +39,16 @@ export default {
   components: {
     EditableTree,
   },
-  props: ['callback', 'data'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       active: null,

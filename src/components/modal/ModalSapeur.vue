@@ -235,7 +235,12 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ModalSapeur',
-  props: ['callback'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+  },
   data() {
     return {
       errorsData: {},

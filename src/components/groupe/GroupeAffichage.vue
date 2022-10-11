@@ -1,7 +1,7 @@
 <template>
   <tree-root
     :tree="groupeTree"
-    :_types="types"
+    :types="types"
     :selectable="true"
     @selected="selected"
   />

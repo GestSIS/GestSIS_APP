@@ -49,7 +49,7 @@
           ref="node"
           :key="item.key"
           :node="item"
-          :_types="_types"
+          :types="types"
           class="tree-node--parent"
           :select="select"
           :active="active"
@@ -76,7 +76,7 @@ export default {
     TransitionExpand,
   },
   props: {
-    _types: {
+    types: {
       required: false,
       type: Object,
       default: () => {},
@@ -126,7 +126,7 @@ export default {
   computed: {
     data() {
       return {
-        ...this._types[this.node.type],
+        ...this.types[this.node.type],
         ...this.node,
       };
     },

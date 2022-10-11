@@ -227,7 +227,16 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalSapeurSelect',
-  props: ['callback', 'data'],
+  props: {
+    callback: {
+      type: Function,
+      default: () => {},
+    },
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     const svm = this;
     return {

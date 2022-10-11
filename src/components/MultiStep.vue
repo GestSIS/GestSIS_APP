@@ -20,7 +20,16 @@
 <script>
 export default {
   name: 'MultiStep',
-  props: ['steps', 'activeIndex'],
+  props: {
+    steps: {
+      type: Array,
+      default: () => [],
+    },
+    activeIndex: {
+      type: Number,
+      default: 0,
+    },
+  },
 };
 </script>
 
