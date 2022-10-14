@@ -30,8 +30,6 @@
               />
               <label class="form-check-label" for="statut"></label>
             </td>
-            <td>{{ s.forfait }}</td>
-            <td>{{ s.unite }}</td>
           </tr>
         </tbody>
       </table>

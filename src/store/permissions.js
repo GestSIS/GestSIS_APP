@@ -35,6 +35,11 @@ export default {
     TOUT: 'controle_medical.tout',
     CONFIG: 'controle_medical.config',
   },
+  MATERIEL_PERSONNEL: {
+    LECTURE: 'mat_perso.lecture',
+    MODIFICATION: 'mat_perso.modification',
+    CONFIG: 'mat_perso.config',
+  },
   SIS: {
     CONFIG: 'sis.config',
   },

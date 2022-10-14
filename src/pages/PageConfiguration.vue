@@ -84,6 +84,11 @@ export default {
           permission: permissions.CONTROLE_MEDICAL.CONFIG,
         },
         {
+          to: { name: 'param-materiel-personnel' },
+          name: 'Matériel personnel',
+          permission: permissions.MATERIEL_PERSONNEL.CONFIG,
+        },
+        {
           to: { name: 'param-roles' },
           name: 'Droits et rôles',
           permission: permissions.UTILISATEUR.CONFIG,

@@ -19,7 +19,7 @@
             role="tab"
             @click.prevent="tab = 'categorie'"
           >
-            Catégorie
+            Catégories
           </a>
           <a
             class="nav-link"
@@ -28,7 +28,7 @@
             role="tab"
             @click.prevent="tab = 'excuse'"
           >
-            Excuses
+            Excuses types
           </a>
           <a
             class="nav-link"
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import store from '@/store/index';
 import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
 import ParametreExcuseType from './ParametreExcuseType.vue';
@@ -82,20 +81,6 @@ export default {
   },
   data() {
     return { tab: 'categorie' };
-  },
-  computed: {
-    ...mapState({
-      listeExcuse: (state) =>
-        state.excuseType.liste.sort((a, b) => a.tri - b.tri),
-      listeCategorie: (state) =>
-        state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
   },
 };
 </script>

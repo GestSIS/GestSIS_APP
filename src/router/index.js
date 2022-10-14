@@ -317,6 +317,13 @@ const router = createRouter({
             import('@/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
+          path: 'materiel-personnel',
+          name: 'param-materiel-personnel',
+          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.CONFIG),
+          component: () =>
+            import('@/components/parametres/ParametreTabMaterielPersonnel.vue'),
+        },
+        {
           path: 'roles',
           name: 'param-roles',
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),
