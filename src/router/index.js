@@ -254,6 +254,12 @@ const router = createRouter({
       component: () => import('@/pages/PageControleMedical.vue'),
     },
     {
+      path: '/materiel-personnel',
+      name: 'materiel-personnel',
+      beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
+      component: () => import('@/pages/PageControlesMedicaux.vue'),
+    },
+    {
       path: '/utilisateurs',
       name: 'users',
       beforeEnter: permissionGuard(permissions.ADMIN.TOUT),

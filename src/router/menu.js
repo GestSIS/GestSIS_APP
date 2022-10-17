@@ -48,16 +48,17 @@ const links = [
     icon: ['far', 'chart-bar'],
     nom: 'Statistiques',
   },
-  // {
-  //   to: '/matériel',
-  //   icon: 'toolbox',
-  //   nom: 'Matériel personel',
-  // },
   {
     to: { name: 'controles-medicaux' },
     icon: 'file-medical-alt',
     nom: 'Contrôles médicaux',
     permission: permissions.CONTROLE_MEDICAL.TOUT,
+  },
+  {
+    to: { name: 'materiel-personnel' },
+    icon: 'shirt',
+    nom: 'Matériel personel',
+    permission: permissions.MATERIEL_PERSONNEL.LECTURE,
   },
   // {
   //   to: '/impressions',

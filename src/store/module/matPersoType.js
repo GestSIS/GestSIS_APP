@@ -47,7 +47,7 @@ export default {
       });
     },
     removeMatPersoType({ commit }, typeId) {
-      return MatPersoTypeService.remove(typeId).then((data) => {
+      return MatPersoTypeService.removeType(typeId).then((data) => {
         commit(types.REMOVE_MAT_PERSO_TYPE, typeId);
         return data;
       });

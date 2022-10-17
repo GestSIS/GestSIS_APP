@@ -3,39 +3,49 @@
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Catégories et type de matériel</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutEvent()">
-        Ajouter un événement type
+      <button type="button" class="btn btn-primary" @click="ajoutCategorie">
+        Ajouter une catégorie
+      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutType">
+        Ajouter un type de matériel
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table class="table table-sm">
+      <table class="table table-sm table-hover">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Validable</th>
-            <th class="text-center">Actions</th>
+            <th>Designation</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-if="!types.length">
-            <td colspan="3">Aucun événement type</td>
+          <tr v-if="computedData.length <= 0">
+            <td colspan="3">Aucune catégorie</td>
           </tr>
-          <tr v-for="t in types" :key="t.id">
-            <td>{{ t.tri }}</td>
-            <td>{{ t.designation }}</td>
-            <td class="align-middle text-center">
+          <tr
+            v-for="item in computedData"
+            :key="item.globalId"
+            :class="{
+              'table-primary': item.globalId === selectedId,
+            }"
+            @click="select(item.globalId)"
+          >
+            <td :style="{ 'padding-left': item.level * 25 + 'px' }">
+              <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.tag]" />
+              {{ item.designation }}
+            </td>
+            <td>
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
-                @click="updateEvent(t)"
+                @click="update(item)"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
                 type="button"
                 class="btn btn-outline-danger border-0"
-                @click="deleteEvent(t)"
+                @click="remove(item)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -51,30 +61,98 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ParametreMatPersoEventType',
+  name: 'ParametreMatPersoTypeCategorie',
+  data() {
+    return {
+      selectedId: '',
+    };
+  },
   computed: {
     ...mapState({
       types: (state) =>
-        state.matPersoEventType.liste.sort((a, b) => a.tri - b.tri),
+        state.matPersoType.liste.sort((a, b) => a.designation - b.designation),
+      categories: (state) =>
+        state.matPersoCategorie.liste.sort(
+          (a, b) => a.designation - b.designation
+        ),
     }),
+    computedData() {
+      let indexedTypes = {};
+      this.types.forEach((t) => {
+        if (!indexedTypes[t.materiel_categorie_id])
+          indexedTypes[t.materiel_categorie_id] = [t];
+        else indexedTypes[t.materiel_categorie_id].push(t);
+      });
+      let indexedCategories = {};
+      this.categories.forEach((c) => {
+        if (!indexedCategories[c.pere_id]) indexedCategories[c.pere_id] = [c];
+        else indexedCategories[c.pere_id].push(c);
+      });
+
+      let data = [];
+
+      const recursive = (categories, level) => {
+        categories.forEach((c) => {
+          data.push({
+            ...c,
+            globalId: 'c' + c.id,
+            type: 'categorie',
+            level: level,
+            expanded: true,
+            tag: 'tag',
+          });
+          console.log(c);
+          if (indexedCategories[c.id])
+            recursive(indexedCategories[c.id], level + 1);
+          indexedTypes[c.id]?.forEach((t) => {
+            data.push({
+              ...t,
+              globalId: 't' + t.id,
+              type: 'type',
+              level: level + 1,
+              expanded: true,
+              tag: 'shirt',
+            });
+          });
+        });
+      };
+
+      recursive(
+        this.categories.filter((c) => !c.pere_id),
+        0
+      );
+      return data;
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    ajoutEvent() {
+    ajoutCategorie() {
       this.SHOW_MODAL({ component: 'ModalMatPersoEventType', data: {} });
     },
-    updateEvent(event) {
+    ajoutType() {
+      this.SHOW_MODAL({ component: 'ModalMatPersoType', data: {} });
+    },
+    update(elem) {
       this.SHOW_MODAL({
-        component: 'ModalMatPersoEventType',
-        data: { ...event },
+        component:
+          elem.type == 'type' ? 'ModalMatPersoType' : 'ModalMatPersoCategorie',
+        data: { ...elem },
       });
     },
-    deleteEvent(event) {
+    remove(elem) {
       this.$store
-        .dispatch('removeMatPersoEventType', event.id)
+        .dispatch(
+          elem.type === 'type'
+            ? 'removeMatPersoType'
+            : 'removeMatPersoCategorie',
+          elem.id
+        )
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
+    },
+    select(id) {
+      this.selectedId = id;
     },
   },
 };

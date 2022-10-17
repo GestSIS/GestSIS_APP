@@ -49,6 +49,38 @@
           :class="{ 'is-invalid': errors['seuil_min'] }"
         />
       </div>
+      <div class="mb-3">
+        <label for="seuil_min">Événements types</label>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <td></td>
+              <td>Evénement</td>
+              <td class="text-center">Validable</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(t, i) in types" :key="i">
+              <td class="text-center">
+                <input
+                  v-model="eventTypeIds[t.id]"
+                  type="checkbox"
+                  class="form-check-input"
+                />
+              </td>
+              <td>{{ t.nom }}</td>
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  :checked="t.validable"
+                  disabled
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
@@ -62,7 +94,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalMateriel',
@@ -75,20 +107,33 @@ export default {
   data() {
     return {
       errors: {},
+      eventTypeIds: {},
       activeAlerte: {
         dernier: false,
       },
     };
+  },
+  computed: {
+    ...mapState({
+      types: (state) =>
+        state.matPersoEventType.liste.sort((a, b) => a.tri - b.tri),
+    }),
   },
   mounted() {
     this.activeAlerte = {
       ...this.activeAlerte,
       ...this.data,
     };
+    this.eventTypeIds = Object.fromEntries(
+      this.data?.event_types?.map((e) => [e.id, true]) ?? []
+    );
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
+      this.activeAlerte.eventTypeIds = Object.entries(this.eventTypeIds)
+        .filter(([, value]) => value)
+        .map(([key]) => key);
       if ((this.activeAlerte.id || 0) === 0) {
         this.$store
           .dispatch('addMatPersoAlerteType', this.activeAlerte)

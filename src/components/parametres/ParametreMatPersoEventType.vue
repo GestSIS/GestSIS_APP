@@ -13,7 +13,7 @@
           <tr>
             <th>Nom</th>
             <th>Description</th>
-            <th>Validable</th>
+            <th class="text-center">Validable</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -24,7 +24,7 @@
           <tr v-for="t in types" :key="t.id">
             <td>{{ t.nom }}</td>
             <td>{{ t.description }}</td>
-            <td>
+            <td class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"

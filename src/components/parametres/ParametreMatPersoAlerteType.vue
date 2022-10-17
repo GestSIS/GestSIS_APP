@@ -14,7 +14,7 @@
             <th>Titre</th>
             <th>Description</th>
             <th>Seuil de déclenchement</th>
-            <th>Dernier événement</th>
+            <th class="text-center">Dernier événement</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -26,7 +26,7 @@
             <td>{{ t.titre }}</td>
             <td>{{ t.description }}</td>
             <td>{{ t.seuil_min }}</td>
-            <td>
+            <td class="text-center">
               <input
                 type="checkbox"
                 class="form-check-input"
