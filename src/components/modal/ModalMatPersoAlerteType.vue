@@ -134,32 +134,24 @@ export default {
       this.activeAlerte.eventTypeIds = Object.entries(this.eventTypeIds)
         .filter(([, value]) => value)
         .map(([key]) => key);
-      if ((this.activeAlerte.id || 0) === 0) {
-        this.$store
-          .dispatch('addMatPersoAlerteType', this.activeAlerte)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateMatPersoAlerteType', this.activeAlerte)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+
+      this.$store
+        .dispatch(
+          (this.activeAlerte.id || 0) === 0
+            ? 'addMatPersoAlerteType'
+            : 'updateMatPersoAlerteType',
+          this.activeAlerte
+        )
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };

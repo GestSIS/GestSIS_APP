@@ -98,19 +98,18 @@ export default {
             globalId: 'c' + c.id,
             type: 'categorie',
             level: level,
-            expanded: true,
             tag: 'tag',
           });
-          console.log(c);
+
           if (indexedCategories[c.id])
             recursive(indexedCategories[c.id], level + 1);
+
           indexedTypes[c.id]?.forEach((t) => {
             data.push({
               ...t,
               globalId: 't' + t.id,
               type: 'type',
               level: level + 1,
-              expanded: true,
               tag: 'shirt',
             });
           });
