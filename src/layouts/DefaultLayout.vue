@@ -2,9 +2,9 @@
   <div class="wrapper">
     <div class="wrapper">
       <!-- Main Sidebar Container -->
-      <main-sidebar class="custom-sidebar" />
+      <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
       <div class="content">
-        <app-navbar />
+        <app-navbar @toggle-sidebar="hideSidebar = !hideSidebar" />
         <slot />
       </div>
       <app-modal />
@@ -35,6 +35,11 @@ export default {
     MainSidebar,
     AppNavbar,
     AppModal,
+  },
+  data() {
+    return {
+      hideSidebar: false,
+    };
   },
 };
 </script>

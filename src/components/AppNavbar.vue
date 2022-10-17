@@ -4,10 +4,13 @@
   >
     <!-- Left navbar links -->
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#">
-          <i class="fa fa-bars"></i>
-        </a>
+      <li class="nav-item position-relative me-2 ms-4">
+        <button
+          class="btn btn-outline-secondary"
+          @click="$emit('toggleSidebar')"
+        >
+          <font-awesome-icon :icon="['fas', 'bars']" />
+        </button>
       </li>
     </ul>
     <ul class="navbar-nav me-2">
@@ -49,6 +52,13 @@ import * as data from '../../releases.json';
 
 export default {
   name: 'AppNavbar',
+  props: {
+    hideSidebar: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ['toggleSidebar'],
   data: () => {
     return {
       releases: data.releases,

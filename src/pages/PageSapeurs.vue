@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="row overflow-hidden">
-      <div class="col-md-3 custom-scroll-column">
+      <div class="col-3 col-md-3 custom-scroll-column">
         <!-- /.card-header -->
         <div class="card card-primary card-outline mb-3">
           <div class="card-header">
@@ -99,7 +99,7 @@
           </ul>
         </div>
       </div>
-      <div class="col-md-9 custom-scroll-column">
+      <div class="col-9 col-md-9 custom-scroll-column">
         <router-view></router-view>
       </div>
     </div>

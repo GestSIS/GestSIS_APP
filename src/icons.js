@@ -40,6 +40,8 @@ import {
   faBan,
   faShirt,
   faTag,
+  faBars,
+  faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -60,6 +62,8 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faBars,
+  faArrowLeft,
   faShirt,
   faTag,
   faBan,
