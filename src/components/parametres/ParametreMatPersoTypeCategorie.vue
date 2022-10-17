@@ -2,8 +2,12 @@
   <div class="card card-primary card-outline">
     <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Catégories et type de matériel</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCategorie">
+      <h3 class="card-title me-auto">Catégories et type de matériel</h3>
+      <button
+        type="button"
+        class="btn btn-primary me-2"
+        @click="ajoutCategorie"
+      >
         Ajouter une catégorie
       </button>
       <button type="button" class="btn btn-primary" @click="ajoutType">

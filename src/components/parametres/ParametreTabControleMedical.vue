@@ -5,7 +5,7 @@
       <div class="card card-primary card-outline">
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Paramètres exercices</h3>
+          <h3 class="card-title">Paramètres contrôles médicaux</h3>
         </div>
         <nav
           class="nav flex-column nav-pills"
