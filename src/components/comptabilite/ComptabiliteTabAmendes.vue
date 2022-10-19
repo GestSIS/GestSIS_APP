@@ -85,16 +85,19 @@ export default {
       filters: {},
       amendeColumns: [
         {
+          title: 'Date',
+          field: 'date',
+          formatter(value) {
+            return new Date(value).toLocaleDateString();
+          },
+        },
+        {
           title: 'Exercice',
           field: 'designation',
         },
         {
           title: 'Excuse',
           field: 'complement',
-        },
-        {
-          title: 'Date',
-          field: 'date',
         },
         {
           title: 'Total',

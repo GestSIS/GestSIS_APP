@@ -112,6 +112,13 @@ export default {
       selectedId: null,
       fields: [
         {
+          title: 'Date',
+          key: 'date',
+          formatter(value) {
+            return value ? new Date(value).toLocaleDateString() : '';
+          },
+        },
+        {
           title: 'Designation',
           key: 'designation',
           sortKey: 'designation',
