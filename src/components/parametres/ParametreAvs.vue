@@ -58,7 +58,7 @@
               id="compte_id"
               v-model="params.compte_id"
               class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['compte_id_id'] }"
+              :class="{ 'is-invalid': errors['compte_id'] }"
             >
               <option v-for="c in listeCompte" :key="c.id" :value="c.id">
                 {{ compte(c) }}
