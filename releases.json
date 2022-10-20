@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "20.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Paramètres pour matériel personnel",
+        "Possibilité de masquer le menu à gauche",
+        "Améliorations diverses de l'UI",
+        "Ajout de la colonne `Payé le` pour les justificatifs de compte"
+      ]
+    },
+    {
       "date": "19.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
