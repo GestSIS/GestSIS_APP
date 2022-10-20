@@ -257,7 +257,7 @@ const router = createRouter({
       path: '/materiel-personnel',
       name: 'materiel-personnel',
       beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-      component: () => import('@/pages/PageMaterielPersonnel.vue'),
+      component: () => import('@/pages/PageEnTravaux.vue'),
     },
     {
       path: '/utilisateurs',
