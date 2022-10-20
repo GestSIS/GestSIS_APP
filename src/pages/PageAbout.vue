@@ -17,7 +17,7 @@
     </div>
     <div class="row">
       <div class="col-md-8">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>Notes de mise à jour</h3>
           </div>
