@@ -53,6 +53,12 @@
           >
             Fichier de paiement (ISO20022)
           </button>
+          <button
+            class="btn btn-outline-primary"
+            @click="certificatsDeSalaire()"
+          >
+            Certificats de salaire
+          </button>
         </div>
       </div>
     </div>
@@ -356,6 +362,18 @@ export default {
         this.$awn.alert(
           err?.message ||
             "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
+    certificatsDeSalaire() {
+      // TODO: Ajouter année dans le nom du certificat de salaire
+      DecompteService.downloadCertificatSalaires(
+        this.activeExerciceComptableId,
+        `certificats_salaire.pdf`
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.message ||
+            "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système"
         );
       });
     },

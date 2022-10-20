@@ -43,4 +43,14 @@ export default {
       `/paiements/${paiementId}/iso20022`
     );
   },
+  downloadCertificatSalaires(exerciceComptableId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/exercices-comptable/${exerciceComptableId}/certificat-salaire`
+    );
+  },
+  downloadCertificatSalaireSapeur(exerciceComptableId, sapeurId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/exercices-comptable/${exerciceComptableId}/certificat-salaire/${sapeurId}`
+    );
+  },
 };
