@@ -251,118 +251,8 @@
         </div>
       </div>
       <div class="col-3">
-        <div class="card card-primary card-outline mb-3 table-responsive">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Alertes</h5>
-          </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
-            :fields="fieldsBase.slice(0, 2)"
-            no-data="Aucun sapeur à afficher"
-            :data="filteredSapeurs.slice(0, 5)"
-            @selected="selectSapeur"
-          >
-            <template #foot>
-              <tr>
-                <th :colspan="fieldsBase.length">
-                  Nombre sapeurs : {{ filteredSapeurs.length }} /
-                  {{ computedData.length }}
-                </th>
-              </tr>
-            </template>
-            <template #actions="props">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                v-slot="{ navigate }"
-                :to="'/sapeurs/' + props.rowData.id"
-                custom
-              >
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-              </router-link>
-              <a
-                class="btn btn-outline-primary border-0"
-                :href="'mailto:' + props.rowData.email"
-              >
-                <font-awesome-icon :icon="['fas', 'envelope']" />
-              </a>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="vcard([props.rowData])"
-              >
-                <font-awesome-icon :icon="['far', 'address-card']" />
-              </button>
-            </template>
-          </base-table>
-        </div>
-        <div class="card card-primary card-outline mb-5 table-responsive">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Matériel a récupérer</h5>
-          </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
-            :fields="fieldsBase.slice(0, 2)"
-            no-data="Aucun sapeur à afficher"
-            :data="filteredSapeurs.slice(0, 5)"
-            @selected="selectSapeur"
-          >
-            <template #foot>
-              <tr>
-                <th :colspan="fieldsBase.length">
-                  Nombre sapeurs : {{ filteredSapeurs.length }} /
-                  {{ computedData.length }}
-                </th>
-              </tr>
-            </template>
-            <template #actions="props">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                v-slot="{ navigate }"
-                :to="'/sapeurs/' + props.rowData.id"
-                custom
-              >
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-              </router-link>
-              <a
-                class="btn btn-outline-primary border-0"
-                :href="'mailto:' + props.rowData.email"
-              >
-                <font-awesome-icon :icon="['fas', 'envelope']" />
-              </a>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="vcard([props.rowData])"
-              >
-                <font-awesome-icon :icon="['far', 'address-card']" />
-              </button>
-            </template>
-          </base-table>
-        </div>
+        <materiel-alertes />
+        <materiel-a-recuperer />
       </div>
     </div>
   </div>
@@ -374,26 +264,37 @@ import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
+import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
+import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../services/SapeurService.js';
-import { DateTime } from 'luxon';
+// import { DateTime } from 'luxon';
 
 async function loadData(routeTo, next) {
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadGrades = store.dispatch('fetchGrades');
-  let loadFonctions = store.dispatch('fetchFonctions');
-  let loadGroupes = store.dispatch('fetchGroupes');
+  let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
+  let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  // let loadGrades = store.dispatch('fetchGrades');
+  // let loadFonctions = store.dispatch('fetchFonctions');
+  // let loadGroupes = store.dispatch('fetchGroupes');
 
-  Promise.all([loadLocalites, loadFonctions, loadGrades, loadGroupes]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadSapeurs,
+    // loadFonctions,
+    // loadGrades,
+    // loadGroupes,
+    loadMaterielARecuperer,
+    loadMaterielAlertes,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
   name: 'PageMaterielPersonnel',
   components: {
     BaseTable,
+    MaterielARecuperer,
+    MaterielAlertes,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
@@ -568,55 +469,56 @@ export default {
       return data;
     },
     computedData() {
-      const idReducer = (map, e) => {
-        map.set(e.id, e);
-        return map;
-      };
+      // const idReducer = (map, e) => {
+      //   map.set(e.id, e);
+      //   return map;
+      // };
 
-      const indexedLocalite = this.localites.reduce(idReducer, new Map());
-      const indexedGrades = this.grades.reduce(idReducer, new Map());
-      const indexedFonctions = this.fonctions.reduce(idReducer, new Map());
-      const indexedGroupes = this.groupes.reduce(idReducer, new Map());
+      // const indexedLocalite = this.localites.reduce(idReducer, new Map());
+      // const indexedGrades = this.grades.reduce(idReducer, new Map());
+      // const indexedFonctions = this.fonctions.reduce(idReducer, new Map());
+      // const indexedGroupes = this.groupes.reduce(idReducer, new Map());
 
-      const porteurIds = new Set(
-        this.fonctions
-          .filter((f) => f.nom.toLowerCase().includes('porteur'))
-          .map((f) => f.id)
-      );
-      const b_id = 3;
-      const c1_id = 6;
-      const c1_118_id = 7;
+      // const porteurIds = new Set(
+      //   this.fonctions
+      //     .filter((f) => f.nom.toLowerCase().includes('porteur'))
+      //     .map((f) => f.id)
+      // );
+      // const b_id = 3;
+      // const c1_id = 6;
+      // const c1_118_id = 7;
 
-      return this.sapeurs
-        .map((s) => ({
-          ...s,
-          nom_prenom: s.nom + ' ' + s.prenom,
-          porteur: s.fonctions
-            .map((f) => porteurIds.has(f.fonction_id))
-            .reduce((acc, e) => acc || e, false),
-          b: s.permis.find((p) => p.permis_type_id == b_id) != undefined,
-          c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
-          c1_118:
-            s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
-          fonctions: s.fonctions.filter(
-            (f) =>
-              f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0
-          ),
-          fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
-          localite: indexedLocalite.get(s.localite_id)?.designation || '',
-          fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
-          grade: indexedGrades.get(s.grade_id)?.designation || '',
-          grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
-          tels: s.telephones.map((t) => t.numero),
-          groupes: s.groupes,
-          formatedGroupes: s.groupes
-            .map((g) => indexedGroupes.get(g.groupe_id))
-            .sort((a, b) => a.no - b.no)
-            .map((g) => g.no)
-            .filter((g) => g)
-            .join(', '),
-        }))
-        .sort((a, b) => b.fonction_tri - a.fonction_tri);
+      // return this.sapeurs
+      //   .map((s) => ({
+      //     ...s,
+      //     nom_prenom: s.nom + ' ' + s.prenom,
+      //     porteur: s.fonctions
+      //       .map((f) => porteurIds.has(f.fonction_id))
+      //       .reduce((acc, e) => acc || e, false),
+      //     b: s.permis.find((p) => p.permis_type_id == b_id) != undefined,
+      //     c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
+      //     c1_118:
+      //       s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
+      //     fonctions: s.fonctions.filter(
+      //       (f) =>
+      //         f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0
+      //     ),
+      //     fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
+      //     localite: indexedLocalite.get(s.localite_id)?.designation || '',
+      //     fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
+      //     grade: indexedGrades.get(s.grade_id)?.designation || '',
+      //     grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
+      //     tels: s.telephones.map((t) => t.numero),
+      //     groupes: s.groupes,
+      //     formatedGroupes: s.groupes
+      //       .map((g) => indexedGroupes.get(g.groupe_id))
+      //       .sort((a, b) => a.no - b.no)
+      //       .map((g) => g.no)
+      //       .filter((g) => g)
+      //       .join(', '),
+      //   }))
+      //   .sort((a, b) => b.fonction_tri - a.fonction_tri);
+      return [];
     },
     filteredLocalites() {
       const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
