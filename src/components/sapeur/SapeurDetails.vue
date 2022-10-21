@@ -90,7 +90,7 @@ const sapeurTabList = {
   FONCTION: 'Fonctions',
   COURS: 'Cours',
   PROMOTION: 'Promotion',
-  // MATERIAL: 'Materiel',
+  MATERIAL: 'Materiel',
   ORGANISATION: 'Organisation',
   PERMIS: 'Permis',
   BANQUE: 'Banque',

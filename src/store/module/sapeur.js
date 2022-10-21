@@ -16,6 +16,7 @@ export default {
       exercices: [],
       controles: [],
       telephones: [],
+      materiels: [],
     },
   },
   mutations: {
@@ -33,6 +34,7 @@ export default {
         exercices: [],
         controles: [],
         telephones: [],
+        materiels: [],
       };
     },
     [types.UPDATE_SAPEURS_LISTE](state, payload) {
@@ -53,16 +55,14 @@ export default {
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
       state.liste.map((s) =>
-        s.id == payload.id
-          ? {
-              ...s,
-              fonction_id: payload.fonction_id,
-              nom: payload.nom,
-              prenom: payload.prenom,
-              actif: payload.actif,
-              date_naissance: payload.date_naissance,
-            }
-          : s
+        s.id == payload.id ? {
+          ...s,
+          fonction_id: payload.fonction_id,
+          nom: payload.nom,
+          prenom: payload.prenom,
+          actif: payload.actif,
+          date_naissance: payload.date_naissance,
+        } : s
       );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
@@ -91,6 +91,9 @@ export default {
     },
     [types.UPDATE_CURRENT_SAPEUR_EXERCICES](state, payload) {
       state.active.exercices = payload;
+    },
+    [types.UPDATE_CURRENT_SAPEUR_MATERIELS](state, payload) {
+      state.active.materiels = payload;
     },
     [types.ADD_CURRENT_SAPEUR_PERMIS](state, payload) {
       state.active.permis = [...state.active.permis, payload];
@@ -255,6 +258,11 @@ export default {
     fetchSapeurTelephones({ commit, state }) {
       return SapeurService.getTelephones(state.active.id).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
+      );
+    },
+    fetchSapeurMateriels({ commit, state }) {
+      return SapeurService.getMateriels(state.active.id).then((data) =>
+        commit(types.UPDATE_CURRENT_SAPEUR_MATERIELS, data)
       );
     },
     fetchSapeurGrades({ commit, state }) {

@@ -37,6 +37,9 @@ export default {
   getMutations(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
   },
+  getMateriels(sapeurId) {
+    return Api.api().get('/sapeurs/' + sapeurId + '/materiels');
+  },
   getExercices(sapeurId, exerciceComptableId) {
     return Api.api().get(
       '/sapeurs/' + sapeurId + '/exercices/' + exerciceComptableId
