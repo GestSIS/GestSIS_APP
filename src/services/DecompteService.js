@@ -43,6 +43,11 @@ export default {
       `/paiements/${paiementId}/iso20022`
     );
   },
+  downloadExcelAFacturer(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/a-facturer`
+    );
+  },
   downloadCertificatSalaires(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
       `/exercices-comptable/${exerciceComptableId}/certificat-salaire`
