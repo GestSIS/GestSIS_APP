@@ -226,7 +226,12 @@ export default {
           return map;
         }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
-      presences: (state) => state.statistique.presences,
+      presences: (state) =>
+        state.statistique.presences.map((e) => ({
+          ...e,
+          sapeur_id: parseInt(e.sapeur_id),
+          exercice_id: parseInt(e.exercice_id),
+        })),
       excuses: (state) => state.excuseType.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
@@ -296,6 +301,7 @@ export default {
         },
         new Map()
       );
+      console.log(this.filteredSapeurs);
 
       return this.filteredSapeurs
         .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
