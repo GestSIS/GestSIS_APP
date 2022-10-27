@@ -68,6 +68,11 @@
       <slot name="foot"></slot>
     </tfoot>
   </table>
+  <div class="d-grid gap-2 d-md-block m-2">
+    <button class="btn" title="Export CSV" @click="toCvs">
+      <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
+    </button>
+  </div>
 </template>
 
 <script>
@@ -161,6 +166,38 @@ export default {
     },
   },
   methods: {
+    toCvs() {
+      const data =
+        'data:text/csv;charset=utf-8,\ufeff' +
+        this.fields
+          .filter((f) => !f.slot)
+          .map((f) => f.title)
+          .join(';') +
+        '\n' +
+        this.computedData
+          .map((e) =>
+            this.fields
+              .filter((f) => !f.slot)
+              .map((f) => (f.formatter || this.defaultFormatter)(e[f.key], e))
+              .join(';')
+          )
+          .join('\n');
+
+      // V1
+      // const encodedUri = encodeURI(data);
+      // window.open(encodedUri);
+
+      // V2
+      var encodedUri = encodeURI(data);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'my_data.csv');
+      document.body.appendChild(link); // Required for FF
+
+      link.click();
+
+      // TODO: Export as CSV
+    },
     sort(field) {
       if (field.sortKey) {
         if (this.sorted.key === field.sortKey) {
