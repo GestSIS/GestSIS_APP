@@ -301,7 +301,6 @@ export default {
         },
         new Map()
       );
-      console.log(this.filteredSapeurs);
 
       return this.filteredSapeurs
         .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))

@@ -5,7 +5,7 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Possibilité d'exporter les données des tables au format `CVS` (supporté par Excel)"
+        "Possibilité d'exporter les données des tables au format `CSV` (supporté par Excel)"
       ]
     },
     {
