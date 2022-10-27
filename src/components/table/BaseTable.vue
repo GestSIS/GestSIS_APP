@@ -1,17 +1,19 @@
 <template>
   <table class="table table-sm table-hover mb-0">
-    <thead>
-      <tr>
-        <th
-          v-for="f in fields"
-          :key="f.key"
-          :class="f.titleClass"
-          @click="sort(f)"
-        >
-          {{ f.title }}
-        </th>
-      </tr>
-    </thead>
+    <slot name="head">
+      <thead>
+        <tr>
+          <th
+            v-for="f in fields"
+            :key="f.key"
+            :class="f.titleClass"
+            @click="sort(f)"
+          >
+            {{ f.title }}
+          </th>
+        </tr>
+      </thead>
+    </slot>
     <tbody>
       <tr v-if="!data.length">
         <td :colspan="fields.length">{{ noData }}</td>
@@ -39,9 +41,11 @@
               :checked="r[f.key]"
               disabled
             />
+            <!-- Date types -->
             <template v-else-if="f.type === 'date'">
               {{ new Date(r[f.key]).toLocaleDateString() }}
             </template>
+            <!-- No type -->
             <slot
               v-else
               :name="f.slot"
