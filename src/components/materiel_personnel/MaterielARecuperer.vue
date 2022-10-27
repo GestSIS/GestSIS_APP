@@ -3,11 +3,6 @@
     <div class="card-header d-flex justify-content-between">
       <h5>Matériel a récupérer</h5>
     </div>
-    <div v-if="loading" class="card-body d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Chargement...</span>
-      </div>
-    </div>
     <base-table
       :selectable="true"
       select-key="id"

@@ -11,11 +11,19 @@ export default {
       state.aRecuperer = [];
       state.liste = [];
     },
+    [types.UPDATE_MAT_PERSO_LISTE](state, payload) {
+      state.liste = payload;
+    },
     [types.UPDATE_MAT_PERSO_A_RECUPERER_LISTE](state, payload) {
       state.aRecuperer = payload;
     },
   },
   actions: {
+    fetchMatPerso({ commit }) {
+      return MatPersoMaterielService.getMateriel().then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
     fetchMatPersoARecuperer({ commit }) {
       return MatPersoMaterielService.getARecuperer().then((data) =>
         commit(types.UPDATE_MAT_PERSO_A_RECUPERER_LISTE, data)

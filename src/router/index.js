@@ -258,6 +258,32 @@ const router = createRouter({
       name: 'materiel-personnel',
       beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
       component: () => import('@/pages/PageMaterielPersonnel.vue'),
+      children: [
+        {
+          path: '',
+          name: 'mat-perso-dashboard',
+          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
+          meta: {},
+          component: () =>
+            import('@/components/materiel_personnel/MaterielTabDashboard.vue'),
+        },
+        {
+          path: 'attribution',
+          name: 'mat-perso-materiel',
+          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
+          meta: {},
+          component: () =>
+            import('@/components/materiel_personnel/MaterielTab.vue'),
+        },
+        {
+          path: 'inventaire',
+          name: 'mat-perso-inventaire',
+          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
+          meta: {},
+          component: () =>
+            import('@/components/materiel_personnel/MaterielTabInventaire.vue'),
+        },
+      ],
     },
     {
       path: '/utilisateurs',

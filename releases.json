@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "26.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un bug pour les décomptes sapeurs",
+        "Correction d'un bug pour le total des statistiques d'intervention"
+      ]
+    },
+    {
       "date": "23.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
