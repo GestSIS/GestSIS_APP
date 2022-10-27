@@ -18,49 +18,24 @@
           </div>
         </div>
         <div class="card-body">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Catégorie</th>
-                <th class="text-center">Amendable</th>
-                <th class="text-center">Nombre</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="filteredCategories.length <= 0">
-                <td colspan="3">Aucun exercice pour l'instant</td>
-              </tr>
-              <tr v-for="c in filteredCategories" :key="c.id">
-                <td>{{ c.designation }}</td>
-                <td class="text-center">
-                  <input
-                    :id="'amendable' + c.id"
-                    type="checkbox"
-                    class="form-check-input"
-                    :checked="c.amendable"
-                    disabled
-                  />
-                  <label
-                    class="form-check-label"
-                    :for="'amendable' + c.id"
-                  ></label>
-                </td>
-                <td class="text-center">
-                  {{ categoriesOccurence[c.id] || 0 }}
-                </td>
-              </tr>
-            </tbody>
-            <thead>
+          <base-table
+            :fields="fields"
+            :data="filteredCategories"
+            no-data="Aucun exercice pour l'instant"
+            :selectable="true"
+            select-key="id"
+            row-selected-class="table-primary"
+          >
+            <template #foot>
               <tr>
                 <th colspan="2">Total :</th>
                 <th class="text-center">{{ exercices.length }}</th>
               </tr>
-            </thead>
-          </table>
+            </template>
+          </base-table>
           <!-- <h4>TODO:</h4>
           <ul>
             <li>Graphique d'un simple tableau</li>
-            <li>Exporter dans Excel</li>
             <li>Répartition des exercices durant l'année -> graph</li>
           </ul> -->
         </div>
@@ -107,6 +82,14 @@ export default {
           title: 'Amendable',
           key: 'amendable',
           type: 'boolean',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Nombre',
+          key: 'nb',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
         },
       ],
     };
@@ -129,7 +112,7 @@ export default {
     filteredCategories() {
       return this.categories
         .filter((c) => this.allCategories || this.categoriesOccurence[c.id])
-        .map((e) => ({ ...e, nb: this.occurences[e.id] ?? 0 }));
+        .map((e) => ({ ...e, nb: this.categoriesOccurence[e.id] ?? 0 }));
     },
   },
   watch: {
