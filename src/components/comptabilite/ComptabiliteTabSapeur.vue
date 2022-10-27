@@ -202,6 +202,7 @@ export default {
           title: 'Total',
           key: 'total',
           sortField: 'total',
+          formatter: (t) => parseFloat(t).toFixed(2),
         },
         {
           title: 'Actions',
