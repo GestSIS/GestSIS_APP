@@ -45,8 +45,7 @@ export default {
     ...mapGetters(['availableSisListe']),
     ...mapState({
       activeSisId: (state) => state.auth.sis.activeId,
-      listeSis: (state) =>
-        state.auth.sis.liste.sort((s1, s2) => s1.nom.localeCompare(s2.nom)),
+      listeSis: (state) => state.auth.sis.liste,
     }),
   },
   watch: {

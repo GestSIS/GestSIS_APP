@@ -148,9 +148,9 @@ export default {
       return state.sis.permissions;
     },
     availableSisListe: (state) => {
-      return state.sis.liste.filter((sis) =>
-        state.sis.available.includes(sis.api_key)
-      );
+      return state.sis.liste
+        .filter((sis) => state.sis.available.includes(sis.api_key))
+        .sort((s1, s2) => s1.nom.localeCompare(s2.nom));
     },
   },
   actions: {
