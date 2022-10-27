@@ -56,6 +56,7 @@ import store from '@/store/index';
 async function loadData(routeTo, next) {
   let loadMateriel = store.dispatch('fetchMatPerso');
   let loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  let loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
   let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
   let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
   let loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -66,6 +67,7 @@ async function loadData(routeTo, next) {
     loadMaterielARecuperer,
     loadMaterielAlertes,
     loadMaterielTypes,
+    loadMaterielCategories,
   ]).then(() => {
     next();
   });

@@ -90,37 +90,7 @@
         <div class="card-header">
           <h5>Filtre Matériel type</h5>
         </div>
-        <table class="table table-sm table-hover table-striped">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Designation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="computedCategories.length <= 0">
-              <td colspan="3">Aucune catégorie</td>
-            </tr>
-            <tr v-for="item in computedCategories" :key="item.globalId">
-              <!-- @click="select(item.globalId)" -->
-              <td class="text-center">
-                <input
-                  v-model="selectedIds[item.type][item.id]"
-                  type="checkbox"
-                  class="form-check-input"
-                  @change="select(item, $event)"
-                />
-              </td>
-              <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-                <font-awesome-icon
-                  class="me-2 ms-2"
-                  :icon="['fas', item.tag]"
-                />
-                {{ item.designation }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <materiel-type-categorie-select @change="selectedTypes" />
       </div>
     </div>
     <div class="col-md-5">
@@ -152,7 +122,7 @@
             />
           </template>
           <template #actions="props">
-            <router-link
+            <!-- <router-link
               v-if="hasSapeurModificationPermission"
               v-slot="{ navigate }"
               :to="'/sapeurs/' + props.rowData.id"
@@ -176,7 +146,7 @@
               @click="vcard([props.rowData])"
             >
               <font-awesome-icon :icon="['far', 'address-card']" />
-            </button>
+            </button> -->
           </template>
         </base-table>
       </div>
@@ -211,7 +181,7 @@
             />
           </template>
           <template #actions="props">
-            <router-link
+            <!-- <router-link
               v-if="hasSapeurModificationPermission"
               v-slot="{ navigate }"
               :to="'/sapeurs/' + props.rowData.id"
@@ -235,7 +205,7 @@
               @click="vcard([props.rowData])"
             >
               <font-awesome-icon :icon="['far', 'address-card']" />
-            </button>
+            </button> -->
           </template>
         </base-table>
       </div>
@@ -248,12 +218,13 @@ import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 import BaseTable from '@/components/table/BaseTable.vue';
-import SapeurService from '../../services/SapeurService.js';
+import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
   name: 'PageMaterielPersonnel',
   components: {
     BaseTable,
+    MaterielTypeCategorieSelect,
   },
   data() {
     return {
@@ -264,7 +235,6 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      sapeurs: [],
       fieldsNumerote: [
         {
           title: 'Materiel type',
@@ -336,52 +306,6 @@ export default {
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-    computedCategories() {
-      let indexedTypes = {};
-      this.types.forEach((t) => {
-        if (!indexedTypes[t.materiel_categorie_id])
-          indexedTypes[t.materiel_categorie_id] = [t];
-        else indexedTypes[t.materiel_categorie_id].push(t);
-      });
-      let indexedCategories = {};
-      this.categories.forEach((c) => {
-        if (!indexedCategories[c.pere_id]) indexedCategories[c.pere_id] = [c];
-        else indexedCategories[c.pere_id].push(c);
-      });
-
-      let data = [];
-
-      const recursive = (categories, level) => {
-        categories.forEach((c) => {
-          data.push({
-            ...c,
-            globalId: 'c' + c.id,
-            type: 'categorie',
-            level: level,
-            tag: 'tag',
-          });
-
-          if (indexedCategories[c.id])
-            recursive(indexedCategories[c.id], level + 1);
-
-          indexedTypes[c.id]?.forEach((t) => {
-            data.push({
-              ...t,
-              globalId: 't' + t.id,
-              type: 'type',
-              level: level + 1,
-              tag: 'shirt',
-            });
-          });
-        });
-      };
-
-      recursive(
-        this.categories.filter((c) => !c.pere_id),
-        0
-      );
-      return data;
-    },
     computedMaterielGeneric() {
       return this.materiels
         .filter((m) => m.materiel?.uuid == null)
@@ -390,6 +314,7 @@ export default {
           ...m,
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     computedMaterielNumerote() {
@@ -400,6 +325,7 @@ export default {
           ...m,
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     indexedMaterielType() {
@@ -407,11 +333,6 @@ export default {
       this.types.forEach((t) => (index[t.id] = t));
       return index;
     },
-  },
-  beforeMount() {
-    SapeurService.getEffectif().then((effectif) => {
-      this.sapeurs = effectif;
-    });
   },
   mounted() {
     this.loading = false;
@@ -421,7 +342,9 @@ export default {
     selectSapeur(id) {
       this.selectedId = id;
     },
-
+    selectedTypes(selectedIds) {
+      this.selectedIds = selectedIds;
+    },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: value };
     },
