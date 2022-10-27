@@ -219,7 +219,7 @@ export default {
       var encodedUri = encodeURI(data);
       var link = document.createElement('a');
       link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'my_data.csv');
+      link.setAttribute('download', 'export_gestsis.csv');
       document.body.appendChild(link); // Required for FF
 
       link.click();
