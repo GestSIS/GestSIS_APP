@@ -69,7 +69,7 @@
               <th class="text-center">
                 {{
                   Object.values(occurences).reduce(
-                    (partialSum, a) => partialSum + (a?.nb ?? 0),
+                    (partialSum, a) => partialSum + (parseInt(a?.nb) ?? 0),
                     0
                   )
                 }}

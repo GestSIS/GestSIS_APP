@@ -19,46 +19,65 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+    <div class="col-12 col-sm-6 col-lg-8 col-xl-6">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Impressions</h3>
         </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedId"
-            @click="impressionStandard(selectedId)"
-          >
-            Impression
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedId"
-            @click="impressionParSapeur(selectedId)"
-          >
-            Impression par sapeur
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedId"
-            @click="impressionParCompte(selectedId)"
-          >
-            Impression par compte
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedId"
-            @click="iso20022Decompte(selectedId)"
-          >
-            Fichier de paiement (ISO20022)
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            @click="certificatsDeSalaire()"
-          >
-            Certificats de salaire
-          </button>
+        <div class="card-body row g-2">
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              :disabled="!selectedId"
+              @click="impressionStandard(selectedId)"
+            >
+              Impression
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              :disabled="!selectedId"
+              @click="impressionParSapeur(selectedId)"
+            >
+              Impression par sapeur
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              :disabled="!selectedId"
+              @click="impressionParCompte(selectedId)"
+            >
+              Impression par compte
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              :disabled="!selectedId"
+              @click="iso20022Decompte(selectedId)"
+            >
+              Fichier de paiement (ISO20022)
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              :disabled="!selectedId"
+              @click="excelAFacturer(selectedId)"
+            >
+              A facturer (Excel)
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              class="btn btn-outline-primary col-12"
+              @click="certificatsDeSalaire()"
+            >
+              Certificats de salaire
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -362,6 +381,18 @@ export default {
         this.$awn.alert(
           err?.message ||
             "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+        );
+      });
+    },
+    excelAFacturer(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
+      DecompteService.downloadExcelAFacturer(
+        decompteId,
+        `decompte_${decompte.date}_a_facturer.xlsx`
+      ).catch((err) => {
+        this.$awn.alert(
+          err?.message ||
+            "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
         );
       });
     },
