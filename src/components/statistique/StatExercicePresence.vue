@@ -231,6 +231,11 @@ export default {
           ...e,
           sapeur_id: parseInt(e.sapeur_id),
           exercice_id: parseInt(e.exercice_id),
+          convoque: parseInt(e.convoque),
+          present: parseInt(e.present),
+          remplace: parseInt(e.remplace),
+          excuse_type_id: parseInt(e.excuse_type_id),
+          amende: parseInt(e.amende),
         })),
       excuses: (state) => state.excuseType.liste,
       localites: (state) =>
