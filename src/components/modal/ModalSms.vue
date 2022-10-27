@@ -7,17 +7,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-8">
-          <base-table :fields="fields" :data="computedSapeurs">
-            <template #checkbox="{ key, value, rowData }">
-              <input
-                :id="key + '-' + rowData.id"
-                type="checkbox"
-                class="form-check-input"
-                :checked="value"
-                disabled
-              />
-            </template>
-          </base-table>
+          <base-table :fields="fields" :data="computedSapeurs" />
         </div>
         <div class="col-4">
           <base-checkbox
@@ -115,7 +105,7 @@ export default {
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
           sortKey: 'convoque',
-          slot: 'checkbox',
+          type: 'boolean',
         },
         {
           title: 'Excusé',
@@ -123,7 +113,7 @@ export default {
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
           sortKey: 'excuse',
-          slot: 'checkbox',
+          type: 'boolean',
         },
         {
           title: 'Portable',

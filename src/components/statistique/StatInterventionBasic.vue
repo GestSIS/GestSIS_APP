@@ -106,6 +106,8 @@
 import { mapState } from 'vuex';
 import store from '@/store/index';
 
+import BaseTable from '@/components/table/BaseTable.vue';
+
 async function loadData(_, next) {
   const loadInterventions = store.dispatch('fetchListeIntervention');
   const loadTypes = store.dispatch('fetchTypeInterventions');
@@ -121,6 +123,9 @@ async function loadData(_, next) {
 
 export default {
   name: 'StatInterventionBasic',
+  components: {
+    BaseTable,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

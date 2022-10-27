@@ -142,9 +142,7 @@ export default {
         {
           title: 'Date',
           field: 'date',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Ecriture',

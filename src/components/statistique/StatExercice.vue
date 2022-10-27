@@ -73,6 +73,8 @@
 import { mapState } from 'vuex';
 import store from '@/store/index';
 
+import BaseTable from '@/components/table/BaseTable.vue';
+
 async function loadData(_, next) {
   const loadExercies = store.dispatch('fetchListeExercice');
   const loadCategories = store.dispatch('fetchExerciceCategories');
@@ -84,6 +86,9 @@ async function loadData(_, next) {
 
 export default {
   name: 'StatExerciceSimple',
+  components: {
+    BaseTable,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -93,6 +98,17 @@ export default {
   data() {
     return {
       allCategories: false,
+      fields: [
+        {
+          title: 'Catégorie',
+          key: 'designation',
+        },
+        {
+          title: 'Amendable',
+          key: 'amendable',
+          type: 'boolean',
+        },
+      ],
     };
   },
   computed: {
@@ -111,9 +127,9 @@ export default {
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
     },
     filteredCategories() {
-      return this.categories.filter(
-        (c) => this.allCategories || this.categoriesOccurence[c.id]
-      );
+      return this.categories
+        .filter((c) => this.allCategories || this.categoriesOccurence[c.id])
+        .map((e) => ({ ...e, nb: this.occurences[e.id] ?? 0 }));
     },
   },
   watch: {

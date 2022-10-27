@@ -181,16 +181,6 @@
             row-selected-class="table-primary"
             @selected="selected"
           >
-            <template #checkbox="props">
-              <input
-                :id="props.key"
-                type="checkbox"
-                class="form-check-input"
-                :checked="props.rowData[props.key]"
-                disabled
-              />
-              <label class="form-check-label" :for="props.key"></label>
-            </template>
             <template #doc="props">
               <button
                 v-if="props.rowData.filename"
@@ -301,11 +291,13 @@ export default {
           title: 'Consultation',
           key: 'consultation',
           sortKey: 'consultation',
+          type: 'date',
         },
         {
           title: 'Validité',
           key: 'validite',
           sortKey: 'validite',
+          type: 'date',
         },
         {
           title: 'Designation',
@@ -318,7 +310,7 @@ export default {
           sortKey: 'accepter',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
-          slot: 'checkbox',
+          type: 'boolean',
         },
         {
           title: 'En cours',
@@ -326,7 +318,7 @@ export default {
           sortKey: 'en_cours',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
-          slot: 'checkbox',
+          type: 'boolean',
         },
         {
           title: 'Doc',

@@ -16,6 +16,7 @@
       <tr v-if="!data.length">
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
+      <!-- TODO: Replace id ? -->
       <template v-for="r in computedData" :key="'main-' + r.id">
         <tr
           :class="[
@@ -28,7 +29,21 @@
           @click="select(r)"
         >
           <td v-for="f in fields" :key="f.key" :class="f.columnClass">
+            <!-- Boolean types -->
+            <!-- TODO: Replace id ? -->
+            <input
+              v-if="f.type === 'boolean'"
+              :id="f.key + '-' + r.id"
+              type="checkbox"
+              class="form-check-input"
+              :checked="r[f.key]"
+              disabled
+            />
+            <template v-else-if="f.type === 'date'">
+              {{ new Date(r[f.key]).toLocaleDateString() }}
+            </template>
             <slot
+              v-else
               :name="f.slot"
               v-bind="{
                 key: f.key,
@@ -178,7 +193,16 @@ export default {
           .map((e) =>
             this.fields
               .filter((f) => !f.slot)
-              .map((f) => (f.formatter || this.defaultFormatter)(e[f.key], e))
+              .map((f) => {
+                switch (f.type) {
+                  case 'boolean':
+                    return e[f.key] ? 'vrai' : 'faux';
+                  case 'date':
+                    return new Date(e[f.key]).toLocaleDateString();
+                  default:
+                    return (f.formatter || this.defaultFormatter)(e[f.key], e);
+                }
+              })
               .join(';')
           )
           .join('\n');
