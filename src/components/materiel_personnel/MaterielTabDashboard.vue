@@ -1,16 +1,16 @@
 <template>
   <div class="row">
+    <div class="col-3">
+      <div class="card card-primary card-outline mb-2 table-responsive">
+        <div class="card-header">
+          <h5>Filtre matériel type</h5>
+        </div>
+        <materiel-type-categorie-select @change="selectedTypes" />
+      </div>
+    </div>
     <div class="col-9">
       <div class="row">
-        <div class="col-md-4">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Actions</h5>
-            </div>
-            <div class="card-body d-grid gap-2"></div>
-          </div>
-        </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
@@ -107,85 +107,13 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-4">
-          <div class="card card-primary card-outline mb-5 table-responsive">
-            <div class="card-header">
-              <h5>Filtre Matériel type</h5>
-            </div>
-            <materiel-type-categorie-select @change="selectedTypes" />
-          </div>
+        <div class="col-6">
+          <materiel-alertes />
         </div>
-        <div class="col-md-8">
-          <div class="card card-primary card-outline mb-5 table-responsive">
-            <div v-if="loading" class="card-body d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
-            <base-table
-              v-show="!loading"
-              :selectable="true"
-              select-key="id"
-              row-selected-class="table-primary"
-              :fields="fieldsBase"
-              no-data="Aucun sapeur à afficher"
-              :data="filteredSapeurs"
-              @selected="selectSapeur"
-            >
-              <template #foot>
-                <tr>
-                  <th :colspan="fieldsBase.length">
-                    Nombre sapeurs : {{ filteredSapeurs.length }} /
-                    {{ computedData.length }}
-                  </th>
-                </tr>
-              </template>
-              <template #checkbox="{ key, value, rowData }">
-                <input
-                  :id="key + '-' + rowData.id"
-                  type="checkbox"
-                  class="form-check-input"
-                  :checked="value"
-                  disabled
-                />
-              </template>
-              <template #actions="props">
-                <router-link
-                  v-if="hasSapeurModificationPermission"
-                  v-slot="{ navigate }"
-                  :to="'/sapeurs/' + props.rowData.id"
-                  custom
-                >
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="navigate"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                </router-link>
-                <a
-                  class="btn btn-outline-primary border-0"
-                  :href="'mailto:' + props.rowData.email"
-                >
-                  <font-awesome-icon :icon="['fas', 'envelope']" />
-                </a>
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="vcard([props.rowData])"
-                >
-                  <font-awesome-icon :icon="['far', 'address-card']" />
-                </button>
-              </template>
-            </base-table>
-          </div>
+        <div class="col-6">
+          <materiel-a-recuperer />
         </div>
       </div>
-    </div>
-    <div class="col-3">
-      <materiel-alertes />
-      <materiel-a-recuperer />
     </div>
   </div>
 </template>
@@ -194,7 +122,6 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
 import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../../services/SapeurService.js';
@@ -203,7 +130,6 @@ import MaterielTypeCategorieSelect from '@/components/materiel_personnel/Materie
 export default {
   name: 'PageMaterielPersonnel',
   components: {
-    BaseTable,
     MaterielARecuperer,
     MaterielAlertes,
     MaterielTypeCategorieSelect,
