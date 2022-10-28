@@ -267,7 +267,16 @@ export default {
         }))
         .filter((m) => this.selectedIds.type[m.materiel_type_id])
         .filter((m) =>
-          m.sapeur.toLowerCase().includes(this.filtreSapeur.toLowerCase())
+          m.sapeur
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              this.filtreSapeur
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+            )
         )
         .filter((m) =>
           m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
@@ -285,7 +294,16 @@ export default {
         }))
         .filter((m) => this.selectedIds.type[m.materiel_type_id])
         .filter((m) =>
-          m.sapeur.toLowerCase().includes(this.filtreSapeur.toLowerCase())
+          m.sapeur
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              this.filtreSapeur
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+            )
         )
         .filter((m) =>
           m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())

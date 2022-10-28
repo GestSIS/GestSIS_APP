@@ -307,10 +307,6 @@ export default {
       const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
     },
-    // filteredCours() {
-    //   const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
-    //   return this.localites.filter((t) => ids.has(t.id));
-    // },
     filteredFonctions() {
       const ids = new Set(
         this.sapeurs
