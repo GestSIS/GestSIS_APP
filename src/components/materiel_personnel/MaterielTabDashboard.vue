@@ -2,34 +2,15 @@
   <div class="row">
     <div class="col-9">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Actions</h5>
             </div>
-            <div class="card-body d-grid gap-2">
-              <button
-                class="btn btn-outline-primary"
-                @click="vcard(filteredSapeurs)"
-              >
-                VCard tous
-              </button>
-              <a
-                :disabled="filteredSapeurs.length == 0"
-                :href="
-                  'mailto:?bcc=' +
-                  filteredSapeurs
-                    .map((s) => s.email)
-                    .filter((s) => s && s != null)
-                    .join(',')
-                "
-                class="btn btn-outline-primary"
-                >Email groupé</a
-              >
-            </div>
+            <div class="card-body d-grid gap-2"></div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
@@ -128,45 +109,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3">
+        <div class="col-4">
           <div class="card card-primary card-outline mb-5 table-responsive">
             <div class="card-header">
-              <h5>Matériel type</h5>
+              <h5>Filtre Matériel type</h5>
             </div>
-            <table class="table table-sm table-hover table-striped">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Designation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-if="computedCategories.length <= 0">
-                  <td colspan="3">Aucune catégorie</td>
-                </tr>
-                <tr v-for="item in computedCategories" :key="item.globalId">
-                  <!-- @click="select(item.globalId)" -->
-                  <td class="text-center">
-                    <input
-                      v-model="selectedIds[item.type][item.id]"
-                      type="checkbox"
-                      class="form-check-input"
-                      @change="select(item, $event)"
-                    />
-                  </td>
-                  <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-                    <font-awesome-icon
-                      class="me-2 ms-2"
-                      :icon="['fas', item.tag]"
-                    />
-                    {{ item.designation }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <materiel-type-categorie-select @change="selectedTypes" />
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
           <div class="card card-primary card-outline mb-5 table-responsive">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
@@ -247,6 +198,7 @@ import BaseTable from '@/components/table/BaseTable.vue';
 import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
 import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../../services/SapeurService.js';
+import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
   name: 'PageMaterielPersonnel',
@@ -254,6 +206,7 @@ export default {
     BaseTable,
     MaterielARecuperer,
     MaterielAlertes,
+    MaterielTypeCategorieSelect,
   },
   data() {
     return {
@@ -483,7 +436,9 @@ export default {
     selectSapeur(id) {
       this.selectedId = id;
     },
-
+    selectedTypes(selectedIds) {
+      this.selectedIds = selectedIds;
+    },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: value };
     },

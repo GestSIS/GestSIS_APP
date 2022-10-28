@@ -58,7 +58,7 @@
         >
           <template #foot>
             <tr>
-              <th colspan="2">Total</th>
+              <th colspan="3">Total</th>
               <th>
                 {{
                   computedData

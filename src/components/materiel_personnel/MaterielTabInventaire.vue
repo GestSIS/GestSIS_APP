@@ -1,128 +1,63 @@
 <template>
   <div class="row">
-    <div class="col-md-3">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Actions</h5>
-        </div>
-        <div class="card-body d-grid gap-2">
-          <button class="btn btn-outline-primary">
-            <!-- @click="vcard(filteredSapeurs)" -->
-            VCard tous
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-9">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Filtres</h5>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4">
-              <!-- <select
-                class="form-select form-select-sm"
-                @change="
-                  (event) =>
-                    onFilter(
-                      'fonctions',
-                      parseInt(event.target.value)
-                        ? (fonctions) =>
-                            fonctions.find(
-                              (f) => f.fonction_id == event.target.value
-                            ) != undefined
-                        : null
-                    )
-                "
-              >
-                <option>&lt;Fonction&gt;</option>
-                <option
-                  v-for="f in filteredFonctions"
-                  :key="f.id"
-                  :value="f.id"
-                >
-                  {{ f.nom }}
-                </option>
-              </select> -->
-            </div>
-            <div class="col-md-4">
-              <!-- <select
-                class="form-select form-select-sm"
-                @change="(event) => onFilter('grade_id', event.target.value)"
-              >
-                <option>&lt;Grade&gt;</option>
-                <option v-for="f in filteredGrades" :key="f.id" :value="f.id">
-                  {{ f.designation }}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select
-                class="form-select form-select-sm"
-                @change="
-                  (event) =>
-                    onFilter(
-                      'groupes',
-                      parseInt(event.target.value)
-                        ? (groupes) =>
-                            groupes.find(
-                              (f) => f.groupe_id == event.target.value
-                            ) != undefined
-                        : undefined
-                    )
-                "
-              >
-                <option :value="undefined">&lt;Groupe&gt;</option>
-                <option v-for="f in filteredGroupes" :key="f.id" :value="f.id">
-                  {{ (f.no ? f.no + ' ' : '') + f.designation }}
-                </option>
-              </select> -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-2">
-      <div class="card card-primary card-outline mb-5 table-responsive">
+    <div class="col-3">
+      <div class="card card-primary card-outline mb-2 table-responsive">
         <div class="card-header">
-          <h5>Filtre Matériel type</h5>
+          <h5>Filtre matériel type</h5>
         </div>
         <materiel-type-categorie-select @change="selectedTypes" />
       </div>
     </div>
-    <div class="col-md-5">
-      <div class="card card-primary card-outline mb-5 table-responsive">
-        <div class="card-header">
-          <h4>Matériel numéroté</h4>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <input
+                    v-model="filtreNumero"
+                    type="text"
+                    placeholder="Numéro"
+                    class="form-control form-control-sm"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <input
+                    v-model="filtreTaille"
+                    type="text"
+                    placeholder="Taille"
+                    class="form-control form-control-sm"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
-          :fields="fieldsNumerote"
-          no-data="Aucun sapeur à afficher"
-          :data="computedMaterielNumerote"
-        >
-          <template #checkbox="{ key, value, rowData }">
-            <input
-              :id="key + '-' + rowData.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="value"
-              disabled
-            />
-          </template>
-          <template #actions="props">
-            <!-- <router-link
+        <div class="col-md-6">
+          <div class="card card-primary card-outline mb-2 table-responsive">
+            <div class="card-header">
+              <h4>Matériel numéroté</h4>
+            </div>
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              select-key="id"
+              row-selected-class="table-primary"
+              :fields="fieldsNumerote"
+              no-data="Aucun sapeur à afficher"
+              :data="computedMaterielNumerote"
+            >
+              <!-- <template #actions="props">
+            <router-link
               v-if="hasSapeurModificationPermission"
               v-slot="{ navigate }"
               :to="'/sapeurs/' + props.rowData.id"
@@ -146,42 +81,33 @@
               @click="vcard([props.rowData])"
             >
               <font-awesome-icon :icon="['far', 'address-card']" />
-            </button> -->
-          </template>
-        </base-table>
-      </div>
-    </div>
-    <div class="col-md-5">
-      <div class="card card-primary card-outline mb-5 table-responsive">
-        <div class="card-header">
-          <h4>Matériel générique</h4>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+            </button>
+          </template> -->
+            </base-table>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
-          :fields="fieldsGeneric"
-          no-data="Aucun sapeur à afficher"
-          :data="computedMaterielGeneric"
-          @selected="selectSapeur"
-        >
-          <template #checkbox="{ key, value, rowData }">
-            <input
-              :id="key + '-' + rowData.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="value"
-              disabled
-            />
-          </template>
-          <template #actions="props">
-            <!-- <router-link
+        <div class="col-md-6">
+          <div class="card card-primary card-outline mb-2 table-responsive">
+            <div class="card-header">
+              <h4>Matériel générique</h4>
+            </div>
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              select-key="id"
+              row-selected-class="table-primary"
+              :fields="fieldsGeneric"
+              no-data="Aucun sapeur à afficher"
+              :data="computedMaterielGeneric"
+              @selected="selectSapeur"
+            >
+              <!-- <template #actions="props">
+            <router-link
               v-if="hasSapeurModificationPermission"
               v-slot="{ navigate }"
               :to="'/sapeurs/' + props.rowData.id"
@@ -205,9 +131,11 @@
               @click="vcard([props.rowData])"
             >
               <font-awesome-icon :icon="['far', 'address-card']" />
-            </button> -->
-          </template>
-        </base-table>
+            </button>
+          </template> -->
+            </base-table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -228,6 +156,8 @@ export default {
   },
   data() {
     return {
+      filtreTaille: '',
+      filtreNumero: '',
       selectedIds: {
         type: {},
         categorie: {},
@@ -315,6 +245,9 @@ export default {
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
         .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter((m) =>
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     computedMaterielNumerote() {
@@ -326,6 +259,12 @@ export default {
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
         .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter((m) =>
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+        )
+        .filter((m) =>
+          m.numero.toLowerCase().includes(this.filtreNumero.toLowerCase())
+        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     indexedMaterielType() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mb-5 table-responsive">
+  <div class="card card-primary card-outline mb-2 table-responsive">
     <div class="card-header d-flex justify-content-between">
       <h5>Alertes</h5>
     </div>

@@ -130,8 +130,8 @@ export default {
     },
     select(item, event) {
       const selected = event.target.checked;
+      const categorieIds = new Set(item.type === 'categorie' ? [item.id] : []);
 
-      const categorieIds = new Set([item.id]);
       this.computedData.forEach((e) => {
         if (e.type === 'categorie' && categorieIds.has(parseInt(e.pere_id))) {
           categorieIds.add(e.id);

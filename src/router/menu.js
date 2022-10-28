@@ -55,7 +55,7 @@ const links = [
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
   {
-    to: { name: 'materiel-personnel' },
+    to: { name: 'mat-perso-dashboard' },
     icon: 'shirt',
     nom: 'Matériel personel',
     permission: permissions.MATERIEL_PERSONNEL.LECTURE,

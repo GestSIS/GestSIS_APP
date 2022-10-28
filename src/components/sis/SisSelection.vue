@@ -3,9 +3,7 @@
     <hr class="bg-secondary" />
     <div class="info">
       <div class="mb-3">
-        <!--<label class="input-group-text" for="inputGroupSelect01">Options</label>-->
         <select
-          id="inputGroupSelect01"
           v-model="sisId"
           class="form-select form-select-sm"
           @change="selectSis($event)"
