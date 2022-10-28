@@ -319,9 +319,7 @@ export default {
           title: 'Date',
           key: 'date',
           sortKey: 'date',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Categorie',

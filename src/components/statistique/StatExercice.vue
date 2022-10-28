@@ -18,49 +18,24 @@
           </div>
         </div>
         <div class="card-body">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Catégorie</th>
-                <th class="text-center">Amendable</th>
-                <th class="text-center">Nombre</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="filteredCategories.length <= 0">
-                <td colspan="3">Aucun exercice pour l'instant</td>
-              </tr>
-              <tr v-for="c in filteredCategories" :key="c.id">
-                <td>{{ c.designation }}</td>
-                <td class="text-center">
-                  <input
-                    :id="'amendable' + c.id"
-                    type="checkbox"
-                    class="form-check-input"
-                    :checked="c.amendable"
-                    disabled
-                  />
-                  <label
-                    class="form-check-label"
-                    :for="'amendable' + c.id"
-                  ></label>
-                </td>
-                <td class="text-center">
-                  {{ categoriesOccurence[c.id] || 0 }}
-                </td>
-              </tr>
-            </tbody>
-            <thead>
+          <base-table
+            :fields="fields"
+            :data="filteredCategories"
+            no-data="Aucun exercice pour l'instant"
+            :selectable="true"
+            select-key="id"
+            row-selected-class="table-primary"
+          >
+            <template #foot>
               <tr>
                 <th colspan="2">Total :</th>
                 <th class="text-center">{{ exercices.length }}</th>
               </tr>
-            </thead>
-          </table>
+            </template>
+          </base-table>
           <!-- <h4>TODO:</h4>
           <ul>
             <li>Graphique d'un simple tableau</li>
-            <li>Exporter dans Excel</li>
             <li>Répartition des exercices durant l'année -> graph</li>
           </ul> -->
         </div>
@@ -73,6 +48,8 @@
 import { mapState } from 'vuex';
 import store from '@/store/index';
 
+import BaseTable from '@/components/table/BaseTable.vue';
+
 async function loadData(_, next) {
   const loadExercies = store.dispatch('fetchListeExercice');
   const loadCategories = store.dispatch('fetchExerciceCategories');
@@ -84,6 +61,9 @@ async function loadData(_, next) {
 
 export default {
   name: 'StatExerciceSimple',
+  components: {
+    BaseTable,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -93,6 +73,25 @@ export default {
   data() {
     return {
       allCategories: false,
+      fields: [
+        {
+          title: 'Catégorie',
+          key: 'designation',
+        },
+        {
+          title: 'Amendable',
+          key: 'amendable',
+          type: 'boolean',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Nombre',
+          key: 'nb',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+      ],
     };
   },
   computed: {
@@ -111,9 +110,9 @@ export default {
         .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
     },
     filteredCategories() {
-      return this.categories.filter(
-        (c) => this.allCategories || this.categoriesOccurence[c.id]
-      );
+      return this.categories
+        .filter((c) => this.allCategories || this.categoriesOccurence[c.id])
+        .map((e) => ({ ...e, nb: this.categoriesOccurence[e.id] ?? 0 }));
     },
   },
   watch: {

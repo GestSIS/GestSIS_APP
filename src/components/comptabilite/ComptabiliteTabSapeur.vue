@@ -142,9 +142,7 @@ export default {
         {
           title: 'Date',
           field: 'date',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Ecriture',
@@ -202,6 +200,7 @@ export default {
           title: 'Total',
           key: 'total',
           sortField: 'total',
+          formatter: (t) => parseFloat(t).toFixed(2),
         },
         {
           title: 'Actions',

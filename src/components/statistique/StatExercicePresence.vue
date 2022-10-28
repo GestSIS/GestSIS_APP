@@ -152,6 +152,11 @@
               </tr>
             </thead>
           </table>
+          <div class="d-grid gap-2 d-md-block m-2">
+            <button class="btn" title="Export CSV" @click="toCvs">
+              <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
+            </button>
+          </div>
           <!-- <h4>TODO:</h4>
           <ul>
             <li>Exporter dans Excel</li>
@@ -226,7 +231,17 @@ export default {
           return map;
         }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
-      presences: (state) => state.statistique.presences,
+      presences: (state) =>
+        state.statistique.presences.map((e) => ({
+          ...e,
+          sapeur_id: parseInt(e.sapeur_id),
+          exercice_id: parseInt(e.exercice_id),
+          convoque: parseInt(e.convoque),
+          present: parseInt(e.present),
+          remplace: parseInt(e.remplace),
+          excuse_type_id: parseInt(e.excuse_type_id),
+          amende: parseInt(e.amende),
+        })),
       excuses: (state) => state.excuseType.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
@@ -380,6 +395,28 @@ export default {
       }
       return prefix + '-';
     },
+    formatPresenceExport(presence) {
+      if (!presence) {
+        return '';
+      }
+      let prefix = '';
+      if (!presence.convoque) {
+        prefix = 'Pour information';
+      }
+      if (presence.present) {
+        return prefix + 'Présent';
+      }
+      if (presence.remplace) {
+        return prefix + 'Remplacé';
+      }
+      if (presence.excuse_type_id) {
+        const excuse = this.excuses.find(
+          (e) => e.id == presence.excuse_type_id
+        );
+        return prefix + excuse?.designation;
+      }
+      return prefix + '-';
+    },
     formatPresenceClass(presence) {
       if (!presence) {
         return '';
@@ -402,6 +439,59 @@ export default {
     },
     formatLocalite(localiteId) {
       return this.localites.find((l) => l.id == localiteId)?.designation;
+    },
+    toCvs() {
+      // TODO: Migrate to BaseTable and remove duplicates
+      const data =
+        'data:text/csv;charset=utf-8,\ufeff' +
+        [
+          'Sapeur',
+          'Localité',
+          'Fonction',
+          ...this.displayExercice.map((e) => e.designation),
+          'Nombre Convoqué',
+          'Nombre Présent',
+          'Nombre Remplacé',
+          'Nombre excusé',
+          'Nombre absent',
+        ].join(';') +
+        '\n' +
+        this.computedData
+          .map((s) =>
+            [
+              `${s.nom} ${s.prenom}`,
+              this.formatLocalite(s.localite_id),
+              this.formatFonction(s.fonction_id),
+              ...s.presences.map((p) => this.formatPresenceExport(p)),
+              s.stats.convoque,
+              s.stats.present,
+              s.stats.remplace,
+              s.stats.excuse,
+              s.stats.amende,
+            ].join(';')
+          )
+          .join('\n') +
+        '\n' +
+        [
+          `Total : ${this.exercices.length}`,
+          '',
+          '',
+          ...this.displayExercice.map(() => ''),
+          this.computedStats.convoque,
+          this.computedStats.present,
+          this.computedStats.remplace,
+          this.computedStats.excuse,
+          this.computedStats.amende,
+        ].join(';');
+
+      // V2
+      var encodedUri = encodeURI(data);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'statistiques_presences.csv');
+      document.body.appendChild(link); // Required for FF
+
+      link.click();
     },
   },
 };

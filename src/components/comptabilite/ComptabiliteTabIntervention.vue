@@ -126,15 +126,6 @@
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
-          <template #checkbox="{ key, value, rowData }">
-            <input
-              :id="key + '-' + rowData.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="value"
-              disabled
-            />
-          </template>
         </base-table>
       </div>
     </div>
@@ -235,7 +226,7 @@ export default {
           field: 'tarif_min_pro_rata',
           headerClassName: 'text-center',
           className: 'text-center',
-          slot: 'checkbox',
+          type: 'boolean',
         },
         {
           title: 'Unité',
@@ -279,9 +270,7 @@ export default {
           title: 'Date',
           key: 'date_debut',
           sortKey: 'date_debut',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Heure',

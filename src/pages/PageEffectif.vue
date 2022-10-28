@@ -158,15 +158,6 @@
                 </th>
               </tr>
             </template>
-            <template #checkbox="{ key, value, rowData }">
-              <input
-                :id="key + '-' + rowData.id"
-                type="checkbox"
-                class="form-check-input"
-                :checked="value"
-                disabled
-              />
-            </template>
             <template #actions="props">
               <router-link
                 v-if="hasSapeurModificationPermission"
@@ -260,7 +251,7 @@ export default {
           title: 'PAR',
           key: 'porteur',
           sortKey: 'porteur',
-          slot: 'checkbox',
+          type: 'boolean',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
         },
@@ -268,7 +259,7 @@ export default {
           title: 'B',
           key: 'b',
           sortKey: 'b',
-          slot: 'checkbox',
+          type: 'boolean',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
         },
@@ -276,7 +267,7 @@ export default {
           title: 'C1',
           key: 'c1',
           sortKey: 'c1',
-          slot: 'checkbox',
+          type: 'boolean',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
         },
@@ -284,7 +275,7 @@ export default {
           title: 'C1 118',
           key: 'c1_118',
           sortKey: 'c1_118',
-          slot: 'checkbox',
+          type: 'boolean',
           titleClass: 'text-center',
           columnClass: 'align-middle text-center',
         },
@@ -317,9 +308,7 @@ export default {
           title: 'Naissance',
           key: 'date_naissance',
           sortKey: 'date_naissance',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Actions',

@@ -295,9 +295,7 @@ export default {
           key: 'date_debut',
           dataClass: 'align-middle',
           sortKey: 'date_debut',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Heure',

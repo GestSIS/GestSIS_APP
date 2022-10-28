@@ -1,21 +1,24 @@
 <template>
   <table class="table table-sm table-hover mb-0">
-    <thead>
-      <tr>
-        <th
-          v-for="f in fields"
-          :key="f.key"
-          :class="f.titleClass"
-          @click="sort(f)"
-        >
-          {{ f.title }}
-        </th>
-      </tr>
-    </thead>
+    <slot name="head">
+      <thead>
+        <tr>
+          <th
+            v-for="f in fields"
+            :key="f.key"
+            :class="f.titleClass"
+            @click="sort(f)"
+          >
+            {{ f.title }}
+          </th>
+        </tr>
+      </thead>
+    </slot>
     <tbody>
       <tr v-if="!data.length">
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
+      <!-- TODO: Replace id ? -->
       <template v-for="r in computedData" :key="'main-' + r.id">
         <tr
           :class="[
@@ -28,7 +31,23 @@
           @click="select(r)"
         >
           <td v-for="f in fields" :key="f.key" :class="f.columnClass">
+            <!-- Boolean types -->
+            <!-- TODO: Replace id ? -->
+            <input
+              v-if="f.type === 'boolean'"
+              :id="f.key + '-' + r.id"
+              type="checkbox"
+              class="form-check-input"
+              :checked="r[f.key]"
+              disabled
+            />
+            <!-- Date types -->
+            <template v-else-if="f.type === 'date'">
+              {{ new Date(r[f.key]).toLocaleDateString() }}
+            </template>
+            <!-- No type -->
             <slot
+              v-else
               :name="f.slot"
               v-bind="{
                 key: f.key,
@@ -68,6 +87,11 @@
       <slot name="foot"></slot>
     </tfoot>
   </table>
+  <div class="d-grid gap-2 d-md-block m-2">
+    <button class="btn" title="Export CSV" @click="toCvs">
+      <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
+    </button>
+  </div>
 </template>
 
 <script>
@@ -161,6 +185,45 @@ export default {
     },
   },
   methods: {
+    toCvs() {
+      const data =
+        'data:text/csv;charset=utf-8,\ufeff' +
+        this.fields
+          .filter((f) => !f.slot)
+          .map((f) => f.title)
+          .join(';') +
+        '\n' +
+        this.computedData
+          .map((e) =>
+            this.fields
+              .filter((f) => !f.slot)
+              .map((f) => {
+                switch (f.type) {
+                  case 'boolean':
+                    return e[f.key] ? 'vrai' : 'faux';
+                  case 'date':
+                    return new Date(e[f.key]).toLocaleDateString();
+                  default:
+                    return (f.formatter || this.defaultFormatter)(e[f.key], e);
+                }
+              })
+              .join(';')
+          )
+          .join('\n');
+
+      // V1
+      // const encodedUri = encodeURI(data);
+      // window.open(encodedUri);
+
+      // V2
+      var encodedUri = encodeURI(data);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'export_gestsis.csv');
+      document.body.appendChild(link); // Required for FF
+
+      link.click();
+    },
     sort(field) {
       if (field.sortKey) {
         if (this.sorted.key === field.sortKey) {

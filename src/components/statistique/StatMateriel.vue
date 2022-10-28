@@ -17,25 +17,14 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Matériel</th>
-              <th class="text-center">Quantité utilisée</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="filteredMateriel.length <= 0">
-              <td colspan="2">Aucun matériel utilisé</td>
-            </tr>
-            <tr v-for="e in filteredMateriel" :key="e.id">
-              <td>{{ e.designation }}</td>
-              <td class="text-center">
-                {{ occurences[e.id] || 0 }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table
+          :fields="fields"
+          :data="filteredMateriel"
+          no-data="Aucun matériel utilisé"
+          :selectable="true"
+          select-key="id"
+          row-selected-class="table-primary"
+        />
       </div>
     </div>
   </div>
@@ -44,11 +33,26 @@
 <script>
 import { mapState } from 'vuex';
 
+import BaseTable from '@/components/table/BaseTable.vue';
+
 export default {
   name: 'StatMateriel',
+  components: {
+    BaseTable,
+  },
   data() {
     return {
       allMateriels: false,
+      fields: [
+        {
+          title: 'Matériel',
+          key: 'designation',
+        },
+        {
+          title: 'Quantité utilisé',
+          key: 'quantite',
+        },
+      ],
     };
   },
   computed: {
@@ -65,9 +69,9 @@ export default {
       );
     },
     filteredMateriel() {
-      return this.materiels.filter(
-        (e) => this.allMateriels || this.occurences[e.id]
-      );
+      return this.materiels
+        .filter((e) => this.allMateriels || this.occurences[e.id])
+        .map((e) => ({ ...e, quantite: this.occurences[e.id] ?? 0 }));
     },
   },
 };

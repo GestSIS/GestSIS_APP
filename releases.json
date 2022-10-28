@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "27.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité d'exporter les données des tables au format `CSV` (supporté par Excel)"
+      ]
+    },
+    {
       "date": "26.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",

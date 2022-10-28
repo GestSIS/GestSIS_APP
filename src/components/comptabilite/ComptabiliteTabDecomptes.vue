@@ -117,15 +117,6 @@
               />
             </button>
           </template>
-          <template #checkbox="{ key, value, rowData }">
-            <input
-              :id="key + '-' + rowData.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="value"
-              disabled
-            />
-          </template>
           <template #actions="{ value }">
             <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
@@ -255,9 +246,7 @@ export default {
           title: 'Date',
           key: 'date',
           sortKey: 'date',
-          formatter(value) {
-            return new Date(value).toLocaleDateString();
-          },
+          type: 'date',
         },
         {
           title: 'Total',
@@ -269,7 +258,7 @@ export default {
           titleClass: 'text-center',
           key: 'deduction',
           sortKey: 'deduction',
-          slot: 'checkbox',
+          type: 'boolean',
           columnClass: 'align-middle text-center',
         },
         {

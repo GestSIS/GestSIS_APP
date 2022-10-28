@@ -17,8 +17,15 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-sm">
-          <thead>
+        <base-table
+          :fields="fields"
+          :data="filteredData"
+          no-data="Aucune intervention"
+          :selectable="true"
+          select-key="id"
+          row-selected-class="table-primary"
+        >
+          <template #head>
             <tr>
               <th>
                 <select
@@ -43,27 +50,8 @@
                 Heures
               </th>
             </tr>
-          </thead>
-          <tbody>
-            <tr v-if="filteredData.length <= 0">
-              <td colspan="2">Aucune intervention</td>
-            </tr>
-            <tr v-for="e in filteredData" :key="e.id">
-              <td>{{ e.designation }}</td>
-              <td class="text-center">
-                {{ occurences[e.id]?.nb ?? 0 }}
-              </td>
-              <td
-                v-if="displayKey != 'statistiquesInterventionTraitement'"
-                class="text-center"
-              >
-                {{
-                  Number.parseFloat(occurences[e.id]?.heures ?? 0)?.toFixed(2)
-                }}
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
+          </template>
+          <template #foot>
             <tr>
               <th>Total :</th>
               <th class="text-center">
@@ -89,12 +77,11 @@
                 }}
               </th>
             </tr>
-          </tfoot>
-        </table>
+          </template>
+        </base-table>
         <!-- <h4>TODO:</h4>
           <ul>
             <li>Graphique d'un simple tableau</li>
-            <li>Exporter dans Excel</li>
             <li>Répartition des interventions durant l'année -> graph</li>
           </ul> -->
       </div>
@@ -105,6 +92,8 @@
 <script>
 import { mapState } from 'vuex';
 import store from '@/store/index';
+
+import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadInterventions = store.dispatch('fetchListeIntervention');
@@ -121,6 +110,9 @@ async function loadData(_, next) {
 
 export default {
   name: 'StatInterventionBasic',
+  components: {
+    BaseTable,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -169,8 +161,32 @@ export default {
       return mapping[this.displayKey];
     },
     filteredData() {
-      return this.groupingData.filter(
-        (e) => this.allCategories || this.occurences[e.id]
+      return this.groupingData
+        .filter((e) => this.allCategories || this.occurences[e.id])
+        .map((e) => ({ ...e, nb: this.occurences[e.id]?.nb ?? 0 }));
+    },
+    fields() {
+      return [
+        {
+          title: this.grouping[this.displayKey],
+          key: 'designation',
+        },
+        {
+          title: 'Nombre',
+          key: 'nb',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Heures',
+          key: 'heures',
+          formatter: (value) => Number.parseFloat(value ?? 0)?.toFixed(2),
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+      ].slice(
+        0,
+        this.displayKey != 'statistiquesInterventionTraitement' ? 3 : 2
       );
     },
   },
