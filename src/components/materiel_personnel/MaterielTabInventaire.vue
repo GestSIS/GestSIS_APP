@@ -149,7 +149,7 @@ import BaseTable from '@/components/table/BaseTable.vue';
 import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
-  name: 'PageMaterielPersonnel',
+  name: 'MaterielTabInventaire',
   components: {
     BaseTable,
     MaterielTypeCategorieSelect,

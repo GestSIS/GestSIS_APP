@@ -273,7 +273,9 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
           meta: {},
           component: () =>
-            import('@/components/materiel_personnel/MaterielTab.vue'),
+            import(
+              '@/components/materiel_personnel/MaterielTabAttribution.vue'
+            ),
         },
         {
           path: 'inventaire',
