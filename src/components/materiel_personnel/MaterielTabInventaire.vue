@@ -181,6 +181,11 @@ export default {
           key: 'numero',
           sortKey: 'numero',
         },
+        {
+          title: 'Remarque',
+          key: 'remarque',
+          sortKey: 'remarque',
+        },
         // {
         //   title: 'Nb lavages',
         //   key: 'lavage',
@@ -209,6 +214,11 @@ export default {
           title: 'Quantité',
           key: 'quantite',
           sortKey: 'quantite',
+        },
+        {
+          title: 'Remarque',
+          key: 'remarque',
+          sortKey: 'remarque',
         },
         {
           title: 'Actions',
