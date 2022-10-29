@@ -456,6 +456,20 @@ export default {
           'Nombre absent',
         ].join(';') +
         '\n' +
+        [
+          '',
+          '',
+          '',
+          ...this.displayExercice.map((e) =>
+            new Date(e.date).toLocaleDateString()
+          ),
+          '',
+          '',
+          '',
+          '',
+          '',
+        ].join(';') +
+        '\n' +
         this.computedData
           .map((s) =>
             [
