@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "29.10.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un bug d'affichage du nombre d'heures pour les statistiques",
+        "Ajout du champ `date` pour les statistiques de présence aux exercices"
+      ]
+    },
+    {
       "date": "27.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",

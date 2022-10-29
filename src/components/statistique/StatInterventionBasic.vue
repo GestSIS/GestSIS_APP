@@ -163,7 +163,11 @@ export default {
     filteredData() {
       return this.groupingData
         .filter((e) => this.allCategories || this.occurences[e.id])
-        .map((e) => ({ ...e, nb: this.occurences[e.id]?.nb ?? 0 }));
+        .map((e) => ({
+          ...e,
+          nb: this.occurences[e.id]?.nb ?? 0,
+          heures: this.occurences[e.id]?.heures ?? 0,
+        }));
     },
     fields() {
       return [
