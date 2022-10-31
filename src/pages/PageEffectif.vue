@@ -395,7 +395,7 @@ export default {
     filteredFonctions() {
       const ids = new Set(
         this.sapeurs
-          .map((s) => s.fonctions.map((f) => f.fonction_id))
+          .map((s) => s.fonctions.map((f) => parseInt(f.fonction_id)))
           .reduce((acc, e) => [...acc, ...e], [])
       );
       return this.fonctions.filter((e) => ids.has(e.id));
