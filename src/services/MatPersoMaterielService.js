@@ -11,6 +11,6 @@ export default {
     return Api.api().post('/mat-perso/attribuer', { attributions: materiels });
   },
   retour(materiels) {
-    return Api.api().post('/mat-perso/retour', { data: materiels });
+    return Api.api().post('/mat-perso/retour', materiels);
   },
 };

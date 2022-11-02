@@ -64,33 +64,15 @@
               no-data="Aucun sapeur à afficher"
               :data="computedMaterielNumerote"
             >
-              <!-- <template #actions="props">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                v-slot="{ navigate }"
-                :to="'/sapeurs/' + props.rowData.id"
-                custom
-              >
+              <template #actions="props">
                 <button
+                  title="Attribuer"
                   class="btn btn-outline-primary border-0"
-                  @click="navigate"
+                  @click="retourSimple(props.rowData)"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
                 </button>
-              </router-link>
-              <a
-                class="btn btn-outline-primary border-0"
-                :href="'mailto:' + props.rowData.email"
-              >
-                <font-awesome-icon :icon="['fas', 'envelope']" />
-              </a>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="vcard([props.rowData])"
-              >
-                <font-awesome-icon :icon="['far', 'address-card']" />
-              </button>
-            </template> -->
+              </template>
             </base-table>
           </div>
         </div>
@@ -114,33 +96,15 @@
               :data="computedMaterielGeneric"
               @selected="selectSapeur"
             >
-              <!-- <template #actions="props">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                v-slot="{ navigate }"
-                :to="'/sapeurs/' + props.rowData.id"
-                custom
-              >
+              <template #actions="props">
                 <button
+                  title="Attribuer"
                   class="btn btn-outline-primary border-0"
-                  @click="navigate"
+                  @click="retourSimple(props.rowData)"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
                 </button>
-              </router-link>
-              <a
-                class="btn btn-outline-primary border-0"
-                :href="'mailto:' + props.rowData.email"
-              >
-                <font-awesome-icon :icon="['fas', 'envelope']" />
-              </a>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="vcard([props.rowData])"
-              >
-                <font-awesome-icon :icon="['far', 'address-card']" />
-              </button>
-            </template> -->
+              </template>
             </base-table>
           </div>
         </div>
@@ -339,6 +303,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    retourSimple(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalRetourUnique',
+        data: materiel,
+      });
+    },
     selectSapeur(id) {
       this.selectedId = id;
     },
