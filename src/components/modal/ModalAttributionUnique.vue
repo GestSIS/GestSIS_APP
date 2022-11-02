@@ -12,7 +12,7 @@
           v-model="activeAttribution.date"
           type="date"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date'] }"
+          :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
       <div v-if="data?.materiel?.quantite" class="mb-3">
@@ -22,7 +22,7 @@
           v-model="activeAttribution.quantite"
           type="number"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['quantite'] }"
+          :class="{ 'is-invalid': errors['attributions.0.quantite'] }"
           min="1"
           @focusout="quantiteChange"
         />
@@ -34,7 +34,7 @@
         label="Sapeur"
         display-key="nom_prenom"
         :options="sapeurs"
-        :select-class="{ 'is-invalid': errors['sapeur_id'] }"
+        :select-class="{ 'is-invalid': errors['attributions.0.sapeur_id'] }"
       ></base-select>
     </div>
     <div class="modal-footer">
@@ -95,7 +95,10 @@ export default {
           // TODO: A dispatch
           // this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
         })
-        .catch((errors) => (this.errors = errors));
+        .catch((errors) => {
+          console.log(errors);
+          this.errors = errors;
+        });
     },
   },
 };

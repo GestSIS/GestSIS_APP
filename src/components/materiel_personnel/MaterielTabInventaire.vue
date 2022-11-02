@@ -88,33 +88,15 @@
               :data="computedMaterielGeneric"
               @selected="selectSapeur"
             >
-              <!-- <template #actions="props">
-            <router-link
-              v-if="hasSapeurModificationPermission"
-              v-slot="{ navigate }"
-              :to="'/sapeurs/' + props.rowData.id"
-              custom
-            >
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="navigate"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-            </router-link>
-            <a
-              class="btn btn-outline-primary border-0"
-              :href="'mailto:' + props.rowData.email"
-            >
-              <font-awesome-icon :icon="['fas', 'envelope']" />
-            </a>
-            <button
-              class="btn btn-outline-primary border-0"
-              @click="vcard([props.rowData])"
-            >
-              <font-awesome-icon :icon="['far', 'address-card']" />
-            </button>
-          </template> -->
+              <template #actions="props">
+                <button
+                  title="Attribuer"
+                  class="btn btn-outline-primary border-0"
+                  @click="attribuerSimple(props.rowData)"
+                >
+                  <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+                </button>
+              </template>
             </base-table>
           </div>
         </div>
