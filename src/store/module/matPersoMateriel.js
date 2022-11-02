@@ -29,6 +29,16 @@ export default {
         commit(types.UPDATE_MAT_PERSO_A_RECUPERER_LISTE, data)
       );
     },
+    attribuerMatPerso({ commit }, attributions) {
+      return MatPersoMaterielService.attribuer(attributions).then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
+    retourMatPerso({ commit }, retours) {
+      return MatPersoMaterielService.retour(retours).then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
     // addMatPersoAlerte({ commit }, alerte) {
     //   return MatPersoMaterielService.addAlerte(alerte).then((data) => {
     //     commit(types.ADD_MAT_PERSO, data);

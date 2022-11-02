@@ -56,33 +56,15 @@
               no-data="Aucun sapeur à afficher"
               :data="computedMaterielNumerote"
             >
-              <!-- <template #actions="props">
-            <router-link
-              v-if="hasSapeurModificationPermission"
-              v-slot="{ navigate }"
-              :to="'/sapeurs/' + props.rowData.id"
-              custom
-            >
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="navigate"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-            </router-link>
-            <a
-              class="btn btn-outline-primary border-0"
-              :href="'mailto:' + props.rowData.email"
-            >
-              <font-awesome-icon :icon="['fas', 'envelope']" />
-            </a>
-            <button
-              class="btn btn-outline-primary border-0"
-              @click="vcard([props.rowData])"
-            >
-              <font-awesome-icon :icon="['far', 'address-card']" />
-            </button>
-          </template> -->
+              <template #actions="props">
+                <button
+                  title="Attribuer"
+                  class="btn btn-outline-primary border-0"
+                  @click="attribuerSimple(props.rowData)"
+                >
+                  <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+                </button>
+              </template>
             </base-table>
           </div>
         </div>
@@ -240,7 +222,8 @@ export default {
         state.matPersoType.liste.sort((a, b) => a.designation - b.designation),
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(
-          (m) => m.retour == null || m.retour.sapeur_id == null
+          (m) =>
+            m.sapeur_id == null || (m.retour != null && m.sapeur_id != null)
         ),
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||
@@ -288,6 +271,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    attribuerSimple(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalAttributionUnique',
+        data: materiel,
+      });
+    },
     selectSapeur(id) {
       this.selectedId = id;
     },

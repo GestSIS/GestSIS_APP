@@ -44,6 +44,7 @@ import {
   faArrowLeft,
   faTriangleExclamation,
   faFileCsv,
+  faPersonCirclePlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -64,6 +65,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faPersonCirclePlus,
   faFileCsv,
   faTriangleExclamation,
   faBars,
