@@ -37,6 +37,13 @@
               class="btn btn-outline-primary"
               >Email groupé</a
             >
+            <button
+              v-if="hasExerciceModificationPermission"
+              class="btn btn-outline-primary"
+              @click="sms"
+            >
+              SMS
+            </button>
           </div>
         </div>
       </div>
@@ -332,6 +339,9 @@ export default {
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+      hasExerciceModificationPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
     }),
     computedData() {
       const idReducer = (map, e) => {
@@ -442,6 +452,13 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     selectSapeur(id) {
       this.selectedId = id;
+    },
+    sms() {
+      this.SHOW_MODAL({
+        component: 'ModalSms',
+        size: 1,
+        data: this.filteredSapeurs,
+      });
     },
     vcard(sapeurs) {
       const telephoneTypeMapping = {

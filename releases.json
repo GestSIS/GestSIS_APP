@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "03.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Envoie de SMS depuis l'effectif"]
+    },
+    {
       "date": "29.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
