@@ -151,6 +151,7 @@ export default {
         comptabilite: 'Comptabilité',
         organisation: 'Groupes',
         sis: 'Config générale',
+        mat_perso: 'Matériel personnel',
       };
       if (key in mapping) {
         return mapping[key];
