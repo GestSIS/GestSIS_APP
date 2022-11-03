@@ -31,7 +31,7 @@
       <div class="row">
         <div class="col-3">
           <label>Filtres</label>
-          <materiel-type-categorie-select @change="selectedTypes" />
+          <materiel-type-categorie-select @change="selectTypes" />
         </div>
         <div class="col-9">
           <table class="table table-sm">
@@ -46,7 +46,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="m in inventaire.filter(
+                v-for="m in filteredInventaire.filter(
                   (m) =>
                     (tab == 'generique' &&
                       (m.materiel?.quantite ?? null) != null) ||
@@ -123,7 +123,7 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        Valider
+        Enregistrer
       </button>
     </div>
   </div>
@@ -149,6 +149,7 @@ export default {
       tab: 'numerote',
       errors: {},
       inventaire: [],
+      selectedTypes: {},
     };
   },
   computed: {
@@ -168,6 +169,14 @@ export default {
               m.materiel?.quantite == null)
         ),
     }),
+    filteredInventaire() {
+      const ids = new Set(
+        Object.entries(this.selectedTypes)
+          .filter(([, selected]) => selected)
+          .map(([id]) => parseInt(id))
+      );
+      return this.inventaire.filter((m) => ids.has(m.materiel_type_id));
+    },
   },
   mounted() {
     this.inventaire = [
@@ -176,6 +185,9 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    selectTypes(selected) {
+      this.selectedTypes = selected.type;
+    },
     add() {
       if (this.tab === 'generique') {
         this.inventaire.push({
