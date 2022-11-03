@@ -449,7 +449,11 @@ export default {
     },
     sms({ id }) {
       const exercice = this.exercices.find((e) => e.id == id);
-      this.SHOW_MODAL({ component: 'ModalSms', size: 2, data: exercice });
+      this.SHOW_MODAL({
+        component: 'ModalSmsExercice',
+        size: 2,
+        data: exercice,
+      });
     },
     validerExercice(id) {
       this.$store.dispatch('validerExercice', id);
