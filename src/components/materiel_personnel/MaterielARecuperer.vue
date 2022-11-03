@@ -11,10 +11,13 @@
       no-data="Aucun matériel personnel à récupérer"
       :data="computedData"
     >
-      <!-- @selected="selectSapeur" -->
-      <template #actions>
-        <button class="btn btn-outline-primary border-0" disabled>
-          <font-awesome-icon :icon="['far', 'edit']" />
+      <template #actions="props">
+        <button
+          title="Attribuer"
+          class="btn btn-outline-primary border-0"
+          @click="retourMultiple(props.rowData)"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
         </button>
       </template>
     </base-table>
@@ -22,7 +25,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import BaseTable from '@/components/table/BaseTable.vue';
 // import permissions from '@/store/permissions.js';
 
@@ -65,8 +68,13 @@ export default {
     computedData() {
       return Object.values(
         this.aRecuperer.reduce((acc, m) => {
-          let reccord = acc[m.sapeur_id] || { sapeur_id: m.sapeur_id, nb: 0 };
+          let reccord = acc[m.sapeur_id] || {
+            sapeur_id: m.sapeur_id,
+            nb: 0,
+            materiels: [],
+          };
           reccord.nb += 1;
+          reccord.materiels.push(m);
           acc[m.sapeur_id] = reccord;
           return acc;
         }, {})
@@ -78,8 +86,12 @@ export default {
     },
   },
   methods: {
-    async save() {
-      //TODO
+    ...mapMutations(['SHOW_MODAL']),
+    async retourMultiple(data) {
+      this.SHOW_MODAL({
+        component: 'ModalRetourMultiple',
+        data: data.materiels,
+      });
     },
   },
 };
