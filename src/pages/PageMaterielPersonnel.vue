@@ -30,7 +30,7 @@
             role="tab"
             active-class="active"
             :to="{ name: 'mat-perso-materiel' }"
-            >Attribution</router-link
+            >Matériel distribué</router-link
           >
           <router-link
             class="nav-item nav-link"

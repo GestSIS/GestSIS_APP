@@ -15,7 +15,7 @@
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
-      <div v-if="data?.materiel?.quantite" class="mb-3">
+      <div v-if="data?.materiel?.quantite !== null" class="mb-3">
         <label for="quantite">Quantité</label>
         <input
           id="quantite"
@@ -35,7 +35,7 @@
         display-key="nom_prenom"
         :options="sapeurs"
         :select-class="{ 'is-invalid': errors['attributions.0.sapeur_id'] }"
-      ></base-select>
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import { objectToString } from '@vue/shared';
 import { mapMutations, mapState } from 'vuex';
 
 export default {

@@ -13,6 +13,22 @@
         <div class="col-md-12">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <button class="btn btn-primary" @click="modifierInventaire">
+                    Modifier l'inventaire
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
             </div>
             <div class="card-body">
@@ -205,7 +221,10 @@ export default {
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(
           (m) =>
-            m.sapeur_id == null || (m.retour != null && m.sapeur_id != null)
+            m.sapeur_id == null ||
+            (m.retour != null &&
+              m.sapeur_id != null &&
+              m.materiel?.quantite == null)
         ),
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||
@@ -253,6 +272,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    modifierInventaire() {
+      this.SHOW_MODAL({
+        component: 'ModalInventaire',
+        size: 2,
+      });
+    },
     attribuerSimple(materiel) {
       this.SHOW_MODAL({
         component: 'ModalAttributionUnique',
