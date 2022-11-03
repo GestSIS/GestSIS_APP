@@ -175,7 +175,9 @@ export default {
           .filter(([, selected]) => selected)
           .map(([id]) => parseInt(id))
       );
-      return this.inventaire.filter((m) => ids.has(m.materiel_type_id));
+      return this.inventaire.filter(
+        (m) => ids.has(m.materiel_type_id) || m.materiel_type_id == null
+      );
     },
   },
   mounted() {
