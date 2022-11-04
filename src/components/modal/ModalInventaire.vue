@@ -42,6 +42,7 @@
                 <th v-if="tab == 'generique'">Quantité</th>
                 <th v-if="tab == 'numerote'">Numéro</th>
                 <th>Remarque</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -98,16 +99,21 @@
                 </td>
                 <td>
                   <input
-                    v-model="m.materiel.remarque"
+                    v-model="m.remarque"
                     type="text"
                     class="form-control form-control-sm"
                   />
+                </td>
+                <td colspan="5">
+                  <button class="btn btn-outline-danger" @click="remove(m)">
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
                 </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="4">
+                <td colspan="5">
                   <button class="btn btn-outline-primary" @click="add">
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
@@ -150,6 +156,7 @@ export default {
       errors: {},
       inventaire: [],
       selectedTypes: {},
+      removedIds: [],
     };
   },
   computed: {
@@ -190,6 +197,10 @@ export default {
     selectTypes(selected) {
       this.selectedTypes = selected.type;
     },
+    remove(materiel) {
+      this.inventaire = this.inventaire.filter((m) => m.id !== materiel.id);
+      this.removedIds.push(materiel.id);
+    },
     add() {
       if (this.tab === 'generique') {
         this.inventaire.push({
@@ -216,8 +227,24 @@ export default {
       }
     },
     async save() {
-      this.$store
-        .dispatch('attribuerMatPerso', [this.activeAttribution])
+      // Create new materiel
+      const added = this.inventaire.filter((m) => m.id === null);
+      const add = added.length
+        ? this.$store.dispatch('addMatPerso', added)
+        : Promise.resolve();
+
+      // Update changed materiel
+      const updated = this.inventaire.filter((m) => m.id !== null);
+      const update = updated.length
+        ? this.$store.dispatch('updateMatPerso', updated)
+        : Promise.resolve();
+
+      // Delete removed materiel$
+      const remove = this.removedIds.length
+        ? this.$store.dispatch('deleteMatPerso', this.removedIds)
+        : Promise.resolve();
+
+      Promise.all([add, update, remove])
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();

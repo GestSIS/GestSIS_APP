@@ -13,4 +13,13 @@ export default {
   retour(materiels) {
     return Api.api().post('/mat-perso/retour', materiels);
   },
+  create(materiels) {
+    return Api.api().post('/mat-perso', { materiels });
+  },
+  update(materiels) {
+    return Api.api().put('/mat-perso', { materiels });
+  },
+  remove(materielsIds) {
+    return Api.api().delete('/mat-perso', { materielsIds });
+  },
 };

@@ -39,23 +39,20 @@ export default {
         commit(types.UPDATE_MAT_PERSO_LISTE, data)
       );
     },
-    // addMatPersoAlerte({ commit }, alerte) {
-    //   return MatPersoMaterielService.addAlerte(alerte).then((data) => {
-    //     commit(types.ADD_MAT_PERSO, data);
-    //     return data;
-    //   });
-    // },
-    // updateMatPersoAlerte({ commit }, alerte) {
-    //   return MatPersoMaterielService.updateAlerte(alerte).then((data) => {
-    //     commit(types.UPDATE_MAT_PERSO, data);
-    //     return data;
-    //   });
-    // },
-    // removeMatPersoAlerte({ commit }, alerteId) {
-    //   return MatPersoMaterielService.removeAlerte(alerteId).then((data) => {
-    //     commit(types.REMOVE_MAT_PERSO, alerteId);
-    //     return data;
-    //   });
-    // },
+    addMatPerso({ commit }, materiels) {
+      return MatPersoMaterielService.create(materiels).then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
+    updateMatPerso({ commit }, materiels) {
+      return MatPersoMaterielService.update(materiels).then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
+    removeMatPerso({ commit }, materielsIds) {
+      return MatPersoMaterielService.remove(materielsIds).then((data) =>
+        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+      );
+    },
   },
 };
