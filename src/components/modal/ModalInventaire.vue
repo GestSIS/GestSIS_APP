@@ -239,7 +239,7 @@ export default {
         ? this.$store.dispatch('updateMatPerso', updated)
         : Promise.resolve();
 
-      // Delete removed materiel$
+      // Delete removed materiel
       const remove = this.removedIds.length
         ? this.$store.dispatch('deleteMatPerso', this.removedIds)
         : Promise.resolve();
