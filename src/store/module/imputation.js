@@ -372,10 +372,10 @@ export default {
         }
       );
     },
-    removeIndemniteExercice({ commit }, indemnite) {
-      return ImputationService.removeIndemniteExercice(indemnite).then(
+    removeIndemniteExercice({ commit }, indemniteId) {
+      return ImputationService.removeIndemniteExercice(indemniteId).then(
         (data) => {
-          commit(types.REMOVE_INDEMNITE_EXERCICE, data);
+          commit(types.REMOVE_INDEMNITE_EXERCICE, indemniteId);
           return data;
         }
       );
@@ -396,10 +396,10 @@ export default {
         }
       );
     },
-    removeIndemniteIntervention({ commit }, indemnite) {
-      return ImputationService.removeIndemniteIntervention(indemnite).then(
+    removeIndemniteIntervention({ commit }, indemniteId) {
+      return ImputationService.removeIndemniteIntervention(indemniteId).then(
         (data) => {
-          commit(types.REMOVE_INDEMNITE_INTERVENTION, data);
+          commit(types.REMOVE_INDEMNITE_INTERVENTION, indemniteId);
           return data;
         }
       );
