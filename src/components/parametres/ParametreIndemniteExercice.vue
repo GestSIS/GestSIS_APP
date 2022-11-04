@@ -81,7 +81,7 @@
               <button
                 type="button"
                 class="btn btn-outline-danger border-0"
-                disabled
+                @click="removeIndemnite(i)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -200,6 +200,9 @@ export default {
         data: { ...indemnite },
         size: 2,
       });
+    },
+    removeIndemnite(indemnite) {
+      this.$store.dispatch('removeIndemniteExercice', indemnite.id);
     },
     fonction(id) {
       return id ? this.fonctions.find((f) => f.id === id)?.abreviation : '';

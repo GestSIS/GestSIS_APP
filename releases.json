@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "04.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout option de suppression des indemnités types pour exercice et intervention"
+      ]
+    },
+    {
       "date": "03.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
