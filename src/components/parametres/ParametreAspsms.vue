@@ -72,6 +72,10 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     async save() {
+      if (this.password === '********') {
+        this.$awn.success('Modifications enregistrées');
+        return;
+      }
       this.$store
         .dispatch('updateAspsmsParams', { ...this.params })
         .then((res) => {
