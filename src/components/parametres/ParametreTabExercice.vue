@@ -59,9 +59,9 @@ import ParametreAspsms from './ParametreAspsms.vue';
 async function loadData(_, next) {
   const loadExcuses = store.dispatch('fetchExcuseTypes');
   const loadCategories = store.dispatch('fetchExerciceCategories');
-  const loadAspsmsParams = store.dispatch('fetchAspsmsParams');
+  store.dispatch('fetchAspsmsParams');
 
-  Promise.all([loadExcuses, loadCategories, loadAspsmsParams]).then(() => {
+  Promise.all([loadExcuses, loadCategories]).then(() => {
     next();
   });
 }
