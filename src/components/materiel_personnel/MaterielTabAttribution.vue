@@ -13,6 +13,22 @@
         <div class="col-md-12">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <button class="btn btn-primary" @click="attribuer">
+                    Attribuer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
             </div>
             <div class="card-body">
@@ -303,6 +319,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    attribuer() {
+      this.SHOW_MODAL({
+        component: 'ModalAttributionMultiple',
+        size: 1,
+      });
+    },
     retourSimple(materiel) {
       this.SHOW_MODAL({
         component: 'ModalRetourUnique',
