@@ -30,7 +30,7 @@
             <td colspan="9">Aucun exercice à afficher</td>
           </tr>
           <tr v-for="e in exerciceDisplay" :key="e.id">
-            <td>{{ e.date }}</td>
+            <td>{{ new Date(e.date).toLocaleDateString() }}</td>
             <td>{{ e.heure }}</td>
             <td>{{ e.categorie }}</td>
             <td>{{ e.localite }}</td>

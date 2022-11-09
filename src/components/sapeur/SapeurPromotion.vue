@@ -33,7 +33,7 @@
             <td :colspan="hasEditPermission ? 4 : 3">Aucun grade</td>
           </tr>
           <tr v-for="g in activeSapeurGrades" :key="g.id">
-            <td>{{ g.date }}</td>
+            <td>{{ new Date(g.date).toLocaleDateString() }}</td>
             <td>{{ formatGrade(grades.find((e) => e.id == g.grade_id)) }}</td>
             <td>{{ g.remarque }}</td>
             <td v-if="hasEditPermission" class="align-middle text-center">

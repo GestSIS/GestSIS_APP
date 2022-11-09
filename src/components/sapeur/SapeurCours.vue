@@ -29,7 +29,7 @@
             <td :colspan="hasEditPermission ? 5 : 4">Aucun cours suivi</td>
           </tr>
           <tr v-for="c in activeSapeurCours" :key="c.id">
-            <td>{{ c.date }}</td>
+            <td>{{ new Date(c.date).toLocaleDateString() }}</td>
             <td>
               {{ cours.find((cours) => cours.id == c.cours_id).designation }}
             </td>
