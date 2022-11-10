@@ -3,7 +3,7 @@
     <form class="text-center form-signin" @submit.prevent="login">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
-      <h1 class="h3 mb-3">Veuillez-vous connectez</h1>
+      <h1 class="h3 mb-3">Veuillez-vous connecter</h1>
       <label for="inputEmail" class="visually-hidden">Email</label>
       <input
         id="inputEmail"
