@@ -84,18 +84,38 @@
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Présences aux exercices</h3>
         </div>
-        <div class="">
+        <div>
           <table class="table table-sm table-header-rotated">
             <thead>
               <tr>
-                <th class="rotate">Sapeur</th>
-                <th class="rotate">Localité</th>
-                <th class="rotate">Fonction</th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <!-- <th class="text-center">Groupes</th> -->
                 <th v-for="e in displayExercice" :key="e.id" class="rotate">
                   <div>
                     <span>{{ e.designation }}</span>
                   </div>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <thead class="table-bordered">
+              <tr>
+                <th>Sapeur</th>
+                <th>Localité</th>
+                <th>Fonction</th>
+                <!-- <th class="text-center">Groupes</th> -->
+                <th
+                  v-for="e in displayExercice"
+                  :key="e.id"
+                  class="fs-6 fw-normal text-center ps-0 pe-0 border border-1"
+                >
+                  {{ new Date(e.date).toLocaleDateString().slice(0, 5) }}
                 </th>
                 <th class="text-center">Nb Cvq</th>
                 <th class="text-center">Nb Pre</th>

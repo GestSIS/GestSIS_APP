@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "10.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout des dates pour statistiques présences aux exercices"]
+    },
+    {
       "date": "09.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
