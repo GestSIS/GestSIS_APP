@@ -30,6 +30,9 @@ export default {
   saveExercice(exerciceId, exerciceData) {
     return Api.api().put('/exercices/' + exerciceId, exerciceData);
   },
+  updatePresences(presences) {
+    return Api.api().put('/exercices/sapeurs', { presences });
+  },
   addSapeurs(exercieId, sapeursData) {
     return Api.api().post('/exercices/' + exercieId + '/sapeurs', sapeursData);
   },

@@ -1,5 +1,6 @@
 import types from '../mutationTypes';
 import SapeurService from '../../services/SapeurService.js';
+import ExerciceService from '../../services/ExerciceService';
 
 export default {
   state: {
@@ -313,7 +314,6 @@ export default {
       });
     },
     saveActiveSapeur({ state, commit }, payload) {
-      //TODO Update store with new values
       return SapeurService.saveSapeur(
         state.active.data.id,
         payload || state.active.data
@@ -323,7 +323,6 @@ export default {
       });
     },
     saveNonSapeurStatut({ state, commit }, payload) {
-      //TODO Update store with new values
       return SapeurService.saveNonSapeurStatut(
         state.active.data.id,
         payload || state.active.data
@@ -341,7 +340,6 @@ export default {
         }
       );
     },
-
     editTelephoneSapeur({ state, commit }, telephone) {
       return SapeurService.editTelephone(state.active.id, telephone).then(
         (data) => {
@@ -512,6 +510,12 @@ export default {
 
     supprimerConvocation({ state }, payload) {
       return SapeurService.supprimerConvocation(state.active.data.id, payload);
+    },
+
+    updateSapeurPresencesExercice({ dispatch }, payload) {
+      return ExerciceService.updatePresences(payload).then(() => {
+        return dispatch('fetchSapeurExercices');
+      });
     },
   },
 };

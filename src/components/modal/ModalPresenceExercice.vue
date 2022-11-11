@@ -1,134 +1,139 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Ajouter des présences</h5>
+      <h5 id="exampleModalLabel" class="modal-title">
+        Modifier présences de {{ sapeur.prenom }} {{ sapeur.nom }}
+      </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
-    <div class="modal-body">
-      <div class="mb-3">
-        <div class="form-check">
-          <input
-            id="piquet"
-            v-model="piquet"
-            type="checkbox"
-            class="form-check-input"
-          />
-          <label class="form-check-label" for="piquet">Piquet</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6 col-xl-6">
-          <div class="mb-3">
-            <label for="m-int-date-debut">Date de début</label>
-            <div class="input-group input-group-sm">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'calendar-alt']" />
-              </div>
+    <div class="modal-body table-responsive">
+      <table id="sap-fonctions" class="table table-sm">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>heure</th>
+            <th>Catégorie</th>
+            <th>Localité</th>
+            <th>Désignation</th>
+            <th class="text-center">Convoqué</th>
+            <th class="text-center">Présent</th>
+            <th class="text-center">Remplacé</th>
+            <th class="text-center">Excusé</th>
+            <th class="text-center">Amende</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="presences.length <= 0">
+            <td colspan="9">Aucun exercice à afficher</td>
+          </tr>
+          <tr v-for="e in presences" :key="e.id">
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.date.toLocaleDateString() }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.heure }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.categorie }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.localite }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.designation }}
+              </component>
+            </td>
+            <td class="text-center">
               <input
-                id="m-int-date-debut"
-                v-model="date_debut"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_debut'] }"
-                type="date"
-                :min="dateDebutMin"
-                :max="dateDebutMax"
-                name="date_debut"
+                v-model="e.convoque"
+                type="checkbox"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                :disabled="!canEditAbsence(e)"
               />
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-6">
-          <div class="mb-3">
-            <label for="m-int-heure_debut">Heure</label>
-            <div class="input-group input-group-sm">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'clock']" />
-              </div>
+            </td>
+            <td class="text-center">
               <input
-                id="m-int-heure_debut"
-                v-model="heure_debut"
-                type="time"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['heure_debut'] }"
-                name="heure_debut"
-                step="900"
-                @focusout="roundDebut"
+                v-model="e.present"
+                type="checkbox"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                :disabled="!canEditPresence(e)"
+                @change="editPresentCheckbox(e)"
               />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6 col-xl-6">
-          <div class="mb-3">
-            <label for="m-int-date-fin">Date de fin</label>
-            <div class="input-group input-group-sm">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'calendar-alt']" />
-              </div>
+            </td>
+            <td class="text-center">
               <input
-                id="m-int-date-fin"
-                v-model="date_fin"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_fin'] }"
-                :min="dateFinMin"
-                :max="dateFinMax"
-                type="date"
-                name="date_fin"
+                v-model="e.remplace"
+                type="checkbox"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                :disabled="
+                  !canEditAbsence(e) || (!canEditPresence(e) && e.present)
+                "
+                @change="editRemplaceCheckbox(e)"
               />
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-6">
-          <div class="mb-3">
-            <label for="m-int-heure_fin">Heure</label>
-            <div class="input-group input-group-sm">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'clock']" />
+            </td>
+            <td class="text-center">
+              <div class="d-inline-flex">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  :checked="e.excuse_type_id"
+                  :disabled="
+                    !canEditAbsence(e) || (!canEditPresence(e) && e.present)
+                  "
+                  @change="editExcuseCheckbox(e)"
+                />
+                <base-select
+                  v-if="e.excuse_type_id"
+                  v-model="e.excuse_type_id"
+                  class="ms-1"
+                  value-key="id"
+                  display-key="designation"
+                  :options="excusesType"
+                  :select-class="{
+                    'is-invalid': errors['ecriture_categorie_id'],
+                  }"
+                  @input="selectExcuseType(e)"
+                />
               </div>
+            </td>
+            <td class="text-center">
               <input
-                id="m-int-heure_fin"
-                v-model="heure_fin"
-                type="time"
-                class="form-control form-control-sm"
-                :class="{
-                  'is-invalid': errors['heure_fin'],
-                }"
-                name="heure_fin"
-                step="900"
-                @focusout="roundFin"
+                v-model="e.amende"
+                type="checkbox"
+                class="form-check-input"
+                :disabled="
+                  !canEditAbsence(e) ||
+                  (!canEditPresence(e) && e.present) ||
+                  !e.amendable
+                "
+                @change="editAmendeCheckbox(e)"
               />
-            </div>
-          </div>
-        </div>
-      </div>
-      <ul v-if="!editMode" class="list-group">
-        <li v-for="s in sapeurs" :key="s.id" class="list-group-item">
-          <div class="form-check">
-            <input
-              :id="'sp' + s.id"
-              v-model="selectedSapeurs[s.id]"
-              type="checkbox"
-              class="form-check-input"
-            />
-            <label class="form-check-label" :for="'sp' + s.id">
-              {{ formatSapeur(s) }}
-            </label>
-          </div>
-        </li>
-      </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :disabled="!nbSelectedSapeurs"
-        @click="save()"
-      >
-        {{ editMode ? 'Enregistrer' : 'Ajouter' }}
+      <button type="button" class="btn btn-primary" @click="save()">
+        Enregistrer
       </button>
     </div>
   </div>
@@ -136,6 +141,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'ModalPresenceExercice',
@@ -151,161 +157,108 @@ export default {
   },
   data() {
     return {
-      editMode: false,
-      date_debut: null,
-      date_fin: null,
-      heure_debut: null,
-      heure_fin: null,
       errors: {},
-      selectedSapeurs: {},
-      piquet: false,
+      presences: [],
     };
   },
   computed: {
     ...mapState({
-      // Sapeurs actif et de type sapeur uniquement
-      sapeurs: (state) =>
-        state.sapeur.liste.filter((s) => s.actif && s.type == 0),
+      excusesType: (state) => state.excuseType.liste,
+      sapeur: (state) => state.sapeur.active.data,
+      localites: (state) => state.localite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurExercice: (state) => state.sapeur.active.exercices,
+      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasPresencePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
+      hasValidationPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
-    heureDebut() {
-      return null; //this.activeInterventionData.heure_debut
-    },
-    heureFin() {
-      return null; //this.activeInterventionData.heure_fin
-    },
-    dateDebutMin() {
-      return this.data.min.slice(0, 10);
-    },
-    dateDebutMax() {
-      return this.data.max.slice(0, 10);
-    },
-    dateFinMin() {
-      return null;
-      // if (!this.currentExerciceComptableId) return
-      // return (
-      //   this.activeInterventionData.date_debut ||
-      //   this.exerciceComptableDebut(
-      //     this.activeInterventionData.exercice_comptable_id
-      //   )
-      // )
-    },
-    dateFinMax() {
-      return this.data.max.slice(0, 10);
-    },
-    nbSelectedSapeurs() {
-      return Object.keys(this.selectedSapeurs).filter(
-        (s) => this.selectedSapeurs[s]
-      ).length;
+    computeExercices() {
+      return this.activeSapeurExercice
+        .map((exercice) => ({
+          ...exercice,
+          canceled: exercice.statut == 0,
+          date: new Date(exercice.date),
+          heure: exercice.heure.substr(0, 5),
+          categorie: this.categories.find(
+            (e) => e.id == exercice.exercice_categorie_id
+          )?.designation,
+          localite: this.localites.find((l) => l.id == exercice.localite_id)
+            ?.designation,
+          amendable: this.categories.find(
+            (c) => c.id == exercice.exercice_categorie_id
+          )?.amendable,
+        }))
+        .sort((a, b) => a.date - b.date);
     },
   },
   mounted() {
-    this.editMode = this.data.mode === 'edit';
-
-    if (this.editMode) {
-      this.data.sapeurs.forEach(
-        (s) => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
-      );
-      this.piquet = this.data.presence.piquet;
-      this.date_debut = this.data.presence.debut.slice(0, 10);
-      this.date_fin = this.data.presence.fin.slice(0, 10);
-      this.heure_debut = this.data.presence.debut.slice(11, 16);
-      this.heure_fin = this.data.presence.fin.slice(11, 16);
-    } else {
-      this.date_debut = this.dateDebutMin;
-      this.date_fin = this.dateDebutMin;
-    }
+    this.presences = [...this.computeExercices.map((e) => ({ ...e }))];
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    roundTime(time, minutesToRound) {
-      let [hours, minutes] = time.split(':');
-      hours = parseInt(hours);
-      minutes = parseInt(minutes);
-
-      // Convert hours and minutes to time in minutes
-      time = hours * 60 + minutes;
-
-      let rounded = Math.round(time / minutesToRound) * minutesToRound;
-      let rHr = '' + Math.floor(rounded / 60);
-      let rMin = '' + (rounded % 60);
-
-      return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
+    canEditAbsence(exercice) {
+      // Possible de l'éditer si permission de validation ou si pas encore validé
+      return (
+        exercice.statut > 0 &&
+        (this.hasValidationPermission ||
+          (this.hasPresencePermission && exercice.statut <= 2))
+      );
     },
-    roundFin() {
-      if (this.heure_fin) {
-        this.heure_fin = this.roundTime(this.heure_fin, 15);
-      }
+    canEditPresence(exercice) {
+      return (
+        exercice.statut > 0 &&
+        ((this.hasPresencePermission && exercice.statut <= 2) ||
+          (this.hasValidationPermission && exercice.statut <= 3))
+      );
     },
-    roundDebut() {
-      if (this.heure_debut) {
-        this.heure_debut = this.roundTime(this.heure_debut, 15);
+    editPresentCheckbox(exercice) {
+      exercice.remplace = 0;
+      exercice.amende = false;
+      exercice.excuse_type_id = null;
+    },
+    editRemplaceCheckbox(exercice) {
+      exercice.present = 0;
+      exercice.amende = false;
+      exercice.excuse_type_id = null;
+    },
+    editAmendeCheckbox(exercice) {
+      exercice.present = 0;
+      exercice.remplace = 0;
+    },
+    editExcuseCheckbox(exercice) {
+      exercice.present = 0;
+      exercice.remplace = 0;
+
+      exercice.excuse_type_id = exercice.excuse_type_id
+        ? null
+        : this.excusesType[0].id;
+    },
+    selectExcuseType(exercice) {
+      console.log(exercice.amendable);
+      if (exercice.amendable) {
+        const excuse = this.excusesType.find(
+          (e) => e.id == exercice.excuse_type_id
+        );
+        console.log('excuse', excuse);
+        exercice.amende = excuse.amende;
+      } else {
+        exercice.amende = false;
       }
     },
     async save() {
-      let debut = this.date_debut + ' ' + this.heure_debut;
-      let fin = this.date_fin + ' ' + this.heure_fin;
-      if (this.editMode) {
-        let presence = {
-          ...this.data.presence,
-          debut,
-          fin,
-          piquet: this.piquet,
-        };
-        this.$store
-          .dispatch('editPresence', presence)
-          .then(() => {
-            (this.callback() ?? Promise.resolve()).then((close) => {
-              if (close ?? true) {
-                this.HIDE_MODAL();
-              }
-            });
-          })
-          .catch((error) => {
-            let debut = error['sapeurs.0.debut'];
-            let fin = error['sapeurs.0.fin'];
-            this.errors = {
-              ...error,
-              date_debut: debut,
-              date_fin: fin,
-              heure_debut: debut,
-              heure_fin: fin,
-            };
-          });
-      } else {
-        let presences = [];
-        Object.keys(this.selectedSapeurs)
-          .filter((s) => this.selectedSapeurs[s])
-          .forEach((s) => {
-            presences = [
-              ...presences,
-              { sapeur_id: s, debut, fin, piquet: this.piquet },
-            ];
-          });
-        this.$store
-          .dispatch('addPresences', presences)
-          .then(() => {
-            (this.callback() ?? Promise.resolve()).then((close) => {
-              if (close ?? true) {
-                this.HIDE_MODAL();
-              }
-            });
-          })
-          .catch((error) => {
-            let debut = error['sapeurs.0.debut'];
-            let fin = error['sapeurs.0.fin'];
-            this.errors = {
-              ...error,
-              date_debut: debut,
-              date_fin: fin,
-              heure_debut: debut,
-              heure_fin: fin,
-            };
-          });
-      }
-    },
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
+      this.$store
+        .dispatch('updateSapeurPresencesExercice', this.presences)
+        .then(this.HIDE_MODAL)
+        .catch((error) => {
+          this.errors = {
+            ...error,
+          };
+        });
     },
   },
 };
