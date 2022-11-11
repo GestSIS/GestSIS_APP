@@ -289,7 +289,7 @@ export default {
           title: 'Localité',
           key: 'localite_id',
           formatter(value) {
-            return svm.localites.find((l) => l.id == value).designation;
+            return svm.localites.find((l) => l.id == value)?.designation;
           },
           sortKey: 'localite_id',
         },

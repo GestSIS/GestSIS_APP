@@ -239,12 +239,10 @@ export default {
         : this.excusesType[0].id;
     },
     selectExcuseType(exercice) {
-      console.log(exercice.amendable);
       if (exercice.amendable) {
         const excuse = this.excusesType.find(
           (e) => e.id == exercice.excuse_type_id
         );
-        console.log('excuse', excuse);
         exercice.amende = excuse.amende;
       } else {
         exercice.amende = false;

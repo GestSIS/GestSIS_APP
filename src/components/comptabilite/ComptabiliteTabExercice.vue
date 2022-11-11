@@ -325,7 +325,7 @@ export default {
             (c) => c.id == e.exercice_categorie_id
           )?.designation,
           localite: this.localites.find((l) => l.id == e.localite_id)
-            .designation,
+            ?.designation,
           aPayer,
           getEcritures: () => Promise.resolve(e.ecritures),
           columns: this.ecritureColumns,
