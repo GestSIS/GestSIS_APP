@@ -391,6 +391,9 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
+      hasSmsEnvoiePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
@@ -448,6 +451,12 @@ export default {
       this.SHOW_MODAL({ component: 'ModalConvoquer', size: 2 });
     },
     sms({ id }) {
+      if (!this.hasSmsEnvoiePermission) {
+        this.$awn.alert(
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+        );
+        return;
+      }
       const exercice = this.exercices.find((e) => e.id == id);
       this.SHOW_MODAL({
         component: 'ModalSmsExercice',

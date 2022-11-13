@@ -337,6 +337,13 @@ const router = createRouter({
             import('@/components/parametres/ParametreTabIntervention.vue'),
         },
         {
+          path: 'sms',
+          name: 'param-sms',
+          beforeEnter: permissionGuard(permissions.SMS.CONFIG),
+          component: () =>
+            import('@/components/parametres/ParametreTabSms.vue'),
+        },
+        {
           path: 'comptabilite',
           name: 'param-comptabilite',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
