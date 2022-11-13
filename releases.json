@@ -4,7 +4,10 @@
       "date": "13.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Nouvelles permissions pour les SMS"]
+      "changes": [
+        "Nouvelles permissions pour les SMS",
+        "Edition des contrôles médicaux, changement du bouton de durée `+2` en `+3`"
+      ]
     },
     {
       "date": "11.11.2022",
