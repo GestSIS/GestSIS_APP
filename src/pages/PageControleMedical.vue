@@ -183,8 +183,8 @@
               </div>
               <div v-if="expirable" class="col-4 d-none d-xl-block">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(2)">
-                    +2
+                  <button class="btn btn-primary" @click="validite(3)">
+                    +3
                   </button>
                 </div>
               </div>
