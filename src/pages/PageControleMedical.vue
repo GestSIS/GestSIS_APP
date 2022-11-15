@@ -321,7 +321,8 @@ export default {
     ...mapState({
       controleMedical: (state) => state.controleMedical.active.data,
       medecins: (state) => state.medecin.liste,
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.type === 0),
+      sapeurs: (state) =>
+        state.sapeur.liste.filter((s) => s.type === 0 && parseInt(s.actif)),
       controleTypes: (state) => state.controlesMedicauxType.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
