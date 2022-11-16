@@ -110,7 +110,7 @@ export default {
       return this.actions.filter(
         (s) =>
           !s.permission ||
-          this.permissions.includes(s.permission) ||
+          this.permissions?.includes(s.permission) ||
           this.isAdmin
       );
     },
