@@ -59,7 +59,7 @@ export default {
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
-        state.sis.permissions = permissionsParSis[sis.api_key];
+        state.sis.permissions = permissionsParSis[sis.api_key] ?? [];
         state.sis.allPermissions = permissionsParSis;
         state.sapeurId = sapeurParSis[sis.api_key] ?? null;
         Api.setSisKey(sis.api_key);
@@ -120,7 +120,7 @@ export default {
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
-        state.sis.permissions = permissionsParSis[sis.api_key];
+        state.sis.permissions = permissionsParSis[sis.api_key] ?? [];
         state.sis.allPermissions = permissionsParSis;
         state.sapeurId = sapeurParSis[sis.api_key] ?? null;
         Api.setSisKey(sis.api_key);
