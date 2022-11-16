@@ -93,6 +93,14 @@ export default {
           sortKey: 'communications',
         },
         {
+          title: 'Convoqué',
+          type: 'boolean',
+          key: 'convoque',
+          sortKey: 'convoque',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
           title: 'Présent',
           type: 'boolean',
           key: 'present',
