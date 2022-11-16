@@ -3,7 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mes décomptes</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <base-table
         :fields="fields"
         :data="paiements"

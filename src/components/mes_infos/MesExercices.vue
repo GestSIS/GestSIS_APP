@@ -6,7 +6,7 @@
         Télécharger fichier <em>iCalendrier</em>
       </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <base-table
         :fields="fields"
         :data="filteredExercices"
@@ -82,6 +82,8 @@ export default {
   computed: {
     ...mapState({
       sisKey: (state) => state.auth.sis.activeKey,
+      sisName: (state) =>
+        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
       exercices: (state) =>
         state.mesInfos.exercices
           .map((e) => ({
@@ -121,7 +123,8 @@ DTSTAMP:${new Date()
 DTSTART:${e.date.replaceAll('-', '') + 'T' + e.heure.replaceAll(':', '')}
 DURATION:PT${e.duree}M
 SUMMARY:${e.categorie} : ${e.designation}
-COMMENT:${e.communications}
+ORGANIZER:${this.sisName}
+DESCRIPTION:${e.communications}
 CATEGORIES:${e.categorie}
 LOCATION:${e.localite} ${e.lieu}
 END:VEVENT`
