@@ -36,6 +36,13 @@
             class="nav-item nav-link"
             role="tab"
             active-class="active"
+            :to="{ name: 'mes-interventions' }"
+            >Mes interventions</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
             :to="{ name: 'mes-decomptes' }"
             >Mes décomptes</router-link
           >
@@ -71,33 +78,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
-
-async function loadData(routeTo, next) {
-  let loadMesInfos = store.dispatch('fetchMesInfos');
-  let loadMesExercices = store.dispatch('fetchMesExercices');
-  let loadMesDecomptes = store.dispatch('fetchMesDecomptes');
-  let loadlocalites = store.dispatch('fetchLocalites');
-  let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
-
-  Promise.all([
-    loadMesInfos,
-    loadMesDecomptes,
-    loadMesExercices,
-    loadlocalites,
-    loadExerciceCategories,
-  ]).then(() => {
-    next();
-  });
-}
-
 export default {
   name: 'PageMesInfos',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
 };
 </script>

@@ -27,9 +27,24 @@
 <script>
 import { mapState } from 'vuex';
 import MesInfosService from '../../services/MesInfosService';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadMesDecomptes = store.dispatch('fetchMesDecomptes');
+
+  Promise.all([loadMesDecomptes]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'MesDecomptes',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

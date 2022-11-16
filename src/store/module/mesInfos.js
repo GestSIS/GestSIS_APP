@@ -5,6 +5,7 @@ export default {
   state: {
     infos: {},
     exercices: [],
+    interventions: [],
     paiements: [],
     ecritures: [],
   },
@@ -12,6 +13,7 @@ export default {
     [types.CLEAR_CACHE](state) {
       state.infos = {};
       state.exercices = {};
+      state.interventions = {};
       state.paiements = {};
       state.ecritures = {};
     },
@@ -20,6 +22,9 @@ export default {
     },
     [types.UPDATE_MES_EXERCICES](state, payload) {
       state.exercices = payload;
+    },
+    [types.UPDATE_MES_INTERVENTIONS](state, payload) {
+      state.interventions = payload;
     },
     [types.UPDATE_MES_PAIEMENTS](state, payload) {
       state.paiements = payload;
@@ -37,6 +42,11 @@ export default {
     fetchMesExercices({ commit }) {
       return MesInfosService.getMesExercices().then((data) =>
         commit(types.UPDATE_MES_EXERCICES, data)
+      );
+    },
+    fetchMesInterventions({ commit }) {
+      return MesInfosService.getMesInterventions().then((data) =>
+        commit(types.UPDATE_MES_INTERVENTIONS, data)
       );
     },
     fetchMesDecomptes({ commit }) {

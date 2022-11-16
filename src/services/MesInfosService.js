@@ -7,6 +7,9 @@ export default {
   getMesExercices() {
     return Api.api().get('/mes-exercices');
   },
+  getMesInterventions() {
+    return Api.api().get('/mes-interventions');
+  },
   getMesDecomptes() {
     return Api.api().get('/mes-decomptes');
   },

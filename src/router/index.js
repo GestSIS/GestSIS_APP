@@ -109,6 +109,14 @@ const router = createRouter({
           props: true,
         },
         {
+          path: 'interventions',
+          name: 'mes-interventions',
+          beforeEnter: sapeurGuard(),
+          component: () =>
+            import('@/components/mes_infos/MesInterventions.vue'),
+          props: true,
+        },
+        {
           path: 'decomptes',
           name: 'mes-decomptes',
           beforeEnter: sapeurGuard(),
