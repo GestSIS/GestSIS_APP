@@ -90,8 +90,6 @@
           :detail-row-component="detailRow"
           :data="filteredExercices"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #details="props">
@@ -147,8 +145,6 @@ import { markRaw } from 'vue';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
 import ImputationService from '@/services/ImputationService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(_, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
   const loadCategories = store.dispatch('fetchExerciceCategories');
@@ -171,9 +167,6 @@ async function loadData(_, next) {
 
 export default {
   name: 'FraisTabExercice',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },

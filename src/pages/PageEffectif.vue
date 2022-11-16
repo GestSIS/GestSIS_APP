@@ -150,8 +150,6 @@
           <base-table
             v-show="!loading"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             :fields="fieldsBase"
             no-data="Aucun sapeur à afficher"
             :data="filteredSapeurs"
@@ -204,7 +202,6 @@ import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
 
@@ -223,9 +220,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'PageEffectif',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

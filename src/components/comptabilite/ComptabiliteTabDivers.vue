@@ -44,8 +44,6 @@
           no-data="Aucune écriture à afficher"
           :data="computedData"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #actions="{ rowData }">
@@ -72,7 +70,6 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import BaseTable from '@/components/table/BaseTable.vue';
 
 import store from '@/store/index';
 
@@ -99,9 +96,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'ComptabiliteDivers',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

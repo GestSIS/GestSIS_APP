@@ -59,7 +59,9 @@ export default {
     filteredLinks() {
       return this.links.filter(
         (l) =>
-          !l.permission || this.perms.includes(l.permission) || this.isAdmin
+          (!l.permission && !l.admin) ||
+          this.perms.includes(l.permission) ||
+          this.isAdmin
       );
     },
   },

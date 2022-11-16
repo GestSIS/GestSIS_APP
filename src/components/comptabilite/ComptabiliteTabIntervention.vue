@@ -97,8 +97,6 @@
           :detail-row-component="detailRow"
           :data="filteredInterventions"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #details="props">
@@ -139,8 +137,6 @@ import { markRaw } from 'vue';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
 import ImputationService from '@/services/ImputationService.js';
-
-import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadExercicesComptables = store.dispatch('fetchExercicesComptables');

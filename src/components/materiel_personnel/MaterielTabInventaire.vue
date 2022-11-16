@@ -66,8 +66,6 @@
             <base-table
               v-show="!loading"
               :selectable="true"
-              select-key="id"
-              row-selected-class="table-primary"
               :fields="fieldsNumerote"
               no-data="Aucun sapeur à afficher"
               :data="computedMaterielNumerote"
@@ -97,8 +95,6 @@
             <base-table
               v-show="!loading"
               :selectable="true"
-              select-key="id"
-              row-selected-class="table-primary"
               :fields="fieldsGeneric"
               no-data="Aucun sapeur à afficher"
               :data="computedMaterielGeneric"
@@ -125,13 +121,11 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
   name: 'MaterielTabInventaire',
   components: {
-    BaseTable,
     MaterielTypeCategorieSelect,
   },
   data() {

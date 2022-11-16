@@ -23,8 +23,6 @@
             :data="filteredCategories"
             no-data="Aucun exercice pour l'instant"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
           >
             <template #foot>
               <tr>
@@ -48,8 +46,6 @@
 import { mapState } from 'vuex';
 import store from '@/store/index';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(_, next) {
   const loadExercies = store.dispatch('fetchListeExercice');
   const loadCategories = store.dispatch('fetchExerciceCategories');
@@ -61,9 +57,6 @@ async function loadData(_, next) {
 
 export default {
   name: 'StatExerciceSimple',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

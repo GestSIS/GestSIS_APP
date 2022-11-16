@@ -33,8 +33,6 @@
           detail-row-class="m-td-0 p-0"
           :detail-row-component="detailRow"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #details="props">
@@ -73,8 +71,6 @@ import { markRaw } from 'vue';
 import store from '@/store/index';
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
@@ -87,9 +83,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'FraisTabAnnuel',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

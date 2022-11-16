@@ -74,6 +74,11 @@ const router = createRouter({
       component: Home,
     },
     {
+      path: '/mes-infos',
+      name: 'mes-infos',
+      component: () => import('@/pages/PageMesInfos.vue'),
+    },
+    {
       path: '/utilisateur',
       name: 'utilisateur',
       meta: { layout: 'no-sidebar' },

@@ -40,11 +40,9 @@
         <base-table
           v-show="!loading"
           :selectable="true"
-          select-key="id"
           :fields="fields"
           :detail-row-component="detailRow"
           detail-row-class="m-td-0"
-          row-selected-class="table-primary"
           no-data="Aucun sapeur à afficher"
           :data="computedData"
           @selected="select"
@@ -104,8 +102,6 @@ import { markRaw } from 'vue';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
 import ImputationService from '@/services/ImputationService.js';
-
-import BaseTable from '@/components/table/BaseTable.vue';
 
 async function loadData(_, next) {
   const loadExercicesComptable = store.dispatch('fetchExercicesComptables');

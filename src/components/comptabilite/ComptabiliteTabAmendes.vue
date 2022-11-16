@@ -23,8 +23,6 @@
           :detail-row-component="detailRow"
           :data="filteredAmendes"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #details="props">
@@ -52,9 +50,6 @@
 import { mapState, mapGetters } from 'vuex';
 import { markRaw } from 'vue';
 import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails.vue';
-
-import BaseTable from '@/components/table/BaseTable.vue';
-
 import store from '@/store/index';
 
 async function loadData(routeTo, next) {
@@ -69,9 +64,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'ComptabiliteTabAmendes',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

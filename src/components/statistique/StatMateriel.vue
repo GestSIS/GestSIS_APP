@@ -22,8 +22,6 @@
           :data="filteredMateriel"
           no-data="Aucun matériel utilisé"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
         />
       </div>
     </div>
@@ -33,13 +31,8 @@
 <script>
 import { mapState } from 'vuex';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 export default {
   name: 'StatMateriel',
-  components: {
-    BaseTable,
-  },
   data() {
     return {
       allMateriels: false,

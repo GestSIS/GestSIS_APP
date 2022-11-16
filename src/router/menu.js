@@ -2,6 +2,12 @@ import permissions from '@/store/permissions.js';
 
 const links = [
   {
+    to: { name: 'mes-infos' },
+    icon: ['far', 'address-book'],
+    nom: 'Mes infos',
+    admin: true,
+  },
+  {
     to: { name: 'effectif' },
     icon: ['far', 'address-book'],
     nom: 'Effectif',

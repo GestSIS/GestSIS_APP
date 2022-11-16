@@ -178,8 +178,6 @@
             v-show="!loading"
             ref="basetable_exercices"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
@@ -274,8 +272,6 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 
 import ExerciceService from '@/services/ExerciceService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
@@ -293,7 +289,6 @@ async function loadData(routeTo, next) {
 export default {
   name: 'PageExercices',
   components: {
-    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {

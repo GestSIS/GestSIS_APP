@@ -120,7 +120,7 @@ export default {
     },
     selectKey: {
       type: String,
-      default: () => '',
+      default: 'id',
     },
     rowClass: {
       type: [String, Function],
@@ -128,7 +128,7 @@ export default {
     },
     rowSelectedClass: {
       type: String,
-      default: () => '',
+      default: 'table-primary',
     },
     detailRowComponent: {
       type: Object,
