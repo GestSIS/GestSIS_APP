@@ -164,7 +164,7 @@ async function loadData(_, next) {
 
 export default {
   name: 'ComptabiliteTabIntervention',
-  components: { BaseTable },
+
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },

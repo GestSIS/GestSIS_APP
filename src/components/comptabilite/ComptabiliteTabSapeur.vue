@@ -115,7 +115,6 @@ async function loadData(_, next) {
 
 export default {
   name: 'FraisTabSapeur',
-  components: { BaseTable },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
