@@ -33,14 +33,15 @@
           <td v-for="f in fields" :key="f.key" :class="f.columnClass">
             <!-- Boolean types -->
             <!-- TODO: Replace id ? -->
-            <input
-              v-if="f.type === 'boolean'"
-              :id="f.key + '-' + r.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="r[f.key]"
-              disabled
-            />
+            <template v-if="f.type === 'boolean' || f.type === Boolean">
+              <input
+                :id="f.key + '-' + r.id"
+                type="checkbox"
+                class="form-check-input"
+                :checked="r[f.key]"
+                disabled
+              /><label v-if="f.labelKey">{{ r[f.labelKey] }}</label>
+            </template>
             <!-- Date types -->
             <template v-else-if="f.type === 'date'">
               {{ new Date(r[f.key]).toLocaleDateString() }}

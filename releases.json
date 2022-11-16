@@ -2,11 +2,11 @@
   "releases": [
     {
       "date": "16.11.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Nouveau module `Mes infos` pour les sapeurs",
-        "Accès aux exercices personnels",
+        "Accès aux exercices personnels avec le statut de présence",
         "Téléchargement du fichier `ical` avec ses exercices",
         "Accès aux décomptes personnels",
         "Téléchargement de son décompte au format PDF"

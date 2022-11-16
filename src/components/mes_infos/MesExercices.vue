@@ -20,9 +20,32 @@
 
 <script>
 import { mapState } from 'vuex';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadMesExercices = store.dispatch('fetchMesExercices');
+  let loadlocalites = store.dispatch('fetchLocalites');
+  let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+  let loadExcuseTypes = store.dispatch('fetchExcuseTypes');
+
+  Promise.all([
+    loadMesExercices,
+    loadlocalites,
+    loadExerciceCategories,
+    loadExcuseTypes,
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'MesExercices',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       annee: 2022,
@@ -32,50 +55,75 @@ export default {
           key: 'date',
           sortKey: 'date',
           type: 'date',
-          titleClass: 'align-middle',
         },
         {
           title: 'Heure',
           key: 'heure',
           sortKey: 'heure',
           formatter: (h) => h.slice(0, 5),
-          titleClass: 'align-middle',
         },
         {
           title: 'Categorie',
           key: 'categorie',
           sortKey: 'categorie',
-          titleClass: 'align-middle',
         },
         {
           title: 'Exercice',
           key: 'designation',
           sortKey: 'designation',
-          titleClass: 'align-middle',
         },
         {
           title: 'Durée [min]',
           key: 'duree',
           sortKey: 'duree',
-          titleClass: 'align-middle',
         },
         {
           title: 'Localité',
           key: 'localite',
           sortKey: 'localite',
-          titleClass: 'align-middle',
         },
         {
           title: 'Lieu',
           key: 'lieu',
           sortKey: 'lieu',
-          titleClass: 'align-middle',
         },
         {
           title: 'Communications',
           key: 'communications',
           sortKey: 'communications',
-          titleClass: 'align-middle',
+        },
+        {
+          title: 'Présent',
+          type: 'boolean',
+          key: 'present',
+          sortKey: 'present',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Remplacé',
+          type: 'boolean',
+          key: 'remplace',
+          sortKey: 'remplace',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Excuse',
+          type: 'boolean',
+          key: 'excuse_type_id',
+          sortKey: 'excuse_type_id',
+          labelKey: 'excuse',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
+        },
+        {
+          title: 'Amende',
+          type: 'boolean',
+          key: 'amende',
+          sortKey: 'amende',
+          titleClass: 'text-center',
+          columnClass: 'text-center',
         },
       ],
     };
@@ -88,11 +136,15 @@ export default {
       exercices: (state) =>
         state.mesInfos.exercices
           .map((e) => ({
+            ...e.exercice,
             ...e,
-            localite: state.localite.liste.find((l) => l.id == e.localite_id)
+            excuse: state.excuseType.liste.find((t) => t.id == e.excuse_type_id)
               ?.designation,
+            localite: state.localite.liste.find(
+              (l) => l.id == e.exercice.localite_id
+            )?.designation,
             categorie: state.exerciceCategorie.liste.find(
-              (c) => c.id == e.exercice_categorie_id
+              (c) => c.id == e.exercice.exercice_categorie_id
             )?.designation,
           }))
           .sort((e1, e2) => e1.date.localeCompare(e2.date)),

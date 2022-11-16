@@ -73,10 +73,6 @@
 <script>
 import store from '@/store/index';
 
-import MesDecomptes from '../components/mes_infos/MesDecomptes.vue';
-import MesExercices from '../components/mes_infos/MesExercices.vue';
-import MesInfos from '../components/mes_infos/MesInfos.vue';
-
 async function loadData(routeTo, next) {
   let loadMesInfos = store.dispatch('fetchMesInfos');
   let loadMesExercices = store.dispatch('fetchMesExercices');
@@ -97,7 +93,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'PageMesInfos',
-  components: { MesInfos, MesExercices, MesDecomptes },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
