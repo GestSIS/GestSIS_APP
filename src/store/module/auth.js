@@ -43,7 +43,12 @@ export default {
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const sapeurParSis = jwt.data.sapeurs;
-      const availableSis = Object.keys(permissionsParSis);
+      const availableSis = [
+        ...new Set([
+          ...Object.keys(permissionsParSis),
+          ...Object.keys(sapeurParSis),
+        ]),
+      ];
 
       state.email = jwt.data.email;
       state.admin = jwt.data.admin;
@@ -98,7 +103,12 @@ export default {
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
       const sapeurParSis = jwt.data.sapeurs;
-      const availableSis = Object.keys(permissionsParSis);
+      const availableSis = [
+        ...new Set([
+          ...Object.keys(permissionsParSis),
+          ...Object.keys(sapeurParSis),
+        ]),
+      ];
 
       state.email = jwt.data.email;
       state.admin = jwt.data.admin;
