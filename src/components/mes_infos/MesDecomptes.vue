@@ -8,14 +8,25 @@
         :fields="fields"
         :data="paiements"
         :selectable="true"
+        :hide-download="true"
         no-data="Aucun décompte pour le moment"
-      />
+      >
+        <template #actions="props">
+          <button
+            class="btn btn-outline-primary border-0"
+            @click="downloadDecompte(props.rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'file-pdf']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import MesInfosService from '../../services/MesInfosService';
 
 export default {
   name: 'MesDecomptes',
@@ -27,55 +38,51 @@ export default {
           key: 'date',
           sortKey: 'date',
           type: 'date',
-          titleClass: 'align-middle',
         },
         {
           title: 'Décompte',
           key: 'decompte',
           sortKey: 'decompte',
-          titleClass: 'align-middle',
         },
         {
           title: 'Solde',
           key: 'solde',
           sortKey: 'solde',
-          titleClass: 'align-middle',
         },
         {
           title: 'Indemnité',
           key: 'indemnite',
           sortKey: 'indemnite',
-          titleClass: 'align-middle',
         },
         {
           title: 'Frais forfaitaires',
           key: 'frais_forfaitaire',
           sortKey: 'frais_forfaitaire',
-          titleClass: 'align-middle',
         },
         {
           title: 'Frais effectifs',
           key: 'frais_effectif',
           sortKey: 'frais_effectif',
-          titleClass: 'align-middle',
         },
         {
           title: 'Retenue AVS/AC',
           key: 'avs_ac',
           sortKey: 'avs_ac',
-          titleClass: 'align-middle',
         },
         {
           title: 'Autre',
           key: 'autre',
           sortKey: 'autre',
-          titleClass: 'align-middle',
         },
         {
           title: 'Total',
           key: 'total',
           sortKey: 'total',
-          titleClass: 'align-middle',
+        },
+        {
+          title: 'Actions',
+          slot: 'actions',
+          key: 'id',
         },
       ],
     };
@@ -91,8 +98,9 @@ export default {
     }),
   },
   methods: {
-    download() {
-      // TODO: download
+    downloadDecompte(paiement) {
+      const filename = `${paiement.date}_decompte.pdf`;
+      MesInfosService.printMonDecompte(paiement.decompte_id, filename);
     },
   },
 };

@@ -28,6 +28,21 @@ const permissionGuard = (permission) => {
   };
 };
 
+const sapeurGuard = () => {
+  return function (to, from, next) {
+    const isSapeur = store.state.auth.sapeurId != null;
+    if (isSapeur) {
+      next();
+      return;
+    }
+    // Otherwise, redirect to dashboard
+    next({
+      name: 'dashboard', // back to safety route //
+      query: { redirectFrom: to.fullPath },
+    });
+  };
+};
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -75,8 +90,32 @@ const router = createRouter({
     },
     {
       path: '/mes-infos',
-      name: 'mes-infos',
+      name: 'mon-dashboard',
       component: () => import('@/pages/PageMesInfos.vue'),
+      beforeEnter: sapeurGuard(),
+      children: [
+        {
+          path: '',
+          name: 'mes-infos',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesInfos.vue'),
+          props: true,
+        },
+        {
+          path: 'exercices',
+          name: 'mes-exercices',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesExercices.vue'),
+          props: true,
+        },
+        {
+          path: 'decomptes',
+          name: 'mes-decomptes',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesDecomptes.vue'),
+          props: true,
+        },
+      ]
     },
     {
       path: '/utilisateur',

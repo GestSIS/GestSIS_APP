@@ -41,7 +41,6 @@ export default {
     },
     fetchMesDecomptes({ commit }) {
       return MesInfosService.getMesDecomptes().then((data) => {
-        console.log(data);
         commit(types.UPDATE_MES_ECRITURES, data.ecritures);
         return commit(types.UPDATE_MES_PAIEMENTS, data.paiements);
       });

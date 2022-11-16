@@ -12,6 +12,7 @@ export default {
     user: null,
     email: null,
     admin: false,
+    sapeurId: null,
     refreshTokenPromise: null,
     permissions: [],
     roles: [],
@@ -19,6 +20,7 @@ export default {
     sis: {
       activeId: null,
       activeKey: null,
+      sapeurs: {},
       liste: [],
       permissions: [],
       available: [],
@@ -40,10 +42,13 @@ export default {
 
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
+      const sapeurParSis = jwt.data.sapeurs;
       const availableSis = Object.keys(permissionsParSis);
-      state.sis.available = availableSis;
+
       state.email = jwt.data.email;
       state.admin = jwt.data.admin;
+      state.sis.sapeurs = sapeurParSis;
+      state.sis.available = availableSis;
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -51,6 +56,7 @@ export default {
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
         state.sis.allPermissions = permissionsParSis;
+        state.sapeurId = sapeurParSis[sis.api_key] ?? null;
         Api.setSisKey(sis.api_key);
       }
     },
@@ -91,10 +97,14 @@ export default {
 
       const jwt = jwt_decode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions;
+      const sapeurParSis = jwt.data.sapeurs;
       const availableSis = Object.keys(permissionsParSis);
-      state.sis.available = availableSis;
+
       state.email = jwt.data.email;
       state.admin = jwt.data.admin;
+      state.sis.sapeurs = sapeurParSis;
+      state.sis.available = availableSis;
+
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -102,6 +112,7 @@ export default {
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key];
         state.sis.allPermissions = permissionsParSis;
+        state.sapeurId = sapeurParSis[sis.api_key] ?? null;
         Api.setSisKey(sis.api_key);
       }
     },
@@ -138,6 +149,7 @@ export default {
       state.sis.activeId = sis.id;
       state.sis.activeKey = sis.api_key;
       state.sis.permissions = state.sis.allPermissions[sis.api_key];
+      state.sapeurId = state.sis.sapeurs[sis.api_key] ?? null;
 
       Api.setSisKey(sis.api_key);
     },

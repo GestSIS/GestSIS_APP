@@ -10,4 +10,7 @@ export default {
   getMesDecomptes() {
     return Api.api().get('/mes-decomptes');
   },
+  printMonDecompte(decompteId, filename) {
+    return Api.print(filename).get(`/mes-decomptes/${decompteId}/print`);
+  },
 };

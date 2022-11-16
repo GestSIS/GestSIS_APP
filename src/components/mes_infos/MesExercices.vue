@@ -11,6 +11,7 @@
         :fields="fields"
         :data="filteredExercices"
         :selectable="true"
+        :hide-download="true"
         no-data="Aucun exercice pour le moment"
       />
     </div>

@@ -72,14 +72,16 @@ export default {
   computed: {
     ...mapState({
       isAdmin: (state) => state.auth.admin,
+      isSapeur: (state) => state.auth.sapeurId,
       perms: (state) => state.auth.sis.permissions,
     }),
     filteredLinks() {
       return this.links.filter(
         (l) =>
-          (!l.permission && !l.admin) ||
+          (!l.permission && !l.admin && !l.sapeur) ||
           this.perms.includes(l.permission) ||
-          this.isAdmin
+          (this.isAdmin && !l.sapeur) ||
+          (l.sapeur && this.isSapeur)
       );
     },
   },

@@ -2,10 +2,10 @@ import permissions from '@/store/permissions.js';
 
 const links = [
   {
-    to: { name: 'mes-infos' },
-    icon: ['far', 'address-book'],
+    to: { name: 'mes-exercices' },
+    icon: ['fas', 'image-portrait'],
     nom: 'Mes infos',
-    admin: true,
+    sapeur: true,
   },
   {
     to: { name: 'effectif' },
