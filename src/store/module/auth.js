@@ -136,7 +136,7 @@ export default {
     },
     [types.AUTH_SELECT_SIS](state, sis) {
       state.sis.activeId = sis.id;
-      state.sis.activeKey = sis.key;
+      state.sis.activeKey = sis.api_key;
       state.sis.permissions = state.sis.allPermissions[sis.api_key];
 
       Api.setSisKey(sis.api_key);
