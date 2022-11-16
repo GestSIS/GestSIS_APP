@@ -79,7 +79,7 @@ export default {
       return this.links.filter(
         (l) =>
           (!l.permission && !l.admin && !l.sapeur) ||
-          this.perms.includes(l.permission) ||
+          this.perms?.includes(l.permission) ||
           (this.isAdmin && !l.sapeur) ||
           (l.sapeur && this.isSapeur)
       );
