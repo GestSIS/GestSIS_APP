@@ -2,6 +2,15 @@
   "releases": [
     {
       "date": "16.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Message d'avertissement pour les comptes non validés",
+        "Possibilité de rafraichir ses permissions sans devoir se déconnecter dans le menu paramètre"
+      ]
+    },
+    {
+      "date": "16.11.2022",
       "version": "3.0",
       "app": "GestSIS APP",
       "changes": [

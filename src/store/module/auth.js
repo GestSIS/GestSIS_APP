@@ -12,6 +12,7 @@ export default {
     user: null,
     email: null,
     admin: false,
+    validated: false,
     sapeurId: null,
     refreshTokenPromise: null,
     permissions: [],
@@ -52,8 +53,11 @@ export default {
 
       state.email = jwt.data.email;
       state.admin = jwt.data.admin;
+      state.validated = jwt.data.validated;
+
       state.sis.sapeurs = sapeurParSis;
       state.sis.available = availableSis;
+
       if (availableSis.length > 0) {
         const firstSisKey = availableSis[0];
         const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
@@ -93,38 +97,7 @@ export default {
       state.roles = state.roles.filter((r) => r.id != roleId);
     },
     [types.AUTH_REFRESH_TOKEN_PROMISES](state, payload) {
-      // console.log("Refresh token");
-      TokenService.saveAccessToken(payload.accessToken);
-      TokenService.saveRefreshToken(payload.refreshToken);
-      Api.setAccessToken(payload.accessToken);
-
       state.refreshTokenPromise = payload;
-
-      const jwt = jwt_decode(payload.accessToken);
-      const permissionsParSis = jwt.data.permissions;
-      const sapeurParSis = jwt.data.sapeurs;
-      const availableSis = [
-        ...new Set([
-          ...Object.keys(permissionsParSis),
-          ...Object.keys(sapeurParSis),
-        ]),
-      ];
-
-      state.email = jwt.data.email;
-      state.admin = jwt.data.admin;
-      state.sis.sapeurs = sapeurParSis;
-      state.sis.available = availableSis;
-
-      if (availableSis.length > 0) {
-        const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
-        state.sis.activeId = sis.id;
-        state.sis.activeKey = sis.api_key;
-        state.sis.permissions = permissionsParSis[sis.api_key] ?? [];
-        state.sis.allPermissions = permissionsParSis;
-        state.sapeurId = sapeurParSis[sis.api_key] ?? null;
-        Api.setSisKey(sis.api_key);
-      }
     },
     [types.AUTH_LOGOUT](state) {
       TokenService.removeAccessToken();
@@ -135,6 +108,8 @@ export default {
       state.user = null;
       state.email = null;
       state.admin = false;
+      state.validated = false;
+
       state.sis.activeId = null;
       state.sis.activeKey = null;
       state.sis.permissions = [];
@@ -262,20 +237,20 @@ export default {
       //TODO: Improve not to call refreshToken n times
       const callback = () => {
         const p = AuthService.refreshToken(TokenService.getRefreshToken());
+        commit(types.AUTH_REFRESH_TOKEN_PROMISES, p);
 
         // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
         // Clear the promise on error as well.
         p.then((data) => {
-          commit(types.AUTH_REFRESH_TOKEN_PROMISES, data);
-        })
-          .catch((e) => {
-            commit(types.AUTH_LOGOUT);
-            router.push({ name: 'login' });
-            return e;
-          })
-          .then(() => {
-            return state.refreshTokenPromise;
-          });
+          commit(types.AUTH_SUCCESSFULL, data);
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          return data;
+        }).catch((e) => {
+          commit(types.AUTH_LOGOUT);
+          commit(types.AUTH_REFRESH_TOKEN_PROMISES, null);
+          router.push({ name: 'login' });
+          throw e;
+        });
       };
       if (!state.refreshTokenPromise) {
         if (state.sis.liste.length == 0) {
