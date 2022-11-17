@@ -49,7 +49,6 @@ export default {
   },
   data() {
     return {
-      annee: 2022,
       fields: [
         {
           title: 'Date',
@@ -115,9 +114,7 @@ export default {
   },
   computed: {
     ...mapState({
-      sisKey: (state) => state.auth.sis.activeKey,
-      sisName: (state) =>
-        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
+      anneeComptableId: (state) => state.exerciceComptable.activeId,
       interventions: (state) =>
         state.mesInfos.interventions
           .map((i) => ({
@@ -143,6 +140,11 @@ export default {
         }
       });
       return Object.values(interventions);
+    },
+  },
+  watch: {
+    anneeComptableId() {
+      this.$store.dispatch('fetchMesInterventions');
     },
   },
   mounted() {

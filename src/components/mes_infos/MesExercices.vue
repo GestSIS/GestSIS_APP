@@ -9,7 +9,7 @@
     <div class="card-body table-responsive">
       <base-table
         :fields="fields"
-        :data="filteredExercices"
+        :data="exercices"
         :selectable="true"
         :hide-download="true"
         no-data="Aucun exercice pour le moment"
@@ -48,7 +48,6 @@ export default {
   },
   data() {
     return {
-      annee: 2022,
       fields: [
         {
           title: 'Date',
@@ -138,27 +137,28 @@ export default {
   },
   computed: {
     ...mapState({
+      anneeComptableId: (state) => state.exerciceComptable.activeId,
       sisKey: (state) => state.auth.sis.activeKey,
       sisName: (state) =>
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
       exercices: (state) =>
         state.mesInfos.exercices
           .map((e) => ({
-            ...e.exercice,
             ...e,
             excuse: state.excuseType.liste.find((t) => t.id == e.excuse_type_id)
               ?.designation,
-            localite: state.localite.liste.find(
-              (l) => l.id == e.exercice.localite_id
-            )?.designation,
+            localite: state.localite.liste.find((l) => l.id == e.localite_id)
+              ?.designation,
             categorie: state.exerciceCategorie.liste.find(
-              (c) => c.id == e.exercice.exercice_categorie_id
+              (c) => c.id == e.exercice_categorie_id
             )?.designation,
           }))
           .sort((e1, e2) => e1.date.localeCompare(e2.date)),
     }),
-    filteredExercices() {
-      return this.exercices;
+  },
+  watch: {
+    anneeComptableId() {
+      this.$store.dispatch('fetchMesExercices');
     },
   },
   methods: {
@@ -172,7 +172,7 @@ VERSION:2.0
 PRODID:GestSIS:2.0
 `;
       const footer = `\nEND:VCALENDAR`;
-      const events = this.filteredExercices
+      const events = this.exercices
         .map(
           (e) => `BEGIN:VEVENT
 UID:${this.sisKey}-${e.id}@gestsis.ch

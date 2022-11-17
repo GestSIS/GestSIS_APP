@@ -49,7 +49,6 @@ export default {
   },
   data() {
     return {
-      annee: 2022,
       fields: [
         {
           title: 'Date',

@@ -13,6 +13,9 @@
           </ol>
         </nav>
       </div>
+      <div class="col-sm-6 d-flex justify-content-end">
+        <exercice-comptable />
+      </div>
     </div>
 
     <div class="row">
@@ -78,7 +81,25 @@
 </template>
 
 <script>
+import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadExercicesComptables = store.dispatch('fetchExercicesComptables');
+
+  Promise.all([loadExercicesComptables]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'PageMesInfos',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  components: { ExerciceComptable },
 };
 </script>

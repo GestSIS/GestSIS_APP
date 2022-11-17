@@ -4,14 +4,14 @@ export default {
   getMesInfos() {
     return Api.api().get('/mes-infos');
   },
-  getMesExercices() {
-    return Api.api().get('/mes-exercices');
+  getMesExercices(exerciceComptableId) {
+    return Api.api().get('/mes-exercices/' + exerciceComptableId);
   },
-  getMesInterventions() {
-    return Api.api().get('/mes-interventions');
+  getMesInterventions(exerciceComptableId) {
+    return Api.api().get('/mes-interventions/' + exerciceComptableId);
   },
-  getMesDecomptes() {
-    return Api.api().get('/mes-decomptes');
+  getMesDecomptes(exerciceComptableId) {
+    return Api.api().get('/mes-decomptes/' + exerciceComptableId);
   },
   printMonDecompte(decompteId, filename) {
     return Api.print(filename).get(`/mes-decomptes/${decompteId}/print`);

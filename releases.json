@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Message d'avertissement pour les comptes non validés",
-        "Possibilité de rafraichir ses permissions sans devoir se déconnecter dans le menu paramètre"
+        "Possibilité de rafraichir ses permissions sans devoir se déconnecter dans le menu paramètre",
+        "Ajout filtre par année pour mes exercices/interventions/décomptes"
       ]
     },
     {

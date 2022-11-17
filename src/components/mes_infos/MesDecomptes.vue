@@ -104,6 +104,7 @@ export default {
   },
   computed: {
     ...mapState({
+      anneeComptableId: (state) => state.exerciceComptable.activeId,
       paiements: (state) =>
         state.mesInfos.paiements
           .map((e) => ({

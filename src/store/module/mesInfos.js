@@ -39,18 +39,20 @@ export default {
         commit(types.UPDATE_MES_INFOS, data)
       );
     },
-    fetchMesExercices({ commit }) {
-      return MesInfosService.getMesExercices().then((data) =>
-        commit(types.UPDATE_MES_EXERCICES, data)
-      );
+    fetchMesExercices({ commit, getters }) {
+      return MesInfosService.getMesExercices(
+        getters.currentExerciceComptableId
+      ).then((data) => commit(types.UPDATE_MES_EXERCICES, data));
     },
-    fetchMesInterventions({ commit }) {
-      return MesInfosService.getMesInterventions().then((data) =>
-        commit(types.UPDATE_MES_INTERVENTIONS, data)
-      );
+    fetchMesInterventions({ commit, getters }) {
+      return MesInfosService.getMesInterventions(
+        getters.currentExerciceComptableId
+      ).then((data) => commit(types.UPDATE_MES_INTERVENTIONS, data));
     },
-    fetchMesDecomptes({ commit }) {
-      return MesInfosService.getMesDecomptes().then((data) => {
+    fetchMesDecomptes({ commit, getters }) {
+      return MesInfosService.getMesDecomptes(
+        getters.currentExerciceComptableId
+      ).then((data) => {
         commit(types.UPDATE_MES_ECRITURES, data.ecritures);
         return commit(types.UPDATE_MES_PAIEMENTS, data.paiements);
       });
