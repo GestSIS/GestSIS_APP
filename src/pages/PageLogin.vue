@@ -69,7 +69,10 @@ export default {
       }
 
       this.$store
-        .dispatch('login', { email: this.email, password: this.password })
+        .dispatch('login', {
+          email: this.email?.trim(),
+          password: this.password,
+        })
         .then(() => {
           this.error = null;
           this.$router.push(
