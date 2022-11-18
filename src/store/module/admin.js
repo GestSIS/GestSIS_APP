@@ -7,10 +7,6 @@ export default {
     users: [],
   },
   mutations: {
-    [types.CLEAR_CACHE](state) {
-      state.sis = [];
-      state.users = [];
-    },
     [types.AUTH_SIS_LISTE](state, payload) {
       state.sis = payload;
     },
