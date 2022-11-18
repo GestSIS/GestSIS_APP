@@ -7,7 +7,7 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div v-if="validated" class="col-12">
+          <div v-if="!validated" class="col-12">
             <div class="alert alert-warning" role="alert">
               Attention, votre compte n'est pas encore validé, veuillez cliquer
               sur le lien reçu dans votre boîte mail pour activer votre compte.
