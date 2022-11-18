@@ -267,6 +267,9 @@ export default {
         return state.refreshTokenPromise;
       }
     },
+    resendValidationEmail() {
+      return AuthService.resendValidationEmail();
+    },
     fetchPermissions({ commit, state }) {
       if (state.permissions.length > 0) {
         return Promise.resolve();

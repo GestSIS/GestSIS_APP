@@ -7,7 +7,7 @@
         </div>
         <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
-          <div v-if="!validated" class="col-12">
+          <div v-if="validated" class="col-12">
             <div class="alert alert-warning" role="alert">
               Attention, votre compte n'est pas encore validé, veuillez cliquer
               sur le lien reçu dans votre boîte mail pour activer votre compte.
@@ -20,6 +20,16 @@
                 Rafraichir
                 <em v-if="disableCounter > 0"
                   >[Réessayer dans {{ disableCounter }} s]</em
+                >
+              </button>
+              <button
+                class="btn btn-secondary mt-2 ms-2"
+                :disabled="disableCounter > 0"
+                @click="resend"
+              >
+                Renvoyer l'email
+                <em v-if="resendCounter > 0"
+                  >[Réessayer dans {{ resendCounter }} s]</em
                 >
               </button>
             </div>
@@ -67,6 +77,8 @@ export default {
       loading: false,
       disableCounter: 0,
       disableInterval: null,
+      resendCounter: 0,
+      resendInterval: null,
     };
   },
   computed: {
@@ -93,6 +105,10 @@ export default {
       clearInterval(this.disableInterval);
       this.disableInterval = null;
     }
+    if (this.resendInterval != null) {
+      clearInterval(this.resendInterval);
+      this.resendInterval = null;
+    }
   },
   methods: {
     getImageUrl(sis) {
@@ -115,9 +131,36 @@ export default {
               this.disableInterval = null;
             }
           }, 1000);
-          return;
         }
       });
+    },
+    resend() {
+      const callback = () => {
+        this.resendCounter = 30;
+        this.resendInterval = setInterval(() => {
+          this.resendCounter--;
+          if (this.resendCounter <= 0) {
+            clearInterval(this.resendInterval);
+            this.resendInterval = null;
+          }
+        }, 1000);
+      };
+      this.$store
+        .dispatch('resendValidationEmail')
+        .then((res) => {
+          this.$awn.success(
+            res?.message ??
+              'Un nouvel email vous a été envoyé, controllez votre boîte mail'
+          );
+          callback();
+        })
+        .catch((err) => {
+          this.$awn.alert(
+            err?.error ??
+              "Une erreur a eu lieu durant le renvoie de l'email de confirmation"
+          );
+          callback();
+        });
     },
   },
 };
