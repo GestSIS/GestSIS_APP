@@ -249,11 +249,9 @@ export default {
         },
         {
           title: 'Déductions',
-          titleClass: 'text-center',
           key: 'deduction',
           sortKey: 'deduction',
-          type: 'boolean',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'Charges AVS',

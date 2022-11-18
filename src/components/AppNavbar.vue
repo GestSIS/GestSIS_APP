@@ -13,6 +13,13 @@
           <font-awesome-icon :icon="['fas', 'bars']" />
         </button>
       </li>
+      <li v-if="isAdmin" class="nav-item position-relative me-2">
+        <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
+          <button class="btn btn-link" @click="clickInfo(navigate)">
+            Admin
+          </button>
+        </router-link>
+      </li>
     </ul>
     <ul class="navbar-nav me-2">
       <router-link v-slot="{ navigate }" :to="{ name: 'about' }" custom>
@@ -48,7 +55,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import * as data from '../../releases.json';
 
 export default {
@@ -72,6 +79,9 @@ export default {
   },
   computed: {
     ...mapGetters(['isLoggedIn']),
+    ...mapState({
+      isAdmin: (state) => state.auth.admin,
+    }),
   },
   mounted() {
     this.showNotif =

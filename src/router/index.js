@@ -8,6 +8,25 @@ import { TokenService } from '@/services/StorageService.js';
 
 import NProgress from 'nprogress';
 
+const adminGuard = () => {
+  return function (to, from, next) {
+    try {
+      const isAdmin = store.state.auth.admin;
+      if (isAdmin) {
+        next();
+      }
+    } catch (e) {
+      //TODO: Check if logged in, if NOT so redirect to login
+
+      // Otherwise, redirect to dashboard
+      next({
+        name: 'dashboard', // back to safety route //
+        query: { redirectFrom: to.fullPath },
+      });
+    }
+  };
+};
+
 const permissionGuard = (permission) => {
   return function (to, from, next) {
     try {
@@ -123,7 +142,7 @@ const router = createRouter({
           component: () => import('@/components/mes_infos/MesDecomptes.vue'),
           props: true,
         },
-      ]
+      ],
     },
     {
       path: '/utilisateur',
@@ -466,6 +485,20 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('@/pages/PageAbout.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      beforeEnter: adminGuard(),
+      component: () => import('@/pages/PageAdmin.vue'),
+      children: [
+        {
+          path: 'sis',
+          name: 'admin-sis',
+          beforeEnter: adminGuard(),
+          component: () => import('@/components/admin/AdminSis.vue'),
+        },
+      ],
     },
   ],
 });

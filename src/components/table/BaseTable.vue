@@ -6,7 +6,10 @@
           <th
             v-for="f in fields"
             :key="f.key"
-            :class="f.titleClass"
+            :class="[
+              f.titleClass,
+              f.type === 'boolean' || f.type === Boolean ? 'text-center' : '',
+            ]"
             @click="sort(f)"
           >
             {{ f.title }}
@@ -30,7 +33,14 @@
           ]"
           @click="select(r)"
         >
-          <td v-for="f in fields" :key="f.key" :class="f.columnClass">
+          <td
+            v-for="f in fields"
+            :key="f.key"
+            :class="[
+              f.columnClass,
+              f.type === 'boolean' || f.type === Boolean ? 'text-center' : '',
+            ]"
+          >
             <!-- Boolean types -->
             <!-- TODO: Replace id ? -->
             <template v-if="f.type === 'boolean' || f.type === Boolean">

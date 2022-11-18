@@ -74,9 +74,7 @@ export default {
         {
           title: 'Amendable',
           key: 'amendable',
-          type: 'boolean',
-          titleClass: 'text-center',
-          columnClass: 'text-center',
+          type: Boolean,
         },
         {
           title: 'Nombre',

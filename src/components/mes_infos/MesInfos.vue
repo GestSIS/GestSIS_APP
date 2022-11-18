@@ -104,8 +104,7 @@ export default {
             title: 'Piquet',
             key: 'piquet',
             type: Boolean,
-            titleClass: 'text-center',
-            columnClass: 'text-center col-2',
+            columnClass: 'col-2',
           },
           {}, // Pour que la table soit compressée, ne pas supprimer
         ],
