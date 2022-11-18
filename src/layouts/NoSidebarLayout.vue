@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="content">
-      <app-navbar />
+      <app-navbar :no-sidebar="true" />
       <slot />
     </div>
     <app-modal />

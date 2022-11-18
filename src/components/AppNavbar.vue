@@ -6,6 +6,7 @@
     <ul class="navbar-nav">
       <li class="nav-item position-relative me-2 ms-4">
         <button
+          v-if="!noSidebar"
           class="btn btn-outline-secondary"
           @click="$emit('toggleSidebar')"
         >
@@ -56,6 +57,10 @@ export default {
     hideSidebar: {
       type: Boolean,
       default: false,
+    },
+    noSidebar: {
+      type: Boolean,
+      default: () => false,
     },
   },
   emits: ['toggleSidebar'],
