@@ -339,6 +339,8 @@
                 name="actif"
                 class="form-check-input"
                 disabled
+                :true-value="1"
+                :false-value="0"
               />
               <label for="actif">Actif</label>
               <font-awesome-icon
