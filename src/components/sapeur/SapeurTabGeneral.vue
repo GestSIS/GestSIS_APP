@@ -331,6 +331,24 @@
                 </option>
               </select>
             </div>
+            <div class="mb-3 form-check">
+              <input
+                id="actif"
+                v-model="activeSapeur.actif"
+                type="checkbox"
+                name="actif"
+                class="form-check-input"
+                disabled
+              />
+              <label for="actif">Actif</label>
+              <font-awesome-icon
+                v-tooltip.bottom="
+                  'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'
+                "
+                class="ms-1"
+                :icon="['far', 'question-circle']"
+              />
+            </div>
             <!-- TODO Actif et Porteur checkbox -->
           </div>
         </form>

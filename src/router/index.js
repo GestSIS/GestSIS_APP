@@ -8,41 +8,40 @@ import { TokenService } from '@/services/StorageService.js';
 
 import NProgress from 'nprogress';
 
+const redirect = (to, from, next) => {
+  const isLoggedIn = !!store.state.auth.user;
+  if (isLoggedIn) {
+    next({
+      name: 'dashboard', // back to safety route //
+      query: { redirectFrom: to.fullPath },
+    });
+  } else {
+    next({
+      name: 'login', // back to safety route //
+      query: { redirectFrom: to.fullPath },
+    });
+  }
+};
+
 const adminGuard = () => {
   return function (to, from, next) {
-    try {
-      const isAdmin = store.state.auth.admin;
-      if (isAdmin) {
-        next();
-      }
-    } catch (e) {
-      //TODO: Check if logged in, if NOT so redirect to login
-
-      // Otherwise, redirect to dashboard
-      next({
-        name: 'dashboard', // back to safety route //
-        query: { redirectFrom: to.fullPath },
-      });
+    const isAdmin = store.state.auth.admin;
+    if (isAdmin) {
+      next();
+    } else {
+      redirect(to, from, next);
     }
   };
 };
 
 const permissionGuard = (permission) => {
   return function (to, from, next) {
-    try {
-      const isAdmin = store.state.auth.admin;
-      const permissions = store.state.auth.sis.permissions;
-      if (permissions.includes(permission) || isAdmin) {
-        next();
-      }
-    } catch (e) {
-      //TODO: Check if logged in, if NOT so redirect to login
-
-      // Otherwise, redirect to dashboard
-      next({
-        name: 'dashboard', // back to safety route //
-        query: { redirectFrom: to.fullPath },
-      });
+    const isAdmin = store.state.auth.admin;
+    const permissions = store.state.auth.sis.permissions;
+    if (permissions.includes(permission) || isAdmin) {
+      next();
+    } else {
+      redirect(to, from, next);
     }
   };
 };
@@ -52,13 +51,9 @@ const sapeurGuard = () => {
     const isSapeur = store.state.auth.sapeurId != null;
     if (isSapeur) {
       next();
-      return;
+    } else {
+      redirect(to, from, next);
     }
-    // Otherwise, redirect to dashboard
-    next({
-      name: 'dashboard', // back to safety route //
-      query: { redirectFrom: to.fullPath },
-    });
   };
 };
 

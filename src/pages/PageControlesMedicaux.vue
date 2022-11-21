@@ -461,16 +461,6 @@ export default {
       ) {
         return 'table-danger';
       }
-      // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
-      // const statutsClass = {
-      //   0: 'text-danger', //'Annulé',
-      //   1: '', //'A saisir',
-      //   2: '', //'En attente de validation',
-      //   3: '', //'Validé',
-      //   4: 'table-success', //'Imputé'
-      // };
-      // return statutsClass[dataItem.statut];
-      return '';
     },
     onAnneeFilter(key, value) {
       if (parseInt(value)) {
