@@ -18,7 +18,7 @@
             placeholder="Utilisateur"
           />
         </div>
-        <div class="col-auto mx-sm-3">
+        <div class="col-auto">
           <input
             id="m-password"
             v-model="password"
@@ -29,6 +29,13 @@
             placeholder="Mot de passe"
           />
         </div>
+        <font-awesome-icon
+          v-tooltip.bottom="
+            'Utilisez vos identifiants du site gestionrta-jura.ch'
+          "
+          class="col-auto"
+          :icon="['far', 'question-circle']"
+        />
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
         </button>

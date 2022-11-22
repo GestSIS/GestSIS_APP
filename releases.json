@@ -4,6 +4,15 @@
       "date": "18.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
+      "changes": [
+        "Matériel personnel, fenêtre pour attribuer en masse du matériel à un sapeur",
+        "Ajout de diverses info-bulles d'aide"
+      ]
+    },
+    {
+      "date": "18.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
       "changes": ["Bouton pour le renvoie de l'email de confirmation"]
     },
     {
