@@ -284,10 +284,23 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      // TODO: Masse attribution
+      // Masse attribution
+      const baseAttribution = {
+        sapeur_id: this.activeAttribution.sapeur_id,
+        date: this.activeAttribution.date,
+      };
+
+      const attributions = [
+        ...this.activeAttribution.numerotes
+          .filter((m) => m.materiel_type_id && m.numero)
+          .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
+        ...this.activeAttribution.generiques
+          .filter((m) => m.materiel_type_id && m.quantite > 0)
+          .map((m) => ({ ...baseAttribution, ...m })),
+      ];
 
       this.$store
-        .dispatch('attribuerMatPerso', [this.activeAttribution])
+        .dispatch('attribuerMatPerso', attributions)
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();
