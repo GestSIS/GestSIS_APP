@@ -2,6 +2,7 @@
   <div>
     <label v-if="label" :for="label">{{ label }}</label>
     <select
+      ref="input"
       :id="label"
       v-model="model"
       :class="['form-select form-select-sm', selectClass]"
@@ -42,7 +43,7 @@ export default {
     },
     valueKey: {
       type: String,
-      required: true,
+      default: 'id',
     },
     displayKey: {
       type: String,
@@ -67,6 +68,11 @@ export default {
     },
     model(currentValue) {
       this.$emit('update:modelValue', currentValue);
+    },
+  },
+  methods: {
+    focus() {
+      this.$refs.input.focus();
     },
   },
 };

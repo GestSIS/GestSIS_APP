@@ -351,7 +351,7 @@
                 :icon="['far', 'question-circle']"
               />
             </div>
-            <!-- TODO Actif et Porteur checkbox -->
+            <!-- TODO Porteur checkbox -->
           </div>
         </form>
       </div>
