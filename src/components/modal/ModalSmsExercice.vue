@@ -59,14 +59,13 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import SapeurService from '../../services/SapeurService';
 import ExerciceService from '../../services/ExerciceService';
 import AspsmsParamService from '../../services/AspsmsParamService';
 
 export default {
   name: 'ModalSmsExercice',
-  components: { BaseTable },
+
   props: {
     data: {
       type: Object,

@@ -8,22 +8,51 @@ import { TokenService } from '@/services/StorageService.js';
 
 import NProgress from 'nprogress';
 
+const redirect = (to, from, next) => {
+  const isLoggedIn = !!store.state.auth.user;
+  if (isLoggedIn) {
+    next({
+      name: 'dashboard', // back to safety route //
+      query: { redirectFrom: to.fullPath },
+    });
+  } else {
+    next({
+      name: 'login', // back to safety route //
+      query: { redirectFrom: to.fullPath },
+    });
+  }
+};
+
+const adminGuard = () => {
+  return function (to, from, next) {
+    const isAdmin = store.state.auth.admin;
+    if (isAdmin) {
+      next();
+    } else {
+      redirect(to, from, next);
+    }
+  };
+};
+
 const permissionGuard = (permission) => {
   return function (to, from, next) {
-    try {
-      const isAdmin = store.state.auth.admin;
-      const permissions = store.state.auth.sis.permissions;
-      if (permissions.includes(permission) || isAdmin) {
-        next();
-      }
-    } catch (e) {
-      //TODO: Check if logged in, if NOT so redirect to login
+    const isAdmin = store.state.auth.admin;
+    const permissions = store.state.auth.sis.permissions;
+    if (permissions.includes(permission) || isAdmin) {
+      next();
+    } else {
+      redirect(to, from, next);
+    }
+  };
+};
 
-      // Otherwise, redirect to dashboard
-      next({
-        name: 'dashboard', // back to safety route //
-        query: { redirectFrom: to.fullPath },
-      });
+const sapeurGuard = () => {
+  return function (to, from, next) {
+    const isSapeur = store.state.auth.sapeurId != null;
+    if (isSapeur) {
+      next();
+    } else {
+      redirect(to, from, next);
     }
   };
 };
@@ -72,6 +101,43 @@ const router = createRouter({
       name: 'accueil',
       meta: { layout: 'no-sidebar' },
       component: Home,
+    },
+    {
+      path: '/mes-infos',
+      name: 'mon-dashboard',
+      component: () => import('@/pages/PageMesInfos.vue'),
+      beforeEnter: sapeurGuard(),
+      children: [
+        {
+          path: '',
+          name: 'mes-infos',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesInfos.vue'),
+          props: true,
+        },
+        {
+          path: 'exercices',
+          name: 'mes-exercices',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesExercices.vue'),
+          props: true,
+        },
+        {
+          path: 'interventions',
+          name: 'mes-interventions',
+          beforeEnter: sapeurGuard(),
+          component: () =>
+            import('@/components/mes_infos/MesInterventions.vue'),
+          props: true,
+        },
+        {
+          path: 'decomptes',
+          name: 'mes-decomptes',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesDecomptes.vue'),
+          props: true,
+        },
+      ],
     },
     {
       path: '/utilisateur',
@@ -337,6 +403,13 @@ const router = createRouter({
             import('@/components/parametres/ParametreTabIntervention.vue'),
         },
         {
+          path: 'sms',
+          name: 'param-sms',
+          beforeEnter: permissionGuard(permissions.SMS.CONFIG),
+          component: () =>
+            import('@/components/parametres/ParametreTabSms.vue'),
+        },
+        {
           path: 'comptabilite',
           name: 'param-comptabilite',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
@@ -407,6 +480,20 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('@/pages/PageAbout.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      beforeEnter: adminGuard(),
+      component: () => import('@/pages/PageAdmin.vue'),
+      children: [
+        {
+          path: 'sis',
+          name: 'admin-sis',
+          beforeEnter: adminGuard(),
+          component: () => import('@/components/admin/AdminSis.vue'),
+        },
+      ],
     },
   ],
 });

@@ -34,8 +34,6 @@
             no-data="Aucun utilisateur"
             :data="users"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
           >
             <template #badges="props">
               <span
@@ -64,8 +62,6 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 function loadData(routeTo, next) {
   let loadUsers = store.dispatch('fetchUsers');
   let loadPermissions = store.dispatch('fetchPermissions');
@@ -79,9 +75,6 @@ function loadData(routeTo, next) {
 
 export default {
   name: 'PageUtilisateurs',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

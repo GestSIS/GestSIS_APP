@@ -178,8 +178,6 @@
             v-show="!loading"
             ref="basetable_exercices"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             :fields="fieldsBase"
             :detail-row-component="detailRow"
             detail-row-class="m-td-0"
@@ -274,8 +272,6 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 
 import ExerciceService from '@/services/ExerciceService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
@@ -293,7 +289,6 @@ async function loadData(routeTo, next) {
 export default {
   name: 'PageExercices',
   components: {
-    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -391,6 +386,9 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
+      hasSmsEnvoiePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
@@ -448,6 +446,12 @@ export default {
       this.SHOW_MODAL({ component: 'ModalConvoquer', size: 2 });
     },
     sms({ id }) {
+      if (!this.hasSmsEnvoiePermission) {
+        this.$awn.alert(
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+        );
+        return;
+      }
       const exercice = this.exercices.find((e) => e.id == id);
       this.SHOW_MODAL({
         component: 'ModalSmsExercice',

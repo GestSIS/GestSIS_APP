@@ -51,8 +51,6 @@
           :fields="fields"
           no-data="Aucune écriture à afficher"
           :selectable="true"
-          select-key="id"
-          row-selected-class="table-primary"
           :data="computedData"
           @selected="selected"
         >
@@ -82,8 +80,6 @@ import store from '@/store/index';
 
 import CompteService from '@/services/CompteService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchExercicesComptables');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -96,9 +92,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'FraisTabCompte',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

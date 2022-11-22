@@ -74,6 +74,11 @@ export default {
           permission: permissions.INTERVENTION.CONFIG,
         },
         {
+          to: { name: 'param-sms' },
+          name: 'Sms',
+          permission: permissions.SMS.CONFIG,
+        },
+        {
           to: { name: 'param-comptabilite' },
           name: 'Comptabilité',
           permission: permissions.COMPTABILITE.CONFIG,

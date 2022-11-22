@@ -17,7 +17,7 @@
     <div class="row">
       <!-- Jeton -->
       <div class="col-12 col-sm-6">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Utiliser un jeton</h3>
           </div>
@@ -37,10 +37,20 @@
             </button>
           </div>
         </div>
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Recharger mes permission</h3>
+          </div>
+          <div class="card-body">
+            <button class="btn btn-primary" @click="refreshTokens">
+              Charger
+            </button>
+          </div>
+        </div>
       </div>
       <!-- Mot de passe -->
       <div class="col-12 col-sm-6">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Changer mon mot de passe</h3>
           </div>
@@ -101,25 +111,27 @@
     </div>
   </div>
   <!-- <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline mb-5">
-          <div class="card-header d-flex justify-content-between">
-            <h3>TODO: Fonctionalitées</h3>
-          </div>
-          <div class="card-body">
-            <h4>Dans le future</h4>
-            <ul>
-              <li>Supprimer ses accès pour un SIS</li>
-              <li>Changer son email</li>
-              <li>
-                Demander un renvoi de la confirmation de l'email si pas validé
-              </li>
-              <li>Changement de mot de passe</li>
-              <li>Contrôler ses données et signaler des changements</li>
-            </ul>
-          </div>
+    <div class="col-md-12">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h3>TODO: Fonctionalitées</h3>
+          <ul>
+            <li>
+              Demander un renvoi de la confirmation de l'email si pas validé
+            </li>
+            <li>Changement de mot de passe</li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <h4>Dans le future</h4>
+          <ul>
+            <li>Supprimer ses accès pour un SIS</li>
+            <li>Changer son email</li>
+            <li>Contrôler ses données et signaler des changements</li>
+          </ul>
         </div>
       </div>
+    </div>
   </div>-->
 </template>
 
@@ -141,6 +153,14 @@ export default {
     },
   },
   methods: {
+    async refreshTokens() {
+      this.$store
+        .dispatch('refreshToken')
+        .then(() => this.$awn.success('Permissions rechargées'))
+        .catch(() =>
+          this.$awn.alert('Vous avez été déconnecté, veuillez-vous reconnecter')
+        );
+    },
     async utiliserJeton() {
       if (!this.jeton) {
         this.$awn.alert('Jeton invalide');

@@ -53,13 +53,17 @@ export default {
       sis: (state) =>
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
       isAdmin: (state) => state.auth.admin,
+      isSapeur: (state) => state.auth.sapeurId,
       perms: (state) => state.auth.sis.permissions,
     }),
     ...mapGetters(['availableSisListe']),
     filteredLinks() {
       return this.links.filter(
         (l) =>
-          !l.permission || this.perms.includes(l.permission) || this.isAdmin
+          (!l.permission && !l.admin && !l.sapeur) ||
+          this.perms?.includes(l.permission) ||
+          (this.isAdmin && !l.sapeur) ||
+          (l.sapeur && this.isSapeur)
       );
     },
   },

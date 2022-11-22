@@ -1,5 +1,6 @@
 import types from '../mutationTypes';
 import SapeurService from '../../services/SapeurService.js';
+import ExerciceService from '../../services/ExerciceService';
 
 export default {
   state: {
@@ -55,14 +56,15 @@ export default {
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
       state.liste.map((s) =>
-        s.id == payload.id ? {
-          ...s,
-          fonction_id: payload.fonction_id,
-          nom: payload.nom,
-          prenom: payload.prenom,
-          actif: payload.actif,
-          date_naissance: payload.date_naissance,
-        } : s
+        s.id == payload.id
+          ? {
+            ...s,
+            fonction_id: payload.fonction_id,
+            nom: payload.nom,
+            prenom: payload.prenom,
+            actif: payload.actif,
+            date_naissance: payload.date_naissance,
+          } : s
       );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
@@ -191,7 +193,7 @@ export default {
         (c) => c.id !== sapeurId
       );
       state.liste = state.liste.map((s) => {
-        if (s.id === sapeurId) {
+        if (s.id == sapeurId) {
           return { ...s, actif };
         }
         return s;
@@ -203,7 +205,7 @@ export default {
         mutation,
       ];
       state.liste = state.liste.map((s) => {
-        if (s.id === mutation.sapeur_id) {
+        if (s.id == mutation.sapeur_id) {
           return { ...s, actif };
         }
         return s;
@@ -313,7 +315,6 @@ export default {
       });
     },
     saveActiveSapeur({ state, commit }, payload) {
-      //TODO Update store with new values
       return SapeurService.saveSapeur(
         state.active.data.id,
         payload || state.active.data
@@ -323,7 +324,6 @@ export default {
       });
     },
     saveNonSapeurStatut({ state, commit }, payload) {
-      //TODO Update store with new values
       return SapeurService.saveNonSapeurStatut(
         state.active.data.id,
         payload || state.active.data
@@ -341,7 +341,6 @@ export default {
         }
       );
     },
-
     editTelephoneSapeur({ state, commit }, telephone) {
       return SapeurService.editTelephone(state.active.id, telephone).then(
         (data) => {
@@ -512,6 +511,12 @@ export default {
 
     supprimerConvocation({ state }, payload) {
       return SapeurService.supprimerConvocation(state.active.data.id, payload);
+    },
+
+    updateSapeurPresencesExercice({ dispatch }, payload) {
+      return ExerciceService.updatePresences(payload).then(() => {
+        return dispatch('fetchSapeurExercices');
+      });
     },
   },
 };

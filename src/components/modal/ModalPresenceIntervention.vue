@@ -138,7 +138,7 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalPresence',
+  name: 'ModalPresenceIntervention',
   props: {
     data: {
       type: Object,

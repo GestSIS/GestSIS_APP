@@ -30,6 +30,7 @@ import BaseSelect from '@/components/base/BaseSelect.vue';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseRadio from '@/components/base/BaseRadio.vue';
 import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
+import BaseTable from '@/components/table/BaseTable.vue';
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {
@@ -95,6 +96,7 @@ app.component('BaseSelect', BaseSelect);
 app.component('BaseCheckbox', BaseCheckbox);
 app.component('BaseRadio', BaseRadio);
 app.component('BaseMultiUnselect', BaseMultiUnselect);
+app.component('BaseTable', BaseTable);
 app.component('DefaultLayout', Default);
 app.component('EmptyLayout', Empty);
 app.component('NoSidebarLayout', NoSidebar);

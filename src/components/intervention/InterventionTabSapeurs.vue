@@ -356,7 +356,7 @@ export default {
     },
     addPresences() {
       this.SHOW_MODAL({
-        component: 'ModalPresence',
+        component: 'ModalPresenceIntervention',
         callback: () => {},
         data: {
           mode: 'add',
@@ -370,7 +370,7 @@ export default {
       let clone = {};
       Object.assign(clone, presence);
       this.SHOW_MODAL({
-        component: 'ModalPresence',
+        component: 'ModalPresenceIntervention',
         callback: () => {},
         data: {
           mode: 'edit',

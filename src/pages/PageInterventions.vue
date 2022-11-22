@@ -197,8 +197,6 @@
             no-data="Aucune intervention à afficher"
             :data="filteredInterventions"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             @selected="select"
           >
             <template #actions="props">
@@ -244,8 +242,6 @@ import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadLocalities = store.dispatch('fetchLocalites');
@@ -273,7 +269,6 @@ async function loadData(routeTo, next) {
 export default {
   name: 'PageInterventions',
   components: {
-    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {

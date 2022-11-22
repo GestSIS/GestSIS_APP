@@ -121,11 +121,11 @@ export default {
     async register() {
       this.$store
         .dispatch('register', {
-          name: this.name,
-          email: this.email,
+          name: this.name?.trim(),
+          email: this.email?.trim(),
           password: this.password,
           password_confirmation: this.password_confirmation,
-          token: this.token || null,
+          token: this.token?.trim() || null,
         })
         .then(() => {
           this.error = {};

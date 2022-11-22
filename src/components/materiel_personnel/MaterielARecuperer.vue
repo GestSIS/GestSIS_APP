@@ -5,8 +5,6 @@
     </div>
     <base-table
       :selectable="true"
-      select-key="id"
-      row-selected-class="table-primary"
       :fields="fields"
       no-data="Aucun matériel personnel à récupérer"
       :data="computedData"
@@ -26,14 +24,11 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import BaseTable from '@/components/table/BaseTable.vue';
+
 // import permissions from '@/store/permissions.js';
 
 export default {
   name: 'MaterielPersonnelARecuperer',
-  components: {
-    BaseTable,
-  },
   data() {
     return {
       errors: {},

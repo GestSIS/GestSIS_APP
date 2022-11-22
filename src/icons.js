@@ -46,6 +46,7 @@ import {
   faFileCsv,
   faPersonCirclePlus,
   faPersonCircleMinus,
+  faImagePortrait,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -66,6 +67,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faImagePortrait,
   faPersonCirclePlus,
   faPersonCircleMinus,
   faFileCsv,

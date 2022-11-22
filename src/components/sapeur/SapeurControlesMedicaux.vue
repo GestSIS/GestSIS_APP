@@ -81,7 +81,7 @@
               <td>
                 {{
                   c.localite_id
-                    ? localites.find((l) => l.id == c.localite_id).designation
+                    ? localites.find((l) => l.id == c.localite_id)?.designation
                     : ''
                 }}
               </td>

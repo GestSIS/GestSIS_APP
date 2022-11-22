@@ -19,6 +19,9 @@ export default {
   useToken(token) {
     return Api.auth().post('/use-token', { token });
   },
+  resendValidationEmail() {
+    return Api.auth().post('/resend-confirmation');
+  },
   confirmation(token) {
     return Api.auth().post('/confirmer-email', { token });
   },

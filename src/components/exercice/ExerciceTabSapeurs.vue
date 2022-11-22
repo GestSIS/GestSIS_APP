@@ -251,14 +251,14 @@ export default {
     canEditAbsence() {
       // Possible de l'éditer si permission de validation ou si pas encore validé
       return (
-        this.activeExerciceData.statut >= 0 &&
+        this.activeExerciceData.statut > 0 &&
         (this.hasValidationPermission ||
           (this.hasPresencePermission && this.activeExerciceData.statut <= 2))
       );
     },
     canEditPresence() {
       return (
-        this.activeExerciceData.statut >= 0 &&
+        this.activeExerciceData.statut > 0 &&
         ((this.hasPresencePermission && this.activeExerciceData.statut <= 2) ||
           (this.hasValidationPermission && this.activeExerciceData.statut <= 3))
       );

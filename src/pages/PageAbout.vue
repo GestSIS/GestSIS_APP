@@ -88,15 +88,20 @@
           </div>
           <div class="card-body">
             <div class="mb-3">
+              <button class="btn btn-primary" @click="refreshTokens">
+                Refresh tokens
+              </button>
+            </div>
+            <div class="mb-3">
               <label for="copy-to-clipboard" class="form-label"
-                >JWT Token</label
+                >Access Token</label
               >
               <div class="input-group">
                 <input
                   type="text"
                   class="form-control"
                   placeholder=""
-                  :value="jwt"
+                  :value="accessToken"
                   readonly
                   aria-label="Copier dans le press-papier"
                   aria-describedby="copy-to-clipboard"
@@ -105,10 +110,34 @@
                   id="copy-to-clipboard"
                   class="btn btn-outline-secondary"
                   type="button"
-                  @click="copyToClipboard(jwt)"
+                  @click="copyToClipboard(accessToken)"
                 >
                   <font-awesome-icon :icon="['far', 'clipboard']" />
                 </button>
+              </div>
+              <div class="mb-3">
+                <label for="copy-to-clipboard" class="form-label"
+                  >Refresh Token</label
+                >
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder=""
+                    :value="refreshToken"
+                    readonly
+                    aria-label="Copier dans le press-papier"
+                    aria-describedby="copy-to-clipboard"
+                  />
+                  <button
+                    id="copy-to-clipboard"
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    @click="copyToClipboard(refreshToken)"
+                  >
+                    <font-awesome-icon :icon="['far', 'clipboard']" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -134,7 +163,8 @@ export default {
       releases: data.releases,
       all: false,
       nbNew: 0,
-      jwt: '',
+      accessToken: '',
+      refreshToken: '',
     };
   },
   computed: {
@@ -143,7 +173,8 @@ export default {
     }),
   },
   mounted() {
-    this.jwt = TokenService.getAccessToken();
+    this.accessToken = TokenService.getAccessToken();
+    this.refreshToken = TokenService.getRefreshToken();
 
     const date = localStorage.getItem(
       'latestReleaseDate',
@@ -167,6 +198,12 @@ export default {
     localStorage.setItem('latestSeenVersion', this.releases[0].version);
   },
   methods: {
+    refreshTokens() {
+      this.$store.dispatch('refreshToken').then(() => {
+        this.accessToken = TokenService.getAccessToken();
+        this.refreshToken = TokenService.getRefreshToken();
+      });
+    },
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
     },

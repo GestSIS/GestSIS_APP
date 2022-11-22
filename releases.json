@@ -1,6 +1,70 @@
 {
   "releases": [
     {
+      "date": "18.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Bouton pour le renvoie de l'email de confirmation"]
+    },
+    {
+      "date": "17.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Message d'avertissement pour les comptes non validés",
+        "Possibilité de rafraichir ses permissions sans devoir se déconnecter dans le menu paramètre",
+        "Ajout filtre par année pour mes exercices/interventions/décomptes"
+      ]
+    },
+    {
+      "date": "16.11.2022",
+      "version": "3.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nouveau module `Mes infos` pour les sapeurs",
+        "Accès aux exercices personnels avec le statut de présence",
+        "Téléchargement du fichier `ical` avec ses exercices",
+        "Accès aux décomptes personnels",
+        "Téléchargement de son décompte au format PDF",
+        "Accès aux interventions effectuées"
+      ]
+    },
+    {
+      "date": "11.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Filtrage des sapeurs inactif pour les contrôles médicaux"]
+    },
+    {
+      "date": "13.11.2022",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nouvelles permissions pour les SMS",
+        "Edition des contrôles médicaux, changement du bouton de durée `+2` en `+3`"
+      ]
+    },
+    {
+      "date": "11.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de saisir les présences directement depuis l'affichage des sapeurs"
+      ]
+    },
+    {
+      "date": "10.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout des dates pour statistiques présences aux exercices"]
+    },
+    {
+      "date": "09.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Formattage de dates"]
+    },
+    {
       "date": "04.11.2022",
       "version": "2.0",
       "app": "GestSIS APP",

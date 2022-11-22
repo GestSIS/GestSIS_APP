@@ -10,8 +10,6 @@
     </div>
     <base-table
       :selectable="true"
-      select-key="id"
-      row-selected-class="table-primary"
       :fields="fields"
       no-data="Aucune alerte"
       :data="computedData"
@@ -28,14 +26,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import BaseTable from '@/components/table/BaseTable.vue';
+
 // import permissions from '@/store/permissions.js';
 
 export default {
   name: 'MaterielPersonnelARecuperer',
-  components: {
-    BaseTable,
-  },
   data() {
     return {
       errors: {},

@@ -177,8 +177,6 @@
             :row-class="onRowClass"
             :data="filteredControles"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             @selected="selected"
           >
             <template #doc="props">
@@ -228,8 +226,6 @@ import store from '@/store/index';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
-
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadMedecins = store.dispatch('fetchMedecins');
@@ -251,7 +247,6 @@ function loadData(routeTo, next) {
 export default {
   name: 'PageControlesMedicaux',
   components: {
-    BaseTable,
     ExerciceComptable,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -308,17 +303,13 @@ export default {
           title: 'Accepté',
           key: 'accepter',
           sortKey: 'accepter',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
-          type: 'boolean',
+          type: Boolean,
         },
         {
           title: 'En cours',
           key: 'en_cours',
           sortKey: 'en_cours',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
-          type: 'boolean',
+          type: Boolean,
         },
         {
           title: 'Doc',
@@ -470,16 +461,6 @@ export default {
       ) {
         return 'table-danger';
       }
-      // // TODO: update pour mettre en évidence les contrôles-médicaux voulus
-      // const statutsClass = {
-      //   0: 'text-danger', //'Annulé',
-      //   1: '', //'A saisir',
-      //   2: '', //'En attente de validation',
-      //   3: '', //'Validé',
-      //   4: 'table-success', //'Imputé'
-      // };
-      // return statutsClass[dataItem.statut];
-      return '';
     },
     onAnneeFilter(key, value) {
       if (parseInt(value)) {

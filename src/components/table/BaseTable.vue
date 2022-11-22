@@ -6,7 +6,10 @@
           <th
             v-for="f in fields"
             :key="f.key"
-            :class="f.titleClass"
+            :class="[
+              f.titleClass,
+              f.type === 'boolean' || f.type === Boolean ? 'text-center' : '',
+            ]"
             @click="sort(f)"
           >
             {{ f.title }}
@@ -30,20 +33,32 @@
           ]"
           @click="select(r)"
         >
-          <td v-for="f in fields" :key="f.key" :class="f.columnClass">
+          <td
+            v-for="f in fields"
+            :key="f.key"
+            :class="[
+              f.columnClass,
+              f.type === 'boolean' || f.type === Boolean ? 'text-center' : '',
+            ]"
+          >
             <!-- Boolean types -->
             <!-- TODO: Replace id ? -->
-            <input
-              v-if="f.type === 'boolean'"
-              :id="f.key + '-' + r.id"
-              type="checkbox"
-              class="form-check-input"
-              :checked="r[f.key]"
-              disabled
-            />
+            <template v-if="f.type === 'boolean' || f.type === Boolean">
+              <input
+                :id="f.key + '-' + r.id"
+                type="checkbox"
+                class="form-check-input"
+                :checked="r[f.key]"
+                disabled
+              /><label v-if="f.labelKey">{{ r[f.labelKey] }}</label>
+            </template>
             <!-- Date types -->
             <template v-else-if="f.type === 'date'">
-              {{ new Date(r[f.key]).toLocaleDateString() }}
+              {{ new Date(r[f.key]).toLocaleDateString().slice(0, 10) }}
+            </template>
+            <!-- Date time types -->
+            <template v-else-if="f.type === 'datetime'">
+              {{ new Date(r[f.key]).toLocaleString().slice(0, 16) }}
             </template>
             <!-- No type -->
             <slot
@@ -72,6 +87,7 @@
           <td :colspan="fields.length" class="p-0">
             <component
               :is="detailRowComponent"
+              :options="detailRowOptions"
               :class="detailRowClass"
               v-bind="{
                 visible: detailsRowVisibility[r.id],
@@ -87,7 +103,7 @@
       <slot name="foot"></slot>
     </tfoot>
   </table>
-  <div class="d-grid gap-2 d-md-block m-2">
+  <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
     <button class="btn" title="Export CSV" @click="toCvs">
       <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
     </button>
@@ -120,7 +136,7 @@ export default {
     },
     selectKey: {
       type: String,
-      default: () => '',
+      default: 'id',
     },
     rowClass: {
       type: [String, Function],
@@ -128,15 +144,23 @@ export default {
     },
     rowSelectedClass: {
       type: String,
-      default: () => '',
+      default: 'table-primary',
     },
     detailRowComponent: {
+      type: Object,
+      default: () => {},
+    },
+    detailRowOptions: {
       type: Object,
       default: () => {},
     },
     detailRowClass: {
       type: String,
       default: () => '',
+    },
+    hideDownload: {
+      type: Boolean,
+      default: () => false,
     },
   },
   emits: ['selected'],
@@ -148,7 +172,9 @@ export default {
         func: (a) => a,
       },
       selected: null,
-      detailsRowVisibility: {},
+      detailsRowVisibility: this.detailRowComponent
+        ? Object.fromEntries(this.data.map((d) => [d[this.selectKey], false]))
+        : {},
       defaultFormatter: (e) => e,
     };
   },
@@ -246,17 +272,35 @@ export default {
         [id]: true,
       };
     },
+    showAllDetailRow() {
+      this.detailsRowVisibility = Object.fromEntries(
+        Object.keys(this.detailsRowVisibility).map((key) => [key, true])
+      );
+    },
     hideDetailRow(id) {
       this.detailsRowVisibility = {
         ...this.detailsRowVisibility,
         [id]: false,
       };
     },
+    hideAllDetailRow() {
+      this.detailsRowVisibility = Object.fromEntries(
+        Object.keys(this.detailsRowVisibility).map((key) => [key, false])
+      );
+    },
     toggleDetailRow(id) {
       this.detailsRowVisibility = {
         ...this.detailsRowVisibility,
         [id]: !this.detailsRowVisibility[id],
       };
+    },
+    toggleAllDetailRow() {
+      this.detailsRowVisibility = Object.fromEntries(
+        Object.entries(this.detailsRowVisibility).map(([key, value]) => [
+          key,
+          !value,
+        ])
+      );
     },
   },
 };

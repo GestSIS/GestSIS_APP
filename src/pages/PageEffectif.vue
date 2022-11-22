@@ -150,8 +150,6 @@
           <base-table
             v-show="!loading"
             :selectable="true"
-            select-key="id"
-            row-selected-class="table-primary"
             :fields="fieldsBase"
             no-data="Aucun sapeur à afficher"
             :data="filteredSapeurs"
@@ -204,7 +202,6 @@ import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
 
@@ -223,9 +220,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'PageEffectif',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -258,33 +252,25 @@ export default {
           title: 'PAR',
           key: 'porteur',
           sortKey: 'porteur',
-          type: 'boolean',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'B',
           key: 'b',
           sortKey: 'b',
-          type: 'boolean',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'C1',
           key: 'c1',
           sortKey: 'c1',
-          type: 'boolean',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'C1 118',
           key: 'c1_118',
           sortKey: 'c1_118',
-          type: 'boolean',
-          titleClass: 'text-center',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'Grade',
@@ -339,6 +325,9 @@ export default {
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+      hasSmsEnvoiePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
       hasExerciceModificationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
@@ -454,6 +443,12 @@ export default {
       this.selectedId = id;
     },
     sms() {
+      if (!this.hasSmsEnvoiePermission) {
+        this.$awn.alert(
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+        );
+        return;
+      }
       this.SHOW_MODAL({
         component: 'ModalSms',
         size: 1,

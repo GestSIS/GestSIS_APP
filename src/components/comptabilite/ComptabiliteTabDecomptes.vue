@@ -97,9 +97,7 @@
           :selectable="true"
           :detail-row-component="detailRow"
           detail-row-class="m-td-0"
-          select-key="id"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
-          row-selected-class="table-primary"
           @selected="selected"
         >
           <template #details="props">
@@ -141,7 +139,6 @@ import { markRaw } from 'vue';
 import store from '@/store/index';
 import DecompteService from '@/services/DecompteService.js';
 
-import BaseTable from '@/components/table/BaseTable.vue';
 import FraisEcritureDetailsVue from './FraisEcritureDetails.vue';
 
 async function loadData(routeTo, next) {
@@ -157,9 +154,6 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'FraisTabDecompte',
-  components: {
-    BaseTable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -255,11 +249,9 @@ export default {
         },
         {
           title: 'Déductions',
-          titleClass: 'text-center',
           key: 'deduction',
           sortKey: 'deduction',
-          type: 'boolean',
-          columnClass: 'align-middle text-center',
+          type: Boolean,
         },
         {
           title: 'Charges AVS',

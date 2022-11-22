@@ -20,6 +20,10 @@ export default {
     VALIDATION: 'exercice.validation',
     CONFIG: 'exercice.config',
   },
+  SMS: {
+    ENVOIE: 'sms.envoie',
+    CONFIG: 'sms.config',
+  },
   UTILISATEUR: {
     TOUT: 'utilisateur.tout',
     CONFIG: 'utilisateur.config',

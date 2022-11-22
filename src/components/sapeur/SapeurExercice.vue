@@ -3,14 +3,16 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Exercices</h3>
+      <button
+        v-if="hasPresencePermission"
+        class="btn btn-primary"
+        @click.prevent="edit"
+      >
+        Modifier
+      </button>
     </div>
     <div class="card-body table-responsive">
-      <table
-        id="sap-fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="sap-fonctions" class="table table-sm">
         <thead>
           <tr>
             <th>Date</th>
@@ -20,9 +22,9 @@
             <th>Désignation</th>
             <th class="text-center">Convoqué</th>
             <th class="text-center">Présent</th>
+            <th class="text-center">Remplacé</th>
             <th class="text-center">Excusé</th>
             <th class="text-center">Amende</th>
-            <!-- <th>Solde</th> -->
           </tr>
         </thead>
         <tbody>
@@ -30,59 +32,85 @@
             <td colspan="9">Aucun exercice à afficher</td>
           </tr>
           <tr v-for="e in exerciceDisplay" :key="e.id">
-            <td>{{ e.date }}</td>
-            <td>{{ e.heure }}</td>
-            <td>{{ e.categorie }}</td>
-            <td>{{ e.localite }}</td>
-            <td>{{ e.designation }}</td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.date.toLocaleDateString() }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.heure }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.categorie }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.localite }}
+              </component>
+            </td>
+            <td>
+              <component :is="e.canceled ? 'del' : 'span'">
+                {{ e.designation }}
+              </component>
+            </td>
             <td class="text-center">
               <input
-                id="convoque"
                 type="checkbox"
                 class="form-check-input"
                 :checked="e.convoque"
+                :true-value="1"
+                :false-value="0"
                 disabled
               />
-              <label class="form-check-label" for="convoque"></label>
             </td>
             <td class="text-center">
               <input
-                id="present"
                 type="checkbox"
                 class="form-check-input"
                 :checked="e.present"
+                :true-value="1"
+                :false-value="0"
                 disabled
               />
-              <label class="form-check-label" for="present"></label>
             </td>
             <td class="text-center">
               <input
-                id="excuse"
+                type="checkbox"
+                class="form-check-input"
+                :checked="e.remplace"
+                :true-value="1"
+                :false-value="0"
+                disabled
+              />
+            </td>
+            <td class="text-center">
+              <input
                 type="checkbox"
                 class="form-check-input"
                 :checked="e.excuse_type_id"
                 disabled
               />
-              <label class="form-check-label" for="excuse">
+              <label v-if="e.excuse_type_id" class="form-check-label ms-1">
                 {{
                   e.excuse_type_id
                     ? excusesType.find((a) => a.id == e.excuse_type_id)
-                        .designation
+                        ?.designation
                     : ''
                 }}
               </label>
             </td>
             <td class="text-center">
               <input
-                id="amende"
                 type="checkbox"
                 class="form-check-input"
-                :checked="e.amende_id"
+                :checked="e.amende"
                 disabled
               />
-              <label class="form-check-label" for="amende"></label>
             </td>
-            <!-- <td>0.0</td> -->
           </tr>
         </tbody>
       </table>
@@ -91,7 +119,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurExercice',
@@ -103,23 +132,24 @@ export default {
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasPresencePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
     }),
     exerciceDisplay() {
       return this.activeSapeurExercice
-        .map((exercice) => {
-          let localite = this.localites.find(
-            (l) => l.id == exercice.localite_id
-          );
-          return {
-            ...exercice,
-            categorie: this.categories.find(
-              (e) => e.id == exercice.exercice_categorie_id
-            )?.designation,
-            localite: `${localite.npa} ${localite.designation}`,
-            heure: exercice.heure.substr(0, 5),
-          };
-        })
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .map((exercice) => ({
+          ...exercice,
+          canceled: exercice.statut == 0,
+          date: new Date(exercice.date),
+          heure: exercice.heure.substr(0, 5),
+          categorie: this.categories.find(
+            (e) => e.id == exercice.exercice_categorie_id
+          )?.designation,
+          localite: this.localites.find((l) => l.id == exercice.localite_id)
+            ?.designation,
+        }))
+        .sort((a, b) => a.date - b.date);
     },
   },
   watch: {
@@ -132,10 +162,18 @@ export default {
   },
   mounted() {
     //TODO: Load before any display
-    //TODO: Affichage solde ? Droits ?
     this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
     this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
     this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    edit() {
+      this.SHOW_MODAL({
+        component: 'ModalPresenceExercice',
+        size: 2,
+      });
+    },
   },
 };
 </script>
