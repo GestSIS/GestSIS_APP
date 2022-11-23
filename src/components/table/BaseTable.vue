@@ -53,7 +53,7 @@
               /><label v-if="f.labelKey">{{ r[f.labelKey] }}</label>
             </template>
             <!-- Date types -->
-            <template v-else-if="f.type === 'date'">
+            <template v-else-if="f.type === 'date' || f.type == Date">
               {{ new Date(r[f.key]).toLocaleDateString().slice(0, 10) }}
             </template>
             <!-- Date time types -->

@@ -23,7 +23,6 @@ import {
   faHourglassEnd,
   faFileInvoiceDollar,
   faCheck,
-  faInfoCircle,
   faMars,
   faVenus,
   faMedal,
@@ -47,6 +46,7 @@ import {
   faPersonCirclePlus,
   faPersonCircleMinus,
   faImagePortrait,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';

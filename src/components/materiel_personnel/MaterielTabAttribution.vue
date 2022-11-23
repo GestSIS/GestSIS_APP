@@ -80,6 +80,13 @@
             >
               <template #actions="props">
                 <button
+                  title="Info"
+                  class="btn btn-outline-primary border-0"
+                  @click="info(props.rowData)"
+                >
+                  <font-awesome-icon :icon="['fas', 'info-circle']" />
+                </button>
+                <button
                   title="Attribuer"
                   class="btn btn-outline-primary border-0"
                   @click="retourSimple(props.rowData)"
@@ -313,6 +320,12 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    info() {
+      this.SHOW_MODAL({
+        component: 'ModalMatPersoMateriel',
+        size: 1,
+      });
+    },
     attribuer() {
       this.SHOW_MODAL({
         component: 'ModalAttributionMultiple',
