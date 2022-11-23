@@ -75,7 +75,7 @@ export default {
         }, {})
       ).map((m) => {
         const s = this.sapeurs.find((s) => s.id == m.sapeur_id);
-        return { ...m, nom_prenom: s?.nom + ' ' + s?.prenom, fin: 'TODO' };
+        return { ...m, nom_prenom: s?.nom + ' ' + s?.prenom, fin: '-' }; // TODO: identifier date de fin de service du sapeur !!! fin: 'TODO' };
       });
       // TODO: Ajouter fin de service
     },

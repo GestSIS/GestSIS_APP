@@ -1,7 +1,15 @@
 {
   "releases": [
     {
-      "date": "18.11.2022",
+      "date": "23.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Décompte par sapeur, groupement des écritures par les catégories existantes"
+      ]
+    },
+    {
+      "date": "22.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [

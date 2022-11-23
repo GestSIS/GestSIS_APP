@@ -9,7 +9,7 @@
         class="mb-3"
         value-key="id"
         display-key="designation"
-        base-option="&lt;Type&gt;"
+        base-option="&lt;Événement&gt;"
         :options="eventType"
         @input="(value) => onFilter('type_intervention_id', value)"
       />

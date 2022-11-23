@@ -102,12 +102,12 @@
     <tfoot>
       <slot name="foot"></slot>
     </tfoot>
+    <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
+      <button class="btn" title="Export CSV" @click="toCvs">
+        <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
+      </button>
+    </div>
   </table>
-  <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
-    <button class="btn" title="Export CSV" @click="toCvs">
-      <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
-    </button>
-  </div>
 </template>
 
 <script>

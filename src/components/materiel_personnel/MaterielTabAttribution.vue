@@ -1,132 +1,104 @@
 <template>
   <div class="row">
-    <div class="col-3">
-      <div class="card card-primary card-outline mb-2 table-responsive">
-        <div class="card-header">
-          <h5>Filtre matériel type</h5>
+    <div class="col-md-12">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Filtres</h5>
         </div>
-        <materiel-type-categorie-select @change="selectedTypes" />
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <input
+                v-model="filtreSapeur"
+                type="text"
+                placeholder="Sapeur"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-md-4">
+              <input
+                v-model="filtreNumero"
+                type="text"
+                placeholder="Numéro"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-md-4">
+              <input
+                v-model="filtreTaille"
+                type="text"
+                placeholder="Taille"
+                class="form-control form-control-sm"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-9">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Actions</h5>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <button class="btn btn-primary" @click="attribuer">
-                    Attribuer
-                  </button>
-                </div>
-              </div>
-            </div>
+    <div class="col-md-6">
+      <div class="card card-primary card-outline mb-2 table-responsive">
+        <div class="card-header">
+          <h4>Matériel numéroté</h4>
+        </div>
+        <div v-if="loading" class="card-body d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Filtres</h5>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-4">
-                  <input
-                    v-model="filtreSapeur"
-                    type="text"
-                    placeholder="Sapeur"
-                    class="form-control form-control-sm"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <input
-                    v-model="filtreNumero"
-                    type="text"
-                    placeholder="Numéro"
-                    class="form-control form-control-sm"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <input
-                    v-model="filtreTaille"
-                    type="text"
-                    placeholder="Taille"
-                    class="form-control form-control-sm"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card card-primary card-outline mb-2 table-responsive">
-            <div class="card-header">
-              <h4>Matériel numéroté</h4>
-            </div>
-            <div v-if="loading" class="card-body d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
-            <base-table
-              v-show="!loading"
-              :selectable="true"
-              :fields="fieldsNumerote"
-              no-data="Aucun sapeur à afficher"
-              :data="computedMaterielNumerote"
+        <base-table
+          v-show="!loading"
+          :selectable="true"
+          :fields="fieldsNumerote"
+          no-data="Aucun sapeur à afficher"
+          :data="computedMaterielNumerote"
+        >
+          <template #actions="props">
+            <button
+              title="Info"
+              class="btn btn-outline-primary border-0"
+              @click="info(props.rowData)"
             >
-              <template #actions="props">
-                <button
-                  title="Info"
-                  class="btn btn-outline-primary border-0"
-                  @click="info(props.rowData)"
-                >
-                  <font-awesome-icon :icon="['fas', 'info-circle']" />
-                </button>
-                <button
-                  title="Attribuer"
-                  class="btn btn-outline-primary border-0"
-                  @click="retourSimple(props.rowData)"
-                >
-                  <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-                </button>
-              </template>
-            </base-table>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card card-primary card-outline mb-2 table-responsive">
-            <div class="card-header">
-              <h4>Matériel générique</h4>
-            </div>
-            <div v-if="loading" class="card-body d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
-            <base-table
-              v-show="!loading"
-              :selectable="true"
-              :fields="fieldsGeneric"
-              no-data="Aucun sapeur à afficher"
-              :data="computedMaterielGeneric"
-              @selected="selectSapeur"
+              <font-awesome-icon :icon="['fas', 'info-circle']" />
+            </button>
+            <button
+              title="Attribuer"
+              class="btn btn-outline-primary border-0"
+              @click="retourSimple(props.rowData)"
             >
-              <template #actions="props">
-                <button
-                  title="Attribuer"
-                  class="btn btn-outline-primary border-0"
-                  @click="retourSimple(props.rowData)"
-                >
-                  <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-                </button>
-              </template>
-            </base-table>
+              <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+            </button>
+          </template>
+        </base-table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card card-primary card-outline mb-2 table-responsive">
+        <div class="card-header">
+          <h4>Matériel générique</h4>
+        </div>
+        <div v-if="loading" class="card-body d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
+        <base-table
+          v-show="!loading"
+          :selectable="true"
+          :fields="fieldsGeneric"
+          no-data="Aucun sapeur à afficher"
+          :data="computedMaterielGeneric"
+          @selected="selectSapeur"
+        >
+          <template #actions="props">
+            <button
+              title="Attribuer"
+              class="btn btn-outline-primary border-0"
+              @click="retourSimple(props.rowData)"
+            >
+              <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+            </button>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -136,22 +108,23 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
-import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
-
 export default {
   name: 'MaterielTabAttribution',
-  components: {
-    MaterielTypeCategorieSelect,
+  props: {
+    selectedIds: {
+      required: false,
+      type: Object,
+      default: () => ({
+        type: {},
+        categorie: {},
+      }),
+    },
   },
   data() {
     return {
       filtreSapeur: '',
       filtreTaille: '',
       filtreNumero: '',
-      selectedIds: {
-        type: {},
-        categorie: {},
-      },
       loading: true,
       selectedId: null,
       filters: {},
@@ -340,9 +313,6 @@ export default {
     },
     selectSapeur(id) {
       this.selectedId = id;
-    },
-    selectedTypes(selectedIds) {
-      this.selectedIds = selectedIds;
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: value };

@@ -16,33 +16,80 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'mat-perso-dashboard' }"
-            >Tableau de bord</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mat-perso-materiel' }"
-            >Matériel distribué</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'mat-perso-inventaire' }"
-            >Inventaire</router-link
-          >
-        </nav>
-        <div id="nav-tabContent" class="tab-content">
-          <div class="tab-pane fade show active" role="tabpanel">
-            <router-view />
+      <div class="col-3">
+        <div class="card card-primary card-outline mb-2 table-responsive">
+          <div class="card-header">
+            <h5>Filtre matériel type</h5>
+          </div>
+          <materiel-type-categorie-select @change="selectedTypes" />
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary card-outline mb-2">
+              <div class="card-header d-flex justify-content-between">
+                <h5>Actions</h5>
+              </div>
+              <div class="card-body">
+                <button class="btn btn-primary" @click="attribuer">
+                  Attribuer
+                </button>
+                <button
+                  class="btn btn-primary ms-2"
+                  @click="modifierInventaire"
+                >
+                  Modifier l'inventaire
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card card-primary card-outline mb-2">
+              <div class="card-header d-flex justify-content-between">
+                <h5>Evénements</h5>
+              </div>
+              <div class="card-body">
+                <button
+                  v-for="(event, index) in eventTypes"
+                  :key="index"
+                  class="btn btn-primary me-2"
+                  @click="newEvent(event)"
+                >
+                  {{ event.nom }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
+              <router-link
+                class="nav-item nav-link"
+                role="tab"
+                exact-active-class="active"
+                :to="{ name: 'mat-perso-dashboard' }"
+                >Tableau de bord</router-link
+              >
+              <router-link
+                class="nav-item nav-link"
+                role="tab"
+                active-class="active"
+                :to="{ name: 'mat-perso-materiel' }"
+                >Matériel distribué</router-link
+              >
+              <router-link
+                class="nav-item nav-link"
+                role="tab"
+                exact-active-class="active"
+                :to="{ name: 'mat-perso-inventaire' }"
+                >Inventaire</router-link
+              >
+            </nav>
+            <div id="nav-tabContent" class="tab-content">
+              <div class="tab-pane fade show active" role="tabpanel">
+                <router-view />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -51,10 +98,14 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
+
+import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 async function loadData(routeTo, next) {
   let loadMateriel = store.dispatch('fetchMatPerso');
+  let loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
   let loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
   let loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
   let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
@@ -68,6 +119,7 @@ async function loadData(routeTo, next) {
     loadMaterielAlertes,
     loadMaterielTypes,
     loadMaterielCategories,
+    loadMaterielEventTypes,
   ]).then(() => {
     next();
   });
@@ -75,11 +127,50 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'PageMaterielPersonnel',
+  components: { MaterielTypeCategorieSelect },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      selectedIds: {
+        type: {},
+        categorie: {},
+      },
+    };
+  },
+  computed: {
+    ...mapState({
+      eventTypes: (state) => state.matPersoEventType.liste,
+    }),
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    selectedTypes(types) {
+      this.selectedIds = types;
+    },
+    attribuer() {
+      this.SHOW_MODAL({
+        component: 'ModalAttributionMultiple',
+        size: 1,
+      });
+    },
+    modifierInventaire() {
+      this.SHOW_MODAL({
+        component: 'ModalInventaire',
+        size: 2,
+      });
+    },
+    newEvent(event) {
+      this.SHOW_MODAL({
+        component: 'ModalInventaire',
+        size: 2,
+        data: event,
+      });
+    },
   },
 };
 </script>

@@ -1,119 +1,95 @@
 <template>
   <div class="row">
-    <div class="col-3">
-      <div class="card card-primary card-outline mb-2 table-responsive">
-        <div class="card-header">
-          <h5>Filtre matériel type</h5>
+    <!-- <div class="col-md-12">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Filtres</h5>
         </div>
-        <materiel-type-categorie-select @change="selectedTypes" />
-      </div>
-    </div>
-    <div class="col-9">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Filtres</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <select
+                class="form-select form-select-sm"
+                @change="(event) => onFilter('localite_id', event.target.value)"
+              >
+                <option>&lt;Localité&gt;</option>
+                <option
+                  v-for="loc in filteredLocalites"
+                  :key="loc.id"
+                  :value="loc.id"
+                >
+                  {{ loc.designation }}
+                </option>
+              </select>
             </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-4">
-                  <select
-                    class="form-select form-select-sm"
-                    @change="
-                      (event) => onFilter('localite_id', event.target.value)
-                    "
-                  >
-                    <option>&lt;Localité&gt;</option>
-                    <option
-                      v-for="loc in filteredLocalites"
-                      :key="loc.id"
-                      :value="loc.id"
-                    >
-                      {{ loc.designation }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <select
-                    class="form-select form-select-sm"
-                    @change="
-                      (event) =>
-                        onFilter(
-                          'fonctions',
-                          parseInt(event.target.value)
-                            ? (fonctions) =>
-                                fonctions.find(
-                                  (f) => f.fonction_id == event.target.value
-                                ) != undefined
-                            : null
-                        )
-                    "
-                  >
-                    <option>&lt;Fonction&gt;</option>
-                    <option
-                      v-for="f in filteredFonctions"
-                      :key="f.id"
-                      :value="f.id"
-                    >
-                      {{ f.nom }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <select
-                    class="form-select form-select-sm"
-                    @change="
-                      (event) => onFilter('grade_id', event.target.value)
-                    "
-                  >
-                    <option>&lt;Grade&gt;</option>
-                    <option
-                      v-for="f in filteredGrades"
-                      :key="f.id"
-                      :value="f.id"
-                    >
-                      {{ f.designation }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <select
-                    class="form-select form-select-sm"
-                    @change="
-                      (event) =>
-                        onFilter(
-                          'groupes',
-                          parseInt(event.target.value)
-                            ? (groupes) =>
-                                groupes.find(
-                                  (f) => f.groupe_id == event.target.value
-                                ) != undefined
-                            : undefined
-                        )
-                    "
-                  >
-                    <option :value="undefined">&lt;Groupe&gt;</option>
-                    <option
-                      v-for="f in filteredGroupes"
-                      :key="f.id"
-                      :value="f.id"
-                    >
-                      {{ (f.no ? f.no + ' ' : '') + f.designation }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+            <div class="col-md-4">
+              <select
+                class="form-select form-select-sm"
+                @change="
+                  (event) =>
+                    onFilter(
+                      'fonctions',
+                      parseInt(event.target.value)
+                        ? (fonctions) =>
+                            fonctions.find(
+                              (f) => f.fonction_id == event.target.value
+                            ) != undefined
+                        : null
+                    )
+                "
+              >
+                <option>&lt;Fonction&gt;</option>
+                <option
+                  v-for="f in filteredFonctions"
+                  :key="f.id"
+                  :value="f.id"
+                >
+                  {{ f.nom }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="form-select form-select-sm"
+                @change="(event) => onFilter('grade_id', event.target.value)"
+              >
+                <option>&lt;Grade&gt;</option>
+                <option v-for="f in filteredGrades" :key="f.id" :value="f.id">
+                  {{ f.designation }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select
+                class="form-select form-select-sm"
+                @change="
+                  (event) =>
+                    onFilter(
+                      'groupes',
+                      parseInt(event.target.value)
+                        ? (groupes) =>
+                            groupes.find(
+                              (f) => f.groupe_id == event.target.value
+                            ) != undefined
+                        : undefined
+                    )
+                "
+              >
+                <option :value="undefined">&lt;Groupe&gt;</option>
+                <option v-for="f in filteredGroupes" :key="f.id" :value="f.id">
+                  {{ (f.no ? f.no + ' ' : '') + f.designation }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
-        <div class="col-6">
-          <materiel-alertes />
-        </div>
-        <div class="col-6">
-          <materiel-a-recuperer />
-        </div>
       </div>
+    </div> -->
+    <div class="col-6">
+      <materiel-alertes />
+    </div>
+    <div class="col-6">
+      <materiel-a-recuperer />
     </div>
   </div>
 </template>
@@ -125,14 +101,12 @@ import permissions from '@/store/permissions.js';
 import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
 import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../../services/SapeurService.js';
-import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
   name: 'PageMaterielPersonnel',
   components: {
     MaterielARecuperer,
     MaterielAlertes,
-    MaterielTypeCategorieSelect,
   },
   data() {
     return {

@@ -3,11 +3,6 @@
     <div class="card-header d-flex justify-content-between">
       <h5>Alertes</h5>
     </div>
-    <div v-if="loading" class="card-body d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Chargement...</span>
-      </div>
-    </div>
     <base-table
       :selectable="true"
       :fields="fields"
@@ -27,10 +22,8 @@
 <script>
 import { mapState } from 'vuex';
 
-// import permissions from '@/store/permissions.js';
-
 export default {
-  name: 'MaterielPersonnelARecuperer',
+  name: 'MaterielAlertes',
   data() {
     return {
       errors: {},
