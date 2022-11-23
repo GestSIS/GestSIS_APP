@@ -5,50 +5,136 @@
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <base-select
-        class="mb-3"
-        value-key="id"
-        display-key="designation"
-        base-option="&lt;Événement&gt;"
-        :options="eventType"
-        @input="(value) => onFilter('type_intervention_id', value)"
-      />
-      <base-select
-        class="mb-3"
-        value-key="id"
-        label="Matériel"
-        display-key="label"
-        base-option="&lt;Matériel&gt;"
-        :options="filteredMateriel"
-      />
-      <div class="mb-3">
-        <label for="date">Date</label>
-        <input
-          id="date"
-          v-model="activeEvent.date"
-          type="datetime-local"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date'] }"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="remarque">Remarque</label>
-        <input
-          id="remarque"
-          v-model="activeEvent.remarque"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['remarque'] }"
-        />
-      </div>
-      <div class="mb-3 form-check">
-        <input
-          id="materiel-succes-modal"
-          v-model="activeEvent.succes"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="materiel-succes-modal">OK</label>
+      <div class="row">
+        <div class="col-6">
+          <base-select
+            v-model="activeEvent.materiel_event_type_id"
+            class="mb-3"
+            label="Événement"
+            value-key="id"
+            display-key="nom"
+            base-option="&lt;Événement&gt;"
+            :options="eventTypes"
+          />
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="date">Date</label>
+            <input
+              id="date"
+              v-model="activeEvent.date"
+              type="date"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['date'] }"
+            />
+          </div>
+        </div>
+        <div class="col-12">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Matériel</th>
+                <th>Numéro</th>
+                <th>Sapeur</th>
+                <th>Remarque</th>
+                <th
+                  v-if="
+                    eventTypes.find(
+                      (t) => t.id == activeEvent.materiel_event_type_id
+                    )?.validable
+                  "
+                  class="text-center"
+                >
+                  Succès
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(materiel, index) in activeEvent.materiels"
+                :key="index"
+              >
+                <td>
+                  <base-select
+                    v-model="materiel.materiel_type_id"
+                    class="mb-3"
+                    value-key="id"
+                    display-key="designation"
+                    :options="materielTypes"
+                    @update:model-value="
+                      (value) => selectMateriel(materiel, value)
+                    "
+                  />
+                </td>
+                <td>
+                  <base-select
+                    v-model="materiel.id"
+                    class="mb-3"
+                    value-key="id"
+                    display-key="numero"
+                    :options="
+                      filteredMaterielDispo.filter(
+                        (m) =>
+                          !materiel.materiel_type_id ||
+                          m.materiel_type_id == materiel.materiel_type_id
+                      )
+                    "
+                    @update:model-value="
+                      (value) => selectNumero(materiel, value)
+                    "
+                  />
+                </td>
+                <td>
+                  <base-select
+                    v-model="materiel.sapeur_id"
+                    class="mb-3"
+                    value-key="id"
+                    display-key="label"
+                    :options="
+                      sapeurs.filter((s) =>
+                        filteredMaterielDispo.find(
+                          (m) =>
+                            (!materiel.materiel_type_id ||
+                              m.materiel_type_id ==
+                                materiel.materiel_type_id) &&
+                            m.sapeur_id == s.id &&
+                            !m.retour
+                        )
+                      )
+                    "
+                    @update:model-value="
+                      (value) => selectSapeur(materiel, value)
+                    "
+                  />
+                </td>
+                <td>
+                  <input
+                    id="remarque"
+                    v-model="activeEvent.remarque"
+                    type="text"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['remarque'] }"
+                  />
+                </td>
+                <td
+                  v-if="
+                    eventTypes.find(
+                      (t) => t.id == activeEvent.materiel_event_type_id
+                    )?.validable
+                  "
+                  class="text-center"
+                >
+                  <input
+                    id="materiel-succes-modal"
+                    v-model="activeEvent.succes"
+                    type="checkbox"
+                    class="form-check-input"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -79,8 +165,9 @@ export default {
       materielTypeIds: {},
       activeEvent: {
         success: true,
-        materiel_event_id: null,
-        date: new Date(),
+        materiel_event_type_id: null,
+        date: new Date().toISOString().slice(0, 10),
+        materiels: [{ id: null, numero: null }],
       },
       selectedIds: {
         type: {},
@@ -94,9 +181,36 @@ export default {
         state.matPersoCategorie.liste.sort(
           (a, b) => a.designation - b.designation
         ),
+      sapeurs: (state) =>
+        state.sapeur.liste.map((s) => ({
+          ...s,
+          label: `${s.nom} ${s.prenom}`,
+        })),
+      eventTypes: (state) => state.matPersoEventType.liste,
       types: (state) =>
         state.matPersoType.liste.sort((a, b) => a.designation - b.designation),
+      materielDispo: (state) => state.matPersoMateriel.liste,
     }),
+    materielTypes() {
+      const eventType = this.eventTypes.find(
+        (e) => e.id == this.activeEvent.materiel_event_type_id
+      );
+      const typeIds = new Set(
+        eventType?.materiel_types?.map((t) => parseInt(t.id)) ?? []
+      );
+      return this.types.filter((t) => typeIds.has(parseInt(t.id)));
+    },
+    filteredMaterielDispo() {
+      const eventType = this.eventTypes.find(
+        (e) => e.id == this.activeEvent.materiel_event_type_id
+      );
+      const typeIds = new Set(
+        eventType?.materiel_types?.map((t) => t.id) ?? []
+      );
+      return this.materielDispo
+        .filter((m) => typeIds.has(parseInt(m.materiel_type_id)))
+        .map((m) => ({ ...m, ...m.materiel }));
+    },
     computedData() {
       let indexedTypes = {};
       this.types.forEach((t) => {
@@ -171,6 +285,37 @@ export default {
           this.selectedIds.type[e.id] = selected;
         }
       });
+    },
+    selectMateriel(materiel, materielTypeId) {
+      const mat = this.materielDispo.find(
+        (m) => m.materiel_type_id == materielTypeId
+      );
+      materiel.id = mat?.id;
+      materiel.numero = mat?.numero;
+      materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
+    },
+    selectNumero(materiel, matId) {
+      if (matId) {
+        const mat = this.materielDispo.find((m) => m.id == matId);
+        materiel.id = mat?.id;
+        materiel.numero = mat?.numero;
+        materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
+        materiel.materiel_type_id = mat?.materiel_type_id;
+      }
+    },
+    selectSapeur(materiel, sapeurId) {
+      if (sapeurId) {
+        const mat = this.materielDispo.find(
+          (m) =>
+            m.sapeur_id == sapeurId &&
+            (!materiel.materiel_type_id ||
+              m.materiel_type_id == materiel.materiel_type_id) //&&            (!materiel.numero || m.numero == materiel.numero)
+        );
+        materiel.id = mat?.id;
+        materiel.numero = mat?.numero;
+        materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
+        materiel.materiel_type_id = mat?.materiel_type_id;
+      }
     },
     async save() {
       this.activeEvent.materielTypeIds = Object.entries(this.selectedIds.type)

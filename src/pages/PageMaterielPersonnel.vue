@@ -166,9 +166,11 @@ export default {
     },
     newEvent(event) {
       this.SHOW_MODAL({
-        component: 'ModalInventaire',
-        size: 2,
-        data: event,
+        component: 'ModalMatPersoEvent',
+        size: 1,
+        data: {
+          materiel_event_type_id: event.id,
+        },
       });
     },
   },

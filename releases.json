@@ -5,7 +5,9 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Décompte par sapeur, groupement des écritures par les catégories existantes"
+        "Décompte par sapeur, groupement des écritures par les catégories existantes",
+        "Refactor de l'interface du matériel personnel",
+        "Fenêtre détail pour matériel numéroté"
       ]
     },
     {
