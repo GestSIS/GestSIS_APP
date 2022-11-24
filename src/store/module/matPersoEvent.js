@@ -29,7 +29,7 @@ export default {
   actions: {
     addMatPersoEvents({ commit }, events) {
       return MatPersoEventService.addEvents(events).then((data) => {
-        commit(types.ADD_MAT_PERSO_EVENT_TYPE, data);
+        commit(types.UPDATE_MAT_PERSO_LISTE, data);
         return data;
       });
     },
