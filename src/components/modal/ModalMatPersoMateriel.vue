@@ -28,6 +28,16 @@
           />
         </div>
         <div class="mb-3">
+          <label for="categorie">Sapeur</label>
+          <base-select
+            :model-value="activeItem.retour == null ? activeItem.sapeur_id : 0"
+            :options="sapeurs"
+            value-key="id"
+            display-key="designation"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
           <label for="taille">Taille</label>
           <input
             id="taille"
@@ -126,6 +136,11 @@ export default {
   },
   computed: {
     ...mapState({
+      sapeurs: (state) =>
+        state.sapeur.liste.map((s) => ({
+          ...s,
+          designation: `${s.nom} ${s.prenom}`,
+        })),
       types: (state) => state.matPersoType.liste,
       eventTypes: (state) => state.matPersoEventType.liste,
     }),

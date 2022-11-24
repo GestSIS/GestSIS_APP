@@ -89,6 +89,8 @@
                     v-model="materiel.sapeur_id"
                     value-key="id"
                     display-key="label"
+                    base-option="&lt;Non-assigné&gt;"
+                    :base-value="null"
                     :options="
                       sapeurs.filter((s) =>
                         filteredMaterielDispo.find(
@@ -102,7 +104,11 @@
                       )
                     "
                     @update:model-value="
-                      (value) => selectSapeur(materiel, value)
+                      (value) =>
+                        selectSapeur(
+                          materiel,
+                          materiel.retour == null ? value : null
+                        )
                     "
                   />
                 </td>
@@ -245,30 +251,41 @@ export default {
       });
     },
     selectMateriel(materiel, materielTypeId) {
-      const mat = this.materielDispo.find(
+      const mat = this.filteredMaterielDispo.find(
         (m) => m.materiel_type_id == materielTypeId
       );
       materiel.id = mat?.id;
       materiel.numero = mat?.numero;
-      materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
+      materiel.sapeur_id = mat?.retour == null ? mat?.sapeur_id : null;
+      console.log('Type');
+      console.log(mat);
     },
     selectNumero(materiel, matId) {
       if (matId) {
-        const mat = this.materielDispo.find((m) => m.id == matId);
+        const mat = this.filteredMaterielDispo.find(
+          (m) => m.materiel.id == matId
+        );
+        console.log('Num');
+        console.log(matId);
+        console.log(mat);
+        console.log(mat?.retour != null ? null : mat?.sapeur_id);
         materiel.id = mat?.id;
         materiel.numero = mat?.numero;
-        materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
+        materiel.sapeur_id = mat?.retour != null ? null : mat?.sapeur_id;
         materiel.materiel_type_id = mat?.materiel_type_id;
       }
     },
     selectSapeur(materiel, sapeurId) {
       if (sapeurId) {
-        const mat = this.materielDispo.find(
+        const mat = this.filteredMaterielDispo.find(
           (m) =>
             m.sapeur_id == sapeurId &&
             (!materiel.materiel_type_id ||
               m.materiel_type_id == materiel.materiel_type_id)
         );
+        console.log('Sapeur');
+        console.log(sapeurId);
+        console.log(mat);
         materiel.id = mat?.id;
         materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
