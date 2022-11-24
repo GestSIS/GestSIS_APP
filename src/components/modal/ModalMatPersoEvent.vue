@@ -109,7 +109,7 @@
                 <td>
                   <input
                     id="remarque"
-                    v-model="activeEvent.remarque"
+                    v-model="materiel.remarque"
                     type="text"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['remarque'] }"
@@ -125,7 +125,7 @@
                 >
                   <input
                     id="materiel-succes-modal"
-                    v-model="activeEvent.succes"
+                    v-model="materiel.succes"
                     type="checkbox"
                     class="form-check-input"
                   />
@@ -278,7 +278,8 @@ export default {
     async save() {
       const baseData = {
         date: this.activeEvent.date,
-        evenement_type_id: this.activeEvent.evenement_type_id,
+        materiel_event_type_id: this.activeEvent.materiel_event_type_id,
+        remarque: '',
       };
       const events = this.activeEvent.materiels
         .filter((m) => m.id)

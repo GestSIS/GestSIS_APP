@@ -87,7 +87,7 @@
             </nav>
             <div id="nav-tabContent" class="tab-content">
               <div class="tab-pane fade show active" role="tabpanel">
-                <router-view />
+                <router-view :selected-ids="selectedIds" />
               </div>
             </div>
           </div>
@@ -104,13 +104,13 @@ import store from '@/store/index';
 import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 async function loadData(routeTo, next) {
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
   let loadMateriel = store.dispatch('fetchMatPerso');
   let loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
   let loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
   let loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
   let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
   let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
 
   Promise.all([
     loadSapeurs,

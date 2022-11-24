@@ -1,58 +1,52 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} une catégorie
-      </h5>
+      <h5 id="exampleModalLabel" class="modal-title">Fiche matériel</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body row">
       <div class="col-6">
         <div class="mb-3">
           <label for="categorie">Matériel type</label>
-          <select
-            id="categorie"
-            :value="activeItem.pere_id"
-            class="form-select form-select-sm"
-            :class="{ 'is-invalid': errors['pere_id'] }"
-            disabled
-          >
-            <option :value="null">-</option>
-            <option v-for="c in eventTypes" :key="c.id" :value="c.id">
-              {{ c.fullDesignation }}
-            </option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="designation">Numéro</label>
-          <input
-            id="designation"
-            v-model="activeItem.designation"
-            type="text"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['designation'] }"
+          <base-select
+            :model-value="activeItem.materiel_type_id"
+            :options="types"
+            value-key="id"
+            display-key="designation"
             disabled
           />
         </div>
         <div class="mb-3">
-          <label for="designation">Taille</label>
+          <label for="numero">Numéro</label>
           <input
-            id="designation"
-            v-model="activeItem.designation"
+            id="numero"
+            v-model="activeItem.numero"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['designation'] }"
+            :class="{ 'is-invalid': errors['numero'] }"
             disabled
           />
         </div>
         <div class="mb-3">
-          <label for="designation">Remarque</label>
+          <label for="taille">Taille</label>
           <input
-            id="designation"
-            v-model="activeItem.designation"
+            id="taille"
+            v-model="activeItem.taille"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['designation'] }"
+            :class="{ 'is-invalid': errors['taille'] }"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="remarque">Remarque</label>
+          <input
+            id="remarque"
+            v-model="activeItem.remarque"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['remarque'] }"
+            disabled
           />
         </div>
       </div>
@@ -62,16 +56,33 @@
           :fields="fields"
           :selectable="true"
           no-data="Aucun événement"
-        />
+        >
+          <template #actions="props">
+            <button
+              v-if="props.rowData.statut === 4"
+              class="btn btn-link border-0"
+              @click="props.actions.toggleDetailRow(props.rowData.id)"
+            >
+              <font-awesome-icon
+                v-if="props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!props.status.detailRowVisible || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </template>
+        </base-table>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <!-- <button type="button" class="btn btn-primary" @click="save()">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
@@ -92,50 +103,43 @@ export default {
       fields: [
         {
           title: 'Date',
-          field: 'date',
+          key: 'date',
           type: 'date',
         },
         {
           title: 'Événements',
-          field: 'type',
+          key: 'eventType',
         },
         {
           title: 'Remarque',
-          field: 'remarque',
+          key: 'remarque',
         },
         {
           title: 'Succès',
-          field: 'succes',
-        },
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-          dataClass: 'details-width',
+          key: 'succes',
+          type: Boolean,
         },
       ],
       errors: {},
-      eventTypeIds: {},
       activeItem: {},
     };
   },
   computed: {
     ...mapState({
-      categories: (state) =>
-        state.matPersoCategorie.liste.sort(
-          (a, b) => a.designation - b.designation
-        ),
-      eventTypes: (state) =>
-        state.matPersoEventType.liste.sort(
-          (a, b) => a.designation - b.designation
-        ),
+      types: (state) => state.matPersoType.liste,
+      eventTypes: (state) => state.matPersoEventType.liste,
     }),
   },
   mounted() {
+    console.log(this.data);
     this.activeItem = {
       ...this.activeItem,
       ...this.data,
-      events: this.data?.materiel?.events.map((e) => ({ ...e })),
+      events: this.data?.materiel?.events.map((e) => ({
+        ...e,
+        eventType: this.eventTypes.find((t) => t.id == e.materiel_event_type_id)
+          ?.nom,
+      })),
     };
   },
   methods: {

@@ -293,10 +293,11 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    info() {
+    info(materiel) {
       this.SHOW_MODAL({
         component: 'ModalMatPersoMateriel',
         size: 1,
+        data: materiel,
       });
     },
     attribuer() {

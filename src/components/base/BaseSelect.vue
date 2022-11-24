@@ -47,7 +47,7 @@ export default {
     },
     displayKey: {
       type: String,
-      default: '',
+      default: 'designation',
     },
     formatter: {
       type: Function,
