@@ -70,7 +70,7 @@
                 <td>
                   <base-select
                     v-model="materiel.id"
-                    value-key="id"
+                    value-key="materiel_nominal_id"
                     display-key="numero"
                     :options="
                       filteredMaterielDispo.filter(
@@ -230,7 +230,11 @@ export default {
       );
       return this.materielDispo
         .filter((m) => typeIds.has(parseInt(m.materiel_type_id)))
-        .map((m) => ({ ...m, ...m.materiel }));
+        .map((m) => ({
+          ...m,
+          ...m.materiel,
+          materiel_nominal_id: m.materiel?.id,
+        }));
     },
   },
   mounted() {
@@ -254,16 +258,16 @@ export default {
       const mat = this.filteredMaterielDispo.find(
         (m) => m.materiel_type_id == materielTypeId
       );
-      materiel.id = mat?.id;
+      materiel.id = mat?.materiel_nominal_id;
       materiel.numero = mat?.numero;
       materiel.sapeur_id = mat?.retour == null ? mat?.sapeur_id : null;
     },
     selectNumero(materiel, matId) {
       if (matId) {
         const mat = this.filteredMaterielDispo.find(
-          (m) => m.materiel.id == matId
+          (m) => m.materiel_nominal_id == matId
         );
-        materiel.id = mat?.id;
+        materiel.materiel_nominal_id = mat?.materiel_nominal_id;
         materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour != null ? null : mat?.sapeur_id;
         materiel.materiel_type_id = mat?.materiel_type_id;
@@ -277,7 +281,7 @@ export default {
             (!materiel.materiel_type_id ||
               m.materiel_type_id == materiel.materiel_type_id)
         );
-        materiel.id = mat?.id;
+        materiel.materiel_nominal_id = mat?.materiel_nominal_id;
         materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
         materiel.materiel_type_id = mat?.materiel_type_id;
@@ -290,8 +294,12 @@ export default {
         remarque: '',
       };
       const events = this.activeEvent.materiels
-        .filter((m) => m.id)
-        .map((m) => ({ ...baseData, ...m, materiel_id: m.id }));
+        .filter((m) => m.materiel_nominal_id)
+        .map((m) => ({
+          ...baseData,
+          ...m,
+          materiel_nominal_id: m.materiel_nominal_id,
+        }));
 
       this.$store
         .dispatch('addMatPersoEvents', events)

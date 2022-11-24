@@ -35,8 +35,8 @@ export default {
         },
         {
           title: 'Materiel type',
-          key: 'nb',
-          sortKey: 'nb',
+          key: 'type',
+          sortKey: 'type',
         },
         {
           title: 'Numéro',
@@ -45,8 +45,8 @@ export default {
         },
         {
           title: 'Sapeur',
-          key: 'nom_prenom',
-          sortKey: 'nom_prenom',
+          key: 'sapeur',
+          sortKey: 'sapeur',
         },
         {
           title: 'Actions',
@@ -59,14 +59,26 @@ export default {
     ...mapState({
       alertes: (state) => state.matPersoAlerte.liste,
       sapeurs: (state) => state.sapeur.liste,
+      types: (state) => state.matPersoType.liste,
     }),
     computedData() {
-      return this.alertes;
-      // .map((a) => {
-      //   const s = this.sapeurs.find((s) => s.id == a.sapeur_id);
-      //   return { ...a, nom_prenom: s?.nom + ' ' + s?.prenom, fin: 'TODO' };
-      // });
-      // TODO: Ajouter metadonnées
+      const sapeurFormat = (sapeurId) => {
+        const sap = this.sapeurs.find((s) => s.id == sapeurId);
+        return sap ? `${sap?.nom} ${sap?.prenom}` : '';
+      };
+
+      return this.alertes.map((a) => ({
+        ...a,
+        numero: a.materiel_nominal?.numero,
+        type: this.types.find(
+          (t) => t.id == a.materiel_nominal?.materiel?.materiel_type_id
+        )?.designation,
+        sapeur: sapeurFormat(
+          a.materiel_nominal?.materiel?.retour == null
+            ? a.materiel_nominal?.materiel?.sapeur_id
+            : null
+        ),
+      }));
     },
   },
   methods: {
