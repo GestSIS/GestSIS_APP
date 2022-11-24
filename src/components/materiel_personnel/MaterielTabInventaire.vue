@@ -46,6 +46,13 @@
         >
           <template #actions="props">
             <button
+              title="Info"
+              class="btn btn-outline-primary border-0"
+              @click="info(props.rowData)"
+            >
+              <font-awesome-icon :icon="['fas', 'info-circle']" />
+            </button>
+            <button
               title="Attribuer"
               class="btn btn-outline-primary border-0"
               @click="attribuerSimple(props.rowData)"
@@ -239,6 +246,13 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    info(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalMatPersoMateriel',
+        size: 1,
+        data: materiel,
+      });
+    },
     attribuerSimple(materiel) {
       this.SHOW_MODAL({
         component: 'ModalAttributionUnique',

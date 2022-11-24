@@ -150,11 +150,14 @@ export default {
     this.activeItem = {
       ...this.activeItem,
       ...this.data,
-      events: this.data?.materiel?.events.map((e) => ({
-        ...e,
-        eventType: this.eventTypes.find((t) => t.id == e.materiel_event_type_id)
-          ?.nom,
-      })),
+      events: this.data?.materiel?.events
+        .map((e) => ({
+          ...e,
+          eventType: this.eventTypes.find(
+            (t) => t.id == e.materiel_event_type_id
+          )?.nom,
+        }))
+        .sort((e1, e2) => e2?.date?.localeCompare(e1?.date)),
     };
   },
   methods: {
