@@ -101,12 +101,28 @@ import permissions from '@/store/permissions.js';
 import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
 import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../../services/SapeurService.js';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
+  let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
+
+  Promise.all([loadMaterielARecuperer, loadMaterielAlertes]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'PageMaterielPersonnel',
   components: {
     MaterielARecuperer,
     MaterielAlertes,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   data() {
     return {

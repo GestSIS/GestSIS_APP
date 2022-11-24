@@ -99,9 +99,24 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadMateriel = store.dispatch('fetchMatPerso');
+
+  Promise.all([loadMateriel]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'MaterielTabInventaire',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   props: {
     selectedIds: {
       required: false,

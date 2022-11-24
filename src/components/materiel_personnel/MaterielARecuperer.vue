@@ -11,7 +11,7 @@
     >
       <template #actions="props">
         <button
-          title="Attribuer"
+          title="Retour"
           class="btn btn-outline-primary border-0"
           @click="retourMultiple(props.rowData)"
         >
@@ -49,7 +49,7 @@ export default {
           sortKey: 'fin',
         },
         {
-          title: 'Fin de service',
+          title: 'Actions',
           slot: 'actions',
         },
       ],

@@ -105,18 +105,12 @@ import MaterielTypeCategorieSelect from '@/components/materiel_personnel/Materie
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadMateriel = store.dispatch('fetchMatPerso');
   let loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
   let loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
   let loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
-  let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
-  let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
 
   Promise.all([
     loadSapeurs,
-    loadMateriel,
-    loadMaterielARecuperer,
-    loadMaterielAlertes,
     loadMaterielTypes,
     loadMaterielCategories,
     loadMaterielEventTypes,

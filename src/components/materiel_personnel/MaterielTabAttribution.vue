@@ -61,7 +61,7 @@
               <font-awesome-icon :icon="['fas', 'info-circle']" />
             </button>
             <button
-              title="Attribuer"
+              title="Retour"
               class="btn btn-outline-primary border-0"
               @click="retourSimple(props.rowData)"
             >
@@ -91,7 +91,7 @@
         >
           <template #actions="props">
             <button
-              title="Attribuer"
+              title="Retour"
               class="btn btn-outline-primary border-0"
               @click="retourSimple(props.rowData)"
             >
@@ -107,9 +107,24 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
+import store from '@/store/index';
+
+async function loadData(routeTo, next) {
+  let loadMateriel = store.dispatch('fetchMatPerso');
+
+  Promise.all([loadMateriel]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'MaterielTabAttribution',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   props: {
     selectedIds: {
       required: false,

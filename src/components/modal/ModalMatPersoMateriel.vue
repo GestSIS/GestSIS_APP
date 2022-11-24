@@ -146,7 +146,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.data);
     this.activeItem = {
       ...this.activeItem,
       ...this.data,
