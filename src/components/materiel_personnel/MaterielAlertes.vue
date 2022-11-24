@@ -48,10 +48,10 @@ export default {
           key: 'sapeur',
           sortKey: 'sapeur',
         },
-        {
-          title: 'Actions',
-          slot: 'actions',
-        },
+        // {
+        //   title: 'Actions',
+        //   slot: 'actions',
+        // },
       ],
     };
   },
