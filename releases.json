@@ -6,7 +6,9 @@
       "app": "GestSIS APP",
       "changes": [
         "Indemnités et frais annuel, affichage de la fonction correspondante à l'obtention de celle-ci",
-        "Décompte par sapeur, résolution d'un cas particulier lié aux écritures AVS"
+        "Décompte par sapeur, résolution d'un cas particulier lié aux écritures AVS",
+        "Résolution de divers problèmes pour la gestion du matériel personnel",
+        "Système d'alertes pour les événements sur le matériel personnel"
       ]
     },
     {

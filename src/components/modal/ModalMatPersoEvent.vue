@@ -196,7 +196,7 @@ export default {
         success: true,
         materiel_event_type_id: null,
         date: new Date().toISOString().slice(0, 10),
-        materiels: [{ id: null, numero: null }],
+        materiels: [{ succes: true }],
       },
     };
   },
@@ -243,7 +243,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     addMateriel() {
-      this.activeEvent.materiels.push({});
+      this.activeEvent.materiels.push({ succes: true });
 
       const count = this.activeEvent.materiels.length;
       this.$nextTick(() => {
@@ -257,18 +257,12 @@ export default {
       materiel.id = mat?.id;
       materiel.numero = mat?.numero;
       materiel.sapeur_id = mat?.retour == null ? mat?.sapeur_id : null;
-      console.log('Type');
-      console.log(mat);
     },
     selectNumero(materiel, matId) {
       if (matId) {
         const mat = this.filteredMaterielDispo.find(
           (m) => m.materiel.id == matId
         );
-        console.log('Num');
-        console.log(matId);
-        console.log(mat);
-        console.log(mat?.retour != null ? null : mat?.sapeur_id);
         materiel.id = mat?.id;
         materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour != null ? null : mat?.sapeur_id;
@@ -283,9 +277,6 @@ export default {
             (!materiel.materiel_type_id ||
               m.materiel_type_id == materiel.materiel_type_id)
         );
-        console.log('Sapeur');
-        console.log(sapeurId);
-        console.log(mat);
         materiel.id = mat?.id;
         materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
