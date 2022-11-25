@@ -47,25 +47,23 @@ const request = {
             case value === false:
               return 0;
             default:
-              return value;
+              return encodeURIComponent(value);
           }
         };
 
         config.params = {
           ...options,
           url: encodeURIComponent(
-            API_URL +
-              config.url +
-              '?' +
-              Object.entries(config.params ?? {})
-                .map(([key, value]) => key + '=' + valueFormatter(value))
-                .join('&')
+            API_URL + config.url + '?' +
+            Object.entries(config.params ?? {})
+              .map(([key, value]) => key + '=' + valueFormatter(value))
+              .join('&')
           ),
         };
         config.url = '/print';
         return config;
       },
-      () => {}
+      () => { }
     );
 
     api.interceptors.response.use(
