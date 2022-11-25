@@ -141,6 +141,7 @@ export default {
           title: 'Date',
           field: 'date',
           type: 'date',
+          formatter: (d) => new Date(d).toLocaleDateString('fr-CH'),
         },
         {
           title: 'Ecriture',
@@ -251,9 +252,8 @@ export default {
           return {
             id: s.id,
             nom_prenom: s.nom_prenom,
-            fonction: s.fonction_id
-              ? this.fonctions.find((f) => f.id == s.fonction_id).nom
-              : '',
+            fonction:
+              this.fonctions.find((f) => f.id == s.fonction_id)?.nom ?? '',
             aPayer:
               ecrituresBySapeur
                 .get(s.id)
