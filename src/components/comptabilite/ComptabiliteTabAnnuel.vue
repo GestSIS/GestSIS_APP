@@ -108,8 +108,18 @@ export default {
         },
         {
           title: 'Type',
-          field: 'frais',
-          formatter: (field) => (field > 0 ? 'Frais' : 'Indemnité'),
+          field: 'type',
+          formatter: (t) => {
+            const mapping = {
+              0: 'Autre',
+              1: 'Solde',
+              2: 'Indemnité',
+              3: 'Frais forfaitaire',
+              4: 'Frais effectif',
+              5: 'Charge AVS/AC',
+            };
+            return mapping[t] ?? 'Autre';
+          },
         },
         {
           title: 'Compte',
