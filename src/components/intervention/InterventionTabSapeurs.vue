@@ -164,7 +164,7 @@
                         :icon="['fas', 'angle-right']"
                       />
                     </button>
-                    {{ formatSapeur(s) }}
+                    {{ s?.nom_prenom }}
                   </th>
                   <td class="text-center">
                     <input
@@ -284,9 +284,7 @@ export default {
       return [
         ...Object.keys(this.computedPresences)
           .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
-          .sort((s1, s2) =>
-            (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
-          ),
+          .sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom)),
       ];
     },
     computedPresences() {
@@ -341,10 +339,6 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
-    },
     formatDatePresence(d) {
       return d.slice(-8, -3);
     },

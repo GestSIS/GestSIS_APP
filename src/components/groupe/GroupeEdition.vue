@@ -119,7 +119,7 @@ export default {
         return {
           id: s.sapeur_id,
           key: `s-${s.sapeur_id}`,
-          label: `${sapeur.nom} ${sapeur.prenom}`,
+          label: sapeur.nom_prenom,
           type: sapeur.civilite_id == 1 ? 'homme' : 'femme',
         };
       };

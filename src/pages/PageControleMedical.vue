@@ -60,7 +60,7 @@
                   :key="sapeur.id"
                   :value="sapeur.id"
                 >
-                  {{ sapeur.nom }} {{ sapeur.prenom }}
+                  {{ sapeur.nom_prenom }}
                 </option>
               </select>
             </div>
@@ -330,10 +330,10 @@ export default {
       return this.controleMedical.designation;
     },
     sapeurName() {
-      const sapeur = this.sapeurs.find(
-        (s) => s.id == this.controleMedical.sapeur_id
+      return (
+        this.sapeurs.find((s) => s.id == this.controleMedical.sapeur_id)
+          ?.nom_prenom ?? ''
       );
-      return sapeur ? `${sapeur.nom} ${sapeur.prenom}` : '';
     },
     modeAjout() {
       return !parseInt(this.id) > 0;

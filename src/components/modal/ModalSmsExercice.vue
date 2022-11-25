@@ -89,8 +89,8 @@ export default {
       fields: [
         {
           title: 'Nom prénom',
-          key: 'nomPrenom',
-          sortKey: 'nomPrenom',
+          key: 'nom_prenom',
+          sortKey: 'nom_prenom',
           titleClass: 'align-middle',
         },
         {
@@ -132,7 +132,7 @@ export default {
       this.sapeurs.forEach(
         (s) =>
           (indexedSapeurs[s.id] = {
-            nomPrenom: `${s.nom} ${s.prenom}`,
+            nom_prenom: s.nom_prenom,
             portable: s.telephones
               .filter((a) => a.telephone_type_id === 3)
               .sort((a, b) => a.priorite - b.priorite)

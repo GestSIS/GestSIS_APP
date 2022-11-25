@@ -139,7 +139,7 @@
                 :class="{ 'table-primary': selectedSapeurId == s.id }"
                 @click="selectedSapeurId = s.id"
               >
-                <td>{{ s.nom }} {{ s.prenom }}</td>
+                <td>{{ s.nom_prenom }}</td>
                 <td>{{ formatLocalite(s.localite_id) }}</td>
                 <td>{{ formatFonction(s.fonction_id) }}</td>
                 <td
@@ -493,7 +493,7 @@ export default {
         this.computedData
           .map((s) =>
             [
-              `${s.nom} ${s.prenom}`,
+              s.nom_prenom,
               this.formatLocalite(s.localite_id),
               this.formatFonction(s.fonction_id),
               ...s.presences.map((p) => this.formatPresenceExport(p)),

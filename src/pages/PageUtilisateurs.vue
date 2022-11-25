@@ -138,8 +138,7 @@ export default {
         return '-';
       }
       const sapeurId = user.sapeur[0].sapeur_id;
-      const sapeur = this.sapeurs.find((s) => s.id === sapeurId);
-      return sapeur ? sapeur.nom + ' ' + sapeur.prenom : '-';
+      return this.sapeurs.find((s) => s.id === sapeurId)?.nom_prenom ?? '-';
     },
     invite() {
       this.SHOW_MODAL({ component: 'ModalRegisterToken' });

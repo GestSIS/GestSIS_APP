@@ -103,7 +103,7 @@
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
             >
-              {{ e.nom }} {{ e.prenom }}
+              {{ e.nom_prenom }}
             </td>
             <td
               :class="{
@@ -208,7 +208,7 @@ export default {
             localite: state.localite.liste.find((l) => l.id == s.localite_id)
               ?.designation,
             fonction:
-              state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
+              state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ??
               '',
             sapeur_id: s.id,
             numeros: s.telephones.map((t) => t.numero),
@@ -240,8 +240,7 @@ export default {
         [...referenceIds].filter((id) => actuelIds.has(id))
       );
 
-      const sapeurCompare = (a, b) =>
-        (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
+      const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
 
       const ajoutes = this.actuel
         .filter((s) => !referenceIds.has(s.sapeur_id))

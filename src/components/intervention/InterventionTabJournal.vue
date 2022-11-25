@@ -118,7 +118,7 @@
                   <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
                   <td>
-                    {{ formatSapeur(sapeurs.find((s) => s.id == m.sapeur_id)) }}
+                    {{ sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom }}
                   </td>
                   <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
@@ -227,10 +227,7 @@ export default {
         date: startDate,
         title: "Debut de l'intervention",
         description: chefIntervention
-          ? "Chef d'intervention : " +
-            chefIntervention.nom +
-            ' ' +
-            chefIntervention.prenom
+          ? "Chef d'intervention : " + chefIntervention?.nom_prenom
           : '',
         type: 'start',
         colorClass: 'default',
@@ -349,10 +346,6 @@ export default {
     formatTime(time) {
       let date = new Date(time);
       return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2);
-    },
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
     },
   },
 };

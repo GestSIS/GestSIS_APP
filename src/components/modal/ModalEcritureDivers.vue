@@ -26,7 +26,7 @@
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
           <option v-for="s in sapeurs" :key="s.id" :value="s.id">
-            {{ s.nom }} {{ s.prenom }}
+            {{ s.nom_prenom }}
           </option>
         </select>
       </div>

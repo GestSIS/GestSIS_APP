@@ -180,8 +180,7 @@ export default {
           title: 'Sapeur',
           field: 'sapeur_id',
           formatter: (sapeurId) => {
-            const sapeur = svm.sapeurs.find((e) => e.id == sapeurId);
-            return sapeur.nom + ' ' + sapeur.prenom;
+            return svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom;
           },
         },
         {

@@ -74,8 +74,11 @@ export default {
           return acc;
         }, {})
       ).map((m) => {
-        const s = this.sapeurs.find((s) => s.id == m.sapeur_id);
-        return { ...m, nom_prenom: s?.nom + ' ' + s?.prenom, fin: '-' }; // TODO: identifier date de fin de service du sapeur !!! fin: 'TODO' };
+        return {
+          ...m,
+          nom_prenom: this.sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+          fin: '-',
+        }; // TODO: identifier date de fin de service du sapeur !!! fin: 'TODO' };
       });
       // TODO: Ajouter fin de service
     },

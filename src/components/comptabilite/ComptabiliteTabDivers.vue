@@ -183,9 +183,7 @@ export default {
         compte?.numero + ' ' + compte?.designation;
       return this.ecritures.map((e) => ({
         ...e,
-        sapeur: [svm.sapeurs.find((s) => s.id == e.sapeur_id)].map((s) =>
-          s ? `${s.nom} ${s.prenom}` : ''
-        )[0],
+        sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
         unite: svm.unites.find((u) => u.id == e.type_unite_id)?.unite,
         ecriture_categorie: svm.categories.find(
           (c) => c.id == e.ecriture_categorie_id

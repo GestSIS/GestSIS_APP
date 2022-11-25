@@ -33,7 +33,7 @@
             :model-value="activeItem.retour == null ? activeItem.sapeur_id : 0"
             :options="sapeurs"
             value-key="id"
-            display-key="designation"
+            display-key="nom_prenom"
             disabled
           />
         </div>
@@ -136,11 +136,7 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          designation: `${s.nom} ${s.prenom}`,
-        })),
+      sapeurs: (state) => state.sapeur.liste,
       types: (state) => state.matPersoType.liste,
       eventTypes: (state) => state.matPersoEventType.liste,
     }),

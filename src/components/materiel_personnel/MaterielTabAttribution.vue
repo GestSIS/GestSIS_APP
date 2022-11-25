@@ -299,7 +299,7 @@ export default {
     },
     indexedSapeurs() {
       let index = {};
-      this.sapeurs.forEach((s) => (index[s.id] = `${s.nom} ${s.prenom}`));
+      this.sapeurs.forEach((s) => (index[s.id] = s.nom_prenom));
       return index;
     },
   },

@@ -84,7 +84,7 @@
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
-                <td>{{ item.nomPrenom }}</td>
+                <td>{{ item.nom_prenom }}</td>
                 <td>
                   <button
                     class="btn btn-outline-danger border-0"
@@ -314,8 +314,7 @@ export default {
     computedChosenSapeurs() {
       return this.chosenSapeurs
         .map((sapeurId) => this.sapeurs.find((s) => s.id == sapeurId))
-        .map((s) => ({ ...s, nomPrenom: this.sapeurFormatter(s) }))
-        .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+        .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
     },
     availableSapeur() {
       return this.sapeurs
@@ -448,7 +447,7 @@ export default {
               .filter(svm.filtreSapeur())
               .filter((s) => s[key] == elem.id)
               .map((sapeur) => ({
-                designation: `${sapeur.nom} ${sapeur.prenom}`,
+                designation: sapeur.nom_prenom,
                 level: 1,
                 leaf: true,
                 id: sapeur.id,
@@ -547,9 +546,6 @@ export default {
       return (s) =>
         svm.sapeurs.find((sap) => sap.id == (s.sapeur_id || s))?.actif == 1 &&
         !svm.chosenSapeurs.includes(s.sapeur_id || s);
-    },
-    sapeurFormatter(s) {
-      return s?.nom + ' ' + s?.prenom;
     },
     groupeFormatter(g) {
       return g.no ? g.no + ' ' + g.designation : g.designation;

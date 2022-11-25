@@ -79,7 +79,7 @@
             class="mb-3"
             value-key="id"
             label="Commandant"
-            :formatter="formatSapeur"
+            :display-key="nom_prenom"
             :options="sapeurs"
             :select-class="{ 'is-invalid': errors['sapeur_id'] }"
           />
@@ -246,9 +246,6 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     formatLocalite(localite) {
       return localite?.designation;
-    },
-    formatSapeur(sapeur) {
-      return `${sapeur?.nom} ${sapeur?.prenom}`;
     },
     updateLocalitesSis() {
       const callback = (res) => {

@@ -146,9 +146,7 @@ export default {
       let svm = this;
       return this.ecritures.map((e) => ({
         ...e,
-        sapeur: [svm.sapeurs.find((s) => s.id == e.sapeur_id)].map((s) =>
-          s ? `${s.nom} ${s.prenom}` : ''
-        )[0],
+        sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
       }));
     },
   },

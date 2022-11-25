@@ -41,17 +41,17 @@ export default {
     [types.UPDATE_SAPEURS_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
-        .sort((s1, s2) =>
-          (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
-        );
+        .map((s) => ({ ...s, nom_prenom: `${s.nom} ${s.prenom}` }))
+        .sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom));
     },
     [types.SELECT_CURRENT_SAPEUR](state, sapeurId) {
       state.active.id = sapeurId;
     },
     [types.CREATE_SAPEUR](state, payload) {
-      state.liste = [...state.liste, payload].sort((s1, s2) =>
-        (s1.nom + s1.prenom).localeCompare(s2.nom + s2.prenom)
-      );
+      state.liste = [
+        ...state.liste,
+        { ...payload, nom_prenom: `${payload.nom} ${payload.prenom}` },
+      ].sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom));
     },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
@@ -62,6 +62,7 @@ export default {
             fonction_id: payload.fonction_id,
             nom: payload.nom,
             prenom: payload.prenom,
+            nom_prenom: `${payload.nom} ${payload.prenom}`,
             actif: payload.actif,
             date_naissance: payload.date_naissance,
           } : s

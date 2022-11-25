@@ -68,7 +68,10 @@
               title="Décompte sapeur"
               :disabled="!props.rowData.aPayer"
               @click="
-                genererDecompteSapeur(props.rowData.id, props.rowData.nomPrenom)
+                genererDecompteSapeur(
+                  props.rowData.id,
+                  props.rowData.nom_prenom
+                )
               "
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
@@ -200,8 +203,8 @@ export default {
         },
         {
           title: 'Sapeur',
-          key: 'nomPrenom',
-          sortField: 'nomPrenom',
+          key: 'nom_prenom',
+          sortField: 'nom_prenom',
         },
         {
           title: 'Fonction',
@@ -247,7 +250,7 @@ export default {
         .map((s) => {
           return {
             id: s.id,
-            nomPrenom: `${s.nom} ${s.prenom}`,
+            nom_prenom: s.nom_prenom,
             fonction: s.fonction_id
               ? this.fonctions.find((f) => f.id == s.fonction_id).nom
               : '',

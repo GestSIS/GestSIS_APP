@@ -34,7 +34,7 @@
           :class="{ 'is-invalid': errors['sapeur_id'] }"
         >
           <option v-for="s in listSapeurs" :key="s.id" :value="s.id">
-            {{ formatSapeur(s) }}
+            {{ s?.nom_prenom }}
           </option>
         </select>
       </div>
@@ -161,10 +161,6 @@ export default {
               })
           );
       }
-    },
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
     },
   },
 };

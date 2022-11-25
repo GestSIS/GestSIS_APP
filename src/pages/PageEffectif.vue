@@ -355,7 +355,6 @@ export default {
       return this.sapeurs
         .map((s) => ({
           ...s,
-          nom_prenom: s.nom + ' ' + s.prenom,
           porteur: s.fonctions
             .map((f) => porteurIds.has(f.fonction_id))
             .reduce((acc, e) => acc || e, false),

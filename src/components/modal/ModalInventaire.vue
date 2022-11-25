@@ -161,11 +161,7 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          nom_prenom: `${s.nom} ${s.prenom}`,
-        })),
+      sapeurs: (state) => state.sapeur.liste,
       types: (state) => state.matPersoType.liste,
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(

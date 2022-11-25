@@ -111,7 +111,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                  formatSapeur(sapeurs.find((s) => s.id == ecriture.sapeur_id))
+                  sapeurs.find((s) => s.id == ecriture.sapeur_id)?.nom_prenom
                 }}
               </td>
               <td>{{ ecriture.designation }}</td>
@@ -190,9 +190,6 @@ export default {
     montantAnnuelTypePourFonction(type, fonction) {
       const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       return elem?.quantite * elem?.montant || '';
-    },
-    formatSapeur(sapeur) {
-      return `${sapeur?.nom} ${sapeur?.prenom}`;
     },
     compte(id) {
       if (!id) {

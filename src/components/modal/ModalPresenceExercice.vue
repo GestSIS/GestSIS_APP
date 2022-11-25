@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        Modifier présences de {{ sapeur.prenom }} {{ sapeur.nom }}
+        Modifier présences de {{ sapeur.nom_prenom }}
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>

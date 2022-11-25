@@ -202,11 +202,7 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          label: `${s.nom} ${s.prenom}`,
-        })),
+      sapeurs: (state) => state.sapeur.liste,
       eventTypes: (state) => state.matPersoEventType.liste,
       types: (state) =>
         state.matPersoType.liste.sort((a, b) => a.designation - b.designation),

@@ -8,7 +8,8 @@
         "Formattage des dates sous chrome",
         "Convocation format affiché correctement",
         "Détails écritures sapeurs, affichage du type de l'écriture",
-        "Page d'enregistrement, remplacement de `Nom d'utilisateur` à `Nom Prénom`"
+        "Page d'enregistrement, remplacement de `Nom d'utilisateur` à `Nom Prénom`",
+        "Tri des écritures pour écriture details"
       ]
     },
     {

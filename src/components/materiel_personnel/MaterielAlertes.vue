@@ -62,10 +62,8 @@ export default {
       types: (state) => state.matPersoType.liste,
     }),
     computedData() {
-      const sapeurFormat = (sapeurId) => {
-        const sap = this.sapeurs.find((s) => s.id == sapeurId);
-        return sap ? `${sap?.nom} ${sap?.prenom}` : '';
-      };
+      const sapeurFormat = (sapeurId) =>
+        this.sapeurs.find((s) => s.id == sapeurId)?.nom_prenom;
 
       return this.alertes.map((a) => ({
         ...a,

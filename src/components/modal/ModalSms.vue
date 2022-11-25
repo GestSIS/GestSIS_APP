@@ -86,8 +86,8 @@ export default {
       fields: [
         {
           title: 'Nom prénom',
-          key: 'nomPrenom',
-          sortKey: 'nomPrenom',
+          key: 'nom_prenom',
+          sortKey: 'nom_prenom',
           titleClass: 'align-middle',
         },
         {
@@ -108,7 +108,6 @@ export default {
     computedSapeurs() {
       return this.sapeurs.map((s) => ({
         ...s,
-        nomPrenom: `${s.nom} ${s.prenom}`,
         portable: s.telephones
           .filter((a) => a.telephone_type_id === 3)
           .sort((a, b) => a.priorite - b.priorite)

@@ -144,8 +144,8 @@ export default {
         },
         {
           title: 'Sapeur',
-          key: 'nomPrenom',
-          sortKey: 'nomPrenom',
+          key: 'nom_prenom',
+          sortKey: 'nom_prenom',
         },
         {
           title: 'Fonction',
@@ -200,7 +200,6 @@ export default {
             return {
               ...e,
               ...sapeur,
-              nomPrenom: sapeur?.nom + ' ' + sapeur?.prenom,
               fonction: sapeur?.fonction_id
                 ? this.fonctions.find((f) => f.id == sapeur?.fonction_id).nom
                 : '',

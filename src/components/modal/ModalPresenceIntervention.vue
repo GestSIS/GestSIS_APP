@@ -112,7 +112,7 @@
               class="form-check-input"
             />
             <label class="form-check-label" :for="'sp' + s.id">
-              {{ formatSapeur(s) }}
+              {{ s?.nom_prenom }}
             </label>
           </div>
         </li>
@@ -302,10 +302,6 @@ export default {
             };
           });
       }
-    },
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
     },
   },
 };

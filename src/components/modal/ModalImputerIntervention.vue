@@ -147,7 +147,7 @@
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
                 {{
-                  formatSapeur(sapeurs.find((f) => f.id == ecriture.sapeur_id))
+                  sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom
                 }}
               </td>
               <td>{{ ecriture.quantite }}</td>
@@ -273,10 +273,6 @@ export default {
           ? 1
           : --this.activeIndemniteIndex % this.indemnitesTypes.length
       );
-    },
-    formatSapeur(sapeur) {
-      if (!sapeur) return '';
-      return sapeur.nom + ' ' + sapeur.prenom;
     },
     formatCompte(compte) {
       if (!compte) return '';

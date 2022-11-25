@@ -173,7 +173,7 @@
                 :key="sapeur.id"
                 :value="sapeur.id"
               >
-                {{ sapeur.nom + ' ' + sapeur.prenom }}
+                {{ sapeur.nom_prenom }}
               </option>
             </select>
           </div>

@@ -266,11 +266,7 @@ export default {
         state.matPersoMateriel.liste
           .filter((m) => m.retour != null || m.sapeur_id == null)
           .map((m) => ({ ...m, ...m.materiel })),
-      sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          nom_prenom: `${s.nom} ${s.prenom}`,
-        })),
+      sapeurs: (state) => state.sapeur.liste,
     }),
   },
   mounted() {

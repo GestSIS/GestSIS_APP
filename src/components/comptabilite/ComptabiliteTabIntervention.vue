@@ -195,9 +195,7 @@ export default {
           title: 'Sapeur',
           field: 'sapeur_id',
           formatter: (field) =>
-            [svm.sapeurs.find((s) => s.id == field)].map(
-              (s) => `${s?.nom} ${s?.prenom}`
-            )[0],
+            svm.sapeurs.find((s) => s.id == field)?.nom_prenom,
         },
         {
           title: 'Tarif',

@@ -16,7 +16,7 @@
     <div class="card-header d-flex">
       <h3 class="me-auto">
         {{ activeExerciceData.designation }} &ndash;
-        {{ activeExerciceData.date }}
+        {{ new Date(activeExerciceData.date).toLocaleDateString('fr-CH') }}
       </h3>
       <button
         v-if="hasValidationPermission"
@@ -54,7 +54,7 @@
           :key="sap.id"
           :class="{ 'table-danger': !sap.actif }"
         >
-          <td>{{ sap.nomPrenom }}</td>
+          <td>{{ sap.nom_prenom }}</td>
           <td>
             <div class="text-center">
               <input
@@ -272,11 +272,11 @@ export default {
           const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
           return {
             ...s,
-            nomPrenom: sapeur ? sapeur.nom + ' ' + sapeur.prenom : '...',
+            nom_prenom: sapeur?.nom_prenom ?? '...',
             actif: sapeur?.actif,
           };
         })
-        .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+        .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
     },
   },
   watch: {

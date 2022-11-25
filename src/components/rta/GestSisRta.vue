@@ -54,7 +54,7 @@
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
             >
-              {{ e.nom }} {{ e.prenom }}
+              {{ e.nom_prenom }}
             </td>
             <td
               :class="{
@@ -184,8 +184,7 @@ export default {
     },
     mutations() {
       const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
-      const sapeurCompare = (a, b) =>
-        (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
+      const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
 
       return this.actuel
         .map((s) => {

@@ -350,7 +350,7 @@ export default {
           );
           return {
             ...s,
-            sapeur: `${sapeur?.nom} ${sapeur?.prenom}`,
+            sapeur: sapeur?.nom_prenom,
             age,
             type: this.types.find((t) => t.id == s.controle_medical_type_id)
               ?.designation,

@@ -55,7 +55,7 @@
                 'text-warning': e.changements.nom || e.changements.prenom,
               }"
             >
-              {{ e.nom }} {{ e.prenom }}
+              {{ e.nom_prenom }}
             </td>
             <td
               :class="{
@@ -193,8 +193,7 @@ export default {
         'adresse',
         'date_naissance',
       ];
-      const sapeurCompare = (a, b) =>
-        (a.nom + a.prenom).localeCompare(b.nom + b.prenom);
+      const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
 
       return this.reference
         .map((s) => {
