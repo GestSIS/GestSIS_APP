@@ -482,7 +482,7 @@ export default {
 VERSION:4.0
 N:${s.nom};${s.prenom};;${civiliteMapping[s.civilite_id]};
 FN:${s.prenom} ${s.nom}
-LANG:fr-ch
+LANG:'fr-CH'
 GENDER:${genderMapping[s.civilite_id]}
 ${s.telephones
   .map(

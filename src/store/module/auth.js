@@ -42,8 +42,8 @@ export default {
       state.user = payload.user;
 
       const jwt = jwt_decode(payload.accessToken);
-      const permissionsParSis = jwt.data.permissions;
-      const sapeurParSis = jwt.data.sapeurs;
+      const permissionsParSis = jwt.data.permissions ?? {};
+      const sapeurParSis = jwt.data.sapeurs ?? {};
       const availableSis = [
         ...new Set([
           ...Object.keys(permissionsParSis),

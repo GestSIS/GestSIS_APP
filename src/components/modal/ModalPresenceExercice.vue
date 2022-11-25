@@ -29,7 +29,7 @@
           <tr v-for="e in presences" :key="e.id">
             <td>
               <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.date.toLocaleDateString() }}
+                {{ e.date.toLocaleDateString('fr-CH') }}
               </component>
             </td>
             <td>

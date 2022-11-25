@@ -237,7 +237,7 @@ export default {
           key: 'date',
           sortKey: 'date',
           formatter(value) {
-            return new Date(value).toLocaleDateString();
+            return new Date(value).toLocaleDateString('fr-CH');
           },
         },
         {

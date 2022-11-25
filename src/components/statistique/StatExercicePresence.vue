@@ -115,7 +115,7 @@
                   :key="e.id"
                   class="fs-6 fw-normal text-center ps-0 pe-0 border border-1"
                 >
-                  {{ new Date(e.date).toLocaleDateString().slice(0, 5) }}
+                  {{ new Date(e.date).toLocaleDateString('fr-CH').slice(0, 5) }}
                 </th>
                 <th class="text-center">Nb Cvq</th>
                 <th class="text-center">Nb Pre</th>
@@ -481,7 +481,7 @@ export default {
           '',
           '',
           ...this.displayExercice.map((e) =>
-            new Date(e.date).toLocaleDateString()
+            new Date(e.date).toLocaleDateString('fr-CH')
           ),
           '',
           '',

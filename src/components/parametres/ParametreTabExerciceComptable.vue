@@ -31,8 +31,8 @@
           <tr v-for="e in listeExerciceComptable" :key="e.id">
             <td>{{ e.annee }}</td>
             <td>{{ e.designation }}</td>
-            <td>{{ new Date(e.debut).toLocaleDateString() }}</td>
-            <td>{{ new Date(e.fin).toLocaleDateString() }}</td>
+            <td>{{ new Date(e.debut).toLocaleDateString('fr-CH') }}</td>
+            <td>{{ new Date(e.fin).toLocaleDateString('fr-CH') }}</td>
             <td class="text-center">
               <input
                 id="en_cours"

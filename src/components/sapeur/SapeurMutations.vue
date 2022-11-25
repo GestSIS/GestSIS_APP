@@ -22,9 +22,13 @@
               <td :colspan="hasEditPermission ? 5 : 4">Aucune mutation</td>
             </tr>
             <tr v-for="m in mutations" :key="m.id">
-              <td>{{ new Date(m.incorporation).toLocaleDateString() }}</td>
               <td>
-                {{ m.sortie ? new Date(m.sortie).toLocaleDateString() : '' }}
+                {{ new Date(m.incorporation).toLocaleDateString('fr-CH') }}
+              </td>
+              <td>
+                {{
+                  m.sortie ? new Date(m.sortie).toLocaleDateString('fr-CH') : ''
+                }}
               </td>
               <td>{{ m.motif }}</td>
               <td>

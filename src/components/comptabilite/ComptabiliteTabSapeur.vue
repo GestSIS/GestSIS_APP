@@ -144,6 +144,23 @@ export default {
           field: 'designation',
         },
         {
+          title: 'Type',
+          field: 'type',
+          headerClassName: 'text-center',
+          className: 'text-end',
+          formatter: (t) => {
+            const mapping = {
+              0: 'Autre',
+              1: 'Solde',
+              2: 'Indemnité',
+              3: 'Frais forfaitaire',
+              4: 'Frais effectif',
+              5: 'Charge AVS/AC',
+            };
+            return mapping[t] ?? 'Autre';
+          },
+        },
+        {
           title: 'Tarif',
           field: 'tarif',
           headerClassName: 'text-center',

@@ -16,8 +16,8 @@
         >{{ option.label }}</label
       >
       <label v-else class="form-check-label" :for="option.value">
-        <template v-for="(l, i) in splittedLabel" :key="i">
-          {{ l }}<br v-if="i != splittedLabel.length - 1" />
+        <template v-for="(l, i) in splittedLabel(option.label)" :key="i">
+          {{ l }}<br v-if="i != splittedLabel(option.label).length - 1" />
         </template>
       </label>
       <!-- v-html="replaceNewLines(option.label)" -->
@@ -60,11 +60,6 @@ export default {
       model: this.modelValue,
     };
   },
-  computed: {
-    splittedLabel() {
-      return (this.label ?? '').split('\n');
-    },
-  },
   watch: {
     modelValue(newValue, oldValue) {
       if (oldValue !== newValue) {
@@ -78,6 +73,9 @@ export default {
   methods: {
     splitNewLines(text) {
       return text.replace('\n', '<br />');
+    },
+    splittedLabel(label) {
+      return (label ?? '').split('\n');
     },
   },
 };

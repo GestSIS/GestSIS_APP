@@ -61,7 +61,7 @@
                 'text-warning': e.changements.date_naissance,
               }"
             >
-              {{ new Date(e.date_naissance).toLocaleDateString() }}
+              {{ new Date(e.date_naissance).toLocaleDateString('fr-CH') }}
             </td>
             <td
               :class="{

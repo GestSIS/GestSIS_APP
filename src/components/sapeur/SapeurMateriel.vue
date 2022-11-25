@@ -35,12 +35,16 @@
               <td>
                 {{
                   m?.attribution
-                    ? new Date(m?.attribution).toLocaleDateString()
+                    ? new Date(m?.attribution).toLocaleDateString('fr-CH')
                     : ''
                 }}
               </td>
               <td>
-                {{ m?.retour ? new Date(m?.retour).toLocaleDateString() : '' }}
+                {{
+                  m?.retour
+                    ? new Date(m?.retour).toLocaleDateString('fr-CH')
+                    : ''
+                }}
               </td>
               <td v-if="hasEditPermission">
                 <div class="d-flex justify-content-center">

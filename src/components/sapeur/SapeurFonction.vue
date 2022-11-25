@@ -33,8 +33,10 @@
             <td :colspan="hasEditPermission ? 5 : 4">Aucune fonction</td>
           </tr>
           <tr v-for="f in activeSapeurFonctions" :key="f.id">
-            <td>{{ new Date(f.debut).toLocaleDateString() }}</td>
-            <td>{{ f.fin ? new Date(f.fin).toLocaleDateString() : '' }}</td>
+            <td>{{ new Date(f.debut).toLocaleDateString('fr-CH') }}</td>
+            <td>
+              {{ f.fin ? new Date(f.fin).toLocaleDateString('fr-CH') : '' }}
+            </td>
             <td>
               {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
             </td>

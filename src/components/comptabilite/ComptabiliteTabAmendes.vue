@@ -80,7 +80,7 @@ export default {
           title: 'Date',
           field: 'date',
           type: 'date',
-          formatter: (e) => new Date(e).toLocaleDateString(),
+          formatter: (e) => new Date(e).toLocaleDateString('fr-CH'),
         },
         {
           title: 'Exercice',

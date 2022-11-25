@@ -108,7 +108,7 @@ export default {
           title: 'Date',
           key: 'date',
           formatter(value) {
-            return value ? new Date(value).toLocaleDateString() : '';
+            return value ? new Date(value).toLocaleDateString('fr-CH') : '';
           },
         },
         {

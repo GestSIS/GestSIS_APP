@@ -54,11 +54,11 @@
             </template>
             <!-- Date types -->
             <template v-else-if="f.type === 'date' || f.type == Date">
-              {{ new Date(r[f.key]).toLocaleDateString().slice(0, 10) }}
+              {{ new Date(r[f.key]).toLocaleDateString('fr-CH').slice(0, 10) }}
             </template>
             <!-- Date time types -->
             <template v-else-if="f.type === 'datetime'">
-              {{ new Date(r[f.key]).toLocaleString().slice(0, 16) }}
+              {{ new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16) }}
             </template>
             <!-- No type -->
             <slot
@@ -228,7 +228,7 @@ export default {
                   case 'boolean':
                     return e[f.key] ? 'vrai' : 'faux';
                   case 'date':
-                    return new Date(e[f.key]).toLocaleDateString();
+                    return new Date(e[f.key]).toLocaleDateString('fr-CH');
                   default:
                     return (f.formatter || this.defaultFormatter)(e[f.key], e);
                 }

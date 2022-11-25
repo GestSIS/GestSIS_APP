@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "25.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Formattage des dates sous chrome",
+        "Convocation format affiché correctement",
+        "Détails écritures sapeurs, affichage du type de l'écriture",
+        "Page d'enregistrement, remplacement de `Nom d'utilisateur` à `Nom Prénom`"
+      ]
+    },
+    {
       "date": "24.11.2022",
       "version": "3.0",
       "app": "GestSIS APP",
