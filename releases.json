@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "26.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Documentation des taux AVS/AI/APG et AC"]
+    },
+    {
       "date": "25.11.2022",
       "version": "2.0",
       "app": "GestSIS APP",

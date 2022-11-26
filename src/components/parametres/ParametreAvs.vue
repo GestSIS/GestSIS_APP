@@ -11,7 +11,15 @@
         </div>
         <div class="card-body">
           <div class="mb-3">
-            <label for="taux_avs">Taux AVS</label>
+            <label for="taux_avs"
+              >Taux AVS/AI/APG<font-awesome-icon
+                v-tooltip.bottom="{
+                  content: 'Taux disponible dans le memento AVS 2.01',
+                  html: true,
+                }"
+                class="ms-1"
+                :icon="['far', 'question-circle']"
+            /></label>
             <input
               id="taux_avs"
               v-model="params.taux_avs"
@@ -21,7 +29,15 @@
             />
           </div>
           <div class="mb-3">
-            <label for="taux_ac">Taux AC</label>
+            <label for="taux_ac"
+              >Taux AC<font-awesome-icon
+                v-tooltip.bottom="{
+                  content: 'Taux disponible dans le memento AC 2.08',
+                  html: true,
+                }"
+                class="ms-1"
+                :icon="['far', 'question-circle']"
+            /></label>
             <input
               id="taux_ac"
               v-model="params.taux_ac"
