@@ -194,7 +194,7 @@
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
-                <td>{{ sapeurFormatter(item) }}</td>
+                <td>{{ item.nom_prenom }}</td>
                 <td>
                   <button
                     class="btn btn-outline-primary border-0"
@@ -366,7 +366,7 @@ export default {
                 (flaten = [
                   ...flaten,
                   {
-                    designation: svm.sapeurFormatter(s),
+                    designation: s.nom_prenom,
                     leaf: true,
                     level: level + 1,
                     parent_id: groupe.id,
