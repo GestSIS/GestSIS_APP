@@ -210,9 +210,8 @@ export default {
             return {
               ...e,
               ...sapeur,
-              fonction: sapeur?.fonction_id
-                ? this.fonctions.find((f) => f.id == sapeur?.fonction_id).nom
-                : '',
+              fonction: this.fonctions.find((f) => f.id == sapeur?.fonction_id)
+                ?.nom,
             };
           })
           // Add data relative to table

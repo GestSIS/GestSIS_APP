@@ -199,10 +199,10 @@ export default {
       return `${compte?.numero} ${compte?.designation}`;
     },
     unite(id) {
-      return id ? this.unites.find((u) => u.id === id)?.abreviation : '';
+      return this.unites.find((u) => u.id === id)?.abreviation;
     },
     categorie(id) {
-      return id ? this.categories.find((c) => c.id === id)?.designation : '';
+      return this.categories.find((c) => c.id === id)?.designation;
     },
     cancel() {
       this.HIDE_MODAL();
