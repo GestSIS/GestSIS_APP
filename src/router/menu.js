@@ -1,4 +1,4 @@
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 
 const links = [
   {
@@ -30,6 +30,12 @@ const links = [
     icon: ['fas', 'calendar-alt'],
     nom: 'Exercices & Séances',
     permission: permissions.EXERCICE.LECTURE,
+  },
+  {
+    to: { name: 'cours' },
+    icon: ['fas', 'medal'],
+    nom: 'Cours',
+    permission: permissions.COURS.LECTURE,
   },
   {
     to: { name: 'organisation' },

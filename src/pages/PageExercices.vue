@@ -108,59 +108,38 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
-                <select
-                  id="filterLocalite"
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('localite_id', event.target.value)
-                  "
-                >
-                  <option>&lt;Localité&gt;</option>
-                  <option
-                    v-for="loc in filteredLocalites"
-                    :key="loc.id"
-                    :value="loc.id"
-                  >
-                    {{ loc.designation }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <select
-                  id="filterCategorie"
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) =>
-                      onFilter('exercice_categorie_id', event.target.value)
-                  "
-                >
-                  <option>&lt;Catégorie&gt;</option>
-                  <option
-                    v-for="categorie in filteredExercicesCategories"
-                    :key="categorie.id"
-                    :value="categorie.id"
-                  >
-                    {{ categorie.designation }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <select
-                  id="filterStatus"
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('statut', parseInt(event.target.value))
-                  "
-                >
-                  <option value="-1">&lt;Statut&gt;</option>
-                  <option value="0">Annulé</option>
-                  <option value="1">Sapeurs à ajouter</option>
-                  <option value="2">En attente de validation</option>
-                  <option value="3">Validé</option>
-                  <option value="4">Imputé</option>
-                </select>
-              </div>
+              <base-select
+                class="col-md-4"
+                :options="filteredLocalites"
+                display-key="designation"
+                value-key="id"
+                base-option="<Localité>"
+                @update:model-value="(value) => onFilter('localite_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                :options="filteredExercicesCategories"
+                display-key="designation"
+                value-key="id"
+                base-option="<Catégorie>"
+                @update:model-value="
+                  (value) => onFilter('exercice_categorie_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                :options="[
+                  { label: 'Annulé', id: 0 },
+                  { label: 'Sapeurs à ajouter', id: 1 },
+                  { label: 'En attente de validation', id: 2 },
+                  { label: 'Validé', id: 3 },
+                  { label: 'Imputé', id: 4 },
+                ]"
+                display-key="label"
+                value-key="id"
+                base-option="<Statut>"
+                @update:model-value="(value) => onFilter('statut', value)"
+              />
             </div>
           </div>
         </div>

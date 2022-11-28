@@ -185,6 +185,12 @@ const router = createRouter({
       component: () => import('@/pages/PageExercices.vue'),
     },
     {
+      path: '/cours',
+      name: 'cours',
+      beforeEnter: permissionGuard(permissions.COURS.LECTURE),
+      component: () => import('@/pages/PageCours.vue'),
+    },
+    {
       path: '/organisation',
       name: 'organisation',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),

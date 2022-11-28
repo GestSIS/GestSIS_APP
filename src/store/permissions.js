@@ -20,6 +20,11 @@ export default {
     VALIDATION: 'exercice.validation',
     CONFIG: 'exercice.config',
   },
+  COURS: {
+    LECTURE: 'cours.lecture',
+    MODIFICATION: 'cours.modification',
+    CONFIG: 'cours.config',
+  },
   SMS: {
     ENVOIE: 'sms.envoie',
     CONFIG: 'sms.config',

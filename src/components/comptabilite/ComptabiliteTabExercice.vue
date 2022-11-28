@@ -251,9 +251,7 @@ export default {
           title: 'Date',
           key: 'date',
           sortKey: 'date',
-          formatter(value) {
-            return new Date(value).toLocaleDateString('fr-CH');
-          },
+          type: Date,
         },
         {
           title: 'Categorie',
