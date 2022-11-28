@@ -54,86 +54,58 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('localite_id', event.target.value)
-                  "
-                >
-                  <option>&lt;Localité&gt;</option>
-                  <option
-                    v-for="loc in filteredLocalites"
-                    :key="loc.id"
-                    :value="loc.id"
-                  >
-                    {{ loc.designation }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) =>
-                      onFilter(
-                        'fonctions',
-                        parseInt(event.target.value)
-                          ? (fonctions) =>
-                              fonctions.find(
-                                (f) => f.fonction_id == event.target.value
-                              ) != undefined
-                          : null
-                      )
-                  "
-                >
-                  <option>&lt;Fonction&gt;</option>
-                  <option
-                    v-for="f in filteredFonctions"
-                    :key="f.id"
-                    :value="f.id"
-                  >
-                    {{ f.nom }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="(event) => onFilter('grade_id', event.target.value)"
-                >
-                  <option>&lt;Grade&gt;</option>
-                  <option v-for="f in filteredGrades" :key="f.id" :value="f.id">
-                    {{ f.designation }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) =>
-                      onFilter(
-                        'groupes',
-                        parseInt(event.target.value)
-                          ? (groupes) =>
-                              groupes.find(
-                                (f) => f.groupe_id == event.target.value
-                              ) != undefined
-                          : undefined
-                      )
-                  "
-                >
-                  <option :value="undefined">&lt;Groupe&gt;</option>
-                  <option
-                    v-for="f in filteredGroupes"
-                    :key="f.id"
-                    :value="f.id"
-                  >
-                    {{ (f.no ? f.no + ' ' : '') + f.designation }}
-                  </option>
-                </select>
-              </div>
+              <base-select
+                class="col-md-4 mb-1"
+                :options="filteredLocalites"
+                display-key="designation"
+                value-key="id"
+                base-option="<Localité>"
+                @update:model-value="(value) => onFilter('localite_id', value)"
+              />
+              <base-select
+                class="col-md-4 mb-1"
+                :options="filteredFonctions"
+                display-key="nom"
+                value-key="id"
+                base-option="<Fonction>"
+                @update:model-value="
+                  (value) =>
+                    onFilter(
+                      'fonctions',
+                      parseInt(value)
+                        ? (fonctions) =>
+                            fonctions.find((f) => f.fonction_id == value) !=
+                            undefined
+                        : null
+                    )
+                "
+              />
+              <base-select
+                class="col-md-4 mb-1"
+                :options="filteredGrades"
+                display-key="designation"
+                value-key="id"
+                base-option="<Grade>"
+                @update:model-value="(value) => onFilter('grade_id', value)"
+              />
+              <base-select
+                class="col-md-4 mb-1"
+                :options="filteredGroupes"
+                display-key="label"
+                value-key="id"
+                base-option="<Groupe>"
+                @update:model-value="
+                  (value) =>
+                    onFilter(
+                      'groupes',
+                      parseInt(value)
+                        ? (groupes) =>
+                            groupes.find((f) => f.groupe_id == value) !=
+                            undefined
+                        : undefined
+                    )
+                "
+              />
             </div>
           </div>
         </div>
@@ -408,7 +380,12 @@ export default {
           .map((s) => s.groupes.map((f) => f.groupe_id))
           .reduce((acc, e) => [...acc, ...e], [])
       );
-      return this.groupes.filter((t) => ids.has(t.id));
+      return this.groupes
+        .filter((t) => ids.has(t.id))
+        .map((e) => ({
+          ...e,
+          label: (e.no ? e.no + ' ' : '') + e.designation,
+        }));
     },
     filteredSapeurs() {
       return this.computedData.filter(
