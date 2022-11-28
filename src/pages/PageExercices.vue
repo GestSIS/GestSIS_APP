@@ -376,7 +376,8 @@ export default {
   },
   computed: {
     ...mapState({
-      exercices: (state) => state.exercice.liste,
+      exercices: (state) =>
+        state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>

@@ -377,7 +377,10 @@ export default {
   },
   computed: {
     ...mapState({
-      interventions: (state) => state.intervention.liste,
+      interventions: (state) =>
+        state.intervention.liste.sort((a, b) =>
+          a.date_debut.localeCompare(b.date_debut)
+        ),
       types: (state) => state.typeIntervention.liste,
       stats: (state) => state.statFederal.liste,
       traitements: (state) => state.interventionTraitement.liste,

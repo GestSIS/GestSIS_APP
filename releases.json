@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Comptabilité, nouveau module cours pour la facturation de ceux-ci",
-        "Résolution d'un problème pour les filtres dans le menu comptabilité"
+        "Résolution d'un problème pour les filtres dans le menu comptabilité",
+        "Harmonistation du tri initiale des tableaux"
       ]
     },
     {

@@ -76,6 +76,16 @@
         </div>
         <div class="form-check form-switch">
           <input
+            id="ecritures-cours"
+            v-model="params.ecrituresCours"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+          />
+          <label class="form-check-label" for="ecritures-cours">Cours</label>
+        </div>
+        <div class="form-check form-switch">
+          <input
             id="ecritures-divers"
             v-model="params.ecrituresDivers"
             class="form-check-input"
@@ -158,11 +168,12 @@ export default {
         deduction: false,
 
         // Types d'écritures
+        ecrituresAmende: false,
+        ecrituresAnnuel: true,
+        ecrituresCours: true,
+        ecrituresDivers: true,
         ecrituresExercice: true,
         ecrituresIntervention: true,
-        ecrituresDivers: true,
-        ecrituresAnnuel: true,
-        ecrituresAmende: false,
       },
     };
   },
