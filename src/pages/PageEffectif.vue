@@ -430,7 +430,10 @@ export default {
   },
   beforeMount() {
     SapeurService.getEffectif().then((effectif) => {
-      this.sapeurs = effectif;
+      this.sapeurs = effectif.map((s) => ({
+        ...s,
+        nom_prenom: `${s.nom} ${s.prenom}`,
+      }));
     });
   },
   mounted() {
