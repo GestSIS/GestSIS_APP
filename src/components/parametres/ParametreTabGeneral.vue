@@ -79,7 +79,7 @@
             class="mb-3"
             value-key="id"
             label="Commandant"
-            :display-key="nom_prenom"
+            display-key="nom_prenom"
             :options="sapeurs"
             :select-class="{ 'is-invalid': errors['sapeur_id'] }"
           />
