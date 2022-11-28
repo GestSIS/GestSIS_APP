@@ -4,9 +4,10 @@ import ImputationService from '../../services/ImputationService.js';
 export default {
   state: {
     fraisIndemnites: {
+      annuels: [],
+      cours: [],
       exercices: [],
       interventions: [],
-      annuels: [],
     },
     ecritures: {
       annuels: [],
@@ -21,9 +22,10 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.fraisIndemnites = {
+        annuels: [],
+        cours: [],
         exercices: [],
         interventions: [],
-        annuels: [],
       };
       state.ecritures = {
         annuels: [],
@@ -149,6 +151,21 @@ export default {
         (m) => m.id != fraisIndemniteId
       );
     },
+    [types.ADD_INDEMNITE_COURS](state, indemnite) {
+      state.fraisIndemnites.cours = [...state.fraisIndemnites.cours, indemnite];
+    },
+    [types.UPDATE_INDEMNITE_COURS](state, indemnite) {
+      state.fraisIndemnites.cours = [
+        ...state.fraisIndemnites.cours.map((m) =>
+          m.id === indemnite.id ? indemnite : m
+        ),
+      ];
+    },
+    [types.REMOVE_INDEMNITE_COURS](state, indemniteId) {
+      state.fraisIndemnites.cours = state.fraisIndemnites.cours.filter(
+        (m) => m.id != indemniteId
+      );
+    },
     [types.ADD_INDEMNITE_EXERCICE](state, indemnite) {
       state.fraisIndemnites.exercices = [
         ...state.fraisIndemnites.exercices,
@@ -237,6 +254,28 @@ export default {
       return ImputationService.getAmendesForExerciceComptable(
         getters.currentExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
+    },
+    imputerCours({ commit }, payload) {
+      return ImputationService.imputerCours(payload.id, payload).then(
+        (data) => {
+          commit(types.UPDATE_COURS_SAPEUR_ECRITURE_STATUT, {
+            id: payload.id,
+            ecritures: data,
+          });
+          return data;
+        });
+    },
+    annulerImputationCours({ commit }, coursSapeurId) {
+      return ImputationService.annulerImputationCours(coursSapeurId).then(
+        (data) => {
+          // TODO:
+          commit(types.UPDATE_COURS_SAPEUR_ECRITURE_STATUT, {
+            id: coursSapeurId,
+            ecritures: [],
+          });
+          return data;
+        }
+      );
     },
     imputerExercice({ commit }, payload) {
       return ImputationService.imputerExercice(
@@ -354,6 +393,26 @@ export default {
       return ImputationService.removeFraisIndemniteAnnuelType(frais).then(
         (data) => {
           commit(types.REMOVE_FRAIS_INDEMNITE_ANNUEL_TYPE, frais);
+          return data;
+        }
+      );
+    },
+    addIndemniteCours({ commit }, indemnite) {
+      return ImputationService.addIndemniteCours(indemnite).then((data) => {
+        commit(types.ADD_INDEMNITE_COURS, data);
+        return data;
+      });
+    },
+    updateIndemniteCours({ commit }, indemnite) {
+      return ImputationService.updateIndemniteCours(indemnite).then((data) => {
+        commit(types.UPDATE_INDEMNITE_COURS, data);
+        return data;
+      });
+    },
+    removeIndemniteCours({ commit }, indemniteId) {
+      return ImputationService.removeIndemniteCours(indemniteId).then(
+        (data) => {
+          commit(types.REMOVE_INDEMNITE_COURS, indemniteId);
           return data;
         }
       );

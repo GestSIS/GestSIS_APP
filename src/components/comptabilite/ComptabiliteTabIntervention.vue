@@ -37,7 +37,7 @@
               display-key="designation"
               base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
-              @input="(value) => onFilter('localite_id', value)"
+              @update:model-value="(value) => onFilter('localite_id', value)"
             />
             <base-select
               class="col-md-4"
@@ -45,7 +45,9 @@
               display-key="designation"
               base-option="&lt;Type&gt;"
               :options="filteredTypesIntervention"
-              @input="(value) => onFilter('type_intervention_id', value)"
+              @update:model-value="
+                (value) => onFilter('type_intervention_id', value)
+              "
             />
             <base-select
               class="col-md-4"
@@ -53,7 +55,9 @@
               display-key="designation"
               base-option="&lt;Statistique fédérale&gt;"
               :options="filteredStatFederal"
-              @input="(value) => onFilter('stat_federal_id', value)"
+              @update:model-value="
+                (value) => onFilter('stat_federal_id', value)
+              "
             />
             <base-select
               class="col-md-4"
@@ -61,7 +65,9 @@
               display-key="designation"
               base-option="&lt;Traitement&gt;"
               :options="traitements"
-              @input="(value) => onFilter('intervention_traitement_id', value)"
+              @update:model-value="
+                (value) => onFilter('intervention_traitement_id', value)
+              "
             />
             <base-select
               class="col-md-4"
@@ -69,7 +75,7 @@
               display-key="designation"
               base-option="&lt;Etendue&gt;"
               :options="degres"
-              @input="(value) => onFilter('degre', value)"
+              @update:model-value="(value) => onFilter('degre', value)"
             />
           </div>
         </form>
@@ -92,8 +98,8 @@
           v-show="!loading"
           :fields="fields"
           :row-class="onRowClass"
-          detail-row-class="m-td-0"
           no-data="Aucune écriture à afficher"
+          detail-row-class="m-td-0"
           :detail-row-component="detailRow"
           :data="filteredInterventions"
           :selectable="true"

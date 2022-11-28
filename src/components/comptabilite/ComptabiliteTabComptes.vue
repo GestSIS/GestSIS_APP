@@ -128,7 +128,6 @@ export default {
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
         },
       ],

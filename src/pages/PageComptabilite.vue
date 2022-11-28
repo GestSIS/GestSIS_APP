@@ -52,6 +52,13 @@
             class="nav-item nav-link"
             role="tab"
             active-class="active"
+            :to="{ name: 'comptabilite-cours' }"
+            >Cours<span class="badge bg-danger ms-2">Nouveau</span></router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
             :to="{ name: 'comptabilite-annuel' }"
           >
             Indemnités et Frais annuels</router-link

@@ -161,7 +161,7 @@ export default {
       return Object.values(sapeurs).map((s) => ({
         ...s,
         nb: s.amendes.length,
-        sapeur: s.nom + ' ' + s.prenom,
+        sapeur: s.nom_prenom,
         total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
         columns: this.amendeColumns,
       }));

@@ -17,6 +17,12 @@ export default {
   getFraisIndemniteTypes() {
     return Api.api().get('/frais-indemnites-types');
   },
+  annulerImputationCours(coursSapeurId) {
+    return Api.api().delete('/imputation/cours/' + coursSapeurId);
+  },
+  imputerCours(coursSapeurId, payload) {
+    return Api.api().post('/imputation/cours/' + coursSapeurId, payload);
+  },
   annulerImputationExercice(exerciceId) {
     return Api.api().delete('/imputation/exercice/' + exerciceId);
   },
@@ -57,6 +63,15 @@ export default {
     return Api.api().delete(
       `/frais-indemnites-annuel-types/${fraisIndemniteId}`
     );
+  },
+  addIndemniteCours(indemnite) {
+    return Api.api().post('/indemnites-cours-types', indemnite);
+  },
+  updateIndemniteCours(indemnite) {
+    return Api.api().put(`/indemnites-cours-types/${indemnite.id}`, indemnite);
+  },
+  removeIndemniteCours(indemniteId) {
+    return Api.api().delete(`/indemnites-cours-types/${indemniteId}`);
   },
   addIndemniteExercice(indemnite) {
     return Api.api().post('/indemnites-exercice-types', indemnite);

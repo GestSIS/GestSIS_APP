@@ -238,6 +238,13 @@ const router = createRouter({
             import('@/components/comptabilite/ComptabiliteTabIntervention.vue'),
         },
         {
+          path: 'cours',
+          name: 'comptabilite-cours',
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          component: () =>
+            import('@/components/comptabilite/ComptabiliteTabCours.vue'),
+        },
+        {
           path: 'annuel',
           name: 'comptabilite-annuel',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),

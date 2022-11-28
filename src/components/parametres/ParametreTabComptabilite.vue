@@ -59,6 +59,13 @@
           >
           <a
             class="nav-link"
+            :class="{ active: tab === 'indemnite-cours' }"
+            href="#"
+            @click.prevent="tab = 'indemnite-cours'"
+            >Indemnité cours</a
+          >
+          <a
+            class="nav-link"
             :class="{ active: tab === 'comptabilite' }"
             href="#"
             @click.prevent="tab = 'comptabilite'"
@@ -80,11 +87,12 @@
       <parametre-indemnite-frais-annuel
         v-if="tab === 'indemnite-frais-annuel'"
       />
-      <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
       <parametre-heure-exercice v-if="tab === 'heure-exercice'" />
+      <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
       <parametre-indemnite-intervention
         v-if="tab === 'indemnite-intervention'"
       />
+      <parametre-indemnite-cours v-if="tab === 'indemnite-cours'" />
       <parametre-avs v-if="tab === 'comptabilite'" />
       <parametre-amende v-if="tab === 'amende'" />
     </div>
@@ -98,6 +106,7 @@ import ParametreCompte from './ParametreCompte.vue';
 import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
 import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
 import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
+import ParametreIndemniteCours from './ParametreIndemniteCours.vue';
 import ParametreHeureExercice from './ParametreHeureExercice.vue';
 import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
 import ParametreAvs from './ParametreAvs.vue';
@@ -134,10 +143,11 @@ export default {
   components: {
     ParametreCompte,
     ParametreEcritureCategorie,
-    ParametreIndemniteFraisAnnuel,
+    ParametreIndemniteCours,
     ParametreIndemniteExercice,
-    ParametreHeureExercice,
+    ParametreIndemniteFraisAnnuel,
     ParametreIndemniteIntervention,
+    ParametreHeureExercice,
     ParametreAvs,
     ParametreAmende,
   },

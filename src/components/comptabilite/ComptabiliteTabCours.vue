@@ -7,7 +7,7 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button
-            v-if="!selectedItem || selectedItem?.statut == 3"
+            v-if="!selectedItem || !selectedItem?.ecritures?.length"
             class="btn btn-outline-primary"
             :disabled="!selectedItem"
             @click="imputer(selectedItem.id)"
@@ -15,20 +15,11 @@
             Imputer
           </button>
           <button
-            v-if="selectedItem?.statut == 4"
+            v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
             @click="annulerImputer(selectedItem.id)"
           >
             Annuler l'imputation
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="selectedItem?.statut != 4"
-            @click="
-              genererDecompteExercice(selectedItem.id, selectedItem.designation)
-            "
-          >
-            Créer un décompte
           </button>
         </div>
       </div>
@@ -44,30 +35,25 @@
               class="col-md-4"
               value-key="id"
               display-key="designation"
+              base-option="&lt;Cours&gt;"
+              :options="filteredCoursTypes"
+              @update:model-value="(value) => onFilter('cours_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              value-key="id"
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => onFilter('sapeur_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              value-key="id"
+              display-key="designation"
               base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @update:model-value="(value) => onFilter('localite_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              value-key="id"
-              display-key="designation"
-              base-option="&lt;Catégorie&gt;"
-              :options="filteredCategories"
-              @update:model-value="
-                (value) => onFilter('exercice_categorie_id', value)
-              "
-            />
-            <base-select
-              class="col-md-4"
-              value-key="id"
-              display-key="designation"
-              base-option="&lt;Statut&gt;"
-              :options="[
-                { id: '3', designation: 'Validé' },
-                { id: '4', designation: 'Imputé' },
-              ]"
-              @update:model-value="(value) => onFilter('statut', value)"
             />
           </div>
         </form>
@@ -76,7 +62,7 @@
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Exercices</h3>
+          <h3 class="card-title">Cours</h3>
         </div>
         <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
@@ -90,13 +76,13 @@
           detail-row-class="m-td-0"
           no-data="Aucune écriture à afficher"
           :detail-row-component="detailRow"
-          :data="filteredExercices"
+          :data="filteredCours"
           :selectable="true"
           @selected="selected"
         >
           <template #details="props">
             <button
-              v-if="props.rowData.statut === 4"
+              v-if="props.rowData.ecritures.length"
               class="btn btn-link border-0"
               @click="props.actions.toggleDetailRow(props.rowData.id)"
             >
@@ -112,23 +98,18 @@
           </template>
           <template #actions="props">
             <button
-              v-if="props.rowData.statut === 3"
+              v-if="props.rowData.ecritures.length"
               class="btn btn-outline-primary border-0"
-              @click="imputer(props.rowData.id)"
+              title="Annuler imputation"
+              @click="annulerImputer(props.rowData.id)"
             >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              <font-awesome-icon :icon="['fas', 'ban']" />
             </button>
             <button
-              v-if="props.rowData.statut === 4"
+              v-if="!props.rowData.ecritures.length"
               class="btn btn-outline-primary border-0"
-              title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
-              @click="
-                genererDecompteExercice(
-                  props.rowData.id,
-                  props.rowData.designation
-                )
-              "
+              title="Imputer cours"
+              @click="imputer(props.rowData.id, props.rowData.designation)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -145,19 +126,20 @@ import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
 import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
-import ImputationService from '@/services/ImputationService.js';
 
 async function loadData(_, next) {
-  const loadExercices = store.dispatch('fetchListeExercice');
-  const loadCategories = store.dispatch('fetchExerciceCategories');
+  const loadCategories = store.dispatch('fetchEcritureCategories');
+  const loadUnites = store.dispatch('fetchUnites');
+  const loadCours = store.dispatch('fetchCours');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
   const loadComptes = store.dispatch('fetchComptes');
 
   Promise.all([
-    loadExercices,
     loadCategories,
+    loadUnites,
+    loadCours,
     loadSapeurs,
     loadLocalites,
     loadIndemnites,
@@ -168,7 +150,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'FraisTabExercice',
+  name: 'FraisTabCours',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -186,7 +168,6 @@ export default {
     return {
       detailRow: markRaw(FraisEcritureDetails),
       loading: true,
-      exercices: [],
       filters: {},
       selectedItem: null,
       ecritureColumns: [
@@ -224,12 +205,10 @@ export default {
           className: 'text-end',
         },
         {
-          title: 'Amende',
-          field: 'total',
-          formatter: (total, ecriture) =>
-            ecriture.module == 5 ? ecriture.total : '0.00',
-          headerClassName: 'text-center',
-          className: 'text-end',
+          title: 'Unite',
+          field: 'type_unite_id',
+          formatter: (type_unite_id) =>
+            svm.unites.find((u) => u.id == type_unite_id)?.unite,
         },
         {
           title: 'Total',
@@ -256,20 +235,17 @@ export default {
           },
         },
         {
-          title: 'Categorie',
-          key: 'categorie',
-          sortKey: 'categorie',
+          title: 'Cours',
+          key: 'designation',
+          sortKey: 'designation',
         },
         {
-          title: 'Heure',
-          key: 'heure',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
-          sortKey: 'heure',
+          title: 'Sapeur',
+          key: 'nom_prenom',
+          sortKey: 'nom_prenom',
         },
         {
-          title: 'Duree',
+          title: 'Durée [jour]',
           key: 'duree',
           sortKey: 'duree',
         },
@@ -277,31 +253,6 @@ export default {
           title: 'Localité',
           key: 'localite',
           sortKey: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-          sortKey: 'lieu',
-        },
-        {
-          title: 'Designation',
-          key: 'designation',
-          sortKey: 'designation',
-        },
-        {
-          title: 'statut',
-          key: 'statut',
-          sortKey: 'statut',
-          formatter(value) {
-            const statuts = {
-              0: 'Annulé',
-              1: 'A saisir',
-              2: 'En attente de validation',
-              3: 'Validé',
-              4: 'Imputé',
-            };
-            return statuts[value];
-          },
         },
         {
           title: 'Actions',
@@ -315,6 +266,10 @@ export default {
   },
   computed: {
     ...mapState({
+      cours: (state) => state.cours.liste,
+      unites: (state) => state.unite.liste,
+      coursSapeurs: (state) =>
+        state.coursSapeur.liste.map((e) => ({ ...e.cours, ...e })),
       sapeurs: (state) => state.sapeur.liste,
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
@@ -322,25 +277,18 @@ export default {
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
-      return this.exercices.map((e) => {
-        let aPayer = e.statut == 4;
-        if (e.statut == 4) {
-          aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
-        }
-        return {
-          ...e,
-          categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id
-          )?.designation,
-          localite: this.localites.find((l) => l.id == e.localite_id)
-            ?.designation,
-          aPayer,
-          getEcritures: () => Promise.resolve(e.ecritures),
-          columns: this.ecritureColumns,
-        };
-      });
+      return this.coursSapeurs.map((e) => ({
+        ...e,
+        categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
+          ?.designation,
+        localite: this.localites.find((l) => l.id == e.localite_id)
+          ?.designation,
+        columns: this.ecritureColumns,
+        nom_prenom: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+        getEcritures: () => Promise.resolve(e.ecritures),
+      }));
     },
-    filteredExercices() {
+    filteredCours() {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0)
@@ -356,12 +304,16 @@ export default {
       );
     },
     filteredLocalites() {
-      const ids = new Set(this.exercices.map((i) => i.localite_id));
+      const ids = new Set(this.coursSapeurs.map((i) => i.localite_id));
       return this.localites.filter((t) => ids.has(t.id));
     },
-    filteredCategories() {
-      const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
-      return this.categories.filter((t) => ids.has(t.id));
+    filteredSapeurs() {
+      const ids = new Set(this.coursSapeurs.map((i) => i.sapeur_id));
+      return this.sapeurs.filter((t) => ids.has(t.id));
+    },
+    filteredCoursTypes() {
+      const ids = new Set(this.coursSapeurs.map((i) => i.cours_id));
+      return this.cours.filter((t) => ids.has(t.id));
     },
   },
   watch: {
@@ -377,37 +329,22 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     init() {
-      ImputationService.getExerciceEcriturePourExerciceComptable(
-        this.currentExerciceComptableId
-      ).then((e) => {
-        this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
-        this.selectedItem =
-          this.exercices.find((e) => e.id == this.selectedItem?.id) || null;
+      store.dispatch('fetchCoursSapeurs').then(() => {
         this.loading = false;
       });
     },
     selected(item) {
       this.selectedItem = item;
     },
-    genererDecompteExercice(exerciceId, designation) {
+    imputer(courSapeurId) {
       this.SHOW_MODAL({
-        component: 'modalDecompte',
-        data: {
-          exerciceId,
-          designation,
-        },
-        callback: () => this.init(),
-      });
-    },
-    imputer(exerciceId) {
-      this.SHOW_MODAL({
-        component: 'ModalImputerExercice',
-        data: { id: exerciceId },
+        component: 'ModalImputerCours',
+        data: { id: courSapeurId },
         size: 2,
         callback: () => this.init(),
       });
     },
-    annulerImputer(exerciceId) {
+    annulerImputer(courSapeurId) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -418,17 +355,17 @@ export default {
         callback: (confirmed) => {
           if (confirmed) {
             this.$store
-              .dispatch('annulerImputationExercice', exerciceId)
+              .dispatch('annulerImputationCours', courSapeurId)
               .then(({ statut }) => {
-                this.exercices = [
-                  ...this.exercices.filter((e) => e.id != exerciceId),
+                this.coursSapeurs = [
+                  ...this.coursSapeurs.filter((e) => e.id != courSapeurId),
                   {
-                    ...this.exercices.find((e) => e.id == exerciceId),
+                    ...this.coursSapeurs.find((e) => e.id == courSapeurId),
                     statut: statut,
                   },
                 ].sort((a, b) => a.date.localeCompare(b.date));
-                this.selectedItem = this.exercices.find(
-                  (e) => e.id == exerciceId
+                this.selectedItem = this.coursSapeurs.find(
+                  (e) => e.id == courSapeurId
                 );
               })
               .catch((err) => {
@@ -445,14 +382,7 @@ export default {
         return;
       }
 
-      const statutsClass = {
-        0: '', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'En attente de validation',
-        3: 'table-warning', //'Validé',
-        4: 'table-success', //'Imputé'
-      };
-      return statutsClass[dataItem.statut];
+      return dataItem.ecritures.length > 0 ? 'table-success' : 'table-warning';
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

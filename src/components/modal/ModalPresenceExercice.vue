@@ -95,7 +95,7 @@
                   :disabled="
                     !canEditAbsence(e) || (!canEditPresence(e) && e.present)
                   "
-                  @change="editExcuseCheckbox(e)"
+                  @update:model-value="editExcuseCheckbox(e)"
                 />
                 <base-select
                   v-if="e.excuse_type_id"
@@ -107,7 +107,7 @@
                   :select-class="{
                     'is-invalid': errors['ecriture_categorie_id'],
                   }"
-                  @input="selectExcuseType(e)"
+                  @update:model-value="selectExcuseType(e)"
                 />
               </div>
             </td>
