@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "29.11.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Affichage des heures supplémentaire dans `mes-infos`"]
+    },
+    {
       "date": "28.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",

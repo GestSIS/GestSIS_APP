@@ -8,11 +8,14 @@
     </div>
     <div class="card-body table-responsive">
       <base-table
+        ref="table"
         :fields="fields"
         :data="exercices"
         :selectable="true"
         :hide-download="true"
-        no-data="Aucun exercice pour le moment"
+        no-data="Aucun exercice pour le
+      moment"
+        :detail-row-component="detailRowComponent"
       />
     </div>
   </div>
@@ -21,16 +24,20 @@
 <script>
 import { mapState } from 'vuex';
 import store from '@/store/index';
+import { markRaw } from 'vue';
+import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
 
 async function loadData(routeTo, next) {
   let loadMesExercices = store.dispatch('fetchMesExercices');
-  let loadlocalites = store.dispatch('fetchLocalites');
+  let loadUnites = store.dispatch('fetchUnites');
+  let loadLocalites = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
   let loadExcuseTypes = store.dispatch('fetchExcuseTypes');
 
   Promise.all([
+    loadUnites,
     loadMesExercices,
-    loadlocalites,
+    loadLocalites,
     loadExerciceCategories,
     loadExcuseTypes,
   ]).then(() => {
@@ -48,6 +55,7 @@ export default {
   },
   data() {
     return {
+      detailRowComponent: markRaw(MesHeuresSuppDetailRow),
       fields: [
         {
           title: 'Date',
@@ -114,7 +122,6 @@ export default {
           type: Boolean,
           key: 'excuse_type_id',
           sortKey: 'excuse_type_id',
-          columnClass: 'text-center',
         },
         {
           title: 'Amende',
@@ -134,6 +141,7 @@ export default {
       exercices: (state) =>
         state.mesInfos.exercices
           .map((e) => ({
+            ...e.presence,
             ...e,
             excuse: state.excuseType.liste.find((t) => t.id == e.excuse_type_id)
               ?.designation,
@@ -148,8 +156,21 @@ export default {
   },
   watch: {
     anneeComptableId() {
-      this.$store.dispatch('fetchMesExercices');
+      this.$store.dispatch('fetchMesExercices').then(() => {
+        this.exercices.forEach((e) => {
+          if (e.heures.length) {
+            this.$refs.table.showDetailRow(e.id);
+          } else {
+            this.$refs.table.hideDetailRow(e.id);
+          }
+        });
+      });
     },
+  },
+  mounted() {
+    this.exercices
+      .filter((e) => e.heures.length)
+      .forEach((e) => this.$refs.table.showDetailRow(e.id));
   },
   methods: {
     download() {
