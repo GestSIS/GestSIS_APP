@@ -47,7 +47,19 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-3">
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Impression</h5>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <button class="btn btn-outline-primary" @click="listeFssp">
+              Liste FSSP
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
@@ -55,7 +67,7 @@
           <div class="card-body">
             <div class="row">
               <base-select
-                class="col-md-4 mb-1"
+                class="col-md-6 mb-1"
                 :options="filteredLocalites"
                 display-key="designation"
                 value-key="id"
@@ -63,7 +75,7 @@
                 @update:model-value="(value) => onFilter('localite_id', value)"
               />
               <base-select
-                class="col-md-4 mb-1"
+                class="col-md-6 mb-1"
                 :options="filteredFonctions"
                 display-key="nom"
                 value-key="id"
@@ -81,7 +93,7 @@
                 "
               />
               <base-select
-                class="col-md-4 mb-1"
+                class="col-md-6 mb-1"
                 :options="filteredGrades"
                 display-key="designation"
                 value-key="id"
@@ -89,7 +101,7 @@
                 @update:model-value="(value) => onFilter('grade_id', value)"
               />
               <base-select
-                class="col-md-4 mb-1"
+                class="col-md-6 mb-1"
                 :options="filteredGroupes"
                 display-key="label"
                 value-key="id"
@@ -420,6 +432,10 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     selectSapeur(id) {
       this.selectedId = id;
+    },
+    listeFssp() {
+      SapeurService.listeFssp();
+      // TODO: Download listeFssp
     },
     sms() {
       if (!this.hasSmsEnvoiePermission) {

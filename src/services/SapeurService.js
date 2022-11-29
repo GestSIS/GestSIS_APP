@@ -4,6 +4,9 @@ export default {
   getEffectif() {
     return Api.api().get('/effectif');
   },
+  listeFssp() {
+    return Api.apiFileDownload('liste_fssp.xlsx').get('/liste-fssp');
+  },
   getSapeurPourConvocationSms() {
     return Api.api().get('/sapeurs-convocation');
   },
