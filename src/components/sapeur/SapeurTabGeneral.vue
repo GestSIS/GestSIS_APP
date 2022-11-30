@@ -79,12 +79,10 @@
           <base-select
             v-model="activeSapeur.localite_id"
             class="mb-3"
-            label="NPA Localité"
-            value-key="id"
+            label="Localité"
             required
             :disabled="!hasEditPermission"
             :options="localites"
-            :formatter="(l) => l.npa + ' ' + l.designation"
           />
           <!-- N° AVS -->
           <div class="row">

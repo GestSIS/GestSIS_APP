@@ -136,47 +136,26 @@
             />
           </div>
           <!-- NPA + LOCALITE -->
-          <div class="mb-3">
-            <label for="m-int-localite">Localité</label>
-            <select
-              id="m-int-localite"
-              v-model="activeInterventionData.localite_id"
-              class="form-select form-select-sm required"
-              :class="{ 'is-invalid': errors['localite_id'] }"
-              name="localite_id"
-              style="width: 100%"
-              :disabled="!hasEditPermission"
-            >
-              <option
-                v-for="localite in localites"
-                :key="localite.id"
-                :value="localite.id"
-              >
-                {{ localite.npa + ' ' + localite.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeInterventionData.localite_id"
+            label="Localité"
+            :options="localites"
+            :disabled="!hasEditPermission"
+            required
+            :select-class="{ 'is-invalid': errors['localite_id'] }"
+            class="mb-3"
+          />
           <!-- Chef d'intervention -->
-          <div class="mb-3">
-            <label for="m-int-sapeur">Chef d'intervention</label>
-            <select
-              id="m-int-sapeur"
-              v-model="activeInterventionData.sapeur_id"
-              class="form-select form-select-sm required"
-              :class="{ 'is-invalid': errors['sapeur_id'] }"
-              name="localite_id"
-              style="width: 100%"
-              :disabled="!hasEditPermission"
-            >
-              <option
-                v-for="sapeur in sapeurs"
-                :key="sapeur.id"
-                :value="sapeur.id"
-              >
-                {{ sapeur.nom_prenom }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeInterventionData.sapeur_id"
+            label="Chef d'intervention"
+            :options="sapeurs"
+            :disabled="!hasEditPermission"
+            display-key="nom_prenom"
+            required
+            :select-class="{ 'is-invalid': errors['sapeur_id'] }"
+            class="mb-3"
+          />
           <!-- Coordonées -->
           <div class="mb-3">
             <label for="m-int-wgs84">Coordonées (format wgs84)</label>

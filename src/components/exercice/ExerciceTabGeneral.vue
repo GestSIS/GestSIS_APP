@@ -25,26 +25,15 @@
         />
       </div>
       <!-- CATEGORIE -->
-      <div class="mb-3">
-        <label for="m-sap-cat">Categorie</label>
-        <select
-          id="m-sap-cat"
-          v-model="activeExerciceData.exercice_categorie_id"
-          :disabled="!hasEditPermission"
-          class="form-select form-select-sm"
-          required
-          :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-          style="width: 100%"
-        >
-          <option
-            v-for="categorie in categories"
-            :key="categorie.id"
-            :value="categorie.id"
-          >
-            {{ categorie.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeExerciceData.exercice_categorie_id"
+        label="Catégorie"
+        :options="categories"
+        :disabled="!hasEditPermission"
+        required
+        class="mb-3"
+        :select-class="{ 'is-invalid': errors['exercice_categorie_id'] }"
+      />
       <div class="row">
         <div class="col-6">
           <!-- DATE -->
@@ -115,27 +104,15 @@
       <div class="row">
         <div class="col-6">
           <!-- LOCALITE -->
-          <div class="mb-3">
-            <label for="m-sap-localite">Localité</label>
-            <select
-              id="m-sap-localite"
-              v-model="activeExerciceData.localite_id"
-              :disabled="!hasEditPermission"
-              class="form-select form-select-sm"
-              required
-              :class="{ 'is-invalid': errors['localite_id'] }"
-              name="localite_id"
-              style="width: 100%"
-            >
-              <option
-                v-for="localite in localites"
-                :key="localite.id"
-                :value="localite.id"
-              >
-                {{ localite.npa + ' ' + localite.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeExerciceData.localite_id"
+            label="Localité"
+            :options="localites"
+            :disabled="!hasEditPermission"
+            required
+            :select-class="{ 'is-invalid': errors['localite_id'] }"
+            class="mb-3"
+          />
         </div>
         <div class="col-6">
           <!-- LIEU -->

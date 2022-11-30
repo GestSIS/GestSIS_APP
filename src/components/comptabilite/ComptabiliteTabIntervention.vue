@@ -33,16 +33,12 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @update:model-value="(value) => onFilter('localite_id', value)"
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Type&gt;"
               :options="filteredTypesIntervention"
               @update:model-value="
@@ -51,8 +47,6 @@
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Statistique fédérale&gt;"
               :options="filteredStatFederal"
               @update:model-value="
@@ -61,8 +55,6 @@
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Traitement&gt;"
               :options="traitements"
               @update:model-value="
@@ -71,8 +63,6 @@
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Etendue&gt;"
               :options="degres"
               @update:model-value="(value) => onFilter('degre', value)"

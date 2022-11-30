@@ -68,7 +68,6 @@
           <base-select
             v-model="sisParam.localite_id"
             class="mb-3"
-            value-key="id"
             label="Localité"
             :formatter="formatLocalite"
             :options="localites"
@@ -77,7 +76,6 @@
           <base-select
             v-model="sisParam.sapeur_id"
             class="mb-3"
-            value-key="id"
             label="Commandant"
             display-key="nom_prenom"
             :options="sapeurs"
