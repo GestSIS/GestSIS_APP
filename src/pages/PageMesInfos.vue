@@ -94,12 +94,12 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'PageMesInfos',
+  components: { ExerciceComptable },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  components: { ExerciceComptable },
 };
 </script>
