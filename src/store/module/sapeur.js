@@ -222,32 +222,6 @@ export default {
       });
     },
   },
-  getters: {
-    activeSapeurPermis: (state) => state.active.permis,
-    activeSapeurTelephones: (state) =>
-      state.active.telephones
-        .slice(0)
-        .sort((t1, t2) => t1.priorite - t2.priorite),
-    activeSapeurGrades: (state) =>
-      state.active.grades
-        .slice(0)
-        .sort((g1, g2) => new Date(g1.date) - new Date(g2.date)),
-    activeSapeurCours: (state) =>
-      state.active.cours
-        .slice(0)
-        .sort((c1, c2) => new Date(c1.date) - new Date(c2.date)),
-    activeSapeurFonctions: (state) =>
-      state.active.fonctions
-        .slice(0)
-        .sort((f1, f2) => new Date(f1.debut) - new Date(f2.debut)),
-    activeSapeurMutations: (state) =>
-      state.active.mutations
-        .slice(0)
-        .sort(
-          (m1, m2) => new Date(m1.incorporation) - new Date(m2.incorporation)
-        ),
-    activeSapeurGroupes: (state) => state.active.groupes,
-  },
   actions: {
     selectSapeur({ commit }, payload) {
       return commit(types.SELECT_CURRENT_SAPEUR, payload);
@@ -263,6 +237,7 @@ export default {
       );
     },
     fetchSapeurPermis({ commit, state }) {
+      console.log(state.active.id)
       return SapeurService.getPermis(state.active.id).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       );
@@ -312,7 +287,7 @@ export default {
     fetchSapeurExercices({ commit, getters, state }) {
       return SapeurService.getExercices(
         state.active.id,
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => {
         commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data);
         return data;

@@ -161,7 +161,7 @@ export default {
       ecritures: (state) => state.imputation.ecritures.annuels,
       fonctions: (state) => state.fonction.liste,
       exercicesComptable: (state) => state.exerciceComptable.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       //Group by sapeur ID
@@ -206,7 +206,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.selectedId = null;
@@ -223,7 +223,7 @@ export default {
       //console.log('Warning')
     }
 
-    if (this.currentExerciceComptableId || 0 !== 0) {
+    if (this.activeExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
         this.loading = false;
         this.selectedId = null;
@@ -250,7 +250,7 @@ export default {
           if (confirmed) {
             this.$store.dispatch(
               'annulerImputationAnnuel',
-              this.currentExerciceComptableId
+              this.activeExerciceComptableId
             );
           }
         },

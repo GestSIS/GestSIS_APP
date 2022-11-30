@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import ExerciceTabSapeurs from '@/components/exercice/ExerciceTabSapeurs.vue';
 import ExerciceTabGeneral from '@/components/exercice/ExerciceTabGeneral.vue';
@@ -86,12 +86,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activeExerciceData']),
+    ...mapState({
+      activeExerciceData: (state) => state.exercice.active.data,
+      activeExerciceId: (state) => state.exercice.active.id,
+    }),
     newMode() {
       return this.id === 'new';
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeExerciceData.designation;
+      return this.newMode ? 'Nouveau' : this.activeExerciceData?.designation;
     },
   },
   watch: {

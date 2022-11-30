@@ -324,7 +324,7 @@ export default {
       sapeurs: (state) =>
         state.sapeur.liste.filter((s) => s.type === 0 && parseInt(s.actif)),
       controleTypes: (state) => state.controlesMedicauxType.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     breadcrumbFinal() {
       return this.controleMedical.designation;

@@ -335,7 +335,7 @@ export default {
       types: (state) => state.controlesMedicauxType.liste,
       medecins: (state) => state.medecin.liste,
       controlesMedicaux: (state) => state.controleMedical.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       const now = Date.now();

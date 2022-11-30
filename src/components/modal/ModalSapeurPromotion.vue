@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   name: 'ModalSapeurPromotion',
@@ -64,8 +64,8 @@ export default {
     ...mapState({
       grades: (state) => state.grade.liste,
       activeGrade: (state) => state.grade.active,
+      activeSapeurId: (state) => state.sapeur.active.id,
     }),
-    ...mapGetters(['activeSapeurId']),
   },
   mounted() {
     if (this.grades.length === 0) {

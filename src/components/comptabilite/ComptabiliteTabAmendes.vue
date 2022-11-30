@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -110,8 +110,8 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       amendes: (state) => state.imputation.ecritures.amendes,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    ...mapGetters(['currentExerciceComptableId']),
     filteredAmendes() {
       const amendes = this.amendes.filter(
         Object.entries(this.filters)
@@ -144,7 +144,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
         this.loading = false;
@@ -161,7 +161,7 @@ export default {
     generer() {
       this.$store.dispatch(
         'genererAmendesAnnuels',
-        this.currentExerciceComptableId
+        this.activeExerciceComptableId
       );
     },
     onFilter(key, value) {

@@ -134,7 +134,7 @@ export default {
   actions: {
     fetchListeIntervention({ getters, commit }) {
       return InterventionService.getInterventions(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_INTERVENTION_LISTE, data));
     },
     fetchIntervention({ commit }, payload) {
@@ -204,7 +204,7 @@ export default {
         responsable: '',
         stat_nb: 1,
         imputer: 0,
-        exercice_comptable_id: getters.currentExerciceComptableId,
+        exercice_comptable_id: getters.activeExerciceComptableId,
         localite_id: null,
         type_intervention_id: null,
         sapeur_id: null,
@@ -215,7 +215,7 @@ export default {
     createIntervention({ state, commit, getters }) {
       return InterventionService.createIntervention({
         ...state.active.data,
-        exercice_comptable_id: getters.currentExerciceComptableId,
+        exercice_comptable_id: getters.activeExerciceComptableId,
       }).then(async (data) => {
         await commit(types.ADD_INTERVENTION, data);
         await commit(types.SELECT_CURRENT_INTERVENTION, data.id);

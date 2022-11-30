@@ -22,7 +22,7 @@ export default {
   actions: {
     fetchDecomptes({ getters, commit }) {
       return DecompteService.getDecomptes(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_DECOMPTES, data));
     },
     removeDecompte({ commit }, decompteId) {

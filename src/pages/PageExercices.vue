@@ -225,7 +225,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 import store from '@/store/index';
 import permissions from '@/store/permissions.js';
@@ -340,7 +340,8 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceId: (state) => state.exercice.active.id,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
@@ -351,7 +352,6 @@ export default {
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
-    ...mapGetters(['activeExerciceId']),
     computedData() {
       return this.exercices.map((s) => ({
         ...s,
@@ -388,7 +388,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchListeExercice').then(() => {
         this.loading = false;

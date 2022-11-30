@@ -21,7 +21,7 @@ export default {
   actions: {
     fetchCoursSapeurs({ commit, getters }) {
       return CoursSapeurService.getCoursSapeurs(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_COURS_SAPEUR_LISTE, data));
     },
   },

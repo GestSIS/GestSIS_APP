@@ -255,7 +255,7 @@ export default {
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       return this.coursSapeurs.map((e) => ({
@@ -297,7 +297,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.init();
     },

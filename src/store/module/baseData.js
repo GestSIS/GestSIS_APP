@@ -19,7 +19,6 @@ export default {
     },
   },
   getters: {
-    listPermisType: (state) => state.permisTypes,
     listTelephoneTypes: (state) => state.telephoneTypes,
   },
   actions: {

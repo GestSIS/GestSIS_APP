@@ -411,7 +411,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 const degre = [
   { id: 1, type: 'Fausse-alarme' },
@@ -442,15 +442,16 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       activeInterventionId: (state) => state.intervention.active.id,
       activeInterventionData: (state) => state.intervention.active.data,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      // TODO: Check si intervention pas déjà imputé
+      activeExerciceComptable: (state) =>
+        state.exerciceComptable.liste.find(
+          (e) => e.id === state.exerciceComptable.activeId
+        ),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),
     }),
-    ...mapGetters(['exerciceComptableDebut', 'exerciceComptableFin']),
     isValidWgs84() {
       const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
       return regex.test(this.activeInterventionData?.wgs84);
@@ -471,31 +472,19 @@ export default {
       return this.activeInterventionData.heure_fin;
     },
     dateDebutMin() {
-      if (!this.currentExerciceComptableId) return;
-      return this.exerciceComptableDebut(
-        this.activeInterventionData.exercice_comptable_id
-      );
+      return this.activeExerciceComptable?.debut;
     },
     dateDebutMax() {
-      if (!this.currentExerciceComptableId) return;
-      return this.exerciceComptableFin(
-        this.activeInterventionData.exercice_comptable_id
-      );
+      return this.activeExerciceComptable?.fin;
     },
     dateFinMin() {
-      if (!this.currentExerciceComptableId) return;
       return (
         this.activeInterventionData.date_debut ||
-        this.exerciceComptableDebut(
-          this.activeInterventionData.exercice_comptable_id
-        )
+        this.activeExerciceComptable?.debut
       );
     },
     dateFinMax() {
-      if (!this.currentExerciceComptableId) return;
-      return this.exerciceComptableFin(
-        this.activeInterventionData.exercice_comptable_id
-      );
+      return this.activeExerciceComptable?.fin;
     },
   },
   watch: {

@@ -230,7 +230,7 @@ export default {
     fetchEcritureComptes({ state, getters, commit }, compteId) {
       return ImputationService.getEcritureForCompte(
         compteId ?? state.active.compteId,
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => {
         return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data);
       });
@@ -242,17 +242,17 @@ export default {
     },
     fetchEcrituresAnnuels({ commit, getters }) {
       return ImputationService.getEcrituresAnnuelsForExerciceComptable(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_ANNUEL_TYPES_LISTE, data));
     },
     fetchEcrituresDivers({ commit, getters }) {
       return ImputationService.getEcrituresDiversForExerciceComptable(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_DIVERS_LISTE, data));
     },
     fetchAmendesExerciceComptable({ commit, getters }) {
       return ImputationService.getAmendesForExerciceComptable(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
     imputerCours({ commit }, payload) {
@@ -325,7 +325,7 @@ export default {
     },
     imputerAnnuel({ commit, getters }) {
       return ImputationService.imputerAnnuel(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => {
         commit(types.UPDATE_ECRITURES_ANNUEL_TYPES_LISTE, data);
         return data;

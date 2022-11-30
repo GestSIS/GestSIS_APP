@@ -334,7 +334,7 @@ export default {
           .filter((e) => e.statut > 1)
           .sort((a, b) => a.date_debut.localeCompare(b.date_debut)),
       exercicesComptable: (state) => state.exerciceComptable.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       typesIntervention: (state) => state.typeIntervention.liste,
       statsFederal: (state) => state.statFederal.liste,
       traitements: (state) => state.interventionTraitement.liste,
@@ -396,7 +396,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchListeIntervention');
     },
   },

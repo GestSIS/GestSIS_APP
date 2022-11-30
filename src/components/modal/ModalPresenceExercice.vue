@@ -169,7 +169,7 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurExercice: (state) => state.sapeur.active.exercices,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasPresencePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),

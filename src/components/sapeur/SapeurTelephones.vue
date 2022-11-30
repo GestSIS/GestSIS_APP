@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 import draggable from 'vuedraggable';
 
@@ -122,11 +122,15 @@ export default {
     ...mapState({
       sapeurType: (state) => state.sapeur.active.data.type,
       telephonesTypes: (state) => state.baseData.telephoneTypes,
+      activeSapeurTelephones: (state) =>
+        state.sapeur.active.telephones
+          .slice(0)
+          .sort((t1, t2) => t1.priorite - t2.priorite),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-    ...mapGetters(['activeSapeurTelephones']),
+
     telephones: {
       get() {
         return this.telephonesData;
@@ -178,7 +182,7 @@ export default {
           ...this.telephones,
           {
             id: null,
-            telephone_type_id: 0, //this.listTelephoneTypes[0].id, //TODO Choisir si select de base
+            telephone_type_id: 0,
             rta: 0,
             priorite: this.telephones.length + 1,
           },

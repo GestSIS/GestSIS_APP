@@ -141,9 +141,6 @@ export default {
   },
   getters: {
     isLoggedIn: (state) => !!state.user,
-    activePermissions: (state) => {
-      return state.sis.permissions;
-    },
     availableSisListe: (state) => {
       return state.sis.liste
         .filter((sis) => state.sis.available.includes(sis.api_key))

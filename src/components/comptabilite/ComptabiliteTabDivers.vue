@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import store from '@/store/index';
 
@@ -176,6 +176,7 @@ export default {
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,
       ecritures: (state) => state.imputation.ecritures.divers,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       let svm = this;
@@ -192,10 +193,9 @@ export default {
         ecritureType: svm.formatType(e.type),
       }));
     },
-    ...mapGetters(['currentExerciceComptableId']),
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchEcrituresDivers').then(() => {
         this.loading = false;

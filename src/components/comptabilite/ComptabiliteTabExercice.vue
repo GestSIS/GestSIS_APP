@@ -300,7 +300,7 @@ export default {
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     selectedItem() {
       return this.exercices.find((e) => e.id == this.selectedItemId);
@@ -348,7 +348,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.init();
     },
@@ -361,7 +361,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     init() {
       ImputationService.getExerciceEcriturePourExerciceComptable(
-        this.currentExerciceComptableId
+        this.activeExerciceComptableId
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
         this.loading = false;

@@ -160,7 +160,7 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
       return this.coursSapeurs.map((s) => ({
@@ -203,7 +203,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchCoursSapeurs').then(() => {
         this.loading = false;

@@ -41,17 +41,17 @@ export default {
     },
     fetchMesExercices({ commit, getters }) {
       return MesInfosService.getMesExercices(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_MES_EXERCICES, data));
     },
     fetchMesInterventions({ commit, getters }) {
       return MesInfosService.getMesInterventions(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_MES_INTERVENTIONS, data));
     },
     fetchMesDecomptes({ commit, getters }) {
       return MesInfosService.getMesDecomptes(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => {
         commit(types.UPDATE_MES_ECRITURES, data.ecritures);
         return commit(types.UPDATE_MES_PAIEMENTS, data.paiements);

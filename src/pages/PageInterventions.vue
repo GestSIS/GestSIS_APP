@@ -198,7 +198,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 import store from '@/store/index';
 
@@ -339,6 +339,7 @@ export default {
   },
   computed: {
     ...mapState({
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       interventions: (state) =>
         state.intervention.liste.sort((a, b) =>
           a.date_debut.localeCompare(b.date_debut)
@@ -361,7 +362,6 @@ export default {
           permissions.INTERVENTION.MODIFICATION
         ),
     }),
-    ...mapGetters(['currentExerciceComptableId']),
     filteredInterventionsTypes() {
       const ids = new Set(
         this.interventions.map((i) => parseInt(i.type_intervention_id))
@@ -405,7 +405,7 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchListeIntervention').then(() => {
         this.loading = false;

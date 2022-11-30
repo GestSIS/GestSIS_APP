@@ -13,7 +13,11 @@
     <div class="card-body">
       <table class="table table-sm">
         <tbody>
-          <tr v-for="permis in permisData" :key="permis.permis_type_id">
+          <tr
+            v-for="permis in permisData"
+            :key="permis.permis_type_id"
+            :class="{ 'table-primary': permis.date }"
+          >
             <td class="text-end">
               <font-awesome-icon
                 v-if="permis.type.toLowerCase().includes('118')"
@@ -28,7 +32,7 @@
               />
             </td>
             <td>
-              <p>{{ permis.type }}</p>
+              {{ permis.type }}
             </td>
             <td>
               <div class="input-group input-group-sm">
@@ -62,7 +66,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
@@ -75,8 +79,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['listPermisType', 'activeSapeurPermis', 'activeSapeurId']),
     ...mapState({
+      listPermisType: (state) => state.baseData.permisTypes,
+      activeSapeurId: (state) => state.sapeur.active.id,
+      activeSapeurPermis: (state) => state.sapeur.active.permis,
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),

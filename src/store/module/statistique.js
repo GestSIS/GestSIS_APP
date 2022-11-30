@@ -41,34 +41,34 @@ export default {
   actions: {
     fetchStatistiqueVehicule({ getters, commit }) {
       return StatistiqueService.getStatVehicule(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_VEHICULE, data));
     },
     fetchStatistiqueMateriel({ getters, commit }) {
       return StatistiqueService.getStatMateriel(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_MATERIEL, data));
     },
     fetchStatistiquePresence({ getters, commit }) {
       return StatistiqueService.getStatPresences(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_PRESENCE, data));
     },
     fetchStatistiqueTypeIntervention({ getters, commit }) {
       return StatistiqueService.getStatTypeIntervention(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_TYPE_INTERVENTION, data)
       );
     },
     fetchStatistiqueStatFederal({ getters, commit }) {
       return StatistiqueService.getStatStatFederal(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_STAT_FEDERAL, data));
     },
     fetchStatistiqueTraitementIntervention({ getters, commit }) {
       return StatistiqueService.getStatTraitementIntervention(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_INTERVENTION_TRAITEMENT, data)
       );

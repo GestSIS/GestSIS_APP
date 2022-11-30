@@ -166,7 +166,7 @@ export default {
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,

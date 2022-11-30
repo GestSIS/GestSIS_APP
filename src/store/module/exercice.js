@@ -51,15 +51,10 @@ export default {
       );
     },
   },
-  getters: {
-    activeExerciceId: (state) => state.active.id,
-    activeExerciceSapeurs: (state) => state.active.sapeurs,
-    activeExerciceData: (state) => state.active.data,
-  },
   actions: {
     fetchListeExercice({ getters, commit }) {
       return ExerciceService.getExercices(
-        getters.currentExerciceComptableId
+        getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
     fetchExercice({ commit }, payload) {
@@ -82,7 +77,7 @@ export default {
         id: null,
         localite_id: null,
         exercice_categorie_id: null,
-        exercice_comptable_id: getters.currentExerciceComptableId,
+        exercice_comptable_id: getters.activeExerciceComptableId,
         date: null,
         heure: null,
         lieu: '',
@@ -95,7 +90,7 @@ export default {
     createExercice({ state, commit, getters }) {
       return ExerciceService.createExercice({
         ...state.active.data,
-        exercice_comptable_id: getters.currentExerciceComptableId,
+        exercice_comptable_id: getters.activeExerciceComptableId,
       }).then(async (data) => {
         await commit(types.ADD_EXERCICE, data);
         await commit(types.SELECT_CURRENT_EXERCICE, data.id);

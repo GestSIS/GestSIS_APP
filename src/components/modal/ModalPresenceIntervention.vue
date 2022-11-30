@@ -181,7 +181,7 @@ export default {
     },
     dateFinMin() {
       return null;
-      // if (!this.currentExerciceComptableId) return
+      // if (!this.activeExerciceComptableId) return
       // return (
       //   this.activeInterventionData.date_debut ||
       //   this.exerciceComptableDebut(

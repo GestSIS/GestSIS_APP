@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="currentExerciceComptableId"
+    v-if="activeExerciceComptable"
     class="exercice-comptable d-flex align-items-center"
   >
     <span>Exercice comptable</span>
     <base-dropdown
       ref="dropdown"
-      :title="getExerciceComptable(currentExerciceComptableId).annee.toString()"
+      :title="activeExerciceComptable?.annee?.toString()"
       menu-class="dropdown-menu-end"
       button-class="ms-1 btn btn-outline-secondary"
     >
@@ -15,8 +15,8 @@
           v-for="e in listeExerciceComptable"
           :key="e.id"
           class="dropdown-item"
-          :class="{ active: currentExerciceComptableId === e.id }"
-          :type="getExerciceComptable(currentExerciceComptableId).annee"
+          :class="{ active: activeExerciceComptable?.id === e.id }"
+          :type="activeExerciceComptable?.annee"
           @click="selectExercice(e.id)"
         >
           {{ e.annee }}
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
@@ -47,12 +47,14 @@ export default {
     ...mapState({
       listeExerciceComptable: (state) =>
         state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptable: (state) =>
+        state.exerciceComptable.liste.find(
+          (e) => e.id == state.exerciceComptable.activeId
+        ),
       hasConfigPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),
     }),
-    ...mapGetters(['getExerciceComptable']),
   },
   mounted() {
     if (this.listeExerciceComptable.length === 0) {

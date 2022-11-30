@@ -37,15 +37,6 @@ export default {
       state.liste = state.liste.filter((m) => m.id != exerciceId);
     },
   },
-  getters: {
-    currentExerciceComptableId: (state) => state.activeId,
-    getExerciceComptable: (state) => (id) =>
-      state.liste.find((e) => e.id == id),
-    exerciceComptableDebut: (state) => (id) =>
-      state.liste.find((e) => e.id == id)?.debut,
-    exerciceComptableFin: (state) => (id) =>
-      state.liste.find((e) => e.id == id)?.fin,
-  },
   actions: {
     fetchExercicesComptables({ commit, state }) {
       if (state.liste.length > 0) {

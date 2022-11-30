@@ -216,7 +216,7 @@ export default {
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       exercicesComptable: (state) => state.exerciceComptable.liste,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeInterventionId: (state) => state.intervention.active.id,
     }),
     computedData() {
@@ -260,10 +260,10 @@ export default {
     },
   },
   watch: {
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       ImputationService.getEcrituresForExerciceComptable(
-        this.currentExerciceComptableId
+        this.activeExerciceComptableId
       ).then((data) => {
         this.ecritures = data;
         this.loading = false;
@@ -273,7 +273,7 @@ export default {
   mounted() {
     this.loading = true;
     ImputationService.getEcrituresForExerciceComptable(
-      this.currentExerciceComptableId
+      this.activeExerciceComptableId
     ).then((data) => {
       this.ecritures = data;
       this.loading = false;
