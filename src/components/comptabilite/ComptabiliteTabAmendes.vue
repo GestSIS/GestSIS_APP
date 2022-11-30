@@ -20,6 +20,7 @@
           :row-class="onRowClass"
           no-data="Aucune amende à afficher"
           :detail-row-column="true"
+          :detail-row-options="detailRowOptions"
           :detail-row-component="detailRowComponent"
           detail-row-class="m-td-0"
           :data="filteredAmendes"
@@ -34,7 +35,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import { markRaw } from 'vue';
-import AmendesSapeurDetails from '@/components/amende/AmendeSapeurDetails.vue';
+
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import store from '@/store/index';
 
 async function loadData(routeTo, next) {
@@ -57,29 +59,30 @@ export default {
   },
   data() {
     return {
-      detailRowComponent: markRaw(AmendesSapeurDetails),
+      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       filters: {},
-      amendeColumns: [
-        {
-          title: 'Date',
-          field: 'date',
-          type: 'date',
-          formatter: (e) => new Date(e).toLocaleDateString('fr-CH'),
-        },
-        {
-          title: 'Exercice',
-          field: 'designation',
-        },
-        {
-          title: 'Excuse',
-          field: 'complement',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-        },
-      ],
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Date',
+            key: 'date',
+            type: Date,
+          },
+          {
+            title: 'Exercice',
+            key: 'designation',
+          },
+          {
+            title: 'Excuse',
+            key: 'complement',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+          },
+        ],
+      },
       fields: [
         {
           title: 'Sapeur',
@@ -95,13 +98,6 @@ export default {
           title: 'Montant',
           key: 'total',
           sortKey: 'total',
-        },
-        {
-          title: 'Actions',
-          key: 'actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
         },
       ],
     };
@@ -143,7 +139,7 @@ export default {
         nb: s.amendes.length,
         sapeur: s.nom_prenom,
         total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-        columns: this.amendeColumns,
+        getData: () => Promise.resolve(s.amendes),
       }));
     },
   },
