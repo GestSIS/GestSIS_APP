@@ -5,34 +5,11 @@
       <h3 class="card-title">Statistique fédéral</h3>
     </div>
     <div class="card-body table-responsive">
-      <table id="materiel" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Désignation</th>
-            <th class="text-center">Actif</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!statsFederales.length">
-            <td colspan="7">Aucune Statistique fédéral</td>
-          </tr>
-          <tr v-for="s in statsFederales" :key="s.id">
-            <td>{{ s.tri }}</td>
-            <td>{{ s.designation }}</td>
-            <td class="text-center">
-              <input
-                id="statut"
-                type="checkbox"
-                class="form-check-input"
-                :checked="s.statut"
-                disabled
-              />
-              <label class="form-check-label" for="statut"></label>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="statsFederales"
+        :fields="fields"
+        no-data="Aucune statistique fédérale"
+      />
     </div>
   </div>
 </template>
@@ -42,6 +19,15 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'ParametreStatFederal',
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Actif', key: 'statut', type: Boolean },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       statsFederales: (state) =>

@@ -8,40 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="exercice-categories" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Désignation</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeCategorie.length">
-            <td colspan="8">Aucune catégorie</td>
-          </tr>
-          <tr v-for="c in listeCategorie" :key="c.id">
-            <td>{{ c.tri }}</td>
-            <td>{{ c.designation }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCategorie(c)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCategorie(c.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeCategorie"
+        :fields="fields"
+        no-data="Aucune catégorie"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateCategorie(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteCategorie(rowData.id)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -65,6 +53,15 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

@@ -8,53 +8,24 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="excuses-types" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Désignation</th>
-            <th>Adresse</th>
-            <th>Localité</th>
-            <th class="text-center">Actif</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeMedecin.length">
-            <td colspan="5">Aucun médecin</td>
-          </tr>
-          <tr v-for="m in listeMedecin" :key="m.id">
-            <td>{{ m.designation }}</td>
-            <td>{{ m.adresse }}</td>
-            <td>{{ localite(m.localite_id) }}</td>
-            <td class="text-center">
-              <input
-                :id="`actif-${m.id}`"
-                type="checkbox"
-                class="form-check-input"
-                :checked="m.actif"
-                disabled
-              />
-              <label class="form-check-label" :for="`actif-${m.id}`"></label>
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateMedecin(m)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteMedecin(m)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table :data="listeMedecin" :fields="fields" no-data="Aucun médecin">
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateMedecin(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteMedecin(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -79,16 +50,27 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Adresse', key: 'adresse' },
+        { title: 'Localité', key: 'localite' },
+        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       listeMedecin: (state) =>
-        state.medecin.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
-        ),
-      listeLocalite: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
-        ),
+        state.medecin.liste
+          .map((m) => ({
+            ...m,
+            localite: state.localite.liste.find((l) => l.id == m.localite_id)
+              ?.designation,
+          }))
+          .sort((a, b) => a.designation.localeCompare(b.designation)),
     }),
   },
   methods: {
@@ -105,9 +87,6 @@ export default {
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
-    },
-    localite(id) {
-      return id ? this.listeLocalite.find((l) => l.id === id)?.designation : '';
     },
   },
 };

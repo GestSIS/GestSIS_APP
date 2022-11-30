@@ -8,54 +8,24 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="cours" class="table table-sm" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Abréviation</th>
-            <th>Désignation</th>
-            <th>Durée [jours]</th>
-            <th>Pré-requis</th>
-            <th>Grade</th>
-            <th>Fonction</th>
-            <th>Validite début</th>
-            <th>Validite fin</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeCours.length">
-            <td colspan="9">Aucun cours</td>
-          </tr>
-          <tr v-for="c in listeCours" :key="c.id">
-            <td>{{ c.tri }}</td>
-            <td>{{ c.abreviation }}</td>
-            <td>{{ c.designation }}</td>
-            <td class="text-center">{{ c.duree }}</td>
-            <td>{{ coursPrecedent(c.precedent_id) }}</td>
-            <td>{{ grade(c.grade_id) }}</td>
-            <td>{{ fonction(c.fonction_id) }}</td>
-            <td>{{ c.validite_debut }}</td>
-            <td>{{ c.validite_fin }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCours(c)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCours(c)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table :data="listeCours" :fields="fields" no-data="Aucun cours">
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateCours(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteCours(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -82,11 +52,39 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Abréviation', key: 'abreviation' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Durée [jours]', key: 'duree' },
+        { title: 'Pré-requis', key: 'cours_precedent' },
+        { title: 'Grade', key: 'grade' },
+        { title: 'Fonction', key: 'fonction' },
+        { title: 'Validite début', key: 'validite_debut', type: Date },
+        { title: 'Validite fin', key: 'validite_fin', type: Date },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
+      listeCours: (state) =>
+        state.cours.liste
+          .map((c) => ({
+            ...c,
+            grade: state.grade.liste.find((g) => g.id == c.grade_id)
+              ?.designation,
+            fonction: state.fonction.liste.find((g) => g.id == c.fonction_id)
+              ?.nom,
+            cours_precedent: state.cours.liste.find(
+              (g) => g.id == c.precedent_id
+            )?.designation,
+          }))
+          .sort((a, b) => b.tri - a.tri),
       listeFonction: (state) =>
         state.fonction.liste.sort((a, b) => a.tri - b.tri),
-      listeCours: (state) => state.cours.liste.sort((a, b) => b.tri - a.tri),
       listeGrade: (state) => state.grade.liste.sort((a, b) => b.tri - a.tri),
     }),
   },

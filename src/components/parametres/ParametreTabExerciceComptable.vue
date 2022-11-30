@@ -13,57 +13,30 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>Année</th>
-            <th>Désignation</th>
-            <th>Début</th>
-            <th>Fin</th>
-            <th class="text-center">Bouclé</th>
-            <th class="text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeExerciceComptable.length">
-            Aucun exercice comptable
-          </tr>
-          <tr v-for="e in listeExerciceComptable" :key="e.id">
-            <td>{{ e.annee }}</td>
-            <td>{{ e.designation }}</td>
-            <td>{{ new Date(e.debut).toLocaleDateString('fr-CH') }}</td>
-            <td>{{ new Date(e.fin).toLocaleDateString('fr-CH') }}</td>
-            <td class="text-center">
-              <input
-                id="en_cours"
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.boucle"
-                disabled
-              />
-              <label class="form-check-label" for="en_cours"></label>
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateExerciceComptable(e)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <!-- TODO Implement Suppression exercice comptable -->
-              <button
-                v-if="false"
-                type="button"
-                class="btn btn-outline-danger border-0"
-                disabled
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeExerciceComptable"
+        :fields="fields"
+        no-data="Aucun exercice comptable"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateExerciceComptable(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <!-- TODO Implement Suppression exercice comptable -->
+          <button
+            v-if="false"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            disabled
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -88,11 +61,22 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Année', key: 'annee' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Début', key: 'debut', type: Date },
+        { title: 'Fin', key: 'fin', type: Date },
+        { title: 'Bouclé', key: 'boucle', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       listeExerciceComptable: (state) =>
         state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },
   methods: {

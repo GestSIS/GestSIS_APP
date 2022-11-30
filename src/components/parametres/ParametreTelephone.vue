@@ -8,42 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="telephones" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Nom</th>
-            <th>Numéro</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeTelephone.length">
-            <td colspan="4">Aucun téléphone</td>
-          </tr>
-          <tr v-for="t in listeTelephone" :key="t.id">
-            <td>{{ t.tri }}</td>
-            <td>{{ t.nom }}</td>
-            <td>{{ t.numero }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateTelephone(t)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteTelephone(t)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeTelephone"
+        :fields="fields"
+        no-data="Aucun téléphone"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateTelephone(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteTelephone(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -67,6 +53,16 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Nom', key: 'nom' },
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

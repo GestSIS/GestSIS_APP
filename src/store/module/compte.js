@@ -10,14 +10,29 @@ export default {
       state.liste = [];
     },
     [types.UPDATE_COMPTE_LISTE](state, payload) {
-      state.liste = payload;
+      state.liste = payload.map((c) => ({
+        ...c,
+        label: `${c.numero} ${c.designation}`,
+      }));
     },
     [types.ADD_COMPTE](state, compte) {
-      state.liste = [...state.liste, compte];
+      state.liste = [
+        ...state.liste,
+        {
+          ...compte,
+          label: `${compte.numero} ${compte.designation}`,
+        },
+      ];
     },
     [types.UPDATE_COMPTE](state, compte) {
       state.liste = [
-        ...state.liste.map((m) => (m.id === compte.id ? compte : m)),
+        ...state.liste.map((m) =>
+          m.id === compte.id
+            ? {
+              ...compte,
+              label: `${compte.numero} ${compte.designation}`,
+            }
+            : m),
       ];
     },
     [types.REMOVE_COMPTE](state, compteId) {

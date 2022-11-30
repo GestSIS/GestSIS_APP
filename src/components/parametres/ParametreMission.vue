@@ -8,38 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="missions" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Titre</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeMission.length">
-            <td colspan="2">Aucune mission</td>
-          </tr>
-          <tr v-for="m in listeMission" :key="m.id">
-            <td>{{ m.titre }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateMission(m)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteMission(m)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeMission"
+        :fields="fields"
+        no-data="Aucune mission"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateMission(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteMission(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -63,6 +53,14 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Titre', key: 'titre' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

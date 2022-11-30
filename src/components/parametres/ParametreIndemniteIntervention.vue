@@ -8,66 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="indemnites-anuelles" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Désignation</th>
-            <th>Tarif</th>
-            <th>Tarif min</th>
-            <th>Pour</th>
-            <th class="text-center">Pro-rata</th>
-            <th>Unité</th>
-            <th>Phase</th>
-            <th>Taux week-end</th>
-            <th>Taux nuit</th>
-            <th>Compte</th>
-            <th>Catégorie d'écriture</th>
-            <th>Type</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!indemnitesIntervention.length">
-            <td colspan="11">Aucune indemnité</td>
-          </tr>
-          <tr v-for="i in indemnitesIntervention" :key="i.id">
-            <td>{{ i.designation }}</td>
-            <td>{{ i.tarif }}</td>
-            <td>{{ i.tarif_min }}</td>
-            <td>{{ i.tarif_min_pour }}</td>
-            <td class="text-center">
-              <input
-                v-model="i.tarif_min_pro_rata"
-                type="checkbox"
-                class="form-check-input"
-              />
-            </td>
-            <td>{{ unite(i.type_unite_id) }}</td>
-            <td>{{ phase(i.phase_id) }}</td>
-            <td>{{ i.taux_weekend }}</td>
-            <td>{{ i.taux_nuit }}</td>
-            <td>{{ compte(i.compte_id) }}</td>
-            <td>{{ categorie(i.ecriture_categorie_id) }}</td>
-            <td>{{ formatType(i.type) }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateIndemnite(i)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="removeIndemnite(i)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="indemnitesIntervention"
+        :fields="fields"
+        no-data="Aucune indemnité"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateIndemnite(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="removeIndemnite(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -102,17 +64,49 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Type', key: 'type_display' },
+        { title: 'Tarif', key: 'tarif' },
+        { title: 'Tarif min', key: 'tarif_min' },
+        { title: 'Pour', key: 'tarif_min_pour' },
+        { title: 'Unité', key: 'unite' },
+        { title: 'Pro-rata', key: 'tarif_min_pro_rata', type: Boolean },
+        { title: 'Phase', key: 'phase' },
+        { title: 'Taux week-end', key: 'taux_weekend' },
+        { title: 'Taux nuit', key: 'taux_nuit' },
+        { title: 'Compte', key: 'compte' },
+        { title: "Catégorie d'écriture", key: 'categorie' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       indemnitesIntervention: (state) =>
-        state.imputation.fraisIndemnites.interventions.sort(
-          (a, b) => a.tri - b.tri
-        ),
-      fonctions: (state) => state.fonction.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      phases: (state) => state.phaseType.liste,
+        state.imputation.fraisIndemnites.interventions
+          .map((e) => ({
+            ...e,
+            unite: state.unite.liste.find((u) => u.id == e.type_unite_id)
+              ?.unite,
+            compte: state.compte.liste.find((c) => c.id == e.compte_id)?.label,
+            categorie: state.ecritureCategorie.liste.find(
+              (c) => c.id == e.ecriture_categorie_id
+            )?.designation,
+            phase: state.phaseType.liste.find((p) => p.id == e.phase_id)
+              ?.designation,
+            type_display: {
+              0: 'Autre',
+              1: 'Solde',
+              2: 'Indemnité',
+              3: 'Frais forfaitaire',
+              4: 'Frais effectif',
+              5: 'Charges AVS/AC',
+            }[e.type ?? 0],
+          }))
+          .sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
@@ -131,37 +125,6 @@ export default {
     },
     removeIndemnite(indemnite) {
       this.$store.dispatch('removeIndemniteIntervention', indemnite.id);
-    },
-    fonction(id) {
-      return id ? this.fonctions.find((f) => f.id === id)?.abreviation : '';
-    },
-    compte(id) {
-      if (!id) {
-        return '';
-      }
-      const compte = this.comptes.find((f) => f.id === id);
-      return `${compte?.numero} ${compte?.designation}`;
-    },
-    unite(id) {
-      const unite = this.unites.find((u) => u.id === id);
-      return (unite?.comptable ? 'par ' : '') + unite?.unite;
-    },
-    phase(id) {
-      return id ? this.phases.find((u) => u.id === id)?.designation : '';
-    },
-    categorie(id) {
-      return id ? this.categories.find((c) => c.id === id)?.designation : '';
-    },
-    formatType(type) {
-      const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC',
-      };
-      return mapping[type] || '';
     },
   },
 };

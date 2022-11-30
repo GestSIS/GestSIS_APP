@@ -66,11 +66,6 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ParametreMatPersoTypeCategorie',
-  data() {
-    return {
-      selectedId: '',
-    };
-  },
   computed: {
     ...mapState({
       types: (state) =>
@@ -153,9 +148,6 @@ export default {
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
-    },
-    select(id) {
-      this.selectedId = id;
     },
   },
 };

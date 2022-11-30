@@ -8,64 +8,27 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="exercice-categories" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Désignation</th>
-            <th>Durée de base [min]</th>
-            <th class="text-center">Amendable</th>
-            <th class="text-center">Actif</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeCategorie.length">
-            <td colspan="6">Aucune catégorie</td>
-          </tr>
-          <tr v-for="c in listeCategorie" :key="c.id">
-            <td>{{ c.tri }}</td>
-            <td>{{ c.designation }}</td>
-            <td>{{ c.duree_base }}</td>
-            <td class="text-center">
-              <input
-                id="amendable"
-                type="checkbox"
-                class="form-check-input"
-                :checked="c.amendable"
-                disabled
-              />
-              <label class="form-check-label" for="amendable"></label>
-            </td>
-            <td class="text-center">
-              <input
-                id="statut"
-                type="checkbox"
-                class="form-check-input"
-                :checked="c.statut"
-                disabled
-              />
-              <label class="form-check-label" for="statut"></label>
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCategorie(c)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCategorie(c)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeCategorie"
+        :fields="fields"
+        no-data="Aucune catégorie"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateCategorie(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteCategorie(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" /></button
+        ></template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -89,6 +52,18 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Durée de base [min]', key: 'duree_base' },
+        { title: 'Amendable', key: 'amendable', type: Boolean },
+        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

@@ -8,53 +8,27 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="exercice-categories" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Désignation</th>
-            <th>Validité [ans]</th>
-            <th class="text-center">Expirable</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeType.length">
-            <td colspan="5">Aucun contrôle médical type</td>
-          </tr>
-          <tr v-for="t in listeType" :key="t.id">
-            <td>{{ t.tri }}</td>
-            <td>{{ t.designation }}</td>
-            <td>{{ t.duree_validite }}</td>
-            <td class="text-center">
-              <input
-                id="expirable"
-                type="checkbox"
-                class="form-check-input"
-                :checked="t.expirable"
-                disabled
-              />
-              <label class="form-check-label" for="expirable"></label>
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateType(t)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteType(t)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeType"
+        :fields="fields"
+        no-data="Aucun contrôle médical type"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateType(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteType(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" /></button
+        ></template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -78,6 +52,17 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Validité [ans]', key: 'duree_validite' },
+        { title: 'Expirable', key: 'expirable', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

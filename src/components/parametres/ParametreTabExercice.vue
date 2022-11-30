@@ -30,22 +30,12 @@
           >
             Excuses types
           </a>
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'aspsms' }"
-            href="#"
-            role="tab"
-            @click.prevent="tab = 'aspsms'"
-          >
-            ASPSMS
-          </a>
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
       <parametre-exercice-categorie v-if="tab === 'categorie'" />
       <parametre-excuse-type v-if="tab === 'excuse'" />
-      <parametre-aspsms v-if="tab === 'aspsms'" />
     </div>
   </div>
 </template>
@@ -54,7 +44,6 @@
 import store from '@/store/index';
 import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
 import ParametreExcuseType from './ParametreExcuseType.vue';
-import ParametreAspsms from './ParametreAspsms.vue';
 
 async function loadData(_, next) {
   const loadExcuses = store.dispatch('fetchExcuseTypes');
@@ -71,7 +60,6 @@ export default {
   components: {
     ParametreExcuseType,
     ParametreExerciceCategorie,
-    ParametreAspsms,
   },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);

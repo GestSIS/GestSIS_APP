@@ -11,42 +11,28 @@
           </button>
         </div>
         <div class="card-body">
-          <table id="type-intervention" class="table table-sm">
-            <thead>
-              <tr>
-                <th>Tri</th>
-                <th>Type d'intervention</th>
-                <th>Statistiques</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="!listeType.length">
-                <td colspan="4">Aucun type</td>
-              </tr>
-              <tr v-for="t in listeType" :key="t.id">
-                <td>{{ t.tri }}</td>
-                <td>{{ t.designation }}</td>
-                <td>{{ statistique(t.stat_intervention_id) }}</td>
-                <td class="align-middle text-center">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary border-0"
-                    @click="updateType(t)"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    @click="deleteType(t)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <base-table
+            :data="listeType"
+            :fields="fieldsType"
+            no-data="Aucun type"
+          >
+            <template #actions="{ rowData }">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateType(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteType(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+          </base-table>
         </div>
       </div>
     </div>
@@ -61,42 +47,28 @@
           </button>
         </div>
         <div class="card-body">
-          <table id="statistiques" class="table table-sm">
-            <thead>
-              <tr>
-                <th>Tri</th>
-                <th>Désignation</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="!listeStat.length">
-                <td colspan="3">Aucune statistique</td>
-              </tr>
-              <tr v-for="s in listeStat" :key="s.id">
-                <td>{{ s.tri }}</td>
-                <td>{{ s.designation }}</td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary border-0"
-                      @click="updateStat(s)"
-                    >
-                      <font-awesome-icon :icon="['far', 'edit']" />
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger border-0"
-                      @click="deleteStat(s)"
-                    >
-                      <font-awesome-icon :icon="['far', 'trash-alt']" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <base-table
+            :data="listeStat"
+            :fields="fieldsStat"
+            no-data="Aucune statistique"
+          >
+            <template #actions="{ rowData }">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="updateStat(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteStat(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+          </base-table>
         </div>
       </div>
     </div>
@@ -124,10 +96,32 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fieldsType: [
+        { title: 'Tri', key: 'tri' },
+        { title: "Type d'intervention", key: 'designation' },
+        { title: 'Statistique', key: 'statistique' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+      fieldsStat: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       listeType: (state) =>
-        state.typeIntervention.liste.sort((a, b) => a.tri - b.tri),
+        state.typeIntervention.liste
+          .map((t) => ({
+            ...t,
+            statistique: state.statIntervention.liste.find(
+              (s) => s.id == t.stat_intervention_id
+            )?.designation,
+          }))
+          .sort((a, b) => a.tri - b.tri),
       listeStat: (state) =>
         state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
     }),
@@ -166,9 +160,6 @@ export default {
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
-    },
-    statistique(id) {
-      return id ? this.listeStat.find((s) => s.id === id)?.designation : '';
     },
   },
 };

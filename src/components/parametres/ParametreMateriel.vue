@@ -8,57 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="materiel" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th class="text-center">Actif</th>
-            <th>Désignation</th>
-            <th>Prix de forfait</th>
-            <th>Prix de l'unité</th>
-            <th>Type d'unité</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeMateriel.length">
-            <td colspan="7">Aucun matériel</td>
-          </tr>
-          <tr v-for="m in listeMateriel" :key="m.id">
-            <td>{{ m.tri }}</td>
-            <td class="text-center">
-              <input
-                id="statut"
-                type="checkbox"
-                class="form-check-input"
-                :checked="m.statut"
-                disabled
-              />
-              <label class="form-check-label" for="statut"></label>
-            </td>
-            <td>{{ m.designation }}</td>
-            <td>{{ m.forfait }}</td>
-            <td>{{ m.unite }}</td>
-            <td>{{ unite(m.type_unite_id) }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateMateriel(m)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteMateriel(m)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeMateriel"
+        :fields="fields"
+        no-data="Aucun materiel"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -83,11 +54,30 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Prix de forfait', key: 'forfait' },
+        { title: "Prix de l'unité", key: 'unite' },
+        { title: "Type d'unité", key: 'type_unite' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
-      listeUnite: (state) => state.unite.liste,
       listeMateriel: (state) =>
-        state.materiel.liste.sort((a, b) => a.tri - b.tri),
+        state.materiel.liste
+          .map((m) => ({
+            ...m,
+            type_unite:
+              state.unite.liste.find((u) => u.id == m.type_unite_id)?.unite ??
+              '-',
+          }))
+          .sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
@@ -104,9 +94,6 @@ export default {
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
-    },
-    unite(id) {
-      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '-';
     },
   },
 };

@@ -72,7 +72,11 @@
             </template>
             <!-- Date types -->
             <template v-else-if="f.type === 'date' || f.type == Date">
-              {{ new Date(r[f.key]).toLocaleDateString('fr-CH').slice(0, 10) }}
+              {{
+                r[f.key]
+                  ? new Date(r[f.key]).toLocaleDateString('fr-CH').slice(0, 10)
+                  : ''
+              }}
             </template>
             <!-- Date time types -->
             <template v-else-if="f.type === 'datetime'">
@@ -254,9 +258,13 @@ export default {
               .map((f) => {
                 switch (f.type) {
                   case 'boolean':
+                  case Boolean:
                     return e[f.key] ? 'vrai' : 'faux';
                   case 'date':
-                    return new Date(e[f.key]).toLocaleDateString('fr-CH');
+                  case Date:
+                    return e[f.key]
+                      ? new Date(e[f.key]).toLocaleDateString('fr-CH')
+                      : '';
                   default:
                     return (f.formatter || this.defaultFormatter)(e[f.key], e);
                 }

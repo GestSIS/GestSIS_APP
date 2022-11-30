@@ -8,64 +8,28 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="excuses-types" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th>Abréviation</th>
-            <th>Désignation</th>
-            <th class="text-center">Amende</th>
-            <th class="text-center">Actif</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeExcuse.length">
-            <td colspan="6">Aucune excuse type</td>
-          </tr>
-          <tr v-for="e in listeExcuse" :key="e.id">
-            <td>{{ e.tri }}</td>
-            <td>{{ e.abreviation }}</td>
-            <td>{{ e.designation }}</td>
-            <td class="text-center">
-              <input
-                id="amende"
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.amende"
-                disabled
-              />
-              <label class="form-check-label" for="amende"></label>
-            </td>
-            <td class="text-center">
-              <input
-                id="statut"
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.statut"
-                disabled
-              />
-              <label class="form-check-label" for="statut"></label>
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateExcuse(e)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteExcuse(e)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :data="listeExcuse"
+        :fields="fields"
+        no-data="Aucune excuse type"
+      >
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateExcuse(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteExcuse(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -89,6 +53,18 @@ export default {
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
+  },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Abréviation', key: 'abreviation' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Amende', key: 'amende', type: Boolean },
+        { title: 'Actif', key: 'statut', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
   },
   computed: {
     ...mapState({

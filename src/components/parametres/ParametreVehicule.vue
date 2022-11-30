@@ -8,57 +8,24 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="vehicules" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Tri</th>
-            <th class="text-center">Actif</th>
-            <th>Désignation</th>
-            <th>Prix de forfait</th>
-            <th>Prix de l'unité</th>
-            <th>Type d'unité</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!vehicules.length">
-            <td colspan="7">Aucun véhicule</td>
-          </tr>
-          <tr v-for="v in vehicules" :key="v.id">
-            <td>{{ v.tri }}</td>
-            <td class="text-center">
-              <input
-                id="statut"
-                type="checkbox"
-                class="form-check-input"
-                :checked="v.statut"
-                disabled
-              />
-              <label class="form-check-label" for="statut"></label>
-            </td>
-            <td>{{ v.designation }}</td>
-            <td>{{ v.forfait }}</td>
-            <td>{{ v.unite }}</td>
-            <td>{{ unite(v.type_unite_id) }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateVehicule(v)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteVehicule(v)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule">
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateVehicule(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteVehicule(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -83,10 +50,30 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Tri', key: 'tri' },
+        { title: 'Actif', key: 'actif' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Prix de forfait', key: 'forfait' },
+        { title: "Prix de l'unité", key: 'unite' },
+        { title: "Type d'unité", key: 'type_unite' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
-      listeUnite: (state) => state.unite.liste,
-      vehicules: (state) => state.vehicule.liste.sort((a, b) => a.tri - b.tri),
+      vehicules: (state) =>
+        state.vehicule.liste
+          .map((m) => ({
+            ...m,
+            type_unite:
+              state.unite.liste.find((u) => u.id == m.type_unite_id)?.unite ??
+              '-',
+          }))
+          .sort((a, b) => a.tri - b.tri),
     }),
   },
   methods: {
@@ -103,9 +90,6 @@ export default {
         .catch((res) =>
           this.$awn.alert(res.message || 'Erreur lors de la suppression')
         );
-    },
-    unite(id) {
-      return id ? this.listeUnite.find((u) => u.id === id)?.unite : '-';
     },
   },
 };

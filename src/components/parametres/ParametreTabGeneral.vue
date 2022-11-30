@@ -143,23 +143,11 @@
           </button>
         </div>
         <div class="card-body">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Npa</th>
-                <th>Localité</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="id in localitesSis" :key="id">
-                <td>{{ indexedLocalites[id].npa }}</td>
-                <td>{{ indexedLocalites[id].designation }}</td>
-              </tr>
-              <tr v-if="!localitesSis.length">
-                <td colspan="2">Aucune localité</td>
-              </tr>
-            </tbody>
-          </table>
+          <base-table
+            :data="localitesSis"
+            :fields="fields"
+            no-data="Aucune localité de configuré pour le SIS"
+          />
         </div>
       </div>
     </div>
@@ -219,22 +207,25 @@ export default {
     return {
       errors: {},
       sisParam: {},
+      fields: [
+        { title: 'Npa', key: 'npa' },
+        { title: 'Localité', key: 'localite' },
+      ],
     };
   },
   computed: {
     ...mapState({
       params: (state) => state.sisParam.params,
       localites: (state) => state.localite.liste,
-      localitesSis: (state) => state.localite.listeSis,
+      localitesSis: (state) =>
+        state.localite.listeSis.map((l) => ({
+          id: l,
+          npa: state.localite.liste.find((e) => e.id == l)?.npa,
+          localite: state.localite.liste.find((e) => e.id == l)?.designation,
+        })),
       sapeurs: (state) =>
         state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
     }),
-    indexedLocalites() {
-      return this.localites.reduce((acc, l) => {
-        acc[l.id] = l;
-        return acc;
-      }, {});
-    },
   },
   mounted() {
     this.sisParam = { ...this.params };

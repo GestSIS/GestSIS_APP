@@ -8,51 +8,24 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Seuil de déclenchement</th>
-            <th class="text-center">Dernier événement</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!types.length">
-            <td colspan="5">Aucune alerte type</td>
-          </tr>
-          <tr v-for="t in types" :key="t.id">
-            <td>{{ t.titre }}</td>
-            <td>{{ t.description }}</td>
-            <td>{{ t.seuil_min }}</td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="t.dernier"
-                disabled
-              />
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateAlerte(t)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteAlerte(t)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table :data="types" :fields="fields" no-data="Aucune alerte type">
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateAlerte(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteAlerte(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -62,6 +35,17 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ParametreMatPersoAlerteType',
+  data() {
+    return {
+      fields: [
+        { title: 'Titre', key: 'titre' },
+        { title: 'Description', key: 'description' },
+        { title: 'Seuil de déclenchement', key: 'seuil_min' },
+        { title: 'Dernier événement', key: 'dernier', type: Boolean },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       types: (state) =>

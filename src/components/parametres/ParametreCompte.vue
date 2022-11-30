@@ -8,52 +8,24 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="indemnites-anuelles" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Numéro</th>
-            <th>Désignation</th>
-            <th>Produit / Charge</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!listeCompte.length">
-            <td colspan="4">Aucun compte</td>
-          </tr>
-          <tr v-for="c in listeCompte" :key="c.id">
-            <td>{{ c.numero }}</td>
-            <td>{{ c.designation }}</td>
-            <!-- <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="produit"
-                :checked="c.produit"
-                disabled
-              />
-              <label class="form-check-label" for="produit"></label>
-            </td>-->
-            <td>{{ formatType(c.produit) }}</td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="updateCompte(c)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteCompte(c.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table :data="listeCompte" :fields="fields" no-data="Aucun compte">
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateCompte(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteCompte(rowData?.id)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -83,28 +55,26 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      fields: [
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Produit / Charge', key: 'type' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       listeCompte: (state) =>
-        state.compte.liste.sort((a, b) => a.numero.localeCompare(b.numero)),
+        state.compte.liste
+          .map((c) => ({ ...c, type: c.type ? 'Produit' : 'Charge' }))
+          .sort((a, b) => a.numero.localeCompare(b.numero)),
     }),
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    formatType(type) {
-      return type ? 'Produit' : 'Charge';
-    },
-    // formatCategorie(type) {
-    //   const mapping = {
-    //     0: 'Autre',
-    //     1: 'Solde',
-    //     2: 'Indemnité',
-    //     3: 'Frais forfaitaire',
-    //     4: 'Frais effectif',
-    //     5: 'Charges AVS/AC',
-    //   }
-    //   return mapping[type] || '';
-    // },
     ajoutCompte() {
       this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
     },
