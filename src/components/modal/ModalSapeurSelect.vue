@@ -291,7 +291,7 @@ export default {
             [
               ...new Set(
                 svm.sapeurs
-                  .filter((s) => s.actif)
+                  .filter((s) => s.actif && s.type == 0)
                   .map((s) => s.annee_incorporation)
               ),
             ]
