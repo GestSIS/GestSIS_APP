@@ -197,7 +197,9 @@ export default {
     },
   },
   mounted() {
-    this.presences = [...this.computeExercices.map((e) => ({ ...e }))];
+    this.presences = [
+      ...this.computeExercices.map((e) => ({ ...e.presence, ...e })),
+    ];
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),

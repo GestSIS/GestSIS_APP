@@ -12,108 +12,16 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="sap-fonctions" class="table table-sm">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>heure</th>
-            <th>Catégorie</th>
-            <th>Localité</th>
-            <th>Désignation</th>
-            <th class="text-center">Convoqué</th>
-            <th class="text-center">Présent</th>
-            <th class="text-center">Remplacé</th>
-            <th class="text-center">Excusé</th>
-            <th class="text-center">Amende</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="exerciceDisplay.length <= 0">
-            <td colspan="9">Aucun exercice à afficher</td>
-          </tr>
-          <tr v-for="e in exerciceDisplay" :key="e.id">
-            <td>
-              <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.date.toLocaleDateString('fr-CH') }}
-              </component>
-            </td>
-            <td>
-              <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.heure }}
-              </component>
-            </td>
-            <td>
-              <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.categorie }}
-              </component>
-            </td>
-            <td>
-              <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.localite }}
-              </component>
-            </td>
-            <td>
-              <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.designation }}
-              </component>
-            </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.convoque"
-                :true-value="1"
-                :false-value="0"
-                disabled
-              />
-            </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.present"
-                :true-value="1"
-                :false-value="0"
-                disabled
-              />
-            </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.remplace"
-                :true-value="1"
-                :false-value="0"
-                disabled
-              />
-            </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.excuse_type_id"
-                disabled
-              />
-              <label v-if="e.excuse_type_id" class="form-check-label ms-1">
-                {{
-                  e.excuse_type_id
-                    ? excusesType.find((a) => a.id == e.excuse_type_id)
-                        ?.designation
-                    : ''
-                }}
-              </label>
-            </td>
-            <td class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="e.amende"
-                disabled
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        ref="table"
+        :fields="fields"
+        :data="exercices"
+        :selectable="true"
+        :hide-download="true"
+        no-data="Aucun exercice pour le
+      moment"
+        :detail-row-component="detailRowComponent"
+      />
     </div>
   </div>
 </template>
@@ -122,41 +30,118 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
+import { markRaw } from 'vue';
+import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
+
 export default {
   name: 'SapeurExercice',
+  data() {
+    return {
+      detailRowComponent: markRaw(MesHeuresSuppDetailRow),
+      fields: [
+        {
+          title: 'Date',
+          key: 'date',
+          sortKey: 'date',
+          type: 'date',
+        },
+        {
+          title: 'Heure',
+          key: 'heure',
+          sortKey: 'heure',
+          formatter: (h) => h.slice(0, 5),
+        },
+        {
+          title: 'Categorie',
+          key: 'categorie',
+          sortKey: 'categorie',
+        },
+        {
+          title: 'Exercice',
+          key: 'designation',
+          sortKey: 'designation',
+        },
+        {
+          title: 'Durée [min]',
+          key: 'duree',
+          sortKey: 'duree',
+        },
+        {
+          title: 'Localité',
+          key: 'localite',
+          sortKey: 'localite',
+        },
+        {
+          title: 'Lieu',
+          key: 'lieu',
+          sortKey: 'lieu',
+        },
+        {
+          title: 'Communications',
+          key: 'communications',
+          sortKey: 'communications',
+        },
+        {
+          title: 'Convoqué',
+          type: Boolean,
+          key: 'convoque',
+          sortKey: 'convoque',
+        },
+        {
+          title: 'Présent',
+          type: Boolean,
+          key: 'present',
+          sortKey: 'present',
+        },
+        {
+          title: 'Remplacé',
+          type: Boolean,
+          key: 'remplace',
+          sortKey: 'remplace',
+        },
+        {
+          title: 'Excuse',
+          type: Boolean,
+          key: 'excuse_type_id',
+          sortKey: 'excuse_type_id',
+        },
+        {
+          title: 'Amende',
+          type: Boolean,
+          key: 'amende',
+          sortKey: 'amende',
+        },
+      ],
+    };
+  },
   computed: {
     ...mapState({
-      excusesType: (state) => state.excuseType.liste,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurExercice: (state) => state.sapeur.active.exercices,
-      currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasPresencePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
+      exercices: (state) =>
+        state.sapeur.active.exercices
+          .map((e) => ({
+            ...e.presence,
+            ...e,
+            excuse: state.excuseType.liste.find((t) => t.id == e.excuse_type_id)
+              ?.designation,
+            localite: state.localite.liste.find((l) => l.id == e.localite_id)
+              ?.designation,
+            categorie: state.exerciceCategorie.liste.find(
+              (c) => c.id == e.exercice_categorie_id
+            )?.designation,
+          }))
+          .sort((e1, e2) => e1.date.localeCompare(e2.date)),
     }),
-    exerciceDisplay() {
-      return this.activeSapeurExercice
-        .map((exercice) => ({
-          ...exercice,
-          canceled: exercice.statut == 0,
-          date: new Date(exercice.date),
-          heure: exercice.heure.substr(0, 5),
-          categorie: this.categories.find(
-            (e) => e.id == exercice.exercice_categorie_id
-          )?.designation,
-          localite: this.localites.find((l) => l.id == exercice.localite_id)
-            ?.designation,
-        }))
-        .sort((a, b) => a.date - b.date);
-    },
   },
   watch: {
     activeSapeurId(id) {
       this.$store.dispatch('fetchSapeurExercices', id);
     },
-    currentExerciceComptableId() {
+    activeExerciceComptableId() {
       this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
     },
   },
@@ -164,7 +149,13 @@ export default {
     //TODO: Load before any display
     this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
     this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-    this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
+    this.$store
+      .dispatch('fetchSapeurExercices', this.activeSapeurId)
+      .then(() => {
+        this.exercices
+          .filter((e) => e.heures.length)
+          .forEach((e) => this.$refs.table.showDetailRow(e.id));
+      });
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
