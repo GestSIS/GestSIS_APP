@@ -139,26 +139,27 @@ export default {
   },
   watch: {
     activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurExercices', id);
+      this.init(id);
     },
     activeExerciceComptableId() {
-      this.$store.dispatch('fetchSapeurExercices', this.activeSapeurId);
+      this.init(this.activeSapeurId);
     },
   },
   mounted() {
     //TODO: Load before any display
     this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
     this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-    this.$store
-      .dispatch('fetchSapeurExercices', this.activeSapeurId)
-      .then(() => {
+    this.init(this.activeSapeurId);
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    init(sapeurId) {
+      this.$store.dispatch('fetchSapeurExercices', sapeurId).then(() => {
         this.exercices
           .filter((e) => e.heures.length)
           .forEach((e) => this.$refs.table.showDetailRow(e.id));
       });
-  },
-  methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    },
     edit() {
       this.SHOW_MODAL({
         component: 'ModalPresenceExercice',

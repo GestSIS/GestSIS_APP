@@ -1,8 +1,8 @@
 {
   "releases": [
     {
-      "date": "29.11.2022",
-      "version": "2.0",
+      "date": "30.11.2022",
+      "version": "3.0",
       "app": "GestSIS APP",
       "changes": [
         "Fenêtre ajout exercice, simplification saisie de la localité",
