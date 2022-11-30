@@ -53,6 +53,9 @@ export default {
         { ...payload, nom_prenom: `${payload.nom} ${payload.prenom}` },
       ].sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom));
     },
+    [types.DELETE_SAPEUR](state, sapeurId) {
+      state.liste = [...state.liste].filter((s) => s.id != sapeurId);
+    },
     [types.UPDATE_CURRENT_SAPEUR_DATA](state, payload) {
       state.active.data = payload;
       state.liste.map((s) =>
@@ -296,6 +299,12 @@ export default {
     createSapeur({ commit }, payload) {
       return SapeurService.createSapeur(payload).then((data) => {
         commit(types.CREATE_SAPEUR, data);
+        return data;
+      });
+    },
+    deleteSapeur({ commit }, sapeurId) {
+      return SapeurService.deleteSapeur(sapeurId).then((data) => {
+        commit(types.DELETE_SAPEUR, sapeurId);
         return data;
       });
     },

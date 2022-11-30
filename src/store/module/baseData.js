@@ -18,9 +18,6 @@ export default {
       state.telephoneTypes = payload;
     },
   },
-  getters: {
-    listTelephoneTypes: (state) => state.telephoneTypes,
-  },
   actions: {
     fetchPermisType({ commit, state }) {
       if (state.permisTypes.length) {

@@ -10,7 +10,8 @@
         "Affichage des heures supplémentaires des exercice dans le module sapeur",
         "Sélection de sapeurs, filtre par année d'incorporation",
         "Possibilité d'exporter les données de configuration",
-        "Mise en valeur des permis que le sapeur possède"
+        "Mise en valeur des permis que le sapeur possède",
+        "Possibilité de supprimer un sapeur a certaines conditions"
       ]
     },
     {

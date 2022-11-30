@@ -26,6 +26,13 @@
               Fiche sapeur
             </button>
             <button
+              v-if="activeSapeur?.id && hasEditPermission"
+              class="btn btn-outline-danger ms-2"
+              @click="deleteSapeur"
+            >
+              Supprimer le sapeur
+            </button>
+            <button
               v-if="hasEditPermission"
               type="button"
               class="btn btn-outline-primary ms-2"
@@ -172,6 +179,7 @@ export default {
   },
   computed: {
     ...mapState({
+      sapeurs: (state) => state.sapeur.liste,
       activeSapeur: (state) => state.sapeur.active.data,
       permissions: (state) => state.auth.sis.permissions,
       hasEditPermission: (state) =>
@@ -204,6 +212,40 @@ export default {
               params: { id: sapeurId },
             });
           });
+        },
+      });
+    },
+    deleteSapeur() {
+      const svm = this;
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce sapeur ?',
+          question:
+            "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            svm.$store
+              .dispatch('deleteSapeur', this.activeSapeur.id)
+              .then(() => {
+                const newSelectedSapeurId = svm.sapeurs[0].id;
+                svm.$store
+                  .dispatch('selectSapeur', newSelectedSapeurId)
+                  .then(() => {
+                    svm.$router.push({
+                      name: 'sapeurs-details',
+                      params: { id: newSelectedSapeurId },
+                    });
+                  });
+                svm.$awn.success('Sapeur supprimé avec succès');
+              })
+              .catch((err) => {
+                svm.$awn.alert(
+                  err?.message ?? 'Impossible de supprimer ce sapeur'
+                );
+              });
+          }
         },
       });
     },

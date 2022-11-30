@@ -51,6 +51,9 @@ export default {
   createSapeur(sapeurData) {
     return Api.api().post('/sapeurs', sapeurData);
   },
+  deleteSapeur(sapeurId) {
+    return Api.api().delete('/sapeurs/' + sapeurId);
+  },
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
   },

@@ -27,11 +27,6 @@ export default {
       default: () => {},
     },
   },
-  mounted() {
-    this.exercices
-      .filter((e) => e.heures.length)
-      .forEach((e) => this.$refs.table.showDetailRow(e.id));
-  },
   computed: {
     ...mapState({
       unites: (state) => state.unite.liste,
