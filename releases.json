@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Fenêtre ajout exercice, simplification saisie de la localité",
-        "Sapeur actif 3 mois avant l'incorporation"
+        "Sapeur actif 3 mois avant l'incorporation",
+        "Affichage des heures supplémentaires des exercice dans le module sapeur"
       ]
     },
     {
