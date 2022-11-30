@@ -3,6 +3,7 @@
     <slot name="head">
       <thead>
         <tr>
+          <th v-if="detailRowColumn && data.length"></th>
           <th
             v-for="f in fields"
             :key="f.key"
@@ -21,8 +22,9 @@
       <tr v-if="!data.length">
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
+
       <!-- TODO: Replace id ? -->
-      <template v-for="r in computedData" :key="'main-' + r.id">
+      <template v-for="r in computedData" :key="'main-' + r[selectKey]">
         <tr
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',
@@ -33,6 +35,22 @@
           ]"
           @click="select(r)"
         >
+          <td v-if="detailRowColumn" class="details-width">
+            <button
+              v-if="!detailRowColumnHideButton(r)"
+              class="btn btn-link border-0"
+              @click="toggleDetailRow(r[selectKey])"
+            >
+              <font-awesome-icon
+                v-if="detailsRowVisibility[r[selectKey]] || false"
+                :icon="['fas', 'angle-down']"
+              />
+              <font-awesome-icon
+                v-if="!detailsRowVisibility[r[selectKey]] || false"
+                :icon="['fas', 'angle-right']"
+              />
+            </button>
+          </td>
           <td
             v-for="f in fields"
             :key="f.key"
@@ -45,7 +63,7 @@
             <!-- TODO: Replace id ? -->
             <template v-if="f.type === 'boolean' || f.type === Boolean">
               <input
-                :id="f.key + '-' + r.id"
+                :id="f.key + '-' + r[selectKey]"
                 type="checkbox"
                 class="form-check-input"
                 :checked="r[f.key]"
@@ -70,7 +88,7 @@
                 actions,
                 status: {
                   selected: selected == r[selectKey],
-                  detailRowVisible: detailsRowVisibility[r.id],
+                  detailRowVisible: detailsRowVisibility[r[selectKey]],
                 },
                 rowData: r,
               }"
@@ -80,17 +98,17 @@
           </td>
         </tr>
         <tr
-          v-if="detailsRowVisibility[r.id]"
-          :key="'detail-' + r.id"
+          v-if="detailsRowVisibility[r[selectKey]]"
+          :key="'detail-' + r[selectKey]"
           :class="r.rowClass"
         >
-          <td :colspan="fields.length" class="p-0">
+          <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0">
             <component
               :is="detailRowComponent"
               :options="detailRowOptions"
               :class="detailRowClass"
               v-bind="{
-                visible: detailsRowVisibility[r.id],
+                visible: detailsRowVisibility[r[selectKey]],
                 rowData: r,
               }"
             >
@@ -145,6 +163,16 @@ export default {
     rowSelectedClass: {
       type: String,
       default: 'table-primary',
+    },
+    detailRowColumn: {
+      // Pour afficher la colonne détail-row
+      type: Boolean,
+      default: () => false,
+    },
+    detailRowColumnHideButton: {
+      // Fonction pour cacher la bouton toggle detail-row de certaines lignes
+      type: Function,
+      default: () => false,
     },
     detailRowComponent: {
       type: Object,
@@ -309,5 +337,9 @@ export default {
 <style lang="scss" scoped>
 th {
   cursor: pointer;
+}
+
+.details-width {
+  width: 8px;
 }
 </style>

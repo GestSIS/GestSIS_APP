@@ -41,27 +41,14 @@
           v-show="!loading"
           :selectable="true"
           :fields="fields"
-          :detail-row-component="detailRow"
+          :detail-row-column="true"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
           no-data="Aucun sapeur à afficher"
           :data="computedData"
           @selected="select"
         >
-          <template #details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="props">
             <button
               class="btn btn-outline-primary border-0"
@@ -103,7 +90,7 @@ import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '@/services/ImputationService.js';
 
 async function loadData(_, next) {
@@ -132,76 +119,71 @@ export default {
   },
   data() {
     return {
-      detailRow: markRaw(FraisEcritureDetails),
+      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       ecritures: [],
       selected: null,
-      ecritureColumns: [
-        {
-          title: 'Date',
-          field: 'date',
-          type: 'date',
-          formatter: (d) => new Date(d).toLocaleDateString('fr-CH'),
-        },
-        {
-          title: 'Ecriture',
-          field: 'designation',
-        },
-        {
-          title: 'Type',
-          field: 'type',
-          headerClassName: 'text-center',
-          className: 'text-end',
-          formatter: (t) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charge AVS/AC',
-            };
-            return mapping[t] ?? 'Autre';
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Date',
+            key: 'date',
+            type: Date,
           },
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Tarif min',
-          field: 'indemnite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Taux',
-          field: 'taux',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-      ],
+          {
+            title: 'Ecriture',
+            key: 'designation',
+          },
+          {
+            title: 'Type',
+            key: 'type',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+            formatter: (t) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charge AVS/AC',
+              };
+              return mapping[t] ?? 'Autre';
+            },
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Tarif min',
+            key: 'indemnite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantité',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Taux',
+            key: 'taux',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          dataClass: 'details-width',
-          slot: 'details',
-        },
         {
           title: 'Sapeur',
           key: 'nom_prenom',
@@ -272,8 +254,7 @@ export default {
                     : +b.total),
                 0
               ),
-            getEcritures: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
-            columns: this.ecritureColumns,
+            getData: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
           };
         });
     },

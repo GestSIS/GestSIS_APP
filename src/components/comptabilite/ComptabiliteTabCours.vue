@@ -75,27 +75,14 @@
           :row-class="onRowClass"
           detail-row-class="m-td-0"
           no-data="Aucune écriture à afficher"
-          :detail-row-component="detailRow"
+          :detail-row-column="true"
+          :detail-row-column-hide-button="(r) => !r.ecritures.length"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           :data="filteredCours"
           :selectable="true"
           @selected="selected"
         >
-          <template #details="props">
-            <button
-              v-if="props.rowData.ecritures.length"
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="props">
             <button
               v-if="props.rowData.ecritures.length"
@@ -125,7 +112,7 @@ import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchEcritureCategories');
@@ -166,66 +153,62 @@ export default {
   data() {
     let svm = this;
     return {
-      detailRow: markRaw(FraisEcritureDetails),
+      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       filters: {},
       selectedItem: null,
-      ecritureColumns: [
-        {
-          title: 'Sapeur',
-          field: 'sapeur_id',
-          formatter: (sapeurId) =>
-            svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
-        },
-        {
-          title: 'Type',
-          field: 'type',
-          formatter: (type) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charges AVS/AC',
-            };
-            return mapping[type] || '';
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Sapeur',
+            key: 'sapeur_id',
+            formatter: (sapeurId) =>
+              svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
           },
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Quantite',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Unite',
-          field: 'type_unite_id',
-          formatter: (type_unite_id) =>
-            svm.unites.find((u) => u.id == type_unite_id)?.unite,
-        },
-        {
-          title: 'Total',
-          field: 'total',
-          formatter: (total, ecriture) =>
-            ecriture.module == 5 ? (-total).toFixed(2) : total,
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-      ],
+          {
+            title: 'Type',
+            key: 'type',
+            formatter: (type) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charges AVS/AC',
+              };
+              return mapping[type] || '';
+            },
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantite',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Unite',
+            key: 'type_unite_id',
+            formatter: (type_unite_id) =>
+              svm.unites.find((u) => u.id == type_unite_id)?.unite,
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            formatter: (total, ecriture) =>
+              ecriture.module == 5 ? (-total).toFixed(2) : total,
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-          dataClass: 'align-middle details-width',
-        },
         {
           title: 'Date',
           key: 'date',
@@ -281,9 +264,8 @@ export default {
           ?.designation,
         localite: this.localites.find((l) => l.id == e.localite_id)
           ?.designation,
-        columns: this.ecritureColumns,
         nom_prenom: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
-        getEcritures: () => Promise.resolve(e.ecritures),
+        getData: () => Promise.resolve(e.ecritures),
       }));
     },
     filteredCours() {

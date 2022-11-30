@@ -190,14 +190,15 @@
                 :class="{ 'is-invalid': errors['wgs84'] }"
                 name="wgs84"
               />
-              <btn
+              <button
                 v-if="!isValidWgs84"
                 id="button-addon2"
                 class="btn btn-outline-secondary"
                 type="button"
                 disabled
-                >GPS
-              </btn>
+              >
+                GPS
+              </button>
               <a
                 v-else
                 id="button-gps"

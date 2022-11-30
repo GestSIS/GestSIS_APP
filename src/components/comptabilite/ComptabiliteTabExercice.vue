@@ -87,29 +87,16 @@
           v-show="!loading"
           :fields="fields"
           :row-class="onRowClass"
-          detail-row-class="m-td-0"
           no-data="Aucune écriture à afficher"
-          :detail-row-component="detailRow"
+          :detail-row-column="true"
+          :detail-row-column-hide-button="(r) => r.statut !== 4"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
+          detail-row-class="m-td-0"
           :data="filteredExercices"
           :selectable="true"
           @selected="selected"
         >
-          <template #details="props">
-            <button
-              v-if="props.rowData.statut === 4"
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="props">
             <button
               v-if="props.rowData.statut === 3"
@@ -144,7 +131,7 @@ import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '@/services/ImputationService.js';
 
 async function loadData(_, next) {
@@ -184,69 +171,65 @@ export default {
   data() {
     let svm = this;
     return {
-      detailRow: markRaw(FraisEcritureDetails),
+      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       exercices: [],
       filters: {},
-      selectedItem: null,
-      ecritureColumns: [
-        {
-          title: 'Sapeur',
-          field: 'sapeur_id',
-          formatter: (sapeurId) =>
-            svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
-        },
-        {
-          title: 'Type',
-          field: 'type',
-          formatter: (type) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charges AVS/AC',
-            };
-            return mapping[type] || '';
+      selectedItemId: null,
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Sapeur',
+            key: 'sapeur_id',
+            formatter: (sapeurId) =>
+              svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
           },
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Quantite',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Amende',
-          field: 'total',
-          formatter: (total, ecriture) =>
-            ecriture.module == 5 ? ecriture.total : '0.00',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-          formatter: (total, ecriture) =>
-            ecriture.module == 5 ? (-total).toFixed(2) : total,
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-      ],
+          {
+            title: 'Type',
+            key: 'type',
+            formatter: (type) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charges AVS/AC',
+              };
+              return mapping[type] || '';
+            },
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantite',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Amende',
+            key: 'total',
+            formatter: (total, ecriture) =>
+              ecriture.module == 5 ? ecriture.total : '0.00',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            formatter: (total, ecriture) =>
+              ecriture.module == 5 ? (-total).toFixed(2) : total,
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-          dataClass: 'align-middle details-width',
-        },
         {
           title: 'Date',
           key: 'date',
@@ -319,6 +302,9 @@ export default {
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       currentExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
+    selectedItem() {
+      return this.exercices.find((e) => e.id == this.selectedItemId);
+    },
     computedData() {
       return this.exercices.map((e) => {
         let aPayer = e.statut == 4;
@@ -333,8 +319,7 @@ export default {
           localite: this.localites.find((l) => l.id == e.localite_id)
             ?.designation,
           aPayer,
-          getEcritures: () => Promise.resolve(e.ecritures),
-          columns: this.ecritureColumns,
+          getData: () => Promise.resolve(e.ecritures),
         };
       });
     },
@@ -379,13 +364,11 @@ export default {
         this.currentExerciceComptableId
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
-        this.selectedItem =
-          this.exercices.find((e) => e.id == this.selectedItem?.id) || null;
         this.loading = false;
       });
     },
     selected(item) {
-      this.selectedItem = item;
+      this.selectedItemId = item?.id;
     },
     genererDecompteExercice(exerciceId, designation) {
       this.SHOW_MODAL({
@@ -425,9 +408,6 @@ export default {
                     statut: statut,
                   },
                 ].sort((a, b) => a.date.localeCompare(b.date));
-                this.selectedItem = this.exercices.find(
-                  (e) => e.id == exerciceId
-                );
               })
               .catch((err) => {
                 this.$awn.alert(

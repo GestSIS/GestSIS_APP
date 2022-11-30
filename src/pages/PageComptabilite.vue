@@ -98,11 +98,24 @@
 
 <script>
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import store from '@/store/index';
+
+async function loadData(_, next) {
+  const loadExerciceComptable = store.dispatch('fetchExercicesComptables');
+
+  Promise.all([loadExerciceComptable]).then(() => {
+    next();
+  });
+}
 
 export default {
   name: 'PageComptabilite',
-  components: {
-    ExerciceComptable,
+  components: { ExerciceComptable },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
   },
 };
 </script>

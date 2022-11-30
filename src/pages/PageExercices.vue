@@ -158,30 +158,14 @@
             ref="basetable_exercices"
             :selectable="true"
             :fields="fieldsBase"
-            :detail-row-component="detailRow"
+            :detail-row-column="true"
+            :detail-row-component="detailRowComponent"
             detail-row-class="m-td-0"
             no-data="Aucun exercice/séance à afficher"
             :data="filteredExercices"
             :row-class="onRowClass"
             @selected="selectExercice"
           >
-            <template #details="props">
-              <div class="d-flex">
-                <button
-                  class="btn btn-link border-0"
-                  @click="props.actions.toggleDetailRow(props.rowData.id)"
-                >
-                  <font-awesome-icon
-                    v-if="props.status.detailRowVisible || false"
-                    :icon="['fas', 'angle-down']"
-                  />
-                  <font-awesome-icon
-                    v-if="!props.status.detailRowVisible || false"
-                    :icon="['fas', 'angle-right']"
-                  />
-                </button>
-              </div>
-            </template>
             <template #actions="props">
               <router-link
                 v-slot="{ navigate }"
@@ -281,14 +265,8 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      detailRow: markRaw(ExerciceDetails),
+      detailRowComponent: markRaw(ExerciceDetails),
       fieldsBase: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-          dataClass: 'details-width',
-        },
         {
           title: 'Date',
           key: 'date',

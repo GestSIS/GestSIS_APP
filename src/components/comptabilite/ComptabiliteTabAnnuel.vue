@@ -30,26 +30,13 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
+          :detail-row-column="true"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0 p-0"
-          :detail-row-component="detailRow"
           :selectable="true"
           @selected="selected"
         >
-          <template #details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="props">
             <button
               title="Regénérer les frais de ce sapeur"
@@ -69,14 +56,14 @@
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 import store from '@/store/index';
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
   let loadComptes = store.dispatch('fetchComptes');
+  let loadFonctions = store.dispatch('fetchFonctions');
   let loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-  Promise.all([loadComptes, loadFraisIndemnites]).then(() => {
+
+  Promise.all([loadComptes, loadFraisIndemnites, loadFonctions]).then(() => {
     next();
   });
 }
@@ -89,69 +76,59 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
   data() {
     let svm = this;
     return {
-      detailRow: markRaw(FraisEcritureDetails),
+      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       selectedId: null,
-      ecritureColumns: [
-        {
-          title: 'Designation',
-          field: 'designation',
-        },
-        {
-          title: 'Type',
-          field: 'type',
-          formatter: (t) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charge AVS/AC',
-            };
-            return mapping[t] ?? 'Autre';
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Designation',
+            key: 'designation',
           },
-        },
-        {
-          title: 'Compte',
-          field: 'compte_id',
-          formatter: (id) => svm.comptes.find((f) => f.id == id)?.designation,
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-      ],
+          {
+            title: 'Type',
+            key: 'type',
+            formatter: (t) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charge AVS/AC',
+              };
+              return mapping[t] ?? 'Autre';
+            },
+          },
+          {
+            title: 'Compte',
+            key: 'compte_id',
+            formatter: (id) => svm.comptes.find((f) => f.id == id)?.designation,
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantité',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-          dataClass: 'details-width',
-        },
         {
           title: 'Sapeur',
           key: 'nom_prenom',
@@ -207,6 +184,7 @@ export default {
           // Add sapeur data
           .map((e) => {
             let sapeur = this.sapeurs.find((s) => s.id == e.id);
+            console.log(sapeur);
             return {
               ...e,
               ...sapeur,
@@ -217,13 +195,12 @@ export default {
           // Add data relative to table
           .map((s) => ({
             ...s,
-            getEcritures: () =>
+            getData: () =>
               new Promise(
                 function (resolve) {
                   resolve(this.ecritures);
                 }.bind(s)
               ),
-            columns: this.ecritureColumns,
           }))
       );
     },

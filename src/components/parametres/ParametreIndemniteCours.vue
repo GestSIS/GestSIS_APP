@@ -14,25 +14,10 @@
         :fields="fields"
         no-data="Aucune indemnité de cours"
         detail-row-class="m-td-0"
+        :detail-row-column="true"
         :detail-row-component="detailRowComponent"
         :detail-row-options="detailRowOptions"
       >
-        <template #details="props">
-          <button
-            v-if="props.rowData.fonctions.length"
-            class="btn btn-link border-0"
-            @click="props.actions.toggleDetailRow(props.rowData.id)"
-          >
-            <font-awesome-icon
-              v-if="props.status.detailRowVisible || false"
-              :icon="['fas', 'angle-down']"
-            />
-            <font-awesome-icon
-              v-if="!props.status.detailRowVisible || false"
-              :icon="['fas', 'angle-right']"
-            />
-          </button>
-        </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">
             <button
@@ -84,7 +69,6 @@ export default {
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       fields: [
-        { title: '', slot: 'details', columnClass: 'col-1' },
         {
           title: 'Désignation',
           key: 'designation',

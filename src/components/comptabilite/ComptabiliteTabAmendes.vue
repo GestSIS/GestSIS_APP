@@ -19,28 +19,13 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune amende à afficher"
+          :detail-row-column="true"
+          :detail-row-component="detailRowComponent"
           detail-row-class="m-td-0"
-          :detail-row-component="detailRow"
           :data="filteredAmendes"
           :selectable="true"
           @selected="selected"
-        >
-          <template #details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
-        </base-table>
+        />
       </div>
     </div>
   </div>
@@ -72,7 +57,7 @@ export default {
   },
   data() {
     return {
-      detailRow: markRaw(AmendesSapeurDetails),
+      detailRowComponent: markRaw(AmendesSapeurDetails),
       loading: true,
       filters: {},
       amendeColumns: [
@@ -96,11 +81,6 @@ export default {
         },
       ],
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-        },
         {
           title: 'Sapeur',
           key: 'sapeur',

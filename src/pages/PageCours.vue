@@ -113,7 +113,7 @@ export default {
       loading: true,
       selectedId: null,
       filters: {},
-      detailRow: markRaw(ExerciceDetails),
+      detailRowComponent: markRaw(ExerciceDetails),
       fields: [
         {
           title: 'Date',

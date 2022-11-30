@@ -95,26 +95,13 @@
           :fields="fields"
           :data="computedDecomptes"
           :selectable="true"
-          :detail-row-component="detailRow"
+          :detail-row-column="true"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
           no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
           @selected="selected"
         >
-          <template #details="props">
-            <button
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="{ value }">
             <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
@@ -139,7 +126,7 @@ import { markRaw } from 'vue';
 import store from '@/store/index';
 import DecompteService from '@/services/DecompteService.js';
 
-import FraisEcritureDetailsVue from './FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -163,73 +150,71 @@ export default {
   data() {
     const svm = this;
     return {
-      detailRow: markRaw(FraisEcritureDetailsVue),
+      detailRowComponent: markRaw(GenericDetailsRow),
       dropdown: false,
       loading: true,
       selectedId: 0,
-      ecritureColumns: [
-        {
-          title: 'Designation',
-          field: 'designation',
-        },
-        {
-          title: 'Date',
-          field: 'date',
-        },
-        {
-          title: 'Sapeur',
-          field: 'sapeur_id',
-          formatter: (sapeurId) => {
-            return svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom;
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Designation',
+            key: 'designation',
           },
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-        },
-        {
-          title: 'Unité',
-          field: 'type_unite_id',
-          formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-        },
-        {
-          title: 'Tarif min',
-          field: 'tarif_min',
-        },
-        {
-          title: 'Pour',
-          field: 'tarif_min_pour',
-        },
-        {
-          title: 'Type',
-          field: 'type',
-          formatter: (type) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charges AVS/AC',
-            };
-            return mapping[type] || '';
+          {
+            title: 'Date',
+            key: 'date',
+            type: Date,
           },
-        },
-        {
-          title: 'Total',
-          field: 'total',
-        },
-      ],
+          {
+            title: 'Sapeur',
+            key: 'sapeur_id',
+            formatter: (sapeurId) => {
+              return svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom;
+            },
+          },
+          {
+            title: 'Quantité',
+            key: 'quantite',
+          },
+          {
+            title: 'Unité',
+            key: 'type_unite_id',
+            formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+          },
+          {
+            title: 'Tarif min',
+            key: 'tarif_min',
+          },
+          {
+            title: 'Pour',
+            key: 'tarif_min_pour',
+          },
+          {
+            title: 'Type',
+            key: 'type',
+            formatter: (type) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charges AVS/AC',
+              };
+              return mapping[type] || '';
+            },
+          },
+          {
+            title: 'Total',
+            key: 'total',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-        },
         {
           title: 'Designation',
           key: 'designation',
@@ -282,8 +267,7 @@ export default {
     computedDecomptes() {
       return this.decomptes.map((d) => ({
         ...d,
-        columns: this.ecritureColumns,
-        getEcritures: () => DecompteService.getEcritures(d.id),
+        getData: () => DecompteService.getEcritures(d.id),
       }));
     },
   },

@@ -250,7 +250,7 @@ export default {
         {
           title: 'Date',
           key: 'date_debut',
-          dataClass: 'align-middle',
+          columnClass: 'align-middle',
           sortKey: 'date_debut',
           type: 'date',
         },
@@ -281,7 +281,7 @@ export default {
         {
           title: 'Lieu',
           key: 'lieu',
-          dataClass: 'align-middle',
+          columnClass: 'align-middle',
         },
         {
           title: 'Stat fédéral',

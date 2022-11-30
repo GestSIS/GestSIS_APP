@@ -99,28 +99,15 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
+          :detail-row-column="true"
+          :detail-row-column-hide-button="(r) => r.statut !== 3"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
-          :detail-row-component="detailRow"
           :data="filteredInterventions"
           :selectable="true"
           @selected="selected"
         >
-          <template #details="props">
-            <button
-              v-if="props.rowData.statut === 3"
-              class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
-            >
-              <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-down']"
-              />
-              <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
-                :icon="['fas', 'angle-right']"
-              />
-            </button>
-          </template>
           <template #actions="props">
             <button
               v-if="props.rowData.statut === 2"
@@ -141,7 +128,7 @@ import store from '@/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
-import FraisEcritureDetails from '@/components/comptabilite/FraisEcritureDetails.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '@/services/ImputationService.js';
 
 async function loadData(_, next) {
@@ -192,85 +179,82 @@ export default {
         { id: 3, designation: 'Moyenne' },
         { id: 4, designation: 'Grande' },
       ],
-      detailRow: markRaw(FraisEcritureDetails),
-      loading: true,
+      detailRowComponent: markRaw(GenericDetailsRow),
+      loading: false,
       filters: {},
-      selectedItem: null,
-      ecritureColumns: [
-        {
-          title: 'Sapeur',
-          field: 'sapeur_id',
-          formatter: (field) =>
-            svm.sapeurs.find((s) => s.id == field)?.nom_prenom,
-        },
-        {
-          title: 'Tarif',
-          field: 'tarif',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Tarif min',
-          field: 'tarif_min',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Pour',
-          field: 'tarif_min_pour',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Pro-rata',
-          field: 'tarif_min_pro_rata',
-          headerClassName: 'text-center',
-          className: 'text-center',
-          type: 'boolean',
-        },
-        {
-          title: 'Unité',
-          field: 'type_unite_id',
-          headerClassName: 'text-center',
-          className: 'text-end',
-          formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
-        },
-        {
-          title: 'Taux',
-          field: 'taux',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Taux description',
-          field: 'taux_description',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Quantité',
-          field: 'quantite',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-        {
-          title: 'Total',
-          field: 'total',
-          headerClassName: 'text-center',
-          className: 'text-end',
-        },
-      ],
+      selectedItemId: null,
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Sapeur',
+            key: 'sapeur_id',
+            formatter: (field) =>
+              svm.sapeurs.find((s) => s.id == field)?.nom_prenom,
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Tarif min',
+            key: 'tarif_min',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Pour',
+            key: 'tarif_min_pour',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Pro-rata',
+            key: 'tarif_min_pro_rata',
+            type: Boolean,
+            titleClass: 'text-center',
+            columnClass: 'text-center',
+          },
+          {
+            title: 'Unité',
+            key: 'type_unite_id',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+            formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
+          },
+          {
+            title: 'Taux',
+            key: 'taux',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Taux description',
+            key: 'taux_description',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantité',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
-        {
-          title: '',
-          key: 'details',
-          slot: 'details',
-        },
         {
           title: 'Date',
           key: 'date_debut',
           sortKey: 'date_debut',
-          type: 'date',
+          type: Date,
         },
         {
           title: 'Heure',
@@ -368,6 +352,9 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
       unites: (state) => state.unite.liste,
     }),
+    selectedItem() {
+      return this.interventions.find((i) => i.id == this.selectedItemId);
+    },
     computedData() {
       return this.interventions.map((i) => ({
         ...i,
@@ -376,9 +363,7 @@ export default {
         )?.designation,
         localite: this.localites.find((l) => l.id == i.localite_id)
           ?.designation,
-        getEcritures: () =>
-          ImputationService.getEcrituresForInterventions(i.id),
-        columns: this.ecritureColumns,
+        getData: () => ImputationService.getEcrituresForInterventions(i.id),
       }));
     },
     filteredTypesIntervention() {
@@ -412,7 +397,7 @@ export default {
             )
         )
         .map((i) => {
-          if (i.id == self.selectedItem?.id) {
+          if (i.id == self.selectedItemId) {
             return { ...i, 'row-class': 'bg-primary' };
           } else {
             return i;
@@ -425,18 +410,10 @@ export default {
       this.$store.dispatch('fetchListeIntervention');
     },
   },
-  mounted() {
-    //TODO Fetch only if neccessary
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    } else {
-      this.loading = false;
-    }
-  },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     selected(item) {
-      this.selectedItem = item;
+      this.selectedItemId = item?.id;
     },
     imputer(interventionId) {
       this.SHOW_MODAL({
