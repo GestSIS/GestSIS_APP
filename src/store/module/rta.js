@@ -12,10 +12,16 @@ export default {
       state.actuel = [];
     },
     [types.UPDATE_RTA_REFERENCE_RTA](state, payload) {
-      state.reference = payload;
+      state.reference = payload.map((s) => ({
+        ...s,
+        nom_prenom: `${s.nom} ${s.prenom}`,
+      }));
     },
     [types.UPDATE_RTA_REFERENCE_GESTSIS](state, payload) {
-      state.actuel = payload;
+      state.actuel = payload.map((s) => ({
+        ...s,
+        nom_prenom: `${s.nom} ${s.prenom}`,
+      }));
     },
   },
   actions: {
