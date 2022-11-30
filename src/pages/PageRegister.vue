@@ -10,7 +10,7 @@
         v-model="name"
         type="text"
         class="form-control form-control-sm"
-        placeholder="Nom d'utilisateur"
+        placeholder="Nom Prénom"
         required
         autofocus
         autocomplete="off"
