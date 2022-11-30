@@ -38,7 +38,7 @@ export default {
     },
   },
   getters: {
-    currentExerciceComptableId: (state) => state.activeId,
+    activeExerciceComptableId: (state) => state.activeId,
   },
   actions: {
     fetchExercicesComptables({ commit, state }) {
