@@ -118,7 +118,7 @@ export default {
       displayKey: 'statistiquesTypeIntervention',
       grouping: {
         statistiquesTypeIntervention: 'Types',
-        statistiquesStatFederal: 'Statistiques fédéral',
+        statistiquesStatFederal: 'Statistiques fédérale',
         statistiquesInterventionTraitement: 'Traitements',
       },
     };

@@ -273,7 +273,7 @@ export default {
           sortKey: 'lieu',
         },
         {
-          title: 'Stat fédéral',
+          title: 'Stat fédérale',
           key: 'stat_federal_id',
           formatter(value) {
             return svm.statsFederal.find((s) => s.id == value)?.designation;

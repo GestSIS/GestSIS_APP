@@ -284,7 +284,7 @@ export default {
           columnClass: 'align-middle',
         },
         {
-          title: 'Stat fédéral',
+          title: 'Stat fédérale',
           key: 'stat_federal_id',
           formatter(id) {
             return self.stats.find((s) => s.id == id)?.designation;

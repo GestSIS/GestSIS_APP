@@ -35,7 +35,8 @@
           <h4>Intervention</h4>
           <ul>
             <li>
-              Stat général pour traitement, type d'intervention et stat fédéral
+              Stat général pour traitement, type d'intervention et statistique
+              fédérale
             </li>
             <li>Véhicules &amp; Matériel</li>
           </ul>

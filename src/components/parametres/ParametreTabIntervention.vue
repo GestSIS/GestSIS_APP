@@ -61,7 +61,7 @@
             :class="{ active: tab === 'stat' }"
             href="#"
             @click.prevent="tab = 'stat'"
-            >Statistique fédéral</a
+            >Statistique fédérale</a
           >
         </nav>
       </div>
