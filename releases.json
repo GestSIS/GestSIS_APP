@@ -2,12 +2,13 @@
   "releases": [
     {
       "date": "30.11.2022",
-      "version": "3.0",
+      "version": "4.0",
       "app": "GestSIS APP",
       "changes": [
         "Fenêtre ajout exercice, simplification saisie de la localité",
         "Sapeur actif 3 mois avant l'incorporation",
-        "Affichage des heures supplémentaires des exercice dans le module sapeur"
+        "Affichage des heures supplémentaires des exercice dans le module sapeur",
+        "Sélection de sapeurs, filtre par année d'incorporation"
       ]
     },
     {

@@ -107,7 +107,7 @@
             </thead>
             <tbody>
               <tr v-if="listeSapeurSelect.length <= 0">
-                <td colspan="2">Aucun sapeur ne possède de fonction</td>
+                <td colspan="2">Aucun sapeur</td>
               </tr>
               <tr
                 v-for="item in listeSapeurSelect"
@@ -248,6 +248,7 @@ export default {
         grade_id: {},
         localite_id: {},
         civilite_id: {},
+        annee_incorporation: {},
         type: {},
         sapeur: {},
       },
@@ -281,6 +282,21 @@ export default {
           generic: true,
           label: 'Civilité',
           collection: () => svm.civilites,
+          displayKey: 'designation',
+        },
+        annee_incorporation: {
+          generic: true,
+          label: 'Année incorporation',
+          collection: () =>
+            [
+              ...new Set(
+                svm.sapeurs
+                  .filter((s) => s.actif)
+                  .map((s) => s.annee_incorporation)
+              ),
+            ]
+              .sort()
+              .map((annee) => ({ designation: annee, id: annee })),
           displayKey: 'designation',
         },
         type: {

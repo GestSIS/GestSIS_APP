@@ -180,34 +180,43 @@ export default {
       state.active.cours = state.active.cours.filter((c) => c.id !== payload);
     },
 
-    [types.ADD_CURRENT_SAPEUR_MUTATION](state, { mutation, actif }) {
+    [types.ADD_CURRENT_SAPEUR_MUTATION](
+      state,
+      { mutation, actif, annee_incorporation }
+    ) {
       state.active.mutations = [...state.active.mutations, mutation];
       state.liste = state.liste.map((s) => {
         if (s.id === mutation.sapeur_id) {
-          return { ...s, actif };
+          return { ...s, actif, annee_incorporation };
         }
         return s;
       });
     },
-    [types.REMOVE_CURRENT_SAPEUR_MUTATION](state, { sapeurId, actif }) {
-      state.active.mutations = state.active.mutations.filter(
-        (c) => c.id !== sapeurId
-      );
-      state.liste = state.liste.map((s) => {
-        if (s.id == sapeurId) {
-          return { ...s, actif };
-        }
-        return s;
-      });
-    },
-    [types.EDIT_CURRENT_SAPEUR_MUTATION](state, { mutation, actif }) {
+    [types.EDIT_CURRENT_SAPEUR_MUTATION](
+      state,
+      { mutation, actif, annee_incorporation }
+    ) {
       state.active.mutations = [
         ...state.active.mutations.filter((c) => c.id !== mutation.id),
         mutation,
       ];
       state.liste = state.liste.map((s) => {
         if (s.id == mutation.sapeur_id) {
-          return { ...s, actif };
+          return { ...s, actif, annee_incorporation };
+        }
+        return s;
+      });
+    },
+    [types.REMOVE_CURRENT_SAPEUR_MUTATION](
+      state,
+      { sapeurId, actif, annee_incorporation }
+    ) {
+      state.active.mutations = state.active.mutations.filter(
+        (c) => c.id !== sapeurId
+      );
+      state.liste = state.liste.map((s) => {
+        if (s.id == sapeurId) {
+          return { ...s, actif, annee_incorporation };
         }
         return s;
       });
