@@ -156,10 +156,24 @@ export default {
       this.selectedId = id;
     },
     generer() {
-      this.$store.dispatch(
-        'genererAmendesAnnuels',
-        this.activeExerciceComptableId
-      );
+      this.$store
+        .dispatch('genererAmendesAnnuels', this.activeExerciceComptableId)
+        .then((amendes) => {
+          console.log(amendes);
+          if (amendes?.length == 0) {
+            this.$awn.success(
+              'Aucune amende requise pour cet exercice comptable'
+            );
+          } else {
+            this.$awn.success('Amendes générées avec succes');
+          }
+        })
+        .catch((err) =>
+          this.$awn.alert(
+            err?.message ??
+              'Une erreur est survenue durant le génération des indemnités/frais annuelles'
+          )
+        );
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

@@ -348,7 +348,7 @@ export default {
       return this.fonctions.find((f) => (f.id = fonctionId))?.designation || '';
     },
     formatUnite(uniteId) {
-      return this.unites.find((f) => (f.id = uniteId))?.designation || '';
+      return this.unites.find((f) => (f.id = uniteId))?.unite || '';
     },
     formatCompte(compteId) {
       const compte = this.comptes.find(

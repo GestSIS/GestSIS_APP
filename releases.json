@@ -2,7 +2,7 @@
   "releases": [
     {
       "date": "01.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Sélection d'un groupe mise en valeur dans organisation",
@@ -10,7 +10,8 @@
         "Tables triables en cliquant sur le titre de la colonne",
         "Supprimer photo sapeur",
         "Formattage des date pour justificatif de compte",
-        "Ajout écriture AVS/AI/APG - AC total pour décomptes"
+        "Ajout écriture AVS/AI/APG - AC total pour décomptes",
+        "Améliorations diverses de l'interface utilisateur"
       ]
     },
     {

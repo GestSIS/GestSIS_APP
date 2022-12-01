@@ -106,7 +106,7 @@ export default {
           {
             title: 'Compte',
             key: 'compte_id',
-            formatter: (id) => svm.comptes.find((f) => f.id == id)?.designation,
+            formatter: (id) => svm.comptes.find((f) => f.id == id)?.label,
           },
           {
             title: 'Tarif',
@@ -244,16 +244,29 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch(
-              'annulerImputationAnnuel',
-              this.activeExerciceComptableId
-            );
+            this.$store
+              .dispatch(
+                'annulerImputationAnnuel',
+                this.activeExerciceComptableId
+              )
+              .catch((err) =>
+                this.$awn.alert(
+                  err?.message ??
+                    "Une erreur est survenue durant l'annulation des indemnités/frais annuelles"
+                )
+              );
           }
         },
       });
     },
     generer() {
-      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
+      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 }).catch(
+        (err) =>
+          this.$awn.alert(
+            err?.message ??
+              'Une erreur est survenue durant le génération des indemnités/frais annuelles'
+          )
+      );
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

@@ -56,7 +56,7 @@
         >
           <template #foot>
             <tr>
-              <th colspan="3">Total</th>
+              <th colspan="4">Total</th>
               <th>
                 {{
                   computedData
@@ -108,6 +108,21 @@ export default {
           title: 'Date',
           key: 'date',
           type: Date,
+        },
+        {
+          title: 'Type',
+          key: 'type',
+          formatter: (type) => {
+            const mapping = {
+              0: 'Autre',
+              1: 'Solde',
+              2: 'Indemnité',
+              3: 'Frais forfaitaire',
+              4: 'Frais effectif',
+              5: 'Charges AVS/AC',
+            };
+            return mapping[type] || '';
+          },
         },
         {
           title: 'Designation',

@@ -254,6 +254,7 @@ export default {
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      exercicesComptables: (state) => state.exerciceComptable.liste,
       sapeurs: (state) => state.sapeur.liste,
       decomptes: (state) => state.decompte.liste,
       unites: (state) => state.unite.liste,
@@ -355,10 +356,19 @@ export default {
       });
     },
     certificatsDeSalaire() {
-      // TODO: Ajouter année dans le nom du certificat de salaire
+      if (this.decomptes.length === 0) {
+        return this.$awn.warning(
+          'Impossible de générer les certificats de salaire sans décompte !'
+        );
+      }
+
+      const annee = this.exercicesComptables.find(
+        (e) => e.id == this.activeExerciceComptableId
+      )?.annee;
+
       DecompteService.downloadCertificatSalaires(
         this.activeExerciceComptableId,
-        `certificats_salaire.pdf`
+        `certificats_salaire_${annee}.pdf`
       ).catch((err) => {
         this.$awn.alert(
           err?.message ||
