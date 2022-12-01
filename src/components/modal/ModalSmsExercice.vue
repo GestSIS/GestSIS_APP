@@ -90,7 +90,6 @@ export default {
         {
           title: 'Nom prénom',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
           titleClass: 'align-middle',
         },
         {
@@ -98,7 +97,6 @@ export default {
           key: 'convoque',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
-          sortKey: 'convoque',
           type: 'boolean',
         },
         {
@@ -106,13 +104,11 @@ export default {
           key: 'excuse',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
-          sortKey: 'excuse',
           type: 'boolean',
         },
         {
           title: 'Portable',
           key: 'portable',
-          sortKey: 'portable',
           titleClass: 'align-middle',
         },
       ],

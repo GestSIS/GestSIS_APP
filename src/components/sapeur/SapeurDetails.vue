@@ -187,7 +187,7 @@ export default {
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     tabList() {
-      return this.activeSapeur.type === 0 ? sapeurTabList : politiqueTabList;
+      return this.activeSapeur.type == 0 ? sapeurTabList : politiqueTabList;
     },
     modeAjout() {
       return this.id == 'ajout';

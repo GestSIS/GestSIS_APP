@@ -89,7 +89,6 @@ export default {
         {
           title: 'Utilisateur',
           key: 'name',
-          sortKey: 'name',
         },
         {
           title: 'Sapeur',
@@ -99,17 +98,14 @@ export default {
         {
           title: 'Email',
           key: 'email',
-          sortKey: 'email',
         },
         {
           title: 'Rôles',
           key: 'roles',
-          sortKey: 'roles',
           slot: 'badges',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

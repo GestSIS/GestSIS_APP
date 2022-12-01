@@ -243,7 +243,6 @@ export default {
         {
           title: 'Date',
           key: 'date_debut',
-          sortKey: 'date_debut',
           type: Date,
         },
         {
@@ -252,12 +251,10 @@ export default {
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortKey: 'heure_debut',
         },
         {
           title: "Type d'intervention",
           key: 'type_intervention',
-          sortKey: 'type_intervention',
         },
         {
           title: 'Localité',
@@ -265,12 +262,10 @@ export default {
           formatter(value) {
             return svm.localites.find((l) => l.id == value)?.designation;
           },
-          sortKey: 'localite_id',
         },
         {
           title: 'Lieu',
           key: 'lieu',
-          sortKey: 'lieu',
         },
         {
           title: 'Stat fédérale',
@@ -278,7 +273,6 @@ export default {
           formatter(value) {
             return svm.statsFederal.find((s) => s.id == value)?.designation;
           },
-          sortKey: 'stat_federal_id',
         },
         {
           title: 'Traitement',
@@ -286,7 +280,6 @@ export default {
           formatter(value) {
             return svm.traitements.find((t) => t.id == value)?.designation;
           },
-          sortKey: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
@@ -300,7 +293,6 @@ export default {
             };
             return degre[value];
           },
-          sortKey: 'degre',
         },
         {
           title: 'Statut',
@@ -314,11 +306,9 @@ export default {
             };
             return statuts[value];
           },
-          sortKey: 'statut',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

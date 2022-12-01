@@ -36,17 +36,14 @@ export default {
         {
           title: 'Sapeur',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
         },
         {
           title: 'Nb matériel',
           key: 'nb',
-          sortKey: 'nb',
         },
         {
           title: 'Fin de service',
           key: 'fin',
-          sortKey: 'fin',
         },
         {
           title: 'Actions',

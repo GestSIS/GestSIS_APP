@@ -87,13 +87,11 @@ export default {
         {
           title: 'Nom prénom',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
           titleClass: 'align-middle',
         },
         {
           title: 'Portable',
           key: 'portable',
-          sortKey: 'portable',
           titleClass: 'align-middle',
         },
       ],

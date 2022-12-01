@@ -1,7 +1,7 @@
 <template>
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
-      class="tree-node-header focusable hoverable"
+      class="tree-node-header focusable hoverable p-0 m-0 alert"
       :class="{ 'alert-primary': active && active.key == node.key }"
       @dblclick="expanded = !expanded"
       @click.prevent="handleClick"
@@ -186,6 +186,10 @@ export default {
   opacity: 0;
   transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1),
     opacity 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+
+.tree-node {
+  padding-left: 1px !important;
 }
 
 .tree-node-icon {

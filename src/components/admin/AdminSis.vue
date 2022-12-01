@@ -61,27 +61,22 @@ export default {
         {
           title: 'id',
           key: 'id',
-          sortKey: 'id',
         },
         {
           title: 'api_key',
           key: 'api_key',
-          sortKey: 'api_key',
         },
         {
           title: 'Nom',
           key: 'nom',
-          sortKey: 'nom',
         },
         {
           title: 'Description',
           key: 'description',
-          sortKey: 'description',
         },
         {
           title: 'Mobile',
           key: 'mobile',
-          sortKey: 'mobile',
           type: Boolean,
         },
         {

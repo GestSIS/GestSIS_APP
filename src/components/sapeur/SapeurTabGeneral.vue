@@ -283,7 +283,14 @@
           <h3 class="card-title">Photo</h3>
           <button
             v-if="hasEditPermission"
-            class="btn btn-primary"
+            class="ms-auto me-2 btn btn-outline-danger"
+            @click="supprimerPhoto"
+          >
+            Supprimer
+          </button>
+          <button
+            v-if="hasEditPermission"
+            class="btn btn-outline-primary"
             @click="editPhoto"
           >
             Modifier
@@ -481,6 +488,23 @@ export default {
             err.message || "Erreur lors de l'enregistrement des données"
           );
         });
+    },
+    supprimerPhoto() {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: `Voulez-vous vraiment supprimer cette photo ?`,
+          question:
+            'Attention, cette action est irréversible ! La photo sera perdue.',
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            SapeurService.deletePhoto(this.activeSapeurId).then(() => {
+              this.photo = null;
+            });
+          }
+        },
+      });
     },
     editPhoto() {
       this.SHOW_MODAL({

@@ -39,7 +39,7 @@
             role="tab"
             active-class="active"
             :to="{ name: 'comptabilite-exercice' }"
-            >Exercices</router-link
+            >Exercices &amp; Séances</router-link
           >
           <router-link
             class="nav-item nav-link"

@@ -218,34 +218,28 @@ export default {
         {
           title: 'Designation',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: 'date',
         },
         {
           title: 'Total',
           key: 'total',
-          sortKey: 'total',
         },
         {
           title: 'Déductions',
           key: 'deduction',
-          sortKey: 'deduction',
           type: Boolean,
         },
         {
           title: 'Charges AVS',
           key: 'avs_total',
-          sortKey: 'avs_total',
         },
         {
           title: 'Charges AC',
           key: 'ac_total',
-          sortKey: 'ac_total',
         },
         {
           title: 'Actions',

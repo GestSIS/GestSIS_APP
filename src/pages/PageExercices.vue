@@ -270,18 +270,15 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: 'date',
         },
         {
           title: 'Categorie',
           key: 'categorie',
-          sortKey: 'categorie',
         },
         {
           title: 'Heure',
           key: 'heure',
-          sortKey: 'heure',
           formatter(value) {
             return value.slice(0, 5);
           },
@@ -289,27 +286,22 @@ export default {
         {
           title: 'Duree',
           key: 'duree',
-          sortKey: 'duree',
         },
         {
           title: 'Localité',
           key: 'localite',
-          sortKey: 'localite',
         },
         {
           title: 'Lieu',
           key: 'lieu',
-          sortKey: 'lieu',
         },
         {
           title: 'Designation',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Statut',
           key: 'statut',
-          sortKey: 'statut',
           formatter(value) {
             const statuts = {
               0: 'Annulé',
@@ -323,7 +315,6 @@ export default {
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

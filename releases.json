@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "01.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Sélection d'un groupe mise en valeur dans organisation",
+        "Affichage de l'année d'incorporation dans l'effectif",
+        "Tables triables en cliquant sur le titre de la colonne",
+        "Supprimer photo sapeur"
+      ]
+    },
+    {
       "date": "30.11.2022",
       "version": "5.0",
       "app": "GestSIS APP",
@@ -11,7 +22,8 @@
         "Sélection de sapeurs, filtre par année d'incorporation",
         "Possibilité d'exporter les données de configuration",
         "Mise en valeur des permis que le sapeur possède",
-        "Possibilité de supprimer un sapeur a certaines conditions"
+        "Possibilité de supprimer un sapeur a certaines conditions",
+        "Corrections de divers libellés"
       ]
     },
     {

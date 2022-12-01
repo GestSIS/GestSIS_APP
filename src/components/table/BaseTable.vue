@@ -217,8 +217,11 @@ export default {
       const func = this.sorted.func;
       const key = this.sorted.key;
       sorted.sort((a, b) => {
-        const res = func(a[key]) < func(b[key]);
-        return this.sorted.asc ? !res : res;
+        const aVal = func(a[key]);
+        const bVal = func(b[key]);
+        const res =
+          typeof aVal === String ? aVal.localeCompare(bVal) : aVal < bVal;
+        return (this.sorted.asc ? !res : res) ? 1 : -1;
       });
       return sorted;
     },
@@ -287,11 +290,12 @@ export default {
       link.click();
     },
     sort(field) {
-      if (field.sortKey) {
-        if (this.sorted.key === field.sortKey) {
+      const sortKey = field.sortKey ?? field.key;
+      if (sortKey) {
+        if (this.sorted.key === sortKey) {
           this.sorted.asc = !this.sorted.asc;
         } else {
-          this.sorted = { ...this.sorted, key: field.sortKey, asc: true };
+          this.sorted = { ...this.sorted, key: sortKey, asc: true };
           //TODO: Ajout support pour custom function of sort
         }
       }

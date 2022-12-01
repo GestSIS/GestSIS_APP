@@ -51,48 +51,39 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: 'date',
         },
         {
           title: 'Décompte',
           key: 'decompte',
-          sortKey: 'decompte',
         },
         {
           title: 'Solde',
           key: 'solde',
-          sortKey: 'solde',
         },
         {
           title: 'Indemnité',
           key: 'indemnite',
-          sortKey: 'indemnite',
         },
         {
           title: 'Frais forfaitaires',
           key: 'frais_forfaitaire',
-          sortKey: 'frais_forfaitaire',
         },
         {
           title: 'Frais effectifs',
           key: 'frais_effectif',
-          sortKey: 'frais_effectif',
         },
         {
           title: 'Retenue AVS/AC',
           key: 'avs_ac',
-          sortKey: 'avs_ac',
         },
         {
           title: 'Autre',
           key: 'autre',
-          sortKey: 'autre',
         },
         {
           title: 'Total',
           key: 'total',
-          sortKey: 'total',
         },
         {
           title: 'Actions',

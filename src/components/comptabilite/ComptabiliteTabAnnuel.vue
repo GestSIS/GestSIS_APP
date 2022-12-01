@@ -132,21 +132,17 @@ export default {
         {
           title: 'Sapeur',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
         },
         {
           title: 'Fonction',
           key: 'fonction',
-          sortKey: 'fonction',
         },
         {
           title: 'Total',
           key: 'total',
-          sortKey: 'montant',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

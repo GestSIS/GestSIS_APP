@@ -251,7 +251,6 @@ export default {
           title: 'Date',
           key: 'date_debut',
           columnClass: 'align-middle',
-          sortKey: 'date_debut',
           type: 'date',
         },
         {
@@ -260,7 +259,6 @@ export default {
           formatter(value) {
             return value.slice(0, 5);
           },
-          sortKey: 'heure_debut',
         },
         {
           title: "Type d'intervention",
@@ -268,7 +266,6 @@ export default {
           formatter(id) {
             return self.types.find((t) => t.id == id)?.designation;
           },
-          sortKey: 'type_intervention_id',
         },
         {
           title: 'Localité',
@@ -276,7 +273,6 @@ export default {
           formatter(id) {
             return self.localites.find((l) => l.id == id)?.designation;
           },
-          sortKey: 'localite_id',
         },
         {
           title: 'Lieu',
@@ -289,7 +285,6 @@ export default {
           formatter(id) {
             return self.stats.find((s) => s.id == id)?.designation;
           },
-          sortKey: 'stat_federal_id',
         },
         {
           title: 'Traitement',
@@ -297,7 +292,6 @@ export default {
           formatter(id) {
             return self.traitements.find((t) => t.id == id)?.designation;
           },
-          sortKey: 'intervention_traitement_id',
         },
         {
           title: 'Étendue',
@@ -311,7 +305,6 @@ export default {
             };
             return degre[value];
           },
-          sortKey: 'degre',
         },
         {
           title: 'Statut',
@@ -325,11 +318,9 @@ export default {
             };
             return statuts[value];
           },
-          sortKey: 'statut',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

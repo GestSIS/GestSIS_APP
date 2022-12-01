@@ -112,17 +112,14 @@ export default {
         {
           title: 'Designation',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Sapeur',
           key: 'sapeur',
-          sortKey: 'sapeur',
         },
         {
           title: 'Total',
           key: 'total',
-          sortKey: 'total',
         },
         {
           title: 'Actions',

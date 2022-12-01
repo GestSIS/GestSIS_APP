@@ -111,57 +111,46 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: 'date',
         },
         {
           title: 'Designation',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Sapeur',
           key: 'sapeur',
-          sortKey: 'sapeur',
         },
         {
           title: 'Quantité',
           key: 'quantite',
-          sortKey: 'quantite',
         },
         {
           title: 'Unité',
           key: 'unite',
-          sortKey: 'unite',
         },
         {
           title: 'Tarif',
           key: 'tarif',
-          sortKey: 'tarif',
         },
         {
           title: 'Total',
           key: 'total',
-          sortKey: 'total',
         },
         {
           title: 'Type',
           key: 'ecritureType',
-          sortKey: 'ecritureType',
         },
         {
           title: 'Compte',
           key: 'compte',
-          sortKey: 'compte',
         },
         {
           title: 'Catégorie',
           key: 'ecriture_categorie',
-          sortKey: 'ecriture_categorie',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

@@ -60,74 +60,61 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: 'date',
         },
         {
           title: 'Heure',
           key: 'heure',
-          sortKey: 'heure',
           formatter: (h) => h.slice(0, 5),
         },
         {
           title: 'Categorie',
           key: 'categorie',
-          sortKey: 'categorie',
         },
         {
           title: 'Exercice',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Durée [min]',
           key: 'duree',
-          sortKey: 'duree',
         },
         {
           title: 'Localité',
           key: 'localite',
-          sortKey: 'localite',
         },
         {
           title: 'Lieu',
           key: 'lieu',
-          sortKey: 'lieu',
         },
         {
           title: 'Communications',
           key: 'communications',
-          sortKey: 'communications',
         },
         {
           title: 'Convoqué',
           type: Boolean,
           key: 'convoque',
-          sortKey: 'convoque',
         },
         {
           title: 'Présent',
           type: Boolean,
           key: 'present',
-          sortKey: 'present',
         },
         {
           title: 'Remplacé',
           type: Boolean,
           key: 'remplace',
-          sortKey: 'remplace',
         },
         {
           title: 'Excuse',
           type: Boolean,
           key: 'excuse_type_id',
-          sortKey: 'excuse_type_id',
         },
         {
           title: 'Amende',
           type: Boolean,
           key: 'amende',
-          sortKey: 'amende',
         },
       ],
     };

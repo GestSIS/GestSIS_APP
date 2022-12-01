@@ -138,22 +138,18 @@ export default {
         {
           title: 'Materiel type',
           key: 'type',
-          sortKey: 'type',
         },
         {
           title: 'Taille',
           key: 'taille',
-          sortKey: 'taille',
         },
         {
           title: 'Numéro',
           key: 'numero',
-          sortKey: 'numero',
         },
         {
           title: 'Remarque',
           key: 'remarque',
-          sortKey: 'remarque',
         },
         // {
         //   title: 'Nb lavages',
@@ -162,7 +158,6 @@ export default {
         // },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
@@ -172,26 +167,21 @@ export default {
         {
           title: 'Materiel type',
           key: 'type',
-          sortKey: 'type',
         },
         {
           title: 'Taille',
           key: 'taille',
-          sortKey: 'taille',
         },
         {
           title: 'Quantité',
           key: 'quantite',
-          sortKey: 'quantite',
         },
         {
           title: 'Remarque',
           key: 'remarque',
-          sortKey: 'remarque',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

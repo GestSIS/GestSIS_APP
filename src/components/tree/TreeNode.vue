@@ -1,8 +1,8 @@
 <template>
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
-      class="tree-node-header focusable hoverable"
-      :class="{ 'table-primary': active && active.key == node.key }"
+      class="tree-node-header focusable hoverable p-0 m-0 alert"
+      :class="{ 'alert-primary': active && active.key == node.key }"
       @dblclick="() => expand(data)"
       @click="select(node)"
     >

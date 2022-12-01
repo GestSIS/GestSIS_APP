@@ -31,22 +31,18 @@ export default {
         {
           title: 'Titre',
           key: 'titre',
-          sortKey: 'titre',
         },
         {
           title: 'Materiel type',
           key: 'type',
-          sortKey: 'type',
         },
         {
           title: 'Numéro',
           key: 'numero',
-          sortKey: 'numero',
         },
         {
           title: 'Sapeur',
           key: 'sapeur',
-          sortKey: 'sapeur',
         },
         // {
         //   title: 'Actions',

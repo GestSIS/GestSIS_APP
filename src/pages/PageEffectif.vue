@@ -220,51 +220,46 @@ export default {
         {
           title: 'Nom Prénom',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
         },
         {
           title: 'Fonction principale',
           key: 'fonction',
-          sortKey: 'fonction_tri',
         },
         {
           title: 'Localité',
           key: 'localite',
-          sortKey: 'localite',
+        },
+        {
+          title: "Année d'incorporation",
+          key: 'annee_incorporation',
         },
         {
           title: 'PAR',
           key: 'porteur',
-          sortKey: 'porteur',
           type: Boolean,
         },
         {
           title: 'B',
           key: 'b',
-          sortKey: 'b',
           type: Boolean,
         },
         {
           title: 'C1',
           key: 'c1',
-          sortKey: 'c1',
           type: Boolean,
         },
         {
           title: 'C1 118',
           key: 'c1_118',
-          sortKey: 'c1_118',
           type: Boolean,
         },
         {
           title: 'Grade',
           key: 'grade',
-          sortKey: 'grade_tri',
         },
         {
           title: 'Groupes',
           key: 'formatedGroupes',
-          sortKey: 'formatedGroupes',
         },
         {
           title: 'Tel n°1',
@@ -284,12 +279,10 @@ export default {
         {
           title: 'Naissance',
           key: 'date_naissance',
-          sortKey: 'date_naissance',
           type: 'date',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

@@ -53,28 +53,23 @@ export default {
         {
           title: 'Date',
           key: 'inter_debut',
-          sortKey: 'inter_debut',
           type: 'datetime',
         },
         {
           title: 'Type',
           key: 'type',
-          sortKey: 'type',
         },
         {
           title: 'Localite',
           key: 'localite',
-          sortKey: 'localite',
         },
         {
           title: 'Lieu',
           key: 'lieu',
-          sortKey: 'lieu',
         },
         {
           title: 'Objet',
           key: 'objet',
-          sortKey: 'objet',
         },
       ],
       detailRowComponent: markRaw(InterventionPresenceDetails),

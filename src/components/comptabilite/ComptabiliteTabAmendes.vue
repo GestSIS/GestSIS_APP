@@ -87,17 +87,14 @@ export default {
         {
           title: 'Sapeur',
           key: 'sapeur',
-          sortKey: 'sapeur',
         },
         {
           title: 'Nombre',
           key: 'nb',
-          sortKey: 'nb',
         },
         {
           title: 'Montant',
           key: 'total',
-          sortKey: 'total',
         },
       ],
     };

@@ -265,63 +265,52 @@ export default {
         {
           title: 'Sapeur',
           key: 'sapeur',
-          sortKey: 'sapeur',
         },
         {
           title: 'Age',
           key: 'age',
-          sortKey: 'age',
         },
         {
           title: 'Type',
           key: 'type',
-          sortKey: 'type',
         },
         {
           title: 'Medecin',
           key: 'medecin',
-          sortKey: 'medecin',
         },
         {
           title: 'Consultation',
           key: 'consultation',
-          sortKey: 'consultation',
           type: 'date',
         },
         {
           title: 'Validité',
           key: 'validite',
-          sortKey: 'validite',
           type: 'date',
         },
         {
           title: 'Designation',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Accepté',
           key: 'accepter',
-          sortKey: 'accepter',
           type: Boolean,
         },
         {
           title: 'En cours',
           key: 'en_cours',
-          sortKey: 'en_cours',
           type: Boolean,
         },
         {
           title: 'Doc',
           key: 'doc',
-          sortKey: 'filename',
           slot: 'doc',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',

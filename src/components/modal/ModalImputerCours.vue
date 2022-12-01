@@ -128,7 +128,6 @@ export default {
         {
           title: 'Désignation',
           key: 'designation',
-          sortKey: 'designation',
         },
         { title: 'Catégorie', key: 'categorie', sortKey: 'categorie' },
         { title: 'Actions', slot: 'actions' },

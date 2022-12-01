@@ -212,32 +212,26 @@ export default {
         {
           title: 'Date',
           key: 'date',
-          sortKey: 'date',
           type: Date,
         },
         {
           title: 'Cours',
           key: 'designation',
-          sortKey: 'designation',
         },
         {
           title: 'Sapeur',
           key: 'nom_prenom',
-          sortKey: 'nom_prenom',
         },
         {
           title: 'Durée [jour]',
           key: 'duree',
-          sortKey: 'duree',
         },
         {
           title: 'Localité',
           key: 'localite',
-          sortKey: 'localite',
         },
         {
           title: 'Actions',
-          key: 'actions',
           slot: 'actions',
           titleClass: 'align-middle text-center',
           columnClass: 'align-middle text-center',
