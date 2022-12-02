@@ -14,6 +14,10 @@ export default {
     [types.UPDATE_MAT_PERSO_LISTE](state, payload) {
       state.liste = payload;
     },
+    [types.REMOVE_MAT_PERSO](state, ids) {
+      const setIds = new Set(ids);
+      state.liste = [...state.liste.filter((m) => !setIds.has(m.id))];
+    },
     [types.UPDATE_MAT_PERSO_A_RECUPERER_LISTE](state, payload) {
       state.aRecuperer = payload;
     },
@@ -51,7 +55,7 @@ export default {
     },
     removeMatPerso({ commit }, materielsIds) {
       return MatPersoMaterielService.remove(materielsIds).then((data) =>
-        commit(types.UPDATE_MAT_PERSO_LISTE, data)
+        commit(types.REMOVE_MAT_PERSO, data)
       );
     },
   },

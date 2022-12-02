@@ -19,7 +19,7 @@ export default {
   update(materiels) {
     return Api.api().put('/mat-perso', { materiels });
   },
-  remove(materielsIds) {
-    return Api.api().delete('/mat-perso', { materielsIds });
+  remove(materielIds) {
+    return Api.api().delete('/mat-perso', { data: { materielIds } });
   },
 };

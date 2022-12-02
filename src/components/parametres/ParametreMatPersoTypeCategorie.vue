@@ -125,7 +125,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     ajoutCategorie() {
-      this.SHOW_MODAL({ component: 'ModalMatPersoEventType', data: {} });
+      this.SHOW_MODAL({ component: 'ModalMatPersoCategorie', data: {} });
     },
     ajoutType() {
       this.SHOW_MODAL({ component: 'ModalMatPersoType', data: {} });

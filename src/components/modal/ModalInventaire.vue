@@ -46,19 +46,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="m in filteredInventaire.filter(
-                  (m) =>
-                    (tab == 'generique' &&
-                      (m.materiel?.quantite ?? null) != null) ||
-                    (tab == 'numerote' &&
-                      (m.materiel?.quantite ?? null) == null)
-                )"
-                :key="m.id"
-              >
+              <tr v-for="(m, index) in filteredInventaire" :key="m.id">
                 <td>
                   <base-select
                     v-if="!m.id"
+                    :ref="'materiel-' + index"
                     v-model="m.materiel_type_id"
                     value-key="id"
                     display-key="designation"
@@ -77,7 +69,7 @@
                 <td>
                   <input
                     v-if="!m.id"
-                    v-model="m.materiel.taille"
+                    v-model="m.taille"
                     type="text"
                     class="form-control form-control-sm"
                   />
@@ -86,6 +78,7 @@
                 <td v-if="tab == 'generique'">
                   <input
                     v-model="m.materiel.quantite"
+                    required
                     type="number"
                     class="form-control form-control-sm"
                   />
@@ -93,6 +86,7 @@
                 <td v-if="tab == 'numerote'">
                   <input
                     v-model="m.materiel.numero"
+                    required
                     type="text"
                     class="form-control form-control-sm"
                   />
@@ -178,9 +172,21 @@ export default {
           .filter(([, selected]) => selected)
           .map(([id]) => parseInt(id))
       );
-      return this.inventaire.filter(
-        (m) => ids.has(m.materiel_type_id) || m.materiel_type_id == null
-      );
+      return this.inventaire
+        .filter(
+          (m) => ids.has(m.materiel_type_id) || m.materiel_type_id == null
+        )
+        .filter(
+          (m) =>
+            (this.tab == 'generique' &&
+              (m.materiel?.quantite ?? null) != null) ||
+            (this.tab == 'numerote' && (m.materiel?.quantite ?? null) == null)
+        );
+    },
+    indexedMateriel() {
+      let index = {};
+      this.materiels.forEach((t) => (index[t.id] = t));
+      return index;
     },
   },
   mounted() {
@@ -218,9 +224,16 @@ export default {
           retour: null,
           sapeur_id: null,
           materiel_type_id: null,
-          materiel: { numero: 0 },
+          materiel: { numero: '', achat: '' },
         });
       }
+
+      this.$nextTick(() => {
+        const count = this.filteredInventaire.length;
+        if (count > 0) {
+          this.$refs[`materiel-${count - 1}`][0].focus();
+        }
+      });
     },
     async save() {
       // Create new materiel
@@ -230,14 +243,25 @@ export default {
         : Promise.resolve();
 
       // Update changed materiel
-      const updated = this.inventaire.filter((m) => m.id !== null);
+      const updated = this.inventaire
+        .filter((m) => m.id !== null)
+        .filter((m) => {
+          const mat = this.indexedMateriel[m.id] ?? {};
+          return (
+            m?.taille != mat?.taille ||
+            m?.remarque != mat?.remarque ||
+            m?.materiel?.numero != mat?.materiel?.numero ||
+            m?.materiel?.achat != mat?.materiel?.achat ||
+            m?.materiel?.quantite != mat?.materiel?.quantite
+          );
+        });
       const update = updated.length
         ? this.$store.dispatch('updateMatPerso', updated)
         : Promise.resolve();
 
       // Delete removed materiel
       const remove = this.removedIds.length
-        ? this.$store.dispatch('deleteMatPerso', this.removedIds)
+        ? this.$store.dispatch('removeMatPerso', this.removedIds)
         : Promise.resolve();
 
       Promise.all([add, update, remove])

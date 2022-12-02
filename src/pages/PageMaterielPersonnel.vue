@@ -53,7 +53,7 @@
                 <button
                   v-for="(event, index) in eventTypes"
                   :key="index"
-                  class="btn btn-primary me-2"
+                  class="btn btn-outline-secondary me-2 mb-2"
                   @click="newEvent(event)"
                 >
                   {{ event.nom }}

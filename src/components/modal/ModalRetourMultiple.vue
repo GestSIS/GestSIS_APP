@@ -20,7 +20,14 @@
         <table class="table table-sm table-striped">
           <thead>
             <tr>
-              <th></th>
+              <th>
+                <input
+                  v-model="all"
+                  type="checkbox"
+                  class="form-check-input"
+                  @change="toggleAll($event.target.checked)"
+                />
+              </th>
               <th>Matériel</th>
               <th>Quantité</th>
               <th>Taille</th>
@@ -35,15 +42,12 @@
               :class="{ 'table-primary': selected[item.id] }"
             >
               <td>
-                <div class="form-check d-inline-block">
-                  <input
-                    :id="item.id"
-                    v-model="selected[item.id]"
-                    type="checkbox"
-                    class="form-check-input"
-                  />
-                  <label class="form-check-label" :for="item.id"></label>
-                </div>
+                <input
+                  :id="item.id"
+                  v-model="selected[item.id]"
+                  type="checkbox"
+                  class="form-check-input"
+                />
               </td>
               <td>
                 {{
@@ -83,6 +87,7 @@ export default {
   },
   data() {
     return {
+      all: true,
       errors: {},
       activeAttribution: {
         date: new Date().toISOString().slice(0, 10),
@@ -101,6 +106,9 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    toggleAll(value) {
+      this.selected = Object.fromEntries(this.data.map((e) => [e.id, value]));
+    },
     async save() {
       this.$store
         .dispatch('retourMatPerso', {

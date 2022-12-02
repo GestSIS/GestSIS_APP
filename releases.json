@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "02.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Peaufinage du module matériel personnel"]
+    },
+    {
       "date": "01.12.2022",
       "version": "2.0",
       "app": "GestSIS APP",

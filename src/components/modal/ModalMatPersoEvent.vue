@@ -88,7 +88,7 @@
                   <base-select
                     v-model="materiel.sapeur_id"
                     value-key="id"
-                    display-key="label"
+                    display-key="nom_prenom"
                     base-option="&lt;Non-assigné&gt;"
                     :base-value="null"
                     :options="
