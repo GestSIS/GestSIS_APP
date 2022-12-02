@@ -7,7 +7,7 @@
     <div class="modal-body">
       <div class="row mt-2">
         <div class="col-6">
-          <div class="mb-3 d-flex align-items-center">
+          <div class="mb-2 d-flex align-items-center">
             <label class="form-select-label mb-0 me-2" for="group-by"
               >Afficher&nbsp;par</label
             >
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="mb-3 d-flex align-items-center">
+          <div class="mb-2 d-flex align-items-center">
             <div class="form-check form-switch">
               <input
                 id="switch-politique"
@@ -55,6 +55,7 @@
           </div>
         </div>
       </div>
+      <hr />
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">
