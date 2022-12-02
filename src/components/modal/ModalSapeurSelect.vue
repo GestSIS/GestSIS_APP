@@ -361,7 +361,7 @@ export default {
     },
     computedChosenSapeurs() {
       return this.chosenSapeurs
-        .map((sapeurId) => this.filteredSapeurs.find((s) => s.id == sapeurId))
+        .map((sapeurId) => this.sapeurs.find((s) => s.id == sapeurId))
         .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
     },
     availableSapeur() {
@@ -409,6 +409,7 @@ export default {
           groupe.sapeurs
             .filter(svm.filtreSapeur())
             .map((s) => svm.filteredSapeurs.find((sap) => sap.id == s))
+            .filter((s) => s)
             .forEach(
               (s) =>
                 (flaten = [
@@ -590,8 +591,11 @@ export default {
       groupe.groupes.forEach((g) => this.selectGroupSingle(g, state));
     },
     filtreSapeur() {
-      let svm = this;
-      return (s) => !svm.chosenSapeurs.includes(s.sapeur_id || s);
+      const svm = this;
+      return (s) =>
+        svm.filteredSapeurs.find(
+          (sap) => sap.id == s?.sapeur_id || sap.id == s
+        ) != null && !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     groupeFormatter(g) {
       return g.no ? g.no + ' ' + g.designation : g.designation;
