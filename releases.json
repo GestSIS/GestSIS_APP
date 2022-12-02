@@ -4,7 +4,10 @@
       "date": "02.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Peaufinage du module matériel personnel"]
+      "changes": [
+        "Peaufinage du module matériel personnel",
+        "Ajout filtre actif et politique dans la fenêtre de sélection des sapeurs"
+      ]
     },
     {
       "date": "01.12.2022",

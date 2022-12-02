@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
       <div class="row mt-2">
-        <div class="col-12">
+        <div class="col-6">
           <div class="mb-3 d-flex align-items-center">
             <label class="form-select-label mb-0 me-2" for="group-by"
               >Afficher&nbsp;par</label
@@ -24,6 +24,34 @@
                 {{ label }}
               </option>
             </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mb-3 d-flex align-items-center">
+            <div class="form-check form-switch">
+              <input
+                id="switch-politique"
+                v-model="politique"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+              />
+              <label class="form-check-label" for="switch-politique"
+                >Inclure les politique</label
+              >
+            </div>
+            <div class="form-check form-switch ms-3">
+              <input
+                id="switch-actif"
+                v-model="inactif"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+              />
+              <label class="form-check-label" for="switch-actif"
+                >Inclure les inactif</label
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -178,7 +206,7 @@
                 </td>
               </tr>
               <tr
-                v-for="item in availableSapeur.filter((s) => s && s.actif)"
+                v-for="item in availableSapeur"
                 :key="item.id"
                 :class="{ 'table-primary': selectedGeneric.sapeur[item.id] }"
               >
@@ -240,6 +268,8 @@ export default {
   data() {
     const svm = this;
     return {
+      politique: true,
+      inactif: false,
       groupBy: 'groupe',
       chosenSapeurs: [],
       selectedGeneric: {
@@ -288,13 +318,7 @@ export default {
           generic: true,
           label: 'Année incorporation',
           collection: () =>
-            [
-              ...new Set(
-                svm.sapeurs
-                  .filter((s) => s.actif && s.type == 0)
-                  .map((s) => s.annee_incorporation)
-              ),
-            ]
+            [...new Set(svm.filteredSapeurs.map((s) => s.annee_incorporation))]
               .sort()
               .map((annee) => ({ designation: annee, id: annee })),
           displayKey: 'designation',
@@ -321,6 +345,13 @@ export default {
       civilites: (state) => state.baseData.civilites,
     }),
     ...mapGetters(['treeGroupesSapeurs']),
+    filteredSapeurs() {
+      return this.sapeurs.filter(
+        (s) =>
+          (this.inactif ? true : s?.actif) &&
+          (this.politique ? true : s?.type == 0)
+      );
+    },
     filteredLocalites() {
       const localitesIds = new Set(
         this.availableSapeur.map((s) => s.localite_id)
@@ -329,11 +360,11 @@ export default {
     },
     computedChosenSapeurs() {
       return this.chosenSapeurs
-        .map((sapeurId) => this.sapeurs.find((s) => s.id == sapeurId))
+        .map((sapeurId) => this.filteredSapeurs.find((s) => s.id == sapeurId))
         .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
     },
     availableSapeur() {
-      return this.sapeurs
+      return this.filteredSapeurs
         .slice(0)
         .filter((s) => (this.data.filter ?? (() => true))(s))
         .filter((s) => !this.chosenSapeurs.includes(s.id));
@@ -376,7 +407,7 @@ export default {
           );
           groupe.sapeurs
             .filter(svm.filtreSapeur())
-            .map((s) => svm.sapeurs.find((sap) => sap.id == s))
+            .map((s) => svm.filteredSapeurs.find((sap) => sap.id == s))
             .forEach(
               (s) =>
                 (flaten = [
@@ -449,7 +480,7 @@ export default {
             id: elem.id,
             expanded: expanded,
             parent_id: 0,
-            empty: !svm.sapeurs
+            empty: !svm.filteredSapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
               .filter((s) => s[key] == elem.id).length,
@@ -458,7 +489,7 @@ export default {
         if (expanded) {
           liste = [
             ...liste,
-            ...svm.sapeurs
+            ...svm.filteredSapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
               .filter((s) => s[key] == elem.id)
@@ -559,9 +590,7 @@ export default {
     },
     filtreSapeur() {
       let svm = this;
-      return (s) =>
-        svm.sapeurs.find((sap) => sap.id == (s.sapeur_id || s))?.actif == 1 &&
-        !svm.chosenSapeurs.includes(s.sapeur_id || s);
+      return (s) => !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     groupeFormatter(g) {
       return g.no ? g.no + ' ' + g.designation : g.designation;
