@@ -276,7 +276,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     selected(row) {
       this.selectedId = row?.id || null;
     },
@@ -366,15 +366,22 @@ export default {
         (e) => e.id == this.activeExerciceComptableId
       )?.annee;
 
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadCertificatSalaires(
         this.activeExerciceComptableId,
         `certificats_salaire_${annee}.pdf`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système"
+          );
+        });
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
