@@ -28,6 +28,20 @@
             :select-class="{ 'is-invalid': errors['attributions.0.sapeur_id'] }"
           />
         </div>
+        <div class="col-md-12 mb-3">
+          <div class="form-check form-switch">
+            <input
+              id="switch-mode-attribution"
+              v-model="depuisInventaire"
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+            />
+            <label class="form-check-label" for="switch-mode-attribution"
+              >Attribuer depuis l'inventaire
+            </label>
+          </div>
+        </div>
         <div class="col-md-12">
           <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
             <button
@@ -60,9 +74,11 @@
                     <th class="col-1"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="depuisInventaire">
                   <tr
-                    v-for="(item, index) in activeAttribution.numerotes"
+                    v-for="(
+                      item, index
+                    ) in activeAttribution.numerotesDepuisInventaire"
                     :key="index"
                   >
                     <td>
@@ -111,7 +127,75 @@
                     <td>
                       <button
                         class="btn btn-outline-danger border-0"
-                        @click="activeAttribution.numerotes.splice(index, 1)"
+                        @click="
+                          activeAttribution.numerotesDepuisInventaire.splice(
+                            index,
+                            1
+                          )
+                        "
+                      >
+                        <font-awesome-icon :icon="['far', 'trash-alt']" />
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5">
+                      <button
+                        class="btn btn-outline-primary"
+                        @click="addNumerote"
+                      >
+                        <font-awesome-icon :icon="['fas', 'plus']" />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-if="!depuisInventaire">
+                  <tr
+                    v-for="(
+                      item, index
+                    ) in activeAttribution.numerotesHorsInventaire"
+                    :key="index"
+                  >
+                    <td>
+                      <base-select
+                        :ref="'numerote-' + index"
+                        v-model="item.materiel_type_id"
+                        :options="types"
+                        base-option="&lt;Matériel type&gt;"
+                        value-key="id"
+                        display-key="designation"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.numero"
+                        class="form-control form-control-sm"
+                        type="text"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.taille"
+                        class="form-control form-control-sm"
+                        type="text"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        v-model="item.remarque"
+                        class="form-control form-control-sm"
+                        type="text"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-outline-danger border-0"
+                        @click="
+                          activeAttribution.numerotesHorsInventaire.splice(
+                            index,
+                            1
+                          )
+                        "
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
                       </button>
@@ -230,10 +314,19 @@ export default {
     return {
       errors: {},
       tab: 'numerote',
+      depuisInventaire: true,
       activeAttribution: {
         date: new Date().toISOString().slice(0, 10),
         sapeur_id: null,
-        numerotes: [
+        numerotesDepuisInventaire: [
+          {
+            materiel_type_id: null,
+            numero: null,
+            taille: null,
+            remarque: null,
+          },
+        ],
+        numerotesHorsInventaire: [
           {
             materiel_type_id: null,
             numero: null,
@@ -280,16 +373,25 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
+      if (!this.activeAttribution.sapeur_id) {
+        this.$awn.warning('Veuillez sélectionner un sapeur');
+      }
+
       // Masse attribution
       const baseAttribution = {
         sapeur_id: this.activeAttribution.sapeur_id,
         date: this.activeAttribution.date,
       };
 
+      const numerotes = this.depuisInventaire
+        ? this.activeAttribution.numerotesDepuisInventaire
+        : this.activeAttribution.numerotesHorsInventaire;
+
       const attributions = [
-        ...this.activeAttribution.numerotes
+        ...numerotes
           .filter((m) => m.materiel_type_id && m.numero)
           .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
+
         ...this.activeAttribution.generiques
           .filter((m) => m.materiel_type_id && m.quantite > 0)
           .map((m) => ({ ...baseAttribution, ...m })),
@@ -304,14 +406,18 @@ export default {
         .catch((errors) => (this.errors = errors));
     },
     addNumerote() {
-      this.activeAttribution.numerotes.push({
+      const data = this.depuisInventaire
+        ? this.activeAttribution.numerotesDepuisInventaire
+        : this.activeAttribution.numerotesHorsInventaire;
+
+      data.push({
         materiel_type_id: null,
         numero: null,
         taille: null,
         remarque: null,
       });
 
-      const count = this.activeAttribution.numerotes.length;
+      const count = data.length;
       this.$nextTick(() => {
         this.$refs[`numerote-${count - 1}`][0].focus();
       });

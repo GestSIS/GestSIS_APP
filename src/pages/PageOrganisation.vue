@@ -196,8 +196,8 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
 
-import GroupeEdition from '@/components/groupe/GroupeEdition.vue';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import GroupeEdition from '../components/groupe/GroupeEdition.vue';
+import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');

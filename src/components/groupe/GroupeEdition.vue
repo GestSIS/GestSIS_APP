@@ -124,7 +124,9 @@ export default {
         };
       };
       const groupeMapping = (g) => ({
-        label: g.no ? `${g.no} ${g.designation}` : g.designation,
+        label:
+          (g.no ? `${g.no} ${g.designation}` : g.designation) +
+          (g.sapeur_ids.length ? ` (${g.sapeur_ids.length})` : ''),
         type: g.type == 0 ? 'groupe' : 'groupeInter',
         id: g.id,
         key: `g-${g.id}`,
