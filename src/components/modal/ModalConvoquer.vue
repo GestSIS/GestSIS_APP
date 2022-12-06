@@ -143,9 +143,8 @@ export default {
         sapeurIds: [],
       },
       formats: [
-        { value: 1, label: 'Localité, Lieu\nCatégorie, Communication' },
-        { value: 2, label: 'Localité, Lieu, Catégorie\n Communication' },
-        { value: 3, label: 'Localité, Lieu, Catégorie, Communication' },
+        { value: 1, label: 'Localité : Lieu\nCommunication' },
+        { value: 2, label: 'Localité : Lieu - Communication' },
       ],
       errors: {},
     };

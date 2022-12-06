@@ -7,7 +7,8 @@
       "changes": [
         "Correction d'un problème pour la génération des fiches de paye pour sapeurs au format pdf",
         "Attribution de matériel personnel sans passer par l'inventaire",
-        "Ajout nombre personnes dans groupe pour la fenêtre organisation"
+        "Ajout nombre personnes dans groupe pour la fenêtre organisation",
+        "Amélioration du format des convocations"
       ]
     },
     {
