@@ -186,6 +186,7 @@ ORGANIZER:${this.sisName}
 DESCRIPTION:${e.communications}
 CATEGORIES:${e.categorie}
 LOCATION:${e.localite} ${e.lieu}
+COLOR:red
 END:VEVENT`
         )
         .join('\n');
