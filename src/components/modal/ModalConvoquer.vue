@@ -41,7 +41,7 @@
           </button>
         </div>
         <hr />
-        <div class="col-8">
+        <div class="col-12">
           <h6>Informations</h6>
           <div class="input-group input-group-sm mb-3">
             <span id="titre" class="input-group-text">Titre</span>
@@ -71,14 +71,6 @@
               aria-describedby="info"
             />
           </div>
-        </div>
-        <div class="col-4">
-          <h6>Format</h6>
-          <base-radio
-            v-model="params.format"
-            :advanced-label="true"
-            :options="formats"
-          />
         </div>
       </div>
       <hr />
@@ -142,10 +134,6 @@ export default {
         texteFin: '',
         sapeurIds: [],
       },
-      formats: [
-        { value: 1, label: 'Localité : Lieu\nCommunication' },
-        { value: 2, label: 'Localité : Lieu - Communication' },
-      ],
       errors: {},
     };
   },

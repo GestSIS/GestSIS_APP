@@ -392,7 +392,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     convoquer() {
-      this.SHOW_MODAL({ component: 'ModalConvoquer', size: 2 });
+      this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 });
     },
     sms({ id }) {
       if (!this.hasSmsEnvoiePermission) {
