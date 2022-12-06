@@ -84,7 +84,10 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
       this.$store
-        .dispatch('attribuerMatPerso', [this.activeAttribution])
+        .dispatch('attribuerMatPerso', {
+          depuisInventaire: true,
+          attributions: [this.activeAttribution],
+        })
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();

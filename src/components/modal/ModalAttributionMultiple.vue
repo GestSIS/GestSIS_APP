@@ -398,7 +398,10 @@ export default {
       ];
 
       this.$store
-        .dispatch('attribuerMatPerso', attributions)
+        .dispatch('attribuerMatPerso', {
+          depuisInventaire: this.depuisInventaire,
+          attributions,
+        })
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();

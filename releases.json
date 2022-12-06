@@ -5,6 +5,15 @@
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
+        "Amélioration du format des convocations",
+        "Peaufinage du module matériel personnel"
+      ]
+    },
+    {
+      "date": "05.12.2022",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
         "Correction d'un problème pour la génération des fiches de paye pour sapeurs au format pdf",
         "Attribution de matériel personnel sans passer par l'inventaire",
         "Ajout nombre personnes dans groupe pour la fenêtre organisation",

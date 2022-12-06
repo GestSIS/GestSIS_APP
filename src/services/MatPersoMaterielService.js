@@ -7,8 +7,8 @@ export default {
   getARecuperer() {
     return Api.api().get('/mat-perso/a-recuperer');
   },
-  attribuer(materiels) {
-    return Api.api().post('/mat-perso/attribuer', { attributions: materiels });
+  attribuer(data) {
+    return Api.api().post('/mat-perso/attribuer', data);
   },
   retour(materiels) {
     return Api.api().post('/mat-perso/retour', materiels);
