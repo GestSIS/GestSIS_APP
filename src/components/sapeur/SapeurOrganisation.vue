@@ -6,23 +6,11 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body table-responsive">
-      <table id="sap-groupe" class="table table-sm">
-        <thead>
-          <tr>
-            <th data-field="groupe">Groupe</th>
-            <th data-field="designation">Désignation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="groupeDisplay.length <= 0">
-            <td colspan="4">Incorporé dans aucun groupe</td>
-          </tr>
-          <tr v-for="g in groupeDisplay" :key="g.id">
-            <td>{{ g.no }}</td>
-            <td>{{ g.designation }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :fields="fields"
+        :data="computedGroupes"
+        no-data="Aucun groupe"
+      />
     </div>
   </div>
 </template>
@@ -32,20 +20,27 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'SapeurOrganisation',
+  data() {
+    return {
+      fields: [
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Désignation', key: 'designation' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       groupes: (state) => state.groupe.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurGroupes: (state) => state.sapeur.active.groupes,
     }),
-    groupeDisplay() {
-      let svm = this;
+    computedGroupes() {
       return this.activeSapeurGroupes.map((groupe) => {
-        let g = svm.groupes.find((g) => g.id == groupe.groupe_id);
+        let g = this.groupes.find((g) => g.id == groupe.groupe_id);
         return {
           id: groupe.id,
           designation: g?.designation,
-          no: g?.no || '',
+          numero: g?.no || '',
         };
       });
     },

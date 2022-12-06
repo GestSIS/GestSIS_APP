@@ -240,7 +240,6 @@ export default {
       );
     },
     fetchSapeurPermis({ commit, state }) {
-      console.log(state.active.id)
       return SapeurService.getPermis(state.active.id).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       );

@@ -14,48 +14,30 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table id="sap-cours" class="table table-sm" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th data-field="date">Date</th>
-            <th data-field="designation">Désignation</th>
-            <th data-field="lieu">Lieu</th>
-            <th class="text-center" data-field="duree">Durée [jours]</th>
-            <th v-if="hasEditPermission" class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="activeSapeurCours.length <= 0">
-            <td :colspan="hasEditPermission ? 5 : 4">Aucun cours suivi</td>
-          </tr>
-          <tr v-for="c in activeSapeurCours" :key="c.id">
-            <td>{{ new Date(c.date).toLocaleDateString('fr-CH') }}</td>
-            <td>
-              {{ cours.find((cours) => cours.id == c.cours_id)?.designation }}
-            </td>
-            <td>
-              {{ localites.find((l) => l.id == c.localite_id)?.designation }}
-            </td>
-            <td class="text-center">{{ c.duree }}</td>
-            <td v-if="hasEditPermission" class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="editCours(c.id)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerCours(c.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <base-table
+        :fields="fields"
+        :data="activeSapeurCours"
+        no-data="Aucun cours suivi"
+      >
+        <template #actions="{ rowData }">
+          <button
+            v-if="hasEditPermission"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="editCours(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            v-if="hasEditPermission"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="supprimerCours(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -66,13 +48,31 @@ import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurCours',
+  data() {
+    return {
+      fields: [
+        { title: 'Date', key: 'date', type: Date },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Lieu', key: 'localite' },
+        { title: 'Durée [jours]', key: 'duree' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       activeSapeurCours: (state) =>
-        state.sapeur.active.cours.sort((a, b) => b.date.localeCompare(a.date)),
+        state.sapeur.active.cours
+          .sort((a, b) => b.date.localeCompare(a.date))
+          .map((c) => ({
+            ...c,
+            designation: state.cours.liste.find(
+              (cours) => cours.id == c.cours_id
+            )?.designation,
+            localite: state.localite.liste.find((l) => l.id == c.localite_id)
+              ?.designation,
+          })),
       activeSapeurId: (state) => state.sapeur.active.id,
-      cours: (state) => state.cours.liste,
-      localites: (state) => state.localite.liste,
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
@@ -84,9 +84,7 @@ export default {
     },
   },
   mounted() {
-    if (this.cours.length === 0) {
-      this.$store.dispatch('fetchCours');
-    }
+    this.$store.dispatch('fetchCours');
     this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
   },
   methods: {
@@ -95,18 +93,15 @@ export default {
       this.$store.dispatch('resetActiveCours');
       this.SHOW_MODAL('ModalSapeurCours');
     },
-    editCours(cours_id) {
+    editCours(cours) {
       this.$store.dispatch(
         'updateActiveCours',
-        Object.assign(
-          { precedent_id: 0 },
-          this.activeSapeurCours.find((c) => c.id == cours_id)
-        )
+        Object.assign({ precedent_id: 0 }, cours)
       );
       this.SHOW_MODAL('ModalSapeurCours');
     },
-    supprimerCours(fonction_id) {
-      this.$store.dispatch('removeSapeurCours', fonction_id);
+    supprimerCours(cours) {
+      this.$store.dispatch('removeSapeurCours', cours?.id);
     },
   },
 };

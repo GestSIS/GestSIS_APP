@@ -6,7 +6,9 @@
       "app": "GestSIS APP",
       "changes": [
         "Amélioration du format des convocations",
-        "Peaufinage du module matériel personnel"
+        "Peaufinage du module matériel personnel",
+        "Mise à jour des tables pour le module `sapeur`",
+        "Matériel personnel pour module sapeur"
       ]
     },
     {

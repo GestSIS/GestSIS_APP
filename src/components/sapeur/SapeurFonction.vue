@@ -13,53 +13,30 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <table
-        id="sap-fonctions"
-        class="table table-sm"
-        cellspacing="0"
-        width="100%"
+      <base-table
+        :fields="fields"
+        :data="activeSapeurFonctions"
+        no-data="Aucune fonction"
       >
-        <thead>
-          <tr>
-            <th>Début</th>
-            <th>Fin</th>
-            <th>Fonction</th>
-            <th>Remarques</th>
-            <th v-if="hasEditPermission" class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="activeSapeurFonctions.length <= 0">
-            <td :colspan="hasEditPermission ? 5 : 4">Aucune fonction</td>
-          </tr>
-          <tr v-for="f in activeSapeurFonctions" :key="f.id">
-            <td>{{ new Date(f.debut).toLocaleDateString('fr-CH') }}</td>
-            <td>
-              {{ f.fin ? new Date(f.fin).toLocaleDateString('fr-CH') : '' }}
-            </td>
-            <td>
-              {{ formatFonction(fonctions.find((e) => e.id == f.fonction_id)) }}
-            </td>
-            <td>{{ f.remarque }}</td>
-            <td v-if="hasEditPermission" class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="editFonction(f.id)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerFonction(f.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <template #actions="{ rowData }">
+          <button
+            v-if="hasEditPermission"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="editFonction(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            v-if="hasEditPermission"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="supprimerFonction(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -70,14 +47,29 @@ import permissions from '@/store/permissions.js';
 
 export default {
   name: 'SapeurFonction',
+  data() {
+    return {
+      fields: [
+        { title: 'Début', key: 'debut', type: Date },
+        { title: 'Fin', key: 'fin', type: Date },
+        { title: 'Fonction', key: 'fonction' },
+        { title: 'Remarques', key: 'remarques' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
-      fonctions: (state) => state.fonction.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurFonctions: (state) =>
-        state.sapeur.active.fonctions.sort((a, b) =>
-          b.debut.localeCompare(a.debut)
-        ),
+        state.sapeur.active.fonctions
+          .sort((a, b) => b.debut.localeCompare(a.debut))
+          .map((f) => ({
+            ...f,
+            fonction: state.fonction.liste.find(
+              (fonction) => fonction.id == f.fonction_id
+            )?.nom,
+          })),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
@@ -89,32 +81,21 @@ export default {
     },
   },
   mounted() {
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
+    this.$store.dispatch('fetchFonctions');
     this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    formatFonction(fonction) {
-      return fonction?.nom;
-    },
     newFonction() {
       this.$store.dispatch('resetActiveFonction');
       this.SHOW_MODAL('ModalSapeurFonction');
     },
-    editFonction(fonction_id) {
-      this.$store.dispatch(
-        'updateActiveFonction',
-        Object.assign(
-          {},
-          this.activeSapeurFonctions.find((f) => f.id == fonction_id)
-        )
-      );
+    editFonction(fonction) {
+      this.$store.dispatch('updateActiveFonction', Object.assign({}, fonction));
       this.SHOW_MODAL('ModalSapeurFonction');
     },
-    supprimerFonction(fonction_id) {
-      this.$store.dispatch('removeSapeurFonction', fonction_id);
+    supprimerFonction(fonction) {
+      this.$store.dispatch('removeSapeurFonction', fonction?.id);
     },
   },
 };

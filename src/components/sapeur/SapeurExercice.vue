@@ -17,7 +17,6 @@
         :fields="fields"
         :data="exercices"
         :selectable="true"
-        :hide-download="true"
         no-data="Aucun exercice pour le
       moment"
         :detail-row-component="detailRowComponent"
@@ -39,65 +38,19 @@ export default {
     return {
       detailRowComponent: markRaw(MesHeuresSuppDetailRow),
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'Heure',
-          key: 'heure',
-          formatter: (h) => h.slice(0, 5),
-        },
-        {
-          title: 'Categorie',
-          key: 'categorie',
-        },
-        {
-          title: 'Exercice',
-          key: 'designation',
-        },
-        {
-          title: 'Durée [min]',
-          key: 'duree',
-        },
-        {
-          title: 'Localité',
-          key: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-        },
-        {
-          title: 'Communications',
-          key: 'communications',
-        },
-        {
-          title: 'Convoqué',
-          type: Boolean,
-          key: 'convoque',
-        },
-        {
-          title: 'Présent',
-          type: Boolean,
-          key: 'present',
-        },
-        {
-          title: 'Remplacé',
-          type: Boolean,
-          key: 'remplace',
-        },
-        {
-          title: 'Excuse',
-          type: Boolean,
-          key: 'excuse_type_id',
-        },
-        {
-          title: 'Amende',
-          type: Boolean,
-          key: 'amende',
-        },
+        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'Heure', key: 'heure', formatter: (h) => h.slice(0, 5) },
+        { title: 'Categorie', key: 'categorie' },
+        { title: 'Exercice', key: 'designation' },
+        { title: 'Durée [min]', key: 'duree' },
+        { title: 'Localité', key: 'localite' },
+        { title: 'Lieu', key: 'lieu' },
+        { title: 'Communications', key: 'communications' },
+        { title: 'Convoqué', type: Boolean, key: 'convoque' },
+        { title: 'Présent', type: Boolean, key: 'present' },
+        { title: 'Remplacé', type: Boolean, key: 'remplace' },
+        { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
+        { title: 'Amende', type: Boolean, key: 'amende' },
       ],
     };
   },

@@ -180,7 +180,6 @@ export default {
           // Add sapeur data
           .map((e) => {
             let sapeur = this.sapeurs.find((s) => s.id == e.id);
-            console.log(sapeur);
             return {
               ...e,
               ...sapeur,

@@ -286,7 +286,6 @@ export default {
         ...this.activeIndemnite,
         fonctions,
       };
-      console.log(indemnite);
 
       const action =
         (indemnite.id || 0) === 0

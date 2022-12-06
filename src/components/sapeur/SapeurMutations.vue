@@ -7,59 +7,30 @@
     <!-- form start -->
     <form role="form">
       <div class="card-body">
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Incorporation</th>
-              <th>Sortie</th>
-              <th>Motif</th>
-              <th>Localité</th>
-              <th v-if="hasEditPermission" class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="mutations.length <= 0">
-              <td :colspan="hasEditPermission ? 5 : 4">Aucune mutation</td>
-            </tr>
-            <tr v-for="m in mutations" :key="m.id">
-              <td>
-                {{ new Date(m.incorporation).toLocaleDateString('fr-CH') }}
-              </td>
-              <td>
-                {{
-                  m.sortie ? new Date(m.sortie).toLocaleDateString('fr-CH') : ''
-                }}
-              </td>
-              <td>{{ m.motif }}</td>
-              <td>
-                {{
-                  m.localite_id
-                    ? localites.find((l) => l.id == m.localite_id)?.designation
-                    : ''
-                }}
-              </td>
-              <td v-if="hasEditPermission">
-                <div class="d-flex justify-content-center">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary border-0"
-                    @click="editMutation(m.id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                  <button
-                    v-if="mutations.length > 1"
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    @click="removeMutation(m.id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table
+          :fields="fields"
+          :data="mutations"
+          no-data="Aucune mutation"
+        >
+          <template #actions="{ rowData }">
+            <button
+              v-if="hasEditPermission"
+              type="button"
+              class="btn btn-outline-primary border-0"
+              @click="editMutation(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
+              v-if="hasEditPermission"
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimerMutation(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
+          </template>
+        </base-table>
         <button
           v-if="finServiceButtonState && hasEditPermission"
           type="button"
@@ -90,11 +61,26 @@ import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
 export default {
+  data() {
+    return {
+      fields: [
+        { title: 'Incorporation', key: 'incorporation', type: Date },
+        { title: 'Sortie', key: 'sortie', type: Date },
+        { title: 'Motif', key: 'motif' },
+        { title: 'Localité', key: 'localite' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       activeSapeurId: (state) => state.sapeur.active.id,
-      localites: (state) => state.localite.liste,
-      mutations: (state) => state.sapeur.active.mutations,
+      mutations: (state) =>
+        state.sapeur.active.mutations.map((m) => ({
+          ...m,
+          localite: state.localite.liste.find((l) => l.id == m.localite_id)
+            ?.nom,
+        })),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
@@ -116,17 +102,11 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
-    removeMutation(mutationId) {
-      this.$store.dispatch('removeMutation', mutationId);
+    removeMutation(mutation) {
+      this.$store.dispatch('removeMutation', mutation?.id);
     },
-    editMutation(mutationId) {
-      this.$store.dispatch(
-        'updateActiveMutation',
-        Object.assign(
-          {},
-          this.mutations.find((m) => m.id == mutationId)
-        )
-      );
+    editMutation(mutation) {
+      this.$store.dispatch('updateActiveMutation', Object.assign({}, mutation));
       this.SHOW_MODAL('ModalMutation');
     },
     finService() {

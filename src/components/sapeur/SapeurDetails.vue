@@ -49,7 +49,9 @@
         <a
           v-for="[key, label] in Object.entries(tabList).filter(
             ([key]) =>
-              !requiredPermission[key] || hasPermission(requiredPermission[key])
+              !requiredPermission[key] ||
+              hasPermission(requiredPermission[key]) ||
+              isAdmin
           )"
           :key="key"
           class="nav-item nav-link"
@@ -87,7 +89,7 @@
 <script>
 import { mapMutations, mapState } from 'vuex';
 import store from '@/store/index';
-import permissions from '@/store/permissions.js';
+import permissions from '../../store/permissions.js';
 
 //TODO Implémenter Matériel personnel
 const sapeurTabList = {
@@ -185,6 +187,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+      isAdmin: (state) => state.auth.admin,
     }),
     tabList() {
       return this.activeSapeur.type == 0 ? sapeurTabList : politiqueTabList;

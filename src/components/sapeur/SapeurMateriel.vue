@@ -7,67 +7,31 @@
     <!-- form start -->
     <form role="form">
       <div class="card-body">
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Matériel type</th>
-              <th>Taille</th>
-              <th>Numéro</th>
-              <th>Quantité</th>
-              <th>Attribution</th>
-              <th>Retour</th>
-              <th v-if="hasEditPermission" class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="materiels.length <= 0">
-              <td :colspan="hasEditPermission ? 5 : 4">
-                Aucun matériel distribué
-              </td>
-            </tr>
-            <tr v-for="m in materiels" :key="m.id">
-              <td>
-                {{ types.find((t) => t.id == m.materiel_type_id)?.designation }}
-              </td>
-              <td>{{ m.taille }}</td>
-              <td>{{ m?.materiel?.quantite }}</td>
-              <td>{{ m?.materiel?.numero }}</td>
-              <td>
-                {{
-                  m?.attribution
-                    ? new Date(m?.attribution).toLocaleDateString('fr-CH')
-                    : ''
-                }}
-              </td>
-              <td>
-                {{
-                  m?.retour
-                    ? new Date(m?.retour).toLocaleDateString('fr-CH')
-                    : ''
-                }}
-              </td>
-              <td v-if="hasEditPermission">
-                <div class="d-flex justify-content-center">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary border-0"
-                    disabled
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                  <button
-                    v-if="materiels.length > 1"
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    disabled
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table
+          :fields="fields"
+          :data="materiels"
+          no-data="Aucun matériel distribué"
+        >
+          <template #actions>
+            <div class="d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                disabled
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                v-if="materiels.length > 1"
+                type="button"
+                class="btn btn-outline-danger border-0"
+                disabled
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </div>
+          </template>
+        </base-table>
       </div>
     </form>
   </div>
@@ -80,11 +44,32 @@ import permissions from '@/store/permissions.js';
 // TODO: Fetch matériel type/categorie
 
 export default {
+  data() {
+    return {
+      fields: [
+        { title: 'Matériel type', key: 'materiel_type' },
+        { title: 'Taille', key: 'taille' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Attribution', key: 'attribution', type: Date },
+        { title: 'Retour', key: 'retour', type: Date },
+        // { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       activeSapeurId: (state) => state.sapeur.active.id,
       types: (state) => state.matPersoType.liste,
-      materiels: (state) => state.sapeur.active.materiels,
+      materiels: (state) =>
+        state.sapeur.active.materiels.map((m) => ({
+          quantite: 1,
+          ...m.materiel,
+          ...m,
+          materiel_type: state.matPersoType.liste.find(
+            (t) => t.id == m.materiel_type_id
+          )?.designation,
+        })),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
