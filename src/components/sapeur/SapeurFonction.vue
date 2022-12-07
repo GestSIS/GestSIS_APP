@@ -45,8 +45,24 @@
 import { mapMutations, mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadSapeurFonctions = store.dispatch('fetchSapeurFonctions');
+
+  Promise.all([loadFonctions, loadSapeurFonctions]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'SapeurFonction',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

@@ -159,7 +159,6 @@ export default {
       this.$store
         .dispatch('genererAmendesAnnuels', this.activeExerciceComptableId)
         .then((amendes) => {
-          console.log(amendes);
           if (amendes?.length == 0) {
             this.$awn.success(
               'Aucune amende requise pour cet exercice comptable'

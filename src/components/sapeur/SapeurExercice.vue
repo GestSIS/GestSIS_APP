@@ -32,8 +32,23 @@ import permissions from '@/store/permissions.js';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadExerciceSapeur = store.dispatch('fetchSapeurExercices');
+
+  Promise.all([loadExerciceSapeur]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'SapeurExercice',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       detailRowComponent: markRaw(MesHeuresSuppDetailRow),

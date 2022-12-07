@@ -41,9 +41,28 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
-// TODO: Fetch matériel type/categorie
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
+  const loadSapeurMateriel = store.dispatch('fetchSapeurMateriels');
+
+  Promise.all([
+    loadMaterielTypes,
+    loadMaterielCategories,
+    loadSapeurMateriel,
+  ]).then(() => {
+    next();
+  });
+}
 
 export default {
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

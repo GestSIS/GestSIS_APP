@@ -69,8 +69,24 @@
 import { mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadPermis = store.dispatch('fetchPermisType');
+  const loadSapeurPermis = store.dispatch('fetchSapeurPermis');
+
+  Promise.all([loadPermis, loadSapeurPermis]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'SapeurPermis',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       publicPath: import.meta.env.BASE_URL,

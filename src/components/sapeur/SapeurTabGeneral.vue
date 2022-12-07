@@ -371,10 +371,34 @@ import permissions from '@/store/permissions.js';
 import SapeurService from '../../services/SapeurService.js';
 import SapeurTelephones from '@/components/sapeur/SapeurTelephones.vue';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  if (routeTo.params.id == 'ajout') {
+    next();
+  } else {
+    const sapeurId = parseInt(routeTo.params.id);
+    await store.dispatch('selectSapeur', sapeurId);
+
+    const loadTelephones = store.dispatch('fetchTelephoneTypes');
+    const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+    const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
+
+    Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
+      next();
+    });
+  }
+}
+
 export default {
   name: 'SapeurTabGeneral',
   components: {
     SapeurTelephones,
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
   },
   data() {
     return {

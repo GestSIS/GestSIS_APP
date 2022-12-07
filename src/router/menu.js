@@ -14,7 +14,7 @@ const links = [
     permission: permissions.EFFECTIF.TOUT,
   },
   {
-    to: { name: 'sapeurs' },
+    to: { name: 'sapeurs', params: { id: 0 } },
     icon: 'user',
     nom: 'Sapeurs',
     permission: permissions.SAPEUR.LECTURE,

@@ -18,8 +18,24 @@
 <script>
 import { mapState } from 'vuex';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadGroupes = store.dispatch('fetchGroupes');
+  const loadSapeurGroupes = store.dispatch('fetchSapeurGroupes');
+
+  Promise.all([loadGroupes, loadSapeurGroupes]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'SapeurOrganisation',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

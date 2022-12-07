@@ -29,7 +29,31 @@
 import { mapState } from 'vuex';
 import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  if (routeTo.params.id == 'ajout') {
+    next();
+  } else {
+    const sapeurId = parseInt(routeTo.params.id);
+    await store.dispatch('selectSapeur', sapeurId);
+
+    const loadTelephones = store.dispatch('fetchTelephoneTypes');
+    const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+    const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
+
+    Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
+      next();
+    });
+  }
+}
+
 export default {
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

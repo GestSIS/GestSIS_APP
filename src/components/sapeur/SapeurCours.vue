@@ -46,8 +46,24 @@
 import { mapMutations, mapState } from 'vuex';
 import permissions from '@/store/permissions.js';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadCours = store.dispatch('fetchCours');
+  const loadSapeurCours = store.dispatch('fetchSapeurCours');
+
+  Promise.all([loadCours, loadSapeurCours]).then(() => {
+    next();
+  });
+}
+
 export default {
   name: 'SapeurCours',
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [

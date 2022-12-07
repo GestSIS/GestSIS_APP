@@ -60,7 +60,22 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '@/store/permissions.js';
 
+import store from '@/store/index';
+async function loadData(routeTo, next) {
+  const loadSapeurMutations = store.dispatch('fetchSapeurMutations');
+
+  Promise.all([loadSapeurMutations]).then(() => {
+    next();
+  });
+}
+
 export default {
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, routeFrom, next) {
+    loadData(routeTo, next);
+  },
   data() {
     return {
       fields: [
