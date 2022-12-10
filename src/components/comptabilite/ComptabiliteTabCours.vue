@@ -76,7 +76,7 @@
           detail-row-class="m-td-0"
           no-data="Aucune écriture à afficher"
           :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => !r.ecritures.length"
+          :detail-row-column-hide-button="(r) => !r?.ecritures?.length"
           :detail-row-component="detailRowComponent"
           :detail-row-options="detailRowOptions"
           :data="filteredCours"
@@ -85,7 +85,7 @@
         >
           <template #actions="props">
             <button
-              v-if="props.rowData.ecritures.length"
+              v-if="props.rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Annuler imputation"
               @click="annulerImputer(props.rowData.id)"
@@ -93,7 +93,7 @@
               <font-awesome-icon :icon="['fas', 'ban']" />
             </button>
             <button
-              v-if="!props.rowData.ecritures.length"
+              v-if="!props.rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Imputer cours"
               @click="imputer(props.rowData.id, props.rowData.designation)"
