@@ -252,7 +252,10 @@ export default {
     },
     async save() {
       this.$store
-        .dispatch('updateSapeurPresencesExercice', this.presences)
+        .dispatch(
+          'updateSapeurPresencesExercice',
+          this.presences.map((p) => ({ ...p, id: p?.presence?.id }))
+        )
         .then(this.HIDE_MODAL)
         .catch((error) => {
           this.errors = {

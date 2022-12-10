@@ -356,7 +356,9 @@ export default {
         return;
       }
 
-      return dataItem.ecritures.length > 0 ? 'table-success' : 'table-warning';
+      return dataItem?.ecritures?.length > 0
+        ? 'table-success'
+        : 'table-warning';
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
