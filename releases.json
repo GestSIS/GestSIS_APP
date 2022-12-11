@@ -1,6 +1,26 @@
 {
   "releases": [
     {
+      "date": "10.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Fichier ISO20022, support des nom/prénoms avec charactères spéciaux",
+        "Fichier ISO20022, prise en compte de la date du décompte",
+        "Ajout colonnes `A facturer` et `A payer` pour décompte afin de faciliter la compréhension"
+      ]
+    },
+    {
+      "date": "09.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Fiches de salaire trié par ordre alphabétique",
+        "Résolution d'un problème de permissions pour la modification des présences d'un exercice déjà imputé",
+        "Résolution d'un problème de permissions pour l'imputation de cours"
+      ]
+    },
+    {
       "date": "07.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",

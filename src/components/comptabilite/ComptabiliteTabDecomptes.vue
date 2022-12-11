@@ -225,8 +225,12 @@ export default {
           type: 'date',
         },
         {
-          title: 'Total',
-          key: 'total',
+          title: 'A payer',
+          key: 'a_payer_total',
+        },
+        {
+          title: 'A facturer',
+          key: 'a_facturer_total',
         },
         {
           title: 'Déductions',
@@ -240,6 +244,10 @@ export default {
         {
           title: 'Charges AC',
           key: 'ac_total',
+        },
+        {
+          title: 'Total',
+          key: 'total',
         },
         {
           title: 'Actions',
