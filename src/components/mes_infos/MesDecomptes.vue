@@ -104,6 +104,11 @@ export default {
           .sort((e1, e2) => e1.date.localeCompare(e2.date)),
     }),
   },
+  watch: {
+    anneeComptableId() {
+      this.$store.dispatch('fetchMesDecomptes');
+    },
+  },
   methods: {
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;

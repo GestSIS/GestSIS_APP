@@ -1,7 +1,7 @@
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes décomptes</h3>
+      <h3 class="card-title">Mon matériel</h3>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -17,7 +17,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import MesInfosService from '../../services/MesInfosService';
 import store from '@/store/index';
 
 async function loadData(routeTo, next) {
@@ -51,7 +50,6 @@ export default {
   },
   computed: {
     ...mapState({
-      anneeComptableId: (state) => state.exerciceComptable.activeId,
       materiels: (state) =>
         state.mesInfos.materiels.map((m) => ({
           quantite: 1,
@@ -62,12 +60,6 @@ export default {
           )?.designation,
         })),
     }),
-  },
-  methods: {
-    downloadDecompte(paiement) {
-      const filename = `${paiement.date}_decompte.pdf`;
-      MesInfosService.printMonDecompte(paiement.decompte_id, filename);
-    },
   },
 };
 </script>
