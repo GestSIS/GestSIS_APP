@@ -25,11 +25,12 @@ export default {
     MODIFICATION: 'cours.modification',
     CONFIG: 'cours.config',
   },
-  FEUILLE_HEURE: {
-    SAISIE_PERSO: 'feuille_heure.saisie_perso',
-    SAISIE_COMMUNE: 'feuille_heure.saisie_commune',
-    VALIDATION: 'feuille_heure.validation',
-    CONFIG: 'feuille_heure.config',
+  FICHE_HEURE: {
+    LECTURE: 'fiche_travail.lecture',
+    SAISIE_PERSO: 'fiche_travail.saisie_perso',
+    SAISIE_COMMUNE: 'fiche_travail.saisie_commune',
+    VALIDATION: 'fiche_travail.validation',
+    CONFIG: 'fiche_travail.config',
   },
   SMS: {
     ENVOIE: 'sms.envoie',

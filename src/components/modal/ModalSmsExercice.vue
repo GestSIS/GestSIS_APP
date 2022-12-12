@@ -144,7 +144,10 @@ export default {
   beforeMount() {
     let resolvedCount = 0;
     SapeurService.getSapeurPourConvocationSms().then((sapeurs) => {
-      this.sapeurs = sapeurs;
+      this.sapeurs = sapeurs.map((s) => ({
+        ...s,
+        nom_prenom: `${s.nom} ${s.prenom}`,
+      }));
       resolvedCount++;
       this.loadingSapeurs = resolvedCount == 2;
     });
