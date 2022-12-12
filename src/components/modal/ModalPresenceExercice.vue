@@ -95,7 +95,7 @@
                   :disabled="
                     !canEditAbsence(e) || (!canEditPresence(e) && e.present)
                   "
-                  @update:model-value="editExcuseCheckbox(e)"
+                  @change="editExcuseCheckbox(e)"
                 />
                 <base-select
                   v-if="e.excuse_type_id"
@@ -235,7 +235,7 @@ export default {
     editExcuseCheckbox(exercice) {
       exercice.present = 0;
       exercice.remplace = 0;
-
+      console.log(exercice);
       exercice.excuse_type_id = exercice.excuse_type_id
         ? null
         : this.excusesType[0].id;
