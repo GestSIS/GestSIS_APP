@@ -4,6 +4,7 @@ import MesInfosService from '../../services/MesInfosService.js';
 export default {
   state: {
     infos: {},
+    materiels: [],
     exercices: [],
     interventions: [],
     paiements: [],
@@ -19,6 +20,9 @@ export default {
     },
     [types.UPDATE_MES_INFOS](state, payload) {
       state.infos = payload;
+    },
+    [types.UPDATE_MON_MATERIEL](state, payload) {
+      state.materiels = payload;
     },
     [types.UPDATE_MES_EXERCICES](state, payload) {
       state.exercices = payload;
@@ -37,6 +41,11 @@ export default {
     fetchMesInfos({ commit }) {
       return MesInfosService.getMesInfos().then((data) =>
         commit(types.UPDATE_MES_INFOS, data)
+      );
+    },
+    fetchMonMateriel({ commit }) {
+      return MesInfosService.getMonMateriel().then((data) =>
+        commit(types.UPDATE_MON_MATERIEL, data)
       );
     },
     fetchMesExercices({ commit, getters }) {

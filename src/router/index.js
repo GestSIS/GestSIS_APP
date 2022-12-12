@@ -131,6 +131,13 @@ const router = createRouter({
           props: true,
         },
         {
+          path: 'materiel',
+          name: 'mon-materiel',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MonMateriel.vue'),
+          props: true,
+        },
+        {
           path: 'decomptes',
           name: 'mes-decomptes',
           beforeEnter: sapeurGuard(),

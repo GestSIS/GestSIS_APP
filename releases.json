@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "11.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Résolution d'un problème pour la saisie des présences aux exercices depuis le module sapeur",
-        "Ajout total pour comptabilité tableau amende, indemnités/frais annuels et autres"
+        "Ajout total pour comptabilité tableau amende, indemnités/frais annuels et autres",
+        "Nouvel onglet `Mon matériel` dans la page `Mes infos`"
       ]
     },
     {

@@ -16,4 +16,7 @@ export default {
   printMonDecompte(decompteId, filename) {
     return Api.print(filename).get(`/mes-decomptes/${decompteId}/print`);
   },
+  getMonMateriel() {
+    return Api.api().get('/mon-materiel');
+  },
 };
