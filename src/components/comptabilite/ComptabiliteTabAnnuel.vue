@@ -46,6 +46,20 @@
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
           </template>
+          <template #foot>
+            <tr>
+              <th :colspan="3">Total</th>
+              <th>
+                {{
+                  computedData
+                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                    ?.toFixed(2)
+                }}
+                CHF
+              </th>
+              <th></th>
+            </tr>
+          </template>
         </base-table>
       </div>
     </div>

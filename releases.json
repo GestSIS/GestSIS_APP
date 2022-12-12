@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Résolution d'un problème pour la saisie des présences aux exercices depuis le module sapeur"
+        "Résolution d'un problème pour la saisie des présences aux exercices depuis le module sapeur",
+        "Ajout total pour comptabilité tableau amende, indemnités/frais annuels et autres"
       ]
     },
     {

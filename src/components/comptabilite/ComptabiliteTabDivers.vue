@@ -62,6 +62,20 @@
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
+          <template #foot>
+            <tr>
+              <th :colspan="9">Total</th>
+              <th>
+                {{
+                  computedData
+                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                    ?.toFixed(2)
+                }}
+                CHF
+              </th>
+              <th></th>
+            </tr>
+          </template>
         </base-table>
       </div>
     </div>
@@ -122,6 +136,18 @@ export default {
           key: 'sapeur',
         },
         {
+          title: 'Type',
+          key: 'ecritureType',
+        },
+        {
+          title: 'Compte',
+          key: 'compte',
+        },
+        {
+          title: 'Catégorie',
+          key: 'ecriture_categorie',
+        },
+        {
           title: 'Quantité',
           key: 'quantite',
         },
@@ -136,18 +162,6 @@ export default {
         {
           title: 'Total',
           key: 'total',
-        },
-        {
-          title: 'Type',
-          key: 'ecritureType',
-        },
-        {
-          title: 'Compte',
-          key: 'compte',
-        },
-        {
-          title: 'Catégorie',
-          key: 'ecriture_categorie',
         },
         {
           title: 'Actions',
