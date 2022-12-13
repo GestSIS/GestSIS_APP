@@ -44,7 +44,7 @@ export default {
         { title: 'Désignation', key: 'designation' },
         { title: 'Quantité', key: 'quantite' },
         { title: 'Unité', key: 'unite' },
-        { title: 'Auteur demande', key: 'auteur' },
+        { title: 'Auteur', key: 'auteur' },
         { title: 'Date demande', key: 'date_demande', type: Date },
         {
           title: 'Statut',

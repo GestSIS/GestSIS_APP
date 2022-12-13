@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Ajout de messages d'erreurs pour génération du fichier ISO20022",
-        "Correction d'un problème pour l'imputation des heures supplémentaires d'exercices"
+        "Correction d'un problème pour l'imputation des heures supplémentaires d'exercices",
+        "Nouveau module `fiche travail` pour la saisie des fiches d'heures, roulage, camion auto-école, ou encore lavage de tenues"
       ]
     },
     {
