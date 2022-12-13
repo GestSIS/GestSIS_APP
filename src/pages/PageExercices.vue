@@ -228,7 +228,7 @@
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 import store from '@/store/index';
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 
 import ExerciceDetails from '@/components/exercice/ExerciceDetails.vue';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';

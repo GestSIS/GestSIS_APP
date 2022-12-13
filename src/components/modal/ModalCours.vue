@@ -50,49 +50,34 @@
           <span class="input-group-text">jours</span>
         </div>
       </div>
-
-      <div class="mb-3">
-        <label for="cours-precedent">Cours précédent</label>
-        <select
-          id="cours-precedent"
-          v-model="activeCours.precedent_id"
-          class="form-select form-select-sm"
-        >
-          <option :value="null">-</option>
-          <option v-for="c in cours" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="grade">Grade</label>
-        <select
-          id="grade"
-          v-model="activeCours.grade_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['grade_id'] }"
-        >
-          <option :value="null">-</option>
-          <option v-for="g in grades" :key="g.id" :value="g.id">
-            {{ g.designation }}
-          </option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label for="fonction">Fonction</label>
-        <select
-          id="fonction"
-          v-model="activeCours.fonction_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['fonction_id'] }"
-        >
-          <option :value="null">-</option>
-          <option v-for="f in fonctions" :key="f.id" :value="f.id">
-            {{ f.nom }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeCours.precedent_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['precedent_id'] }"
+        :options="cours"
+        label="Cours précédent"
+        base-option="-"
+        :base-value="null"
+      />
+      <base-select
+        v-model="activeCours.grade_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['grade_id'] }"
+        :options="grades"
+        label="Graden"
+        base-option="-"
+        :base-value="null"
+      />
+      <base-select
+        v-model="activeCours.fonction_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['fonction_id'] }"
+        :options="fonctions"
+        display-key="nom"
+        label="Fonction"
+        base-option="-"
+        :base-value="null"
+      />
       <div class="mb-3">
         <label for="validite_debut">Validité début</label>
         <input

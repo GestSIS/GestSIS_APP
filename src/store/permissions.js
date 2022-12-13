@@ -25,7 +25,7 @@ export default {
     MODIFICATION: 'cours.modification',
     CONFIG: 'cours.config',
   },
-  FICHE_HEURE: {
+  FICHE_TRAVAIL: {
     LECTURE: 'fiche_travail.lecture',
     SAISIE_PERSO: 'fiche_travail.saisie_perso',
     SAISIE_COMMUNE: 'fiche_travail.saisie_commune',

@@ -3,7 +3,7 @@
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
-        exercice
+        cours
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
@@ -62,30 +62,20 @@
                     />
                   </td>
                   <td class="col-3">
-                    <select
-                      id="unite"
+                    <base-select
                       v-model="base[i].type_unite_id"
-                      class="form-select form-select-sm"
-                      :class="{
-                        'is-invalid': errors['base-unite' + i],
-                      }"
-                    >
-                      <option v-for="u in unites" :key="u.id" :value="u.id">
-                        {{ u.unite }}
-                      </option>
-                    </select>
+                      :class="{ 'is-invalid': errors['base-unite' + i] }"
+                      display-key="unite"
+                      :options="unites"
+                    />
                   </td>
                   <td class="col-4">
-                    <select
-                      id="compte"
+                    <base-select
                       v-model="base[i].compte_id"
-                      class="form-select form-select-sm"
                       :class="{ 'is-invalid': errors['base-compte' + i] }"
-                    >
-                      <option v-for="c in comptes" :key="c.id" :value="c.id">
-                        {{ compte(c) }}
-                      </option>
-                    </select>
+                      display-key="label"
+                      :options="comptes"
+                    />
                   </td>
                   <td v-if="base.length > 1" class="text-center">
                     <button
@@ -115,19 +105,13 @@
               </tbody>
             </table>
           </div>
-          <div class="mb-3">
-            <label for="categorie">Catégorie</label>
-            <select
-              id="categorie"
-              v-model="activeIndemnite.ecriture_categorie_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-            >
-              <option v-for="c in categories" :key="c.id" :value="c.id">
-                {{ c.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeTravailType.ecriture_categorie_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            :options="categories"
+            label="Catégorie comptable"
+          />
         </div>
       </div>
     </div>
@@ -226,15 +210,6 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
-    unite(id) {
-      return this.unites.find((u) => u.id == id)?.abreviation;
-    },
-    compte(compte) {
-      return `${compte?.numero} ${compte.designation}`;
-    },
-    fonction(id) {
-      return this.fonctions.find((f) => f.id === id)?.nom;
-    },
     updateTarif(index, e) {
       this.activeIndemnite.fonctions[index].tarif = e.target.value;
     },

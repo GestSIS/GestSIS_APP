@@ -64,7 +64,7 @@ export default {
         { title: 'Montant', key: 'montant' },
         { title: 'Unité', key: 'unite' },
         { title: 'Compte', key: 'compte' },
-        { title: 'Type', key: 'type' },
+        { title: 'Type', key: 'typeLabel' },
         { title: 'Catégorie', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
@@ -82,7 +82,7 @@ export default {
             categorie: state.ecritureCategorie.liste.find(
               (e) => e.id == h.ecriture_categorie_id
             )?.designation,
-            type: {
+            typeLabel: {
               0: 'Autre',
               1: 'Solde',
               2: 'Indemnité',

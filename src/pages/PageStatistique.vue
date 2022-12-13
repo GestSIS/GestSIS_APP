@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 import { mapState } from 'vuex';
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
 

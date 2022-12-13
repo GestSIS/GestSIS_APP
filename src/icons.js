@@ -47,6 +47,7 @@ import {
   faPersonCircleMinus,
   faImagePortrait,
   faInfoCircle,
+  faBusinessTime,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -67,6 +68,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faBusinessTime,
   faImagePortrait,
   faPersonCirclePlus,
   faPersonCircleMinus,

@@ -184,7 +184,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '@/store/index';
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';

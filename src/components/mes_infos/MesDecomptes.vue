@@ -48,48 +48,16 @@ export default {
   data() {
     return {
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'Décompte',
-          key: 'decompte',
-        },
-        {
-          title: 'Solde',
-          key: 'solde',
-        },
-        {
-          title: 'Indemnité',
-          key: 'indemnite',
-        },
-        {
-          title: 'Frais forfaitaires',
-          key: 'frais_forfaitaire',
-        },
-        {
-          title: 'Frais effectifs',
-          key: 'frais_effectif',
-        },
-        {
-          title: 'Retenue AVS/AC',
-          key: 'avs_ac',
-        },
-        {
-          title: 'Autre',
-          key: 'autre',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-        },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          key: 'id',
-        },
+        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'Décompte', key: 'decompte' },
+        { title: 'Solde', key: 'solde' },
+        { title: 'Indemnité', key: 'indemnite' },
+        { title: 'Frais forfaitaires', key: 'frais_forfaitaire' },
+        { title: 'Frais effectifs', key: 'frais_effectif' },
+        { title: 'Retenue AVS/AC', key: 'avs_ac' },
+        { title: 'Autre', key: 'autre' },
+        { title: 'Total', key: 'total' },
+        { title: 'Actions', slot: 'actions', key: 'id' },
       ],
     };
   },

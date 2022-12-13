@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 import { mapState } from 'vuex';
 
 export default {
@@ -72,6 +72,11 @@ export default {
           to: { name: 'param-intervention' },
           name: 'Intervention',
           permission: permissions.INTERVENTION.CONFIG,
+        },
+        {
+          to: { name: 'param-fiche-travail' },
+          name: 'Fiche de travail',
+          permission: permissions.FICHE_TRAVAIL.CONFIG,
         },
         {
           to: { name: 'param-sms' },

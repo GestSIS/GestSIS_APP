@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Public from '@/pages/PagePublic.vue';
-import Home from '@/pages/PageHome.vue';
-import store from '@/store/index';
-import permissions from '@/store/permissions.js';
+import Public from '../pages/PagePublic.vue';
+import Home from '../pages/PageHome.vue';
+import store from '../store/index';
+import permissions from '../store/permissions.js';
 
-import { TokenService } from '@/services/StorageService.js';
+import { TokenService } from '../services/StorageService.js';
 
 import NProgress from 'nprogress';
 
@@ -180,7 +180,8 @@ const router = createRouter({
           path: 'controles-medicaux',
           name: 'sapeur-controles-medicaux',
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
-          component: () => import('../components/sapeur/SapeurControlesMedicaux.vue'),
+          component: () =>
+            import('../components/sapeur/SapeurControlesMedicaux.vue'),
         },
         {
           path: 'fonctions',
@@ -257,6 +258,12 @@ const router = createRouter({
       name: 'cours',
       beforeEnter: permissionGuard(permissions.COURS.LECTURE),
       component: () => import('@/pages/PageCours.vue'),
+    },
+    {
+      path: '/fiche-travail',
+      name: 'fiche-travail',
+      beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.LECTURE),
+      component: () => import('@/pages/PageTravaux.vue'),
     },
     {
       path: '/organisation',
@@ -482,6 +489,13 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
           component: () =>
             import('@/components/parametres/ParametreTabIntervention.vue'),
+        },
+        {
+          path: 'fiche-travail',
+          name: 'param-fiche-travail',
+          beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.CONFIG),
+          component: () =>
+            import('@/components/parametres/ParametreTabFicheTravail.vue'),
         },
         {
           path: 'sms',

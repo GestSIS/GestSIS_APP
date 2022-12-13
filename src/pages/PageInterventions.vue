@@ -199,7 +199,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '../store/permissions.js';
 import store from '@/store/index';
 
 import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';

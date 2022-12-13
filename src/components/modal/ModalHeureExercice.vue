@@ -2,7 +2,8 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice
+        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une heure additionelle
+        pour exercice
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
