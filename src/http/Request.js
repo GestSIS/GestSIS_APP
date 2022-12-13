@@ -54,7 +54,9 @@ const request = {
         config.params = {
           ...options,
           url: encodeURIComponent(
-            API_URL + config.url + '?' +
+            API_URL +
+            config.url +
+            '?' +
             Object.entries(config.params ?? {})
               .map(([key, value]) => key + '=' + valueFormatter(value))
               .join('&')
@@ -107,6 +109,14 @@ const request = {
 
     api.interceptors.response.use(
       function (response) {
+        const error =
+          JSON.parse(
+            String.fromCharCode.apply(null, new Uint8Array(response.data))
+          ) ?? null;
+        if (error?.error) {
+          throw error.error;
+        }
+        console.log();
         return response;
       },
       function (error) {
