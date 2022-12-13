@@ -19,4 +19,7 @@ export default {
   getMonMateriel() {
     return Api.api().get('/mon-materiel');
   },
+  getMesTravaux() {
+    return Api.api().get('/mes-travaux');
+  },
 };

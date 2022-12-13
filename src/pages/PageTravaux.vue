@@ -172,15 +172,13 @@ export default {
       filters: {},
       selectedId: null,
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          columnClass: 'align-middle',
-          type: Date,
-        },
+        { title: 'Date', key: 'date', type: Date },
         { title: 'Sapeur', key: 'sapeur' },
         { title: 'Travail', key: 'travail_type' },
         { title: 'Désignation', key: 'designation' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Unité', key: 'unite' },
+        { title: 'Auteur', key: 'auteur' },
         { title: 'Date demande', key: 'date_demande', type: Date },
         {
           title: 'Statut',
@@ -190,10 +188,6 @@ export default {
           },
         },
         { title: 'Justification', key: 'justification' },
-        { title: 'Auteur', key: 'auteur' },
-        { title: 'Quantité', key: 'quantite' },
-        { title: 'Unité', key: 'unite' },
-        { title: 'Actions', slot: 'actions' },
       ],
     };
   },

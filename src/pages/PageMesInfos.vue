@@ -53,6 +53,13 @@
             class="nav-item nav-link"
             role="tab"
             active-class="active"
+            :to="{ name: 'mes-travaux' }"
+            >Mes travaux</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
             :to="{ name: 'mes-decomptes' }"
             >Mes décomptes</router-link
           >

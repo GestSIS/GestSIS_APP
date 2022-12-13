@@ -5,6 +5,7 @@ export default {
   state: {
     infos: {},
     materiels: [],
+    travaux: [],
     exercices: [],
     interventions: [],
     paiements: [],
@@ -47,6 +48,11 @@ export default {
       return MesInfosService.getMonMateriel().then((data) =>
         commit(types.UPDATE_MON_MATERIEL, data)
       );
+    },
+    fetchMesTravaux({ commit, getters }) {
+      return MesInfosService.getMesTravaux(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_MES_TRAVAUX, data));
     },
     fetchMesExercices({ commit, getters }) {
       return MesInfosService.getMesExercices(

@@ -138,6 +138,13 @@ const router = createRouter({
           props: true,
         },
         {
+          path: 'travaux',
+          name: 'mes-travaux',
+          beforeEnter: sapeurGuard(),
+          component: () => import('@/components/mes_infos/MesTravaux.vue'),
+          props: true,
+        },
+        {
           path: 'decomptes',
           name: 'mes-decomptes',
           beforeEnter: sapeurGuard(),
