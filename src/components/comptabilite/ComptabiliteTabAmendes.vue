@@ -1,13 +1,37 @@
 <template>
   <div class="row">
+    <div class="col-12 col-md-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-primary" @click="generer">
+            Générer les amendes
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <base-select
+            display-key="nom_prenom"
+            base-option="&lt;Sapeur&gt;"
+            :options="filteredSapeurs"
+            @update:model-value="(value) => onFilter('id', value)"
+          />
+        </form>
+      </div>
+    </div>
     <div class="col-md-12">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
         <div class="card-header d-flex justify-content-between">
           <h3>Amendes</h3>
-          <button class="btn btn-primary" @click="generer">
-            Générer les amendes
-          </button>
         </div>
         <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
@@ -23,22 +47,21 @@
           :detail-row-options="detailRowOptions"
           :detail-row-component="detailRowComponent"
           detail-row-class="m-td-0"
-          :data="filteredAmendes"
+          :data="filteredData"
           :selectable="true"
           @selected="selected"
         >
           <template #foot>
             <tr>
-              <th :colspan="3">Total</th>
+              <th :colspan="filteredData.length ? 3 : 2">Total</th>
               <th>
                 {{
-                  filteredAmendes
+                  filteredData
                     .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
                     ?.toFixed(2)
                 }}
                 CHF
               </th>
-              <th></th>
             </tr>
           </template>
         </base-table>
@@ -79,38 +102,16 @@ export default {
       filters: {},
       detailRowOptions: {
         fields: [
-          {
-            title: 'Date',
-            key: 'date',
-            type: Date,
-          },
-          {
-            title: 'Exercice',
-            key: 'designation',
-          },
-          {
-            title: 'Excuse',
-            key: 'complement',
-          },
-          {
-            title: 'Total',
-            key: 'total',
-          },
+          { title: 'Date', key: 'date', type: Date },
+          { title: 'Exercice', key: 'designation' },
+          { title: 'Excuse', key: 'complement' },
+          { title: 'Total', key: 'total' },
         ],
       },
       fields: [
-        {
-          title: 'Sapeur',
-          key: 'sapeur',
-        },
-        {
-          title: 'Nombre',
-          key: 'nb',
-        },
-        {
-          title: 'Montant',
-          key: 'total',
-        },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Nombre', key: 'nb' },
+        { title: 'Montant', key: 'total' },
       ],
     };
   },
@@ -124,7 +125,7 @@ export default {
       amendes: (state) => state.imputation.ecritures.amendes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    filteredAmendes() {
+    computedData() {
       const amendes = this.amendes.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val)
@@ -153,6 +154,25 @@ export default {
         total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
         getData: () => Promise.resolve(s.amendes),
       }));
+    },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredSapeurs() {
+      const ids = new Set(this.amendes.map((i) => i.sapeur_id));
+      return this.sapeurs.filter((t) => ids.has(t.id));
     },
   },
   watch: {
@@ -189,9 +209,6 @@ export default {
           )
         );
     },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
-    },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {
         return;
@@ -203,6 +220,9 @@ export default {
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

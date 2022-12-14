@@ -18,6 +18,37 @@
         </div>
       </div>
     </div>
+    <div class="col-12 col-md-8 col-xl-6">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <div class="row">
+            <base-select
+              class="col-md-6"
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => onFilter('sapeur_id', value)"
+            />
+            <base-select
+              class="col-md-6"
+              base-option="&lt;Type&gt;"
+              :options="[
+                { id: 0, designation: 'Autre' },
+                { id: 1, designation: 'Solde' },
+                { id: 2, designation: 'Indemnité' },
+                { id: 3, designation: 'Frais forfaitaire' },
+                { id: 4, designation: 'Frais effectif' },
+                { id: 5, designation: 'Charges AVS/AC' },
+              ]"
+              @update:model-value="(value) => onFilter('type', value)"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="col-12">
       <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
@@ -51,7 +82,7 @@
           :fields="fields"
           no-data="Aucune écriture à afficher"
           :selectable="true"
-          :data="computedData"
+          :data="filteredData"
           @selected="selected"
         >
           <template #foot>
@@ -59,7 +90,7 @@
               <th colspan="4">Total</th>
               <th>
                 {{
-                  computedData
+                  filteredData
                     .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
                     ?.toFixed(2)
                 }}
@@ -102,6 +133,7 @@ export default {
     return {
       dropdown: false,
       loading: true,
+      filters: {},
       selectedId: null,
       fields: [
         {
@@ -157,6 +189,25 @@ export default {
         ...e,
         sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
       }));
+    },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredSapeurs() {
+      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
+      return this.sapeurs.filter((t) => ids.has(t.id));
     },
   },
   watch: {
@@ -219,6 +270,9 @@ export default {
         this.loading = false;
         this.selectedId = null;
       });
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

@@ -24,6 +24,21 @@
         </div>
       </div>
     </div>
+    <div class="col-12 col-md-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <base-select
+            display-key="nom_prenom"
+            base-option="&lt;Sapeur&gt;"
+            :options="filteredSapeurs"
+            @update:model-value="(value) => onFilter('id', value)"
+          />
+        </form>
+      </div>
+    </div>
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
@@ -46,7 +61,7 @@
           :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
           no-data="Aucun sapeur à afficher"
-          :data="computedData"
+          :data="filteredData"
           @selected="select"
         >
           <template #actions="props">
@@ -123,17 +138,11 @@ export default {
       loading: true,
       ecritures: [],
       selected: null,
+      filters: {},
       detailRowOptions: {
         fields: [
-          {
-            title: 'Date',
-            key: 'date',
-            type: Date,
-          },
-          {
-            title: 'Ecriture',
-            key: 'designation',
-          },
+          { title: 'Date', key: 'date', type: Date },
+          { title: 'Ecriture', key: 'designation' },
           {
             title: 'Type',
             key: 'type',
@@ -184,16 +193,8 @@ export default {
         ],
       },
       fields: [
-        {
-          title: 'Sapeur',
-          key: 'nom_prenom',
-          sortField: 'nom_prenom',
-        },
-        {
-          title: 'Fonction',
-          key: 'fonction',
-          sortField: 'fonction',
-        },
+        { title: 'Sapeur', key: 'nom_prenom', sortField: 'nom_prenom' },
+        { title: 'Fonction', key: 'fonction', sortField: 'fonction' },
         {
           title: 'Total',
           key: 'total',
@@ -257,6 +258,25 @@ export default {
           };
         });
     },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredSapeurs() {
+      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
+      return this.sapeurs.filter((t) => ids.has(t.id));
+    },
   },
   watch: {
     activeExerciceComptableId() {
@@ -292,6 +312,9 @@ export default {
     },
     select(id) {
       this.selected = id;
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

@@ -94,7 +94,7 @@
           :detail-row-component="detailRowComponent"
           :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
-          :data="filteredInterventions"
+          :data="filteredData"
           :selectable="true"
           @selected="selected"
         >
@@ -346,6 +346,21 @@ export default {
         getData: () => ImputationService.getEcrituresForInterventions(i.id),
       }));
     },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
     filteredTypesIntervention() {
       const ids = new Set(
         this.interventions.map((i) => i.type_intervention_id)
@@ -359,30 +374,6 @@ export default {
     filteredStatFederal() {
       const ids = new Set(this.interventions.map((i) => i.stat_federal_id));
       return this.statsFederal.filter((t) => ids.has(t.id));
-    },
-    filteredInterventions() {
-      const self = this;
-      return this.computedData
-        .filter(
-          Object.entries(this.filters)
-            .filter(([, val]) => val)
-            .map(
-              ([key, value]) =>
-                (x) =>
-                  x[key] === value
-            )
-            .reduce(
-              (f, g) => (x) => f(x) && g(x),
-              () => true
-            )
-        )
-        .map((i) => {
-          if (i.id == self.selectedItemId) {
-            return { ...i, 'row-class': 'bg-primary' };
-          } else {
-            return i;
-          }
-        });
     },
   },
   watch: {

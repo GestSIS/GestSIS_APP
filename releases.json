@@ -1,7 +1,13 @@
 {
   "releases": [
     {
-      "date": "12.12.2022",
+      "date": "14.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Homogénéisation de l'interface du module `Comptabilité`"]
+    },
+    {
+      "date": "13.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -11,7 +17,7 @@
       ]
     },
     {
-      "date": "11.12.2022",
+      "date": "12.12.2022",
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
@@ -21,7 +27,7 @@
       ]
     },
     {
-      "date": "10.12.2022",
+      "date": "11.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -31,7 +37,7 @@
       ]
     },
     {
-      "date": "09.12.2022",
+      "date": "10.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [

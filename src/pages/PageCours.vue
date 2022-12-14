@@ -25,26 +25,21 @@
             <div class="row">
               <base-select
                 class="col-md-4"
-                :options="filteredCoursTypes"
-                display-key="designation"
-                value-key="id"
                 base-option="<Cours>"
+                :options="filteredCoursTypes"
                 @update:model-value="(value) => onFilter('cours_id', value)"
               />
               <base-select
                 class="col-md-4"
-                :options="filteredSapeurs"
                 display-key="nom_prenom"
-                value-key="id"
                 base-option="<Sapeur>"
+                :options="filteredSapeurs"
                 @update:model-value="(value) => onFilter('sapeur_id', value)"
               />
               <base-select
                 class="col-md-4"
-                :options="filteredLocalites"
-                display-key="designation"
-                value-key="id"
                 base-option="<Localité>"
+                :options="filteredLocalites"
                 @update:model-value="(value) => onFilter('localite_id', value)"
               />
             </div>

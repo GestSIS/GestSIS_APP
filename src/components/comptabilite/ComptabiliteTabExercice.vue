@@ -93,7 +93,7 @@
           :detail-row-component="detailRowComponent"
           :detail-row-options="detailRowOptions"
           detail-row-class="m-td-0"
-          :data="filteredExercices"
+          :data="filteredData"
           :selectable="true"
           @selected="selected"
         >
@@ -314,7 +314,7 @@ export default {
         };
       });
     },
-    filteredExercices() {
+    filteredData() {
       return this.computedData.filter(
         Object.entries(this.filters)
           .filter(([, val]) => val >= 0)

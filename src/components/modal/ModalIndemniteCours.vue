@@ -106,7 +106,7 @@
             </table>
           </div>
           <base-select
-            v-model="activeTravailType.ecriture_categorie_id"
+            v-model="activeIndemnite.ecriture_categorie_id"
             class="mb-3"
             :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             :options="categories"

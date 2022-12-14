@@ -93,7 +93,7 @@
         </div>
         <base-table
           :fields="fields"
-          :data="computedDecomptes"
+          :data="filteredData"
           :selectable="true"
           :detail-row-column="true"
           :detail-row-component="detailRowComponent"
@@ -153,46 +153,27 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       dropdown: false,
       loading: true,
+      filters: {},
       selectedId: 0,
       detailRowOptions: {
         fields: [
-          {
-            title: 'Designation',
-            key: 'designation',
-          },
-          {
-            title: 'Date',
-            key: 'date',
-            type: Date,
-          },
+          { title: 'Designation', key: 'designation' },
+          { title: 'Date', key: 'date', type: Date },
           {
             title: 'Sapeur',
             key: 'sapeur_id',
-            formatter: (sapeurId) => {
-              return svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom;
-            },
+            formatter: (sapeurId) =>
+              svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom,
           },
-          {
-            title: 'Quantité',
-            key: 'quantite',
-          },
+          { title: 'Quantité', key: 'quantite' },
           {
             title: 'Unité',
             key: 'type_unite_id',
             formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
           },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-          },
-          {
-            title: 'Tarif min',
-            key: 'tarif_min',
-          },
-          {
-            title: 'Pour',
-            key: 'tarif_min_pour',
-          },
+          { title: 'Tarif', key: 'tarif' },
+          { title: 'Tarif min', key: 'tarif_min' },
+          { title: 'Pour', key: 'tarif_min_pour' },
           {
             title: 'Type',
             key: 'type',
@@ -208,47 +189,18 @@ export default {
               return mapping[type] || '';
             },
           },
-          {
-            title: 'Total',
-            key: 'total',
-          },
+          { title: 'Total', key: 'total' },
         ],
       },
       fields: [
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'A payer',
-          key: 'a_payer_total',
-        },
-        {
-          title: 'A facturer',
-          key: 'a_facturer_total',
-        },
-        {
-          title: 'Déductions',
-          key: 'deduction',
-          type: Boolean,
-        },
-        {
-          title: 'Charges AVS',
-          key: 'avs_total',
-        },
-        {
-          title: 'Charges AC',
-          key: 'ac_total',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-        },
+        { title: 'Designation', key: 'designation' },
+        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'A payer', key: 'a_payer_total' },
+        { title: 'A facturer', key: 'a_facturer_total' },
+        { title: 'Déductions', key: 'deduction', type: Boolean },
+        { title: 'Charges AVS', key: 'avs_total' },
+        { title: 'Charges AC', key: 'ac_total' },
+        { title: 'Total', key: 'total' },
         {
           title: 'Actions',
           titleClass: 'text-center',
@@ -267,11 +219,26 @@ export default {
       decomptes: (state) => state.decompte.liste,
       unites: (state) => state.unite.liste,
     }),
-    computedDecomptes() {
+    computedData() {
       return this.decomptes.map((d) => ({
         ...d,
         getData: () => DecompteService.getEcritures(d.id),
       }));
+    },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
     },
   },
   watch: {
@@ -393,6 +360,9 @@ export default {
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

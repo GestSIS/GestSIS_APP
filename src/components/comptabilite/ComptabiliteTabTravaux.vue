@@ -10,16 +10,16 @@
             v-if="!selectedItem || !selectedItem?.ecritures?.length"
             class="btn btn-outline-primary"
             :disabled="!selectedItem"
-            @click="imputer(selectedItem.id)"
+            @click="imputer()"
           >
-            Imputer
+            Tout imputer
           </button>
           <button
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
-            @click="annulerImputer(selectedItem.id)"
+            @click="annulerImputer()"
           >
-            Annuler l'imputation
+            Annuler les imputations
           </button>
         </div>
       </div>
@@ -33,26 +33,31 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
-              base-option="&lt;Cours&gt;"
-              :options="filteredDataTypes"
-              @update:model-value="(value) => onFilter('cours_id', value)"
-            />
-            <base-select
-              class="col-md-4"
               display-key="nom_prenom"
               base-option="&lt;Sapeur&gt;"
               :options="filteredSapeurs"
               @update:model-value="(value) => onFilter('sapeur_id', value)"
             />
             <base-select
-              class="col-md-4"
-              value-key="id"
+              class="mb-1 col-md-4"
+              :options="filteredTravailTypes"
               display-key="designation"
-              base-option="&lt;Localité&gt;"
-              :options="filteredLocalites"
-              @update:model-value="(value) => onFilter('localite_id', value)"
+              base-option="<Type>"
+              @update:model-value="
+                (value) => onFilter('travail_type_id', value)
+              "
+            />
+            <base-select
+              class="col-md-4"
+              :options="[
+                { id: [-1], label: 'Refusé' },
+                { id: 0, label: 'En attente' },
+                { id: 1, label: 'Accepté' },
+              ]"
+              display-key="label"
+              value-key="id"
+              base-option="<Statut>"
+              @update:model-value="(value) => onFilter('statut', value)"
             />
           </div>
         </form>
@@ -70,14 +75,10 @@
         </div>
         <base-table
           v-show="!loading"
+          :class="{ 'd-none': loading }"
           :fields="fields"
           :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data="Aucune écriture à afficher"
-          :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => !r?.ecritures?.length"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
+          no-data="Aucun travail à afficher"
           :data="filteredData"
           :selectable="true"
           @selected="selected"
@@ -94,8 +95,8 @@
             <button
               v-if="!props.rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
-              title="Imputer cours"
-              @click="imputer(props.rowData.id, props.rowData.designation)"
+              title="Imputer travail"
+              @click="imputer(props.rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -150,87 +151,41 @@ export default {
     },
   },
   data() {
-    let svm = this;
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       filters: {},
       selectedId: null,
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Sapeur',
-            key: 'sapeur_id',
-            formatter: (sapeurId) =>
-              svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
-          },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantite',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Unite',
-            key: 'type_unite_id',
-            formatter: (type_unite_id) =>
-              svm.unites.find((u) => u.id == type_unite_id)?.unite,
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            formatter: (total, ecriture) =>
-              ecriture.module == 5 ? (-total).toFixed(2) : total,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
       fields: [
         { title: 'Date', key: 'date', type: Date },
-        { title: 'Cours', key: 'designation' },
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Durée [jour]', key: 'duree' },
-        { title: 'Localité', key: 'localite' },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Travail', key: 'travail_type' },
+        { title: 'Désignation', key: 'designation' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Unité', key: 'unite' },
+        { title: 'Auteur', key: 'auteur' },
+        { title: 'Date demande', key: 'date_demande', type: Date },
+        {
+          title: 'Statut',
+          key: 'statut',
+          formatter(statut) {
+            return { [-1]: 'Refusé', 0: 'En attente', 1: 'Accepté' }[statut];
+          },
+        },
+        { title: 'Justification', key: 'justification' },
         { title: 'Actions', slot: 'actions' },
       ],
     };
   },
   computed: {
     ...mapState({
-      cours: (state) => state.cours.liste,
-      unites: (state) => state.unite.liste,
-      coursSapeurs: (state) =>
-        state.coursSapeur.liste.map((e) => ({ ...e.cours, ...e })),
-      sapeurs: (state) => state.sapeur.liste,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      travaux: (state) => state.travail.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      travailTypes: (state) => state.travailType.liste,
     }),
     computedData() {
-      return this.coursSapeurs.map((e) => ({
+      return this.travaux.map((e) => ({
         ...e,
         categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
           ?.designation,
@@ -255,20 +210,16 @@ export default {
           )
       );
     },
-    filteredLocalites() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.localite_id));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
     filteredSapeurs() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.sapeur_id));
+      const ids = new Set(this.travaux.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
     },
-    filteredDataTypes() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.cours_id));
-      return this.cours.filter((t) => ids.has(t.id));
+    filteredTravailTypes() {
+      const ids = new Set(this.travaux.map((i) => i.travail_type_id));
+      return this.travailTypes.filter((t) => ids.has(t.id));
     },
     selectedItem() {
-      return this.cours.find((c) => c.id == this.selectedId);
+      return this.travaux.find((c) => c.id == this.selectedId);
     },
   },
   watch: {
@@ -284,22 +235,24 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     init() {
-      store.dispatch('fetchCoursSapeurs').then(() => {
+      store.dispatch('fetchTravaux').then(() => {
         this.loading = false;
       });
     },
     selected(item) {
       this.selectedId = item?.id;
     },
-    imputer(courSapeurId) {
+    imputer(travailId) {
+      const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
       this.SHOW_MODAL({
-        component: 'ModalImputerCours',
-        data: { id: courSapeurId },
+        component: 'ModalImputerTravail',
+        data: { ids },
         size: 2,
         callback: () => this.init(),
       });
     },
-    annulerImputer(courSapeurId) {
+    annulerImputer(travailId) {
+      const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -310,18 +263,9 @@ export default {
         callback: (confirmed) => {
           if (confirmed) {
             this.$store
-              .dispatch('annulerImputationCours', courSapeurId)
-              .then(({ statut }) => {
-                this.coursSapeurs = [
-                  ...this.coursSapeurs.filter((e) => e.id != courSapeurId),
-                  {
-                    ...this.coursSapeurs.find((e) => e.id == courSapeurId),
-                    statut: statut,
-                  },
-                ].sort((a, b) => a.date.localeCompare(b.date));
-                this.selectedItem = this.coursSapeurs.find(
-                  (e) => e.id == courSapeurId
-                );
+              .dispatch('annulerImputationTravail', { ids })
+              .then((res) => {
+                this.$awn.success(res?.message ?? 'Travaux imputé avec succès');
               })
               .catch((err) => {
                 this.$awn.alert(

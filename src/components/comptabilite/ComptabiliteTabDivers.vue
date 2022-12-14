@@ -26,6 +26,51 @@
         </div>
       </div>
     </div>
+    <div class="col-12 col-md-8 col-xl-9">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Filtres</h3>
+        </div>
+        <form class="card-body">
+          <div class="row">
+            <base-select
+              class="col-md-4"
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => onFilter('sapeur_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              base-option="&lt;Type&gt;"
+              :options="[
+                { id: 0, designation: 'Autre' },
+                { id: 1, designation: 'Solde' },
+                { id: 2, designation: 'Indemnité' },
+                { id: 3, designation: 'Frais forfaitaire' },
+                { id: 4, designation: 'Frais effectif' },
+                { id: 5, designation: 'Charges AVS/AC' },
+              ]"
+              @update:model-value="(value) => onFilter('type', value)"
+            />
+            <base-select
+              class="col-md-4"
+              base-option="&lt;Compte&gt;"
+              :options="filteredComptes"
+              @update:model-value="(value) => onFilter('compte_id', value)"
+            />
+            <base-select
+              class="col-md-4"
+              base-option="&lt;Catégorie&gt;"
+              :options="filteredCategories"
+              @update:model-value="
+                (value) => onFilter('ecriture_categorie_id', value)
+              "
+            />
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="col-12">
       <!-- /.card-header -->
       <div class="card card-primary card-outline mb-5">
@@ -42,7 +87,7 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucune écriture à afficher"
-          :data="computedData"
+          :data="filteredData"
           :selectable="true"
           @selected="selected"
         >
@@ -122,47 +167,16 @@ export default {
       selectedItem: null,
       filters: {},
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
-        {
-          title: 'Sapeur',
-          key: 'sapeur',
-        },
-        {
-          title: 'Type',
-          key: 'ecritureType',
-        },
-        {
-          title: 'Compte',
-          key: 'compte',
-        },
-        {
-          title: 'Catégorie',
-          key: 'ecriture_categorie',
-        },
-        {
-          title: 'Quantité',
-          key: 'quantite',
-        },
-        {
-          title: 'Unité',
-          key: 'unite',
-        },
-        {
-          title: 'Tarif',
-          key: 'tarif',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-        },
+        { title: 'Date', key: 'date', type: Date },
+        { title: 'Designation', key: 'designation' },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Type', key: 'ecritureType' },
+        { title: 'Compte', key: 'compte' },
+        { title: 'Catégorie', key: 'ecriture_categorie' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Unité', key: 'unite' },
+        { title: 'Tarif', key: 'tarif' },
+        { title: 'Total', key: 'total' },
         {
           title: 'Actions',
           slot: 'actions',
@@ -195,6 +209,33 @@ export default {
         compte: formatCompte(svm.comptes.find((c) => c.id == e.compte_id)),
         ecritureType: svm.formatType(e.type),
       }));
+    },
+    filteredData() {
+      return this.computedData.filter(
+        Object.entries(this.filters)
+          .filter(([, val]) => val >= 0)
+          .map(
+            ([key, value]) =>
+              (x) =>
+                x[key] === value
+          )
+          .reduce(
+            (f, g) => (x) => f(x) && g(x),
+            () => true
+          )
+      );
+    },
+    filteredSapeurs() {
+      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
+      return this.sapeurs.filter((t) => ids.has(t.id));
+    },
+    filteredComptes() {
+      const ids = new Set(this.ecritures.map((i) => i.compte_id));
+      return this.comptes.filter((t) => ids.has(t.id));
+    },
+    filteredCategories() {
+      const ids = new Set(this.ecritures.map((i) => i.ecriture_categorie_id));
+      return this.categories.filter((t) => ids.has(t.id));
     },
   },
   watch: {
@@ -232,9 +273,6 @@ export default {
     selected(item) {
       this.selectedItem = item;
     },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
-    },
     formatType(type) {
       const mapping = {
         0: 'Autre',
@@ -257,6 +295,9 @@ export default {
         3: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
+    },
+    onFilter(key, value) {
+      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

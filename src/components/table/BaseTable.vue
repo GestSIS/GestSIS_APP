@@ -102,7 +102,9 @@
           </td>
         </tr>
         <tr
-          v-if="detailsRowVisibility[r[selectKey]]"
+          v-if="
+            detailsRowVisibility[r[selectKey]] && !detailRowColumnHideButton(r)
+          "
           :key="'detail-' + r[selectKey]"
           :class="r.rowClass"
         >
