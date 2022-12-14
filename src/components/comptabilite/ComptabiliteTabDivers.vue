@@ -112,7 +112,7 @@
               <th :colspan="9">Total</th>
               <th>
                 {{
-                  computedData
+                  filteredData
                     .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
                     ?.toFixed(2)
                 }}
