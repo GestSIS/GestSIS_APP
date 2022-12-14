@@ -109,10 +109,15 @@ const request = {
 
     api.interceptors.response.use(
       function (response) {
-        const error =
-          JSON.parse(
-            String.fromCharCode.apply(null, new Uint8Array(response.data))
-          ) ?? null;
+        let error = null;
+        try {
+          error =
+            JSON.parse(
+              String.fromCharCode.apply(null, new Uint8Array(response.data))
+            ) ?? null;
+        } catch (e) {
+          error = null;
+        }
         if (error?.error) {
           throw error.error;
         }
