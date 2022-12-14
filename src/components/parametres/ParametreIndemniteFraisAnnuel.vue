@@ -22,8 +22,8 @@
             <th></th>
             <th
               v-for="type in typesAnnuel"
-              class="text-center"
               :key="type.id + '-' + type.type"
+              class="text-center"
             >
               {{ type.designation }}
               <button

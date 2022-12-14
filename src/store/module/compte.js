@@ -29,10 +29,11 @@ export default {
         ...state.liste.map((m) =>
           m.id === compte.id
             ? {
-              ...compte,
-              label: `${compte.numero} ${compte.designation}`,
-            }
-            : m),
+                ...compte,
+                label: `${compte.numero} ${compte.designation}`,
+              }
+            : m
+        ),
       ];
     },
     [types.REMOVE_COMPTE](state, compteId) {

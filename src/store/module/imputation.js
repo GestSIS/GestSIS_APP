@@ -263,7 +263,8 @@ export default {
             ecritures: data,
           });
           return data;
-        });
+        }
+      );
     },
     annulerImputationCours({ commit }, coursSapeurId) {
       return ImputationService.annulerImputationCours(coursSapeurId).then(

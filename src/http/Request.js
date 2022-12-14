@@ -55,17 +55,17 @@ const request = {
           ...options,
           url: encodeURIComponent(
             API_URL +
-            config.url +
-            '?' +
-            Object.entries(config.params ?? {})
-              .map(([key, value]) => key + '=' + valueFormatter(value))
-              .join('&')
+              config.url +
+              '?' +
+              Object.entries(config.params ?? {})
+                .map(([key, value]) => key + '=' + valueFormatter(value))
+                .join('&')
           ),
         };
         config.url = '/print';
         return config;
       },
-      () => { }
+      () => {}
     );
 
     api.interceptors.response.use(

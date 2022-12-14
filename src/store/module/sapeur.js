@@ -61,14 +61,15 @@ export default {
       state.liste.map((s) =>
         s.id == payload.id
           ? {
-            ...s,
-            fonction_id: payload.fonction_id,
-            nom: payload.nom,
-            prenom: payload.prenom,
-            nom_prenom: `${payload.nom} ${payload.prenom}`,
-            actif: payload.actif,
-            date_naissance: payload.date_naissance,
-          } : s
+              ...s,
+              fonction_id: payload.fonction_id,
+              nom: payload.nom,
+              prenom: payload.prenom,
+              nom_prenom: `${payload.nom} ${payload.prenom}`,
+              actif: payload.actif,
+              date_naissance: payload.date_naissance,
+            }
+          : s
       );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {
