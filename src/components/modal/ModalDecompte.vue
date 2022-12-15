@@ -14,29 +14,19 @@
           v-model="params.designation"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['designation'] }"
+          :class="{ 'is-invalid': errors['designation'] }"
           name="designation"
           :disabled="params.exercice_id || params.sapeur_id"
         />
       </div>
-      <div v-if="!params.exercice_id" class="mb-3">
-        <label for="m-exercice-comptable-id">Exercice comptable id</label>
-        <select
-          id="m-exercice-comptable-id"
-          v-model="params.exercice_comptable_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errorsData['exercice_comptable_id'] }"
-          name="exercice_comptable_id"
-        >
-          <option
-            v-for="exercice in listeExerciceComptable"
-            :key="exercice.id"
-            :value="exercice.id"
-          >
-            {{ exercice.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-if="!params.exercice_id"
+        v-model="params.exercice_comptable_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['exercice_comptable_id'] }"
+        label="Exercice comptable id"
+        :options="listeExerciceComptable"
+      />
       <div class="mb-3">
         <label for="m-date">Date</label>
         <input
@@ -44,7 +34,7 @@
           v-model="params.date"
           type="date"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['date'] }"
+          :class="{ 'is-invalid': errors['date'] }"
           name="date"
         />
       </div>
@@ -157,7 +147,7 @@ export default {
   },
   data() {
     return {
-      errorsData: {},
+      errors: {},
       mode: 'genererDecompte',
       params: {
         date: new Date().toJSON().slice(0, 10),
@@ -212,7 +202,7 @@ export default {
           });
         })
         .catch((errors) => {
-          this.errorsData = errors;
+          this.errors = errors;
           this.$awn.alert(
             errors?.message ?? 'Erreur lors de la création du décompte'
           );

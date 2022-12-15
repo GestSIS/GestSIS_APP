@@ -17,20 +17,14 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="categorie">Catégorie parente</label>
-        <select
-          id="categorie"
-          v-model="activeItem.pere_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['pere_id'] }"
-        >
-          <option :value="null">-</option>
-          <option v-for="c in computedCategories" :key="c.id" :value="c.id">
-            {{ c.fullDesignation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeItem.pere_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['pere_id'] }"
+        label="Catégorie parente"
+        display-key="fullDesignation"
+        :options="computedCategories"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

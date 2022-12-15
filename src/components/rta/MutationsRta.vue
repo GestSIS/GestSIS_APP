@@ -13,7 +13,7 @@
             v-model="username"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData.username }"
+            :class="{ 'is-invalid': errors.username }"
             name="username"
             placeholder="Utilisateur"
           />
@@ -24,7 +24,7 @@
             v-model="password"
             type="password"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData.password }"
+            :class="{ 'is-invalid': errors.password }"
             name="password"
             placeholder="Mot de passe"
           />
@@ -49,7 +49,7 @@
             type="text"
             rows="2"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['communication'] }"
+            :class="{ 'is-invalid': errors['communication'] }"
             name="communication"
             placeholder="Communication"
           />
@@ -192,7 +192,7 @@ export default {
       username: '',
       password: '',
       communication: '',
-      errorsData: {},
+      errors: {},
     };
   },
   computed: {
@@ -388,18 +388,18 @@ export default {
   methods: {
     mutate() {
       if (!this.password) {
-        this.errorsData.password = 'Mot de passe invalide';
+        this.errors.password = 'Mot de passe invalide';
       } else {
-        delete this.errorsData.password;
+        delete this.errors.password;
       }
       if (!this.username) {
-        this.errorsData.username = "Nom d'utilisateur invalide";
+        this.errors.username = "Nom d'utilisateur invalide";
       } else {
-        delete this.errorsData.username;
+        delete this.errors.username;
       }
-      this.errorsData = { ...this.errorsData };
+      this.errors = { ...this.errors };
 
-      if (this.errorsData.username || this.errorsData.password) {
+      if (this.errors.username || this.errors.password) {
         return;
       }
 
@@ -439,7 +439,7 @@ export default {
           this.$awn.success('Mutation transmise avec succès');
         })
         .catch((error) => {
-          this.errorsData = { ...error };
+          this.errors = { ...error };
           this.$awn.alert(error.message);
         });
     },

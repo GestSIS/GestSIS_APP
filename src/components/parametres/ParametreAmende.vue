@@ -9,32 +9,20 @@
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="mb-3 col-6">
-          <label for="compte_id">Compte</label>
-          <select
-            id="compte_id"
-            v-model="params.compte_id"
-            class="form-select form-select-sm"
-            :class="{ 'is-invalid': errors['compte_id_id'] }"
-          >
-            <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-              {{ compte(c) }}
-            </option>
-          </select>
-        </div>
-        <div class="mb-3 col-6">
-          <label for="ecriture_categorie_id">Catégorie d'écriture</label>
-          <select
-            id="ecriture_categorie_id"
-            v-model="params.ecriture_categorie_id"
-            class="form-select form-select-sm"
-            :class="{ 'is-invalid': errors['ecriture_categorie_id_id'] }"
-          >
-            <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-              {{ c.designation }}
-            </option>
-          </select>
-        </div>
+        <base-select
+          v-model="params.compte_id"
+          class="mb-3 col-6"
+          :class="{ 'is-invalid': errors['compte_id'] }"
+          label="Compte"
+          :options="listeCompte.map((c) => ({ ...c, designation: compte(c) }))"
+        />
+        <base-select
+          v-model="params.ecriture_categorie_id"
+          class="mb-3 col-6"
+          :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+          label="Catégorie d'écriture"
+          :options="listeCategorie"
+        />
       </div>
       <table id="indemnites-anuelles" class="table table-sm">
         <thead>

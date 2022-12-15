@@ -5,20 +5,14 @@
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="mb-3">
-        <label for="materiel">Matériel</label>
-        <select
-          id="materiel"
-          v-model="activeMateriel.materiel_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['materiel_id'] }"
-          :disabled="activeMateriel.id"
-        >
-          <option v-for="m in listMateriels" :key="m.id" :value="m.id">
-            {{ m.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeMateriel.materiel_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['materiel_id'] }"
+        label="Matériel"
+        :options="listeMateriels"
+        :disabled="activeMateriel.id"
+      />
       <div class="mb-3">
         <label for="remarque">Quantité</label>
         <input
@@ -54,7 +48,7 @@ export default {
   computed: {
     ...mapState({
       activeMateriel: (state) => state.materiel.active,
-      listMateriels: (state) => state.materiel.liste,
+      listeMateriels: (state) => state.materiel.liste,
       activeInterventionId: (state) => state.intervention.active.id,
     }),
   },

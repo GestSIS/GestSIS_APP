@@ -228,49 +228,25 @@
         </div>
         <div class="card-body">
           <!-- INTERVENTION TRAITEMENT -->
-          <div class="mb-3">
-            <label for="m-int-traitement">Traitement</label>
-            <select
-              id="m-int-traitement"
-              v-model="activeInterventionData.intervention_traitement_id"
-              class="form-select form-select-sm required"
-              :class="{
-                'is-invalid': errors['intervention_traitement_id'],
-              }"
-              name="localite_id"
-              style="width: 100%"
-              :disabled="!hasEditPermission"
-            >
-              <option
-                v-for="traitement in interventionTraitements"
-                :key="traitement.id"
-                :value="traitement.id"
-              >
-                {{ traitement.designation }}
-              </option>
-            </select>
-          </div>
-          <!-- TYPE D'INTERVENTION -->
+          <base-select
+            v-model="activeInterventionData.intervention_traitement_id"
+            class="mb-3"
+            :class="{
+              'is-invalid': errors['intervention_traitement_id'],
+            }"
+            label="Traitement"
+            :options="interventionTraitements"
+            :disabled="!hasEditPermission"
+          />
           <div class="row mb-3">
-            <div class="col-8">
-              <label for="m-int-type">Type d'intervention</label>
-              <select
-                id="m-int-type"
-                v-model="activeInterventionData.type_intervention_id"
-                class="form-select form-select-sm"
-                :class="{ 'is-invalid': errors['type_intervention_id'] }"
-                name="type_intervention_id"
-                :disabled="!hasEditPermission"
-              >
-                <option
-                  v-for="t in typesIntervention"
-                  :key="t.id"
-                  :value="t.id"
-                >
-                  {{ t.designation }}
-                </option>
-              </select>
-            </div>
+            <base-select
+              v-model="activeInterventionData.type_intervention_id"
+              class="col-8"
+              :class="{ 'is-invalid': errors['type_intervention_id'] }"
+              label="Type d'intervention"
+              :options="typesIntervention"
+              :disabled="!hasEditPermission"
+            />
             <div class="col-4">
               <label for="m-sap-suffixe">Nb intervention</label>
               <font-awesome-icon
@@ -292,28 +268,14 @@
               />
             </div>
           </div>
-          <!-- STAT FEDERAL -->
-          <div class="mb-3">
-            <label for="m-int-stat">Statistique fédérale</label>
-            <select
-              id="m-int-stat"
-              v-model="activeInterventionData.stat_federal_id"
-              class="form-select form-select-sm required"
-              :class="{ 'is-invalid': errors['stat_federal_id'] }"
-              name="stat"
-              style="width: 100%"
-              :disabled="!hasEditPermission"
-            >
-              <option
-                v-for="stat in statsFederales"
-                :key="stat.id"
-                :value="stat.id"
-              >
-                {{ stat.designation }}
-              </option>
-            </select>
-          </div>
-
+          <base-select
+            v-model="activeInterventionData.stat_federal_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['stat_federal_id'] }"
+            label="Statistique fédérale"
+            :options="statsFederales"
+            :disabled="!hasEditPermission"
+          />
           <!-- Sauve personnes -->
           <div class="mb-3">
             <label for="m-int-save-pers">Nb de personnes sauvées</label>
@@ -344,24 +306,17 @@
           </div>
 
           <!-- DEGRE -->
-          <div class="mb-3">
-            <label for="m-int-degre">Degre</label>
-            <select
-              id="m-int-degre"
-              v-model="activeInterventionData.degre"
-              class="form-select form-select-sm required"
-              :class="{
-                'is-invalid': errors['degre'],
-              }"
-              name="degre"
-              style="width: 100%"
-              :disabled="!hasEditPermission"
-            >
-              <option v-for="deg in degre" :key="deg.id" :value="deg.id">
-                {{ deg.type }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeInterventionData.degre"
+            class="mb-3"
+            :class="{
+              'is-invalid': errors['degre'],
+            }"
+            label="Traitement"
+            display-key="type"
+            :options="degre"
+            :disabled="!hasEditPermission"
+          />
         </div>
       </div>
     </div>

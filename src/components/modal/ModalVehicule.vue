@@ -47,20 +47,16 @@
           :class="{ 'is-invalid': errors['unite'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="type_unite_id">Unité type</label>
-        <select
-          id="type_unite_id"
-          v-model="activeVehicule.type_unite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['type_unite_id'] }"
-        >
-          <option :value="0">-</option>
-          <option v-for="u in listeUnite" :key="u.id" :value="u.id">
-            {{ u.unite }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeVehicule.type_unite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type_unite_id'] }"
+        label="Unité type"
+        base-option="-"
+        base-value="0"
+        display-key="unite"
+        :options="listeUnite"
+      />
       <div class="mb-3">
         <div class="form-check">
           <input

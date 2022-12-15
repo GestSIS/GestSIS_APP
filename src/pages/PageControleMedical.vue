@@ -45,62 +45,30 @@
                 :value="sapeurName"
               />
             </div>
-            <div v-else class="mb-3">
-              <label for="m-exe-des">Sapeur</label>
-              <select
-                id="m-sap-cat"
-                v-model="controleMedical.sapeur_id"
-                class="form-select form-select-sm"
-                required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                style="width: 100%"
-              >
-                <option
-                  v-for="sapeur in sapeurs"
-                  :key="sapeur.id"
-                  :value="sapeur.id"
-                >
-                  {{ sapeur.nom_prenom }}
-                </option>
-              </select>
-            </div>
-            <!-- MEDECIN -->
-            <div class="mb-3">
-              <label for="m-sap-cat">Médecin</label>
-              <select
-                id="m-sap-cat"
-                v-model="controleMedical.medecin_id"
-                class="form-select form-select-sm"
-                required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                style="width: 100%"
-              >
-                <option
-                  v-for="medecin in medecins"
-                  :key="medecin.id"
-                  :value="medecin.id"
-                >
-                  {{ medecin.designation }}
-                </option>
-              </select>
-            </div>
-            <!-- TYPE -->
-            <div class="mb-3">
-              <label for="m-sap-cat">Type</label>
-              <select
-                id="m-sap-cat"
-                v-model="controleMedical.controle_medical_type_id"
-                class="form-select form-select-sm"
-                required
-                :class="{ 'is-invalid': errors['exercice_categorie_id'] }"
-                style="width: 100%"
-              >
-                <option v-for="t in controleTypes" :key="t.id" :value="t.id">
-                  {{ t.designation }}
-                </option>
-              </select>
-            </div>
-            <!-- ACCEPTER -->
+            <base-select
+              v-else
+              v-model="controleMedical.sapeur_id"
+              class="mb-3"
+              :class="{ 'is-invalid': errors['sapeur_id'] }"
+              label="Sapeur"
+              display-key="nom_prenom"
+              :options="sapeurs"
+            />
+            <base-select
+              v-model="controleMedical.medecin_id"
+              class="mb-3"
+              :class="{ 'is-invalid': errors['medecin_id'] }"
+              label="Médecin"
+              :options="medecins"
+              required
+            />
+            <base-select
+              v-model="controleMedical.controle_medical_type_id"
+              class="mb-3"
+              :class="{ 'is-invalid': errors['controle_medical_type_id'] }"
+              label="Type"
+              :options="controleTypes"
+            />
             <div class="mb-3">
               <div class="form-check">
                 <input
@@ -116,7 +84,6 @@
             </div>
             <div class="row">
               <div class="col-12" :class="{ 'col-xl-6': expirable }">
-                <!-- CONSULTATION -->
                 <div class="mb-3">
                   <label for="m-exe-date">Consultation</label>
                   <div class="input-group input-group-sm">
@@ -156,7 +123,6 @@
                 </div>
               </div>
               <div v-if="expirable" class="col-12 col-xl-6">
-                <!-- Validité -->
                 <div class="mb-3">
                   <label for="m-exe-date">Validité</label>
                   <div class="input-group input-group-sm">

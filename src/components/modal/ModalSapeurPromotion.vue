@@ -15,19 +15,13 @@
           :class="{ 'is-invalid': errors['date'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="grade">Grade</label>
-        <select
-          id="grade"
-          v-model="activeGrade.grade_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['grade_id'] }"
-        >
-          <option v-for="g in grades" :key="g.id" :value="g.id">
-            {{ g.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeGrade.grade_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['grade_id'] }"
+        label="Grade"
+        :options="grades"
+      />
       <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input

@@ -156,19 +156,15 @@
                 :class="{ 'is-invalid': errors['designation'] }"
               />
             </div>
-            <div class="mb-3">
-              <label for="cours-precedent">Groupe parent</label>
-              <select
-                id="pere_id"
-                v-model="groupeEdit.pere_id"
-                class="form-select form-select-sm"
-              >
-                <option :value="null">-</option>
-                <option v-for="g in filteredGroupes" :key="g.id" :value="g.id">
-                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
-                </option>
-              </select>
-            </div>
+            <base-select
+              v-model="groupeEdit.pere_id"
+              class="mb-3"
+              label="Groupe parent"
+              base-option="-"
+              :base-value="null"
+              display-key="label"
+              :options="filteredGroupes"
+            />
             <div class="mb-3">
               <div class="form-check">
                 <input
@@ -231,7 +227,11 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste,
+      groupes: (state) =>
+        state.groupe.liste.map((g) => ({
+          ...g,
+          label: (g.no ? g.no + ' ' : '') + g.designation,
+        })),
       sapeurs: (state) => state.sapeur.liste,
     }),
     filteredGroupes() {
@@ -313,7 +313,7 @@ export default {
           this.$awn.success('Groupe modifié avec succès');
         })
         .catch((errors) => {
-          this.errorsData = { ...errors };
+          this.errors = { ...errors };
           this.$awn.alert(
             errors.message || 'Erreur lors de la modification du groupe'
           );

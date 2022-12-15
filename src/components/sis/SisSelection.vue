@@ -2,21 +2,13 @@
   <div>
     <hr class="bg-secondary" />
     <div class="info">
-      <div class="mb-3">
-        <select
-          v-model="sisId"
-          class="form-select form-select-sm"
-          @change="selectSis($event)"
-        >
-          <option
-            v-for="sis in availableSisListe"
-            :key="sis.id"
-            :value="sis.id"
-          >
-            {{ sis.nom }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="sisId"
+        class="mb-3"
+        display-key="nom"
+        :options="availableSisListe"
+        @update:model-value="(sisId) => selectSis(sisId)"
+      />
       <!-- <a href="#" class="d-block">
              &lt;!&ndash; @if(!empty($user_details['nom']))
              {{ $user_details['prenom'] }} {{ $user_details['nom'] }}
@@ -55,8 +47,8 @@ export default {
     this.sisId = this.activeSisId;
   },
   methods: {
-    selectSis(event) {
-      const sis = this.listeSis.find((s) => s.id == event.target.value);
+    selectSis(sisId) {
+      const sis = this.listeSis.find((s) => s.id == sisId);
       this.$store.dispatch('selectSis', sis).then(() => {
         this.$router.push({ name: 'dashboard' });
       });

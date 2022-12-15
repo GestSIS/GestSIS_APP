@@ -143,7 +143,7 @@ export default {
       username: '',
       password: '',
       communication: '',
-      errorsData: {},
+      errors: {},
     };
   },
   computed: {

@@ -27,20 +27,14 @@
           :class="{ 'is-invalid': errors['fin'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="fonction">Fonction</label>
-        <select
-          id="fonction"
-          v-model="activeFonction.fonction_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['fonction_id'] }"
-          :disabled="(activeFonction.id || 0) !== 0"
-        >
-          <option v-for="f in listeFonctions" :key="f.id" :value="f.id">
-            {{ f.nom }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeCours.fonction_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['fonction_id'] }"
+        label="Fonction"
+        display-key="nom"
+        :options="listeFonctions"
+      />
       <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input

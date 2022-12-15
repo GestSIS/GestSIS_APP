@@ -28,19 +28,13 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="stat_intervention">Statistique</label>
-        <select
-          id="stat_intervention"
-          v-model="activeTypeIntervention.stat_intervention_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['stat_intervention_id'] }"
-        >
-          <option v-for="s in listeStatIntervention" :key="s.id" :value="s.id">
-            {{ s.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeTypeIntervention.stat_intervention_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['stat_intervention_id'] }"
+        label="Statistique"
+        :options="listeStatIntervention"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

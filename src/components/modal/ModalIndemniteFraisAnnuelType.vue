@@ -21,43 +21,31 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="compte">Type</label>
-        <select
-          id="type"
-          v-model="active.type"
-          class="form-select form-select-sm"
-        >
-          <option :value="2">Indemnité</option>
-          <option :value="3">Frais forfaitaire</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="compte">Compte</label>
-        <select
-          id="compte"
-          v-model="active.compte_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['compte_id'] }"
-        >
-          <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="categorie">Catégorie d'écriture</label>
-        <select
-          id="categorie"
-          v-model="active.ecriture_categorie_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        >
-          <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="active.type"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type'] }"
+        label="Type"
+        :options="[
+          { id: 2, designation: 'Indemnité' },
+          { id: 3, designation: 'Frais forfaitaire' },
+        ]"
+      />
+      <base-select
+        v-model="active.compte_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['compte_id'] }"
+        label="Compte"
+        display-key="label"
+        :options="comptes"
+      />
+      <base-select
+        v-model="active.ecriture_categorie_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+        label="Catégorie d'écriture"
+        :options="listeCategorie"
+      />
       <div class="mb-3">
         <div class="form-check">
           <input

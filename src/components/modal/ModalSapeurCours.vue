@@ -16,21 +16,14 @@
           @focusout="dateChange"
         />
       </div>
-      <div class="mb-3">
-        <label for="cours-name">Cours</label>
-        <select
-          id="cours-name"
-          v-model="activeCours.cours_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['cours_id'] }"
-          :disabled="!addMode"
-        >
-          <option v-for="c in filteredCours" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-          <!-- TODO limiter le nombre de cours -->
-        </select>
-      </div>
+      <base-select
+        v-model="activeCours.cours_id"
+        class="mb-3"
+        label="Cours"
+        :class="{ 'is-invalid': errors['cours_id'] }"
+        :disabled="!addMode"
+        :options="filteredCours"
+      />
       <div class="mb-3">
         <label for="duree">Durée</label>
         <div class="input-group">
@@ -44,51 +37,35 @@
           <span class="input-group-text">jours</span>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="cours-localite">Localité</label>
-        <select
-          id="cours-localite"
-          v-model="activeCours.localite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['localite_id'] }"
-        >
-          <option v-for="l in localites" :key="l.id" :value="l.id">
-            {{ l.designation }}
-          </option>
-        </select>
-      </div>
-      <div v-if="addMode" class="mb-3">
-        <label for="cours-precedent">Cours précédent</label>
-        <select
-          id="cours-precedent"
-          v-model="activeCours.precedent_id"
-          class="form-select form-select-sm"
-          disabled
-        >
-          <option value="0">-</option>
-          <option v-for="c in cours" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-          <!-- TODO Limiter le nombre de cours -->
-        </select>
-      </div>
+      <base-select
+        v-model="activeCours.localite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['localite_id'] }"
+        label="Localité"
+        :options="localites"
+      />
+      <base-select
+        v-if="addMode"
+        v-model="activeCours.precedent_id"
+        class="mb-3"
+        label="Cours précédent"
+        base-option="-"
+        base-value="0"
+        :options="cours"
+      />
       <div v-if="addMode" class="mb-3">
         <label>Grade</label>
       </div>
       <div v-if="addMode" class="row">
         <div class="col-md-8">
-          <div class="mb-3">
-            <select
-              v-model="activeCours.grade_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['grade_id'] }"
-            >
-              <option value="0">-</option>
-              <option v-for="g in grades" :key="g.id" :value="g.id">
-                {{ g.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeCours.grade_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['grade_id'] }"
+            base-option="-"
+            base-value="0"
+            :options="grades"
+          />
         </div>
         <div class="col-md-4">
           <div class="mb-3">
@@ -107,18 +84,15 @@
       </div>
       <div v-if="addMode" class="row">
         <div class="col-md-8">
-          <div class="mb-3">
-            <select
-              v-model="activeCours.fonction_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['fonction_id'] }"
-            >
-              <option value="0">-</option>
-              <option v-for="f in fonctions" :key="f.id" :value="f.id">
-                {{ f.nom }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeCours.fonction_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['fonction_id'] }"
+            base-option="-"
+            base-value="0"
+            display-key="nom"
+            :options="fonctions"
+          />
         </div>
         <div class="col-md-4">
           <div class="mb-3">
@@ -136,22 +110,19 @@
       </div>
       <div v-if="addMode" class="row">
         <div class="col-md-8">
-          <div class="mb-3">
-            <select
-              v-model="activeCours.fonction_sapeur_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
-            >
-              <option value="0">-</option>
-              <option
-                v-for="f in activeSapeurFonctions"
-                :key="f.id"
-                :value="f.id"
-              >
-                {{ fonctions.find((e) => e.id == f.fonction_id).nom }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeCours.fonction_sapeur_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
+            base-option="-"
+            base-value="0"
+            display-key="nom"
+            :options="
+              activeSapeurFonctions.map((s) =>
+                fonctions.find((f) => f.id == s.fonction_id)
+              )
+            "
+          />
         </div>
       </div>
     </div>

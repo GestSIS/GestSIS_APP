@@ -28,19 +28,13 @@
           Date invalide
         </div>
       </div>
-      <div class="mb-3" :class="{ 'd-none': finDeService }">
-        <label for="localite">Localite</label>
-        <select
-          id="localite"
-          v-model="activeMutation.localite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['localite_id'] }"
-        >
-          <option v-for="l in localites" :key="l.id" :value="l.id">
-            {{ l.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeMutation.localite_id"
+        class="mb-3"
+        :class="{ 'd-none': finDeService, 'is-invalid': errors['localite_id'] }"
+        label="Localité"
+        :options="localites"
+      />
       <div class="mb-3">
         <label for="motif">Motif</label>
         <input

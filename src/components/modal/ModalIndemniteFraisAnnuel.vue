@@ -10,20 +10,15 @@
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <div class="mb-3">
-        <label for="fonction">Fonction</label>
-        <select
-          id="fonction"
-          :value="active.fonction_id"
-          disabled
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['fonction_id'] }"
-        >
-          <option v-for="f in listeFonction" :key="f.id" :value="f.id">
-            {{ f.nom }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="active.fonction_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['fonction_id'] }"
+        label="Fonction"
+        display-key="nom"
+        :options="listeFonction"
+        disabled
+      />
       <div class="mb-3">
         <label for="montant">Montant</label>
         <input
@@ -44,19 +39,14 @@
           :class="{ 'is-invalid': errors['quantite'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="unite">Unité</label>
-        <select
-          id="unite"
-          v-model="active.type_unite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['type_unite_id'] }"
-        >
-          <option v-for="u in unites" :key="u.id" :value="u.id">
-            {{ u.unite }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="active.type_unite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type_unite_id'] }"
+        label="Unité"
+        display-key="unite"
+        :options="unites"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

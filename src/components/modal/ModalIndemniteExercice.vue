@@ -25,19 +25,14 @@
               :class="{ 'is-invalid': errors['designation'] }"
             />
           </div>
-          <div class="mb-3">
-            <label for="unite">Unité</label>
-            <select
-              id="unite"
-              v-model="activeIndemnite.type_unite_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['type_unite_id'] }"
-            >
-              <option v-for="u in unites" :key="u.id" :value="u.id">
-                {{ u.unite }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeIndemnite.type_unite_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['type_unite_id'] }"
+            label="Unité"
+            display-key="unite"
+            :options="unites"
+          />
           <div class="mb-3">
             <table class="table table-sm">
               <thead>
@@ -125,19 +120,13 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="categorie">Catégorie</label>
-            <select
-              id="categorie"
-              v-model="activeIndemnite.ecriture_categorie_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-            >
-              <option v-for="c in categories" :key="c.id" :value="c.id">
-                {{ c.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="activeIndemnite.ecriture_categorie_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            label="Catégorie"
+            :options="categories"
+          />
         </div>
 
         <div v-if="activeIndemnite.par_fonction" class="col-6">

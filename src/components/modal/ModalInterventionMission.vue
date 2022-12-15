@@ -25,19 +25,14 @@
           title="Titre"
         />
       </div>
-      <div class="mb-3">
-        <label for="mission">Responsable</label>
-        <select
-          id="mission"
-          v-model="activeMission.sapeur_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['sapeur_id'] }"
-        >
-          <option v-for="s in listSapeurs" :key="s.id" :value="s.id">
-            {{ s?.nom_prenom }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeMission.sapeur_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['sapeur_id'] }"
+        label="Responsable"
+        display-key="nom_prenom"
+        :options="listeSapeurs"
+      />
       <div class="mb-3">
         <label for="fin">Quittance</label>
         <input
@@ -100,7 +95,7 @@ export default {
   computed: {
     ...mapState({
       listMissions: (state) => state.mission.liste,
-      listSapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
+      listeSapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
       activeInterventionId: (state) => state.intervention.active.id,
     }),
   },

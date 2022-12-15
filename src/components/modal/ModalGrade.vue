@@ -37,18 +37,17 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="cours-precedent">Grade précédent</label>
-        <select
-          id="groupe"
-          v-model="activeGrade.groupe"
-          class="form-select form-select-sm"
-        >
-          <option value="1">Officier</option>
-          <option value="2">Sous-Officier</option>
-          <option value="3">Spécialiste</option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeGrade.groupe"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['groupe'] }"
+        label="Groupe"
+        :options="[
+          { id: 1, designation: 'Officier' },
+          { id: 2, designation: 'Sous-Officier' },
+          { id: 3, designation: 'Spécialiste' },
+        ]"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

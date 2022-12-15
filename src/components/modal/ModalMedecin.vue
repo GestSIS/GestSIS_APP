@@ -27,19 +27,13 @@
           :class="{ 'is-invalid': errors['adresse'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="localite">Localité</label>
-        <select
-          id="localite"
-          v-model="activeMedecin.localite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['localite_id'] }"
-        >
-          <option v-for="l in listeLocalite" :key="l.id" :value="l.id">
-            {{ localite(l) }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeMedecin.localite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['localite_id'] }"
+        label="Localité"
+        :options="localites"
+      />
       <div class="mb-3">
         <div class="form-check">
           <input
@@ -87,8 +81,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeMedecin: (state) => state.medecin.liste,
-      listeLocalite: (state) => state.localite.liste,
+      localites: (state) => state.localite.liste,
     }),
   },
   mounted() {
@@ -99,9 +92,6 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    localite(localite) {
-      return localite?.designation;
-    },
     async save() {
       if ((this.activeMedecin.id || 0) === 0) {
         this.$store

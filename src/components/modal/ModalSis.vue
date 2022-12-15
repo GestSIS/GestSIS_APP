@@ -13,7 +13,7 @@
           v-model="sis.nom"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['nom'] }"
+          :class="{ 'is-invalid': errors['nom'] }"
           name="nom"
         />
       </div>
@@ -24,7 +24,7 @@
           v-model="sis.description"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['description'] }"
+          :class="{ 'is-invalid': errors['description'] }"
           name="m-sis-description"
         />
       </div>
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      errorsData: {},
+      errors: {},
       sis: {
         nom: '',
         description: '',
@@ -92,7 +92,7 @@ export default {
           this.HIDE_MODAL();
         })
         .catch((errors) => {
-          this.errorsData = errors;
+          this.errors = errors;
         });
     },
   },

@@ -75,19 +75,13 @@
           id="cours-date"
       />-->
       <!-- </div> -->
-      <div class="mb-3">
-        <label for="phase_type">Type</label>
-        <select
-          id="phase_type"
-          v-model="activePhase.phase_type_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['phase_type_id'] }"
-        >
-          <option v-for="p in listePhaseType" :key="p.id" :value="p.id">
-            {{ p.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeEcriture.phase_type_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['phase_type_id'] }"
+        label="Type"
+        :options="listePhaseType"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

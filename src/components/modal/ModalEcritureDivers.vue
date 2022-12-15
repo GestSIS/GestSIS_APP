@@ -17,19 +17,15 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="sapeur">Sapeur</label>
-        <select
-          id="sapeur"
-          v-model="activeEcriture.sapeur_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['sapeur_id'] }"
-        >
-          <option v-for="s in sapeurs" :key="s.id" :value="s.id">
-            {{ s.nom_prenom }}
-          </option>
-        </select>
-      </div>
+
+      <base-select
+        v-model="activeEcriture.sapeur_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['sapeur_id'] }"
+        label="Sapeur"
+        display-key="nom_prenom"
+        :options="sapeurs"
+      />
       <div class="mb-3">
         <label for="date">Date</label>
         <input
@@ -40,19 +36,14 @@
           :class="{ 'is-invalid': errors['date'] }"
         />
       </div>
-      <div class="mb-3 col-12">
-        <label for="unite">Unité</label>
-        <select
-          id="unite"
-          v-model="activeEcriture.type_unite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['type_unite_id'] }"
-        >
-          <option v-for="u in unites" :key="u.id" :value="u.id">
-            {{ u.unite }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeEcriture.type_unite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type_unite_id'] }"
+        label="Unité"
+        display-key="unite"
+        :options="unites"
+      />
       <div class="row">
         <div v-if="activeUnite?.comptable" class="mb-3 col-4">
           <label for="quantite">Quantité</label>
@@ -102,45 +93,28 @@
           </div>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="compte">Compte</label>
-        <select
-          id="compte"
-          v-model="activeEcriture.compte_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['compte_id'] }"
-        >
-          <option v-for="c in comptes" :key="c.id" :value="c.id">
-            {{ c.numero }} {{ c.designation }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="ecriture_type">Type d'écriture</label>
-        <select
-          id="ecriture_type"
-          v-model="activeEcriture.type"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['ecriture_type'] }"
-        >
-          <option v-for="s in types" :key="s.id" :value="s.id">
-            {{ s.designation }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="categorie">Catégorie d'écriture</label>
-        <select
-          id="categorie"
-          v-model="activeEcriture.ecriture_categorie_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        >
-          <option v-for="c in categories" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="activeEcriture.compte_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['compte_id'] }"
+        label="Compte"
+        display-key="label"
+        :options="comptes"
+      />
+      <base-select
+        v-model="activeEcriture.ecriture_type"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['ecriture_type'] }"
+        label="Type d'écriture"
+        :options="types"
+      />
+      <base-select
+        v-model="activeEcriture.ecriture_categorie_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+        label="Catégorie d'écriture"
+        :options="categories"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">

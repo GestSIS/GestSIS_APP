@@ -31,7 +31,7 @@
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errorsData['nom'] }"
+              :class="{ 'is-invalid': errors['nom'] }"
               name="nom"
             />
           </div>
@@ -44,7 +44,7 @@
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errorsData['prenom'] }"
+              :class="{ 'is-invalid': errors['prenom'] }"
               name="prenom"
             />
           </div>
@@ -58,7 +58,7 @@
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errorsData['rue'] }"
+                :class="{ 'is-invalid': errors['rue'] }"
                 name="rue"
               />
             </div>
@@ -70,7 +70,7 @@
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errorsData['no_rue'] }"
+                :class="{ 'is-invalid': errors['no_rue'] }"
                 name="no_rue"
               />
             </div>
@@ -94,7 +94,7 @@
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errorsData['no_avs'] }"
+                :class="{ 'is-invalid': errors['no_avs'] }"
                 name="no_avs"
               />
             </div>
@@ -133,7 +133,7 @@
                 id="m-sap-email"
                 v-model="activeSapeur.email"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errorsData['email'] }"
+                :class="{ 'is-invalid': errors['email'] }"
                 type="email"
                 :readonly="!hasEditPermission"
                 name="email"
@@ -152,7 +152,7 @@
                   id="m-sap-date-naissance"
                   v-model="activeSapeur.date_naissance"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errorsData['date_naissance'] }"
+                  :class="{ 'is-invalid': errors['date_naissance'] }"
                   type="date"
                   :readonly="!hasEditPermission"
                   name="date_naissance"
@@ -174,7 +174,7 @@
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errorsData['suffixe'] }"
+                :class="{ 'is-invalid': errors['suffixe'] }"
                 name="suffixe"
               />
             </div>
@@ -187,7 +187,7 @@
               v-model="activeSapeur.remarque"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errorsData['remarque'] }"
+              :class="{ 'is-invalid': errors['remarque'] }"
               rows="3"
               name="remarques"
             ></textarea>
@@ -310,32 +310,20 @@
         </div>
         <form role="form">
           <div class="card-body">
-            <div class="mb-3">
-              <label for="mainFonction">Fonction principale</label>
-              <select
-                id="mainFonction"
-                v-model="activeSapeur.fonction_id"
-                class="form-select form-select-sm"
-                disabled
-              >
-                <option v-for="f in fonctions" :key="f.id" :value="f.id">
-                  {{ f.nom }}
-                </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="mainGrade">Grade actuel</label>
-              <select
-                id="mainGrade"
-                v-model="activeSapeur.grade_id"
-                class="form-select form-select-sm"
-                disabled
-              >
-                <option v-for="g in grades" :key="g.id" :value="g.id">
-                  {{ g.designation }}
-                </option>
-              </select>
-            </div>
+            <base-select
+              v-model="activeSapeur.fonction_id"
+              class="mb-3"
+              label="Fonction principale"
+              display-key="nom"
+              :options="fonctions"
+              :disabled="true"
+            />
+            <base-select
+              v-model="activeCours.grade_id"
+              class="mb-3"
+              label="Grade actuel"
+              :options="grades"
+            />
             <div class="mb-3 form-check">
               <input
                 id="actif"
@@ -402,7 +390,7 @@ export default {
   },
   data() {
     return {
-      errorsData: {},
+      errors: {},
       defaultPhoto: '',
       photo: null, //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
     };
@@ -423,7 +411,7 @@ export default {
   },
   watch: {
     activeSapeurId() {
-      this.errorsData = {};
+      this.errors = {};
       if (this.activeSapeur.type === 0) {
         SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
           this.photo = photo;
@@ -469,14 +457,14 @@ export default {
       this.$store
         .dispatch('saveActiveSapeur', saveSapeur)
         .then((res) => {
-          this.errorsData = {};
+          this.errors = {};
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch((err) => {
           this.$awn.alert(
             err.message || "Erreur lors de l'enregistrement des données"
           );
-          this.errorsData = err;
+          this.errors = err;
         });
     },
     async saveNonSapeurStatut() {
@@ -487,14 +475,14 @@ export default {
       this.$store
         .dispatch('saveNonSapeurStatut', saveSapeur)
         .then((res) => {
-          this.errorsData = {};
+          this.errors = {};
           this.$awn.success(res.message || 'Modifications sauvegardées');
         })
         .catch((err) => {
           this.$awn.alert(
             err.message || "Erreur lors de l'enregistrement des données"
           );
-          this.errorsData = err;
+          this.errors = err;
         });
     },
     async saveSapeurRefPro() {

@@ -68,32 +68,22 @@
               :class="{ 'is-invalid': errors['franchise_imposition'] }"
             />
           </div>
-          <div class="mb-3">
-            <label for="compte_id">Compte</label>
-            <select
-              id="compte_id"
-              v-model="params.compte_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['compte_id'] }"
-            >
-              <option v-for="c in listeCompte" :key="c.id" :value="c.id">
-                {{ compte(c) }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="compte_id">Ecriture catégorie</label>
-            <select
-              id="ecriture_categorie_id"
-              v-model="params.ecriture_categorie_id"
-              class="form-select form-select-sm"
-              :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-            >
-              <option v-for="c in listeCategorie" :key="c.id" :value="c.id">
-                {{ c.designation }}
-              </option>
-            </select>
-          </div>
+          <base-select
+            v-model="params.compte_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['compte_id'] }"
+            label="Compte"
+            :options="
+              listeCompte.map((c) => ({ ...c, designation: compte(c) }))
+            "
+          />
+          <base-select
+            v-model="params.ecriture_categorie_id"
+            class="mb-3"
+            :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
+            label="Ecriture catégorie"
+            :options="listeCategorie"
+          />
         </div>
       </div>
     </div>

@@ -25,19 +25,16 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="cours-precedent">Groupe parent</label>
-        <select
-          id="pere_id"
-          v-model="groupe.pere_id"
-          class="form-select form-select-sm"
-        >
-          <option :value="null">-</option>
-          <option v-for="g in groupes" :key="g.id" :value="g.id">
-            {{ (g.no ? g.no + ' ' : '') + g.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="groupe.pere_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['pere_id'] }"
+        label="Groupe parent"
+        base-option="-"
+        :base-value="null"
+        display-key="label"
+        :options="groupes"
+      />
       <div class="mb-3">
         <div class="form-check">
           <input
@@ -80,7 +77,11 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste,
+      groupes: (state) =>
+        state.groupe.liste.map((g) => ({
+          ...g,
+          label: (g.no ? g.no + ' ' : '') + g.designation,
+        })),
     }),
   },
   methods: {

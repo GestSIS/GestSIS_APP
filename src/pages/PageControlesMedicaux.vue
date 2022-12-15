@@ -86,73 +86,44 @@
                   >Derniers contrôles de chaque sapeurs</label
                 >
               </div>
-              <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) =>
-                      onFilter('controle_medical_type_id', event.target.value)
-                  "
-                >
-                  <option>&lt;Type&gt;</option>
-                  <option v-for="t in filteredTypes" :key="t.id" :value="t.id">
-                    {{ t.designation }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onFilter('medecin_id', event.target.value)
-                  "
-                >
-                  <option>&lt;Médecin&gt;</option>
-                  <option
-                    v-for="medecin in filteredMedecins"
-                    :key="medecin.id"
-                    :value="medecin.id"
-                  >
-                    {{ medecin.designation }}
-                  </option>
-                </select>
-              </div>
+              <base-select
+                class="col-md-6"
+                base-option="<Type>"
+                :options="filteredTypes"
+                @update:model-value="
+                  (v) => onFilter('controle_medical_type_id', v)
+                "
+              />
+              <base-select
+                class="col-md-6"
+                base-option="<Médecin>"
+                :options="filteredMedecins"
+                @update:model-value="(v) => onFilter('medecin_id', v)"
+              />
             </div>
             <div class="row mt-2">
-              <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onAnneeFilter('consultation', event.target.value)
-                  "
-                >
-                  <option>&lt;Année de consultation&gt;</option>
-                  <option
-                    v-for="annee in filteredAnneesConsultation"
-                    :key="annee"
-                    :value="annee"
-                  >
-                    {{ annee }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-6">
-                <select
-                  class="form-select form-select-sm"
-                  @change="
-                    (event) => onAnneeFilter('validite', event.target.value)
-                  "
-                >
-                  <option>&lt;Année de validite&gt;</option>
-                  <option
-                    v-for="annee in filteredAnneesExpiration"
-                    :key="annee"
-                    :value="annee"
-                  >
-                    {{ annee }}
-                  </option>
-                </select>
-              </div>
+              <base-select
+                class="col-md-6"
+                base-option="<Année de consultation>"
+                :options="
+                  [...filteredAnneesConsultation].map((annee) => ({
+                    id: annee,
+                    designation: annee,
+                  }))
+                "
+                @change="(v) => onAnneeFilter('consultation', v)"
+              />
+              <base-select
+                class="col-md-6"
+                base-option="<Année de validité>"
+                :options="
+                  [...filteredAnneesExpiration].map((annee) => ({
+                    id: annee,
+                    designation: annee,
+                  }))
+                "
+                @change="(v) => onAnneeFilter('validite', v)"
+              />
             </div>
           </div>
         </div>

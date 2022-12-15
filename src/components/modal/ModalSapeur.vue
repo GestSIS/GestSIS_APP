@@ -36,25 +36,13 @@
           <label class="form-check-label" for="inlineRadio2">Politique</label>
         </div>
       </div>
-      <!-- CIVILITE -->
-      <div class="mb-3">
-        <label for="m-sap-civilite">Civilité</label>
-        <select
-          id="m-sap-civilite"
-          v-model="sapeur.civilite_id"
-          class="form-select form-select-sm"
-          :class="{ 'is-invalid': errorsData['civilite_id'] }"
-          name="civilite_id"
-        >
-          <option
-            v-for="civilite in civilites"
-            :key="civilite.id"
-            :value="civilite.id"
-          >
-            {{ civilite.designation }}
-          </option>
-        </select>
-      </div>
+      <base-select
+        v-model="sapeur.civilite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['civilite_id'] }"
+        label="Civilité"
+        :options="civilites"
+      />
       <!-- NOM -->
       <div class="mb-3 row">
         <div class="col-6">
@@ -64,7 +52,7 @@
             v-model="sapeur.nom"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['nom'] }"
+            :class="{ 'is-invalid': errors['nom'] }"
             name="nom"
           />
         </div>
@@ -75,33 +63,20 @@
             v-model="sapeur.prenom"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['prenom'] }"
+            :class="{ 'is-invalid': errors['prenom'] }"
             name="prenom"
           />
         </div>
       </div>
       <!-- RUE -->
       <div class="mb-3 row">
-        <div class="col-4">
-          <label for="m-sap-localite">NPA Localité</label>
-          <select
-            id="m-sap-localite"
-            v-model="sapeur.localite_id"
-            class="form-select form-select-sm"
-            required
-            :class="{ 'is-invalid': errorsData['localite_id'] }"
-            name="localite_id"
-            style="width: 100%"
-          >
-            <option
-              v-for="localite in localites"
-              :key="localite.id"
-              :value="localite.id"
-            >
-              {{ localite.npa + ' ' + localite.designation }}
-            </option>
-          </select>
-        </div>
+        <base-select
+          v-model="sapeur.localite_id"
+          class="col-4"
+          :class="{ 'is-invalid': errors['localite_id'] }"
+          label="Localité"
+          :options="localites"
+        />
         <div class="col-6">
           <label for="m-sap-rue">Rue</label>
           <input
@@ -109,7 +84,7 @@
             v-model="sapeur.rue"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['rue'] }"
+            :class="{ 'is-invalid': errors['rue'] }"
             name="rue"
           />
         </div>
@@ -120,7 +95,7 @@
             v-model="sapeur.no_rue"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['no_rue'] }"
+            :class="{ 'is-invalid': errors['no_rue'] }"
             name="no_rue"
           />
         </div>
@@ -135,7 +110,7 @@
           v-model="sapeur.no_avs"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['no_avs'] }"
+          :class="{ 'is-invalid': errors['no_avs'] }"
           name="no_avs"
         />
       </div>
@@ -150,7 +125,7 @@
             id="m-sap-email"
             v-model="sapeur.email"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['email'] }"
+            :class="{ 'is-invalid': errors['email'] }"
             type="email"
             name="email"
           />
@@ -168,7 +143,7 @@
               id="m-sap-date-naissance"
               v-model="sapeur.date_naissance"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errorsData['date_naissance'] }"
+              :class="{ 'is-invalid': errors['date_naissance'] }"
               type="date"
               name="date_naissance"
             />
@@ -188,7 +163,7 @@
             v-model="sapeur.suffixe"
             type="text"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['suffixe'] }"
+            :class="{ 'is-invalid': errors['suffixe'] }"
             name="suffixe"
           />
         </div>
@@ -204,7 +179,7 @@
             id="m-sap-incorporation"
             v-model="sapeur.incorporation"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errorsData['incorporation'] }"
+            :class="{ 'is-invalid': errors['incorporation'] }"
             type="date"
             name="date_incorporation"
           />
@@ -217,7 +192,7 @@
           id="m-sap-remarques"
           v-model="sapeur.remarque"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errorsData['remarque'] }"
+          :class="{ 'is-invalid': errors['remarque'] }"
           rows="3"
           name="remarques"
         ></textarea>
@@ -243,7 +218,7 @@ export default {
   },
   data() {
     return {
-      errorsData: {},
+      errors: {},
       sapeur: {
         type: 0,
         nom: '',
@@ -287,7 +262,7 @@ export default {
           });
         })
         .catch((errors) => {
-          this.errorsData = errors;
+          this.errors = errors;
         });
     },
   },
