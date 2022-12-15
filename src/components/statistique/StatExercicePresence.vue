@@ -12,24 +12,18 @@
               v-model="unselectedCategories"
               class="col-md-4"
               label="Catégorie :"
-              value-key="id"
-              display-key="designation"
               :options="categorieExercices"
             />
             <base-multi-unselect
               v-model="unselectedSapeurDe"
               class="col-md-4"
               label="Sapeur de :"
-              value-key="id"
-              display-key="designation"
               :options="localiteSapeurs"
             />
             <base-multi-unselect
               v-model="unselectedExerciceA"
               class="col-md-4"
               label="Exercice à :"
-              value-key="id"
-              display-key="designation"
               :options="localiteExercices"
             />
           </div>

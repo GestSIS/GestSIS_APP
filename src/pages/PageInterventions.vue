@@ -90,16 +90,12 @@
               <base-select
                 class="mb-1 col-md-4"
                 :options="filteredLocalites"
-                display-key="designation"
-                value-key="id"
                 base-option="<Localité>"
                 @update:model-value="(value) => onFilter('localite_id', value)"
               />
               <base-select
                 class="mb-1 col-md-4"
                 :options="filteredInterventionsTypes"
-                display-key="designation"
-                value-key="id"
                 base-option="<Type>"
                 @update:model-value="
                   (value) => onFilter('type_intervention_id', value)
@@ -108,8 +104,6 @@
               <base-select
                 class="mb-1 col-md-4"
                 :options="filteredStatFederal"
-                display-key="designation"
-                value-key="id"
                 base-option="<Statistique fédérale>"
                 @update:model-value="
                   (value) => onFilter('stat_federal_id', value)
@@ -118,8 +112,6 @@
               <base-select
                 class="col-md-4"
                 :options="traitements"
-                display-key="designation"
-                value-key="id"
                 base-option="<Statistique fédérale>"
                 @update:model-value="
                   (value) => onFilter('intervention_traitement_id', value)
@@ -127,15 +119,13 @@
               />
               <base-select
                 class="col-md-4"
-                :options="[
-                  { id: 1, label: 'Fausse alarme' },
-                  { id: 2, label: 'Petite' },
-                  { id: 3, label: 'Moyenne' },
-                  { id: 4, label: 'Grande' },
-                ]"
-                display-key="label"
-                value-key="id"
                 base-option="<Etendue>"
+                :options="[
+                  { id: 1, designation: 'Fausse alarme' },
+                  { id: 2, designation: 'Petite' },
+                  { id: 3, designation: 'Moyenne' },
+                  { id: 4, designation: 'Grande' },
+                ]"
                 @update:model-value="(value) => onFilter('degre', value)"
               />
             </div>

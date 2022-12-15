@@ -52,8 +52,6 @@
                     v-if="!m.id"
                     :ref="'materiel-' + index"
                     v-model="m.materiel_type_id"
-                    value-key="id"
-                    display-key="designation"
                     :options="types"
                     :select-class="{
                       'is-invalid': errors['materiel_type_id'],

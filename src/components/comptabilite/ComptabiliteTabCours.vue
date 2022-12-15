@@ -33,8 +33,6 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Cours&gt;"
               :options="filteredDataTypes"
               @update:model-value="(value) => onFilter('cours_id', value)"
@@ -48,8 +46,6 @@
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @update:model-value="(value) => onFilter('localite_id', value)"

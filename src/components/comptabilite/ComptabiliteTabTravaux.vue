@@ -41,7 +41,6 @@
             <base-select
               class="mb-1 col-md-4"
               :options="filteredTravailTypes"
-              display-key="designation"
               base-option="<Type>"
               @update:model-value="
                 (value) => onFilter('travail_type_id', value)
@@ -49,14 +48,12 @@
             />
             <base-select
               class="col-md-4"
-              :options="[
-                { id: [-1], label: 'Refusé' },
-                { id: 0, label: 'En attente' },
-                { id: 1, label: 'Accepté' },
-              ]"
-              display-key="label"
-              value-key="id"
               base-option="<Statut>"
+              :options="[
+                { id: [-1], designation: 'Refusé' },
+                { id: 0, designation: 'En attente' },
+                { id: 1, designation: 'Accepté' },
+              ]"
               @update:model-value="(value) => onFilter('statut', value)"
             />
           </div>

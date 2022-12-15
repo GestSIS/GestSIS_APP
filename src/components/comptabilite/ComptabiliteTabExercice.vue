@@ -42,16 +42,12 @@
           <div class="row">
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Localité&gt;"
               :options="filteredLocalites"
               @update:model-value="(value) => onFilter('localite_id', value)"
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Catégorie&gt;"
               :options="filteredCategories"
               @update:model-value="
@@ -60,8 +56,6 @@
             />
             <base-select
               class="col-md-4"
-              value-key="id"
-              display-key="designation"
               base-option="&lt;Statut&gt;"
               :options="[
                 { id: '3', designation: 'Validé' },

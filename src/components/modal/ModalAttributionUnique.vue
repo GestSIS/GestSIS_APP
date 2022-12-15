@@ -30,7 +30,6 @@
       <base-select
         v-model="activeAttribution.sapeur_id"
         class="mb-3"
-        value-key="id"
         label="Sapeur"
         display-key="nom_prenom"
         :options="sapeurs"

@@ -11,8 +11,6 @@
           <base-select
             :model-value="activeItem.materiel_type_id"
             :options="types"
-            value-key="id"
-            display-key="designation"
             disabled
           />
         </div>
@@ -32,7 +30,6 @@
           <base-select
             :model-value="activeItem.retour == null ? activeItem.sapeur_id : 0"
             :options="sapeurs"
-            value-key="id"
             display-key="nom_prenom"
             disabled
           />

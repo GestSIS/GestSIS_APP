@@ -49,11 +49,9 @@
                     <base-select
                       v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
-                      value-key="value"
-                      display-key="label"
                       :options="[
-                        { value: 1, label: 'Solde' },
-                        { value: 2, label: 'Indemnite' },
+                        { id: 1, designation: 'Solde' },
+                        { id: 2, designation: 'Indemnite' },
                       ]"
                     />
                   </td>
@@ -150,11 +148,9 @@
                   <base-select
                     v-model="columns[i].type"
                     :class="{ 'is-invalid': errors['type'] }"
-                    value-key="value"
-                    display-key="label"
                     :options="[
-                      { value: 1, label: 'Solde' },
-                      { value: 2, label: 'Indemnite' },
+                      { id: 1, designation: 'Solde' },
+                      { id: 2, designation: 'Indemnite' },
                     ]"
                   />
                 </th>

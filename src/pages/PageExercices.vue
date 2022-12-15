@@ -111,16 +111,12 @@
               <base-select
                 class="col-md-4"
                 :options="filteredLocalites"
-                display-key="designation"
-                value-key="id"
                 base-option="<Localité>"
                 @update:model-value="(value) => onFilter('localite_id', value)"
               />
               <base-select
                 class="col-md-4"
                 :options="filteredExercicesCategories"
-                display-key="designation"
-                value-key="id"
                 base-option="<Catégorie>"
                 @update:model-value="
                   (value) => onFilter('exercice_categorie_id', value)
@@ -128,16 +124,14 @@
               />
               <base-select
                 class="col-md-4"
-                :options="[
-                  { label: 'Annulé', id: 0 },
-                  { label: 'Sapeurs à ajouter', id: 1 },
-                  { label: 'En attente de validation', id: 2 },
-                  { label: 'Validé', id: 3 },
-                  { label: 'Imputé', id: 4 },
-                ]"
-                display-key="label"
-                value-key="id"
                 base-option="<Statut>"
+                :options="[
+                  { id: 0, designation: 'Annulé' },
+                  { id: 1, designation: 'Sapeurs à ajouter' },
+                  { id: 2, designation: 'En attente de validation' },
+                  { id: 3, designation: 'Validé' },
+                  { id: 4, designation: 'Imputé' },
+                ]"
                 @update:model-value="(value) => onFilter('statut', value)"
               />
             </div>

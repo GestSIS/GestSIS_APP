@@ -42,13 +42,11 @@
                     <base-select
                       v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
-                      value-key="value"
-                      display-key="label"
                       :options="[
-                        { value: 1, label: 'Solde' },
-                        { value: 2, label: 'Indemnite' },
-                        { value: 3, label: 'Frais forfaitaire' },
-                        { value: 4, label: 'Frais effectif' },
+                        { id: 1, designation: 'Solde' },
+                        { id: 2, designation: 'Indemnite' },
+                        { id: 3, designation: 'Frais forfaitaire' },
+                        { id: 4, designation: 'Frais effectif' },
                       ]"
                     />
                   </td>

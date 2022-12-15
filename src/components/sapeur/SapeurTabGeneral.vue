@@ -17,9 +17,7 @@
             v-model="activeSapeur.civilite_id"
             class="mb-3"
             label="Civilité"
-            value-key="id"
             :disabled="!hasEditPermission"
-            display-key="designation"
             :options="civilites"
           />
           <!-- NOM -->

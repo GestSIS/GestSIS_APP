@@ -198,11 +198,9 @@
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
         label="Type comptable"
-        value-key="value"
-        display-key="label"
         :options="[
-          { value: 1, label: 'Solde' },
-          { value: 2, label: 'Indemnite' },
+          { id: 1, designation: 'Solde' },
+          { id: 2, designation: 'Indemnite' },
         ]"
       />
     </div>

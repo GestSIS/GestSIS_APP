@@ -31,7 +31,6 @@
       <base-select
         v-model="activeHeure.type_unite_id"
         class="mb-3"
-        value-key="id"
         label="Unité"
         display-key="unite"
         base-option="&lt;Unité&gt;"
@@ -41,9 +40,7 @@
       <base-select
         v-model="activeHeure.compte_id"
         class="mb-3"
-        value-key="id"
         label="Compte"
-        display-key="designation"
         base-option="&lt;Compte&gt;"
         :options="comptes"
         :select-class="{ 'is-invalid': errors['compte_id'] }"
@@ -51,9 +48,7 @@
       <base-select
         v-model="activeHeure.ecriture_categorie_id"
         class="mb-3"
-        value-key="id"
         label="Ecriture catégorie"
-        display-key="designation"
         base-option="&lt;Catégorie&gt;"
         :options="categories"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
@@ -61,16 +56,14 @@
       <base-select
         v-model="activeHeure.type"
         class="mb-3"
-        value-key="id"
         label="Type"
-        display-key="label"
         :options="[
-          // { id: 0, label: 'Autre' },
-          { id: 1, label: 'Solde' },
-          { id: 2, label: 'Indemnité' },
-          // { id: 3, label: 'Frais forfaitaire' },
-          // { id: 4, label: 'Frais effectif' },
-          // { id: 5, label: 'Charges AVS/AC' },
+          // { id: 0, designation: 'Autre' },
+          { id: 1, designation: 'Solde' },
+          { id: 2, designation: 'Indemnité' },
+          // { id: 3, designation: 'Frais forfaitaire' },
+          // { id: 4, designation: 'Frais effectif' },
+          // { id: 5, designation: 'Charges AVS/AC' },
         ]"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />

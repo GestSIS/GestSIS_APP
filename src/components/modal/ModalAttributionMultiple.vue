@@ -21,7 +21,6 @@
             ref="sapeur"
             v-model="activeAttribution.sapeur_id"
             class="mb-3"
-            value-key="id"
             label="Sapeur"
             display-key="nom_prenom"
             :options="sapeurs"
@@ -93,8 +92,6 @@
                           )
                         "
                         base-option="&lt;Matériel type&gt;"
-                        value-key="id"
-                        display-key="designation"
                         @update:model-value="
                           (value) => selectMaterielTypeNumerote(item, value)
                         "
@@ -111,7 +108,6 @@
                           )
                         "
                         base-option="&lt;Aucun matériel correspondant&gt;"
-                        value-key="id"
                         display-key="numero"
                         @update:model-value="
                           (value) => selectNumero(item, value)
@@ -160,10 +156,8 @@
                       <base-select
                         :ref="'numerote-' + index"
                         v-model="item.materiel_type_id"
-                        :options="types"
                         base-option="&lt;Matériel type&gt;"
-                        value-key="id"
-                        display-key="designation"
+                        :options="types"
                       />
                     </td>
                     <td>
@@ -234,8 +228,6 @@
                         v-model="item.materiel_type_id"
                         :options="types"
                         base-option="&lt;Matériel type&gt;"
-                        value-key="id"
-                        display-key="designation"
                         @update:model-value="
                           (value) => selectMaterielTypeGenerique(item, value)
                         "

@@ -11,7 +11,6 @@
             v-model="activeEvent.materiel_event_type_id"
             class="mb-3"
             label="Événement"
-            value-key="id"
             display-key="nom"
             base-option="&lt;Événement&gt;"
             :options="eventTypes"
@@ -59,8 +58,6 @@
                   <base-select
                     :ref="'materiel-type-' + index"
                     v-model="materiel.materiel_type_id"
-                    value-key="id"
-                    display-key="designation"
                     :options="materielTypes"
                     @update:model-value="
                       (value) => selectMateriel(materiel, value)
@@ -87,7 +84,6 @@
                 <td>
                   <base-select
                     v-model="materiel.sapeur_id"
-                    value-key="id"
                     display-key="nom_prenom"
                     base-option="&lt;Non-assigné&gt;"
                     :base-value="null"

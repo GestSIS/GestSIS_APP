@@ -101,8 +101,6 @@
                   v-if="e.excuse_type_id"
                   v-model="e.excuse_type_id"
                   class="ms-1"
-                  value-key="id"
-                  display-key="designation"
                   :options="excusesType"
                   :select-class="{
                     'is-invalid': errors['ecriture_categorie_id'],

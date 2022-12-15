@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "15.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Correction "]
+    },
+    {
       "date": "14.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",

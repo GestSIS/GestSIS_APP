@@ -2,17 +2,34 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeTravailType.id ? 'Modifier' : 'Ajouter' }} un travail type
+        {{ activeTravail.id ? 'Modifier' : 'Ajouter' }} un travail
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
+      <base-select
+        v-model="activeTravail.travail_type_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['travail_type_id'] }"
+        :options="travailTypes"
+        label="Travail"
+      />
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeTravailType.designation"
+          v-model="activeTravail.designation"
           type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['designation'] }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="designation">Date</label>
+        <input
+          id="designation"
+          v-model="activeTravail.date"
+          type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
@@ -21,10 +38,8 @@
         <table class="table table-sm">
           <thead>
             <tr>
-              <th>Type</th>
-              <th>Tarif</th>
-              <th>Unité</th>
-              <th>Compte</th>
+              <th>Sapeur</th>
+              <th>Quantité</th>
               <th></th>
             </tr>
           </thead>
@@ -34,12 +49,8 @@
                 <base-select
                   v-model="base[i].type"
                   :class="{ 'is-invalid': errors['base-type' + i] }"
-                  :options="[
-                    { id: 1, designation: 'Solde' },
-                    { id: 2, designation: 'Indemnite' },
-                    { id: 3, designation: 'Frais forfaitaire' },
-                    { id: 4, designation: 'Frais effectif' },
-                  ]"
+                  display-key="nom_prenom"
+                  :options="sapeur"
                 />
               </td>
               <td class="col-2">
@@ -92,25 +103,14 @@
           </tbody>
         </table>
       </div>
-      <base-select
-        v-model="activeTravailType.ecriture_categorie_id"
-        class="mb-3"
-        :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        :options="categories"
-        label="Catégorie comptable"
-      />
-      <base-checkbox
-        v-model="activeTravailType.actif"
-        class="mb-3"
-        label="Actif"
-      />
+      <base-checkbox v-model="activeTravail.actif" class="mb-3" label="Actif" />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTravailType.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeTravail.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
@@ -133,7 +133,7 @@ export default {
       columnCreationIndex: 0,
       columns: [],
       base: [],
-      activeTravailType: {
+      activeTravail: {
         actif: true,
         fonctions: [],
       },
@@ -189,8 +189,8 @@ export default {
       this.columnCreationIndex++;
     }
 
-    this.activeTravailType = {
-      ...this.activeTravailType,
+    this.activeTravail = {
+      ...this.activeTravail,
       type_unite_id: 6, // Set unité type défault à forfait
       ...this.data,
     };
@@ -212,10 +212,10 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
     updateTarif(index, e) {
-      this.activeTravailType.fonctions[index].tarif = e.target.value;
+      this.activeTravail.fonctions[index].tarif = e.target.value;
     },
     updateIndemnite(index, e) {
-      this.activeTravailType.fonctions[index].indemnite = e.target.value;
+      this.activeTravail.fonctions[index].indemnite = e.target.value;
     },
     ajoutType() {
       this.base.push({
@@ -263,7 +263,7 @@ export default {
         if (e.tarif_min_pour && e.tarif_min_pour < 0)
           this.errors['base-tarif-min-pour' + i] = true;
       });
-      if (this.activeTravailType.par_fonction) {
+      if (this.activeTravail.par_fonction) {
         Object.values(this.columns).forEach((e, i) => {
           if (!e.type) this.errors['column-type' + i] = true;
           if (!e.compte_id) this.errors['column-compte' + i] = true;
@@ -279,7 +279,7 @@ export default {
       const fonctions = [...this.base];
 
       const indemnite = {
-        ...this.activeTravailType,
+        ...this.activeTravail,
         fonctions,
       };
 

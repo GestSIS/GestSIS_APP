@@ -69,8 +69,6 @@
               <base-select
                 class="col-md-6 mb-1"
                 :options="filteredLocalites"
-                display-key="designation"
-                value-key="id"
                 base-option="<Localité>"
                 @update:model-value="(value) => onFilter('localite_id', value)"
               />
@@ -78,7 +76,6 @@
                 class="col-md-6 mb-1"
                 :options="filteredFonctions"
                 display-key="nom"
-                value-key="id"
                 base-option="<Fonction>"
                 @update:model-value="
                   (value) =>
@@ -95,8 +92,6 @@
               <base-select
                 class="col-md-6 mb-1"
                 :options="filteredGrades"
-                display-key="designation"
-                value-key="id"
                 base-option="<Grade>"
                 @update:model-value="(value) => onFilter('grade_id', value)"
               />
@@ -104,7 +99,6 @@
                 class="col-md-6 mb-1"
                 :options="filteredGroupes"
                 display-key="label"
-                value-key="id"
                 base-option="<Groupe>"
                 @update:model-value="
                   (value) =>

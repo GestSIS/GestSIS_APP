@@ -31,11 +31,9 @@
         v-model="activeCompte.produit"
         class="mb-3"
         label="Type comptable"
-        value-key="value"
-        display-key="designation"
         :options="[
-          { value: 0, designation: 'Charge' },
-          { value: 1, designation: 'Produit' },
+          { id: 0, designation: 'Charge' },
+          { id: 1, designation: 'Produit' },
         ]"
       />
     </div>

@@ -36,7 +36,7 @@
               v-if="hasEditPermission"
               :disabled="!canDelete"
               class="btn btn-outline-danger"
-              @click="supprimerIntervention(selectedId)"
+              @click="supprimerTravail(selectedId)"
             >
               Supprimer
             </button>
@@ -112,7 +112,7 @@
                 v-if="hasValidationPermission && props.rowData.statut != 1"
                 title="Examen"
                 class="btn btn-outline-primary border-0"
-                @click="validerIntervention(props.rowData.id)"
+                @click="validerTravail(props.rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
@@ -120,7 +120,7 @@
                 v-if="hasEditPermission && props.rowData.statut == 0"
                 title="Supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerIntervention(props.rowData.id)"
+                @click="supprimerTravail(props.rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -266,7 +266,10 @@ export default {
     select(row) {
       this.selectedId = row?.id;
     },
-    supprimerIntervention(id) {
+    createTravail() {
+      this.SHOW_MODAL({ component: 'ModalTravail' });
+    },
+    supprimerTravail(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -281,8 +284,8 @@ export default {
         },
       });
     },
-    validerIntervention(id) {
-      this.$store.dispatch('validerIntervention', id);
+    validerTravail(id) {
+      this.$store.dispatch('validerTravail', id);
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };
