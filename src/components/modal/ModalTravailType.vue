@@ -17,15 +17,22 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
+      <base-select
+        v-model="activeTravailType.type_unite_id"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['type_unite_id'] }"
+        label="Unité"
+        display-key="unite"
+        :options="unites"
+      />
       <div class="mb-3">
         <table class="table table-sm">
           <thead>
             <tr>
               <th>Type</th>
               <th>Tarif</th>
-              <th>Unité</th>
               <th>Compte</th>
-              <th></th>
+              <th v-if="base.length > 1"></th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +49,7 @@
                   ]"
                 />
               </td>
-              <td class="col-2">
+              <td class="col-2 input-group input-group-sm">
                 <input
                   id="tarif"
                   v-model="base[i].tarif"
@@ -50,14 +57,13 @@
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors['base-tarif' + i] }"
                 />
-              </td>
-              <td class="col-3">
-                <base-select
-                  v-model="base[i].type_unite_id"
-                  :class="{ 'is-invalid': errors['base-unite' + i] }"
-                  display-key="unite"
-                  :options="unites"
-                />
+                <span class="input-group-text">
+                  CHF /
+                  {{
+                    unites.find((u) => u.id == activeTravailType.type_unite_id)
+                      ?.unite
+                  }}</span
+                >
               </td>
               <td class="col-4">
                 <base-select
@@ -78,7 +84,7 @@
               </td>
             </tr>
             <tr>
-              <td :colspan="base.length > 1 ? 6 : 5">
+              <td :colspan="base.length > 1 ? 5 : 4">
                 <button
                   type="button"
                   class="btn btn-outline-primary"

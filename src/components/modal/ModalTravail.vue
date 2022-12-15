@@ -62,13 +62,7 @@
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-quantite' + i] }"
                   />
-                  <span class="input-group-text"
-                    >{{
-                      travailTypes.find(
-                        (t) => t.id == activeTravail.travail_type_id
-                      )
-                    }}
-                    -
+                  <span class="input-group-text">
                     {{
                       unites.find(
                         (u) =>
@@ -85,6 +79,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
+                  :disabled="activeTravail.sapeurs.length <= 1"
                   @click="supprimerType(i)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
@@ -106,7 +101,6 @@
           </tbody>
         </table>
       </div>
-      <base-checkbox v-model="activeTravail.actif" class="mb-3" label="Actif" />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
@@ -175,18 +169,7 @@ export default {
       });
     },
     supprimerType(i) {
-      this.base.splice(i, 1);
-    },
-    ajoutTypePourFonction() {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    },
-    supprimerTypePourFonction(i) {
-      delete this.columns[i];
+      this.activeTravail.sapeurs.splice(i, 1);
     },
     async save() {
       this.errors = {};
