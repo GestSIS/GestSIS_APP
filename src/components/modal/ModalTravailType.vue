@@ -141,7 +141,6 @@ export default {
   },
   computed: {
     ...mapState({
-      fonctions: (state) => state.fonction.liste,
       unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
       comptes: (state) => state.compte.liste,
       categories: (state) => state.ecritureCategorie.liste,

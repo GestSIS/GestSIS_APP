@@ -60,7 +60,7 @@ export default {
       fields: [
         { title: 'Numéro', key: 'numero' },
         { title: 'Désignation', key: 'designation' },
-        { title: 'Produit / Charge', key: 'type' },
+        { title: 'Produit / Charge', key: 'typeLabel' },
         { title: 'Actions', slot: 'actions' },
       ],
     };
@@ -69,7 +69,7 @@ export default {
     ...mapState({
       listeCompte: (state) =>
         state.compte.liste
-          .map((c) => ({ ...c, type: c.type ? 'Produit' : 'Charge' }))
+          .map((c) => ({ ...c, typeLabel: c.produit ? 'Produit' : 'Charge' }))
           .sort((a, b) => a.numero.localeCompare(b.numero)),
     }),
   },

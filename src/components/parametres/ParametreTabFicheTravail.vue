@@ -36,8 +36,17 @@ import ParametreTravailType from './ParametreTravailType.vue';
 
 async function loadData(_, next) {
   const loadTravailTypes = store.dispatch('fetchTravailTypes');
+  const loadUnites = store.dispatch('fetchUnites');
+  const loadComptes = store.dispatch('fetchComptes');
+  const loadEcritureCategories = store.dispatch('fetchEcritureCategories');
 
-  Promise.all([loadTravailTypes]).then(() => {
+  Promise.all([
+    loadComptes,
+    loadUnites,
+    loadTravailTypes,
+    loadEcritureCategories,
+    loadTravailTypes,
+  ]).then(() => {
     next();
   });
 }

@@ -34,7 +34,7 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
+      <div v-if="!activeTravail.id" class="mb-3">
         <table class="table table-sm">
           <thead>
             <tr>
@@ -44,41 +44,44 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(indemnite, i) in base" :key="i">
-              <td class="col-3">
+            <tr v-for="(item, i) in activeTravail.sapeurs" :key="i">
+              <td class="col-8">
                 <base-select
-                  v-model="base[i].type"
+                  v-model="item.sapeur_id"
                   :class="{ 'is-invalid': errors['base-type' + i] }"
                   display-key="nom_prenom"
-                  :options="sapeur"
-                />
-              </td>
-              <td class="col-2">
-                <input
-                  id="tarif"
-                  v-model="base[i].tarif"
-                  type="text"
-                  class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['base-tarif' + i] }"
+                  :options="sapeurs"
                 />
               </td>
               <td class="col-3">
-                <base-select
-                  v-model="base[i].type_unite_id"
-                  :class="{ 'is-invalid': errors['base-unite' + i] }"
-                  display-key="unite"
-                  :options="unites"
-                />
+                <div class="input-group input-group-sm">
+                  <input
+                    id="quantite"
+                    v-model="item.quantite"
+                    type="number"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['base-quantite' + i] }"
+                  />
+                  <span class="input-group-text"
+                    >{{
+                      travailTypes.find(
+                        (t) => t.id == activeTravail.travail_type_id
+                      )
+                    }}
+                    -
+                    {{
+                      unites.find(
+                        (u) =>
+                          u.id ==
+                          travailTypes.find(
+                            (t) => t.id == activeTravail.travail_type_id
+                          )?.type_unite_id
+                      )?.unite
+                    }}</span
+                  >
+                </div>
               </td>
-              <td class="col-4">
-                <base-select
-                  v-model="base[i].compte_id"
-                  :class="{ 'is-invalid': errors['base-compte' + i] }"
-                  display-key="label"
-                  :options="comptes"
-                />
-              </td>
-              <td v-if="base.length > 1" class="text-center">
+              <td class="text-center">
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"
@@ -135,16 +138,15 @@ export default {
       base: [],
       activeTravail: {
         actif: true,
-        fonctions: [],
+        sapeurs: [{ sapeur_id: null, quantite: null }],
       },
     };
   },
   computed: {
     ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
-      comptes: (state) => state.compte.liste,
-      categories: (state) => state.ecritureCategorie.liste,
+      unites: (state) => state.unite.liste,
+      travailTypes: (state) => state.travailType.liste,
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
     }),
   },
   watch: {
@@ -153,61 +155,10 @@ export default {
     },
   },
   mounted() {
-    // Calcul des différentes combinaisons existantes
-    const configurations = new Set(
-      this.data?.fonctions
-        ?.filter((f) => f.fonction_id)
-        ?.map((f) => f.type + ' ' + f.compte_id) || []
-    );
-    this.columns = Object.fromEntries(
-      [...configurations]
-        .map((e) => [e, e.split(' ')])
-        .map(([index, e]) => [
-          index,
-          {
-            type: e[0],
-            compte_id: e[1],
-            fonctions: {},
-          },
-        ])
-    );
-
-    this.data?.fonctions
-      ?.filter((f) => f.fonction_id)
-      ?.forEach((f) => {
-        this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-          f.tarif;
-      });
-
-    // Ajout un type par défault en cas d'utilisation des indemnités par fonction
-    if (!Object.keys(this.columns).length) {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    }
-
     this.activeTravail = {
       ...this.activeTravail,
-      type_unite_id: 6, // Set unité type défault à forfait
       ...this.data,
     };
-
-    this.base = this.data?.fonctions?.filter((f) => !f.fonction_id) || [];
-    if (!this.base.length) {
-      // Ajout d'un revenu de base de type solde
-      this.base.push({
-        type: 1,
-        id: null,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
-      });
-    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
@@ -218,13 +169,9 @@ export default {
       this.activeTravail.fonctions[index].indemnite = e.target.value;
     },
     ajoutType() {
-      this.base.push({
-        type: 1,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
+      this.activeTravail.sapeurs.push({
+        sapeur_id: null,
+        quantite: null,
       });
     },
     supprimerType(i) {
