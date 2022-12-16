@@ -35,15 +35,22 @@
         />
       </div>
       <base-select
-        v-if="activeTravail?.id"
+        v-if="activeTravail?.id && hasSaisieCommunePermission"
         v-model="activeTravail.sapeurs[0].sapeur_id"
         class="mb-3"
         label="Sapeur"
         display-key="nom_prenom"
         :options="sapeurs"
       />
-      <label v-if="activeTravail?.id" for="quantite">Quantité</label>
-      <div v-if="activeTravail?.id" class="input-group input-group-sm mb-3">
+      <label
+        v-if="activeTravail?.id || !hasSaisieCommunePermission"
+        for="quantite"
+        >Quantité</label
+      >
+      <div
+        v-if="activeTravail?.id || !hasSaisieCommunePermission"
+        class="input-group input-group-sm mb-3"
+      >
         <input
           id="quantite"
           v-model="activeTravail.sapeurs[0].quantite"
@@ -63,7 +70,7 @@
           }}</span
         >
       </div>
-      <div v-if="!activeTravail.id" class="mb-3">
+      <div v-if="!activeTravail?.id && hasSaisieCommunePermission" class="mb-3">
         <table class="table table-sm">
           <thead>
             <tr>
@@ -147,6 +154,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import permissions from '../../store/permissions.js';
+
 export default {
   name: 'ModalTravailType',
   props: {
@@ -173,6 +182,12 @@ export default {
       travailTypes: (state) => state.travailType.liste,
       sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeSapeurId: (state) => state.auth.sapeurId,
+      hasSaisieCommunePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+        ),
     }),
   },
   watch: {
@@ -190,6 +205,9 @@ export default {
       };
     } else {
       this.activeTravail.exercice_comptable_id = this.activeExerciceComptableId;
+      if (!this.hasSaisieCommunePermission) {
+        this.activeTravail.sapeurs[0].sapeur_id = this.activeSapeurId;
+      }
     }
   },
   methods: {
