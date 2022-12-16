@@ -34,6 +34,35 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
+      <base-select
+        v-if="activeTravail?.id"
+        v-model="activeTravail.sapeurs[0].sapeur_id"
+        class="mb-3"
+        label="Sapeur"
+        display-key="nom_prenom"
+        :options="sapeurs"
+      />
+      <label v-if="activeTravail?.id" for="quantite">Quantité</label>
+      <div v-if="activeTravail?.id" class="input-group input-group-sm mb-3">
+        <input
+          id="quantite"
+          v-model="activeTravail.sapeurs[0].quantite"
+          name="quantite"
+          type="number"
+          min="0"
+          class="form-control form-control-sm"
+        />
+        <span class="input-group-text">
+          {{
+            unites.find(
+              (u) =>
+                u.id ==
+                travailTypes.find((t) => t.id == activeTravail.travail_type_id)
+                  ?.type_unite_id
+            )?.unite
+          }}</span
+        >
+      </div>
       <div v-if="!activeTravail.id" class="mb-3">
         <table class="table table-sm">
           <thead>
@@ -60,6 +89,7 @@
                     id="quantite"
                     v-model="item.quantite"
                     type="number"
+                    min="0"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-quantite' + i] }"
                   />
@@ -153,7 +183,7 @@ export default {
   mounted() {
     if (this.data.id) {
       this.activeTravail = {
-        ...this.activeTravail,
+        ...this.data,
         sapeurs: [
           { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
         ],

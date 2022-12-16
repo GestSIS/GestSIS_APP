@@ -104,7 +104,7 @@
                 v-if="hasEditPermission && props.rowData.statut == 0"
                 title="Modifier"
                 class="btn btn-outline-primary border-0"
-                @click="updateTravail"
+                @click="updateTravail(props.rowData)"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
@@ -284,6 +284,9 @@ export default {
     },
     createTravail() {
       this.SHOW_MODAL({ component: 'ModalTravail' });
+    },
+    updateTravail(travail) {
+      this.SHOW_MODAL({ component: 'ModalTravail', data: travail });
     },
     supprimerTravail(id) {
       this.SHOW_MODAL({

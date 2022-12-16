@@ -55,17 +55,17 @@ const request = {
           ...options,
           url: encodeURIComponent(
             API_URL +
-              config.url +
-              '?' +
-              Object.entries(config.params ?? {})
-                .map(([key, value]) => key + '=' + valueFormatter(value))
-                .join('&')
+            config.url +
+            '?' +
+            Object.entries(config.params ?? {})
+              .map(([key, value]) => key + '=' + valueFormatter(value))
+              .join('&')
           ),
         };
         config.url = '/print';
         return config;
       },
-      () => {}
+      () => { }
     );
 
     api.interceptors.response.use(
@@ -121,7 +121,6 @@ const request = {
         if (error?.error) {
           throw error.error;
         }
-        console.log();
         return response;
       },
       function (error) {
@@ -250,8 +249,6 @@ const request = {
   },
 
   auth: () => {
-    // console.log("Create auth")
-    // console.log(axios.defaults.headers.common)
     let auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
@@ -269,12 +266,10 @@ const request = {
         return response.data;
       },
       function (error) {
-        // console.log(error);
         // Do something with response error
         return Promise.reject(error.response.data);
       }
     );
-    // console.log("Return auth")
     return auth;
   },
 };

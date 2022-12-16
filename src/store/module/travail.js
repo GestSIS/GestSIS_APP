@@ -30,7 +30,7 @@ export default {
     },
     addTravaux({ commit }, travaux) {
       return Travail.addTravaux(travaux).then((data) => {
-        data.foreach((travail) => commit(types.ADD_TRAVAIL, travail));
+        data?.forEach((travail) => commit(types.ADD_TRAVAIL, travail));
         return data;
       });
     },

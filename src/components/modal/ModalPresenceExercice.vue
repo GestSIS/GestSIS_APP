@@ -233,7 +233,6 @@ export default {
     editExcuseCheckbox(exercice) {
       exercice.present = 0;
       exercice.remplace = 0;
-      console.log(exercice);
       exercice.excuse_type_id = exercice.excuse_type_id
         ? null
         : this.excusesType[0].id;

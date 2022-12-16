@@ -272,9 +272,6 @@ export default {
     if (this.fonctions.length === 0) {
       this.$store.dispatch('fetchFonctions');
     }
-    if (this.exercicesComptable.length === 0) {
-      //console.log('Warning')
-    }
 
     if (this.activeExerciceComptableId || 0 !== 0) {
       this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
