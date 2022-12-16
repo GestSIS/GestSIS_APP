@@ -76,6 +76,18 @@
         </div>
         <div class="form-check form-switch">
           <input
+            id="ecritures-travail"
+            v-model="params.ecrituresTravail"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+          />
+          <label class="form-check-label" for="ecritures-travail"
+            >Fiches de travail</label
+          >
+        </div>
+        <div class="form-check form-switch">
+          <input
             id="ecritures-divers"
             v-model="params.ecrituresDivers"
             class="form-check-input"
@@ -162,6 +174,7 @@ export default {
         ecrituresAnnuel: true,
         ecrituresCours: true,
         ecrituresDivers: true,
+        ecrituresTravail: true,
         ecrituresExercice: true,
         ecrituresIntervention: true,
       },
