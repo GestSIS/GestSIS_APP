@@ -22,4 +22,9 @@ export default {
   printMonDecompte(decompteId, filename) {
     return Api.print(filename).get(`/mes-decomptes/${decompteId}/print`);
   },
+  downloadMonCertificatSalaire(exerciceComptableId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/mon-certificat-salaire/${exerciceComptableId}`
+    );
+  },
 };

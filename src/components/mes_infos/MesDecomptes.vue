@@ -2,6 +2,9 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mes décomptes</h3>
+      <button class="btn btn-primary" @click="certificatSalaire">
+        Certificat de salaire
+      </button>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -63,17 +66,21 @@ export default {
   },
   computed: {
     ...mapState({
-      anneeComptableId: (state) => state.exerciceComptable.activeId,
+      exerciceComptableId: (state) => state.exerciceComptable.activeId,
       paiements: (state) =>
         state.mesInfos.paiements
           .map((e) => ({
             ...e,
           }))
           .sort((e1, e2) => e1.date.localeCompare(e2.date)),
+      exerciceComptable: (state) =>
+        state.exerciceComptable.liste.find(
+          (e) => e.id == state.exerciceComptable.activeId
+        ),
     }),
   },
   watch: {
-    anneeComptableId() {
+    exerciceComptableId() {
       this.$store.dispatch('fetchMesDecomptes');
     },
   },
@@ -81,6 +88,24 @@ export default {
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;
       MesInfosService.printMonDecompte(paiement.decompte_id, filename);
+    },
+    certificatSalaire() {
+      if (this.paiements.length == 0) {
+        this.$awn.alert(
+          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire'
+        );
+        return;
+      }
+      if (Date.now() < new Date(this.exerciceComptable.fin)) {
+        this.$awn.warning(
+          "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !"
+        );
+      }
+      const filename = `${this.exerciceComptable?.annee}_certificat_salaire.pdf`;
+      MesInfosService.downloadMonCertificatSalaire(
+        this.exerciceComptableId,
+        filename
+      );
     },
   },
 };

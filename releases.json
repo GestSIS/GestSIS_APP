@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "16.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Finalisation du module `fiche travail` permettant aux sapeurs de saisir leurs travaux hors exercices/séances et autre",
-        "Menu `Ma fiche de travail` permettant de visualiser les travaux saisis"
+        "Menu `Ma fiche de travail` permettant de visualiser les travaux saisis",
+        "Mon certificat de salaire, téléchargeable depuis `Mes décomptes`"
       ]
     },
     {
