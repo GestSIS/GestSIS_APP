@@ -7,20 +7,30 @@
         </div>
         <div class="card-body d-grid gap-1">
           <button
-            v-if="!selectedItem || !selectedItem?.ecritures?.length"
+            v-if="!selectedItem || selectedItem?.statut == 1"
             class="btn btn-outline-primary"
-            :disabled="!selectedItem"
+            :disabled="selectedItem && selectedItem.statut == 1"
             @click="imputer()"
           >
-            Tout imputer
+            Imputer le travail sélectionné
           </button>
           <button
+            v-if="selectedItem?.statut == 2"
+            class="btn btn-outline-danger"
+            @click="imputer()"
+          >
+            Annuler l'imputation sélectionnée
+          </button>
+          <button class="btn btn-outline-primary" @click="imputer()">
+            Tout imputer
+          </button>
+          <!-- <button
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
             @click="annulerImputer()"
           >
-            Annuler les imputations
-          </button>
+            Annuler toutes les imputations
+          </button> -->
         </div>
       </div>
     </div>
