@@ -34,11 +34,16 @@ const adminGuard = () => {
   };
 };
 
-const permissionGuard = (permission) => {
+const permissionGuard = (...perms) => {
   return function (to, from, next) {
     const isAdmin = store.state.auth.admin;
     const permissions = store.state.auth.sis.permissions;
-    if (permissions.includes(permission) || isAdmin) {
+    const requiredPermissions = new Set(perms);
+
+    if (
+      permissions.filter((p) => requiredPermissions.has(p)).length ||
+      isAdmin
+    ) {
       next();
     } else {
       redirect(to, from, next);
@@ -269,7 +274,11 @@ const router = createRouter({
     {
       path: '/fiche-travail',
       name: 'fiche-travail',
-      beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.LECTURE),
+      beforeEnter: permissionGuard(
+        permissions.FICHE_TRAVAIL.LECTURE,
+        permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
+        permissions.FICHE_TRAVAIL.SAISIE_PERSO
+      ),
       component: () => import('@/pages/PageTravaux.vue'),
     },
     {

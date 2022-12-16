@@ -78,8 +78,9 @@ export default {
     filteredLinks() {
       return this.links.filter(
         (l) =>
-          (!l.permission && !l.admin && !l.sapeur) ||
+          (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
           this.perms?.includes(l.permission) ||
+          this.perms?.filter((p) => new Set(l.permissions).has(p)).length ||
           (this.isAdmin && !l.sapeur) ||
           (l.sapeur && this.isSapeur)
       );

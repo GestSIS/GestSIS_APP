@@ -35,7 +35,11 @@ const links = [
     to: { name: 'fiche-travail' },
     icon: ['fas', 'business-time'],
     nom: 'Fiche de travail',
-    permission: permissions.FICHE_TRAVAIL.SAISIE_PERSO,
+    permissions: [
+      permissions.FICHE_TRAVAIL.SAISIE_PERSO,
+      permissions.FICHE_TRAVAIL.LECTURE,
+      permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
+    ],
   },
   {
     to: { name: 'cours' },

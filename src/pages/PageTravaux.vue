@@ -49,7 +49,9 @@
               Annuler l'examen
             </button>
             <button
-              v-if="hasEditPermission"
+              v-if="
+                hasEditPermission && selectedItem?.auteur_id == activeSapeurId
+              "
               :disabled="!selectedItem?.statut == 0"
               class="btn btn-outline-danger"
               @click="supprimerTravail(selectedItem)"
@@ -117,7 +119,11 @@
           >
             <template #actions="{ rowData }">
               <button
-                v-if="hasEditPermission && rowData.statut == 0"
+                v-if="
+                  hasEditPermission &&
+                  rowData.auteur_id == activeSapeurId &&
+                  rowData.statut == 0
+                "
                 title="Modifier"
                 class="btn btn-outline-primary border-0"
                 @click="updateTravail(rowData)"
@@ -144,7 +150,11 @@
                 <font-awesome-icon :icon="['far', 'eye']" />
               </button>
               <button
-                v-if="hasEditPermission && rowData.statut == 0"
+                v-if="
+                  hasEditPermission &&
+                  rowData.auteur_id == activeSapeurId &&
+                  rowData.statut == 0
+                "
                 title="Supprimer"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerTravail(rowData)"
@@ -224,6 +234,7 @@ export default {
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeSapeurId: (state) => state.auth.sapeurId,
       travaux: (state) =>
         state.travail.liste.map((t) => ({
           ...t,
@@ -362,6 +373,7 @@ export default {
         [-1]: 'table-warning', // 'Refusé',
         0: '', // 'En attente',
         1: 'table-success', // 'Accepté'
+        2: 'table-success', // 'Imputé'
       };
       return statutsClass[dataItem.statut];
     },
