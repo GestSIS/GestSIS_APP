@@ -253,7 +253,7 @@ export default {
       const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
       if (baseSet.size != this.base.length) {
         this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise."
+          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises."
         );
         return;
       }

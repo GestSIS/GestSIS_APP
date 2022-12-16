@@ -22,8 +22,9 @@ import store from '@/store/index';
 async function loadData(routeTo, next) {
   let loadMesTravaux = store.dispatch('fetchMesTravaux');
   let loadTravailTypes = store.dispatch('fetchTravailTypes');
+  let loadUnites = store.dispatch('fetchUnites');
 
-  Promise.all([loadMesTravaux, loadTravailTypes]).then(() => {
+  Promise.all([loadMesTravaux, loadTravailTypes, loadUnites]).then(() => {
     next();
   });
 }
@@ -44,8 +45,6 @@ export default {
         { title: 'Désignation', key: 'designation' },
         { title: 'Quantité', key: 'quantite' },
         { title: 'Unité', key: 'unite' },
-        { title: 'Auteur', key: 'auteur' },
-        { title: 'Date demande', key: 'date_demande', type: Date },
         {
           title: 'Statut',
           key: 'statut',
@@ -65,6 +64,14 @@ export default {
           travail_type: state.travailType.liste.find(
             (e) => e.id == t.travail_type_id
           )?.designation,
+          auteur: state.sapeur.liste.find((s) => s.id == t.auteur_id)
+            ?.nom_prenom,
+          unite: state.unite.liste.find(
+            (u) =>
+              u.id ==
+              state.travailType.liste.find((e) => e.id == t.travail_type_id)
+                ?.type_unite_id
+          )?.unite,
         })),
     }),
   },

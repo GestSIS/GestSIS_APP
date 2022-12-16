@@ -47,6 +47,7 @@
             <tr v-for="(item, i) in activeTravail.sapeurs" :key="i">
               <td class="col-8">
                 <base-select
+                  :ref="'sapeur-' + i"
                   v-model="item.sapeur_id"
                   :class="{ 'is-invalid': errors['base-type' + i] }"
                   display-key="nom_prenom"
@@ -131,7 +132,7 @@ export default {
       columns: [],
       base: [],
       activeTravail: {
-        actif: true,
+        exercice_comptable_id: null,
         sapeurs: [{ sapeur_id: null, quantite: null }],
       },
     };
@@ -141,6 +142,7 @@ export default {
       unites: (state) => state.unite.liste,
       travailTypes: (state) => state.travailType.liste,
       sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },
   watch: {
@@ -149,10 +151,16 @@ export default {
     },
   },
   mounted() {
-    this.activeTravail = {
-      ...this.activeTravail,
-      ...this.data,
-    };
+    if (this.data.id) {
+      this.activeTravail = {
+        ...this.activeTravail,
+        sapeurs: [
+          { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
+        ],
+      };
+    } else {
+      this.activeTravail.exercice_comptable_id = this.activeExerciceComptableId;
+    }
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
@@ -167,6 +175,11 @@ export default {
         sapeur_id: null,
         quantite: null,
       });
+
+      const count = this.activeTravail.sapeurs.length;
+      this.$nextTick(() => {
+        this.$refs[`sapeur-${count - 1}`][0].focus();
+      });
     },
     supprimerType(i) {
       this.activeTravail.sapeurs.splice(i, 1);
@@ -175,29 +188,12 @@ export default {
       this.errors = {};
 
       // Contrôle qu'aucune colonne n'est dupliquée
-      const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
-      if (baseSet.size != this.base.length) {
-        this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé plusieurs reprise."
-        );
+      const sapeurIds = new Set(
+        this.activeTravail.sapeurs.map((e) => e.sapeur_id)
+      );
+      if (sapeurIds.size != this.activeTravail.sapeurs.length) {
+        this.$awn.alert('Erreur, un sapeur a été saisie à double.');
         return;
-      }
-
-      // Contrôle des données de base
-      this.base.forEach((e, i) => {
-        if (!e.type) this.errors['base-type' + i] = true;
-        if (!e.compte_id) this.errors['base-compte' + i] = true;
-        if (!e.tarif || e.tarif < 0) this.errors['base-tarif' + i] = true;
-        if (e.tarif_min && e.tarif_min < 0)
-          this.errors['base-tarif-min' + i] = true;
-        if (e.tarif_min_pour && e.tarif_min_pour < 0)
-          this.errors['base-tarif-min-pour' + i] = true;
-      });
-      if (this.activeTravail.par_fonction) {
-        Object.values(this.columns).forEach((e, i) => {
-          if (!e.type) this.errors['column-type' + i] = true;
-          if (!e.compte_id) this.errors['column-compte' + i] = true;
-        });
       }
 
       // Return en cas d'erreurs
@@ -205,18 +201,23 @@ export default {
         return;
       }
 
-      // Generate data
-      const fonctions = [...this.base];
-
-      const indemnite = {
-        ...this.activeTravail,
-        fonctions,
-      };
-
-      const action =
-        (indemnite.id || 0) === 0 ? 'addTravailType' : 'updateTravailType';
-      this.$store
-        .dispatch(action, indemnite)
+      let promise = null;
+      if ((this.activeTravail.id ?? 0) === 0) {
+        const travaux = this.activeTravail.sapeurs.map((s) => ({
+          ...this.activeTravail,
+          sapeurs: undefined,
+          ...s,
+        }));
+        promise = this.$store.dispatch('addTravaux', travaux);
+      } else {
+        const travail = {
+          ...this.activeTravail,
+          sapeur_id: this.activeTravail.sapeurs[0].sapeur_id,
+          quantite: this.activeTravail.sapeurs[0].quantite,
+        };
+        promise = this.$store.dispatch('updateTravail', travail);
+      }
+      promise
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();

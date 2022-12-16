@@ -14,16 +14,21 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.infos = {};
-      state.exercices = {};
-      state.interventions = {};
-      state.paiements = {};
-      state.ecritures = {};
+      state.materiels = [];
+      state.travaux = [];
+      state.exercices = [];
+      state.interventions = [];
+      state.paiements = [];
+      state.ecritures = [];
     },
     [types.UPDATE_MES_INFOS](state, payload) {
       state.infos = payload;
     },
     [types.UPDATE_MON_MATERIEL](state, payload) {
       state.materiels = payload;
+    },
+    [types.UPDATE_MES_TRAVAUX](state, payload) {
+      state.travaux = payload;
     },
     [types.UPDATE_MES_EXERCICES](state, payload) {
       state.exercices = payload;

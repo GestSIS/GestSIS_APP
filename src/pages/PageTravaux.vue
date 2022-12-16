@@ -141,13 +141,13 @@ import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadLocalites = store.dispatch('fetchLocalites');
+  let loadUnites = store.dispatch('fetchUnites');
   let loadTravailTypes = store.dispatch('fetchTravailTypes');
 
   await store.dispatch('fetchExercicesComptables');
 
   let loadTravaux = store.dispatch('fetchTravaux');
-  Promise.all([loadSapeurs, loadLocalites, loadTravaux, loadTravailTypes]).then(
+  Promise.all([loadSapeurs, loadUnites, loadTravaux, loadTravailTypes]).then(
     () => next()
   );
 }
@@ -192,7 +192,23 @@ export default {
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      travaux: (state) => state.travail.liste,
+      travaux: (state) =>
+        state.travail.liste.map((t) => ({
+          ...t,
+          travail_type: state.travailType.liste.find(
+            (e) => e.id == t.travail_type_id
+          )?.designation,
+          sapeur: state.sapeur.liste.find((s) => s.id == t.sapeur_id)
+            ?.nom_prenom,
+          auteur: state.sapeur.liste.find((s) => s.id == t.auteur_id)
+            ?.nom_prenom,
+          unite: state.unite.liste.find(
+            (u) =>
+              u.id ==
+              state.travailType.liste.find((e) => e.id == t.travail_type_id)
+                ?.type_unite_id
+          )?.unite,
+        })),
       sapeurs: (state) => state.sapeur.liste,
       travailTypes: (state) => state.travailType.liste,
       hasSaisiePersoPermission: (state) =>
@@ -279,7 +295,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeIntervention', id);
+            this.$store.dispatch('removeTravail', id);
           }
         },
       });

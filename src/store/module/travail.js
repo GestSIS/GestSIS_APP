@@ -28,20 +28,26 @@ export default {
         (data) => commit(types.UPDATE_TRAVAIL_LISTE, data)
       );
     },
-    addTravail({ commit }, type) {
-      return Travail.addType(type).then((data) => {
-        commit(types.ADD_TRAVAIL, data);
+    addTravaux({ commit }, travaux) {
+      return Travail.addTravaux(travaux).then((data) => {
+        data.foreach((travail) => commit(types.ADD_TRAVAIL, travail));
         return data;
       });
     },
     updateTravail({ commit }, type) {
-      return Travail.updateType(type).then((data) => {
+      return Travail.updateTravail(type).then((data) => {
+        commit(types.UPDATE_TRAVAIL, data);
+        return data;
+      });
+    },
+    reviewTravail({ commit }, type) {
+      return Travail.reviewTravail(type).then((data) => {
         commit(types.UPDATE_TRAVAIL, data);
         return data;
       });
     },
     removeTravail({ commit }, typeId) {
-      return Travail.removeType(typeId).then((data) => {
+      return Travail.removeTravail(typeId).then((data) => {
         commit(types.REMOVE_TRAVAIL, typeId);
         return data;
       });
