@@ -11,10 +11,10 @@
         :hide-download="true"
         no-data="Aucun décompte pour le moment"
       >
-        <template #actions="props">
+        <template #actions="{ rowData }">
           <button
             class="btn btn-outline-primary border-0"
-            @click="downloadDecompte(props.rowData)"
+            @click="downloadDecompte(rowData)"
           >
             <font-awesome-icon :icon="['far', 'file-pdf']" />
           </button>

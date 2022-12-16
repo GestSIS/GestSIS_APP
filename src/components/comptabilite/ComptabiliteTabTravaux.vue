@@ -80,20 +80,20 @@
           :selectable="true"
           @selected="selected"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
-              v-if="props.rowData.ecritures?.length"
+              v-if="rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Annuler imputation"
-              @click="annulerImputer(props.rowData.id)"
+              @click="annulerImputer(rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'ban']" />
             </button>
             <button
-              v-if="!props.rowData.ecritures?.length"
+              v-if="!rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Imputer travail"
-              @click="imputer(props.rowData.id)"
+              @click="imputer(rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>

@@ -160,10 +160,10 @@
             :row-class="onRowClass"
             @selected="selectExercice"
           >
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <router-link
                 v-slot="{ navigate }"
-                :to="'/exercices/' + props.rowData.id"
+                :to="'/exercices/' + rowData.id"
                 custom
               >
                 <button
@@ -175,38 +175,38 @@
                 </button>
               </router-link>
               <button
-                v-if="hasValidationPermission && props.rowData.statut == 2"
+                v-if="hasValidationPermission && rowData.statut == 2"
                 title="valider"
                 class="btn btn-outline-primary border-0"
-                @click="validerExercice(props.rowData.id)"
+                @click="validerExercice(rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
                 v-if="
                   hasValidationPermission &&
-                  props.rowData.statut <= 3 &&
-                  props.rowData.statut > 0
+                  rowData.statut <= 3 &&
+                  rowData.statut > 0
                 "
                 title="annuler"
                 class="btn btn-outline-warning border-0"
-                @click="annulerExercice(props.rowData.id)"
+                @click="annulerExercice(rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'ban']" />
               </button>
               <button
-                v-if="hasValidationPermission && props.rowData.statut == 0"
+                v-if="hasValidationPermission && rowData.statut == 0"
                 title="réactiver"
                 class="btn btn-outline-success border-0"
-                @click="reactiverExercice(props.rowData.id)"
+                @click="reactiverExercice(rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
-                v-if="hasValidationPermission && props.rowData.statut <= 3"
+                v-if="hasValidationPermission && rowData.statut <= 3"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerExercice(props.rowData.id)"
+                @click="supprimerExercice(rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>

@@ -64,17 +64,12 @@
           :data="filteredData"
           @selected="select"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
               class="btn btn-outline-primary border-0"
               title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
-              @click="
-                genererDecompteSapeur(
-                  props.rowData.id,
-                  props.rowData.nom_prenom
-                )
-              "
+              :disabled="!rowData.aPayer"
+              @click="genererDecompteSapeur(rowData.id, rowData.nom_prenom)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>

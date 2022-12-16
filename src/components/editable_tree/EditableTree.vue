@@ -15,8 +15,8 @@
       :is-last="index + 1 == tree.length"
       :is-last-of-level="index + 1 == tree.length"
     >
-      <template #default="props">
-        <slot :node="props.node"></slot>
+      <template #default="{ node }">
+        <slot :node="node"></slot>
       </template>
     </editable-node>
   </div>

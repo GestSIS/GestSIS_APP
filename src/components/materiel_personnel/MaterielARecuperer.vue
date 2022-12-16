@@ -9,11 +9,11 @@
       no-data="Aucun matériel personnel à récupérer"
       :data="computedData"
     >
-      <template #actions="props">
+      <template #actions="{ rowData }">
         <button
           title="Retour"
           class="btn btn-outline-primary border-0"
-          @click="retourMultiple(props.rowData)"
+          @click="retourMultiple(rowData)"
         >
           <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
         </button>

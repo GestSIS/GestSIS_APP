@@ -99,28 +99,28 @@
             :selectable="true"
             @selected="select"
           >
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <button
-                v-if="hasEditPermission && props.rowData.statut == 0"
+                v-if="hasEditPermission && rowData.statut == 0"
                 title="Modifier"
                 class="btn btn-outline-primary border-0"
-                @click="updateTravail(props.rowData)"
+                @click="updateTravail(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
-                v-if="hasValidationPermission && props.rowData.statut != 1"
+                v-if="hasValidationPermission && rowData.statut != 1"
                 title="Examen"
                 class="btn btn-outline-primary border-0"
-                @click="validerTravail(props.rowData.id)"
+                @click="reviewTravail(rowData)"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
-                v-if="hasEditPermission && props.rowData.statut == 0"
+                v-if="hasEditPermission && rowData.statut == 0"
                 title="Supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerTravail(props.rowData.id)"
+                @click="supprimerTravail(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -288,7 +288,7 @@ export default {
     updateTravail(travail) {
       this.SHOW_MODAL({ component: 'ModalTravail', data: travail });
     },
-    supprimerTravail(id) {
+    supprimerTravail(travail) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -298,7 +298,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeTravail', id);
+            this.$store.dispatch('removeTravail', travail?.id);
           }
         },
       });

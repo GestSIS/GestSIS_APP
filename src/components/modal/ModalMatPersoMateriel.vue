@@ -64,18 +64,18 @@
           :selectable="true"
           no-data="Aucun événement"
         >
-          <template #actions="props">
+          <template #actions="{ rowData, actions, status }">
             <button
-              v-if="props.rowData.statut === 4"
+              v-if="rowData.statut === 4"
               class="btn btn-link border-0"
-              @click="props.actions.toggleDetailRow(props.rowData.id)"
+              @click="actions.toggleDetailRow(rowData.id)"
             >
               <font-awesome-icon
-                v-if="props.status.detailRowVisible || false"
+                v-if="status.detailRowVisible || false"
                 :icon="['fas', 'angle-down']"
               />
               <font-awesome-icon
-                v-if="!props.status.detailRowVisible || false"
+                v-if="!status.detailRowVisible || false"
                 :icon="['fas', 'angle-right']"
               />
             </button>

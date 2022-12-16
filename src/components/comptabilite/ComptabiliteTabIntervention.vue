@@ -98,11 +98,11 @@
           :selectable="true"
           @selected="selected"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
-              v-if="props.rowData.statut === 2"
+              v-if="rowData.statut === 2"
               class="btn btn-outline-primary border-0"
-              @click="imputer(props.rowData.id)"
+              @click="imputer(rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>

@@ -91,25 +91,20 @@
           :selectable="true"
           @selected="selected"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
-              v-if="props.rowData.statut === 3"
+              v-if="rowData.statut === 3"
               class="btn btn-outline-primary border-0"
-              @click="imputer(props.rowData.id)"
+              @click="imputer(rowData.id)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
             <button
-              v-if="props.rowData.statut === 4"
+              v-if="rowData.statut === 4"
               class="btn btn-outline-primary border-0"
               title="Décompte sapeur"
-              :disabled="!props.rowData.aPayer"
-              @click="
-                genererDecompteExercice(
-                  props.rowData.id,
-                  props.rowData.designation
-                )
-              "
+              :disabled="!rowData.aPayer"
+              @click="genererDecompteExercice(rowData.id, rowData.designation)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>

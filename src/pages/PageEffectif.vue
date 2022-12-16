@@ -141,11 +141,11 @@
                 </th>
               </tr>
             </template>
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <router-link
                 v-if="hasSapeurModificationPermission"
                 v-slot="{ navigate }"
-                :to="'/sapeurs/' + props.rowData.id"
+                :to="'/sapeurs/' + rowData.id"
                 custom
               >
                 <button
@@ -157,13 +157,13 @@
               </router-link>
               <a
                 class="btn btn-outline-primary border-0"
-                :href="'mailto:' + props.rowData.email"
+                :href="'mailto:' + rowData.email"
               >
                 <font-awesome-icon :icon="['fas', 'envelope']" />
               </a>
               <button
                 class="btn btn-outline-primary border-0"
-                @click="vcard([props.rowData])"
+                @click="vcard([rowData])"
               >
                 <font-awesome-icon :icon="['far', 'address-card']" />
               </button>

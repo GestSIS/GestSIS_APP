@@ -10,14 +10,14 @@
             v-if="!selectedItem || !selectedItem?.ecritures?.length"
             class="btn btn-outline-primary"
             :disabled="!selectedItem"
-            @click="imputer(selectedItem.id)"
+            @click="imputer(selectedItem)"
           >
             Imputer
           </button>
           <button
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
-            @click="annulerImputer(selectedItem.id)"
+            @click="annulerImputer(selectedItem)"
           >
             Annuler l'imputation
           </button>
@@ -78,20 +78,20 @@
           :selectable="true"
           @selected="selected"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
-              v-if="props.rowData.ecritures?.length"
+              v-if="rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Annuler imputation"
-              @click="annulerImputer(props.rowData.id)"
+              @click="annulerImputer(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'ban']" />
             </button>
             <button
-              v-if="!props.rowData.ecritures?.length"
+              v-if="!rowData.ecritures?.length"
               class="btn btn-outline-primary border-0"
               title="Imputer cours"
-              @click="imputer(props.rowData.id, props.rowData.designation)"
+              @click="imputer(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -287,15 +287,15 @@ export default {
     selected(item) {
       this.selectedId = item?.id;
     },
-    imputer(courSapeurId) {
+    imputer(courSapeur) {
       this.SHOW_MODAL({
         component: 'ModalImputerCours',
-        data: { id: courSapeurId },
+        data: { id: courSapeur?.id },
         size: 2,
         callback: () => this.init(),
       });
     },
-    annulerImputer(courSapeurId) {
+    annulerImputer(courSapeur) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -306,17 +306,17 @@ export default {
         callback: (confirmed) => {
           if (confirmed) {
             this.$store
-              .dispatch('annulerImputationCours', courSapeurId)
+              .dispatch('annulerImputationCours', courSapeur?.id)
               .then(({ statut }) => {
                 this.coursSapeurs = [
-                  ...this.coursSapeurs.filter((e) => e.id != courSapeurId),
+                  ...this.coursSapeurs.filter((e) => e.id != courSapeur?.id),
                   {
-                    ...this.coursSapeurs.find((e) => e.id == courSapeurId),
+                    ...this.coursSapeurs.find((e) => e.id == courSapeur?.id),
                     statut: statut,
                   },
                 ].sort((a, b) => a.date.localeCompare(b.date));
                 this.selectedItem = this.coursSapeurs.find(
-                  (e) => e.id == courSapeurId
+                  (e) => e.id == courSapeur?.id
                 );
               })
               .catch((err) => {

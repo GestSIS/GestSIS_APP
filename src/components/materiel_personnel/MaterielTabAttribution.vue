@@ -52,18 +52,18 @@
           no-data="Aucun sapeur à afficher"
           :data="computedMaterielNumerote"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
               title="Info"
               class="btn btn-outline-primary border-0"
-              @click="info(props.rowData)"
+              @click="info(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'info-circle']" />
             </button>
             <button
               title="Retour"
               class="btn btn-outline-primary border-0"
-              @click="retourSimple(props.rowData)"
+              @click="retourSimple(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
             </button>
@@ -89,11 +89,11 @@
           :data="computedMaterielGeneric"
           @selected="selectSapeur"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
               title="Retour"
               class="btn btn-outline-primary border-0"
-              @click="retourSimple(props.rowData)"
+              @click="retourSimple(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
             </button>

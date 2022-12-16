@@ -151,10 +151,10 @@
             :selectable="true"
             @selected="select"
           >
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <router-link
                 v-slot="{ navigate }"
-                :to="'/interventions/' + props.rowData.id"
+                :to="'/interventions/' + rowData.id"
                 custom
               >
                 <button
@@ -165,17 +165,17 @@
                 </button>
               </router-link>
               <button
-                v-if="hasValidationPermission && props.rowData.statut === 1"
+                v-if="hasValidationPermission && rowData.statut === 1"
                 class="btn btn-outline-primary border-0"
-                @click="validerIntervention(props.rowData.id)"
+                @click="validerIntervention(rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'check']" />
               </button>
               <button
-                v-if="hasEditPermission && props.rowData.statut <= 3"
+                v-if="hasEditPermission && rowData.statut <= 3"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerIntervention(props.rowData.id)"
+                @click="supprimerIntervention(rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>

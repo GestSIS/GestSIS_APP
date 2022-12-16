@@ -61,11 +61,11 @@
           :selectable="true"
           @selected="selected"
         >
-          <template #actions="props">
+          <template #actions="{ rowData }">
             <button
               title="Regénérer les frais de ce sapeur"
               class="btn btn-outline-primary border-0"
-              @click="regenererSapeur(props.rowData.id)"
+              @click="regenererSapeur(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
             </button>
@@ -286,6 +286,7 @@ export default {
       this.selectedId = id;
     },
     regenererSapeur() {
+      // TODO: Fix this feature
       this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
     },
     async annulerImputation() {

@@ -150,21 +150,21 @@
             :selectable="true"
             @selected="selected"
           >
-            <template #doc="props">
+            <template #doc="{ rowData }">
               <button
-                v-if="props.rowData.filename"
+                v-if="rowData.filename"
                 class="btn"
-                @click="downloadJustificatif(props.rowData)"
+                @click="downloadJustificatif(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
             </template>
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <router-link
                 v-slot="{ navigate }"
                 :to="{
                   name: 'controle-medical',
-                  params: { id: props.rowData.id },
+                  params: { id: rowData.id },
                 }"
                 custom
               >
@@ -178,7 +178,7 @@
               <button
                 type="button"
                 class="btn btn-outline-danger border-0"
-                @click="supprimer(props.rowData)"
+                @click="supprimer(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>

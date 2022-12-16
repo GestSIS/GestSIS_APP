@@ -35,18 +35,18 @@
             :data="users"
             :selectable="true"
           >
-            <template #badges="props">
+            <template #badges="{ rowData }">
               <span
-                v-for="r in props.rowData.user_roles"
+                v-for="r in rowData.user_roles"
                 :key="r.id"
                 class="badge bg-primary me-1"
                 >{{ formatRole(r.role_id) }}</span
               >
             </template>
-            <template #actions="props">
+            <template #actions="{ rowData }">
               <button
                 class="btn btn-outline-primary border-0"
-                @click="edit(props.rowData)"
+                @click="edit(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
