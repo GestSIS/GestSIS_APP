@@ -33,10 +33,26 @@
               Ajouter un travail
             </button>
             <button
+              v-if="hasValidationPermission && selectedItem?.statut < 1"
+              class="btn btn-outline-success"
+              :disabled="!selectedItem?.statut < 1"
+              @click="reviewTravail(selectedItem)"
+            >
+              Traiter
+            </button>
+            <button
+              v-if="hasValidationPermission && !selectedItem?.statut < 1"
+              class="btn btn-outline-success"
+              :disabled="selectedItem?.statut == 0 || selectedItem?.statut == 2"
+              @click="cancelReviewTravail(selectedItem)"
+            >
+              Annuler l'examen
+            </button>
+            <button
               v-if="hasEditPermission"
-              :disabled="!canDelete"
+              :disabled="!selectedItem?.statut == 0"
               class="btn btn-outline-danger"
-              @click="supprimerTravail(selectedId)"
+              @click="supprimerTravail(selectedItem)"
             >
               Supprimer
             </button>
@@ -109,12 +125,23 @@
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
-                v-if="hasValidationPermission && rowData.statut != 1"
+                v-if="
+                  hasValidationPermission &&
+                  (rowData.statut == -1 || rowData.statut == 1)
+                "
                 title="Examen"
-                class="btn btn-outline-primary border-0"
+                class="btn btn-outline-warning border-0"
+                @click="cancelReviewTravail(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'cancel']" />
+              </button>
+              <button
+                v-if="hasValidationPermission && rowData.statut == 0"
+                title="Examen"
+                class="btn btn-outline-success border-0"
                 @click="reviewTravail(rowData)"
               >
-                <font-awesome-icon :icon="['fas', 'check']" />
+                <font-awesome-icon :icon="['far', 'eye']" />
               </button>
               <button
                 v-if="hasEditPermission && rowData.statut == 0"
@@ -181,7 +208,12 @@ export default {
           title: 'Statut',
           key: 'statut',
           formatter(statut) {
-            return { [-1]: 'Refusé', 0: 'En attente', 1: 'Accepté' }[statut];
+            return {
+              [-1]: 'Refusé',
+              0: 'En attente',
+              1: 'Accepté',
+              2: 'Imputé',
+            }[statut];
           },
         },
         { title: 'Justification', key: 'justification' },
@@ -211,20 +243,10 @@ export default {
         })),
       sapeurs: (state) => state.sapeur.liste,
       travailTypes: (state) => state.travailType.liste,
-      hasSaisiePersoPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_PERSO
-        ),
       hasSaisieCommunePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
           permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
-        ),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.VALIDATION
         ),
       hasEditPermission: (state) =>
         state.auth.admin ||
@@ -233,6 +255,11 @@ export default {
         ) ||
         state.auth.sis.permissions.includes(
           permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+        ),
+      hasValidationPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.FICHE_TRAVAIL.VALIDATION
         ),
     }),
     filteredSapeurs() {
@@ -265,6 +292,9 @@ export default {
           .length > 0
       );
     },
+    selectedItem() {
+      return this.travaux.find((t) => t.id == this.selectedId);
+    },
   },
   watch: {
     activeExerciceComptableId() {
@@ -288,6 +318,24 @@ export default {
     updateTravail(travail) {
       this.SHOW_MODAL({ component: 'ModalTravail', data: travail });
     },
+    reviewTravail(travail) {
+      this.SHOW_MODAL({ component: 'ModalReviewTravail', data: travail });
+    },
+    cancelReviewTravail(travail) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: "Voulez-vous vraiment annuler l'examen de ce travail ?",
+          question:
+            "Attention, la justification fournie lors de l'examen sera perdue.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('cancelReviewTravail', travail?.id);
+          }
+        },
+      });
+    },
     supprimerTravail(travail) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
@@ -302,9 +350,6 @@ export default {
           }
         },
       });
-    },
-    validerTravail(id) {
-      this.$store.dispatch('validerTravail', id);
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

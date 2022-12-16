@@ -63,7 +63,7 @@
     <div class="col-sm-12 col-xl-12">
       <div class="card card-primary card-outline mb-3 table-responsive">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Cours</h3>
+          <h3 class="card-title">Fiches de travails</h3>
         </div>
         <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
@@ -76,13 +76,17 @@
           :fields="fields"
           :row-class="onRowClass"
           no-data="Aucun travail à afficher"
+          :detail-row-column="true"
+          :detail-row-column-hide-button="(r) => r.statut !== 2"
+          :detail-row-component="detailRowComponent"
+          :detail-row-options="detailRowOptions"
           :data="filteredData"
           :selectable="true"
           @selected="selected"
         >
           <template #actions="{ rowData }">
             <button
-              v-if="rowData.ecritures?.length"
+              v-if="rowData.statut == 2"
               class="btn btn-outline-primary border-0"
               title="Annuler imputation"
               @click="annulerImputer(rowData.id)"
@@ -90,7 +94,7 @@
               <font-awesome-icon :icon="['fas', 'ban']" />
             </button>
             <button
-              v-if="!rowData.ecritures?.length"
+              v-if="rowData.statut == 1"
               class="btn btn-outline-primary border-0"
               title="Imputer travail"
               @click="imputer(rowData.id)"
@@ -114,19 +118,17 @@ import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchEcritureCategories');
   const loadUnites = store.dispatch('fetchUnites');
-  const loadCours = store.dispatch('fetchCours');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+  const loadTravailTypes = store.dispatch('fetchTravailTypes');
   const loadComptes = store.dispatch('fetchComptes');
+  const loadTravaux = store.dispatch('fetchTravaux');
 
   Promise.all([
     loadCategories,
     loadUnites,
-    loadCours,
+    loadTravailTypes,
     loadSapeurs,
-    loadLocalites,
-    loadIndemnites,
+    loadTravaux,
     loadComptes,
   ]).then(() => {
     next();
@@ -134,7 +136,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'FraisTabCours',
+  name: 'ComptabiliteTabTravaux',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -153,6 +155,45 @@ export default {
       loading: true,
       filters: {},
       selectedId: null,
+      detailRowOptions: {
+        fields: [
+          {
+            title: 'Type',
+            key: 'type',
+            formatter: (type) => {
+              const mapping = {
+                0: 'Autre',
+                1: 'Solde',
+                2: 'Indemnité',
+                3: 'Frais forfaitaire',
+                4: 'Frais effectif',
+                5: 'Charges AVS/AC',
+              };
+              return mapping[type] || '';
+            },
+          },
+          {
+            title: 'Tarif',
+            key: 'tarif',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Quantite',
+            key: 'quantite',
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+          {
+            title: 'Total',
+            key: 'total',
+            formatter: (total, ecriture) =>
+              ecriture.module == 5 ? (-total).toFixed(2) : total,
+            titleClass: 'text-center',
+            columnClass: 'text-end',
+          },
+        ],
+      },
       fields: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Sapeur', key: 'sapeur' },
@@ -166,7 +207,12 @@ export default {
           title: 'Statut',
           key: 'statut',
           formatter(statut) {
-            return { [-1]: 'Refusé', 0: 'En attente', 1: 'Accepté' }[statut];
+            return {
+              [-1]: 'Refusé',
+              0: 'En attente',
+              1: 'Accepté',
+              2: 'Imputé',
+            }[statut];
           },
         },
         { title: 'Justification', key: 'justification' },
@@ -177,18 +223,25 @@ export default {
   computed: {
     ...mapState({
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      travaux: (state) => state.travail.liste,
+      travaux: (state) => state.travail.liste.filter((t) => t.statut >= 1),
       sapeurs: (state) => state.sapeur.liste,
       travailTypes: (state) => state.travailType.liste,
+      categories: (state) => state.ecritureCategorie.liste,
+      unites: (state) => state.unite.liste,
     }),
     computedData() {
       return this.travaux.map((e) => ({
         ...e,
-        categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
+        travail_type: this.travailTypes.find((e) => e.id == e.travail_type_id)
           ?.designation,
-        localite: this.localites.find((l) => l.id == e.localite_id)
-          ?.designation,
-        nom_prenom: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+        sapeur: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+        auteur: this.sapeurs.find((s) => s.id == e.auteur_id)?.nom_prenom,
+        unite: this.unites.find(
+          (u) =>
+            u.id ==
+            this.travailTypes.find((e) => e.id == e.travail_type_id)
+              ?.type_unite_id
+        )?.unite,
         getData: () => Promise.resolve(e.ecritures),
       }));
     },
@@ -240,27 +293,34 @@ export default {
       this.selectedId = item?.id;
     },
     imputer(travailId) {
-      const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
-      this.SHOW_MODAL({
-        component: 'ModalImputerTravail',
-        data: { ids },
-        size: 2,
-        callback: () => this.init(),
-      });
+      const ids = travailId
+        ? [travailId]
+        : this.travaux.filter((t) => t.statut == 1).map((t) => t.id);
+      this.$store
+        .dispatch('imputerTravail', ids)
+        .then((res) => {
+          this.$store.dispatch('fetchTravaux');
+          this.$awn.success(res?.message ?? 'Travaux imputé avec succès');
+        })
+        .catch((err) => {
+          this.$awn.alert(
+            err?.message ?? "Erreur impossible d'annuler l'imputation"
+          );
+        });
     },
     annulerImputer(travailId) {
-      const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
+      // const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
           title: 'Voulez-vous vraiment supprimer cette imputation ?',
           question:
-            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
+            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
         },
         callback: (confirmed) => {
           if (confirmed) {
             this.$store
-              .dispatch('annulerImputationTravail', { ids })
+              .dispatch('annulerImputationTravail', travailId)
               .then((res) => {
                 this.$awn.success(res?.message ?? 'Travaux imputé avec succès');
               })
@@ -278,9 +338,7 @@ export default {
         return;
       }
 
-      return dataItem?.ecritures?.length > 0
-        ? 'table-success'
-        : 'table-warning';
+      return dataItem?.statut == 2 ? 'table-success' : 'table-warning';
     },
     onFilter(key, value) {
       this.filters = { ...this.filters, [key]: parseInt(value) };

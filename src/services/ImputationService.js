@@ -38,6 +38,12 @@ export default {
       payload
     );
   },
+  annulerImputationTravail(travailId) {
+    return Api.api().delete('/imputation/travail/' + travailId);
+  },
+  imputerTravail(travauxIds) {
+    return Api.api().post('/imputation/travail', { ids: travauxIds });
+  },
   addFraisIndemniteAnnuel(fraisIndemnite) {
     return Api.api().post('/frais-indemnites-annuel', fraisIndemnite);
   },

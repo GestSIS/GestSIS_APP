@@ -137,7 +137,6 @@ export default {
     return {
       errors: {},
       columnCreationIndex: 0,
-      columns: [],
       base: [],
       activeTravailType: {
         actif: true,
@@ -152,48 +151,7 @@ export default {
       categories: (state) => state.ecritureCategorie.liste,
     }),
   },
-  watch: {
-    parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
-    },
-  },
   mounted() {
-    // Calcul des différentes combinaisons existantes
-    const configurations = new Set(
-      this.data?.fonctions
-        ?.filter((f) => f.fonction_id)
-        ?.map((f) => f.type + ' ' + f.compte_id) || []
-    );
-    this.columns = Object.fromEntries(
-      [...configurations]
-        .map((e) => [e, e.split(' ')])
-        .map(([index, e]) => [
-          index,
-          {
-            type: e[0],
-            compte_id: e[1],
-            fonctions: {},
-          },
-        ])
-    );
-
-    this.data?.fonctions
-      ?.filter((f) => f.fonction_id)
-      ?.forEach((f) => {
-        this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-          f.tarif;
-      });
-
-    // Ajout un type par défault en cas d'utilisation des indemnités par fonction
-    if (!Object.keys(this.columns).length) {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    }
-
     this.activeTravailType = {
       ...this.activeTravailType,
       type_unite_id: 6, // Set unité type défault à forfait
@@ -235,17 +193,6 @@ export default {
     supprimerType(i) {
       this.base.splice(i, 1);
     },
-    ajoutTypePourFonction() {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    },
-    supprimerTypePourFonction(i) {
-      delete this.columns[i];
-    },
     async save() {
       this.errors = {};
 
@@ -268,12 +215,6 @@ export default {
         if (e.tarif_min_pour && e.tarif_min_pour < 0)
           this.errors['base-tarif-min-pour' + i] = true;
       });
-      if (this.activeTravailType.par_fonction) {
-        Object.values(this.columns).forEach((e, i) => {
-          if (!e.type) this.errors['column-type' + i] = true;
-          if (!e.compte_id) this.errors['column-compte' + i] = true;
-        });
-      }
 
       // Return en cas d'erreurs
       if (Object.keys(this.errors).length > 0) {

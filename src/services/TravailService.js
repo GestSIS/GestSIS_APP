@@ -11,7 +11,10 @@ export default {
     return Api.api().put(`/travaux/${travail.id}`, travail);
   },
   reviewTravail(travail) {
-    return Api.api().put(`/travaux/${travail.id}/review`, travail);
+    return Api.api().post(`/travaux/${travail.id}/review`, travail);
+  },
+  cancelReviewTravail(travailId) {
+    return Api.api().delete(`/travaux/${travailId}/review`);
   },
   removeTravail(travail_id) {
     return Api.api().delete(`/travaux/${travail_id}`);

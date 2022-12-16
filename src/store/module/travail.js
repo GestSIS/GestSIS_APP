@@ -18,6 +18,11 @@ export default {
     [types.UPDATE_TRAVAIL](state, type) {
       state.liste = [...state.liste.map((m) => (m.id === type.id ? type : m))];
     },
+    [types.UPDATE_TRAVAIL_STATUT](state, { id, statut }) {
+      state.liste = [
+        ...state.liste.map((m) => (m.id === id ? { ...m, statut } : m)),
+      ];
+    },
     [types.REMOVE_TRAVAIL](state, typeId) {
       state.liste = state.liste.filter((m) => m.id != typeId);
     },
@@ -40,8 +45,14 @@ export default {
         return data;
       });
     },
-    reviewTravail({ commit }, type) {
-      return Travail.reviewTravail(type).then((data) => {
+    reviewTravail({ commit }, travail) {
+      return Travail.reviewTravail(travail).then((data) => {
+        commit(types.UPDATE_TRAVAIL, data);
+        return data;
+      });
+    },
+    cancelReviewTravail({ commit }, travailId) {
+      return Travail.cancelReviewTravail(travailId).then((data) => {
         commit(types.UPDATE_TRAVAIL, data);
         return data;
       });

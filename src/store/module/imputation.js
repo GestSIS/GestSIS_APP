@@ -301,6 +301,20 @@ export default {
         }
       );
     },
+    imputerTravail(_, ids) {
+      return ImputationService.imputerTravail(ids);
+    },
+    annulerImputationTravail({ commit }, travailId) {
+      return ImputationService.annulerImputationTravail(travailId).then(
+        (data) => {
+          commit(types.UPDATE_TRAVAIL_STATUT, {
+            id: travailId,
+            statut: data.statut,
+          });
+          return data;
+        }
+      );
+    },
     imputerIntervention({ commit }, payload) {
       return ImputationService.imputerIntervention(
         payload.intervention_id,

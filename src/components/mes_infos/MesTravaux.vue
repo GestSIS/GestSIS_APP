@@ -49,7 +49,12 @@ export default {
           title: 'Statut',
           key: 'statut',
           formatter(statut) {
-            return { [-1]: 'Refusé', 0: 'En attente', 1: 'Accepté' }[statut];
+            return {
+              [-1]: 'Refusé',
+              0: 'En attente',
+              1: 'Accepté',
+              2: 'Imputé',
+            }[statut];
           },
         },
         { title: 'Justification', key: 'justification' },

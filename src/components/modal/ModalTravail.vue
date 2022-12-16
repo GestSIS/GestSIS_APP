@@ -125,7 +125,7 @@
               </td>
             </tr>
             <tr>
-              <td :colspan="base.length > 1 ? 6 : 5">
+              <td colspan="3">
                 <button
                   type="button"
                   class="btn btn-outline-primary"
@@ -167,9 +167,6 @@ export default {
   data() {
     return {
       errors: {},
-      columnCreationIndex: 0,
-      columns: [],
-      base: [],
       activeTravail: {
         exercice_comptable_id: null,
         sapeurs: [{ sapeur_id: null, quantite: null }],
@@ -190,11 +187,6 @@ export default {
         ),
     }),
   },
-  watch: {
-    parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
-    },
-  },
   mounted() {
     if (this.data.id) {
       this.activeTravail = {
@@ -212,12 +204,6 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
-    updateTarif(index, e) {
-      this.activeTravail.fonctions[index].tarif = e.target.value;
-    },
-    updateIndemnite(index, e) {
-      this.activeTravail.fonctions[index].indemnite = e.target.value;
-    },
     ajoutType() {
       this.activeTravail.sapeurs.push({
         sapeur_id: null,

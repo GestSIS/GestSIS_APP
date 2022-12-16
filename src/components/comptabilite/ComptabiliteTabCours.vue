@@ -132,7 +132,7 @@ async function loadData(_, next) {
 }
 
 export default {
-  name: 'FraisTabCours',
+  name: 'ComptabiliteTabCours',
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },

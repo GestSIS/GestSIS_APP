@@ -10,6 +10,7 @@
         class="mb-3"
         :options="travailTypes"
         label="Travail"
+        disabled
       />
       <div class="mb-3">
         <label for="designation">Désignation</label>
@@ -18,24 +19,33 @@
           v-model="activeTravail.designation"
           type="text"
           class="form-control form-control-sm"
+          disabled
         />
       </div>
-      <div class="mb-3">
-        <label for="date">Date</label>
-        <input
-          id="date"
-          v-model="activeTravail.date"
-          type="date"
-          class="form-control form-control-sm"
-        />
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="date">Date</label>
+            <input
+              id="date"
+              v-model="activeTravail.date"
+              type="date"
+              class="form-control form-control-sm"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="col-6">
+          <base-select
+            v-model="activeTravail.sapeur_id"
+            class="mb-3"
+            label="Sapeur"
+            display-key="nom_prenom"
+            :options="sapeurs"
+            disabled
+          />
+        </div>
       </div>
-      <base-select
-        v-model="activeTravail.sapeur_id"
-        class="mb-3"
-        label="Sapeur"
-        display-key="nom_prenom"
-        :options="sapeurs"
-      />
       <label for="quantite">Quantité</label>
       <div class="input-group input-group-sm mb-3">
         <input
@@ -45,6 +55,7 @@
           type="number"
           min="0"
           class="form-control form-control-sm"
+          disabled
         />
         <span class="input-group-text">
           {{
@@ -57,13 +68,61 @@
           }}</span
         >
       </div>
+      <div class="row">
+        <div class="col-6">
+          <base-select
+            v-model="activeTravail.sapeur_id"
+            class="mb-3"
+            label="Saisie par"
+            display-key="nom_prenom"
+            :options="sapeurs"
+            disabled
+          />
+        </div>
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="date">Le</label>
+            <input
+              id="date"
+              v-model="activeTravail.date_demande"
+              type="date"
+              class="form-control form-control-sm"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="justification">Justification</label>
+        <textarea
+          id="justification"
+          ref="justification"
+          v-model="activeTravail.justification"
+          class="form-control form-control-sm"
+          placeholder="(optionnel)"
+        ></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <button class="btn btn-primary col-12" @click="review(true)">
+            Accepter
+          </button>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-danger col-12" @click="review(false)">
+            Refuser
+          </button>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTravail.id ? 'Modifier' : 'Ajouter' }}
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="HIDE_MODAL()"
+      >
+        Annuler
       </button>
     </div>
   </div>
@@ -108,11 +167,6 @@ export default {
         ),
     }),
   },
-  watch: {
-    parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
-    },
-  },
   mounted() {
     if (this.data.id) {
       this.activeTravail = {
@@ -127,63 +181,13 @@ export default {
         this.activeTravail.sapeurs[0].sapeur_id = this.activeSapeurId;
       }
     }
+    this.$refs.justification.focus();
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
-    updateTarif(index, e) {
-      this.activeTravail.fonctions[index].tarif = e.target.value;
-    },
-    updateIndemnite(index, e) {
-      this.activeTravail.fonctions[index].indemnite = e.target.value;
-    },
-    ajoutType() {
-      this.activeTravail.sapeurs.push({
-        sapeur_id: null,
-        quantite: null,
-      });
-
-      const count = this.activeTravail.sapeurs.length;
-      this.$nextTick(() => {
-        this.$refs[`sapeur-${count - 1}`][0].focus();
-      });
-    },
-    supprimerType(i) {
-      this.activeTravail.sapeurs.splice(i, 1);
-    },
-    async save() {
-      this.errors = {};
-
-      // Contrôle qu'aucune colonne n'est dupliquée
-      const sapeurIds = new Set(
-        this.activeTravail.sapeurs.map((e) => e.sapeur_id)
-      );
-      if (sapeurIds.size != this.activeTravail.sapeurs.length) {
-        this.$awn.alert('Erreur, un sapeur a été saisie à double.');
-        return;
-      }
-
-      // Return en cas d'erreurs
-      if (Object.keys(this.errors).length > 0) {
-        return;
-      }
-
-      let promise = null;
-      if ((this.activeTravail.id ?? 0) === 0) {
-        const travaux = this.activeTravail.sapeurs.map((s) => ({
-          ...this.activeTravail,
-          sapeurs: undefined,
-          ...s,
-        }));
-        promise = this.$store.dispatch('addTravaux', travaux);
-      } else {
-        const travail = {
-          ...this.activeTravail,
-          sapeur_id: this.activeTravail.sapeurs[0].sapeur_id,
-          quantite: this.activeTravail.sapeurs[0].quantite,
-        };
-        promise = this.$store.dispatch('updateTravail', travail);
-      }
-      promise
+    async review(accepte) {
+      this.$store
+        .dispatch('reviewTravail', { ...this.activeTravail, accepte })
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();
