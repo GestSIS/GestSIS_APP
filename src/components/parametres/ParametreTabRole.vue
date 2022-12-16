@@ -25,7 +25,7 @@
               :colspan="permissions.length"
               :rowspan="permissions.length === 1 ? 2 : 1"
             >
-              {{ keyMapping(key) }}
+              {{ moduleMapping(key) }}
             </th>
             <th data-field="actions" rowspan="2">Actions</th>
           </tr>
@@ -42,7 +42,7 @@
                 :key="i"
                 class="text-center text-capitalize"
               >
-                {{ p.permission }}
+                {{ permissionMapping(p.permission) }}
               </th>
             </template>
           </tr>
@@ -144,7 +144,7 @@ export default {
     remove(role) {
       this.$store.dispatch('deleteRole', role.id);
     },
-    keyMapping(key) {
+    moduleMapping(key) {
       // Permet d'améliorer certains textes à afficher
       const mapping = {
         controle_medical: 'Contrôles médicaux',
@@ -152,6 +152,18 @@ export default {
         organisation: 'Groupes',
         sis: 'Config générale',
         mat_perso: 'Matériel personnel',
+        fiche_travail: 'Fiche de travail',
+      };
+      if (key in mapping) {
+        return mapping[key];
+      }
+      return key;
+    },
+    permissionMapping(key) {
+      // Permet d'améliorer certains textes à afficher
+      const mapping = {
+        saisie_perso: 'Saisie perso',
+        saisie_commune: 'Saisie commune',
       };
       if (key in mapping) {
         return mapping[key];
