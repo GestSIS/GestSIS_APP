@@ -1,7 +1,7 @@
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes travaux</h3>
+      <h3 class="card-title">Ma fiche de travail</h3>
     </div>
     <div class="card-body table-responsive">
       <base-table

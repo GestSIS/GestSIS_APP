@@ -54,7 +54,7 @@
             role="tab"
             active-class="active"
             :to="{ name: 'mes-travaux' }"
-            >Mes travaux</router-link
+            >Ma fiche de travail</router-link
           >
           <router-link
             class="nav-item nav-link"
