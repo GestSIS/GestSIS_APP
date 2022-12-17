@@ -264,7 +264,7 @@ export default {
       return this.cours.filter((t) => ids.has(t.id));
     },
     selectedItem() {
-      return this.cours.find((c) => c.id == this.selectedId);
+      return this.coursSapeurs.find((c) => c.id == this.selectedId);
     },
   },
   watch: {
