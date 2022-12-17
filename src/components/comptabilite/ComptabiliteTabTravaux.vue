@@ -306,6 +306,12 @@ export default {
       const ids = travailId
         ? [travailId]
         : this.travaux.filter((t) => t.statut == 1).map((t) => t.id);
+
+      if (!ids.length) {
+        this.$awn.warning('Aucun travail à impossible');
+        return;
+      }
+
       this.$store
         .dispatch('imputerTravail', ids)
         .then((res) => {
