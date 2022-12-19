@@ -42,11 +42,11 @@ export default {
     },
     valueKey: {
       type: String,
-      required: true,
+      default: 'id',
     },
     displayKey: {
       type: String,
-      default: '',
+      default: 'designation',
     },
     formatter: {
       type: Function,
