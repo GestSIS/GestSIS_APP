@@ -77,11 +77,10 @@ export default {
       ],
       detailRowOptions: {
         fields: [
-          { title: 'Fonction', key: 'fonction', sortKey: 'fonction' },
+          { title: 'Fonction', key: 'fonction' },
           {
             title: 'Type',
             key: 'type',
-            sortKey: 'type',
             formatter: (type) => {
               const mapping = {
                 0: 'Autre',
@@ -94,8 +93,8 @@ export default {
               return mapping[type] || '';
             },
           },
-          { title: 'Tarif', key: 'tarif', sortKey: 'tarif' },
-          { title: 'Compte', key: 'compte', sortKey: 'compte' },
+          { title: 'Tarif', key: 'tarif' },
+          { title: 'Compte', key: 'compte' },
         ],
         noData: 'Aucune indemnité',
       },

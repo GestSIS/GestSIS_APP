@@ -2,7 +2,7 @@ import permissions from '../store/permissions.js';
 
 const links = [
   {
-    to: { name: 'mes-exercices' },
+    to: { name: 'mes-infos' },
     icon: ['fas', 'image-portrait'],
     nom: 'Mes infos',
     sapeur: true,

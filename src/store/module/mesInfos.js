@@ -4,6 +4,11 @@ import MesInfosService from '../../services/MesInfosService.js';
 export default {
   state: {
     infos: {},
+    fonctions: [],
+    grades: [],
+    cours: [],
+    groupes: [],
+    mutations: [],
     materiels: [],
     travaux: [],
     exercices: [],
@@ -14,6 +19,11 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.infos = {};
+      state.fonctions = [];
+      state.grades = [];
+      state.cours = [];
+      state.groupes = [];
+      state.mutations = [];
       state.materiels = [];
       state.travaux = [];
       state.exercices = [];

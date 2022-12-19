@@ -37,8 +37,8 @@ async function loadData(routeTo, next) {
     const sapeurId = parseInt(routeTo.params.id);
     await store.dispatch('selectSapeur', sapeurId);
 
-    const loadTelephones = store.dispatch('fetchTelephoneTypes');
-    const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+    const loadTelephones = store.dispatch('fetchSapeurTelephones');
+    const loadTelephonesType = store.dispatch('fetchTelephoneTypes');
     const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
 
     Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {

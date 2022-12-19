@@ -28,7 +28,7 @@
         />
       </div>
       <base-select
-        v-model="activeCours.fonction_id"
+        v-model="activeFonction.fonction_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['fonction_id'] }"
         label="Fonction"

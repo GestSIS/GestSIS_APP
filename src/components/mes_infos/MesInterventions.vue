@@ -50,27 +50,11 @@ export default {
   data() {
     return {
       fields: [
-        {
-          title: 'Date',
-          key: 'inter_debut',
-          type: 'datetime',
-        },
-        {
-          title: 'Type',
-          key: 'type',
-        },
-        {
-          title: 'Localite',
-          key: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-        },
-        {
-          title: 'Objet',
-          key: 'objet',
-        },
+        { title: 'Date', key: 'inter_debut', type: 'datetime' },
+        { title: 'Type', key: 'type' },
+        { title: 'Localite', key: 'localite' },
+        { title: 'Lieu', key: 'lieu' },
+        { title: 'Objet', key: 'objet' },
       ],
       detailRowComponent: markRaw(InterventionPresenceDetails),
       detailRowOptions: {
@@ -78,23 +62,11 @@ export default {
           {
             title: 'Début',
             key: 'debut',
-            sortKey: 'debut',
             type: 'datetime',
             columnClass: 'col-2',
           },
-          {
-            title: 'Fin',
-            key: 'fin',
-            sortKey: 'fin',
-            type: 'datetime',
-            columnClass: 'col-2',
-          },
-          {
-            title: 'Durée [heure]',
-            key: 'duree',
-            sortKey: 'duree',
-            columnClass: 'col-2',
-          },
+          { title: 'Fin', key: 'fin', type: 'datetime', columnClass: 'col-2' },
+          { title: 'Durée [heure]', key: 'duree', columnClass: 'col-2' },
           {
             title: 'Piquet',
             key: 'piquet',

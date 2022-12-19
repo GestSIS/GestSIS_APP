@@ -2,9 +2,12 @@
   "releases": [
     {
       "date": "19.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Correction de divers problèmes d'affichage"]
+      "changes": [
+        "Correction de divers problèmes d'affichage",
+        "Fiche sapeur dans `Mes infos`"
+      ]
     },
     {
       "date": "16.12.2022",

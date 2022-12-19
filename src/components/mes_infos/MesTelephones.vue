@@ -1,5 +1,4 @@
 <template>
-  <!-- Téléphones -->
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
@@ -48,7 +47,7 @@
                   v-model="element.numero"
                   class="form-control form-control-sm"
                   type="text"
-                  :readonly="!hasEditPermission"
+                  :disabled="!hasEditPermission"
                   placeholder="..."
                 />
               </td>
@@ -101,95 +100,41 @@
 
 <script>
 import { mapState } from 'vuex';
-import permissions from '@/store/permissions.js';
 import draggable from 'vuedraggable';
 
 export default {
+  name: 'MonTelephones',
   components: {
     draggable,
   },
+  props: {
+    modelValue: {
+      type: Array,
+      required: true,
+    },
+    sapeurType: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
-      telephonesData: [],
-      errorsTel: {},
+      telephones: [...this.modelValue.map((t) => ({ ...t }))],
+      hasEditPermission: false,
+      fields: [
+        { title: 'Priorité', key: 'priorite' },
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Type', key: 'type' },
+        { title: 'RTA', key: 'rta', type: Boolean },
+      ],
     };
   },
   computed: {
     ...mapState({
-      sapeurType: (state) => state.sapeur.active.data.type,
       telephoneTypes: (state) => state.baseData.telephoneTypes,
-      activeSapeurTelephones: (state) =>
-        state.sapeur.active.telephones
-          .slice(0)
-          .sort((t1, t2) => t1.priorite - t2.priorite),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
-
-    telephones: {
-      get() {
-        return this.telephonesData;
-      },
-      set(telephones) {
-        telephones.forEach((t, i) => (t.priorite = i + 1));
-
-        this.telephonesData = telephones.sort(
-          (t1, t2) => t1.priorite - t2.priorite
-        );
-      },
-    },
-  },
-  watch: {
-    activeSapeurTelephones() {
-      this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
-    },
-  },
-  mounted() {
-    this.telephonesData = [
-      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
-    ];
-  },
-  methods: {
-    saveTelephones() {
-      //TODO: Validation de toutes les données
-
-      this.activeSapeurTelephones.forEach((t) => {
-        //Suppression des numéros supprimé
-        if (this.telephones.filter((t2) => t2.id === t.id).length === 0) {
-          this.$store.dispatch('removeTelephoneSapeur', t.id);
-        }
-      });
-
-      this.telephones.forEach((t) => {
-        //Numéros modifiés
-        if (t.id !== null) {
-          this.$store.dispatch('editTelephoneSapeur', t);
-        }
-        //Nouveaux numéros
-        else {
-          this.$store.dispatch('addTelephoneSapeur', t);
-        }
-      });
-    },
-    addTelephone() {
-      if (this.telephonesData.length < 3) {
-        this.telephones = [
-          ...this.telephones,
-          {
-            id: null,
-            telephone_type_id: 0,
-            rta: 0,
-            priorite: this.telephones.length + 1,
-          },
-        ];
-      }
-    },
-    removeTelephone(priorite) {
-      this.telephones = this.telephones.filter((t) => t.priorite !== priorite);
-    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

@@ -76,7 +76,7 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       fields: [
         { title: 'Désignation', key: 'designation' },
-        { title: 'Catégorie', key: 'categorie', sortKey: 'categorie' },
+        { title: 'Catégorie', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
       detailRowOptions: {
@@ -84,7 +84,6 @@ export default {
           {
             title: 'Type',
             key: 'type',
-            sortKey: 'type',
             formatter: (type) => {
               const mapping = {
                 0: 'Autre',
@@ -97,9 +96,9 @@ export default {
               return mapping[type] || '';
             },
           },
-          { title: 'Tarif', key: 'tarif', sortKey: 'tarif' },
-          { title: 'Unité', key: 'unite', sortKey: 'unite' },
-          { title: 'Compte', key: 'compte', sortKey: 'compte' },
+          { title: 'Tarif', key: 'tarif' },
+          { title: 'Unité', key: 'unite' },
+          { title: 'Compte', key: 'compte' },
         ],
         noData: 'Aucune indemnité',
       },

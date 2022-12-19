@@ -135,27 +135,11 @@ export default {
       selectedId: null,
       filters: {},
       fieldsNumerote: [
-        {
-          title: 'Materiel type',
-          key: 'type',
-        },
-        {
-          title: 'Taille',
-          key: 'taille',
-        },
-        {
-          title: 'Numéro',
-          key: 'numero',
-        },
-        {
-          title: 'Remarque',
-          key: 'remarque',
-        },
-        // {
-        //   title: 'Nb lavages',
-        //   key: 'lavage',
-        //   sortKey: 'lavage',
-        // },
+        { title: 'Materiel type', key: 'type' },
+        { title: 'Taille', key: 'taille' },
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Remarque', key: 'remarque' },
+        // { title: 'Nb lavages', key: 'lavage' },
         {
           title: 'Actions',
           slot: 'actions',
@@ -164,22 +148,10 @@ export default {
         },
       ],
       fieldsGeneric: [
-        {
-          title: 'Materiel type',
-          key: 'type',
-        },
-        {
-          title: 'Taille',
-          key: 'taille',
-        },
-        {
-          title: 'Quantité',
-          key: 'quantite',
-        },
-        {
-          title: 'Remarque',
-          key: 'remarque',
-        },
+        { title: 'Materiel type', key: 'type' },
+        { title: 'Taille', key: 'taille' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Remarque', key: 'remarque' },
         {
           title: 'Actions',
           slot: 'actions',

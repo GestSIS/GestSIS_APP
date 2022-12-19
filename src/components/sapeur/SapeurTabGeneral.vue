@@ -314,13 +314,14 @@
               label="Fonction principale"
               display-key="nom"
               :options="fonctions"
-              :disabled="true"
+              disabled
             />
             <base-select
               v-model="activeSapeur.grade_id"
               class="mb-3"
               label="Grade actuel"
               :options="grades"
+              disabled
             />
             <div class="mb-3 form-check">
               <input
@@ -365,8 +366,8 @@ async function loadData(routeTo, next) {
     const sapeurId = parseInt(routeTo.params.id);
     await store.dispatch('selectSapeur', sapeurId);
 
-    const loadTelephones = store.dispatch('fetchTelephoneTypes');
-    const loadTelephonesType = store.dispatch('fetchSapeurTelephones');
+    const loadTelephones = store.dispatch('fetchSapeurTelephones');
+    const loadTelephonesType = store.dispatch('fetchTelephoneTypes');
     const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
 
     Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {

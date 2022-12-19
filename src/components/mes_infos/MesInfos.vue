@@ -1,39 +1,120 @@
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes interventions</h3>
+  <div class="row">
+    <div class="col-sm-12 col-xl-6">
+      <mes-donnees-perso v-model="sapeur" />
+      <mes-donnees-bancaires v-model="sapeur" />
     </div>
-    <div class="card-body table-responsive">
-      <base-table
-        ref="table"
-        :fields="fields"
-        :data="computedInterventions"
-        :selectable="true"
-        :hide-download="true"
-        :detail-row-options="detailRowOptions"
-        :detail-row-component="detailRowComponent"
-        no-data="Aucune intervention pour le moment"
-      />
+    <div class="col-sm-12 col-xl-6">
+      <mes-references-professionelles v-if="estSapeur" v-model="sapeur" />
+
+      <div v-if="!estSapeur" class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Politique</h3>
+          <button
+            v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="saveNonSapeurStatut"
+          >
+            Enregistrer
+          </button>
+        </div>
+        <form role="form">
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input
+                  id="politiqueActif"
+                  v-model="sapeur.actif"
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  :true-value="1"
+                  :false-value="0"
+                />
+                <label class="form-check-label" for="politiqueActif"
+                  >Actif</label
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <mes-telephones v-model="sapeur.telephones" :sapeur-type="sapeur.type" />
+
+      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
+        <div class="card-header">
+          <h3 class="card-title">Informations</h3>
+        </div>
+        <form role="form">
+          <div class="card-body">
+            <base-select
+              v-model="sapeur.fonction_id"
+              class="mb-3"
+              label="Fonction principale"
+              display-key="nom"
+              :options="fonctions"
+              disabled
+            />
+            <base-select
+              v-model="sapeur.grade_id"
+              class="mb-3"
+              label="Grade actuel"
+              :options="grades"
+              disabled
+            />
+            <div class="mb-3 form-check">
+              <input
+                id="actif"
+                v-model="sapeur.actif"
+                type="checkbox"
+                name="actif"
+                class="form-check-input"
+                disabled
+                :true-value="1"
+                :false-value="0"
+              />
+              <label for="actif">Actif</label>
+              <font-awesome-icon
+                v-tooltip.bottom="
+                  'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'
+                "
+                class="ms-1"
+                :icon="['far', 'question-circle']"
+              />
+              <!-- TODO Porteur checkbox -->
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { markRaw } from 'vue';
 import { mapState } from 'vuex';
 import store from '@/store/index';
 
-import InterventionPresenceDetails from '@/components/mes_infos/InterventionPresenceDetails.vue';
+import MesDonneesPerso from '@/components/mes_infos/MesDonneesPerso.vue';
+import MesDonneesBancaires from '@/components/mes_infos/MesDonneesBancaires.vue';
+import MesReferencesProfessionelles from '@/components/mes_infos/MesReferencesProfessionelles.vue';
+import MesTelephones from '@/components/mes_infos/MesTelephones.vue';
 
 async function loadData(routeTo, next) {
-  let loadMesInterventions = store.dispatch('fetchMesInterventions');
-  let loadlocalites = store.dispatch('fetchLocalites');
-  let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+  let loadMesInfos = store.dispatch('fetchMesInfos');
+  let loadLocalites = store.dispatch('fetchLocalites');
+  let loadCivilites = store.dispatch('fetchCivilites');
+  let loadTelephoneTypes = store.dispatch('fetchTelephoneTypes');
+  let loadFonctions = store.dispatch('fetchFonctions');
+  let loadGrades = store.dispatch('fetchGrades');
 
   Promise.all([
-    loadMesInterventions,
-    loadlocalites,
-    loadTypeInterventions,
+    loadMesInfos,
+    loadLocalites,
+    loadTelephoneTypes,
+    loadCivilites,
+    loadFonctions,
+    loadGrades,
   ]).then(() => {
     next();
   });
@@ -41,6 +122,12 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'MesInfos',
+  components: {
+    MesDonneesPerso,
+    MesDonneesBancaires,
+    MesReferencesProfessionelles,
+    MesTelephones,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -48,98 +135,15 @@ export default {
     loadData(routeTo, next);
   },
   data() {
-    return {
-      fields: [
-        {
-          title: 'Date',
-          key: 'inter_debut',
-          type: 'datetime',
-        },
-        {
-          title: 'Type',
-          key: 'type',
-        },
-        {
-          title: 'Localite',
-          key: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-        },
-        {
-          title: 'Objet',
-          key: 'objet',
-        },
-      ],
-      detailRowComponent: markRaw(InterventionPresenceDetails),
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Début',
-            key: 'debut',
-            sortKey: 'debut',
-            type: 'datetime',
-            columnClass: 'col-2',
-          },
-          {
-            title: 'Fin',
-            key: 'fin',
-            sortKey: 'fin',
-            type: 'datetime',
-            columnClass: 'col-2',
-          },
-          {
-            title: 'Durée [heure]',
-            key: 'duree',
-            sortKey: 'duree',
-            columnClass: 'col-2',
-          },
-          {
-            title: 'Piquet',
-            key: 'piquet',
-            type: Boolean,
-            columnClass: 'col-2',
-          },
-          {}, // Pour que la table soit compressée, ne pas supprimer
-        ],
-      },
-    };
+    return {};
   },
   computed: {
     ...mapState({
-      sisKey: (state) => state.auth.sis.activeKey,
-      sisName: (state) =>
-        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
-      interventions: (state) =>
-        state.mesInfos.interventions
-          .map((i) => ({
-            ...i,
-            inter_debut: i.date_debut + ' ' + i.heure_debut,
-            inter_fin: i.date_fin + ' ' + i.heure_fin,
-            duree: Math.abs(new Date(i.debut) - new Date(i.fin)) / 36e5,
-            localite: state.localite.liste.find((l) => l.id == i.localite_id)
-              ?.designation,
-            type: state.typeIntervention.liste.find(
-              (c) => c.id == i.type_intervention_id
-            )?.designation,
-          }))
-          .sort((i1, i2) => i1.debut.localeCompare(i2.debut)),
+      sapeur: (state) => state.mesInfos.infos,
     }),
-    computedInterventions() {
-      const interventions = {};
-      this.interventions.forEach((i) => {
-        if (!interventions[i.intervention_id]) {
-          interventions[i.intervention_id] = { ...i, presences: [i] };
-        } else {
-          interventions[i.intervention_id].presences.push(i);
-        }
-      });
-      return Object.values(interventions);
+    estSapeur() {
+      return this.sapeur.type == 0;
     },
-  },
-  mounted() {
-    this.$refs.table.showAllDetailRow();
   },
 };
 </script>

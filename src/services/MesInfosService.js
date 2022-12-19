@@ -4,6 +4,21 @@ export default {
   getMesInfos() {
     return Api.api().get('/mes-infos');
   },
+  getMesFonctions() {
+    return Api.api().get('/mes-fonctions');
+  },
+  getMesGrades() {
+    return Api.api().get('/mes-grades');
+  },
+  getMesGroupes() {
+    return Api.api().get('/mes-groupes');
+  },
+  getMesMutations() {
+    return Api.api().get('/mes-mutations');
+  },
+  getMesCours() {
+    return Api.api().get('/mes-cours');
+  },
   getMonMateriel() {
     return Api.api().get('/mon-materiel');
   },
