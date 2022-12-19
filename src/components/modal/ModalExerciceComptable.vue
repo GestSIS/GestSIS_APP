@@ -56,6 +56,7 @@
             type="checkbox"
             class="form-check-input"
             :true-value="1"
+            :false-value="0"
           />
           <label class="form-check-label" for="exercice-comptable-boucle-modal"
             >Bouclé</label
