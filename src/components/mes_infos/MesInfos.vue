@@ -140,6 +140,8 @@ export default {
   computed: {
     ...mapState({
       sapeur: (state) => state.mesInfos.infos,
+      fonctions: (state) => state.fonction.liste,
+      grades: (state) => state.grade.liste,
     }),
     estSapeur() {
       return this.sapeur.type == 0;
