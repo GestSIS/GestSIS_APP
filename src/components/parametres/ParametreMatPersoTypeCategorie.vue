@@ -32,7 +32,7 @@
             :class="{
               'table-primary': item.globalId === selectedId,
             }"
-            @click="select(item.globalId)"
+            @click="select(item)"
           >
             <td :style="{ 'padding-left': item.level * 25 + 'px' }">
               <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.tag]" />
@@ -66,6 +66,11 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ParametreMatPersoTypeCategorie',
+  data() {
+    return {
+      selectedId: null,
+    };
+  },
   computed: {
     ...mapState({
       types: (state) =>
@@ -124,6 +129,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    select(item) {
+      this.selectedId = item?.globalId;
+    },
     ajoutCategorie() {
       this.SHOW_MODAL({ component: 'ModalMatPersoCategorie', data: {} });
     },
