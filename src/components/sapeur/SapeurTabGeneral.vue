@@ -317,7 +317,7 @@
               :disabled="true"
             />
             <base-select
-              v-model="activeCours.grade_id"
+              v-model="activeSapeur.grade_id"
               class="mb-3"
               label="Grade actuel"
               :options="grades"
