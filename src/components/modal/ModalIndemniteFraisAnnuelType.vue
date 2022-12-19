@@ -37,7 +37,7 @@
         :class="{ 'is-invalid': errors['compte_id'] }"
         label="Compte"
         display-key="label"
-        :options="comptes"
+        :options="listeCompte"
       />
       <base-select
         v-model="active.ecriture_categorie_id"
