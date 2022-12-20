@@ -5,7 +5,7 @@
       <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
         <app-navbar @toggle-sidebar="hideSidebar = !hideSidebar" />
-        <slot class="pb-3" />
+        <slot />
       </div>
       <app-modal />
     </div>

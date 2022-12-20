@@ -59,8 +59,12 @@ export default {
       state.sis.available = availableSis;
 
       if (availableSis.length > 0) {
-        const firstSisKey = availableSis[0];
-        const sis = state.sis.liste.find((sis) => sis.api_key == firstSisKey);
+        let sisKey = availableSis[0];
+        if (Object.keys(sapeurParSis).length) {
+          sisKey = Object.keys(sapeurParSis)[0];
+        }
+
+        const sis = state.sis.liste.find((sis) => sis.api_key == sisKey);
         state.sis.activeId = sis.id;
         state.sis.activeKey = sis.api_key;
         state.sis.permissions = permissionsParSis[sis.api_key] ?? [];
