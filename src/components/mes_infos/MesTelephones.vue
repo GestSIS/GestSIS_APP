@@ -119,7 +119,9 @@ export default {
   },
   data() {
     return {
-      telephones: [...this.modelValue.map((t) => ({ ...t }))],
+      telephones: [...this.modelValue.map((t) => ({ ...t }))].sort((t1, t2) =>
+        t1.priorite?.toString()?.localeCompare(t2.priorite)
+      ),
       hasEditPermission: false,
       fields: [
         { title: 'Priorité', key: 'priorite' },

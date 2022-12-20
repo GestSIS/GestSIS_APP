@@ -76,6 +76,7 @@
               />
               <label for="actif">Actif</label>
               <font-awesome-icon
+                v-if="hasEditPermission"
                 v-tooltip.bottom="
                   'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'
                 "
@@ -135,7 +136,9 @@ export default {
     loadData(routeTo, next);
   },
   data() {
-    return {};
+    return {
+      hasEditPermission: false,
+    };
   },
   computed: {
     ...mapState({

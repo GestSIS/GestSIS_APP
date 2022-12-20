@@ -16,7 +16,7 @@ export default {
   cancelReviewTravail(travailId) {
     return Api.api().delete(`/travaux/${travailId}/review`);
   },
-  removeTravail(travail_id) {
-    return Api.api().delete(`/travaux/${travail_id}`);
+  removeTravail(travailId) {
+    return Api.api().delete(`/travaux/${travailId}`);
   },
 };
