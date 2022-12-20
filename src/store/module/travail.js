@@ -57,9 +57,9 @@ export default {
         return data;
       });
     },
-    removeTravail({ commit }, typeId) {
-      return Travail.removeTravail(typeId).then((data) => {
-        commit(types.REMOVE_TRAVAIL, typeId);
+    removeTravail({ commit }, travailId) {
+      return Travail.removeTravail(travailId).then((data) => {
+        commit(types.REMOVE_TRAVAIL, travailId);
         return data;
       });
     },

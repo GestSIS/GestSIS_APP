@@ -3,7 +3,28 @@
     <slot name="head">
       <thead>
         <tr>
-          <th v-if="detailRowColumn && data.length"></th>
+          <th v-if="detailRowColumn && data.length">
+            <button
+              v-if="Object.values(detailsRowVisibility).find((e) => e)"
+              class="btn btn-link border-0"
+              @click="hideAllDetailRow"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'down-left-and-up-right-to-center']"
+                :rotation="90"
+              />
+            </button>
+            <button
+              v-if="!Object.values(detailsRowVisibility).find((e) => e)"
+              class="btn btn-link border-0"
+              @click="showAllDetailRow"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'up-right-and-down-left-from-center']"
+                :rotation="90"
+              />
+            </button>
+          </th>
           <th
             v-for="f in fields"
             :key="f.key"
@@ -135,6 +156,8 @@
 </template>
 
 <script>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 export default {
   name: 'BaseTable',
   props: {
@@ -215,7 +238,6 @@ export default {
   computed: {
     computedData() {
       const sorted = [...this.data];
-
       const func = this.sorted.func;
       const key = this.sorted.key;
       sorted.sort((a, b) => {
@@ -250,7 +272,7 @@ export default {
   methods: {
     toCvs() {
       const data =
-        'data:text/csv;charset=utf-8,\ufeff' +
+        'data:text/csv;charset=utf-8,﻿' +
         this.fields
           .filter((f) => !f.slot)
           .map((f) => f.title)
@@ -277,18 +299,15 @@ export default {
               .join(';')
           )
           .join('\n');
-
       // V1
       // const encodedUri = encodeURI(data);
       // window.open(encodedUri);
-
       // V2
       var encodedUri = encodeURI(data);
       var link = document.createElement('a');
       link.setAttribute('href', encodedUri);
       link.setAttribute('download', 'export_gestsis.csv');
       document.body.appendChild(link); // Required for FF
-
       link.click();
     },
     sort(field) {
@@ -345,6 +364,7 @@ export default {
       );
     },
   },
+  components: { FontAwesomeIcon },
 };
 </script>
 
