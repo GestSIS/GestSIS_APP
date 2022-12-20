@@ -3,25 +3,13 @@
     <div class="wrapper">
       <!-- Main Sidebar Container -->
       <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
-      <div class="content">
+      <div class="content pb-5">
         <app-navbar @toggle-sidebar="hideSidebar = !hideSidebar" />
-        <slot />
+        <slot class="pb-3" />
       </div>
       <app-modal />
     </div>
   </div>
-
-  <!-- Control Sidebar -->
-  <!-- @include('control-sidebar') -->
-  <!-- /.control-sidebar -->
-  <!-- @else
-          <div id="main-content">
-            <div class="container-fluid">
-              @include('common')
-              @yield('content')
-            </div>
-          </div>
-  @endif-->
 </template>
 
 <script>
@@ -57,7 +45,7 @@ export default {
   flex-grow: 1;
   /*ensures that the container will take up the full height of the parent container*/
   // overflow-y: auto; /*adds scroll to this container*/
-  overflow: hidden;
+  overflow: scroll;
   /*adds scroll to this container*/
   display: flex;
   flex-flow: column;
@@ -67,10 +55,8 @@ export default {
 .custom-sidebar {
   flex-shrink: 0;
   flex-grow: 0;
+  overflow: scroll;
   padding: 0;
-}
-
-.container-fluid {
-  overflow-y: scroll;
+  height: 100%;
 }
 </style>

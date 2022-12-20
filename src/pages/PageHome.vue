@@ -167,6 +167,10 @@ export default {
 </script>
 
 <style scoped>
+.columns {
+  overflow: scroll;
+}
+
 .img-fetch {
   height: auto;
   max-height: 220px;
