@@ -3,7 +3,7 @@
     <div class="wrapper">
       <!-- Main Sidebar Container -->
       <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
-      <div class="content pb-5">
+      <div class="content" :class="isMobile ? 'pb-6' : ''">
         <app-navbar @toggle-sidebar="hideSidebar = !hideSidebar" />
         <slot class="pb-3" />
       </div>
@@ -28,6 +28,13 @@ export default {
     return {
       hideSidebar: false,
     };
+  },
+  computed: {
+    isMobile() {
+      const isAndroid = () => navigator.userAgent.match(/Android/i);
+      const isIOS = () => navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      return isAndroid() || isIOS();
+    },
   },
 };
 </script>
