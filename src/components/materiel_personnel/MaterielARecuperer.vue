@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mb-5 table-responsive">
+  <div class="card card-primary card-outline table-responsive">
     <div class="card-header d-flex justify-content-between">
       <h5>Matériel a récupérer</h5>
     </div>

@@ -69,17 +69,17 @@ export default {
 
 @media (min-width: 320px) {
   .content {
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
   }
 }
 @media (min-width: 480px) {
   .content {
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
   }
 }
 @media (min-width: 600px) {
   .content {
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
   }
 }
 </style>

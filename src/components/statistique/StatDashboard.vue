@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <div class="card card-primary card-outline mb-5">
+      <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3>Dashboard</h3>
         </div>

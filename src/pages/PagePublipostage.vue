@@ -19,7 +19,7 @@
     </div>
     <div class="row">
       <div class="col-8">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Publipostage</h3>
           </div>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="col-4">
-        <div class="card card-primary card-outline mb-5">
+        <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Options</h3>
           </div>

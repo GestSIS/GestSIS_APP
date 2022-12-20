@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline mb-5">
+    <div class="card card-primary card-outline">
       <div class="card-header d-flex justify-content-between">
         <h3>Stats matériel pour interventions</h3>
         <div class="form-check form-switch mb-2">
