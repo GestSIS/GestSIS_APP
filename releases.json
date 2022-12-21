@@ -2,9 +2,14 @@
   "releases": [
     {
       "date": "21.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Corrections mineures d'affichage"]
+      "changes": [
+        "Corrections mineures d'affichage",
+        "Ajout récapitulatif pour l'impression du décompte par sapeur",
+        "Ajout récapitulatif pour l'impression de tous les comptes",
+        "Ajout de fenêtres de chargement pour l'impression de décomptes"
+      ]
     },
     {
       "date": "20.12.2022",

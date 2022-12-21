@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 import CompteService from '/src/services/CompteService.js';
@@ -136,11 +136,7 @@ export default {
       filters: {},
       selectedId: null,
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: Date,
-        },
+        { title: 'Date', key: 'date', type: Date },
         {
           title: 'Type',
           key: 'type',
@@ -156,22 +152,10 @@ export default {
             return mapping[type] || '';
           },
         },
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
-        {
-          title: 'Sapeur',
-          key: 'sapeur',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-        },
-        {
-          title: 'Actions',
-          slot: 'actions',
-        },
+        { title: 'Designation', key: 'designation' },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Total', key: 'total' },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -226,6 +210,7 @@ export default {
     this.init();
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     formatCompte(compte) {
       if (!compte) return '';
       return compte?.numero + ' - ' + compte?.designation;
@@ -245,19 +230,43 @@ export default {
         compte.numero
       }.pdf`;
 
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       CompteService.downloadJustificatifIndividuel(
         filename,
         this.activeExerciceComptableId,
         compteId
-      );
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              'Une erreur a eu lieu durant la génération de votre fichier'
+          );
+        });
     },
     justificatifComplet() {
       const filename = `${this.formatedDate()}_justificatif-complet.pdf`;
 
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       CompteService.downloadJustificatifComplet(
         filename,
         this.activeExerciceComptableId
-      );
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              'Une erreur a eu lieu durant la génération de votre fichier'
+          );
+        });
     },
     selectCompte(id) {
       this.$refs.dropdown.close();

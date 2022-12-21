@@ -272,63 +272,103 @@ export default {
     },
     impressionStandard(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadDecompte(
         decompteId,
         `decompte_${decompte.date}.pdf`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          );
+        });
     },
     impressionParSapeur(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadDecompteParSapeur(
         decompteId,
         `decompte_${decompte.date}.pdf`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          );
+        });
     },
     impressionParCompte(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadDecompteParCompte(
         decompteId,
         `decompte_${decompte.date}.pdf`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+          );
+        });
     },
     iso20022Decompte(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
         `decompte_${decompte.date}.xml`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+          );
+        });
     },
     excelAFacturer(decompteId) {
       const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadExcelAFacturer(
         decompteId,
         `decompte_${decompte.date}_a_facturer.xlsx`
-      ).catch((err) => {
-        this.$awn.alert(
-          err?.message ||
-            "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
-        );
-      });
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
+          );
+        });
     },
     certificatsDeSalaire() {
       if (this.decomptes.length === 0) {
