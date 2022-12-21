@@ -123,8 +123,8 @@
 <script>
 import { mapMutations, mapState } from 'vuex';
 import { markRaw } from 'vue';
-import store from '@/store/index';
-import DecompteService from '@/services/DecompteService.js';
+import store from '/src/store/index';
+import DecompteService from '/src/services/DecompteService.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 

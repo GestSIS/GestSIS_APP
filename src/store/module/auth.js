@@ -135,10 +135,10 @@ export default {
       state.users = payload;
     },
     [types.AUTH_SELECT_SIS](state, sis) {
-      state.sis.activeId = sis.id;
-      state.sis.activeKey = sis.api_key;
-      state.sis.permissions = state.sis.allPermissions[sis.api_key] ?? [];
-      state.sapeurId = state.sis.sapeurs[sis.api_key] ?? null;
+      state.sis.activeId = sis?.id;
+      state.sis.activeKey = sis?.api_key;
+      state.sis.permissions = state.sis.allPermissions[sis?.api_key] ?? [];
+      state.sapeurId = state.sis.sapeurs[sis?.api_key] ?? null;
 
       Api.setSisKey(sis.api_key);
     },

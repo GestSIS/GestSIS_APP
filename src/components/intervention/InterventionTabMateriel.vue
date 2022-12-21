@@ -69,7 +69,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'InterventionTabMateriel',

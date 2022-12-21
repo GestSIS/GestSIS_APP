@@ -353,12 +353,12 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
-import SapeurTelephones from '@/components/sapeur/SapeurTelephones.vue';
+import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
 
-import store from '@/store/index';
+import store from '/src/store/index';
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
     next();

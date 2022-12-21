@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import AppNavbar from '@/components/AppNavbar.vue';
-import AppModal from '@/components/AppModal.vue';
+import AppNavbar from '/src/components/AppNavbar.vue';
+import AppModal from '/src/components/AppModal.vue';
 
 export default {
   name: 'NoSidebarLayout',

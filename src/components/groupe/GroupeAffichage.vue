@@ -10,7 +10,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
-import TreeRoot from '@/components/tree/TreeRoot.vue';
+import TreeRoot from '/src/components/tree/TreeRoot.vue';
 
 export default {
   name: 'GroupeAffichage',

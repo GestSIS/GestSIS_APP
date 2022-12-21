@@ -32,7 +32,7 @@
 <script>
 import { mapMutations, mapState } from 'vuex';
 
-import EditableTree from '@/components/editable_tree/EditableTree.vue';
+import EditableTree from '/src/components/editable_tree/EditableTree.vue';
 
 export default {
   name: 'ModalGroupeEdition',

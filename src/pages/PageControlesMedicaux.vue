@@ -192,10 +192,10 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
-import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import ExerciceService from '@/services/ExerciceService.js';
+import ExerciceService from '/src/services/ExerciceService.js';
 
 export default {
   name: 'ExerciceDetails',

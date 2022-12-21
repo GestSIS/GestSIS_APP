@@ -75,7 +75,7 @@ import { mapState } from 'vuex';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');

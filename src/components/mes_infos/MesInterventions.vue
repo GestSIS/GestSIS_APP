@@ -21,9 +21,9 @@
 <script>
 import { markRaw } from 'vue';
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import InterventionPresenceDetails from '@/components/mes_infos/InterventionPresenceDetails.vue';
+import InterventionPresenceDetails from '/src/components/mes_infos/InterventionPresenceDetails.vue';
 
 async function loadData(routeTo, next) {
   let loadMesInterventions = store.dispatch('fetchMesInterventions');

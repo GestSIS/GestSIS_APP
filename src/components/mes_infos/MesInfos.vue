@@ -94,12 +94,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import MesDonneesPerso from '@/components/mes_infos/MesDonneesPerso.vue';
-import MesDonneesBancaires from '@/components/mes_infos/MesDonneesBancaires.vue';
-import MesReferencesProfessionelles from '@/components/mes_infos/MesReferencesProfessionelles.vue';
-import MesTelephones from '@/components/mes_infos/MesTelephones.vue';
+import MesDonneesPerso from './MesDonneesPerso.vue';
+import MesDonneesBancaires from './MesDonneesBancaires.vue';
+import MesReferencesProfessionelles from './MesReferencesProfessionelles.vue';
+import MesTelephones from './MesTelephones.vue';
 
 async function loadData(routeTo, next) {
   let loadMesInfos = store.dispatch('fetchMesInfos');

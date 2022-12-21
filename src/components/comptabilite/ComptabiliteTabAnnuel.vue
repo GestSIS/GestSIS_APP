@@ -93,7 +93,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
-import store from '@/store/index';
+import store from '/src/store/index';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(routeTo, next) {

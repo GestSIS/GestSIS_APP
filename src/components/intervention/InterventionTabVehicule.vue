@@ -53,7 +53,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'InterventionTabVehicules',

@@ -184,7 +184,7 @@
 import store from '../store/index';
 import permissions from '../store/permissions.js';
 import { mapState, mapMutations } from 'vuex';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 //TODO Implémenter Matériel personnel
 const links = [

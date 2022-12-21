@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import AppNavbar from '@/components/AppNavbar.vue';
-import AppModal from '@/components/AppModal.vue';
-import MainSidebar from '@/components/MainSidebar.vue';
+import AppNavbar from '/src/components/AppNavbar.vue';
+import AppModal from '/src/components/AppModal.vue';
+import MainSidebar from '/src/components/MainSidebar.vue';
 
 export default {
   name: 'DefaultLayout',

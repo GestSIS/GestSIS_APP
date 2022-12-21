@@ -99,9 +99,9 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
+import MaterielTypeCategorieSelect from '/src/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');

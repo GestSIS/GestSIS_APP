@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import EditableNode from '@/components/editable_tree/EditableNode.vue';
+import EditableNode from '/src/components/editable_tree/EditableNode.vue';
 
 export default {
   name: 'EditableTree',

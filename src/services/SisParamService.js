@@ -1,4 +1,4 @@
-import Api from '@/http/Request';
+import Api from '/src/http/Request';
 
 export default {
   getParams() {

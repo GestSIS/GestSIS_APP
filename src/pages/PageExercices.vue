@@ -221,13 +221,13 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
-import store from '@/store/index';
+import store from '/src/store/index';
 import permissions from '../store/permissions.js';
 
-import ExerciceDetails from '@/components/exercice/ExerciceDetails.vue';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
-import ExerciceService from '@/services/ExerciceService.js';
+import ExerciceService from '/src/services/ExerciceService.js';
 
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');

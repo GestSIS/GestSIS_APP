@@ -12,7 +12,7 @@
         ref="table"
         :data="computedData"
         :fields="fields"
-        no-data="Aucune indemnité de cours"
+        no-data="Aucun travail type"
         detail-row-class="m-td-0"
         :detail-row-column="true"
         :detail-row-component="detailRowComponent"
@@ -43,7 +43,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 

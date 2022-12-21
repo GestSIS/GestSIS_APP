@@ -227,12 +227,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
-import PdfViewer from '@/components/pdf/PdfViewer.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import PdfViewer from '/src/components/pdf/PdfViewer.vue';
 
 function loadData(routeTo, next) {
   const idControle = parseInt(routeTo.params.id);

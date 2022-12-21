@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import TransitionExpand from '@/components/transition/TransitionExpand.vue';
+import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
 
 export default {
   name: 'TreeNode',

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 import ParametreTravailType from './ParametreTravailType.vue';
 
 async function loadData(_, next) {

@@ -105,8 +105,8 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
-import store from '@/store/index';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import store from '/src/store/index';
 
 async function loadData(_, next) {
   const loadExerciceComptable = store.dispatch('fetchExercicesComptables');

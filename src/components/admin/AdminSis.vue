@@ -37,7 +37,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   let loadSis = store.dispatch('loadSisListe');

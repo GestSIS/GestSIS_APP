@@ -8,11 +8,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import StatInterventionBasic from '@/components/statistique/StatInterventionBasic.vue';
-import StatVehicule from '@/components/statistique/StatVehicule.vue';
-import StatMateriel from '@/components/statistique/StatMateriel.vue';
+import StatInterventionBasic from '/src/components/statistique/StatInterventionBasic.vue';
+import StatVehicule from '/src/components/statistique/StatVehicule.vue';
+import StatMateriel from '/src/components/statistique/StatMateriel.vue';
 
 async function loadData(_, next) {
   const loadTypes = store.dispatch('fetchTypeInterventions');

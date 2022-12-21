@@ -141,9 +141,9 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
-import InterventionService from '@/services/InterventionService.js';
+import InterventionService from '/src/services/InterventionService.js';
 
 export default {
   name: 'ModalRapportIntervention',

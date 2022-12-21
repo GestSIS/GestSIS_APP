@@ -11,12 +11,12 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
-import MaterielARecuperer from '@/components/materiel_personnel/MaterielARecuperer.vue';
-import MaterielAlertes from '@/components/materiel_personnel/MaterielAlertes.vue';
+import MaterielARecuperer from '/src/components/materiel_personnel/MaterielARecuperer.vue';
+import MaterielAlertes from '/src/components/materiel_personnel/MaterielAlertes.vue';
 import SapeurService from '../../services/SapeurService.js';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');

@@ -58,9 +58,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import permissions from '@/store/permissions.js';
+import permissions from '/src/store/permissions.js';
 
-import store from '@/store/index';
+import store from '/src/store/index';
 async function loadData(routeTo, next) {
   const loadSapeurMutations = store.dispatch('fetchSapeurMutations');
 

@@ -30,7 +30,7 @@
 <script>
 import { mapState } from 'vuex';
 import MesInfosService from '../../services/MesInfosService';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   let loadMesDecomptes = store.dispatch('fetchMesDecomptes');

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
 import ParametreExcuseType from './ParametreExcuseType.vue';
 

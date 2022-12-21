@@ -190,7 +190,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';

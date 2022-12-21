@@ -62,9 +62,9 @@
 <script>
 import { mapState } from 'vuex';
 
-import ExerciceTabSapeurs from '@/components/exercice/ExerciceTabSapeurs.vue';
-import ExerciceTabGeneral from '@/components/exercice/ExerciceTabGeneral.vue';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ExerciceTabSapeurs from '/src/components/exercice/ExerciceTabSapeurs.vue';
+import ExerciceTabGeneral from '/src/components/exercice/ExerciceTabGeneral.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'PageExercice',

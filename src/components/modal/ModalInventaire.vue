@@ -129,7 +129,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import MaterielTypeCategorieSelect from '@/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
+import MaterielTypeCategorieSelect from '/src/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 export default {
   name: 'ModalInventaire',

@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import SisSelection from '@/components/sis/SisSelection.vue';
-import links from '@/router/menu.js';
+import SisSelection from '/src/components/sis/SisSelection.vue';
+import links from '/src/router/menu.js';
 
 import { mapState } from 'vuex';
 

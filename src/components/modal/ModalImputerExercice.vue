@@ -185,7 +185,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import MultiStep from '@/components/MultiStep.vue';
+import MultiStep from '/src/components/MultiStep.vue';
 
 export default {
   name: 'ModalImputerExercice',

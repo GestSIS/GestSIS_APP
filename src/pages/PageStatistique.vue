@@ -44,7 +44,7 @@
 <script>
 import permissions from '../store/permissions.js';
 import { mapState } from 'vuex';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'PageStatistiques',

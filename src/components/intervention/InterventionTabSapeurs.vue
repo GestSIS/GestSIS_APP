@@ -241,8 +241,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import permissions from '@/store/permissions.js';
-import InterventionTabGroupe from '@/components/intervention/InterventionTabGroupe.vue';
+import permissions from '/src/store/permissions.js';
+import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
 
 export default {
   name: 'InterventionTabSapeurs',

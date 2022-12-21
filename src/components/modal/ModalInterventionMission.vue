@@ -70,7 +70,7 @@
 import { mapState, mapMutations } from 'vuex';
 import { DateTime } from 'luxon';
 
-import BaseAutocomplete from '@/components/base/BaseAutocomplete.vue';
+import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
 
 export default {
   name: 'ModalInterventionMission',

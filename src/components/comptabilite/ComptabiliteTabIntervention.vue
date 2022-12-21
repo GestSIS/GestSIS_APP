@@ -114,12 +114,12 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import ImputationService from '@/services/ImputationService.js';
+import ImputationService from '/src/services/ImputationService.js';
 
 async function loadData(_, next) {
   const loadExercicesComptables = store.dispatch('fetchExercicesComptables');

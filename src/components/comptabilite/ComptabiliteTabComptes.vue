@@ -107,9 +107,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import CompteService from '@/services/CompteService.js';
+import CompteService from '/src/services/CompteService.js';
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchExercicesComptables');

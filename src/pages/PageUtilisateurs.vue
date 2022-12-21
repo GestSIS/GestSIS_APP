@@ -60,7 +60,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 function loadData(routeTo, next) {
   let loadUsers = store.dispatch('fetchUsers');

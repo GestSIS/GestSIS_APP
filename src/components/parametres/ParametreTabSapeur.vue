@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 import ParametreCours from './ParametreCours.vue';
 import ParametreFonction from './ParametreFonction.vue';
 import ParametreGrade from './ParametreGrade.vue';

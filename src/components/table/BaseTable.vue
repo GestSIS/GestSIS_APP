@@ -44,7 +44,6 @@
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
 
-      <!-- TODO: Replace id ? -->
       <template v-for="r in computedData" :key="'main-' + r[selectKey]">
         <tr
           :class="[

@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { TokenService } from '../services/StorageService.js';
 import { mapState } from 'vuex';
 import * as data from '../../releases.json';

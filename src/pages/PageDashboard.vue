@@ -36,7 +36,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import links from '@/router/menu.js';
+import links from '/src/router/menu.js';
 
 export default {
   name: 'PageDashboard',

@@ -92,7 +92,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(_, next) {
   const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');

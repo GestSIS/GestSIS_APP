@@ -183,7 +183,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
 async function loadData(_, next) {
   let loadLocalites = store.dispatch('fetchLocalites');

@@ -69,31 +69,31 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('@/pages/PageLogin.vue'),
+      component: () => import('/src/pages/PageLogin.vue'),
     },
     {
       path: '/confirmation',
       name: 'confirmation',
       meta: { layout: 'no-sidebar', public: true },
-      component: () => import('@/pages/PageConfirmation.vue'),
+      component: () => import('/src/pages/PageConfirmation.vue'),
     },
     {
       path: '/reset-mdp',
       name: 'reset-password',
       meta: { layout: 'no-sidebar', public: true },
-      component: () => import('@/pages/PageResetPassword.vue'),
+      component: () => import('/src/pages/PageResetPassword.vue'),
     },
     {
       path: '/mdp-oublie',
       name: 'forgotten-password',
       meta: { layout: 'no-sidebar', public: true },
-      component: () => import('@/pages/PageForgottenPassword.vue'),
+      component: () => import('/src/pages/PageForgottenPassword.vue'),
     },
     {
       path: '/register',
       name: 'register',
       meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('@/pages/PageRegister.vue'),
+      component: () => import('/src/pages/PageRegister.vue'),
     },
     {
       path: '/',
@@ -110,21 +110,21 @@ const router = createRouter({
     {
       path: '/mes-infos',
       name: 'mon-dashboard',
-      component: () => import('@/pages/PageMesInfos.vue'),
+      component: () => import('/src/pages/PageMesInfos.vue'),
       beforeEnter: sapeurGuard(),
       children: [
         {
           path: '',
           name: 'mes-infos',
           beforeEnter: sapeurGuard(),
-          component: () => import('@/components/mes_infos/MesInfos.vue'),
+          component: () => import('/src/components/mes_infos/MesInfos.vue'),
           props: true,
         },
         {
           path: 'exercices',
           name: 'mes-exercices',
           beforeEnter: sapeurGuard(),
-          component: () => import('@/components/mes_infos/MesExercices.vue'),
+          component: () => import('/src/components/mes_infos/MesExercices.vue'),
           props: true,
         },
         {
@@ -132,28 +132,28 @@ const router = createRouter({
           name: 'mes-interventions',
           beforeEnter: sapeurGuard(),
           component: () =>
-            import('@/components/mes_infos/MesInterventions.vue'),
+            import('/src/components/mes_infos/MesInterventions.vue'),
           props: true,
         },
         {
           path: 'materiel',
           name: 'mon-materiel',
           beforeEnter: sapeurGuard(),
-          component: () => import('@/components/mes_infos/MonMateriel.vue'),
+          component: () => import('/src/components/mes_infos/MonMateriel.vue'),
           props: true,
         },
         {
           path: 'travaux',
           name: 'mes-travaux',
           beforeEnter: sapeurGuard(),
-          component: () => import('@/components/mes_infos/MesTravaux.vue'),
+          component: () => import('/src/components/mes_infos/MesTravaux.vue'),
           props: true,
         },
         {
           path: 'decomptes',
           name: 'mes-decomptes',
           beforeEnter: sapeurGuard(),
-          component: () => import('@/components/mes_infos/MesDecomptes.vue'),
+          component: () => import('/src/components/mes_infos/MesDecomptes.vue'),
           props: true,
         },
       ],
@@ -162,18 +162,18 @@ const router = createRouter({
       path: '/utilisateur',
       name: 'utilisateur',
       meta: { layout: 'no-sidebar' },
-      component: () => import('@/pages/PageUser.vue'),
+      component: () => import('/src/pages/PageUser.vue'),
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/pages/PageDashboard.vue'),
+      component: () => import('/src/pages/PageDashboard.vue'),
     },
     {
       path: '/sapeurs/:id',
       name: 'sapeurs',
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-      component: () => import('@/pages/PageSapeurs.vue'),
+      component: () => import('/src/pages/PageSapeurs.vue'),
       props: true,
       children: [
         {
@@ -250,26 +250,26 @@ const router = createRouter({
       path: '/effectif',
       name: 'effectif',
       beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
-      component: () => import('@/pages/PageEffectif.vue'),
+      component: () => import('/src/pages/PageEffectif.vue'),
     },
     {
       path: '/exercices/:id',
       name: 'exercice',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
-      component: () => import('@/pages/PageExercice.vue'),
+      component: () => import('/src/pages/PageExercice.vue'),
     },
     {
       path: '/exercices',
       name: 'exercices',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-      component: () => import('@/pages/PageExercices.vue'),
+      component: () => import('/src/pages/PageExercices.vue'),
     },
     {
       path: '/cours',
       name: 'cours',
       beforeEnter: permissionGuard(permissions.COURS.LECTURE),
-      component: () => import('@/pages/PageCours.vue'),
+      component: () => import('/src/pages/PageCours.vue'),
     },
     {
       path: '/fiche-travail',
@@ -279,141 +279,141 @@ const router = createRouter({
         permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
         permissions.FICHE_TRAVAIL.SAISIE_PERSO
       ),
-      component: () => import('@/pages/PageTravaux.vue'),
+      component: () => import('/src/pages/PageTravaux.vue'),
     },
     {
       path: '/organisation',
       name: 'organisation',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-      component: () => import('@/pages/PageOrganisation.vue'),
+      component: () => import('/src/pages/PageOrganisation.vue'),
     },
     {
       path: '/interventions/:id',
       name: 'intervention',
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
-      component: () => import('@/pages/PageIntervention.vue'),
+      component: () => import('/src/pages/PageIntervention.vue'),
     },
     {
       path: '/interventions',
       name: 'interventions',
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-      component: () => import('@/pages/PageInterventions.vue'),
+      component: () => import('/src/pages/PageInterventions.vue'),
     },
     {
       path: '/comptabilite',
       name: 'comptabilite',
       beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
-      component: () => import('@/pages/PageComptabilite.vue'),
+      component: () => import('/src/pages/PageComptabilite.vue'),
       children: [
         {
           path: '',
           name: 'comptabilite-decompte',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabDecomptes.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabDecomptes.vue'),
         },
         {
           path: 'comptes',
           name: 'comptabilite-compte',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabComptes.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabComptes.vue'),
         },
         {
           path: 'exercices',
           name: 'comptabilite-exercice',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabExercice.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabExercice.vue'),
         },
         {
           path: 'interventions',
           name: 'comptabilite-intervention',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabIntervention.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabIntervention.vue'),
         },
         {
           path: 'cours',
           name: 'comptabilite-cours',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabCours.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabCours.vue'),
         },
         {
           path: 'travaux',
           name: 'comptabilite-travaux',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabTravaux.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabTravaux.vue'),
         },
         {
           path: 'annuel',
           name: 'comptabilite-annuel',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabAnnuel.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabAnnuel.vue'),
         },
         {
           path: 'sapeurs',
           name: 'comptabilite-sapeurs',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabSapeur.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabSapeur.vue'),
         },
         {
           path: 'divers',
           name: 'comptabilite-divers',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabDivers.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabDivers.vue'),
         },
         {
           path: 'amendes',
           name: 'comptabilite-amendes',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('@/components/comptabilite/ComptabiliteTabAmendes.vue'),
+            import('/src/components/comptabilite/ComptabiliteTabAmendes.vue'),
         },
       ],
     },
     {
       path: '/publipostage',
       name: 'publipostage',
-      component: () => import('@/pages/PagePublipostage.vue'),
+      component: () => import('/src/pages/PagePublipostage.vue'),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
     },
     {
       path: '/statistique',
       name: 'statistique',
-      component: () => import('@/pages/PageStatistique.vue'),
+      component: () => import('/src/pages/PageStatistique.vue'),
       children: [
         {
           path: '',
           name: 'stat-dashboard',
           meta: {},
-          component: () => import('@/components/statistique/StatDashboard.vue'),
+          component: () => import('/src/components/statistique/StatDashboard.vue'),
         },
         {
           path: 'exercice',
           name: 'stat-exercice-simple',
           meta: {},
-          component: () => import('@/components/statistique/StatExercice.vue'),
+          component: () => import('/src/components/statistique/StatExercice.vue'),
         },
         {
           path: 'exercice-presence',
           name: 'stat-exercice-presence',
           meta: {},
           component: () =>
-            import('@/components/statistique/StatExercicePresence.vue'),
+            import('/src/components/statistique/StatExercicePresence.vue'),
         },
         {
           path: 'intervention',
           name: 'stat-intervention',
           meta: {},
           component: () =>
-            import('@/components/statistique/StatIntervention.vue'),
+            import('/src/components/statistique/StatIntervention.vue'),
         },
       ],
     },
@@ -421,20 +421,20 @@ const router = createRouter({
       path: '/controles-medicaux',
       name: 'controles-medicaux',
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
-      component: () => import('@/pages/PageControlesMedicaux.vue'),
+      component: () => import('/src/pages/PageControlesMedicaux.vue'),
     },
     {
       path: '/controles-medicaux/:id',
       name: 'controle-medical',
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
       props: true,
-      component: () => import('@/pages/PageControleMedical.vue'),
+      component: () => import('/src/pages/PageControleMedical.vue'),
     },
     {
       path: '/materiel-personnel',
       name: 'materiel-personnel',
       beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-      component: () => import('@/pages/PageMaterielPersonnel.vue'),
+      component: () => import('/src/pages/PageMaterielPersonnel.vue'),
       children: [
         {
           path: '',
@@ -442,7 +442,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
           meta: {},
           component: () =>
-            import('@/components/materiel_personnel/MaterielTabDashboard.vue'),
+            import('/src/components/materiel_personnel/MaterielTabDashboard.vue'),
         },
         {
           path: 'attribution',
@@ -451,7 +451,7 @@ const router = createRouter({
           meta: {},
           component: () =>
             import(
-              '@/components/materiel_personnel/MaterielTabAttribution.vue'
+              '/src/components/materiel_personnel/MaterielTabAttribution.vue'
             ),
         },
         {
@@ -460,7 +460,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
           meta: {},
           component: () =>
-            import('@/components/materiel_personnel/MaterielTabInventaire.vue'),
+            import('/src/components/materiel_personnel/MaterielTabInventaire.vue'),
         },
       ],
     },
@@ -469,13 +469,13 @@ const router = createRouter({
       name: 'users',
       beforeEnter: permissionGuard(permissions.ADMIN.TOUT),
       props: true,
-      component: () => import('@/pages/PageUtilisateurs.vue'),
+      component: () => import('/src/pages/PageUtilisateurs.vue'),
     },
     {
       path: '/configuration',
       name: 'configuration',
       beforeEnter: permissionGuard(permissions.SIS.CONFIG),
-      component: () => import('@/pages/PageConfiguration.vue'),
+      component: () => import('/src/pages/PageConfiguration.vue'),
       children: [
         {
           path: '',
@@ -483,77 +483,77 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.SIS.CONFIG),
           meta: {},
           component: () =>
-            import('@/components/parametres/ParametreTabGeneral.vue'),
+            import('/src/components/parametres/ParametreTabGeneral.vue'),
         },
         {
           path: 'exercice-comptable',
           name: 'param-exercice-comptable',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabExerciceComptable.vue'),
+            import('/src/components/parametres/ParametreTabExerciceComptable.vue'),
         },
         {
           path: 'sapeur',
           name: 'param-sapeur',
           beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabSapeur.vue'),
+            import('/src/components/parametres/ParametreTabSapeur.vue'),
         },
         {
           path: 'exercice',
           name: 'param-exercice',
           beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabExercice.vue'),
+            import('/src/components/parametres/ParametreTabExercice.vue'),
         },
         {
           path: 'intervention',
           name: 'param-intervention',
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabIntervention.vue'),
+            import('/src/components/parametres/ParametreTabIntervention.vue'),
         },
         {
           path: 'fiche-travail',
           name: 'param-fiche-travail',
           beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabFicheTravail.vue'),
+            import('/src/components/parametres/ParametreTabFicheTravail.vue'),
         },
         {
           path: 'sms',
           name: 'param-sms',
           beforeEnter: permissionGuard(permissions.SMS.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabSms.vue'),
+            import('/src/components/parametres/ParametreTabSms.vue'),
         },
         {
           path: 'comptabilite',
           name: 'param-comptabilite',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabComptabilite.vue'),
+            import('/src/components/parametres/ParametreTabComptabilite.vue'),
         },
         {
           path: 'controle-medical',
           name: 'param-controle-medical',
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabControleMedical.vue'),
+            import('/src/components/parametres/ParametreTabControleMedical.vue'),
         },
         {
           path: 'materiel-personnel',
           name: 'param-materiel-personnel',
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabMaterielPersonnel.vue'),
+            import('/src/components/parametres/ParametreTabMaterielPersonnel.vue'),
         },
         {
           path: 'roles',
           name: 'param-roles',
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),
           component: () =>
-            import('@/components/parametres/ParametreTabRole.vue'),
+            import('/src/components/parametres/ParametreTabRole.vue'),
         },
       ],
     },
@@ -562,7 +562,7 @@ const router = createRouter({
       name: 'rta',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
       component: () =>
-        import(/* webpackChunkName: "rta" */ '@/pages/PageRta.vue'),
+        import(/* webpackChunkName: "rta" */ '/src/pages/PageRta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
@@ -571,7 +571,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/MutationsRta.vue'
+              /* webpackChunkName: "rta" */ '/src/components/rta/MutationsRta.vue'
             ),
         },
         {
@@ -580,7 +580,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/ReferenceRta.vue'
+              /* webpackChunkName: "rta" */ '/src/components/rta/ReferenceRta.vue'
             ),
         },
         {
@@ -589,7 +589,7 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
             import(
-              /* webpackChunkName: "rta" */ '@/components/rta/GestSisRta.vue'
+              /* webpackChunkName: "rta" */ '/src/components/rta/GestSisRta.vue'
             ),
         },
       ],
@@ -597,19 +597,19 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/pages/PageAbout.vue'),
+      component: () => import('/src/pages/PageAbout.vue'),
     },
     {
       path: '/admin',
       name: 'admin',
       beforeEnter: adminGuard(),
-      component: () => import('@/pages/PageAdmin.vue'),
+      component: () => import('/src/pages/PageAdmin.vue'),
       children: [
         {
           path: 'sis',
           name: 'admin-sis',
           beforeEnter: adminGuard(),
-          component: () => import('@/components/admin/AdminSis.vue'),
+          component: () => import('/src/components/admin/AdminSis.vue'),
         },
       ],
     },

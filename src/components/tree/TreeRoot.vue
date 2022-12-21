@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import TreeNode from '@/components/tree/TreeNode.vue';
+import TreeNode from '/src/components/tree/TreeNode.vue';
 
 export default {
   name: 'TreeRoot',

@@ -27,9 +27,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import ControlesMedicauxService from '@/services/ControlesMedicauxService.js';
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 
-import store from '@/store/index';
+import store from '/src/store/index';
 async function loadData(routeTo, next) {
   if (routeTo.params.id == 'ajout') {
     next();

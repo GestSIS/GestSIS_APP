@@ -108,7 +108,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import ConvocationService from '@/services/ConvocationService.js';
+import ConvocationService from '/src/services/ConvocationService.js';
 
 export default {
   name: 'ModalConvoquer',

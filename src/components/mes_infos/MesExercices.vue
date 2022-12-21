@@ -23,7 +23,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
 

@@ -25,12 +25,12 @@ import './icons';
 // import bootstrap from 'bootstrap';
 
 // Base components
-import BaseDropdown from '@/components/base/BaseDropdown.vue';
-import BaseSelect from '@/components/base/BaseSelect.vue';
-import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
-import BaseRadio from '@/components/base/BaseRadio.vue';
-import BaseMultiUnselect from '@/components/base/BaseMultiUnselect.vue';
-import BaseTable from '@/components/table/BaseTable.vue';
+import BaseDropdown from '/src/components/base/BaseDropdown.vue';
+import BaseSelect from '/src/components/base/BaseSelect.vue';
+import BaseCheckbox from '/src/components/base/BaseCheckbox.vue';
+import BaseRadio from '/src/components/base/BaseRadio.vue';
+import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
+import BaseTable from '/src/components/table/BaseTable.vue';
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {

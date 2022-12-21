@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_ENDPOINT;
 const AUTH_URL = import.meta.env.VITE_AUTH_ENDPOINT;
 const PRINT_URL = import.meta.env.VITE_PRINT_ENDPOINT;
 
-import store from '@/store';
+import store from '/src/store';
 
 const request = {
   _401interceptor: true,

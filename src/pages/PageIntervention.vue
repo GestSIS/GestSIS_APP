@@ -107,15 +107,15 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from '@/store/index';
+import store from '/src/store/index';
 
-import InterventionTabGeneral from '@/components/intervention/InterventionTabGeneral.vue';
-import InterventionTabResume from '@/components/intervention/InterventionTabResume.vue';
-import InterventionTabSapeurs from '@/components/intervention/InterventionTabSapeurs.vue';
-import InterventionTabMateriel from '@/components/intervention/InterventionTabMateriel.vue';
-import InterventionTabVehicule from '@/components/intervention/InterventionTabVehicule.vue';
-import InterventionTabJournal from '@/components/intervention/InterventionTabJournal.vue';
-import ExerciceComptable from '@/components/exercice_comptable/ExerciceComptable.vue';
+import InterventionTabGeneral from '/src/components/intervention/InterventionTabGeneral.vue';
+import InterventionTabResume from '/src/components/intervention/InterventionTabResume.vue';
+import InterventionTabSapeurs from '/src/components/intervention/InterventionTabSapeurs.vue';
+import InterventionTabMateriel from '/src/components/intervention/InterventionTabMateriel.vue';
+import InterventionTabVehicule from '/src/components/intervention/InterventionTabVehicule.vue';
+import InterventionTabJournal from '/src/components/intervention/InterventionTabJournal.vue';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');

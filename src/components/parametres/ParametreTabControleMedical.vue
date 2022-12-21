@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 import ParametreMedecin from './ParametreMedecin.vue';
 import ParametreControleMedicalType from './ParametreControleMedicalType.vue';
 

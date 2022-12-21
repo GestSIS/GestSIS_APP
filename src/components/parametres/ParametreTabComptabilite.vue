@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import store from '@/store/index';
+import store from '/src/store/index';
 
 import ParametreCompte from './ParametreCompte.vue';
 import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';

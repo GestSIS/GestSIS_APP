@@ -103,7 +103,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import MultiStep from '@/components/MultiStep.vue';
+import MultiStep from '/src/components/MultiStep.vue';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
