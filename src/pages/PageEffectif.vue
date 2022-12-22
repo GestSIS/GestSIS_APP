@@ -421,7 +421,9 @@ export default {
       this.selectedId = id;
     },
     listeFssp() {
-      SapeurService.listeFssp();
+      this.SHOW_MODAL({
+        component: 'ModalListeFssp',
+      });
       // TODO: Download listeFssp
     },
     sms() {
