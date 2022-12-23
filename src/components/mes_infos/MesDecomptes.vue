@@ -87,7 +87,18 @@ export default {
   methods: {
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;
-      MesInfosService.printMonDecompte(paiement.decompte_id, filename);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+      MesInfosService.printMonDecompte(paiement.decompte_id, filename)
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((error) => {
+          this.$awn.warning(
+            error?.message ?? 'Erreur lors de la génération de la liste FSSP'
+          );
+          this.HIDE_MODAL();
+        });
     },
     certificatSalaire() {
       if (this.paiements.length == 0) {
@@ -102,10 +113,22 @@ export default {
         );
       }
       const filename = `${this.exerciceComptable?.annee}_certificat_salaire.pdf`;
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       MesInfosService.downloadMonCertificatSalaire(
         this.exerciceComptableId,
         filename
-      );
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((error) => {
+          this.$awn.warning(
+            error?.message ?? 'Erreur lors de la génération de la liste FSSP'
+          );
+          this.HIDE_MODAL();
+        });
     },
   },
 };
