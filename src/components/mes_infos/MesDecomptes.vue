@@ -95,7 +95,7 @@ export default {
         })
         .catch((error) => {
           this.$awn.warning(
-            error?.message ?? 'Erreur lors de la génération de la liste FSSP'
+            error?.message ?? 'Erreur lors de la génération de votre décompte'
           );
           this.HIDE_MODAL();
         });
@@ -125,7 +125,8 @@ export default {
         })
         .catch((error) => {
           this.$awn.warning(
-            error?.message ?? 'Erreur lors de la génération de la liste FSSP'
+            error?.message ??
+              'Erreur lors de la génération de votre certificat de salaire'
           );
           this.HIDE_MODAL();
         });
