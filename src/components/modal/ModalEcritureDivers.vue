@@ -102,9 +102,9 @@
         :options="comptes"
       />
       <base-select
-        v-model="activeEcriture.ecriture_type"
+        v-model="activeEcriture.type"
         class="mb-3"
-        :class="{ 'is-invalid': errors['ecriture_type'] }"
+        :class="{ 'is-invalid': errors['type'] }"
         label="Type d'écriture"
         :options="types"
       />
@@ -142,7 +142,7 @@ export default {
     return {
       errors: {},
       activeEcriture: {
-        ecriture_type: 1,
+        type: 1,
         quantite: 0,
         tarif: 0,
         type_unite_id: 1,
