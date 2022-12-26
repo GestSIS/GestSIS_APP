@@ -142,7 +142,6 @@ export default {
     return {
       errors: {},
       activeEcriture: {
-        type: 1,
         quantite: 0,
         tarif: 0,
         type_unite_id: 1,
