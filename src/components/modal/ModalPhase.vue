@@ -76,7 +76,7 @@
       />-->
       <!-- </div> -->
       <base-select
-        v-model="activeEcriture.phase_type_id"
+        v-model="activePhase.phase_type_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['phase_type_id'] }"
         label="Type"
