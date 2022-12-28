@@ -19,9 +19,9 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.infos = {};
+      state.cours = [];
       state.fonctions = [];
       state.grades = [];
-      state.cours = [];
       state.groupes = [];
       state.mutations = [];
       state.materiels = [];
@@ -36,6 +36,18 @@ export default {
     },
     [types.UPDATE_MON_MATERIEL](state, payload) {
       state.materiels = payload;
+    },
+    [types.UPDATE_MES_COURS](state, payload) {
+      state.cours = payload;
+    },
+    [types.UPDATE_MES_FONCTIONS](state, payload) {
+      state.fonctions = payload;
+    },
+    [types.UPDATE_MES_GRADES](state, payload) {
+      state.grades = payload;
+    },
+    [types.UPDATE_MES_GROUPES](state, payload) {
+      state.groupes = payload;
     },
     [types.UPDATE_MES_TRAVAUX](state, payload) {
       state.travaux = payload;
@@ -62,6 +74,26 @@ export default {
     fetchMonMateriel({ commit }) {
       return MesInfosService.getMonMateriel().then((data) =>
         commit(types.UPDATE_MON_MATERIEL, data)
+      );
+    },
+    fetchMesCours({ commit }) {
+      return MesInfosService.getMesCours().then((data) =>
+        commit(types.UPDATE_MES_COURS, data)
+      );
+    },
+    fetchMesFonctions({ commit }) {
+      return MesInfosService.getMesFonctions().then((data) =>
+        commit(types.UPDATE_MES_FONCTIONS, data)
+      );
+    },
+    fetchMesGrades({ commit }) {
+      return MesInfosService.getMesGrades().then((data) =>
+        commit(types.UPDATE_MES_GRADES, data)
+      );
+    },
+    fetchMesGroupes({ commit }) {
+      return MesInfosService.getMesGroupes().then((data) =>
+        commit(types.UPDATE_MES_GROUPES, data)
       );
     },
     fetchMesTravaux({ commit, getters }) {

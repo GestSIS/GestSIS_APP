@@ -39,10 +39,8 @@ export default {
   data() {
     return {
       fields: [
-        { title: 'Début', key: 'debut', type: Date },
-        { title: 'Fin', key: 'fin', type: Date },
-        { title: 'Fonction', key: 'groupe' },
-        { title: 'Remarques', key: 'remarques' },
+        { title: 'Numéro', key: 'numero', columnClass: 'col-2' },
+        { title: 'Désignation', key: 'designation' },
       ],
     };
   },
@@ -51,8 +49,9 @@ export default {
       groupes: (state) =>
         state.mesInfos.groupes.map((t) => ({
           ...t,
-          groupe: state.groupes.liste.find((e) => e.id == t.groupe_id)
+          designation: state.groupe.liste.find((e) => e.id == t.groupe_id)
             ?.designation,
+          numero: state.groupe.liste.find((e) => e.id == t.groupe_id)?.no,
         })),
     }),
   },

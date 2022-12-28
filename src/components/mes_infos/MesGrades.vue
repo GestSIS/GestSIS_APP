@@ -50,8 +50,7 @@ export default {
       grades: (state) =>
         state.mesInfos.grades.map((t) => ({
           ...t,
-          grade: state.grades.liste.find((e) => e.id == t.grade_id)
-            ?.designation,
+          grade: state.grade.liste.find((e) => e.id == t.grade_id)?.designation,
         })),
     }),
   },

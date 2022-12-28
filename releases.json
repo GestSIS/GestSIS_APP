@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "28.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Affichage de `Mes cours`, `Mes fonctions`, `Mes Grades` et `Mes groupes d'alarme`"
+      ]
+    },
+    {
       "date": "23.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",

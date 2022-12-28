@@ -51,7 +51,7 @@ export default {
       fonctions: (state) =>
         state.mesInfos.fonctions.map((t) => ({
           ...t,
-          fonction: state.fonctions.liste.find((e) => e.id == t.fonction_id)
+          fonction: state.fonction.liste.find((e) => e.id == t.fonction_id)
             ?.designation,
         })),
     }),

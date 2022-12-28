@@ -63,6 +63,34 @@
             :to="{ name: 'mes-decomptes' }"
             >Mes décomptes</router-link
           >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
+            :to="{ name: 'mes-cours' }"
+            >Mes cours</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
+            :to="{ name: 'mes-fonctions' }"
+            >Mes fonctions</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
+            :to="{ name: 'mes-grades' }"
+            >Mes Grades</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
+            :to="{ name: 'mes-groupes' }"
+            >Mes Groupes</router-link
+          >
           <!-- <router-link
             class="nav-item nav-link"
             role="tab"
