@@ -2,7 +2,7 @@
   <stateful-filter
     id="amendes"
     v-slot="{ setFilter, filteredData }"
-    :data="amendes"
+    :data="computedData"
   >
     <div class="row">
       <div class="col-12 col-md-4 col-xl-3">
@@ -52,16 +52,16 @@
             :detail-row-options="detailRowOptions"
             :detail-row-component="detailRowComponent"
             detail-row-class="m-td-0"
-            :data="computeData(filteredData)"
+            :data="filteredData"
             :selectable="true"
             @selected="selected"
           >
-            <template #foot>
+            <template #foot="{ data }">
               <tr>
-                <th :colspan="filteredData.length ? 3 : 2">Total</th>
+                <th :colspan="data.length ? 3 : 2">Total</th>
                 <th>
                   {{
-                    filteredData
+                    data
                       .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
                       ?.toFixed(2)
                   }}
@@ -130,6 +130,22 @@ export default {
       amendes: (state) => state.imputation.ecritures.amendes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
+    computedData() {
+      const sapeurs = this.amendes.reduce((rv, a) => {
+        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
+          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
+          amendes: [],
+        }).amendes.push(a);
+        return rv;
+      }, {});
+      return Object.values(sapeurs).map((s) => ({
+        ...s,
+        nb: s.amendes.length,
+        sapeur: s.nom_prenom,
+        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
+        getData: () => Promise.resolve(s.amendes),
+      }));
+    },
     filteredSapeurs() {
       const ids = new Set(this.amendes.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
@@ -147,22 +163,6 @@ export default {
     this.loading = false;
   },
   methods: {
-    computeData(amendes) {
-      const sapeurs = amendes.reduce((rv, a) => {
-        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
-          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
-          amendes: [],
-        }).amendes.push(a);
-        return rv;
-      }, {});
-      return Object.values(sapeurs).map((s) => ({
-        ...s,
-        nb: s.amendes.length,
-        sapeur: s.nom_prenom,
-        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-        getData: () => Promise.resolve(s.amendes),
-      }));
-    },
     selected(id) {
       this.selectedId = id;
     },
