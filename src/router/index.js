@@ -174,6 +174,12 @@ const router = createRouter({
           beforeEnter: sapeurGuard(),
           component: () => import('/src/components/mes_infos/MesGroupes.vue'),
         },
+        {
+          path: 'mutations',
+          name: 'mes-mutations',
+          beforeEnter: sapeurGuard(),
+          component: () => import('/src/components/mes_infos/MesMutations.vue'),
+        },
       ],
     },
     {

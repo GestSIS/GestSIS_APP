@@ -49,6 +49,9 @@ export default {
     [types.UPDATE_MES_GROUPES](state, payload) {
       state.groupes = payload;
     },
+    [types.UPDATE_MES_MUTATIONS](state, payload) {
+      state.mutations = payload;
+    },
     [types.UPDATE_MES_TRAVAUX](state, payload) {
       state.travaux = payload;
     },
@@ -94,6 +97,11 @@ export default {
     fetchMesGroupes({ commit }) {
       return MesInfosService.getMesGroupes().then((data) =>
         commit(types.UPDATE_MES_GROUPES, data)
+      );
+    },
+    fetchMesMutations({ commit }) {
+      return MesInfosService.getMesMutations().then((data) =>
+        commit(types.UPDATE_MES_MUTATIONS, data)
       );
     },
     fetchMesTravaux({ commit, getters }) {

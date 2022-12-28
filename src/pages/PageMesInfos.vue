@@ -26,7 +26,7 @@
             role="tab"
             exact-active-class="active"
             :to="{ name: 'mes-infos' }"
-            >Mes Infos</router-link
+            >Mes infos</router-link
           >
           <router-link
             class="nav-item nav-link"
@@ -82,39 +82,28 @@
             role="tab"
             active-class="active"
             :to="{ name: 'mes-grades' }"
-            >Mes Grades</router-link
+            >Mes grades</router-link
           >
           <router-link
             class="nav-item nav-link"
             role="tab"
             active-class="active"
             :to="{ name: 'mes-groupes' }"
-            >Mes Groupes</router-link
+            >Mes groupes</router-link
           >
-          <!-- <router-link
+          <router-link
             class="nav-item nav-link"
             role="tab"
-            exact-active-class="active"
-            :to="{ name: 'mat-perso-inventaire' }"
-            >Inventaire</router-link
-          > -->
+            active-class="active"
+            :to="{ name: 'mes-mutations' }"
+            >Mes mutations</router-link
+          >
         </nav>
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <div class="col-12">
               <router-view />
             </div>
-            <!-- <div class="row">
-              <div v-if="false" class="col-12">
-                <mes-infos />
-              </div>
-              <div class="col-12">
-                <mes-exercices />
-              </div>
-              <div class="col-12">
-                <mes-decomptes />
-              </div>
-            </div> -->
           </div>
         </div>
       </div>

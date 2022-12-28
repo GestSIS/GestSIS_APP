@@ -1,7 +1,7 @@
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes groupes</h3>
+      <h3 class="card-title">Mes groupes d'alarme</h3>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -47,12 +47,15 @@ export default {
   computed: {
     ...mapState({
       groupes: (state) =>
-        state.mesInfos.groupes.map((t) => ({
-          ...t,
-          designation: state.groupe.liste.find((e) => e.id == t.groupe_id)
-            ?.designation,
-          numero: state.groupe.liste.find((e) => e.id == t.groupe_id)?.no,
-        })),
+        state.mesInfos.groupes
+          .map((t) => ({
+            ...t,
+            designation: state.groupe.liste.find((e) => e.id == t.groupe_id)
+              ?.designation,
+            numero: state.groupe.liste.find((e) => e.id == t.groupe_id)?.no,
+            type: state.groupe.liste.find((e) => e.id == t.groupe_id)?.type,
+          }))
+          .filter((g) => g.type),
     }),
   },
 };

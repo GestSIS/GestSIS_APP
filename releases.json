@@ -2,17 +2,17 @@
   "releases": [
     {
       "date": "28.12.2022",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Affichage de `Mes cours`, `Mes fonctions`, `Mes Grades` et `Mes groupes d'alarme`"
+        "Affichage de `Mes cours`, `Mes fonctions`, `Mes Grades`, `Mes groupes d'alarme` et `Mes mutations`"
       ]
     },
     {
       "date": "23.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Fenêtres de chargement dans mes décompte"]
+      "changes": ["Fenêtres de chargement dans `Mes décomptes`"]
     },
     {
       "date": "22.12.2022",
