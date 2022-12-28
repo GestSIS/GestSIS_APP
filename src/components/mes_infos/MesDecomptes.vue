@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import MesInfosService from '../../services/MesInfosService';
 import store from '/src/store/index';
 
@@ -85,6 +85,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;
 
