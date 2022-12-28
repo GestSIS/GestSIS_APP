@@ -133,7 +133,6 @@ export default {
       filtreNumero: '',
       loading: true,
       selectedId: null,
-      filters: {},
       fieldsNumerote: [
         { title: 'Materiel type', key: 'type' },
         { title: 'Taille', key: 'taille' },
@@ -238,9 +237,6 @@ export default {
     },
     selectSapeur(id) {
       this.selectedId = id;
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: value };
     },
   },
 };

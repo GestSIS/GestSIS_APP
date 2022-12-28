@@ -30,6 +30,7 @@ import BaseSelect from '/src/components/base/BaseSelect.vue';
 import BaseCheckbox from '/src/components/base/BaseCheckbox.vue';
 import BaseRadio from '/src/components/base/BaseRadio.vue';
 import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
+import StatefulFilter from '/src/components/base/StatefulFilter.vue';
 import BaseTable from '/src/components/table/BaseTable.vue';
 
 router.beforeEach((to, from, next) => {
@@ -73,16 +74,17 @@ router.beforeEach((to, from, next) => {
 //   render: () => h(App),
 // }
 const app = createApp(App);
-app.use(router);
-app.use(store);
-app.use(VueAWN, {
-  labels: {
-    success: 'Succès',
-    warning: 'Attention',
-    alert: 'Erreur',
-  },
-});
-app.use(FloatingVue);
+app
+  .use(router)
+  .use(store)
+  .use(VueAWN, {
+    labels: {
+      success: 'Succès',
+      warning: 'Attention',
+      alert: 'Erreur',
+    },
+  })
+  .use(FloatingVue);
 
 // Object.entries(import.meta.globEager('./modal/*.vue')).forEach(
 //   ([key, value]) => {
@@ -91,15 +93,16 @@ app.use(FloatingVue);
 //   }
 // );
 
-app.component('BaseDropdown', BaseDropdown);
-app.component('BaseSelect', BaseSelect);
-app.component('BaseCheckbox', BaseCheckbox);
-app.component('BaseRadio', BaseRadio);
-app.component('BaseMultiUnselect', BaseMultiUnselect);
-app.component('BaseTable', BaseTable);
-app.component('DefaultLayout', Default);
-app.component('EmptyLayout', Empty);
-app.component('NoSidebarLayout', NoSidebar);
-app.component('FontAwesomeIcon', FontAwesomeIcon);
-
-app.mount('#app');
+app
+  .component('BaseDropdown', BaseDropdown)
+  .component('BaseSelect', BaseSelect)
+  .component('BaseCheckbox', BaseCheckbox)
+  .component('BaseRadio', BaseRadio)
+  .component('BaseMultiUnselect', BaseMultiUnselect)
+  .component('StatefulFilter', StatefulFilter)
+  .component('BaseTable', BaseTable)
+  .component('DefaultLayout', Default)
+  .component('EmptyLayout', Empty)
+  .component('NoSidebarLayout', NoSidebar)
+  .component('FontAwesomeIcon', FontAwesomeIcon)
+  .mount('#app');

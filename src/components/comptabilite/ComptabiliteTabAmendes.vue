@@ -1,73 +1,79 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button class="btn btn-primary" @click="generer">
-            Générer les amendes
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <base-select
-            display-key="nom_prenom"
-            base-option="&lt;Sapeur&gt;"
-            :options="filteredSapeurs"
-            @update:model-value="(value) => onFilter('id', value)"
-          />
-        </form>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <!-- /.card-header -->
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3>Amendes</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+  <stateful-filter
+    id="amendes"
+    v-slot="{ setFilter, filteredData }"
+    :data="amendes"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
+            <button class="btn btn-primary" @click="generer">
+              Générer les amendes
+            </button>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune amende à afficher"
-          :detail-row-column="true"
-          :detail-row-options="detailRowOptions"
-          :detail-row-component="detailRowComponent"
-          detail-row-class="m-td-0"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #foot>
-            <tr>
-              <th :colspan="filteredData.length ? 3 : 2">Total</th>
-              <th>
-                {{
-                  filteredData
-                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                    ?.toFixed(2)
-                }}
-                CHF
-              </th>
-            </tr>
-          </template>
-        </base-table>
+      </div>
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <base-select
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => setFilter('id', value)"
+            />
+          </form>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Amendes</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune amende à afficher"
+            :detail-row-column="true"
+            :detail-row-options="detailRowOptions"
+            :detail-row-component="detailRowComponent"
+            detail-row-class="m-td-0"
+            :data="computeData(filteredData)"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #foot>
+              <tr>
+                <th :colspan="filteredData.length ? 3 : 2">Total</th>
+                <th>
+                  {{
+                    filteredData
+                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                      ?.toFixed(2)
+                  }}
+                  CHF
+                </th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -99,7 +105,6 @@ export default {
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
-      filters: {},
       detailRowOptions: {
         fields: [
           { title: 'Date', key: 'date', type: Date },
@@ -125,51 +130,6 @@ export default {
       amendes: (state) => state.imputation.ecritures.amendes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
-    computedData() {
-      const amendes = this.amendes.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-
-      const sapeurs = amendes.reduce((rv, a) => {
-        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
-          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
-          amendes: [],
-        }).amendes.push(a);
-        return rv;
-      }, {});
-      return Object.values(sapeurs).map((s) => ({
-        ...s,
-        nb: s.amendes.length,
-        sapeur: s.nom_prenom,
-        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-        getData: () => Promise.resolve(s.amendes),
-      }));
-    },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredSapeurs() {
       const ids = new Set(this.amendes.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
@@ -187,6 +147,22 @@ export default {
     this.loading = false;
   },
   methods: {
+    computeData(amendes) {
+      const sapeurs = amendes.reduce((rv, a) => {
+        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
+          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
+          amendes: [],
+        }).amendes.push(a);
+        return rv;
+      }, {});
+      return Object.values(sapeurs).map((s) => ({
+        ...s,
+        nb: s.amendes.length,
+        sapeur: s.nom_prenom,
+        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
+        getData: () => Promise.resolve(s.amendes),
+      }));
+    },
     selected(id) {
       this.selectedId = id;
     },
@@ -220,9 +196,6 @@ export default {
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

@@ -1,98 +1,107 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" disabled>
-            Créer un décompte individuel
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Impressions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" :disabled="!selected || true">
-            Résumé des frais
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <base-select
-            display-key="nom_prenom"
-            base-option="&lt;Sapeur&gt;"
-            :options="filteredSapeurs"
-            @update:model-value="(value) => onFilter('id', value)"
-          />
-        </form>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Sapeurs</h3>
-          <!--          <button @click.prevent="save" class="btn btn-primary">-->
-          <!--            Enregistrer-->
-          <!--          </button>-->
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+  <stateful-filter
+    id="sapeurs"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
+            <button class="btn btn-outline-primary" disabled>
+              Créer un décompte individuel
+            </button>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          :fields="fields"
-          :detail-row-column="true"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          detail-row-class="m-td-0"
-          no-data="Aucun sapeur à afficher"
-          :data="filteredData"
-          @selected="select"
-        >
-          <template #actions="{ rowData }">
+      </div>
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Impressions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
             <button
-              class="btn btn-outline-primary border-0"
-              title="Décompte sapeur"
-              :disabled="!rowData.aPayer"
-              @click="genererDecompteSapeur(rowData.id, rowData.nom_prenom)"
+              class="btn btn-outline-primary"
+              :disabled="!selected || true"
             >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              Résumé des frais
             </button>
-          </template>
-          <template #foot>
-            <tr>
-              <th></th>
-              <th :colspan="filteredData.length ? 2 : 1">Total</th>
-              <th>
-                {{
-                  filteredData
-                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                    ?.toFixed(2)
-                }}
-                CHF
-              </th>
-              <th></th>
-            </tr>
-          </template>
-        </base-table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <base-select
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => setFilter('id', value)"
+            />
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xl-12">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Sapeurs</h3>
+            <!--          <button @click.prevent="save" class="btn btn-primary">-->
+            <!--            Enregistrer-->
+            <!--          </button>-->
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :selectable="true"
+            :fields="fields"
+            :detail-row-column="true"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            detail-row-class="m-td-0"
+            no-data="Aucun sapeur à afficher"
+            :data="filteredData"
+            @selected="select"
+          >
+            <template #actions="{ rowData }">
+              <button
+                class="btn btn-outline-primary border-0"
+                title="Décompte sapeur"
+                :disabled="!rowData.aPayer"
+                @click="genererDecompteSapeur(rowData.id, rowData.nom_prenom)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+            <template #foot>
+              <tr>
+                <th></th>
+                <th :colspan="filteredData.length ? 2 : 1">Total</th>
+                <th>
+                  {{
+                    filteredData
+                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                      ?.toFixed(2)
+                  }}
+                  CHF
+                </th>
+                <th></th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -133,7 +142,6 @@ export default {
       loading: true,
       ecritures: [],
       selected: null,
-      filters: {},
       detailRowOptions: {
         fields: [
           { title: 'Date', key: 'date', type: Date },
@@ -253,21 +261,6 @@ export default {
           };
         });
     },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredSapeurs() {
       const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
@@ -307,9 +300,6 @@ export default {
     },
     select(id) {
       this.selected = id;
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

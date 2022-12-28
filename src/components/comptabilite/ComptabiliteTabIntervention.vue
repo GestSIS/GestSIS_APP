@@ -1,116 +1,122 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            v-if="!selectedItem || selectedItem?.statut == 2"
-            class="btn btn-outline-primary"
-            :disabled="!selectedItem"
-            @click="imputer(selectedItem.id)"
-          >
-            Imputer
-          </button>
-          <button
-            v-if="selectedItem?.statut == 3"
-            class="btn btn-outline-danger"
-            @click="annulerImputer(selectedItem.id)"
-          >
-            Annuler l'imputation
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-9">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Localité&gt;"
-              :options="filteredLocalites"
-              @update:model-value="(value) => onFilter('localite_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Type&gt;"
-              :options="filteredTypesIntervention"
-              @update:model-value="
-                (value) => onFilter('type_intervention_id', value)
-              "
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Statistique fédérale&gt;"
-              :options="filteredStatFederal"
-              @update:model-value="
-                (value) => onFilter('stat_federal_id', value)
-              "
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Traitement&gt;"
-              :options="traitements"
-              @update:model-value="
-                (value) => onFilter('intervention_traitement_id', value)
-              "
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Etendue&gt;"
-              :options="degres"
-              @update:model-value="(value) => onFilter('degre', value)"
-            />
+  <stateful-filter
+    id="interventions"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
           </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3 table-responsive">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Interventions</h3>
-          <!--          <button @click.prevent="save" class="btn btn-primary">-->
-          <!--            Enregistrer-->
-          <!--          </button>-->
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
-          </div>
-        </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune écriture à afficher"
-          :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => r.statut !== 3"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          detail-row-class="m-td-0"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
+          <div class="card-body d-grid gap-1">
             <button
-              v-if="rowData.statut === 2"
-              class="btn btn-outline-primary border-0"
-              @click="imputer(rowData.id)"
+              v-if="!selectedItem || selectedItem?.statut == 2"
+              class="btn btn-outline-primary"
+              :disabled="!selectedItem"
+              @click="imputer(selectedItem.id)"
             >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              Imputer
             </button>
-          </template>
-        </base-table>
+            <button
+              v-if="selectedItem?.statut == 3"
+              class="btn btn-outline-danger"
+              @click="annulerImputer(selectedItem.id)"
+            >
+              Annuler l'imputation
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Localité&gt;"
+                :options="filteredLocalites"
+                @update:model-value="(value) => setFilter('localite_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Type&gt;"
+                :options="filteredTypesIntervention"
+                @update:model-value="
+                  (value) => setFilter('type_intervention_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Statistique fédérale&gt;"
+                :options="filteredStatFederal"
+                @update:model-value="
+                  (value) => setFilter('stat_federal_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Traitement&gt;"
+                :options="traitements"
+                @update:model-value="
+                  (value) => setFilter('intervention_traitement_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Etendue&gt;"
+                :options="degres"
+                @update:model-value="(value) => setFilter('degre', value)"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xl-12">
+        <div class="card card-primary card-outline mb-3 table-responsive">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Interventions</h3>
+            <!--          <button @click.prevent="save" class="btn btn-primary">-->
+            <!--            Enregistrer-->
+            <!--          </button>-->
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune écriture à afficher"
+            :detail-row-column="true"
+            :detail-row-column-hide-button="(r) => r.statut !== 3"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            detail-row-class="m-td-0"
+            :data="filteredData"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                v-if="rowData.statut === 2"
+                class="btn btn-outline-primary border-0"
+                @click="imputer(rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -171,7 +177,6 @@ export default {
       ],
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: false,
-      filters: {},
       selectedItemId: null,
       detailRowOptions: {
         fields: [
@@ -346,21 +351,6 @@ export default {
         getData: () => ImputationService.getEcrituresForInterventions(i.id),
       }));
     },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredTypesIntervention() {
       const ids = new Set(
         this.interventions.map((i) => i.type_intervention_id)
@@ -426,9 +416,6 @@ export default {
         3: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

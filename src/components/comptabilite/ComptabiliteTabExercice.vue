@@ -1,118 +1,129 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            v-if="!selectedItem || selectedItem?.statut == 3"
-            class="btn btn-outline-primary"
-            :disabled="!selectedItem"
-            @click="imputer(selectedItem.id)"
-          >
-            Imputer
-          </button>
-          <button
-            v-if="selectedItem?.statut == 4"
-            class="btn btn-outline-danger"
-            @click="annulerImputer(selectedItem.id)"
-          >
-            Annuler l'imputation
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="selectedItem?.statut != 4"
-            @click="
-              genererDecompteExercice(selectedItem.id, selectedItem.designation)
-            "
-          >
-            Créer un décompte
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-9">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Localité&gt;"
-              :options="filteredLocalites"
-              @update:model-value="(value) => onFilter('localite_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Catégorie&gt;"
-              :options="filteredCategories"
-              @update:model-value="
-                (value) => onFilter('exercice_categorie_id', value)
+  <stateful-filter
+    id="exercices"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
+            <button
+              v-if="!selectedItem || selectedItem?.statut == 3"
+              class="btn btn-outline-primary"
+              :disabled="!selectedItem"
+              @click="imputer(selectedItem.id)"
+            >
+              Imputer
+            </button>
+            <button
+              v-if="selectedItem?.statut == 4"
+              class="btn btn-outline-danger"
+              @click="annulerImputer(selectedItem.id)"
+            >
+              Annuler l'imputation
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              :disabled="selectedItem?.statut != 4"
+              @click="
+                genererDecompteExercice(
+                  selectedItem.id,
+                  selectedItem.designation
+                )
               "
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Statut&gt;"
-              :options="[
-                { id: '3', designation: 'Validé' },
-                { id: '4', designation: 'Imputé' },
-              ]"
-              @update:model-value="(value) => onFilter('statut', value)"
-            />
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3 table-responsive">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Exercices</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+            >
+              Créer un décompte
+            </button>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune écriture à afficher"
-          :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => r.statut !== 4"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          detail-row-class="m-td-0"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
-            <button
-              v-if="rowData.statut === 3"
-              class="btn btn-outline-primary border-0"
-              @click="imputer(rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-            <button
-              v-if="rowData.statut === 4"
-              class="btn btn-outline-primary border-0"
-              title="Décompte sapeur"
-              :disabled="!rowData.aPayer"
-              @click="genererDecompteExercice(rowData.id, rowData.designation)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </template>
-        </base-table>
+      </div>
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Localité&gt;"
+                :options="filteredLocalites"
+                @update:model-value="(value) => setFilter('localite_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Catégorie&gt;"
+                :options="filteredCategories"
+                @update:model-value="
+                  (value) => setFilter('exercice_categorie_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Statut&gt;"
+                :options="[
+                  { id: '3', designation: 'Validé' },
+                  { id: '4', designation: 'Imputé' },
+                ]"
+                @update:model-value="(value) => setFilter('statut', value)"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xl-12">
+        <div class="card card-primary card-outline mb-3 table-responsive">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Exercices</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune écriture à afficher"
+            :detail-row-column="true"
+            :detail-row-column-hide-button="(r) => r.statut !== 4"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            detail-row-class="m-td-0"
+            :data="filteredData"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                v-if="rowData.statut === 3"
+                class="btn btn-outline-primary border-0"
+                @click="imputer(rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+              <button
+                v-if="rowData.statut === 4"
+                class="btn btn-outline-primary border-0"
+                title="Décompte sapeur"
+                :disabled="!rowData.aPayer"
+                @click="
+                  genererDecompteExercice(rowData.id, rowData.designation)
+                "
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -163,7 +174,6 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       exercices: [],
-      filters: {},
       selectedItemId: null,
       detailRowOptions: {
         fields: [
@@ -303,21 +313,6 @@ export default {
         };
       });
     },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredLocalites() {
       const ids = new Set(this.exercices.map((i) => i.localite_id));
       return this.localites.filter((t) => ids.has(t.id));
@@ -411,9 +406,6 @@ export default {
         4: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

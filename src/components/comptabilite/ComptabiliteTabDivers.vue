@@ -1,130 +1,136 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="newEcriture">
-            Nouveau
-          </button>
-          <button
-            class="btn btn-outline-primary"
-            :disabled="!selectedItem"
-            @click="editEcriture(selectedItem)"
-          >
-            Modifier
-          </button>
-          <button
-            class="btn btn-outline-danger"
-            :disabled="!selectedItem"
-            @click="deleteEcriture(selectedItem?.id)"
-          >
-            Supprimer
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-9">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-4"
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              @update:model-value="(value) => onFilter('sapeur_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Type&gt;"
-              :options="[
-                { id: 0, designation: 'Autre' },
-                { id: 1, designation: 'Solde' },
-                { id: 2, designation: 'Indemnité' },
-                { id: 3, designation: 'Frais forfaitaire' },
-                { id: 4, designation: 'Frais effectif' },
-                { id: 5, designation: 'Charges AVS/AC' },
-              ]"
-              @update:model-value="(value) => onFilter('type', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Compte&gt;"
-              :options="filteredComptes"
-              @update:model-value="(value) => onFilter('compte_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Catégorie&gt;"
-              :options="filteredCategories"
-              @update:model-value="
-                (value) => onFilter('ecriture_categorie_id', value)
-              "
-            />
+  <stateful-filter
+    id="compta-divers"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
           </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-12">
-      <!-- /.card-header -->
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3>Autres</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
-          </div>
-        </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune écriture à afficher"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
-            <button
-              type="button"
-              class="btn btn-outline-primary border-0"
-              @click="editEcriture(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
+          <div class="card-body d-grid gap-1">
+            <button class="btn btn-outline-primary" @click="newEcriture">
+              Nouveau
             </button>
             <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="deleteEcriture(rowData?.id)"
+              class="btn btn-outline-primary"
+              :disabled="!selectedItem"
+              @click="editEcriture(selectedItem)"
             >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
+              Modifier
             </button>
-          </template>
-          <template #foot>
-            <tr>
-              <th :colspan="9">Total</th>
-              <th>
-                {{
-                  filteredData
-                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                    ?.toFixed(2)
-                }}
-                CHF
-              </th>
-              <th></th>
-            </tr>
-          </template>
-        </base-table>
+            <button
+              class="btn btn-outline-danger"
+              :disabled="!selectedItem"
+              @click="deleteEcriture(selectedItem?.id)"
+            >
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-4"
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                @update:model-value="(value) => setFilter('sapeur_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Type&gt;"
+                :options="[
+                  { id: 0, designation: 'Autre' },
+                  { id: 1, designation: 'Solde' },
+                  { id: 2, designation: 'Indemnité' },
+                  { id: 3, designation: 'Frais forfaitaire' },
+                  { id: 4, designation: 'Frais effectif' },
+                  { id: 5, designation: 'Charges AVS/AC' },
+                ]"
+                @update:model-value="(value) => setFilter('type', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Compte&gt;"
+                :options="filteredComptes"
+                @update:model-value="(value) => setFilter('compte_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Catégorie&gt;"
+                :options="filteredCategories"
+                @update:model-value="
+                  (value) => setFilter('ecriture_categorie_id', value)
+                "
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-12">
+        <!-- /.card-header -->
+        <div class="card card-primary card-outline">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Autres</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune écriture à afficher"
+            :data="filteredData"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="editEcriture(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="deleteEcriture(rowData?.id)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+            <template #foot>
+              <tr>
+                <th :colspan="9">Total</th>
+                <th>
+                  {{
+                    filteredData
+                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                      ?.toFixed(2)
+                  }}
+                  CHF
+                </th>
+                <th></th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -165,7 +171,6 @@ export default {
     return {
       loading: true,
       selectedItem: null,
-      filters: {},
       fields: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Designation', key: 'designation' },
@@ -209,21 +214,6 @@ export default {
         compte: formatCompte(svm.comptes.find((c) => c.id == e.compte_id)),
         ecritureType: svm.formatType(e.type),
       }));
-    },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
     filteredSapeurs() {
       const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
@@ -295,9 +285,6 @@ export default {
         3: 'table-success', //'Imputé'
       };
       return statutsClass[dataItem.statut];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

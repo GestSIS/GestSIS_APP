@@ -142,7 +142,6 @@ export default {
       filtreNumero: '',
       loading: true,
       selectedId: null,
-      filters: {},
       fieldsNumerote: [
         { title: 'Materiel type', key: 'type' },
         { title: 'Sapeur', key: 'sapeur' },

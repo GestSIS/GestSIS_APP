@@ -1,57 +1,62 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Exercices
-            </li>
-          </ol>
-        </nav>
+  <stateful-filter
+    id="exercices"
+    v-slot="{ setFilter, filteredData }"
+    :data="exercices"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Exercices
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <exercice-comptable />
+        </div>
       </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="{ name: 'exercice', params: { id: 'new' } }"
-            >
-              <button
-                v-if="hasEditPermission"
-                class="btn btn-outline-primary"
-                @click="navigate"
+      <div class="row">
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+              <router-link
+                v-slot="{ navigate }"
+                custom
+                :to="{ name: 'exercice', params: { id: 'new' } }"
               >
-                Ajouter un exercice
-              </button>
-            </router-link>
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="'/exercices/' + selectedId"
-            >
-              <button
-                :disabled="!selectedId"
-                class="btn btn-outline-primary"
-                @click="navigate"
+                <button
+                  v-if="hasEditPermission"
+                  class="btn btn-outline-primary"
+                  @click="navigate"
+                >
+                  Ajouter un exercice
+                </button>
+              </router-link>
+              <router-link
+                v-slot="{ navigate }"
+                custom
+                :to="'/exercices/' + selectedId"
               >
-                {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
-              </button>
-            </router-link>
-            <!-- <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
+                <button
+                  :disabled="!selectedId"
+                  class="btn btn-outline-primary"
+                  @click="navigate"
+                >
+                  {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
+                </button>
+              </router-link>
+              <!-- <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
               class="btn btn-outline-primary">
               Annuler
             </button>
@@ -59,163 +64,166 @@
               class="btn btn-outline-primary">
               Annuler
             </button> -->
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="sms({ id: selectedId })"
-            >
-              SMS
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impressions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button
-              class="btn btn-outline-primary"
-              :disabled="!exercices.length"
-              @click="convoquer"
-            >
-              Convocations
-            </button>
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="listePresences({ id: selectedId })"
-            >
-              Liste de présences
-            </button>
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="listeAppel({ id: selectedId })"
-            >
-              Liste d'appel
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4"
-                :options="filteredLocalites"
-                base-option="<Localité>"
-                @update:model-value="(value) => onFilter('localite_id', value)"
-              />
-              <base-select
-                class="col-md-4"
-                :options="filteredExercicesCategories"
-                base-option="<Catégorie>"
-                @update:model-value="
-                  (value) => onFilter('exercice_categorie_id', value)
-                "
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Statut>"
-                :options="[
-                  { id: 0, designation: 'Annulé' },
-                  { id: 1, designation: 'Sapeurs à ajouter' },
-                  { id: 2, designation: 'En attente de validation' },
-                  { id: 3, designation: 'Validé' },
-                  { id: 4, designation: 'Imputé' },
-                ]"
-                @update:model-value="(value) => onFilter('statut', value)"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            ref="basetable_exercices"
-            :selectable="true"
-            :fields="fieldsBase"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            detail-row-class="m-td-0"
-            no-data="Aucun exercice/séance à afficher"
-            :data="filteredExercices"
-            :row-class="onRowClass"
-            @selected="selectExercice"
-          >
-            <template #actions="{ rowData }">
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/exercices/' + rowData.id"
-                custom
+              <button
+                :disabled="!selectedId"
+                class="btn btn-outline-primary"
+                @click="sms({ id: selectedId })"
               >
-                <button
-                  title="modifier"
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
+                SMS
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Impressions</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+              <button
+                class="btn btn-outline-primary"
+                :disabled="!exercices.length"
+                @click="convoquer"
+              >
+                Convocations
+              </button>
+              <button
+                :disabled="!selectedId"
+                class="btn btn-outline-primary"
+                @click="listePresences({ id: selectedId })"
+              >
+                Liste de présences
+              </button>
+              <button
+                :disabled="!selectedId"
+                class="btn btn-outline-primary"
+                @click="listeAppel({ id: selectedId })"
+              >
+                Liste d'appel
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <base-select
+                  class="col-md-4"
+                  :options="filteredLocalites"
+                  base-option="<Localité>"
+                  @update:model-value="
+                    (value) => setFilter('localite_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-4"
+                  :options="filteredExercicesCategories"
+                  base-option="<Catégorie>"
+                  @update:model-value="
+                    (value) => setFilter('exercice_categorie_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-4"
+                  base-option="<Statut>"
+                  :options="[
+                    { id: 0, designation: 'Annulé' },
+                    { id: 1, designation: 'Sapeurs à ajouter' },
+                    { id: 2, designation: 'En attente de validation' },
+                    { id: 3, designation: 'Validé' },
+                    { id: 4, designation: 'Imputé' },
+                  ]"
+                  @update:model-value="(value) => setFilter('statut', value)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline table-responsive">
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              v-show="!loading"
+              ref="basetable_exercices"
+              :selectable="true"
+              :fields="fieldsBase"
+              :detail-row-column="true"
+              :detail-row-component="detailRowComponent"
+              detail-row-class="m-td-0"
+              no-data="Aucun exercice/séance à afficher"
+              :data="filteredData"
+              :row-class="onRowClass"
+              @selected="selectExercice"
+            >
+              <template #actions="{ rowData }">
+                <router-link
+                  v-slot="{ navigate }"
+                  :to="'/exercices/' + rowData.id"
+                  custom
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <button
+                    title="modifier"
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </router-link>
+                <button
+                  v-if="hasValidationPermission && rowData.statut == 2"
+                  title="valider"
+                  class="btn btn-outline-primary border-0"
+                  @click="validerExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
-              </router-link>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 2"
-                title="valider"
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="
-                  hasValidationPermission &&
-                  rowData.statut <= 3 &&
-                  rowData.statut > 0
-                "
-                title="annuler"
-                class="btn btn-outline-warning border-0"
-                @click="annulerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'ban']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 0"
-                title="réactiver"
-                class="btn btn-outline-success border-0"
-                @click="reactiverExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut <= 3"
-                title="supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-          </base-table>
+                <button
+                  v-if="
+                    hasValidationPermission &&
+                    rowData.statut <= 3 &&
+                    rowData.statut > 0
+                  "
+                  title="annuler"
+                  class="btn btn-outline-warning border-0"
+                  @click="annulerExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'ban']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut == 0"
+                  title="réactiver"
+                  class="btn btn-outline-success border-0"
+                  @click="reactiverExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut <= 3"
+                  title="supprimer"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimerExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -258,7 +266,6 @@ export default {
     return {
       loading: true,
       selectedId: null,
-      filters: {},
       detailRowComponent: markRaw(ExerciceDetails),
       fieldsBase: [
         {
@@ -356,21 +363,6 @@ export default {
       const ids = new Set(this.exercices.map((i) => parseInt(i.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
     },
-    filteredExercices() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
   },
   watch: {
     activeExerciceComptableId() {
@@ -448,9 +440,6 @@ export default {
         4: 'table-success', //'Imputée'
       };
       return statutsClass[dataItem.statut];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

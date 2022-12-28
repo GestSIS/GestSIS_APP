@@ -93,7 +93,7 @@
         </div>
         <base-table
           :fields="fields"
-          :data="filteredData"
+          :data="computedData"
           :selectable="true"
           :detail-row-column="true"
           :detail-row-component="detailRowComponent"
@@ -153,7 +153,6 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       dropdown: false,
       loading: true,
-      filters: {},
       selectedId: 0,
       detailRowOptions: {
         fields: [
@@ -224,21 +223,6 @@ export default {
         ...d,
         getData: () => DecompteService.getEcritures(d.id),
       }));
-    },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
   },
   watch: {
@@ -400,9 +384,6 @@ export default {
     },
     generer() {
       this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

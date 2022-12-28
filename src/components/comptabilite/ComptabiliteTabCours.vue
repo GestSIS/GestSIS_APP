@@ -1,105 +1,111 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            v-if="!selectedItem || !selectedItem?.ecritures?.length"
-            class="btn btn-outline-primary"
-            :disabled="!selectedItem"
-            @click="imputer(selectedItem)"
-          >
-            Imputer
-          </button>
-          <button
-            v-if="selectedItem?.ecritures?.length"
-            class="btn btn-outline-danger"
-            @click="annulerImputer(selectedItem)"
-          >
-            Annuler l'imputation
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-9">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Cours&gt;"
-              :options="filteredDataTypes"
-              @update:model-value="(value) => onFilter('cours_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              @update:model-value="(value) => onFilter('sapeur_id', value)"
-            />
-            <base-select
-              class="col-md-4"
-              base-option="&lt;Localité&gt;"
-              :options="filteredLocalites"
-              @update:model-value="(value) => onFilter('localite_id', value)"
-            />
+  <stateful-filter
+    id="cours"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
           </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3 table-responsive">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Cours</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
-          </div>
-        </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          :row-class="onRowClass"
-          detail-row-class="m-td-0"
-          no-data="Aucune écriture à afficher"
-          :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => !r?.ecritures?.length"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
+          <div class="card-body d-grid gap-1">
             <button
-              v-if="rowData.ecritures?.length"
-              class="btn btn-outline-primary border-0"
-              title="Annuler imputation"
-              @click="annulerImputer(rowData)"
+              v-if="!selectedItem || !selectedItem?.ecritures?.length"
+              class="btn btn-outline-primary"
+              :disabled="!selectedItem"
+              @click="imputer(selectedItem)"
             >
-              <font-awesome-icon :icon="['fas', 'ban']" />
+              Imputer
             </button>
             <button
-              v-if="!rowData.ecritures?.length"
-              class="btn btn-outline-primary border-0"
-              title="Imputer cours"
-              @click="imputer(rowData)"
+              v-if="selectedItem?.ecritures?.length"
+              class="btn btn-outline-danger"
+              @click="annulerImputer(selectedItem)"
             >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              Annuler l'imputation
             </button>
-          </template>
-        </base-table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Cours&gt;"
+                :options="filteredDataTypes"
+                @update:model-value="(value) => setFilter('cours_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                @update:model-value="(value) => setFilter('sapeur_id', value)"
+              />
+              <base-select
+                class="col-md-4"
+                base-option="&lt;Localité&gt;"
+                :options="filteredLocalites"
+                @update:model-value="(value) => setFilter('localite_id', value)"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xl-12">
+        <div class="card card-primary card-outline mb-3 table-responsive">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Cours</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            :row-class="onRowClass"
+            detail-row-class="m-td-0"
+            no-data="Aucune écriture à afficher"
+            :detail-row-column="true"
+            :detail-row-column-hide-button="(r) => !r?.ecritures?.length"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            :data="filteredData"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                v-if="rowData.ecritures?.length"
+                class="btn btn-outline-primary border-0"
+                title="Annuler imputation"
+                @click="annulerImputer(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'ban']" />
+              </button>
+              <button
+                v-if="!rowData.ecritures?.length"
+                class="btn btn-outline-primary border-0"
+                title="Imputer cours"
+                @click="imputer(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -150,7 +156,6 @@ export default {
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
-      filters: {},
       selectedId: null,
       detailRowOptions: {
         fields: [
@@ -235,21 +240,6 @@ export default {
         nom_prenom: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
         getData: () => Promise.resolve(e.ecritures),
       }));
-    },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
     filteredLocalites() {
       const ids = new Set(this.coursSapeurs.map((i) => i.localite_id));
@@ -336,9 +326,6 @@ export default {
       return dataItem?.ecritures?.length > 0
         ? 'table-success'
         : 'table-warning';
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

@@ -1,108 +1,119 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            class="btn btn-outline-primary"
-            @click="justificatifIndividuel(activeCompteId)"
-          >
-            Justificatif du compte
-          </button>
-          <button class="btn btn-outline-primary" @click="justificatifComplet">
-            Justificatif complet
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-6"
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              @update:model-value="(value) => onFilter('sapeur_id', value)"
-            />
-            <base-select
-              class="col-md-6"
-              base-option="&lt;Type&gt;"
-              :options="[
-                { id: 0, designation: 'Autre' },
-                { id: 1, designation: 'Solde' },
-                { id: 2, designation: 'Indemnité' },
-                { id: 3, designation: 'Frais forfaitaire' },
-                { id: 4, designation: 'Frais effectif' },
-                { id: 5, designation: 'Charges AVS/AC' },
-              ]"
-              @update:model-value="(value) => onFilter('type', value)"
-            />
+  <stateful-filter
+    id="comptes"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
           </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-12">
-      <!-- general form elements -->
-      <div class="card card-primary card-outline mb-3">
-        <!-- /.card-header -->
-        <div class="card-header d-flex justify-content-between">
-          <div class="card-title">
-            <h3 class="card-title">Comptes</h3>
-            <base-dropdown
-              ref="dropdown"
-              button-class="ms-1 btn btn-outline-secondary dropdown-toggle"
-              menu-class="dropdown-menu"
-              :title="formatCompte(comptes.find((f) => f.id == activeCompteId))"
+          <div class="card-body d-grid gap-1">
+            <button
+              class="btn btn-outline-primary"
+              @click="justificatifIndividuel(activeCompteId)"
             >
-              <template #default>
-                <button
-                  v-for="c in comptes"
-                  :key="c.id"
-                  class="dropdown-item"
-                  :class="{ active: activeCompteId == c.id }"
-                  type="button"
-                  @click="selectCompte(c.id)"
-                >
-                  {{ formatCompte(c) }}
-                </button>
-              </template>
-            </base-dropdown>
+              Justificatif du compte
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              @click="justificatifComplet"
+            >
+              Justificatif complet
+            </button>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :fields="fields"
-          no-data="Aucune écriture à afficher"
-          :selectable="true"
-          :data="filteredData"
-          @selected="selected"
-        >
-          <template #foot>
-            <tr>
-              <th colspan="4">Total</th>
-              <th>
-                {{
-                  filteredData
-                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                    ?.toFixed(2)
-                }}
-                CHF
-              </th>
-              <th></th>
-            </tr>
-          </template>
-        </base-table>
+      </div>
+      <div class="col-12 col-md-8 col-xl-6">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-6"
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                @update:model-value="(value) => setFilter('sapeur_id', value)"
+              />
+              <base-select
+                class="col-md-6"
+                base-option="&lt;Type&gt;"
+                :options="[
+                  { id: 0, designation: 'Autre' },
+                  { id: 1, designation: 'Solde' },
+                  { id: 2, designation: 'Indemnité' },
+                  { id: 3, designation: 'Frais forfaitaire' },
+                  { id: 4, designation: 'Frais effectif' },
+                  { id: 5, designation: 'Charges AVS/AC' },
+                ]"
+                @update:model-value="(value) => setFilter('type', value)"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-12">
+        <!-- general form elements -->
+        <div class="card card-primary card-outline mb-3">
+          <!-- /.card-header -->
+          <div class="card-header d-flex justify-content-between">
+            <div class="card-title">
+              <h3 class="card-title">Comptes</h3>
+              <base-dropdown
+                ref="dropdown"
+                button-class="ms-1 btn btn-outline-secondary dropdown-toggle"
+                menu-class="dropdown-menu"
+                :title="
+                  formatCompte(comptes.find((f) => f.id == activeCompteId))
+                "
+              >
+                <template #default>
+                  <button
+                    v-for="c in comptes"
+                    :key="c.id"
+                    class="dropdown-item"
+                    :class="{ active: activeCompteId == c.id }"
+                    type="button"
+                    @click="selectCompte(c.id)"
+                  >
+                    {{ formatCompte(c) }}
+                  </button>
+                </template>
+              </base-dropdown>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fields"
+            no-data="Aucune écriture à afficher"
+            :selectable="true"
+            :data="filteredData"
+            @selected="selected"
+          >
+            <template #foot>
+              <tr>
+                <th colspan="4">Total</th>
+                <th>
+                  {{
+                    filteredData
+                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                      ?.toFixed(2)
+                  }}
+                  CHF
+                </th>
+                <th></th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -133,7 +144,6 @@ export default {
     return {
       dropdown: false,
       loading: true,
-      filters: {},
       selectedId: null,
       fields: [
         { title: 'Date', key: 'date', type: Date },
@@ -173,21 +183,6 @@ export default {
         ...e,
         sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
       }));
-    },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
     filteredSapeurs() {
       const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
@@ -279,9 +274,6 @@ export default {
         this.loading = false;
         this.selectedId = null;
       });
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

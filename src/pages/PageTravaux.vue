@@ -1,172 +1,182 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Fiche de travail
-            </li>
-          </ol>
-        </nav>
-      </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-1">
-            <button
-              v-if="hasEditPermission"
-              class="btn btn-outline-primary"
-              @click="createTravail"
-            >
-              Ajouter un travail
-            </button>
-            <button
-              v-if="hasValidationPermission && selectedItem?.statut < 1"
-              class="btn btn-outline-success"
-              :disabled="!selectedItem?.statut < 1"
-              @click="reviewTravail(selectedItem)"
-            >
-              Traiter
-            </button>
-            <button
-              v-if="hasValidationPermission && !selectedItem?.statut < 1"
-              class="btn btn-outline-success"
-              :disabled="selectedItem?.statut == 0 || selectedItem?.statut == 2"
-              @click="cancelReviewTravail(selectedItem)"
-            >
-              Annuler l'examen
-            </button>
-            <button
-              v-if="
-                hasEditPermission && selectedItem?.auteur_id == activeSapeurId
-              "
-              :disabled="!selectedItem?.statut == 0"
-              class="btn btn-outline-danger"
-              @click="supprimerTravail(selectedItem)"
-            >
-              Supprimer
-            </button>
-          </div>
+  <stateful-filter
+    id="travaux"
+    v-slot="{ setFilter, filteredData }"
+    :data="travaux"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Fiche de travail
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <exercice-comptable />
         </div>
       </div>
-      <div class="col-md-9">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="mb-1 col-md-4"
-                display-key="nom_prenom"
-                base-option="<Sapeur>"
-                :options="filteredSapeurs"
-                @update:model-value="(value) => onFilter('localite_id', value)"
-              />
-              <base-select
-                class="mb-1 col-md-4"
-                base-option="<Type>"
-                :options="filteredTravailTypes"
-                @update:model-value="
-                  (value) => onFilter('travail_type_id', value)
+      <div class="row">
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
+            </div>
+            <div class="card-body d-grid gap-1">
+              <button
+                v-if="hasEditPermission"
+                class="btn btn-outline-primary"
+                @click="createTravail"
+              >
+                Ajouter un travail
+              </button>
+              <button
+                v-if="hasValidationPermission && selectedItem?.statut < 1"
+                class="btn btn-outline-success"
+                :disabled="!selectedItem?.statut < 1"
+                @click="reviewTravail(selectedItem)"
+              >
+                Traiter
+              </button>
+              <button
+                v-if="hasValidationPermission && !selectedItem?.statut < 1"
+                class="btn btn-outline-success"
+                :disabled="
+                  selectedItem?.statut == 0 || selectedItem?.statut == 2
                 "
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Statut>"
-                :options="[
-                  { id: [-1], designation: 'Refusé' },
-                  { id: 0, designation: 'En attente' },
-                  { id: 1, designation: 'Accepté' },
-                ]"
-                @update:model-value="(value) => onFilter('statut', value)"
-              />
+                @click="cancelReviewTravail(selectedItem)"
+              >
+                Annuler l'examen
+              </button>
+              <button
+                v-if="
+                  hasEditPermission && selectedItem?.auteur_id == activeSapeurId
+                "
+                :disabled="!selectedItem?.statut == 0"
+                class="btn btn-outline-danger"
+                @click="supprimerTravail(selectedItem)"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <base-select
+                  class="mb-1 col-md-4"
+                  display-key="nom_prenom"
+                  base-option="<Sapeur>"
+                  :options="filteredSapeurs"
+                  @update:model-value="
+                    (value) => setFilter('localite_id', value)
+                  "
+                />
+                <base-select
+                  class="mb-1 col-md-4"
+                  base-option="<Type>"
+                  :options="filteredTravailTypes"
+                  @update:model-value="
+                    (value) => setFilter('travail_type_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-4"
+                  base-option="<Statut>"
+                  :options="[
+                    { id: [-1], designation: 'Refusé' },
+                    { id: 0, designation: 'En attente' },
+                    { id: 1, designation: 'Accepté' },
+                  ]"
+                  @update:model-value="(value) => setFilter('statut', value)"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline table-responsive">
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
             </div>
+            <base-table
+              :class="{ 'd-none': loading }"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucun travail à afficher"
+              :data="filteredData"
+              :selectable="true"
+              @selected="select"
+            >
+              <template #actions="{ rowData }">
+                <button
+                  v-if="
+                    hasEditPermission &&
+                    rowData.auteur_id == activeSapeurId &&
+                    rowData.statut == 0
+                  "
+                  title="Modifier"
+                  class="btn btn-outline-primary border-0"
+                  @click="updateTravail(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </button>
+                <button
+                  v-if="
+                    hasValidationPermission &&
+                    (rowData.statut == -1 || rowData.statut == 1)
+                  "
+                  title="Examen"
+                  class="btn btn-outline-warning border-0"
+                  @click="cancelReviewTravail(rowData)"
+                >
+                  <font-awesome-icon :icon="['fas', 'cancel']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut == 0"
+                  title="Examen"
+                  class="btn btn-outline-success border-0"
+                  @click="reviewTravail(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'eye']" />
+                </button>
+                <button
+                  v-if="
+                    hasEditPermission &&
+                    rowData.auteur_id == activeSapeurId &&
+                    rowData.statut == 0
+                  "
+                  title="Supprimer"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimerTravail(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
           </div>
-          <base-table
-            :class="{ 'd-none': loading }"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucun travail à afficher"
-            :data="filteredTravaux"
-            :selectable="true"
-            @selected="select"
-          >
-            <template #actions="{ rowData }">
-              <button
-                v-if="
-                  hasEditPermission &&
-                  rowData.auteur_id == activeSapeurId &&
-                  rowData.statut == 0
-                "
-                title="Modifier"
-                class="btn btn-outline-primary border-0"
-                @click="updateTravail(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                v-if="
-                  hasValidationPermission &&
-                  (rowData.statut == -1 || rowData.statut == 1)
-                "
-                title="Examen"
-                class="btn btn-outline-warning border-0"
-                @click="cancelReviewTravail(rowData)"
-              >
-                <font-awesome-icon :icon="['fas', 'cancel']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 0"
-                title="Examen"
-                class="btn btn-outline-success border-0"
-                @click="reviewTravail(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'eye']" />
-              </button>
-              <button
-                v-if="
-                  hasEditPermission &&
-                  rowData.auteur_id == activeSapeurId &&
-                  rowData.statut == 0
-                "
-                title="Supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerTravail(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-          </base-table>
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -203,7 +213,6 @@ export default {
   data() {
     return {
       loading: true,
-      filters: {},
       selectedId: null,
       fields: [
         { title: 'Date', key: 'date', type: Date },
@@ -281,21 +290,6 @@ export default {
       const ids = new Set(this.travaux.map((i) => parseInt(i.travail_type_id)));
       return this.travailTypes.filter((t) => ids.has(t.id));
     },
-    filteredTravaux() {
-      return this.travaux.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     canDelete() {
       return (
         this.selectedId &&
@@ -361,9 +355,6 @@ export default {
           }
         },
       });
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

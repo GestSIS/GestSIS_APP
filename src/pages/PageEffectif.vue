@@ -1,178 +1,188 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Effectif</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button
-              class="btn btn-outline-primary"
-              @click="vcard(filteredSapeurs)"
-            >
-              VCard tous
-            </button>
-            <a
-              :disabled="filteredSapeurs.length == 0"
-              :href="
-                'mailto:?bcc=' +
-                filteredSapeurs
-                  .map((s) => s.email)
-                  .filter((s) => s && s != null)
-                  .join(',')
-              "
-              class="btn btn-outline-primary"
-              >Email groupé</a
-            >
-            <button
-              v-if="hasExerciceModificationPermission"
-              class="btn btn-outline-primary"
-              @click="sms"
-            >
-              SMS
-            </button>
-          </div>
+  <stateful-filter
+    id="effectif"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Effectif
+              </li>
+            </ol>
+          </nav>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impression</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button class="btn btn-outline-primary" @click="listeFssp">
-              Liste FSSP
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-6 mb-1"
-                :options="filteredLocalites"
-                base-option="<Localité>"
-                @update:model-value="(value) => onFilter('localite_id', value)"
-              />
-              <base-select
-                class="col-md-6 mb-1"
-                :options="filteredFonctions"
-                display-key="nom"
-                base-option="<Fonction>"
-                @update:model-value="
-                  (value) =>
-                    onFilter(
-                      'fonctions',
-                      parseInt(value)
-                        ? (fonctions) =>
-                            fonctions.find((f) => f.fonction_id == value) !=
-                            undefined
-                        : null
-                    )
-                "
-              />
-              <base-select
-                class="col-md-6 mb-1"
-                :options="filteredGrades"
-                base-option="<Grade>"
-                @update:model-value="(value) => onFilter('grade_id', value)"
-              />
-              <base-select
-                class="col-md-6 mb-1"
-                :options="filteredGroupes"
-                display-key="label"
-                base-option="<Groupe>"
-                @update:model-value="
-                  (value) =>
-                    onFilter(
-                      'groupes',
-                      parseInt(value)
-                        ? (groupes) =>
-                            groupes.find((f) => f.groupe_id == value) !=
-                            undefined
-                        : undefined
-                    )
-                "
-              />
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            :fields="fieldsBase"
-            no-data="Aucun sapeur à afficher"
-            :data="filteredSapeurs"
-            @selected="selectSapeur"
-          >
-            <template #foot>
-              <tr>
-                <th :colspan="fieldsBase.length">
-                  Nombre sapeurs : {{ filteredSapeurs.length }} /
-                  {{ computedData.length }}
-                </th>
-              </tr>
-            </template>
-            <template #actions="{ rowData }">
-              <router-link
-                v-if="hasSapeurModificationPermission"
-                v-slot="{ navigate }"
-                :to="'/sapeurs/' + rowData.id"
-                custom
+            <div class="card-body d-grid gap-2">
+              <button
+                class="btn btn-outline-primary"
+                @click="vcard(filteredData)"
               >
+                VCard tous
+              </button>
+              <a
+                :disabled="filteredData.length == 0"
+                :href="
+                  'mailto:?bcc=' +
+                  filteredData
+                    .map((s) => s.email)
+                    .filter((s) => s && s != null)
+                    .join(',')
+                "
+                class="btn btn-outline-primary"
+                >Email groupé</a
+              >
+              <button
+                v-if="hasExerciceModificationPermission"
+                class="btn btn-outline-primary"
+                @click="sms(filteredData)"
+              >
+                SMS
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Impression</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+              <button class="btn btn-outline-primary" @click="listeFssp">
+                Liste FSSP
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <base-select
+                  class="col-md-6 mb-1"
+                  :options="filteredLocalites"
+                  base-option="<Localité>"
+                  @update:model-value="
+                    (value) => setFilter('localite_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-6 mb-1"
+                  :options="filteredFonctions"
+                  display-key="nom"
+                  base-option="<Fonction>"
+                  @update:model-value="
+                    (value) =>
+                      setFilter(
+                        'fonctions',
+                        parseInt(value)
+                          ? (fonctions) =>
+                              fonctions.find((f) => f.fonction_id == value) !=
+                              undefined
+                          : null
+                      )
+                  "
+                />
+                <base-select
+                  class="col-md-6 mb-1"
+                  :options="filteredGrades"
+                  base-option="<Grade>"
+                  @update:model-value="(value) => setFilter('grade_id', value)"
+                />
+                <base-select
+                  class="col-md-6 mb-1"
+                  :options="filteredGroupes"
+                  display-key="label"
+                  base-option="<Groupe>"
+                  @update:model-value="
+                    (value) =>
+                      setFilter(
+                        'groupes',
+                        parseInt(value)
+                          ? (groupes) =>
+                              groupes.find((f) => f.groupe_id == value) !=
+                              undefined
+                          : undefined
+                      )
+                  "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline table-responsive">
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              :fields="fieldsBase"
+              no-data="Aucun sapeur à afficher"
+              :data="filteredData"
+              @selected="selectSapeur"
+            >
+              <template #foot>
+                <tr>
+                  <th :colspan="fieldsBase.length">
+                    Nombre sapeurs : {{ filteredData.length }} /
+                    {{ computedData.length }}
+                  </th>
+                </tr>
+              </template>
+              <template #actions="{ rowData }">
+                <router-link
+                  v-if="hasSapeurModificationPermission"
+                  v-slot="{ navigate }"
+                  :to="'/sapeurs/' + rowData.id"
+                  custom
+                >
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </router-link>
+                <a
+                  class="btn btn-outline-primary border-0"
+                  :href="'mailto:' + rowData.email"
+                >
+                  <font-awesome-icon :icon="['fas', 'envelope']" />
+                </a>
                 <button
                   class="btn btn-outline-primary border-0"
-                  @click="navigate"
+                  @click="vcard([rowData])"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <font-awesome-icon :icon="['far', 'address-card']" />
                 </button>
-              </router-link>
-              <a
-                class="btn btn-outline-primary border-0"
-                :href="'mailto:' + rowData.email"
-              >
-                <font-awesome-icon :icon="['fas', 'envelope']" />
-              </a>
-              <button
-                class="btn btn-outline-primary border-0"
-                @click="vcard([rowData])"
-              >
-                <font-awesome-icon :icon="['far', 'address-card']" />
-              </button>
-            </template>
-          </base-table>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -208,7 +218,6 @@ export default {
     return {
       loading: true,
       selectedId: null,
-      filters: {},
       sapeurs: [],
       fieldsBase: [
         {
@@ -386,23 +395,6 @@ export default {
           label: (e.no ? e.no + ' ' : '') + e.designation,
         }));
     },
-    filteredSapeurs() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val && (val >= 0 || typeof val == 'function'))
-          .map(([key, value]) => {
-            if (typeof value == 'function') {
-              return (x) => value(x[key]);
-            } else {
-              return (x) => x[key] == value;
-            }
-          })
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
   },
   beforeMount() {
     SapeurService.getEffectif().then((effectif) => {
@@ -424,9 +416,8 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalListeFssp',
       });
-      // TODO: Download listeFssp
     },
-    sms() {
+    sms(sapeurs) {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
           "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
@@ -436,7 +427,7 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalSms',
         size: 1,
-        data: this.filteredSapeurs,
+        data: sapeurs,
       });
     },
     vcard(sapeurs) {
@@ -510,9 +501,6 @@ END:VCARD`
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       }, 0);
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: value };
     },
   },
 };

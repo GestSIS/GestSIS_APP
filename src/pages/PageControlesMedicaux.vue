@@ -1,193 +1,199 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Contrôles Medicaux
-            </li>
-          </ol>
-        </nav>
-      </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="{ name: 'controle-medical', params: { id: 'ajout' } }"
-            >
-              <button class="btn btn-outline-primary" @click="navigate">
-                Ajouter un contrôle
-              </button>
-            </router-link>
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="'/controles-medicaux/' + selectedItem?.id"
-            >
-              <button
-                :disabled="!selectedItem"
-                class="btn btn-outline-primary"
-                @click="navigate"
-              >
-                Modifier
-              </button>
-            </router-link>
-          </div>
+  <stateful-filter
+    id="controles-medicaux"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Contrôles Medicaux
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <exercice-comptable />
         </div>
       </div>
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impressions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button
-              :disabled="!selectedItem?.filename"
-              class="btn btn-outline-primary"
-              @click="downloadJustificatif(selectedItem)"
-            >
-              Justificatif
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-12 mb-2">
-                <input
-                  id="only_latest"
-                  v-model="latest"
-                  type="checkbox"
-                  class="form-check-input"
-                />
-                <label class="form-check-label ms-2" for="only_latest"
-                  >Derniers contrôles de chaque sapeurs</label
-                >
-              </div>
-              <base-select
-                class="col-md-6"
-                base-option="<Type>"
-                :options="filteredTypes"
-                @update:model-value="
-                  (v) => onFilter('controle_medical_type_id', v)
-                "
-              />
-              <base-select
-                class="col-md-6"
-                base-option="<Médecin>"
-                :options="filteredMedecins"
-                @update:model-value="(v) => onFilter('medecin_id', v)"
-              />
+      <div class="row">
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
             </div>
-            <div class="row mt-2">
-              <base-select
-                class="col-md-6"
-                base-option="<Année de consultation>"
-                :options="
-                  [...filteredAnneesConsultation].map((annee) => ({
-                    id: annee,
-                    designation: annee,
-                  }))
-                "
-                @change="(v) => onAnneeFilter('consultation', v)"
-              />
-              <base-select
-                class="col-md-6"
-                base-option="<Année de validité>"
-                :options="
-                  [...filteredAnneesExpiration].map((annee) => ({
-                    id: annee,
-                    designation: annee,
-                  }))
-                "
-                @change="(v) => onAnneeFilter('validite', v)"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline table-responsive">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Liste des contrôles médicaux</h3>
-          </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            no-data="Aucun contrôle médical à afficher"
-            :row-class="onRowClass"
-            :data="filteredControles"
-            :selectable="true"
-            @selected="selected"
-          >
-            <template #doc="{ rowData }">
-              <button
-                v-if="rowData.filename"
-                class="btn"
-                @click="downloadJustificatif(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'file-pdf']" />
-              </button>
-            </template>
-            <template #actions="{ rowData }">
+            <div class="card-body d-grid gap-2">
               <router-link
                 v-slot="{ navigate }"
-                :to="{
-                  name: 'controle-medical',
-                  params: { id: rowData.id },
-                }"
                 custom
+                :to="{ name: 'controle-medical', params: { id: 'ajout' } }"
               >
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                <button class="btn btn-outline-primary" @click="navigate">
+                  Ajouter un contrôle
                 </button>
               </router-link>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="supprimer(rowData)"
+              <router-link
+                v-slot="{ navigate }"
+                custom
+                :to="'/controles-medicaux/' + selectedItem?.id"
               >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
+                <button
+                  :disabled="!selectedItem"
+                  class="btn btn-outline-primary"
+                  @click="navigate"
+                >
+                  Modifier
+                </button>
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Impressions</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+              <button
+                :disabled="!selectedItem?.filename"
+                class="btn btn-outline-primary"
+                @click="downloadJustificatif(selectedItem)"
+              >
+                Justificatif
               </button>
-            </template>
-          </base-table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 mb-2">
+                  <input
+                    id="only_latest"
+                    v-model="latest"
+                    type="checkbox"
+                    class="form-check-input"
+                  />
+                  <label class="form-check-label ms-2" for="only_latest"
+                    >Derniers contrôles de chaque sapeurs</label
+                  >
+                </div>
+                <base-select
+                  class="col-md-6"
+                  base-option="<Type>"
+                  :options="filteredTypes"
+                  @update:model-value="
+                    (v) => setFilter('controle_medical_type_id', v)
+                  "
+                />
+                <base-select
+                  class="col-md-6"
+                  base-option="<Médecin>"
+                  :options="filteredMedecins"
+                  @update:model-value="(v) => setFilter('medecin_id', v)"
+                />
+              </div>
+              <div class="row mt-2">
+                <base-select
+                  class="col-md-6"
+                  base-option="<Année de consultation>"
+                  :options="
+                    [...filteredAnneesConsultation].map((annee) => ({
+                      id: annee,
+                      designation: annee,
+                    }))
+                  "
+                  @change="(v) => onAnneeFilter(setFilter, 'consultation', v)"
+                />
+                <base-select
+                  class="col-md-6"
+                  base-option="<Année de validité>"
+                  :options="
+                    [...filteredAnneesExpiration].map((annee) => ({
+                      id: annee,
+                      designation: annee,
+                    }))
+                  "
+                  @change="(v) => onAnneeFilter(setFilter, 'validite', v)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline table-responsive">
+            <div class="card-header d-flex justify-content-between">
+              <h3>Liste des contrôles médicaux</h3>
+            </div>
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              v-show="!loading"
+              :fields="fields"
+              no-data="Aucun contrôle médical à afficher"
+              :row-class="onRowClass"
+              :data="filteredData"
+              :selectable="true"
+              @selected="selected"
+            >
+              <template #doc="{ rowData }">
+                <button
+                  v-if="rowData.filename"
+                  class="btn"
+                  @click="downloadJustificatif(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+              </template>
+              <template #actions="{ rowData }">
+                <router-link
+                  v-slot="{ navigate }"
+                  :to="{
+                    name: 'controle-medical',
+                    params: { id: rowData.id },
+                  }"
+                  custom
+                >
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </router-link>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimer(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -231,48 +237,16 @@ export default {
       latest: true,
       loading: true,
       selectedItem: null,
-      filters: {},
       fields: [
-        {
-          title: 'Sapeur',
-          key: 'sapeur',
-        },
-        {
-          title: 'Age',
-          key: 'age',
-        },
-        {
-          title: 'Type',
-          key: 'type',
-        },
-        {
-          title: 'Medecin',
-          key: 'medecin',
-        },
-        {
-          title: 'Consultation',
-          key: 'consultation',
-          type: 'date',
-        },
-        {
-          title: 'Validité',
-          key: 'validite',
-          type: 'date',
-        },
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
-        {
-          title: 'Accepté',
-          key: 'accepter',
-          type: Boolean,
-        },
-        {
-          title: 'En cours',
-          key: 'en_cours',
-          type: Boolean,
-        },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Age', key: 'age' },
+        { title: 'Type', key: 'type' },
+        { title: 'Medecin', key: 'medecin' },
+        { title: 'Consultation', key: 'consultation', type: Date },
+        { title: 'Validité', key: 'validite', type: Date },
+        { title: 'Designation', key: 'designation' },
+        { title: 'Accepté', key: 'accepter', type: Boolean },
+        { title: 'En cours', key: 'en_cours', type: Boolean },
         {
           title: 'Doc',
           key: 'doc',
@@ -337,21 +311,6 @@ export default {
         }
         return acc;
       }, []);
-    },
-    filteredControles() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0 || typeof val == 'function')
-          .map(([key, value]) =>
-            typeof value == 'function'
-              ? (x) => value(x[key])
-              : (x) => x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
     filteredTypes() {
       const ids = new Set(
@@ -422,18 +381,12 @@ export default {
         return 'table-danger';
       }
     },
-    onAnneeFilter(key, value) {
+    onAnneeFilter(setFilter, key, value) {
       if (parseInt(value)) {
-        this.filters = {
-          ...this.filters,
-          [key]: (e) => e && new Date(e).getFullYear() == value,
-        };
+        setFilter(key, (e) => e && new Date(e).getFullYear() == value);
       } else {
-        this.filters = { ...this.filters, [key]: undefined };
+        setFilter(key, undefined);
       }
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

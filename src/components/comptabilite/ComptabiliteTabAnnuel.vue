@@ -1,93 +1,99 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            class="btn btn-outline-primary me-2"
-            :title="computedData.length ? 'Regénérer tous' : 'Générer'"
-            @click.prevent="generer"
-          >
-            {{ computedData.length ? 'Regénérer' : 'Générer' }}
-          </button>
-          <button
-            v-if="computedData.length"
-            class="btn btn-outline-danger"
-            @click.prevent="annulerImputation"
-          >
-            Tout supprimer
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <base-select
-            display-key="nom_prenom"
-            base-option="&lt;Sapeur&gt;"
-            :options="filteredSapeurs"
-            @update:model-value="(value) => onFilter('id', value)"
-          />
-        </form>
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title me-auto">Indemnités et Frais annuels</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+  <stateful-filter
+    id="annuel"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
+            <button
+              class="btn btn-outline-primary me-2"
+              :title="computedData.length ? 'Regénérer tous' : 'Générer'"
+              @click.prevent="generer"
+            >
+              {{ computedData.length ? 'Regénérer' : 'Générer' }}
+            </button>
+            <button
+              v-if="computedData.length"
+              class="btn btn-outline-danger"
+              @click.prevent="annulerImputation"
+            >
+              Tout supprimer
+            </button>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :data="filteredData"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucune écriture à afficher"
-          :detail-row-column="true"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          detail-row-class="m-td-0 p-0"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
-            <button
-              title="Regénérer les frais de ce sapeur"
-              class="btn btn-outline-primary border-0"
-              @click="regenererSapeur(rowData)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </template>
-          <template #foot>
-            <tr>
-              <th :colspan="filteredData.length ? 3 : 2">Total</th>
-              <th>
-                {{
-                  filteredData
-                    .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                    ?.toFixed(2)
-                }}
-                CHF
-              </th>
-              <th></th>
-            </tr>
-          </template>
-        </base-table>
+      </div>
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <base-select
+              display-key="nom_prenom"
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              @update:model-value="(value) => setFilter('id', value)"
+            />
+          </form>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title me-auto">Indemnités et Frais annuels</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :data="filteredData"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucune écriture à afficher"
+            :detail-row-column="true"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            detail-row-class="m-td-0 p-0"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                title="Regénérer les frais de ce sapeur"
+                class="btn btn-outline-primary border-0"
+                @click="regenererSapeur(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+            <template #foot>
+              <tr>
+                <th :colspan="filteredData.length ? 3 : 2">Total</th>
+                <th>
+                  {{
+                    filteredData
+                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                      ?.toFixed(2)
+                  }}
+                  CHF
+                </th>
+                <th></th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -120,7 +126,6 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       selectedId: null,
-      filters: {},
       detailRowOptions: {
         fields: [
           {
@@ -238,21 +243,6 @@ export default {
           }))
       );
     },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredSapeurs() {
       const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
@@ -326,9 +316,6 @@ export default {
         1: '', //'Actif',
       };
       return statutsClass[dataItem.actif];
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

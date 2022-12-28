@@ -1,190 +1,198 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Interventions
-            </li>
-          </ol>
-        </nav>
-      </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-1">
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="{ name: 'intervention', params: { id: 'new' } }"
-            >
-              <button
-                v-if="hasEditPermission"
-                class="btn btn-outline-primary"
-                @click="navigate"
-              >
-                Ajouter une intervention
-              </button>
-            </router-link>
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="'/interventions/' + selectedId"
-            >
-              <button
-                :disabled="!selectedId"
-                class="btn btn-outline-primary"
-                @click="navigate"
-              >
-                {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
-              </button>
-            </router-link>
-            <button
-              v-if="hasEditPermission"
-              :disabled="!canDelete"
-              class="btn btn-outline-danger"
-              @click="supprimerIntervention(selectedId)"
-            >
-              Supprimer
-            </button>
-          </div>
+  <stateful-filter
+    id="interventions"
+    v-slot="{ setFilter, filteredData }"
+    :data="interventions"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Interventions
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <exercice-comptable />
         </div>
       </div>
-      <div class="col-md-3">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impressions</h5>
-          </div>
-          <div class="card-body d-grid gap-1">
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="rapportIntervention"
-            >
-              Rapport d'intervention
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="mb-1 col-md-4"
-                :options="filteredLocalites"
-                base-option="<Localité>"
-                @update:model-value="(value) => onFilter('localite_id', value)"
-              />
-              <base-select
-                class="mb-1 col-md-4"
-                :options="filteredInterventionsTypes"
-                base-option="<Type>"
-                @update:model-value="
-                  (value) => onFilter('type_intervention_id', value)
-                "
-              />
-              <base-select
-                class="mb-1 col-md-4"
-                :options="filteredStatFederal"
-                base-option="<Statistique fédérale>"
-                @update:model-value="
-                  (value) => onFilter('stat_federal_id', value)
-                "
-              />
-              <base-select
-                class="col-md-4"
-                :options="traitements"
-                base-option="<Statistique fédérale>"
-                @update:model-value="
-                  (value) => onFilter('intervention_traitement_id', value)
-                "
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Etendue>"
-                :options="[
-                  { id: 1, designation: 'Fausse alarme' },
-                  { id: 2, designation: 'Petite' },
-                  { id: 3, designation: 'Moyenne' },
-                  { id: 4, designation: 'Grande' },
-                ]"
-                @update:model-value="(value) => onFilter('degre', value)"
-              />
+      <div class="row">
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <!-- /.card-header -->
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            :class="{ 'd-none': loading }"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucune intervention à afficher"
-            :data="filteredInterventions"
-            :selectable="true"
-            @selected="select"
-          >
-            <template #actions="{ rowData }">
+            <div class="card-body d-grid gap-1">
               <router-link
                 v-slot="{ navigate }"
-                :to="'/interventions/' + rowData.id"
                 custom
+                :to="{ name: 'intervention', params: { id: 'new' } }"
               >
                 <button
-                  class="btn btn-outline-primary border-0"
+                  v-if="hasEditPermission"
+                  class="btn btn-outline-primary"
                   @click="navigate"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  Ajouter une intervention
+                </button>
+              </router-link>
+              <router-link
+                v-slot="{ navigate }"
+                custom
+                :to="'/interventions/' + selectedId"
+              >
+                <button
+                  :disabled="!selectedId"
+                  class="btn btn-outline-primary"
+                  @click="navigate"
+                >
+                  {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
                 </button>
               </router-link>
               <button
-                v-if="hasValidationPermission && rowData.statut === 1"
-                class="btn btn-outline-primary border-0"
-                @click="validerIntervention(rowData.id)"
+                v-if="hasEditPermission"
+                :disabled="!canDelete"
+                class="btn btn-outline-danger"
+                @click="supprimerIntervention(selectedId)"
               >
-                <font-awesome-icon :icon="['fas', 'check']" />
+                Supprimer
               </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Impressions</h5>
+            </div>
+            <div class="card-body d-grid gap-1">
               <button
-                v-if="hasEditPermission && rowData.statut <= 3"
-                title="supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerIntervention(rowData.id)"
+                :disabled="!selectedId"
+                class="btn btn-outline-primary"
+                @click="rapportIntervention"
               >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
+                Rapport d'intervention
               </button>
-            </template>
-          </base-table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <base-select
+                  class="mb-1 col-md-4"
+                  :options="filteredLocalites"
+                  base-option="<Localité>"
+                  @update:model-value="
+                    (value) => setFilter('localite_id', value)
+                  "
+                />
+                <base-select
+                  class="mb-1 col-md-4"
+                  :options="filteredInterventionsTypes"
+                  base-option="<Type>"
+                  @update:model-value="
+                    (value) => setFilter('type_intervention_id', value)
+                  "
+                />
+                <base-select
+                  class="mb-1 col-md-4"
+                  :options="filteredStatFederal"
+                  base-option="<Statistique fédérale>"
+                  @update:model-value="
+                    (value) => setFilter('stat_federal_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-4"
+                  :options="traitements"
+                  base-option="<Statistique fédérale>"
+                  @update:model-value="
+                    (value) => setFilter('intervention_traitement_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-4"
+                  base-option="<Etendue>"
+                  :options="[
+                    { id: 1, designation: 'Fausse alarme' },
+                    { id: 2, designation: 'Petite' },
+                    { id: 3, designation: 'Moyenne' },
+                    { id: 4, designation: 'Grande' },
+                  ]"
+                  @update:model-value="(value) => setFilter('degre', value)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- /.card-header -->
+          <div class="card card-primary card-outline table-responsive">
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            <base-table
+              :class="{ 'd-none': loading }"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucune intervention à afficher"
+              :data="filteredData ?? []"
+              :selectable="true"
+              @selected="select"
+            >
+              <template #actions="{ rowData }">
+                <router-link
+                  v-slot="{ navigate }"
+                  :to="'/interventions/' + rowData.id"
+                  custom
+                >
+                  <button
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </router-link>
+                <button
+                  v-if="hasValidationPermission && rowData.statut === 1"
+                  class="btn btn-outline-primary border-0"
+                  @click="validerIntervention(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+                <button
+                  v-if="hasEditPermission && rowData.statut <= 3"
+                  title="supprimer"
+                  class="btn btn-outline-danger border-0"
+                  @click="supprimerIntervention(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -234,59 +242,41 @@ export default {
 
     return {
       loading: true,
-      filters: {},
       selectedId: null,
       fields: [
-        {
-          title: 'Date',
-          key: 'date_debut',
-          columnClass: 'align-middle',
-          type: 'date',
-        },
+        { title: 'Date', key: 'date_debut', type: 'date' },
         {
           title: 'Heure',
           key: 'heure_debut',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
+          formatter: (value) => value.slice(0, 5),
         },
         {
           title: "Type d'intervention",
           key: 'type_intervention_id',
-          formatter(id) {
-            return self.types.find((t) => t.id == id)?.designation;
-          },
+          formatter: (id) => self.types.find((t) => t.id == id)?.designation,
         },
         {
           title: 'Localité',
           key: 'localite_id',
-          formatter(id) {
-            return self.localites.find((l) => l.id == id)?.designation;
-          },
+          formatter: (id) =>
+            self.localites.find((l) => l.id == id)?.designation,
         },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-          columnClass: 'align-middle',
-        },
+        { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
         {
           title: 'Stat fédérale',
           key: 'stat_federal_id',
-          formatter(id) {
-            return self.stats.find((s) => s.id == id)?.designation;
-          },
+          formatter: (id) => self.stats.find((s) => s.id == id)?.designation,
         },
         {
           title: 'Traitement',
           key: 'intervention_traitement_id',
-          formatter(id) {
-            return self.traitements.find((t) => t.id == id)?.designation;
-          },
+          formatter: (id) =>
+            self.traitements.find((t) => t.id == id)?.designation,
         },
         {
           title: 'Étendue',
           key: 'degre',
-          formatter(value) {
+          formatter: (value) => {
             const degre = {
               1: 'Fausse-alarme',
               2: 'Petite',
@@ -299,7 +289,7 @@ export default {
         {
           title: 'Statut',
           key: 'statut',
-          formatter(value) {
+          formatter: (value) => {
             const statuts = {
               0: 'A saisir',
               1: 'A valider',
@@ -309,12 +299,7 @@ export default {
             return statuts[value];
           },
         },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -360,21 +345,6 @@ export default {
         this.interventions.map((i) => parseInt(i.stat_federal_id))
       );
       return this.stats.filter((t) => ids.has(t.id));
-    },
-    filteredInterventions() {
-      return this.interventions.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
     },
     canDelete() {
       return (
@@ -428,9 +398,6 @@ export default {
         size: 1,
         data: { interventionId: this.selectedId, statut },
       });
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

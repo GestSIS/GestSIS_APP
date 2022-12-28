@@ -1,121 +1,127 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
-          <button
-            v-if="!selectedItem || selectedItem?.statut == 1"
-            class="btn btn-outline-primary"
-            :disabled="selectedItem && selectedItem.statut == 1"
-            @click="imputer()"
-          >
-            Imputer le travail sélectionné
-          </button>
-          <button
-            v-if="selectedItem?.statut == 2"
-            class="btn btn-outline-danger"
-            @click="imputer()"
-          >
-            Annuler l'imputation sélectionnée
-          </button>
-          <button class="btn btn-outline-primary" @click="imputer()">
-            Tout imputer
-          </button>
-          <!-- <button
+  <stateful-filter
+    id="travaux"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="row">
+      <div class="col-12 col-md-4 col-xl-3">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-1">
+            <button
+              v-if="!selectedItem || selectedItem?.statut == 1"
+              class="btn btn-outline-primary"
+              :disabled="selectedItem && selectedItem.statut == 1"
+              @click="imputer()"
+            >
+              Imputer le travail sélectionné
+            </button>
+            <button
+              v-if="selectedItem?.statut == 2"
+              class="btn btn-outline-danger"
+              @click="imputer()"
+            >
+              Annuler l'imputation sélectionnée
+            </button>
+            <button class="btn btn-outline-primary" @click="imputer()">
+              Tout imputer
+            </button>
+            <!-- <button
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
             @click="annulerImputer()"
           >
             Annuler toutes les imputations
           </button> -->
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-md-8 col-xl-9">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Filtres</h3>
-        </div>
-        <form class="card-body">
-          <div class="row">
-            <base-select
-              class="col-md-4"
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              @update:model-value="(value) => onFilter('sapeur_id', value)"
-            />
-            <base-select
-              class="mb-1 col-md-4"
-              :options="filteredTravailTypes"
-              base-option="<Type>"
-              @update:model-value="
-                (value) => onFilter('travail_type_id', value)
-              "
-            />
-            <base-select
-              class="col-md-4"
-              base-option="<Statut>"
-              :options="[
-                { id: [-1], designation: 'Refusé' },
-                { id: 0, designation: 'En attente' },
-                { id: 1, designation: 'Accepté' },
-              ]"
-              @update:model-value="(value) => onFilter('statut', value)"
-            />
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3 table-responsive">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Fiches de travails</h3>
-        </div>
-        <div v-if="loading" class="card-body d-flex justify-content-center">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :class="{ 'd-none': loading }"
-          :fields="fields"
-          :row-class="onRowClass"
-          no-data="Aucun travail à afficher"
-          :detail-row-column="true"
-          :detail-row-column-hide-button="(r) => r.statut !== 2"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          :data="filteredData"
-          :selectable="true"
-          @selected="selected"
-        >
-          <template #actions="{ rowData }">
-            <button
-              v-if="rowData.statut == 2"
-              class="btn btn-outline-primary border-0"
-              title="Annuler imputation"
-              @click="annulerImputer(rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'ban']" />
-            </button>
-            <button
-              v-if="rowData.statut == 1"
-              class="btn btn-outline-primary border-0"
-              title="Imputer travail"
-              @click="imputer(rowData.id)"
-            >
-              <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-            </button>
-          </template>
-        </base-table>
+      </div>
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Filtres</h3>
+          </div>
+          <form class="card-body">
+            <div class="row">
+              <base-select
+                class="col-md-4"
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                @update:model-value="(value) => setFilter('sapeur_id', value)"
+              />
+              <base-select
+                class="mb-1 col-md-4"
+                :options="filteredTravailTypes"
+                base-option="<Type>"
+                @update:model-value="
+                  (value) => setFilter('travail_type_id', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
+                base-option="<Statut>"
+                :options="[
+                  { id: [-1], designation: 'Refusé' },
+                  { id: 0, designation: 'En attente' },
+                  { id: 1, designation: 'Accepté' },
+                ]"
+                @update:model-value="(value) => setFilter('statut', value)"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xl-12">
+        <div class="card card-primary card-outline mb-3 table-responsive">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Fiches de travails</h3>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :class="{ 'd-none': loading }"
+            :fields="fields"
+            :row-class="onRowClass"
+            no-data="Aucun travail à afficher"
+            :detail-row-column="true"
+            :detail-row-column-hide-button="(r) => r.statut !== 2"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            :data="filteredData"
+            :selectable="true"
+            @selected="selected"
+          >
+            <template #actions="{ rowData }">
+              <button
+                v-if="rowData.statut == 2"
+                class="btn btn-outline-primary border-0"
+                title="Annuler imputation"
+                @click="annulerImputer(rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'ban']" />
+              </button>
+              <button
+                v-if="rowData.statut == 1"
+                class="btn btn-outline-primary border-0"
+                title="Imputer travail"
+                @click="imputer(rowData.id)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -163,7 +169,6 @@ export default {
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
-      filters: {},
       selectedId: null,
       detailRowOptions: {
         fields: [
@@ -255,21 +260,6 @@ export default {
         getData: () => Promise.resolve(e.ecritures),
       }));
     },
-    filteredData() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] === value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
     filteredSapeurs() {
       const ids = new Set(this.travaux.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
@@ -355,9 +345,6 @@ export default {
       }
 
       return dataItem?.statut == 2 ? 'table-success' : 'table-warning';
-    },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
     },
   },
 };

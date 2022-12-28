@@ -1,71 +1,79 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Cours</li>
-          </ol>
-        </nav>
+  <stateful-filter
+    id="cours"
+    v-slot="{ setFilter, filteredData }"
+    :data="computedData"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-3">
+              <li class="breadcrumb-item">
+                <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Cours</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <exercice-comptable />
+        </div>
       </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4"
-                base-option="<Cours>"
-                :options="filteredCoursTypes"
-                @update:model-value="(value) => onFilter('cours_id', value)"
-              />
-              <base-select
-                class="col-md-4"
-                display-key="nom_prenom"
-                base-option="<Sapeur>"
-                :options="filteredSapeurs"
-                @update:model-value="(value) => onFilter('sapeur_id', value)"
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Localité>"
-                :options="filteredLocalites"
-                @update:model-value="(value) => onFilter('localite_id', value)"
-              />
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Filtres</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <base-select
+                  class="col-md-4"
+                  base-option="<Cours>"
+                  :options="filteredCoursTypes"
+                  @update:model-value="(value) => setFilter('cours_id', value)"
+                />
+                <base-select
+                  class="col-md-4"
+                  display-key="nom_prenom"
+                  base-option="<Sapeur>"
+                  :options="filteredSapeurs"
+                  @update:model-value="(value) => setFilter('sapeur_id', value)"
+                />
+                <base-select
+                  class="col-md-4"
+                  base-option="<Localité>"
+                  :options="filteredLocalites"
+                  @update:model-value="
+                    (value) => setFilter('localite_id', value)
+                  "
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline table-responsive">
+            <div v-if="loading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
             </div>
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              :fields="fields"
+              no-data="Aucun cours à afficher"
+              :data="filteredData"
+            />
           </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            :fields="fields"
-            no-data="Aucun cours à afficher"
-            :data="filteredCoursSapeurs"
-          />
         </div>
       </div>
     </div>
-  </div>
+  </stateful-filter>
 </template>
 
 <script>
@@ -107,30 +115,13 @@ export default {
     return {
       loading: true,
       selectedId: null,
-      filters: {},
       detailRowComponent: markRaw(ExerciceDetails),
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: Date,
-        },
-        {
-          title: 'Cours',
-          key: 'designation',
-        },
-        {
-          title: 'Sapeur',
-          key: 'nom_prenom',
-        },
-        {
-          title: 'Durée [jour]',
-          key: 'duree',
-        },
-        {
-          title: 'Localité',
-          key: 'localite',
-        },
+        { title: 'Date', key: 'date', type: Date },
+        { title: 'Cours', key: 'designation' },
+        { title: 'Sapeur', key: 'nom_prenom' },
+        { title: 'Durée [jour]', key: 'duree' },
+        { title: 'Localité', key: 'localite' },
       ],
     };
   },
@@ -176,21 +167,6 @@ export default {
       );
       return this.localites.filter((t) => ids.has(t.id));
     },
-    filteredCoursSapeurs() {
-      return this.computedData.filter(
-        Object.entries(this.filters)
-          .filter(([, val]) => val >= 0)
-          .map(
-            ([key, value]) =>
-              (x) =>
-                x[key] == value
-          )
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
   },
   watch: {
     activeExerciceComptableId() {
@@ -202,11 +178,6 @@ export default {
   },
   mounted() {
     this.loading = false;
-  },
-  methods: {
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: parseInt(value) };
-    },
   },
 };
 </script>
