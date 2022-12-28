@@ -52,7 +52,7 @@ export default {
         state.mesInfos.fonctions.map((t) => ({
           ...t,
           fonction: state.fonction.liste.find((e) => e.id == t.fonction_id)
-            ?.designation,
+            ?.nom,
         })),
     }),
   },
