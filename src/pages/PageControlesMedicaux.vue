@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="controles-medicaux"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="container-fluid">
@@ -95,6 +95,7 @@
                   class="col-md-6"
                   base-option="<Type>"
                   :options="filteredTypes"
+                  :model-value="filters.controle_medical_type_id"
                   @update:model-value="
                     (v) => setFilter('controle_medical_type_id', v)
                   "
@@ -103,6 +104,7 @@
                   class="col-md-6"
                   base-option="<Médecin>"
                   :options="filteredMedecins"
+                  :model-value="filters.medecin_id"
                   @update:model-value="(v) => setFilter('medecin_id', v)"
                 />
               </div>
@@ -129,6 +131,11 @@
                   "
                   @change="(v) => onAnneeFilter(setFilter, 'validite', v)"
                 />
+                <div v-if="canReset" class="col-md-6">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
           </div>

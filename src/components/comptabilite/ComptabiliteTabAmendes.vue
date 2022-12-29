@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="amendes"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="row">
@@ -27,8 +27,14 @@
               display-key="nom_prenom"
               base-option="&lt;Sapeur&gt;"
               :options="filteredSapeurs"
+              :model-value="filters.id"
               @update:model-value="(value) => setFilter('id', value)"
             />
+            <div v-if="canReset" class="w-100 mt-2">
+              <button class="btn btn-sm btn-warning w-100" @click="reset">
+                Réinitialiser
+              </button>
+            </div>
           </form>
         </div>
       </div>

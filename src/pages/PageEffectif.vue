@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="effectif"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="container-fluid">
@@ -77,6 +77,7 @@
                   class="col-md-6 mb-1"
                   :options="filteredLocalites"
                   base-option="<Localité>"
+                  :model-value="filters.localite_id"
                   @update:model-value="
                     (value) => setFilter('localite_id', value)
                   "
@@ -102,6 +103,7 @@
                   class="col-md-6 mb-1"
                   :options="filteredGrades"
                   base-option="<Grade>"
+                  :model-value="filters.grade_id"
                   @update:model-value="(value) => setFilter('grade_id', value)"
                 />
                 <base-select
@@ -121,6 +123,11 @@
                       )
                   "
                 />
+                <div v-if="canReset" class="col-md-6">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
           </div>

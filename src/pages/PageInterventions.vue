@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="interventions"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="interventions"
   >
     <div class="container-fluid">
@@ -96,6 +96,7 @@
                   class="mb-1 col-md-4"
                   :options="filteredLocalites"
                   base-option="<Localité>"
+                  :model-value="filters.localite_id"
                   @update:model-value="
                     (value) => setFilter('localite_id', value)
                   "
@@ -104,6 +105,7 @@
                   class="mb-1 col-md-4"
                   :options="filteredInterventionsTypes"
                   base-option="<Type>"
+                  :model-value="filters.type_intervention_id"
                   @update:model-value="
                     (value) => setFilter('type_intervention_id', value)
                   "
@@ -112,6 +114,7 @@
                   class="mb-1 col-md-4"
                   :options="filteredStatFederal"
                   base-option="<Statistique fédérale>"
+                  :model-value="filters.stat_federal_id"
                   @update:model-value="
                     (value) => setFilter('stat_federal_id', value)
                   "
@@ -120,6 +123,7 @@
                   class="col-md-4"
                   :options="traitements"
                   base-option="<Statistique fédérale>"
+                  :model-value="filters.intervention_traitement_id"
                   @update:model-value="
                     (value) => setFilter('intervention_traitement_id', value)
                   "
@@ -133,8 +137,14 @@
                     { id: 3, designation: 'Moyenne' },
                     { id: 4, designation: 'Grande' },
                   ]"
+                  :model-value="filters.degre"
                   @update:model-value="(value) => setFilter('degre', value)"
                 />
+                <div v-if="canReset" class="col-md-4">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="travaux"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="travaux"
   >
     <div class="container-fluid">
@@ -81,6 +81,7 @@
                   display-key="nom_prenom"
                   base-option="<Sapeur>"
                   :options="filteredSapeurs"
+                  :model-value="filters.localite_id"
                   @update:model-value="
                     (value) => setFilter('localite_id', value)
                   "
@@ -89,6 +90,7 @@
                   class="mb-1 col-md-4"
                   base-option="<Type>"
                   :options="filteredTravailTypes"
+                  :model-value="filters.travail_type_id"
                   @update:model-value="
                     (value) => setFilter('travail_type_id', value)
                   "
@@ -101,8 +103,14 @@
                     { id: 0, designation: 'En attente' },
                     { id: 1, designation: 'Accepté' },
                   ]"
+                  :model-value="filters.statut"
                   @update:model-value="(value) => setFilter('statut', value)"
                 />
+                <div v-if="canReset" class="col-md-4">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
           </div>

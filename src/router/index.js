@@ -356,7 +356,9 @@ const router = createRouter({
           name: 'comptabilite-intervention',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
           component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabIntervention.vue'),
+            import(
+              '/src/components/comptabilite/ComptabiliteTabIntervention.vue'
+            ),
         },
         {
           path: 'cours',
@@ -417,13 +419,15 @@ const router = createRouter({
           path: '',
           name: 'stat-dashboard',
           meta: {},
-          component: () => import('/src/components/statistique/StatDashboard.vue'),
+          component: () =>
+            import('/src/components/statistique/StatDashboard.vue'),
         },
         {
           path: 'exercice',
           name: 'stat-exercice-simple',
           meta: {},
-          component: () => import('/src/components/statistique/StatExercice.vue'),
+          component: () =>
+            import('/src/components/statistique/StatExercice.vue'),
         },
         {
           path: 'exercice-presence',
@@ -466,7 +470,9 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
           meta: {},
           component: () =>
-            import('/src/components/materiel_personnel/MaterielTabDashboard.vue'),
+            import(
+              '/src/components/materiel_personnel/MaterielTabDashboard.vue'
+            ),
         },
         {
           path: 'attribution',
@@ -484,7 +490,9 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
           meta: {},
           component: () =>
-            import('/src/components/materiel_personnel/MaterielTabInventaire.vue'),
+            import(
+              '/src/components/materiel_personnel/MaterielTabInventaire.vue'
+            ),
         },
       ],
     },
@@ -514,7 +522,9 @@ const router = createRouter({
           name: 'param-exercice-comptable',
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () =>
-            import('/src/components/parametres/ParametreTabExerciceComptable.vue'),
+            import(
+              '/src/components/parametres/ParametreTabExerciceComptable.vue'
+            ),
         },
         {
           path: 'sapeur',
@@ -563,14 +573,18 @@ const router = createRouter({
           name: 'param-controle-medical',
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
           component: () =>
-            import('/src/components/parametres/ParametreTabControleMedical.vue'),
+            import(
+              '/src/components/parametres/ParametreTabControleMedical.vue'
+            ),
         },
         {
           path: 'materiel-personnel',
           name: 'param-materiel-personnel',
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.CONFIG),
           component: () =>
-            import('/src/components/parametres/ParametreTabMaterielPersonnel.vue'),
+            import(
+              '/src/components/parametres/ParametreTabMaterielPersonnel.vue'
+            ),
         },
         {
           path: 'roles',

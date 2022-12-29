@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="cours"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="container-fluid">
@@ -32,6 +32,7 @@
                   class="col-md-4"
                   base-option="<Cours>"
                   :options="filteredCoursTypes"
+                  :model-value="filters.cours_id"
                   @update:model-value="(value) => setFilter('cours_id', value)"
                 />
                 <base-select
@@ -39,16 +40,23 @@
                   display-key="nom_prenom"
                   base-option="<Sapeur>"
                   :options="filteredSapeurs"
+                  :model-value="filters.sapeur_id"
                   @update:model-value="(value) => setFilter('sapeur_id', value)"
                 />
                 <base-select
                   class="col-md-4"
                   base-option="<Localité>"
                   :options="filteredLocalites"
+                  :model-value="filters.localite_id"
                   @update:model-value="
                     (value) => setFilter('localite_id', value)
                   "
                 />
+                <div v-if="canReset" class="col-md-4">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
           </div>

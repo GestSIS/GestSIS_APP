@@ -283,9 +283,6 @@ export default {
     selectSapeur(id) {
       this.selectedId = id;
     },
-    onFilter(key, value) {
-      this.filters = { ...this.filters, [key]: value };
-    },
   },
 };
 </script>

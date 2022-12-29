@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="interventions"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="row">
@@ -40,12 +40,14 @@
                 class="col-md-4"
                 base-option="&lt;Localité&gt;"
                 :options="filteredLocalites"
+                :model-value="filters.localite_id"
                 @update:model-value="(value) => setFilter('localite_id', value)"
               />
               <base-select
                 class="col-md-4"
                 base-option="&lt;Type&gt;"
                 :options="filteredTypesIntervention"
+                :model-value="filters.type_intervention_id"
                 @update:model-value="
                   (value) => setFilter('type_intervention_id', value)
                 "
@@ -54,6 +56,7 @@
                 class="col-md-4"
                 base-option="&lt;Statistique fédérale&gt;"
                 :options="filteredStatFederal"
+                :model-value="filters.stat_federal_id"
                 @update:model-value="
                   (value) => setFilter('stat_federal_id', value)
                 "
@@ -62,6 +65,7 @@
                 class="col-md-4"
                 base-option="&lt;Traitement&gt;"
                 :options="traitements"
+                :model-value="filters.intervention_traitement_id"
                 @update:model-value="
                   (value) => setFilter('intervention_traitement_id', value)
                 "
@@ -70,8 +74,14 @@
                 class="col-md-4"
                 base-option="&lt;Etendue&gt;"
                 :options="degres"
+                :model-value="filters.degre"
                 @update:model-value="(value) => setFilter('degre', value)"
               />
+              <div v-if="canReset" class="col-md-4">
+                <button class="btn btn-sm btn-warning w-100" @click="reset">
+                  Réinitialiser
+                </button>
+              </div>
             </div>
           </form>
         </div>

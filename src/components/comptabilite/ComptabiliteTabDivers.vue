@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="compta-divers"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="row">
@@ -43,6 +43,7 @@
                 display-key="nom_prenom"
                 base-option="&lt;Sapeur&gt;"
                 :options="filteredSapeurs"
+                :model-value="filters.sapeur_id"
                 @update:model-value="(value) => setFilter('sapeur_id', value)"
               />
               <base-select
@@ -56,12 +57,14 @@
                   { id: 4, designation: 'Frais effectif' },
                   { id: 5, designation: 'Charges AVS/AC' },
                 ]"
+                :model-value="filters.type"
                 @update:model-value="(value) => setFilter('type', value)"
               />
               <base-select
                 class="col-md-4"
                 base-option="&lt;Compte&gt;"
                 :options="filteredComptes"
+                :model-value="filters.compte_id"
                 @update:model-value="(value) => setFilter('compte_id', value)"
               />
               <base-select
@@ -72,6 +75,11 @@
                   (value) => setFilter('ecriture_categorie_id', value)
                 "
               />
+              <div v-if="canReset" class="col-md-4">
+                <button class="btn btn-sm btn-warning w-100" @click="reset">
+                  Réinitialiser
+                </button>
+              </div>
             </div>
           </form>
         </div>

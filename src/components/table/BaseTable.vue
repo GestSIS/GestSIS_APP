@@ -80,7 +80,6 @@
             ]"
           >
             <!-- Boolean types -->
-            <!-- TODO: Replace id ? -->
             <template v-if="f.type === 'boolean' || f.type === Boolean">
               <input
                 :id="f.key + '-' + r[selectKey]"
@@ -155,8 +154,6 @@
 </template>
 
 <script>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 export default {
   name: 'BaseTable',
   props: {
@@ -363,7 +360,6 @@ export default {
       );
     },
   },
-  components: { FontAwesomeIcon },
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="exercices"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="row">
@@ -52,12 +52,14 @@
                 class="col-md-4"
                 base-option="&lt;Localité&gt;"
                 :options="filteredLocalites"
+                :model-value="filters.localite_id"
                 @update:model-value="(value) => setFilter('localite_id', value)"
               />
               <base-select
                 class="col-md-4"
                 base-option="&lt;Catégorie&gt;"
                 :options="filteredCategories"
+                :model-value="filters.exercice_categorie_id"
                 @update:model-value="
                   (value) => setFilter('exercice_categorie_id', value)
                 "
@@ -69,8 +71,14 @@
                   { id: '3', designation: 'Validé' },
                   { id: '4', designation: 'Imputé' },
                 ]"
+                :model-value="filters.statut"
                 @update:model-value="(value) => setFilter('statut', value)"
               />
+              <div v-if="canReset" class="col-md-4">
+                <button class="btn btn-sm btn-warning w-100" @click="reset">
+                  Réinitialiser
+                </button>
+              </div>
             </div>
           </form>
         </div>

@@ -1,7 +1,7 @@
 <template>
   <stateful-filter
     id="annuel"
-    v-slot="{ setFilter, filteredData }"
+    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
     :data="computedData"
   >
     <div class="row">
@@ -12,7 +12,7 @@
           </div>
           <div class="card-body d-grid gap-1">
             <button
-              class="btn btn-outline-primary me-2"
+              class="btn btn-outline-primary"
               :title="computedData.length ? 'Regénérer tous' : 'Générer'"
               @click.prevent="generer"
             >
@@ -38,8 +38,14 @@
               display-key="nom_prenom"
               base-option="&lt;Sapeur&gt;"
               :options="filteredSapeurs"
+              :model-value="filters.id"
               @update:model-value="(value) => setFilter('id', value)"
             />
+            <div v-if="canReset" class="w-100 mt-3">
+              <button class="btn btn-sm btn-warning w-100" @click="reset">
+                Réinitialiser
+              </button>
+            </div>
           </form>
         </div>
       </div>

@@ -1,8 +1,13 @@
 <template>
-  <slot name="default" v-bind="{ setFilter, filteredData }"></slot>
+  <slot
+    name="default"
+    v-bind="{ setFilter, filters, filteredData, reset, canReset }"
+  ></slot>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'StatefulFilter',
   inheritsAttrs: false,
@@ -22,6 +27,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      sisKey: (state) => state.auth.sis.activeKey,
+    }),
     filteredData() {
       // return this.data.filter(
       //   Object.entries(this.filters)
@@ -56,13 +64,46 @@ export default {
           )
       );
     },
+    canReset() {
+      return Object.entries(this.filters).find(([, value]) => value) ?? false;
+    },
+  },
+  watch: {
+    sisKey() {
+      this.init();
+    },
+  },
+  created() {
+    this.init();
   },
   methods: {
+    init() {
+      this.filters = {
+        ...JSON.parse(
+          localStorage.getItem(`${this.sisKey}-${this.id}`) ?? '{}'
+        ),
+      };
+    },
     setFilter(key, value) {
+      const types = new Set(['function', 'undefined']);
       this.filters = {
         ...this.filters,
-        [key]: typeof value === 'function' ? value : parseInt(value),
+        [key]: types.has(typeof value) ? value : parseInt(value),
       };
+      localStorage.setItem(
+        `${this.sisKey}-${this.id}`,
+        JSON.stringify(
+          Object.fromEntries(
+            Object.entries(this.filters).filter(
+              ([, value]) => !types.has(typeof value) && value != null
+            )
+          )
+        )
+      );
+    },
+    reset() {
+      // TODO: Check si ça fonctionne
+      this.filters = {};
     },
   },
 };
