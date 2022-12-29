@@ -118,7 +118,9 @@
                       designation: annee,
                     }))
                   "
-                  @change="(v) => onAnneeFilter(setFilter, 'consultation', v)"
+                  @update:model-value="
+                    (v) => onAnneeFilter(setFilter, 'consultation', v)
+                  "
                 />
                 <base-select
                   class="col-md-6"
@@ -129,7 +131,9 @@
                       designation: annee,
                     }))
                   "
-                  @change="(v) => onAnneeFilter(setFilter, 'validite', v)"
+                  @update:model-value="
+                    (v) => onAnneeFilter(setFilter, 'validite', v)
+                  "
                 />
                 <div v-if="canReset" class="col-md-6">
                   <button class="btn btn-sm btn-warning w-100" @click="reset">
@@ -389,6 +393,7 @@ export default {
       }
     },
     onAnneeFilter(setFilter, key, value) {
+      console.log('Test', key, value);
       if (parseInt(value)) {
         setFilter(key, (e) => e && new Date(e).getFullYear() == value);
       } else {

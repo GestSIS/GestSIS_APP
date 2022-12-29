@@ -31,20 +31,6 @@ export default {
       sisKey: (state) => state.auth.sis.activeKey,
     }),
     filteredData() {
-      // return this.data.filter(
-      //   Object.entries(this.filters)
-      //     .filter(([, val]) => val >= 0)
-      //     .map(
-      //       ([key, value]) =>
-      //         (x) =>
-      //           x[key] == value
-      //     )
-      //     .reduce(
-      //       (f, g) => (x) => f(x) && g(x),
-      //       () => true
-      //     )
-      // );
-
       return this.data.filter(
         Object.entries(this.filters)
           .filter(
@@ -102,7 +88,6 @@ export default {
       );
     },
     reset() {
-      // TODO: Check si ça fonctionne
       this.filters = {};
     },
   },
