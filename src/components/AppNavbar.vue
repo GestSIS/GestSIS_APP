@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
+    class="navbar navbar-expand navbar-light border-bottom border-left justify-content-between"
   >
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -105,3 +105,5 @@ export default {
   },
 };
 </script>
+
+<style scoped></style>

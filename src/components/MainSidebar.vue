@@ -1,5 +1,5 @@
 <template>
-  <aside id="sidebar" class="bg-dark text-white p-3">
+  <aside id="sidebar" class="text-white p-3">
     <div class="sidebar-header ps-3 pe-3">
       <h2 class="brand-text m-0">GestSIS</h2>
     </div>
@@ -92,6 +92,7 @@ export default {
 <style lang="scss" scoped>
 aside {
   overflow: scroll;
+  background-color: rgb(var(--bs-body-bg-rgb)) !important;
 }
 
 ul li a:hover {

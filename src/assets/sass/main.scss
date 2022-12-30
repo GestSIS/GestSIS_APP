@@ -4,9 +4,31 @@
 // @import '~awesome-notifications/src/styles/style.scss';
 @import 'awesome-notifications/src/styles/style.scss';
 
+[data-bs-theme='dark'] {
+  --bs-body-bg-rg: rgb(33, 37, 41);
+  nav .navbar {
+    background-color: rgb(var(--bs-body-bg-rgb));
+  }
+
+  .card .card-title {
+    color: rgb(201, 209, 217);
+  }
+
+  table.table tr th {
+    color: rgb(201, 209, 217);
+  }
+  // --bs-card-title-color: white !important;
+  // --bs-card-title-color: rgb(0, 0, 0);
+}
+
+.content {
+  background-color: var(--bs-dark-bg-subtle);
+}
+
 html {
   overflow: hidden;
   width: 100%;
+  // background-color: rgb(13, 17, 23) !important;
 }
 body {
   height: 100%;
