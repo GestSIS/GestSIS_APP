@@ -393,7 +393,6 @@ export default {
       }
     },
     onAnneeFilter(setFilter, key, value) {
-      console.log('Test', key, value);
       if (parseInt(value)) {
         setFilter(key, (e) => e && new Date(e).getFullYear() == value);
       } else {
