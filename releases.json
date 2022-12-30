@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "30.12.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Fenêtre de sélection de sapeur, amélioration du filtre par fonction pour inclure toutes les fonctions (et pas que la fonction principale)"
+      ]
+    },
+    {
       "date": "29.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",

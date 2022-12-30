@@ -248,8 +248,7 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
-//TODO:
-// - Par fonction -> effectif et non principale
+// TODO:
 // - Par cours
 // - Date anniversaire
 // - Permis de conduire
@@ -300,6 +299,7 @@ export default {
         fonction_id: {
           generic: true,
           label: 'Fonction',
+          comparison: (sapeur, value) => sapeur.fonctions.includes(value),
           collection: () => svm.fonctions,
           displayKey: 'nom',
         },
@@ -375,7 +375,8 @@ export default {
       if (option.generic) {
         return this.flattenedSapeurGeneric(
           option.collection(),
-          this.groupBy,
+          option.comparison ??
+            ((sapeur, value) => sapeur[this.groupBy] == value),
           option.displayKey
         );
       }
@@ -468,7 +469,7 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
-    flattenedSapeurGeneric(relation, key, displayKey) {
+    flattenedSapeurGeneric(relation, comparison, displayKey) {
       let liste = [];
       const svm = this;
       relation.forEach((elem) => {
@@ -485,7 +486,7 @@ export default {
             empty: !svm.filteredSapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] == elem.id).length,
+              .filter((s) => comparison(s, elem.id)).length,
           },
         ];
         if (expanded) {
@@ -494,13 +495,14 @@ export default {
             ...svm.filteredSapeurs
               .map((s) => ({ ...s, sapeur_id: s.id }))
               .filter(svm.filtreSapeur())
-              .filter((s) => s[key] == elem.id)
+              .filter((s) => comparison(s, elem.id))
+              // .filter((s) => s[key] == elem.id)
               .map((sapeur) => ({
                 designation: sapeur.nom_prenom,
                 level: 1,
                 leaf: true,
                 id: sapeur.id,
-                parent_id: sapeur[key],
+                parent_id: elem.id,
               })),
           ];
         }
