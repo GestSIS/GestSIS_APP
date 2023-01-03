@@ -148,7 +148,7 @@ END:VEVENT`
       const data = (header + events + footer).replaceAll('\n', '\r\n');
 
       // V-Card for all
-      const file = new Blob([data], { type: 'text/plain' });
+      const file = new Blob([data], { type: 'text/calendar' });
       const a = document.createElement('a');
       const url = URL.createObjectURL(file);
 
