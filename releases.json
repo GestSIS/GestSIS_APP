@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "04.01.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème avec l'export FSSP",
+        "Possibilité de sélectionner une ligne dans paramètres > rôles",
+        "Correction d'un problème d'affichage pour la liste des exercices",
+        "Amélioration du nom des fichiers pdf pour les rapports d'intervention"
+      ]
+    },
+    {
       "date": "30.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
