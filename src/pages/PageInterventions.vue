@@ -2,7 +2,7 @@
   <stateful-filter
     id="interventions"
     v-slot="{ setFilter, filters, filteredData, canReset, reset }"
-    :data="interventions"
+    :data="computedData"
   >
     <div class="container-fluid">
       <div class="row">
@@ -248,41 +248,21 @@ export default {
     loadData(routeTo, next);
   },
   data() {
-    const self = this;
-
     return {
       loading: true,
       selectedId: null,
       fields: [
-        { title: 'Date', key: 'date_debut', type: 'date' },
+        { title: 'Date', key: 'date_debut', type: Date },
         {
           title: 'Heure',
           key: 'heure_debut',
           formatter: (value) => value.slice(0, 5),
         },
-        {
-          title: "Type d'intervention",
-          key: 'type_intervention_id',
-          formatter: (id) => self.types.find((t) => t.id == id)?.designation,
-        },
-        {
-          title: 'Localité',
-          key: 'localite_id',
-          formatter: (id) =>
-            self.localites.find((l) => l.id == id)?.designation,
-        },
+        { title: "Type d'intervention", key: 'type_intervention' },
+        { title: 'Localité', key: 'localite' },
         { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
-        {
-          title: 'Stat fédérale',
-          key: 'stat_federal_id',
-          formatter: (id) => self.stats.find((s) => s.id == id)?.designation,
-        },
-        {
-          title: 'Traitement',
-          key: 'intervention_traitement_id',
-          formatter: (id) =>
-            self.traitements.find((t) => t.id == id)?.designation,
-        },
+        { title: 'Stat fédérale', key: 'stat_federal' },
+        { title: 'Traitement', key: 'traitement' },
         {
           title: 'Étendue',
           key: 'degre',
@@ -338,6 +318,21 @@ export default {
           permissions.INTERVENTION.MODIFICATION
         ),
     }),
+    computedData() {
+      return this.interventions.map((e) => ({
+        ...e,
+        type_intervention: this.types.find(
+          (c) => c.id == e.type_intervention_id
+        )?.designation,
+        localite: this.localites.find((l) => l.id == e.localite_id)
+          ?.designation,
+        stat_federal: this.stats.find((l) => l.id == e.stat_federal_id)
+          ?.designation,
+        traitement: this.traitements.find(
+          (l) => l.id == e.intervention_traitement_id
+        )?.designation,
+      }));
+    },
     filteredInterventionsTypes() {
       const ids = new Set(
         this.interventions.map((i) => parseInt(i.type_intervention_id))

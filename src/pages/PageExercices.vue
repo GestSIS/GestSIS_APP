@@ -2,7 +2,7 @@
   <stateful-filter
     id="exercices"
     v-slot="{ setFilter, filters, filteredData, canReset, reset }"
-    :data="exercices"
+    :data="computedData"
   >
     <div class="container-fluid">
       <div class="row">
@@ -276,15 +276,8 @@ export default {
       selectedId: null,
       detailRowComponent: markRaw(ExerciceDetails),
       fieldsBase: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'Categorie',
-          key: 'categorie',
-        },
+        { title: 'Date', key: 'date', type: Date },
+        { title: 'Categorie', key: 'categorie' },
         {
           title: 'Heure',
           key: 'heure',
@@ -292,22 +285,10 @@ export default {
             return value.slice(0, 5);
           },
         },
-        {
-          title: 'Duree',
-          key: 'duree',
-        },
-        {
-          title: 'Localité',
-          key: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-        },
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
+        { title: 'Duree', key: 'duree' },
+        { title: 'Localité', key: 'localite' },
+        { title: 'Lieu', key: 'lieu' },
+        { title: 'Designation', key: 'designation' },
         {
           title: 'Statut',
           key: 'statut',
@@ -353,11 +334,11 @@ export default {
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
     }),
     computedData() {
-      return this.exercices.map((s) => ({
-        ...s,
-        categorie: this.categories.find((c) => c.id == s.exercice_categorie_id)
+      return this.exercices.map((e) => ({
+        ...e,
+        categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
           ?.designation,
-        localite: this.localites.find((l) => l.id == s.localite_id)
+        localite: this.localites.find((l) => l.id == e.localite_id)
           ?.designation,
       }));
     },
