@@ -395,13 +395,17 @@ export default {
       this.$store.dispatch('validerIntervention', id);
     },
     rapportIntervention() {
-      const statut = this.interventions.find(
+      const intervention = this.interventions.find(
         (i) => i.id == this.selectedId
-      )?.statut;
+      );
       this.SHOW_MODAL({
         component: 'ModalRapportIntervention',
         size: 1,
-        data: { interventionId: this.selectedId, statut },
+        data: {
+          interventionId: this.selectedId,
+          statut: intervention.statut,
+          date: intervention.date_debut,
+        },
       });
     },
     onRowClass(dataItem, isSelected) {

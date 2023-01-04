@@ -180,10 +180,11 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     generer() {
+      const date = this.data.date;
       InterventionService.downloadRapport(
         this.data.interventionId,
         this.params,
-        'intervention.pdf'
+        `${date}_intervention.pdf`
       );
       this.HIDE_MODAL();
     },
