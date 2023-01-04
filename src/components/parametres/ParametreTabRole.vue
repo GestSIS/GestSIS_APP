@@ -48,7 +48,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="r in formattedRoles" :key="r.id">
+          <tr
+            v-for="r in formattedRoles"
+            :key="r.id"
+            :class="{ 'table-primary': selectedId == r.id }"
+            @click="selectRole(r)"
+          >
             <td>{{ r.nom }}</td>
             <td>{{ r.description }}</td>
             <td v-for="p in permissions" :key="p.id" class="text-center">
@@ -106,6 +111,11 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  data() {
+    return {
+      selectedId: null,
+    };
+  },
   computed: {
     ...mapState({
       permissions: (state) =>
@@ -135,6 +145,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    selectRole(role) {
+      this.selectedId = role.id;
+    },
     edit(role) {
       this.SHOW_MODAL({ component: 'ModalRole', data: role });
     },
