@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "date": "En cours de déploiement",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.8",
+      "changes": [
+        "Amélioration du système de synchronisation",
+        "Pré-sélection des sapeurs pour la saisie du chef d'intervention",
+        "Possibilité de saisir des personnes externes au SIS comme responsable de mission",
+        "Tri des groupes d'intervention",
+        "Amélioration de divers éléments graphiques"
+      ]
+    },
+    {
+      "date": "05.01.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Support saisie responsable de mission hors sapeur du SIS"]
+    },
+    {
       "date": "04.01.2022",
       "version": "1.0",
       "app": "GestSIS APP",

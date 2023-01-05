@@ -25,14 +25,47 @@
           title="Titre"
         />
       </div>
+      <label class="form-check-label" for="flexSwitchCheckDefault">
+        Responsable
+      </label>
+      <div class="form-check">
+        <input
+          id="sapeur_id"
+          v-model="responsableMode"
+          class="form-check-input"
+          type="radio"
+          name="responsable"
+          value="sapeur_id"
+        />
+        <label class="form-check-label" for="sapeur_id">Sapeur</label>
+      </div>
+      <div class="form-check">
+        <input
+          id="sapeur"
+          v-model="responsableMode"
+          class="form-check-input"
+          type="radio"
+          name="responsable"
+          value="sapeur"
+        />
+        <label class="form-check-label" for="sapeur">Externe au SIS</label>
+      </div>
       <base-select
+        v-if="responsableMode == 'sapeur_id'"
         v-model="activeMission.sapeur_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['sapeur_id'] }"
-        label="Responsable"
         display-key="nom_prenom"
         :options="listeSapeurs"
       />
+      <div v-if="responsableMode == 'sapeur'" class="mb-3">
+        <input
+          v-model="activeMission.sapeur"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['sapeur'] }"
+        />
+      </div>
       <div class="mb-3">
         <label for="fin">Quittance</label>
         <input
@@ -86,6 +119,7 @@ export default {
   data() {
     return {
       errors: {},
+      responsableMode: this.data?.mission?.sapeur ? 'sapeur' : 'sapeur_id',
       activeMission: {},
       format: 'yyyy-MM-dd HH:mm',
       // min: null,
@@ -121,6 +155,20 @@ export default {
         this.activeMission.fin2
       )?.toFormat(this.format);
 
+      if (this.responsableMode == 'sapeur') {
+        delete this.activeMission.sapeur_id;
+        if (!this.activeMission.sapeur) {
+          this.errors.sapeur = 'Manquant';
+          return;
+        }
+      } else {
+        delete this.activeMission.sapeur;
+        if (!this.activeMission.sapeur_id) {
+          this.errors.sapeur_id = 'Manquant';
+          return;
+        }
+      }
+
       if ((this.activeMission.id || 0) === 0) {
         this.$store
           .dispatch('addInterventionMission', this.activeMission)
@@ -135,6 +183,7 @@ export default {
                 debut: errors['missions.0.debut'],
                 fin: errors['missions.0.fin'],
                 sapeur_id: errors['missions.0.sapeur_id'],
+                sapeur: errors['missions.0.sapeur'],
                 titre: errors['missions.0.titre'],
               })
           );
@@ -152,6 +201,7 @@ export default {
                 debut: errors['missions.0.debut'],
                 fin: errors['missions.0.fin'],
                 sapeur_id: errors['missions.0.sapeur_id'],
+                sapeur: errors['missions.0.sapeur'],
                 titre: errors['missions.0.titre'],
               })
           );

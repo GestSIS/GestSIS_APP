@@ -1,8 +1,8 @@
 <template>
   <div class="autocomplete">
-    <label :for="'d1_' + _uid">{{ title }}</label>
+    <label :for="'d1_' + uid">{{ title }}</label>
     <input
-      :id="'d1_' + _uid"
+      :id="'d1_' + uid"
       v-model="search"
       class="form-control form-control-sm"
       :class="{ 'is-invalid': error }"
@@ -62,6 +62,7 @@ export default {
       search: this.modelValue,
       isLoading: false,
       arrowCounter: 0,
+      uid: Math.random(),
     };
   },
   watch: {

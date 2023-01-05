@@ -19,7 +19,8 @@
                 </div>
               </div>
               <div class="timeline-body small">
-                <p>{{ e.description }}</p>
+                <p v-if="e.responsable">{{ e.responsable }}</p>
+                <p v-if="e.description">{{ e.description }}</p>
               </div>
             </div>
           </li>
@@ -118,7 +119,10 @@
                   <td>{{ formatTime(m.debut) }}</td>
                   <td>{{ m.titre }}</td>
                   <td>
-                    {{ sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom }}
+                    {{
+                      m.sapeur ||
+                      sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom
+                    }}
                   </td>
                   <td>{{ formatTime(m.fin) }}</td>
                   <td>{{ m.resume }}</td>
@@ -187,6 +191,7 @@ export default {
           date: m.debut,
           title: 'Début ' + m.titre,
           description: m.resume,
+          responsable: m.sapeur,
           type: 'mission',
           colorClass: m.fin ? 'mission-ended' : 'mission-running',
           action: missionAction,
