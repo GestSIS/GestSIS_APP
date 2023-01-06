@@ -330,9 +330,10 @@ export default {
       };
     },
     showAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries(
-        Object.keys(this.detailsRowVisibility).map((key) => [key, true])
-      );
+      this.detailsRowVisibility = Object.fromEntries([
+        ...Object.keys(this.detailsRowVisibility).map((key) => [key, true]),
+        ...this.data.map((d) => [d[this.selectKey], true]),
+      ]);
     },
     hideDetailRow(id) {
       this.detailsRowVisibility = {
@@ -341,9 +342,10 @@ export default {
       };
     },
     hideAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries(
-        Object.keys(this.detailsRowVisibility).map((key) => [key, false])
-      );
+      this.detailsRowVisibility = Object.fromEntries({
+        ...Object.keys(this.detailsRowVisibility).map((key) => [key, false]),
+        ...this.data.map((d) => [d[this.selectKey], false]),
+      });
     },
     toggleDetailRow(id) {
       this.detailsRowVisibility = {
@@ -352,12 +354,13 @@ export default {
       };
     },
     toggleAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries(
-        Object.entries(this.detailsRowVisibility).map(([key, value]) => [
+      this.detailsRowVisibility = Object.fromEntries({
+        ...this.data.map((d) => [d[this.selectKey], true]),
+        ...Object.entries(this.detailsRowVisibility).map(([key, value]) => [
           key,
           !value,
-        ])
-      );
+        ]),
+      });
     },
   },
 };
