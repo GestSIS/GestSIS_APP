@@ -6,27 +6,13 @@
           <h3>Dashboard</h3>
         </div>
         <div class="card-body">
-          <!-- <h4>Sapeurs</h4>
-            <ul>
-              <li>Nb sapeurs</li>
-              <li>Stats cours, fonctions, grades</li>
-              <li>Permis</li>
-            </ul> -->
-          <!-- <h3>TODO: Second temps</h3>
-          <h4>Exercices</h4>
-          <ul>
-            <li>Nb heure par sapeur</li>
-          </ul>
-          <h4>Intervention</h4>
-          <ul>
-            <li>Statistiques de présences sur intervention</li>
-          </ul>
-          <h4>Frais</h4>
-          <ul>
-            <li>Répartition des frais</li>
-          </ul> -->
-
           <h3>Fonctionalités actuelles</h3>
+          <h4>Sapeurs</h4>
+          <ul>
+            <li>Nb sapeurs</li>
+            <li>Stats civilité, fonctions, grades, permis</li>
+            <li>Permis</li>
+          </ul>
           <h4>Exercices</h4>
           <ul>
             <li>Stat générale par catégorie</li>
@@ -41,6 +27,19 @@
             <li>Nb heures par type intervention</li>
             <li>Véhicules &amp; Matériel</li>
           </ul>
+          <!-- <h3>TODO: Second temps</h3>
+            <h4>Exercices</h4>
+          <ul>
+            <li>Nb heure par sapeur</li>
+          </ul>
+          <h4>Intervention</h4>
+          <ul>
+            <li>Statistiques de présences sur intervention</li>
+          </ul>
+          <h4>Frais</h4>
+          <ul>
+            <li>Répartition des frais</li>
+          </ul> -->
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ export default {
     return {
       allCivilites: false,
       fields: [
-        { title: 'Civilite', key: 'designation' },
+        { title: 'Civilité', key: 'designation' },
         { title: 'Nombre', key: 'quantite' },
       ],
     };
