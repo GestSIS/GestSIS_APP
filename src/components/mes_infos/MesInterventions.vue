@@ -111,7 +111,9 @@ export default {
   },
   watch: {
     anneeComptableId() {
-      this.$store.dispatch('fetchMesInterventions');
+      this.$store
+        .dispatch('fetchMesInterventions')
+        .then(() => this.$refs.table.showAllDetailRow());
     },
   },
   mounted() {
