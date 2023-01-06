@@ -25,7 +25,7 @@
               v-if="hasEditPermission"
               type="button"
               class="btn btn-outline-danger border-0"
-              @click="supprimerMutation(rowData)"
+              @click="removeMutation(rowData)"
             >
               <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
