@@ -45,10 +45,12 @@ export default {
     ...mapState({
       grades: (state) => state.grade.liste,
       sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          grades: new Set(s.grades),
-        })),
+        state.sapeur.liste
+          .map((s) => ({
+            ...s,
+            grades: new Set(s.grades),
+          }))
+          .filter((s) => s.actif && s.type === 0),
     }),
     occurences() {
       const occurences = {};

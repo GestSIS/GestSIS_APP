@@ -45,10 +45,12 @@ export default {
     ...mapState({
       permis: (state) => state.baseData.permisTypes,
       sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          permis: new Set(s.permis),
-        })),
+        state.sapeur.liste
+          .map((s) => ({
+            ...s,
+            permis: new Set(s.permis),
+          }))
+          .filter((s) => s.actif && s.type === 0),
     }),
     occurences() {
       const occurences = {};

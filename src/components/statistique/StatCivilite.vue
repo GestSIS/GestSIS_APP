@@ -47,7 +47,8 @@ export default {
   computed: {
     ...mapState({
       civilites: (state) => state.baseData.civilites,
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.type == 0),
+      sapeurs: (state) =>
+        state.sapeur.liste.filter((s) => s.actif && s.type === 0),
     }),
     occurences() {
       const occurences = {};

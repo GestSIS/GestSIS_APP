@@ -45,10 +45,12 @@ export default {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
       sapeurs: (state) =>
-        state.sapeur.liste.map((s) => ({
-          ...s,
-          fonctions: new Set(s.fonctions),
-        })),
+        state.sapeur.liste
+          .map((s) => ({
+            ...s,
+            fonctions: new Set(s.fonctions),
+          }))
+          .filter((s) => s.actif && s.type === 0),
     }),
     occurences() {
       const occurences = {};
