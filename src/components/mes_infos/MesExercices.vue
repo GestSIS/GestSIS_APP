@@ -57,7 +57,7 @@ export default {
     return {
       detailRowComponent: markRaw(MesHeuresSuppDetailRow),
       fields: [
-        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'Date', key: 'date', type: Date },
         { title: 'Heure', key: 'heure', formatter: (h) => h.slice(0, 5) },
         { title: 'Categorie', key: 'categorie' },
         { title: 'Exercice', key: 'designation' },

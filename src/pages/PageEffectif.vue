@@ -227,50 +227,16 @@ export default {
       selectedId: null,
       sapeurs: [],
       fieldsBase: [
-        {
-          title: 'Nom Prénom',
-          key: 'nom_prenom',
-        },
-        {
-          title: 'Fonction principale',
-          key: 'fonction',
-        },
-        {
-          title: 'Localité',
-          key: 'localite',
-        },
-        {
-          title: "Année d'incorporation",
-          key: 'annee_incorporation',
-        },
-        {
-          title: 'PAR',
-          key: 'porteur',
-          type: Boolean,
-        },
-        {
-          title: 'B',
-          key: 'b',
-          type: Boolean,
-        },
-        {
-          title: 'C1',
-          key: 'c1',
-          type: Boolean,
-        },
-        {
-          title: 'C1 118',
-          key: 'c1_118',
-          type: Boolean,
-        },
-        {
-          title: 'Grade',
-          key: 'grade',
-        },
-        {
-          title: 'Groupes',
-          key: 'formatedGroupes',
-        },
+        { title: 'Nom Prénom', key: 'nom_prenom' },
+        { title: 'Fonction principale', key: 'fonction' },
+        { title: 'Localité', key: 'localite' },
+        { title: "Année d'incorporation", key: 'annee_incorporation' },
+        { title: 'PAR', key: 'porteur', type: Boolean },
+        { title: 'B', key: 'b', type: Boolean },
+        { title: 'C1', key: 'c1', type: Boolean },
+        { title: 'C1 118', key: 'c1_118', type: Boolean },
+        { title: 'Grade', key: 'grade' },
+        { title: 'Groupes', key: 'formatedGroupes' },
         {
           title: 'Tel n°1',
           key: 'tels',
@@ -286,11 +252,7 @@ export default {
           key: 'tels',
           formatter: (t) => (t.length >= 3 ? t[2] : ''),
         },
-        {
-          title: 'Naissance',
-          key: 'date_naissance',
-          type: 'date',
-        },
+        { title: 'Naissance', key: 'date_naissance', type: Date },
         {
           title: 'Actions',
           slot: 'actions',

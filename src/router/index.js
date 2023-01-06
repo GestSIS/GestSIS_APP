@@ -423,6 +423,12 @@ const router = createRouter({
             import('/src/components/statistique/StatDashboard.vue'),
         },
         {
+          path: 'sapeur',
+          name: 'stat-sapeur',
+          meta: {},
+          component: () => import('/src/components/statistique/StatSapeur.vue'),
+        },
+        {
           path: 'exercice',
           name: 'stat-exercice-simple',
           meta: {},

@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       fields: [
-        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'Date', key: 'date', type: Date },
         { title: 'Décompte', key: 'decompte' },
         { title: 'Solde', key: 'solde' },
         { title: 'Indemnité', key: 'indemnite' },

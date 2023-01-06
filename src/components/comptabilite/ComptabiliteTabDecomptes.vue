@@ -193,7 +193,7 @@ export default {
       },
       fields: [
         { title: 'Designation', key: 'designation' },
-        { title: 'Date', key: 'date', type: 'date' },
+        { title: 'Date', key: 'date', type: Date },
         { title: 'A payer', key: 'a_payer_total' },
         { title: 'A facturer', key: 'a_facturer_total' },
         { title: 'Déductions', key: 'deduction', type: Boolean },

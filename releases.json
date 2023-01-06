@@ -2,7 +2,7 @@
   "releases": [
     {
       "date": "En cours de déploiement",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS Mobile 2.0.8",
       "changes": [
         "Amélioration du système de synchronisation",
@@ -10,6 +10,15 @@
         "Possibilité de saisir des personnes externes au SIS comme responsable de mission",
         "Tri des groupes d'intervention",
         "Amélioration de divers éléments graphiques"
+      ]
+    },
+    {
+      "date": "06.01.2022",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Sélection par permis de conduire",
+        "Nouvel onglet `Sapeurs` pour le module statistiques"
       ]
     },
     {

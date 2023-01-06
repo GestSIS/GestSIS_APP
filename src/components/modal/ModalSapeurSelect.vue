@@ -249,7 +249,6 @@
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
 // TODO:
-// - Par cours
 // - Date anniversaire
 // - Permis de conduire
 
@@ -275,6 +274,7 @@ export default {
       selectedGeneric: {
         groupe: {},
         fonction_id: {},
+        permis_type_id: {},
         grade_id: {},
         localite_id: {},
         civilite_id: {},
@@ -302,6 +302,13 @@ export default {
           comparison: (sapeur, value) => sapeur.fonctions.includes(value),
           collection: () => svm.fonctions,
           displayKey: 'nom',
+        },
+        permis_type_id: {
+          generic: true,
+          label: 'Permis de conduire',
+          comparison: (sapeur, value) => sapeur.permis.includes(value),
+          collection: () => svm.permis,
+          displayKey: 'type',
         },
         grade_id: {
           generic: true,
@@ -344,6 +351,7 @@ export default {
       fonctions: (state) => state.fonction.liste,
       sapeurs: (state) => state.sapeur.liste,
       civilites: (state) => state.baseData.civilites,
+      permis: (state) => state.baseData.permisTypes,
     }),
     ...mapGetters(['treeGroupesSapeurs']),
     filteredSapeurs() {
@@ -457,6 +465,7 @@ export default {
     this.$store.dispatch('fetchGrades');
     this.$store.dispatch('fetchFonctions');
     this.$store.dispatch('fetchCivilites');
+    this.$store.dispatch('fetchPermisType');
 
     this.$store.dispatch('fetchGroupes').then(() => {
       let svm = this;
@@ -552,6 +561,10 @@ export default {
       this.selectedGeneric.sapeur[id] = !this.selectedGeneric.sapeur[id];
     },
     selectGeneric(id) {
+      const option = this.selectOptions[this.groupBy];
+      const comparison =
+        option.comparison ?? ((sapeur, value) => sapeur[this.groupBy] == value);
+
       // Get group state
       const state = this.selectedGeneric[this.groupBy][id] ?? false;
 
@@ -560,9 +573,7 @@ export default {
 
       // Select all sapeurs
       this.availableSapeur
-        .filter(
-          (s) => s[this.groupBy] == id && !this.chosenSapeurs.includes(s.id)
-        )
+        .filter((s) => comparison(s, id) && !this.chosenSapeurs.includes(s.id))
         .forEach((s) => (this.selectedGeneric.sapeur[s.id] = !state));
     },
     selectGroupe(id) {

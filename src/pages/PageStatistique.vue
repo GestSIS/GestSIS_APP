@@ -54,15 +54,12 @@ export default {
   data() {
     return {
       actions: [
+        { to: { name: 'stat-dashboard' }, name: 'Résumé' },
         {
-          to: { name: 'stat-dashboard' },
-          name: 'Résumé',
+          to: { name: 'stat-sapeur' },
+          name: 'Sapeur',
+          permission: permissions.SAPEUR.LECTURE,
         },
-        // {
-        //   to: { name: 'param-sapeur' },
-        //   name: 'Sapeur',
-        //   permission: permissions.SAPEUR.LECTURE,
-        // },
         {
           to: { name: 'stat-exercice-simple' },
           name: 'Exercice',

@@ -108,24 +108,10 @@ export default {
   data() {
     return {
       fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: 'date',
-        },
-        {
-          title: 'Événements',
-          key: 'eventType',
-        },
-        {
-          title: 'Remarque',
-          key: 'remarque',
-        },
-        {
-          title: 'Succès',
-          key: 'succes',
-          type: Boolean,
-        },
+        { title: 'Date', key: 'date', type: Date },
+        { title: 'Événements', key: 'eventType' },
+        { title: 'Remarque', key: 'remarque' },
+        { title: 'Succès', key: 'succes', type: Boolean },
       ],
       errors: {},
       activeItem: {},

@@ -10,6 +10,7 @@
             <ul>
               <li>Nb sapeurs</li>
               <li>Stats cours, fonctions, grades</li>
+              <li>Permis</li>
             </ul> -->
           <!-- <h3>TODO: Second temps</h3>
           <h4>Exercices</h4>
@@ -18,7 +19,6 @@
           </ul>
           <h4>Intervention</h4>
           <ul>
-            <li>Nb heures par type intervention</li>
             <li>Statistiques de présences sur intervention</li>
           </ul>
           <h4>Frais</h4>
@@ -38,6 +38,7 @@
               Stat général pour traitement, type d'intervention et statistique
               fédérale
             </li>
+            <li>Nb heures par type intervention</li>
             <li>Véhicules &amp; Matériel</li>
           </ul>
         </div>
