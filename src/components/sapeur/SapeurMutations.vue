@@ -94,7 +94,7 @@ export default {
         state.sapeur.active.mutations.map((m) => ({
           ...m,
           localite: state.localite.liste.find((l) => l.id == m.localite_id)
-            ?.nom,
+            ?.designation,
         })),
       hasEditPermission: (state) =>
         state.auth.admin ||
