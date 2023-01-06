@@ -325,6 +325,7 @@ export default {
           formatedGroupes: s.groupes
             .map((g) => indexedGroupes.get(g.groupe_id))
             .sort((a, b) => a.no - b.no)
+            .filter((g) => g.type)
             .map((g) => g.no)
             .filter((g) => g)
             .join(', '),
