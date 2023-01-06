@@ -61,14 +61,14 @@ export default {
       state.liste.map((s) =>
         s.id == payload.id
           ? {
-              ...s,
-              fonction_id: payload.fonction_id,
-              nom: payload.nom,
-              prenom: payload.prenom,
-              nom_prenom: `${payload.nom} ${payload.prenom}`,
-              actif: payload.actif,
-              date_naissance: payload.date_naissance,
-            }
+            ...s,
+            fonction_id: payload.fonction_id,
+            nom: payload.nom,
+            prenom: payload.prenom,
+            nom_prenom: `${payload.nom} ${payload.prenom}`,
+            actif: payload.actif,
+            date_naissance: payload.date_naissance,
+          }
           : s
       );
     },
@@ -213,14 +213,14 @@ export default {
     },
     [types.REMOVE_CURRENT_SAPEUR_MUTATION](
       state,
-      { sapeurId, actif, annee_incorporation }
+      { sapeurId, mutationId, actif }
     ) {
       state.active.mutations = state.active.mutations.filter(
-        (c) => c.id !== sapeurId
+        (c) => c.id !== mutationId
       );
       state.liste = state.liste.map((s) => {
         if (s.id == sapeurId) {
-          return { ...s, actif, annee_incorporation };
+          return { ...s, actif };
         }
         return s;
       });
@@ -477,6 +477,7 @@ export default {
       ).then((data) => {
         commit(types.REMOVE_CURRENT_SAPEUR_MUTATION, {
           sapeurId: state.active.data.id,
+          mutationId,
           actif: data.actif,
         });
         return data;
