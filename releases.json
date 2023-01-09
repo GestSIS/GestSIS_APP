@@ -1,13 +1,13 @@
 {
   "releases": [
     {
-      "date": "09.01.2022",
+      "date": "09.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Envoie d'email pour sapeurs d'un exercice"]
     },
     {
-      "date": "06.01.2022",
+      "date": "06.01.2023",
       "version": "2.0",
       "app": "GestSIS Mobile 2.0.8",
       "changes": [
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "date": "06.01.2022",
+      "date": "06.01.2023",
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
@@ -28,13 +28,13 @@
       ]
     },
     {
-      "date": "05.01.2022",
+      "date": "05.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Support saisie responsable de mission hors sapeur du SIS"]
     },
     {
-      "date": "04.01.2022",
+      "date": "04.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
