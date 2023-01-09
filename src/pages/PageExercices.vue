@@ -71,6 +71,13 @@
               >
                 SMS
               </button>
+              <button
+                :disabled="!selectedId"
+                class="btn btn-outline-primary"
+                @click="email({ id: selectedId })"
+              >
+                Email
+              </button>
             </div>
           </div>
         </div>
@@ -248,15 +255,19 @@ import ExerciceService from '/src/services/ExerciceService.js';
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+  let loadSapeurs = store.dispatch('fetchListeSapeur');
 
   await store.dispatch('fetchExercicesComptables');
 
   let loadExercices = store.dispatch('fetchListeExercice');
-  Promise.all([loadExercices, loadLocalities, loadExerciceCategories]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadSapeurs,
+    loadExercices,
+    loadLocalities,
+    loadExerciceCategories,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
@@ -314,6 +325,7 @@ export default {
   },
   computed: {
     ...mapState({
+      sapeurs: (state) => state.sapeur.liste,
       exercices: (state) =>
         state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
       categories: (state) => state.exerciceCategorie.liste,
@@ -381,6 +393,18 @@ export default {
         component: 'ModalSmsExercice',
         size: 2,
         data: exercice,
+      });
+    },
+    email({ id }) {
+      ExerciceService.getSapeurs(id).then((presences) => {
+        const link = document.createElement('a');
+        link.href =
+          'mailto:?bcc=' +
+          presences
+            .map((p) => this.sapeurs.find((s) => s.id == p.sapeur_id)?.email)
+            .filter((s) => s)
+            .join(', ');
+        link.click();
       });
     },
     validerExercice(id) {

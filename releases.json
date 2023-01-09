@@ -1,7 +1,13 @@
 {
   "releases": [
     {
-      "date": "En cours de déploiement",
+      "date": "09.01.2022",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Envoie d'email pour sapeurs d'un exercice"]
+    },
+    {
+      "date": "06.01.2022",
       "version": "2.0",
       "app": "GestSIS Mobile 2.0.8",
       "changes": [

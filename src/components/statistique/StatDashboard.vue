@@ -11,7 +11,6 @@
           <ul>
             <li>Nb sapeurs</li>
             <li>Stats civilité, fonctions, grades, permis</li>
-            <li>Permis</li>
           </ul>
           <h4>Exercices</h4>
           <ul>
