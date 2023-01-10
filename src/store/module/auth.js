@@ -60,7 +60,10 @@ export default {
 
       if (availableSis.length > 0) {
         let sisKey = availableSis[0];
-        if (Object.keys(sapeurParSis).length) {
+        if (availableSis.find(state.sis.activeKey)) {
+          // En cas de reconnexion
+          sisKey = state.sis.activeKey;
+        } else if (Object.keys(sapeurParSis).length) {
           sisKey = Object.keys(sapeurParSis)[0];
         }
 
@@ -140,7 +143,7 @@ export default {
       state.sis.permissions = state.sis.allPermissions[sis?.api_key] ?? [];
       state.sapeurId = state.sis.sapeurs[sis?.api_key] ?? null;
 
-      Api.setSisKey(sis.api_key);
+      Api.setSisKey(sis?.api_key);
     },
   },
   getters: {
