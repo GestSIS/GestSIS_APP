@@ -60,7 +60,7 @@ export default {
 
       if (availableSis.length > 0) {
         let sisKey = availableSis[0];
-        if (availableSis.find(state.sis.activeKey)) {
+        if (availableSis.find((v) => v === state.sis.activeKey)) {
           // En cas de reconnexion
           sisKey = state.sis.activeKey;
         } else if (Object.keys(sapeurParSis).length) {
