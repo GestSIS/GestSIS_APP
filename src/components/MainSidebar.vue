@@ -1,7 +1,8 @@
 <template>
   <aside id="sidebar" class="bg-dark text-white p-3">
     <div class="sidebar-header ps-3 pe-3">
-      <h2 class="brand-text m-0">GestSIS</h2>
+      <img alt="logo" src="../assets/logo.svg" class="logo text-center" />
+      <h2 class="brand-text m-0 text-center">GestSIS</h2>
     </div>
     <sis-selection />
     <!--    <hr class="bg-secondary" />-->
@@ -90,6 +91,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  max-width: 80px;
+  display: block;
+  margin: 0px auto -15px auto;
+}
+
 aside {
   overflow: scroll;
 }
