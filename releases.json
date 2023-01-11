@@ -4,7 +4,10 @@
       "date": "11.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Ajout logo"]
+      "changes": [
+        "Ajout logo",
+        "Résolution d'un bug pour dans le rapport d'intervention avec missions"
+      ]
     },
     {
       "date": "10.01.2023",
