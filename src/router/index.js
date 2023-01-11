@@ -195,7 +195,7 @@ const router = createRouter({
     },
     {
       path: '/sapeurs/:id',
-      name: 'sapeurs',
+      name: 'sapeur-index',
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
       component: () => import('/src/pages/PageSapeurs.vue'),
       props: true,
@@ -511,7 +511,7 @@ const router = createRouter({
     },
     {
       path: '/configuration',
-      name: 'configuration',
+      name: 'parametres',
       beforeEnter: permissionGuard(permissions.SIS.CONFIG),
       component: () => import('/src/pages/PageConfiguration.vue'),
       children: [

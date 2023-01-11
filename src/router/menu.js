@@ -14,10 +14,12 @@ const links = [
     permission: permissions.EFFECTIF.TOUT,
   },
   {
-    to: { name: 'sapeurs', params: { id: 0 } },
+    to: { name: 'sapeur-index', params: { id: 0 } },
     icon: 'user',
     nom: 'Sapeurs',
     permission: permissions.SAPEUR.LECTURE,
+    // TODO: Fix active link pour sapeurs
+    // active: (route) => route?.matched?.includes((r) => r.name == 'sapeur-index') ?? false,
   },
   {
     to: { name: 'interventions' },

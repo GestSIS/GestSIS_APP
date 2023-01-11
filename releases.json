@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "10.01.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.0.9",
+      "changes": [
+        "Correction d'un problème d'affichage des responsables de mission dans le journal d'intervention"
+      ]
+    },
+    {
       "date": "09.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
