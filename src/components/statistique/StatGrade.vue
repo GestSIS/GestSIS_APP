@@ -19,7 +19,7 @@
         <base-table
           :fields="fields"
           :data="filteredGrade"
-          no-data="Aucune grade"
+          no-data="Aucun grade"
           :selectable="true"
         />
       </div>
