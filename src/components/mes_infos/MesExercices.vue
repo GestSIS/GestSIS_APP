@@ -26,7 +26,7 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
-import { downloadIcs } from '../../tools/exercicesToIcalc';
+import { downloadIcs } from '../../tools/exportExercices';
 
 async function loadData(routeTo, next) {
   let loadMesExercices = store.dispatch('fetchMesExercices');
