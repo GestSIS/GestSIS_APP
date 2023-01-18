@@ -26,7 +26,7 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
-import { downloadIcs } from '../../tools/exportExercices';
+import { exercicesToIcs } from '../../tools/exportExercices';
 
 async function loadData(routeTo, next) {
   let loadMesExercices = store.dispatch('fetchMesExercices');
@@ -123,7 +123,7 @@ export default {
       if (this.exercices.length <= 0) {
         this.$awn.alert('Aucun exercice à exporter');
       }
-      downloadIcs(this.exercices, this.sisName, this.sisKey, this.annee);
+      exercicesToIcs(this.exercices, this.sisName, this.sisKey, this.annee);
     },
   },
 };
