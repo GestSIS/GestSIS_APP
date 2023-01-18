@@ -85,7 +85,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;
 

@@ -64,19 +64,31 @@
               class="btn btn-outline-primary">
               Annuler
             </button> -->
+              <div class="row">
+                <div class="col-6">
+                  <button
+                    :disabled="!selectedId"
+                    class="btn btn-outline-primary col-12"
+                    @click="sms({ id: selectedId })"
+                  >
+                    SMS
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button
+                    :disabled="!selectedId"
+                    class="btn btn-outline-primary col-12"
+                    @click="email({ id: selectedId })"
+                  >
+                    Email
+                  </button>
+                </div>
+              </div>
               <button
-                :disabled="!selectedId"
                 class="btn btn-outline-primary"
-                @click="sms({ id: selectedId })"
+                @click="downloadIcs(filteredData)"
               >
-                SMS
-              </button>
-              <button
-                :disabled="!selectedId"
-                class="btn btn-outline-primary"
-                @click="email({ id: selectedId })"
-              >
-                Email
+                Fichier <em>Icalc</em>
               </button>
             </div>
           </div>
@@ -252,6 +264,8 @@ import ExerciceComptable from '/src/components/exercice_comptable/ExerciceCompta
 
 import ExerciceService from '/src/services/ExerciceService.js';
 
+import { exercicesToIcs } from '../tools/exportExercices';
+
 async function loadData(routeTo, next) {
   let loadLocalities = store.dispatch('fetchLocalites');
   let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
@@ -325,6 +339,13 @@ export default {
   },
   computed: {
     ...mapState({
+      sisKey: (state) => state.auth.sis.activeKey,
+      sisName: (state) =>
+        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
+      annee: (state) =>
+        state.exerciceComptable.liste.find(
+          (e) => e.id == state.exerciceComptable.activeId
+        )?.annee,
       sapeurs: (state) => state.sapeur.liste,
       exercices: (state) =>
         state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
@@ -439,6 +460,12 @@ export default {
     },
     listeAppel({ id }) {
       ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
+    },
+    downloadIcs(filteredExercices) {
+      if (filteredExercices.length <= 0) {
+        this.$awn.alert('Aucun exercice à exporter');
+      }
+      exercicesToIcs(filteredExercices, this.sisName, this.sisKey, this.annee);
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {

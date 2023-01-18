@@ -32,6 +32,12 @@
               >
                 VCard tous
               </button>
+              <!-- <button
+                class="btn btn-outline-primary"
+                @click="outlookCsv(filteredData)"
+              >
+                CSV Outlook
+              </button> -->
               <a
                 :disabled="filteredData.length == 0"
                 :href="
@@ -199,6 +205,8 @@ import permissions from '../store/permissions.js';
 
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
+
+import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
 
 async function loadData(routeTo, next) {
   let loadLocalites = store.dispatch('fetchLocalites');
@@ -401,76 +409,10 @@ export default {
       });
     },
     vcard(sapeurs) {
-      const telephoneTypeMapping = {
-        1: 'HOME',
-        2: 'WORK',
-        3: 'CELL',
-      };
-      const civiliteMapping = {
-        1: 'Mr.',
-        2: 'Mme.',
-      };
-      const genderMapping = {
-        1: 'M',
-        2: 'F',
-      };
-
-      const idReducer = (map, e) => {
-        map.set(e.id, e);
-        return map;
-      };
-      const indexedLocalite = this.localites.reduce(idReducer, new Map());
-
-      const contacts = sapeurs
-        .map(
-          (s) => `BEGIN:VCARD
-VERSION:4.0
-N:${s.nom};${s.prenom};;${civiliteMapping[s.civilite_id]};
-FN:${s.prenom} ${s.nom}
-LANG:'fr-CH'
-GENDER:${genderMapping[s.civilite_id]}
-${s.telephones
-  .map(
-    (t) =>
-      'TEL;TYPE=' +
-      telephoneTypeMapping[t.telephone_type_id] +
-      ';VALUE=uri:' +
-      t.numero
-  )
-  .join('\n')}
-ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${
-            indexedLocalite.get(s.localite_id)?.designation
-          };${indexedLocalite.get(s.localite_id)?.npa};Suisse
-EMAIL:${s.email}
-BDAY:${s.date_naissance}
-CATEGORIES:SIS
-SOURCE:GestSIS2.0
-END:VCARD`
-        )
-        .join('\n');
-
-      // V-Card for all
-      const file = new Blob([contacts], { type: 'text/plain' });
-      const a = document.createElement('a');
-      const url = URL.createObjectURL(file);
-
-      a.href = url;
-      a.download =
-        sapeurs.length == 1
-          ? sapeurs[0].nom_prenom
-              .replaceAll(' ', '_')
-              .normalize('NFD')
-              .replace(/\p{Diacritic}/gu, '')
-              .toLowerCase() + '.vcf'
-          : 'sis_vcard.vcf';
-
-      document.body.appendChild(a);
-
-      a.click();
-      setTimeout(function () {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      }, 0);
+      downloadVcard(sapeurs, this.localites);
+    },
+    outlookCsv(sapeurs) {
+      downloadOutlookCsv(sapeurs, this.localites);
     },
   },
 };

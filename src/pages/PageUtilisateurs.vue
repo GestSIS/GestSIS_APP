@@ -51,6 +51,11 @@
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
             </template>
+            <template #foot>
+              <tr>
+                <th colspan="5">Nombre : {{ users.length }}</th>
+              </tr>
+            </template>
           </base-table>
         </div>
       </div>
