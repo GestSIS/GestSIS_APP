@@ -17,7 +17,7 @@
       >
         <thead>
           <tr>
-            <th colspan="2"></th>
+            <th colspan="2" class="sticky"></th>
             <th
               v-for="[key, permissions] in groupedPermissions"
               :key="key"
@@ -30,8 +30,8 @@
             <th data-field="actions" rowspan="2">Actions</th>
           </tr>
           <tr>
-            <th data-field="date">Rôle</th>
-            <th data-field="designation">Désignation</th>
+            <th class="sticky" data-field="date">Rôle</th>
+            <th class="sticky" data-field="designation">Désignation</th>
             <template
               v-for="[key, permissions] in groupedPermissions"
               :key="key"
@@ -54,8 +54,8 @@
             :class="{ 'table-primary': selectedId == r.id }"
             @click="selectRole(r)"
           >
-            <td>{{ r.nom }}</td>
-            <td>{{ r.description }}</td>
+            <td class="sticky">{{ r.nom }}</td>
+            <td class="sticky">{{ r.description }}</td>
             <td v-for="p in permissions" :key="p.id" class="text-center">
               <input
                 :id="p.id + '-' + r.id"
@@ -187,4 +187,36 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+table {
+  border-collapse: separate; /* Don't collapse */
+}
+
+td,
+th {
+  border-width: 1px 1px 0px 0px !important;
+}
+td:first-child,
+th:first-child {
+  border-left-width: 1px !important;
+}
+
+tr:last-child td,
+tr:last-child td {
+  border-bottom-width: 1px !important;
+}
+
+.sticky {
+  position: sticky;
+  left: 0px;
+  width: 100px;
+  background-color: white;
+  z-index: 1;
+}
+
+th:nth-child(2).sticky,
+td:nth-child(2).sticky {
+  position: sticky;
+  left: 56px;
+}
+</style>

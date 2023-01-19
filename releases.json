@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "19.01.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Page utilisateurs, mise en évidence des sapeurs inactif",
+        "Configuration des rôles, affichage de la colonne rôle lors du défilement"
+      ]
+    },
+    {
       "date": "18.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",

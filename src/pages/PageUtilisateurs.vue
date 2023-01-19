@@ -34,6 +34,7 @@
             no-data="Aucun utilisateur"
             :data="users"
             :selectable="true"
+            :row-class="onRowClass"
           >
             <template #badges="{ rowData }">
               <span
@@ -91,24 +92,14 @@ export default {
       toggles: {},
       loading: true,
       fields: [
-        {
-          title: 'Utilisateur',
-          key: 'name',
-        },
+        { title: 'Utilisateur', key: 'name' },
         {
           title: 'Sapeur',
           key: 'sapeur_id',
           formatter: (_, data) => this.formatSapeur(data),
         },
-        {
-          title: 'Email',
-          key: 'email',
-        },
-        {
-          title: 'Rôles',
-          key: 'roles',
-          slot: 'badges',
-        },
+        { title: 'Email', key: 'email' },
+        { title: 'Rôles', key: 'roles', slot: 'badges' },
         {
           title: 'Actions',
           slot: 'actions',
@@ -149,6 +140,19 @@ export default {
         component: 'ModalUserRole',
         data: { ...user, roles: user.user_roles.map((r) => r.role_id) },
       });
+    },
+    onRowClass(dataItem, isSelected) {
+      if (isSelected) {
+        return '';
+      }
+      if (!dataItem.sapeur.length > 0) {
+        return '';
+      }
+
+      const sapeurId = dataItem.sapeur[0].sapeur_id;
+      return !this.sapeurs.find((s) => s.id === sapeurId)?.actif
+        ? 'text-danger'
+        : '';
     },
   },
 };
