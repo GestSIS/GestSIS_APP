@@ -141,10 +141,7 @@ export default {
         data: { ...user, roles: user.user_roles.map((r) => r.role_id) },
       });
     },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return '';
-      }
+    onRowClass(dataItem) {
       if (!dataItem.sapeur.length > 0) {
         return '';
       }
