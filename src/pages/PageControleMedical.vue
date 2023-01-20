@@ -18,9 +18,6 @@
           </ol>
         </nav>
       </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div>
     </div>
     <div class="row">
       <div class="col-lg-4 col-12">
@@ -52,6 +49,7 @@
               :class="{ 'is-invalid': errors['sapeur_id'] }"
               label="Sapeur"
               display-key="nom_prenom"
+              :formatter="(s) => `${s?.nom_prenom} (${s?.age} ans)`"
               :options="sapeurs"
             />
             <base-select
@@ -231,7 +229,6 @@ import store from '/src/store/index';
 
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import PdfViewer from '/src/components/pdf/PdfViewer.vue';
 
 function loadData(routeTo, next) {
@@ -260,7 +257,6 @@ function loadData(routeTo, next) {
 export default {
   name: 'PageControleMedical',
   components: {
-    ExerciceComptable,
     PdfViewer,
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -288,7 +284,17 @@ export default {
       controleMedical: (state) => state.controleMedical.active.data,
       medecins: (state) => state.medecin.liste,
       sapeurs: (state) =>
-        state.sapeur.liste.filter((s) => s.type === 0 && parseInt(s.actif)),
+        state.sapeur.liste
+          .filter((s) => s.type === 0 && parseInt(s.actif))
+          .map((s) => {
+            const age = Math.floor(
+              (new Date() - new Date(s?.date_naissance || 0).getTime()) /
+                1000 /
+                (60 * 60 * 24) /
+                365.25
+            );
+            return { ...s, age };
+          }),
       controleTypes: (state) => state.controlesMedicauxType.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -296,10 +302,10 @@ export default {
       return this.controleMedical.designation;
     },
     sapeurName() {
-      return (
-        this.sapeurs.find((s) => s.id == this.controleMedical.sapeur_id)
-          ?.nom_prenom ?? ''
+      const sapeur = this.sapeurs.find(
+        (s) => s.id == this.controleMedical.sapeur_id
       );
+      return `${sapeur?.nom_prenom} (${sapeur?.age} ans)`;
     },
     modeAjout() {
       return !parseInt(this.id) > 0;

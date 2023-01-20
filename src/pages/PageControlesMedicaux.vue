@@ -18,9 +18,6 @@
             </ol>
           </nav>
         </div>
-        <div class="col-sm-6 d-flex justify-content-end">
-          <exercice-comptable />
-        </div>
       </div>
       <div class="row">
         <div class="col-md-3">
@@ -211,7 +208,6 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 
 function loadData(routeTo, next) {
@@ -234,9 +230,6 @@ function loadData(routeTo, next) {
 
 export default {
   name: 'PageControlesMedicaux',
-  components: {
-    ExerciceComptable,
-  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
