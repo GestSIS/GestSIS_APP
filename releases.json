@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "20.01.2023",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Page utilisateurs, liste des sapeurs n'ayant pas créé de compte",
-        "Affichage de l'âge du sapeur dans les contrôles médicaux"
+        "Affichage de l'âge du sapeur dans les contrôles médicaux",
+        "Numéros de téléphone disponible pour le publipostage"
       ]
     },
     {
