@@ -16,7 +16,30 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive">
+        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
+          <button
+            class="nav-item nav-link"
+            role="tab"
+            :class="{ active: tab == 'users' }"
+            @click="tab = 'users'"
+          >
+            Utilisateurs
+          </button>
+          <button
+            class="nav-item nav-link"
+            role="tab"
+            :class="{ active: tab == 'sapeurs' }"
+            @click="tab = 'sapeurs'"
+          >
+            Sapeurs sans comptes
+          </button>
+        </nav>
+      </div>
+      <div class="col-md-12">
+        <div
+          v-if="tab == 'users'"
+          class="card card-primary card-outline table-responsive"
+        >
           <div class="card-header d-flex justify-content-between">
             <h3>Liste des utilisateurs</h3>
             <button class="btn btn-outline-primary" @click="invite">
@@ -30,7 +53,7 @@
           </div>
           <base-table
             v-show="!loading"
-            :fields="fields"
+            :fields="fieldsUser"
             no-data="Aucun utilisateur"
             :data="users"
             :selectable="true"
@@ -55,6 +78,53 @@
             <template #foot>
               <tr>
                 <th colspan="5">Nombre : {{ users.length }}</th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
+        <div
+          v-if="tab == 'sapeurs'"
+          class="card card-primary card-outline table-responsive"
+        >
+          <div class="card-header d-flex justify-content-between">
+            <h3>Liste des sapeurs n'ayant pas créé de compte</h3>
+
+            <a
+              class="btn btn-outline-primary"
+              :href="
+                'mailto:' +
+                sapeursSansCompte
+                  .map((s) => s.email)
+                  .filter((s) => s && s != null)
+                  .join(';')
+              "
+            >
+              Email
+            </a>
+          </div>
+          <div v-if="loading" class="card-body d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <base-table
+            v-show="!loading"
+            :fields="fieldsSapeur"
+            no-data="Aucun sapeur à afficher"
+            :data="sapeursSansCompte"
+            :selectable="true"
+          >
+            <template #actions="{ rowData }">
+              <a
+                class="btn btn-sm btn-outline-primary border-0"
+                :href="'mailto:' + rowData.email"
+              >
+                <font-awesome-icon :icon="['fas', 'envelope']" />
+              </a>
+            </template>
+            <template #foot>
+              <tr>
+                <th colspan="5">Nombre : {{ sapeursSansCompte.length }}</th>
               </tr>
             </template>
           </base-table>
@@ -91,7 +161,8 @@ export default {
     return {
       toggles: {},
       loading: true,
-      fields: [
+      tab: 'users',
+      fieldsUser: [
         { title: 'Utilisateur', key: 'name' },
         {
           title: 'Sapeur',
@@ -100,22 +171,35 @@ export default {
         },
         { title: 'Email', key: 'email' },
         { title: 'Rôles', key: 'roles', slot: 'badges' },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
+        { title: 'Actions', slot: 'actions' },
+      ],
+      fieldsSapeur: [
+        { title: 'Sapeur', key: 'nom_prenom' },
+        { title: 'Email', key: 'email' },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
   computed: {
     ...mapState({
+      sisId: (state) => state.auth.sis.activeId,
       users: (state) => state.auth.users,
       roles: (state) => state.auth.roles,
       permissions: (state) => state.auth.permissions,
       sapeurs: (state) => state.sapeur.liste,
     }),
+    sapeursSansCompte() {
+      const sapeurIds = new Set(
+        this.users.flatMap((u) =>
+          u.sapeur.filter((s) => s.sis_id == this.sisId).map((s) => s.sapeur_id)
+        )
+      );
+      return this.sapeurs
+        .filter((s) => s.actif)
+        .filter((s) => s.type == 0)
+        .filter((s) => !sapeurIds.has(s.id));
+      // return false;
+    },
   },
   mounted() {
     this.loading = false;
@@ -126,7 +210,7 @@ export default {
       return (this.roles.find((r) => r.id === id) || { nom: '' }).nom;
     },
     formatSapeur(user) {
-      if (!user.sapeur.length > 0) {
+      if (!user?.sapeur?.length > 0) {
         return '-';
       }
       const sapeurId = user.sapeur[0].sapeur_id;
@@ -142,7 +226,7 @@ export default {
       });
     },
     onRowClass(dataItem) {
-      if (!dataItem.sapeur.length > 0) {
+      if (!dataItem?.sapeur?.length > 0) {
         return '';
       }
 

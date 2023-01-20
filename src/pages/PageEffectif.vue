@@ -45,7 +45,7 @@
                   filteredData
                     .map((s) => s.email)
                     .filter((s) => s && s != null)
-                    .join(',')
+                    .join(';')
                 "
                 class="btn btn-outline-primary"
                 >Email groupé</a

@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "20.01.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Page utilisateurs, liste des sapeurs n'ayant pas créé de compte"
+      ]
+    },
+    {
       "date": "19.01.2023",
       "version": "2.0",
       "app": "GestSIS APP",
