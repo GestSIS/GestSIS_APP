@@ -143,7 +143,7 @@ export default {
       loading: true,
       selectedId: null,
       fieldsNumerote: [
-        { title: 'Materiel type', key: 'type' },
+        { title: 'Matériel type', key: 'type' },
         { title: 'Sapeur', key: 'sapeur' },
         { title: 'Taille', key: 'taille' },
         { title: 'Numéro', key: 'numero' },
@@ -157,7 +157,7 @@ export default {
         },
       ],
       fieldsGeneric: [
-        { title: 'Materiel type', key: 'type' },
+        { title: 'Matériel type', key: 'type' },
         { title: 'Sapeur', key: 'sapeur' },
         { title: 'Taille', key: 'taille' },
         { title: 'Quantité', key: 'quantite' },

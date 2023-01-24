@@ -1,7 +1,7 @@
 <template>
   <div class="card card-primary card-outline table-responsive">
     <div class="card-header d-flex justify-content-between">
-      <h5>Matériel a récupérer</h5>
+      <h5>Matériel à récupérer</h5>
     </div>
     <base-table
       :selectable="true"

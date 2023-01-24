@@ -154,7 +154,10 @@ export default {
   computed: {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
-      types: (state) => state.matPersoType.liste,
+      types: (state) =>
+        state.matPersoType.liste.sort((e1, e2) =>
+          e1?.designation.localeCompare(e2?.designation)
+        ),
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(
           (m) =>

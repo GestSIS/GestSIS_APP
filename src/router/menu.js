@@ -81,7 +81,7 @@ const links = [
   {
     to: { name: 'mat-perso-dashboard' },
     icon: 'shirt',
-    nom: 'Matériel personel',
+    nom: 'Matériel personnel',
     permission: permissions.MATERIEL_PERSONNEL.LECTURE,
   },
   // {

@@ -339,7 +339,10 @@ export default {
   },
   computed: {
     ...mapState({
-      types: (state) => state.matPersoType.liste,
+      types: (state) =>
+        state.matPersoType.liste.sort((e1, e2) =>
+          e1?.designation.localeCompare(e2?.designation)
+        ),
       materielNumeroteDispo: (state) =>
         state.matPersoMateriel.liste
           .filter(

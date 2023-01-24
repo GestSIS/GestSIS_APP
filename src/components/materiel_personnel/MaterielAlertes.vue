@@ -33,7 +33,7 @@ export default {
           key: 'titre',
         },
         {
-          title: 'Materiel type',
+          title: 'Matériel type',
           key: 'type',
         },
         {

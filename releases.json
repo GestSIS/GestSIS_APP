@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "24.01.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction de libellés",
+        "Tri du type de matériel dans le fenêtre attribution et inventaire du matériel personnel"
+      ]
+    },
+    {
       "date": "20.01.2023",
       "version": "2.0",
       "app": "GestSIS APP",
