@@ -55,7 +55,7 @@ export default {
     },
     removeMatPerso({ commit }, materielsIds) {
       return MatPersoMaterielService.remove(materielsIds).then((data) =>
-        commit(types.REMOVE_MAT_PERSO, data)
+        commit(types.REMOVE_MAT_PERSO, materielsIds)
       );
     },
   },

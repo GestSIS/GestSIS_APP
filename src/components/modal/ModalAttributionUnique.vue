@@ -15,7 +15,7 @@
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
-      <div v-if="data?.materiel?.quantite !== null" class="mb-3">
+      <div v-if="data?.materiel && !data?.materiel?.uuid" class="mb-3">
         <label for="quantite">Quantité</label>
         <input
           id="quantite"
@@ -24,7 +24,6 @@
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['attributions.0.quantite'] }"
           min="1"
-          @focusout="quantiteChange"
         />
       </div>
       <base-select

@@ -48,10 +48,13 @@ export default {
   computed: {
     ...mapState({
       grades: (state) =>
-        state.mesInfos.grades.map((t) => ({
-          ...t,
-          grade: state.grade.liste.find((e) => e.id == t.grade_id)?.designation,
-        })),
+        state.mesInfos.grades
+          .map((t) => ({
+            ...t,
+            grade: state.grade.liste.find((e) => e.id == t.grade_id)
+              ?.designation,
+          }))
+          .sort((a, b) => b.date.localeCompare(a.date)),
     }),
   },
 };

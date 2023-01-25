@@ -58,7 +58,7 @@
               class="btn btn-outline-primary border-0"
               @click="info(rowData)"
             >
-              <font-awesome-icon :icon="['fas', 'info-circle']" />
+              <font-awesome-icon :icon="['far', 'edit']" />
             </button>
             <button
               title="Retour"
@@ -66,6 +66,13 @@
               @click="retourSimple(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
         </base-table>
@@ -91,11 +98,25 @@
         >
           <template #actions="{ rowData }">
             <button
+              title="Info"
+              class="btn btn-outline-primary border-0"
+              @click="info(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
               title="Retour"
               class="btn btn-outline-primary border-0"
               @click="retourSimple(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </template>
         </base-table>
@@ -282,6 +303,30 @@ export default {
     },
     selectSapeur(id) {
       this.selectedId = id;
+    },
+    supprimer(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce matériel ?',
+          question:
+            "Attention, celui-ci ne sera pas ajouté dans l'inventaire et toutes ses données seront perdues.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store
+              .dispatch('removeMatPerso', [materiel.id])
+              .then((res) => {
+                this.$awn.success(res?.message ?? 'Matériels supprimés');
+              })
+              .catch((err) => {
+                this.$awn.alert(
+                  err?.message ?? 'Erreur impossible de supprimer ce matériel'
+                );
+              });
+          }
+        },
+      });
     },
   },
 };

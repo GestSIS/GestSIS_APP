@@ -15,6 +15,19 @@
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
+      <!-- TODO: Retour partiel de matériel -->
+      <!-- <div v-if="data?.materiel && !data?.materiel?.uuid" class="mb-3">
+        <label for="quantite">Quantité</label>
+        <input
+          id="quantite"
+          v-model="activeAttribution.quantite"
+          type="number"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['attributions.0.quantite'] }"
+          min="1"
+          :max="data?.materiel?.quantite"
+        />
+      </div> -->
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
@@ -50,6 +63,7 @@ export default {
     this.activeAttribution = {
       ...this.activeAttribution,
       id: this.data?.id,
+      // quantite: this.data?.materiel?.quantite,
     };
   },
   methods: {

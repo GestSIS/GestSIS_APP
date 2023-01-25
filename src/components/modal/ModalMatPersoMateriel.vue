@@ -5,7 +5,7 @@
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body row">
-      <div class="col-6">
+      <div :class="activeItem.events ? 'col-6' : 'col-12'">
         <div class="mb-3">
           <label for="categorie">Matériel type</label>
           <base-select
@@ -15,23 +15,36 @@
           />
         </div>
         <div class="mb-3">
-          <label for="numero">Numéro</label>
-          <input
-            id="numero"
-            v-model="activeItem.numero"
-            type="text"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['numero'] }"
-            disabled
-          />
-        </div>
-        <div class="mb-3">
           <label for="categorie">Sapeur</label>
           <base-select
             :model-value="activeItem.retour == null ? activeItem.sapeur_id : 0"
             :options="sapeurs"
+            base-option="<Non-attribué>"
             display-key="nom_prenom"
             disabled
+          />
+        </div>
+        <div v-if="activeItem?.materiel?.uuid" class="mb-3">
+          <label for="numero">Numéro</label>
+          <input
+            id="numero"
+            v-model="activeItem.materiel.numero"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['numero'] }"
+          />
+        </div>
+        <div
+          v-if="activeItem?.materiel && !activeItem?.materiel?.uuid"
+          class="mb-3"
+        >
+          <label for="numero">Quantité</label>
+          <input
+            id="numero"
+            v-model="activeItem.materiel.quantite"
+            type="number"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['quantite'] }"
           />
         </div>
         <div class="mb-3">
@@ -42,7 +55,6 @@
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['taille'] }"
-            disabled
           />
         </div>
         <div class="mb-3">
@@ -53,11 +65,10 @@
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"
-            disabled
           />
         </div>
       </div>
-      <div class="col-6">
+      <div v-if="activeItem.events" class="col-6">
         <base-table
           :data="activeItem.events"
           :fields="fields"
@@ -87,9 +98,9 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <!-- <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="save()">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
-      </button> -->
+      </button>
     </div>
   </div>
 </template>
@@ -98,7 +109,7 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalMatPersoMateriel',
   props: {
     data: {
       type: Object,
@@ -129,13 +140,13 @@ export default {
       ...this.activeItem,
       ...this.data,
       events: this.data?.materiel?.events
-        .map((e) => ({
+        ?.map((e) => ({
           ...e,
           eventType: this.eventTypes.find(
             (t) => t.id == e.materiel_event_type_id
           )?.nom,
         }))
-        .sort((e1, e2) => e2?.date?.localeCompare(e1?.date)),
+        ?.sort((e1, e2) => e2?.date?.localeCompare(e1?.date)),
     };
   },
   methods: {
@@ -143,21 +154,21 @@ export default {
     async save() {
       this.$store
         .dispatch(
-          (this.activeItem.id || 0) === 0
-            ? 'addMatPersoCategorie'
-            : 'updateMatPersoCategorie',
-          this.activeItem
+          (this.activeItem.id || 0) === 0 ? 'addMatPerso' : 'updateMatPerso',
+          [this.activeItem]
         )
         .then(() => {
           this.errors = {};
-          this.HIDE_MODAL();
+          this.$awn.success('Modifications enregistrées');
         })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            })
-        );
+        .catch((errors) => {
+          this.errors = {
+            ...errors,
+          };
+          this.$awn.warning(
+            errors?.message ?? 'Erreur lors de la modification'
+          );
+        });
     },
   },
 };

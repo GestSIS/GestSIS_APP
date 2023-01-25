@@ -49,11 +49,13 @@ export default {
   computed: {
     ...mapState({
       fonctions: (state) =>
-        state.mesInfos.fonctions.map((t) => ({
-          ...t,
-          fonction: state.fonction.liste.find((e) => e.id == t.fonction_id)
-            ?.nom,
-        })),
+        state.mesInfos.fonctions
+          .map((t) => ({
+            ...t,
+            fonction: state.fonction.liste.find((e) => e.id == t.fonction_id)
+              ?.nom,
+          }))
+          .sort((a, b) => b.debut.localeCompare(a.debut)),
     }),
   },
 };

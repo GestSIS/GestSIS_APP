@@ -88,7 +88,7 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalMatPersoEventType',
   props: {
     data: {
       type: Object,

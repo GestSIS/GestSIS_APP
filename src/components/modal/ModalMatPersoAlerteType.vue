@@ -97,7 +97,7 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalMatPersoAlerteType',
   props: {
     data: {
       type: Object,
