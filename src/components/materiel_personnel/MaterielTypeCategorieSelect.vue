@@ -4,13 +4,14 @@
       <tr>
         <th>
           <input
+            id="all"
             type="checkbox"
             class="form-check-input"
             :checked="Object.values(selectedIds.type).every((m) => m)"
             @change="toggleAll($event)"
           />
         </th>
-        <th>Designation</th>
+        <th><label for="all">Designation</label></th>
       </tr>
     </thead>
     <tbody>
@@ -26,7 +27,7 @@
       >
         <td>
           <input
-            :id="item.id"
+            :id="item.globalId"
             v-model="selectedIds[item.type][item.id]"
             type="checkbox"
             class="form-check-input"
@@ -34,8 +35,10 @@
           />
         </td>
         <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-          <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.tag]" />
-          {{ item.designation }}
+          <label :for="item.globalId">
+            <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.tag]" />
+            {{ item.designation }}
+          </label>
         </td>
       </tr>
     </tbody>
