@@ -208,6 +208,7 @@ export default {
           this.saveSuccessfull(p.permis_type_id);
         }
       });
+      this.$awn.success('Modifications enregistrées en avec succès');
     },
     isInvalid(key) {
       return this.errors[key] !== undefined;
