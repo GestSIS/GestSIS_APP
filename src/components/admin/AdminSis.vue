@@ -2,6 +2,7 @@
   <div class="card card-primary card-outline mb-3 col-12 col-lg-6">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Sis</h3>
+      <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -10,8 +11,6 @@
         :data="sis"
         :selectable="true"
         :hide-download="true"
-        :detail-row-options="detailRowOptions"
-        :detail-row-component="detailRowComponent"
         no-data="Aucun SIS"
       >
         <template #actions="{ rowData }">
@@ -58,32 +57,12 @@ export default {
   data() {
     return {
       fields: [
-        {
-          title: 'id',
-          key: 'id',
-        },
-        {
-          title: 'api_key',
-          key: 'api_key',
-        },
-        {
-          title: 'Nom',
-          key: 'nom',
-        },
-        {
-          title: 'Description',
-          key: 'description',
-        },
-        {
-          title: 'Mobile',
-          key: 'mobile',
-          type: Boolean,
-        },
-        {
-          title: 'Actions',
-          key: 'id',
-          slot: 'actions',
-        },
+        { title: 'id', key: 'id' },
+        { title: 'api_key', key: 'api_key' },
+        { title: 'Nom', key: 'nom' },
+        { title: 'Abréviation', key: 'abreviation' },
+        { title: 'Mobile', key: 'mobile', type: Boolean },
+        { title: 'Actions', key: 'id', slot: 'actions' },
       ],
     };
   },
@@ -96,6 +75,9 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     editSis(sis) {
       this.SHOW_MODAL({ component: 'ModalSis', data: sis });
+    },
+    ajoutSis() {
+      this.SHOW_MODAL({ component: 'ModalSis' });
     },
   },
 };

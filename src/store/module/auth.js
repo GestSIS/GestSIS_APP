@@ -85,7 +85,7 @@ export default {
         }
       });
     },
-    [types.NEW_ROLE](state, payload) {
+    [types.ADD_ROLE](state, payload) {
       state.roles = [...state.roles, payload];
     },
     [types.UPDATE_USER_ROLE](state, payload) {
@@ -229,7 +229,7 @@ export default {
     },
     createRole({ commit }, role) {
       return AuthService.createRole(role).then((role) => {
-        return commit(types.NEW_ROLE, role.data);
+        return commit(types.ADD_ROLE, role.data);
       });
     },
     deleteRole({ commit }, roleId) {
