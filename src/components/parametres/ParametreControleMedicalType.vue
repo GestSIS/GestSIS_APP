@@ -58,6 +58,7 @@ export default {
       fields: [
         { title: 'Tri', key: 'tri' },
         { title: 'Désignation', key: 'designation' },
+        { title: 'Remarque', key: 'remarque' },
         { title: 'Validité [ans]', key: 'duree_validite' },
         { title: 'Expirable', key: 'expirable', type: Boolean },
         { title: 'Actions', slot: 'actions' },

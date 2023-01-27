@@ -28,6 +28,16 @@
         />
       </div>
       <div class="mb-3">
+        <label for="remarque">Remarque</label>
+        <textarea
+          id="remarque"
+          v-model="activeType.remarque"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['remarque'] }"
+        />
+      </div>
+      <div class="mb-3">
         <label for="validite">Validité</label>
         <input
           id="validite"

@@ -173,6 +173,29 @@
             </div>
           </div>
         </div>
+        <div class="alert alert-info mt-2" role="alert">
+          <strong><em>Contrôle médical type, remarque :</em></strong>
+          <template
+            v-if="
+              !controleTypes?.find(
+                (t) => t.id == controleMedical.controle_medical_type_id
+              )?.remarque
+            "
+          >
+            Aucune remarque
+          </template>
+          <template
+            v-for="(elem, i) in (
+              controleTypes?.find(
+                (t) => t.id == controleMedical.controle_medical_type_id
+              )?.remarque ?? ''
+            ).split('\n')"
+            :key="i"
+          >
+            <br />
+            {{ elem }}
+          </template>
+        </div>
       </div>
       <div v-if="controleMedical.id" class="col-lg-8 col-12">
         <div class="card card-primary card-outline">
