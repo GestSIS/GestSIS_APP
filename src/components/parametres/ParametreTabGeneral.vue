@@ -6,7 +6,12 @@
         <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">General</h3>
-          <button type="button" class="btn btn-primary" @click="save()">
+          <button
+            v-if="hasConfigGeneralPermission"
+            type="button"
+            class="btn btn-primary"
+            @click="save()"
+          >
             Enregister
           </button>
         </div>
@@ -19,6 +24,7 @@
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['nom'] }"
+              :disabled="!hasConfigGeneralPermission"
             />
           </div>
           <div class="row mb-3">
@@ -30,6 +36,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['district'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
             <div class="col-4">
@@ -40,6 +47,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no_arrondissement'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
           </div>
@@ -52,6 +60,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['rue'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
             <div class="col-4">
@@ -62,6 +71,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['numero'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
           </div>
@@ -72,6 +82,7 @@
             :formatter="formatLocalite"
             :options="localites"
             :select-class="{ 'is-invalid': errors['localite_id'] }"
+            :disabled="!hasConfigGeneralPermission"
           />
           <base-select
             v-model="sisParam.sapeur_id"
@@ -80,6 +91,7 @@
             display-key="nom_prenom"
             :options="sapeurs"
             :select-class="{ 'is-invalid': errors['sapeur_id'] }"
+            :disabled="!hasConfigGeneralPermission"
           />
           <div class="row mb-3">
             <div class="col-6">
@@ -90,6 +102,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['telephone'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
             <div class="col-6">
@@ -100,6 +113,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['email'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
           </div>
@@ -112,6 +126,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['iban'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
             <div class="col-6">
@@ -122,6 +137,7 @@
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['bic'] }"
+                :disabled="!hasConfigGeneralPermission"
               />
             </div>
           </div>
@@ -135,6 +151,7 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Localités du sis</h3>
           <button
+            v-if="hasConfigGeneralPermission"
             type="button"
             class="btn btn-primary"
             @click="updateLocalitesSis()"
@@ -183,6 +200,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import permissions from '../../store/permissions';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -215,6 +233,9 @@ export default {
   },
   computed: {
     ...mapState({
+      hasConfigGeneralPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SIS.CONFIG),
       params: (state) => state.sisParam.params,
       localites: (state) => state.localite.liste,
       localitesSis: (state) =>

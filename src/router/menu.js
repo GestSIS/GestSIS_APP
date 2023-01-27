@@ -99,8 +99,19 @@ const links = [
     to: { name: 'param-general' },
     icon: 'sliders-h',
     nom: 'Configuration',
-    //TODO: See what to do here
-    permission: permissions.SIS.CONFIG,
+    permissions: [
+      permissions.COMPTABILITE.CONFIG,
+      permissions.CONTROLE_MEDICAL.CONFIG,
+      permissions.COURS.CONFIG,
+      permissions.EXERCICE.CONFIG,
+      permissions.FICHE_TRAVAIL.CONFIG,
+      permissions.INTERVENTION.CONFIG,
+      permissions.MATERIEL_PERSONNEL.CONFIG,
+      permissions.SAPEUR.CONFIG,
+      permissions.SIS.CONFIG,
+      permissions.SMS.CONFIG,
+      permissions.UTILISATEUR.CONFIG,
+    ],
   },
   {
     to: '/rta',

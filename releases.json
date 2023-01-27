@@ -4,7 +4,17 @@
       "date": "26.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Amélioration de l'interface administrateur"]
+      "changes": [
+        "Amélioration du système de permissions pour les paramètres généraux"
+      ]
+    },
+    {
+      "date": "26.01.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'interface administrateur"
+      ]
     },
     {
       "date": "25.01.2023",
@@ -74,7 +84,9 @@
       "date": "09.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Envoie d'email pour sapeurs d'un exercice"]
+      "changes": [
+        "Envoie d'email pour sapeurs d'un exercice"
+      ]
     },
     {
       "date": "06.01.2023",
@@ -101,7 +113,9 @@
       "date": "05.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Support saisie responsable de mission hors sapeur du SIS"]
+      "changes": [
+        "Support saisie responsable de mission hors sapeur du SIS"
+      ]
     },
     {
       "date": "04.01.2023",
@@ -143,7 +157,9 @@
       "date": "23.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Fenêtres de chargement dans `Mes décomptes`"]
+      "changes": [
+        "Fenêtres de chargement dans `Mes décomptes`"
+      ]
     },
     {
       "date": "22.12.2022",
@@ -205,7 +221,9 @@
       "date": "14.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Homogénéisation de l'interface du module `Comptabilité`"]
+      "changes": [
+        "Homogénéisation de l'interface du module `Comptabilité`"
+      ]
     },
     {
       "date": "13.12.2022",
@@ -251,7 +269,9 @@
       "date": "07.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Refonte du système de navigation de la page sapeurs"]
+      "changes": [
+        "Refonte du système de navigation de la page sapeurs"
+      ]
     },
     {
       "date": "06.12.2022",
@@ -337,7 +357,9 @@
       "date": "26.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Documentation des taux AVS/AI/APG et AC"]
+      "changes": [
+        "Documentation des taux AVS/AI/APG et AC"
+      ]
     },
     {
       "date": "25.11.2022",
@@ -387,7 +409,9 @@
       "date": "18.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Bouton pour le renvoie de l'email de confirmation"]
+      "changes": [
+        "Bouton pour le renvoie de l'email de confirmation"
+      ]
     },
     {
       "date": "17.11.2022",
@@ -416,7 +440,9 @@
       "date": "14.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Filtrage des sapeurs inactif pour les contrôles médicaux"]
+      "changes": [
+        "Filtrage des sapeurs inactif pour les contrôles médicaux"
+      ]
     },
     {
       "date": "13.11.2022",
@@ -439,13 +465,17 @@
       "date": "10.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Ajout des dates pour statistiques présences aux exercices"]
+      "changes": [
+        "Ajout des dates pour statistiques présences aux exercices"
+      ]
     },
     {
       "date": "09.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Formattage de dates"]
+      "changes": [
+        "Formattage de dates"
+      ]
     },
     {
       "date": "04.11.2022",
@@ -460,7 +490,9 @@
       "date": "03.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Envoie de SMS depuis l'effectif"]
+      "changes": [
+        "Envoie de SMS depuis l'effectif"
+      ]
     },
     {
       "date": "29.10.2022",
@@ -492,7 +524,9 @@
       "date": "23.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Etats de sortie pour les amendes"]
+      "changes": [
+        "Etats de sortie pour les amendes"
+      ]
     },
     {
       "date": "20.10.2022",
@@ -526,7 +560,9 @@
       "date": "14.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Ajout des rôles pour le future module matériel personnel"]
+      "changes": [
+        "Ajout des rôles pour le future module matériel personnel"
+      ]
     },
     {
       "date": "10.10.2022",
@@ -687,7 +723,10 @@
       "date": "08.06.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Annuler et réactiver exercice", "Suppression d'exercice"]
+      "changes": [
+        "Annuler et réactiver exercice",
+        "Suppression d'exercice"
+      ]
     },
     {
       "date": "06.06.2022",
@@ -712,7 +751,9 @@
       "date": "29.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Ajout du champ `durée` pour les cours"]
+      "changes": [
+        "Ajout du champ `durée` pour les cours"
+      ]
     },
     {
       "date": "28.05.2022",
@@ -726,7 +767,9 @@
       "date": "27.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Système de notification pour les mise à jours"]
+      "changes": [
+        "Système de notification pour les mise à jours"
+      ]
     },
     {
       "date": "26.05.2022",
@@ -766,7 +809,9 @@
       "date": "10.05.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6",
-      "changes": ["Nouvelle version de GestSIS Mobile en production"]
+      "changes": [
+        "Nouvelle version de GestSIS Mobile en production"
+      ]
     },
     {
       "date": "09.05.2022",
@@ -812,7 +857,9 @@
       "date": "29.04.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6 (beta)",
-      "changes": ["Choix du thème résilient au redémarrage de l'application"]
+      "changes": [
+        "Choix du thème résilient au redémarrage de l'application"
+      ]
     },
     {
       "date": "28.04.2022",

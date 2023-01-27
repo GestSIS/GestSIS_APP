@@ -512,13 +512,37 @@ const router = createRouter({
     {
       path: '/configuration',
       name: 'parametres',
-      beforeEnter: permissionGuard(permissions.SIS.CONFIG),
+      beforeEnter: permissionGuard(
+        permissions.COMPTABILITE.CONFIG,
+        permissions.CONTROLE_MEDICAL.CONFIG,
+        permissions.COURS.CONFIG,
+        permissions.EXERCICE.CONFIG,
+        permissions.FICHE_TRAVAIL.CONFIG,
+        permissions.INTERVENTION.CONFIG,
+        permissions.MATERIEL_PERSONNEL.CONFIG,
+        permissions.SAPEUR.CONFIG,
+        permissions.SIS.CONFIG,
+        permissions.SMS.CONFIG,
+        permissions.UTILISATEUR.CONFIG
+      ),
       component: () => import('/src/pages/PageConfiguration.vue'),
       children: [
         {
           path: '',
           name: 'param-general',
-          beforeEnter: permissionGuard(permissions.SIS.CONFIG),
+          beforeEnter: permissionGuard(
+            permissions.COMPTABILITE.CONFIG,
+            permissions.CONTROLE_MEDICAL.CONFIG,
+            permissions.COURS.CONFIG,
+            permissions.EXERCICE.CONFIG,
+            permissions.FICHE_TRAVAIL.CONFIG,
+            permissions.INTERVENTION.CONFIG,
+            permissions.MATERIEL_PERSONNEL.CONFIG,
+            permissions.SAPEUR.CONFIG,
+            permissions.SIS.CONFIG,
+            permissions.SMS.CONFIG,
+            permissions.UTILISATEUR.CONFIG
+          ),
           meta: {},
           component: () =>
             import('/src/components/parametres/ParametreTabGeneral.vue'),
