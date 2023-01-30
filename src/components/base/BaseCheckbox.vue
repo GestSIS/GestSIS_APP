@@ -6,6 +6,8 @@
       class="form-check-input"
       type="checkbox"
       v-bind="$attrs"
+      :true-value="trueValue"
+      :false-value="falseValue"
     />
     <label v-if="label" class="form-check-label" :for="label">
       {{ label }}
@@ -24,6 +26,14 @@ export default {
     modelValue: {
       type: [Boolean, Number],
       default: undefined,
+    },
+    trueValue: {
+      type: [Boolean, Number, Function],
+      default: true,
+    },
+    falseValue: {
+      type: [Boolean, Number, Function],
+      default: false,
     },
   },
   emits: ['update:modelValue'],
