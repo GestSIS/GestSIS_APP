@@ -48,8 +48,8 @@
       <base-select
         v-model="activeHeure.ecriture_categorie_id"
         class="mb-3"
-        label="Ecriture catégorie"
-        base-option="&lt;Catégorie&gt;"
+        label="Catégorie comptable"
+        base-option="&lt;Catégorie comptable&gt;"
         :options="categories"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />

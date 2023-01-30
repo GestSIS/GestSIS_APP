@@ -76,7 +76,7 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       fields: [
         { title: 'Désignation', key: 'designation' },
-        { title: 'Catégorie', key: 'categorie' },
+        { title: 'Catégorie comptable', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
       detailRowOptions: {

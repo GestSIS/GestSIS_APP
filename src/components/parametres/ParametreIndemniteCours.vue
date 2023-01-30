@@ -73,7 +73,7 @@ export default {
           title: 'Désignation',
           key: 'designation',
         },
-        { title: 'Catégorie', key: 'categorie' },
+        { title: 'Catégorie comptable', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
       detailRowOptions: {

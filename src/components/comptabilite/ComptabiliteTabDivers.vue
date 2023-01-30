@@ -69,7 +69,7 @@
               />
               <base-select
                 class="col-md-4"
-                base-option="&lt;Catégorie&gt;"
+                base-option="&lt;Catégorie comptable&gt;"
                 :options="filteredCategories"
                 @update:model-value="
                   (value) => setFilter('ecriture_categorie_id', value)

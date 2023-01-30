@@ -65,7 +65,7 @@ export default {
         { title: 'Unité', key: 'unite' },
         { title: 'Compte', key: 'compte' },
         { title: 'Type', key: 'typeLabel' },
-        { title: 'Catégorie', key: 'categorie' },
+        { title: 'Catégorie comptable', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
     };

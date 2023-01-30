@@ -81,7 +81,7 @@
             v-model="params.ecriture_categorie_id"
             class="mb-3"
             :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-            label="Ecriture catégorie"
+            label="Catégorie comptable"
             :options="listeCategorie"
           />
         </div>

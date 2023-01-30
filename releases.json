@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Statistiques pour module comptabilité",
-        "Amélioration de l'affichage des colonnes numériques dans les tables"
+        "Amélioration de l'affichage des colonnes numériques dans les tables",
+        "Clarification de terme `catégorie comptable`"
       ]
     },
     {

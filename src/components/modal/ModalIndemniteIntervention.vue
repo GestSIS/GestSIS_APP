@@ -181,7 +181,7 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="categorie">Catégorie d'écriture</label>
+        <label for="categorie">Catégorie comptable</label>
         <select
           id="categorie"
           v-model="activeIndemnite.ecriture_categorie_id"

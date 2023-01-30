@@ -58,7 +58,7 @@
             </td>
           </tr>
           <tr>
-            <th>Catégorie</th>
+            <th>Catégorie comptable</th>
             <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
               {{ categorie(type.ecriture_categorie_id) }}
             </td>

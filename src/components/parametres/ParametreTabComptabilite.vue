@@ -26,7 +26,7 @@
             href="#"
             role="tab"
             @click.prevent="tab = 'categorie'"
-            >Catégories</a
+            >Catégories comptables</a
           >
           <a
             class="nav-link"

@@ -3,6 +3,7 @@
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }} une catégorie
+        comptable
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>

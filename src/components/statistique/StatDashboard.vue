@@ -26,6 +26,10 @@
             <li>Nb heures par type intervention</li>
             <li>Véhicules &amp; Matériel</li>
           </ul>
+          <h4>Comptabilité</h4>
+          <ul>
+            <li>Stat catégorie/module comptable, compte</li>
+          </ul>
           <!-- <h3>TODO: Second temps</h3>
             <h4>Exercices</h4>
           <ul>
@@ -34,11 +38,7 @@
           <h4>Intervention</h4>
           <ul>
             <li>Statistiques de présences sur intervention</li>
-          </ul>
-          <h4>Frais</h4>
-          <ul>
-            <li>Répartition des frais</li>
-          </ul> -->
+          </ul>-->
         </div>
       </div>
     </div>

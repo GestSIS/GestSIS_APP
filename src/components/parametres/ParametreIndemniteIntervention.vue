@@ -78,7 +78,7 @@ export default {
         { title: 'Taux week-end', key: 'taux_weekend' },
         { title: 'Taux nuit', key: 'taux_nuit' },
         { title: 'Compte', key: 'compte' },
-        { title: "Catégorie d'écriture", key: 'categorie' },
+        { title: 'Catégorie comptable', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
     };

@@ -67,15 +67,8 @@ export default {
     return {
       allCategories: false,
       fields: [
-        {
-          title: 'Catégorie',
-          key: 'designation',
-        },
-        {
-          title: 'Amendable',
-          key: 'amendable',
-          type: Boolean,
-        },
+        { title: 'Catégorie', key: 'designation' },
+        { title: 'Amendable', key: 'amendable', type: Boolean },
         {
           title: 'Nombre',
           key: 'nb',

@@ -122,7 +122,7 @@
             v-model="activeIndemnite.ecriture_categorie_id"
             class="mb-3"
             :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-            label="Catégorie"
+            label="Catégorie comptable"
             :options="categories"
           />
         </div>

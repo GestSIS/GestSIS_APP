@@ -43,7 +43,7 @@
         v-model="active.ecriture_categorie_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        label="Catégorie d'écriture"
+        label="Catégorie comptable"
         :options="listeCategorie"
       />
       <div class="mb-3">

@@ -72,7 +72,7 @@ export default {
         { title: 'Désignation', key: 'designation' },
         { title: 'Unité', key: 'unite' },
         { title: 'Par fonction', key: 'par_fonction', type: Boolean },
-        { title: 'Catégorie', key: 'categorie' },
+        { title: 'Catégorie comptable', key: 'categorie' },
         { title: 'Actions', slot: 'actions' },
       ],
       detailRowOptions: {
