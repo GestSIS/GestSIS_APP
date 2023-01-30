@@ -59,7 +59,7 @@ export default {
   },
   watch: {
     activeExerciceComptableId() {
-      this.$store.dispatch('fetchStatistiqueCategorie');
+      this.$store.dispatch('fetchStatistiqueCategorieComptable');
       this.$store.dispatch('fetchStatistiqueCompte');
       this.$store.dispatch('fetchStatistiqueModuleComptable');
     },
