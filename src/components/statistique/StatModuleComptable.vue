@@ -57,10 +57,10 @@ export default {
     return {
       allModule: false,
       modules: [
-        { designation: 'Exercice', id: 1 },
-        { designation: 'Intervention & séance', id: 2 },
+        { designation: 'Exercice & séance', id: 1 },
+        { designation: 'Intervention', id: 2 },
         { designation: 'Frais et indemnité annuel', id: 3 },
-        { designation: 'Ecritures diverses', id: 0 },
+        { designation: 'Ecriture divers', id: 0 },
         { designation: 'Amende', id: 5 },
         { designation: 'Fiche de travail', id: 6 },
         { designation: 'Cours', id: 7 },
