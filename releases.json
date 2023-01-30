@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "30.01.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Statistiques pour module comptabilité"
+      ]
+    },
+    {
       "date": "27.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -23,4 +23,17 @@ export default {
       `/statistiques/${exercieComptableId}/intervention-traitement`
     );
   },
+  getStatCategorieComptable(exercieComptableId) {
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/categorie-comptable`
+    );
+  },
+  getStatCompte(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/compte`);
+  },
+  getStatModuleComptable(exercieComptableId) {
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/module-comptable`
+    );
+  },
 };

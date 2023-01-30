@@ -9,6 +9,9 @@ export default {
     typeIntervention: [],
     interventionTraitement: [],
     presences: [],
+    comptes: [],
+    modulesComptable: [],
+    categoriesComptable: [],
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
@@ -37,8 +40,33 @@ export default {
     [types.UPDATE_STATISTIQUE_INTERVENTION_TRAITEMENT](state, payload) {
       state.interventionTraitement = payload;
     },
+    [types.UPDATE_STATISTIQUE_COMPTE](state, payload) {
+      state.comptes = payload;
+    },
+    [types.UPDATE_STATISTIQUE_MODULE_COMPTABLE](state, payload) {
+      state.modulesComptable = payload;
+    },
+    [types.UPDATE_STATISTIQUE_CATEGORIE_COMPTABLE](state, payload) {
+      state.categoriesComptable = payload;
+    },
   },
   actions: {
+    fetchStatistiqueCategorieComptable({ getters, commit }) {
+      return StatistiqueService.getStatCategorieComptable(
+        getters.activeExerciceComptableId
+      ).then((data) =>
+        commit(types.UPDATE_STATISTIQUE_CATEGORIE_COMPTABLE, data));
+    },
+    fetchStatistiqueCompte({ getters, commit }) {
+      return StatistiqueService.getStatCompte(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_COMPTE, data));
+    },
+    fetchStatistiqueModuleComptable({ getters, commit }) {
+      return StatistiqueService.getStatModuleComptable(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_MODULE_COMPTABLE, data));
+    },
     fetchStatistiqueVehicule({ getters, commit }) {
       return StatistiqueService.getStatVehicule(
         getters.activeExerciceComptableId

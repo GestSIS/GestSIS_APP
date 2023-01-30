@@ -75,26 +75,11 @@ export default {
           name: 'Intervention',
           permission: permissions.INTERVENTION.MODIFICATION,
         },
-        // {
-        //   to: { name: 'param-intervention' },
-        //   name: 'Intervention',
-        //   permission: permissions.INTERVENTION.CONFIG,
-        // },
-        // {
-        //   to: { name: 'param-comptabilite' },
-        //   name: 'Comptabilité',
-        //   permission: permissions.COMPTABILITE.CONFIG,
-        // },
-        // {
-        //   to: { name: 'param-controle-medical' },
-        //   name: 'Contrôles médicaux',
-        //   permission: permissions.CONTROLE_MEDICAL.CONFIG,
-        // },
-        // {
-        //   to: { name: 'param-roles' },
-        //   name: 'Droits et rôles',
-        //   permission: permissions.UTILISATEUR.CONFIG,
-        // },
+        {
+          to: { name: 'stat-comptabilite' },
+          name: 'Comptabilité',
+          permission: permissions.COMPTABILITE.TOUT,
+        },
       ],
     };
   },

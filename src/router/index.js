@@ -449,6 +449,13 @@ const router = createRouter({
           component: () =>
             import('/src/components/statistique/StatIntervention.vue'),
         },
+        {
+          path: 'comptabilite',
+          name: 'stat-comptabilite',
+          meta: {},
+          component: () =>
+            import('/src/components/statistique/StatComptabilite.vue'),
+        },
       ],
     },
     {
