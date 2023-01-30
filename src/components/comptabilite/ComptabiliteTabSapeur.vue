@@ -96,7 +96,7 @@
                   {{
                     filteredData
                       .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toFixed(2)
+                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                   }}
                   CHF
                 </th>
@@ -172,12 +172,14 @@ export default {
           {
             title: 'Tarif',
             key: 'tarif',
+            ytpe: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
           {
             title: 'Tarif min',
             key: 'indemnite',
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
@@ -190,12 +192,14 @@ export default {
           {
             title: 'Taux',
             key: 'taux',
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
           {
             title: 'Total',
             key: 'total',
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
@@ -204,12 +208,7 @@ export default {
       fields: [
         { title: 'Sapeur', key: 'nom_prenom', sortField: 'nom_prenom' },
         { title: 'Fonction', key: 'fonction', sortField: 'fonction' },
-        {
-          title: 'Total',
-          key: 'total',
-          sortField: 'total',
-          formatter: (t) => parseFloat(t).toFixed(2),
-        },
+        { title: 'Total', key: 'total', type: Number },
         {
           title: 'Actions',
           slot: 'actions',

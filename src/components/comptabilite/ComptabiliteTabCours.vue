@@ -210,7 +210,8 @@ export default {
             title: 'Total',
             key: 'total',
             formatter: (total, ecriture) =>
-              ecriture.module == 5 ? (-total).toFixed(2) : total,
+              ecriture.module == 5 ? -total : total,
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },

@@ -97,6 +97,15 @@
                   : ''
               }}
             </template>
+            <template v-else-if="f.type === 'number' || f.type == Number">
+              {{
+                r[f.key]
+                  ? parseFloat(r[f.key])?.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    })
+                  : ''
+              }}
+            </template>
             <!-- Date time types -->
             <template v-else-if="f.type === 'datetime'">
               {{ new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16) }}

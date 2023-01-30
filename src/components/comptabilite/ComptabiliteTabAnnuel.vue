@@ -88,7 +88,7 @@
                   {{
                     filteredData
                       .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toFixed(2)
+                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                   }}
                   CHF
                 </th>
@@ -161,6 +161,7 @@ export default {
           {
             title: 'Tarif',
             key: 'tarif',
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
@@ -173,6 +174,7 @@ export default {
           {
             title: 'Total',
             key: 'total',
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
@@ -190,6 +192,7 @@ export default {
         {
           title: 'Total',
           key: 'total',
+          type: Number,
         },
         {
           title: 'Actions',

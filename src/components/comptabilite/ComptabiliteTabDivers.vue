@@ -127,7 +127,7 @@
                   {{
                     filteredData
                       .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toFixed(2)
+                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                   }}
                   CHF
                 </th>
@@ -188,8 +188,8 @@ export default {
         { title: 'Catégorie', key: 'ecriture_categorie' },
         { title: 'Quantité', key: 'quantite' },
         { title: 'Unité', key: 'unite' },
-        { title: 'Tarif', key: 'tarif' },
-        { title: 'Total', key: 'total' },
+        { title: 'Tarif', key: 'tarif', type: Number },
+        { title: 'Total', key: 'total', type: Number },
         {
           title: 'Actions',
           slot: 'actions',
@@ -212,7 +212,7 @@ export default {
       let svm = this;
       const formatCompte = (compte) =>
         compte?.numero + ' ' + compte?.designation;
-      return this.ecritures.map((e) => ({
+      return this.ecritures?.map((e) => ({
         ...e,
         sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
         unite: svm.unites.find((u) => u.id == e.type_unite_id)?.unite,

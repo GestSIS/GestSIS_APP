@@ -37,7 +37,7 @@
                 {{
                   filteredData
                     .reduce((acc, a) => acc + (parseFloat(a.total) ?? 0), 0.0)
-                    .toFixed(2)
+                    .toLocaleString(undefined, { minimumFractionDigits: 2 })
                 }}
               </th>
             </tr>
@@ -67,6 +67,7 @@ export default {
         {
           title: 'Total',
           key: 'total',
+          type: Number,
           columnClass: 'text-end',
           titleClass: 'text-end',
         },

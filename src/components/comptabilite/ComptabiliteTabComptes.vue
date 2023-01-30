@@ -109,7 +109,7 @@
                   {{
                     filteredData
                       .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toFixed(2)
+                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                   }}
                   CHF
                 </th>
@@ -171,7 +171,7 @@ export default {
         },
         { title: 'Designation', key: 'designation' },
         { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Total', key: 'total' },
+        { title: 'Total', key: 'total', type: Number },
         { title: 'Actions', slot: 'actions' },
       ],
     };

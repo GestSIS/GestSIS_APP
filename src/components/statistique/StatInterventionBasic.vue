@@ -71,7 +71,7 @@
                         partialSum + Number.parseFloat(a?.heures ?? 0),
                       0.0
                     )
-                    ?.toFixed(2)
+                    ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                 }}
               </th>
             </tr>
@@ -177,7 +177,7 @@ export default {
         {
           title: 'Heures',
           key: 'heures',
-          formatter: (value) => Number.parseFloat(value ?? 0)?.toFixed(2),
+          type: Number,
           titleClass: 'text-center',
           columnClass: 'text-center',
         },

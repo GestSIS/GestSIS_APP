@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Statistiques pour module comptabilité"
+        "Statistiques pour module comptabilité",
+        "Amélioration de l'affichage des colonnes numériques dans les tables"
       ]
     },
     {
