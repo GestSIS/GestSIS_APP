@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6 col-12">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb m-3">
             <li class="breadcrumb-item">
@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-      <div class="col-3">
+      <div class="col-12 col-md-3">
         <div class="card card-primary card-outline mb-2 table-responsive">
           <div class="card-header">
             <h5>Filtre matériel type</h5>
@@ -32,15 +32,21 @@
                 <h5>Actions</h5>
               </div>
               <div class="card-body">
-                <button class="btn btn-primary" @click="attribuer">
-                  Attribuer
-                </button>
-                <button
-                  class="btn btn-primary ms-2"
-                  @click="modifierInventaire"
-                >
-                  Modifier l'inventaire
-                </button>
+                <div class="row">
+                  <div class="col-12 col-md-6 mb-2">
+                    <button class="btn btn-primary col-12" @click="attribuer">
+                      Attribuer
+                    </button>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <button
+                      class="btn btn-primary col-12"
+                      @click="modifierInventaire"
+                    >
+                      Modifier l'inventaire
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
