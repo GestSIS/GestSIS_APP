@@ -77,7 +77,7 @@
         </template>
         <template #foot>
           <tr>
-            <th colspan="5">Nombre : {{ users.length }}</th>
+            <th colspan="5">Nombre : {{ computedData.length }}</th>
           </tr>
         </template>
       </base-table>
