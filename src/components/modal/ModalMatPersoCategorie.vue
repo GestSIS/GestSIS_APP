@@ -23,6 +23,7 @@
         :class="{ 'is-invalid': errors['pere_id'] }"
         label="Catégorie parente"
         display-key="fullDesignation"
+        base-option="<Aucun parent>"
         :options="computedCategories"
       />
     </div>

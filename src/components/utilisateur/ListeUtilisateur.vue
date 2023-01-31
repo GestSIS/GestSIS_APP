@@ -157,7 +157,7 @@ export default {
         .filter((u) => {
           const sapeurId = u.sapeur[0]?.sapeur_id;
           const sapeur = this.sapeurs?.find((s) => s.id === sapeurId);
-          return (sapeur.nom + ' ' + sapeur.prenom)
+          return sapeur.nom_prenom
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase()
@@ -188,7 +188,7 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     formatRole(id) {
-      return (this.roles.find((r) => r.id === id) || { nom: '' }).nom;
+      return this.roles.find((r) => r.id === id)?.nom;
     },
     formatSapeur(user) {
       if (!user?.sapeur?.length > 0) {
