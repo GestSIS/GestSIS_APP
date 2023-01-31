@@ -49,6 +49,24 @@
                   Modifier
                 </button>
               </router-link>
+              <div class="row">
+                <div class="col-6">
+                  <button
+                    class="btn btn-outline-primary col-12"
+                    @click="sms(filteredData)"
+                  >
+                    SMS
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-outline-primary col-12"
+                    @click="email(filteredData)"
+                  >
+                    Email
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -207,8 +225,10 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
+import permissions from '../store/permissions.js';
 
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
+import SapeurService from '/src/services/SapeurService.js';
 
 function loadData(routeTo, next) {
   let loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -274,6 +294,9 @@ export default {
       medecins: (state) => state.medecin.liste,
       controlesMedicaux: (state) => state.controleMedical.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasSmsEnvoiePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
     }),
     computedData() {
       const now = Date.now();
@@ -357,6 +380,42 @@ export default {
     },
     downloadJustificatif({ id, filename }) {
       ControlesMedicauxService.downloadJustificatif(id, filename);
+    },
+    sms(controleMedicaux) {
+      if (!this.hasSmsEnvoiePermission) {
+        this.$awn.alert(
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+        );
+        return;
+      }
+
+      SapeurService.getSapeursTelephones().then((telephones) => {
+        const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+        const sapeurs = this.sapeurs
+          .filter((e) => ids.has(e.id))
+          .map((s) => ({
+            ...s,
+            telephones: telephones.find((t) => t.id == s.id)?.telephones,
+          }));
+        this.SHOW_MODAL({
+          component: 'ModalSms',
+          size: 1,
+          data: sapeurs,
+        });
+      });
+    },
+    email(controleMedicaux) {
+      const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+      const sapeurs = this.sapeurs.filter((e) => ids.has(e.id));
+
+      const link = document.createElement('a');
+      link.href =
+        'mailto:?bcc=' +
+        sapeurs
+          .map((s) => s?.email)
+          .filter((s) => s)
+          .join(', ');
+      link.click();
     },
     async supprimer(controle) {
       this.SHOW_MODAL({

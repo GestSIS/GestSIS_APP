@@ -12,6 +12,9 @@ export default {
   getSapeurPourConvocationSms() {
     return Api.api().get('/sapeurs-convocation');
   },
+  getSapeursTelephones() {
+    return Api.api().get('/sapeurs-telephones');
+  },
   getSapeurs() {
     return Api.api().get('/sapeurs');
   },
