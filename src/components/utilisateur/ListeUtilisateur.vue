@@ -157,16 +157,18 @@ export default {
         .filter((u) => {
           const sapeurId = u.sapeur[0]?.sapeur_id;
           const sapeur = this.sapeurs?.find((s) => s.id === sapeurId);
-          return sapeur.nom_prenom
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filters.sapeur
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            );
+          return (
+            sapeur?.nom_prenom
+              ?.normalize('NFD')
+              ?.replace(/[\u0300-\u036f]/g, '')
+              ?.toLowerCase()
+              ?.includes(
+                this.filters.sapeur
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLowerCase()
+              ) ?? true
+          );
         })
         .filter((u) =>
           u.name

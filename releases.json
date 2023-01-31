@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Correction d'un problème pour la suppression d'indemnités de cours type",
-        "Correction d'un problème pour la suppression de travail type"
+        "Correction d'un problème pour la suppression de travail type",
+        "Sms et email disponibles depuis les contrôles médicaux"
       ]
     },
     {
