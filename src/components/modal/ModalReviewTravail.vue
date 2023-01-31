@@ -71,7 +71,7 @@
       <div class="row">
         <div class="col-6">
           <base-select
-            v-model="activeTravail.sapeur_id"
+            v-model="activeTravail.auteur_id"
             class="mb-3"
             label="Saisie par"
             display-key="nom_prenom"
