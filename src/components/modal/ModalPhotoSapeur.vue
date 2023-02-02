@@ -22,7 +22,7 @@
         class="cropper"
         :src="img"
         :canvas="{
-          maxWidth: 128,
+          maxWidth: 256,
         }"
         :stencil-props="{
           aspectRatio: 10 / 12,
@@ -93,7 +93,7 @@ export default {
       const image = canvas.toDataURL();
       canvas.toBlob((blob) => {
         this.defaultSize = {
-          width: 128,
+          width: 256,
         };
 
         this.callback({ image, blob })
