@@ -33,56 +33,53 @@
         <tr v-if="telephones.length <= 0">
           <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
         </tr>
-        <draggable v-model="telephones" tag="tbody" item-key="priorite">
-          <template #item="{ element }">
-            <tr>
-              <td
-                class="text-center"
-                :class="{ 'd-none': telephones.length <= 1 }"
-              >
-                {{ element.priorite }}
-              </td>
-              <td>
-                <input
-                  v-model="element.numero"
-                  class="form-control form-control-sm"
-                  type="text"
-                  :disabled="!hasEditPermission"
-                  placeholder="..."
-                />
-              </td>
-              <td>
-                <select
-                  v-model="element.telephone_type_id"
-                  class="form-select form-select-sm"
-                  :disabled="!hasEditPermission"
-                >
-                  <option v-for="t in telephoneTypes" :key="t.id" :value="t.id">
-                    {{ t.type }}
-                  </option>
-                </select>
-              </td>
-              <td v-if="sapeurType === 0" class="align-middle text-center">
-                <input
-                  v-model="element.rta"
-                  type="checkbox"
-                  class="form-check-input"
-                  :disabled="!hasEditPermission"
-                />
-              </td>
-              <td v-if="hasEditPermission" class="align-middle text-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  required
-                  @click="removeTelephone(element.priorite)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </td>
-            </tr>
-          </template>
-        </draggable>
+        <tr
+          v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)"
+          :key="t.id"
+        ></tr>
+        <tr>
+          <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
+            {{ t.priorite }}
+          </td>
+          <td>
+            <input
+              v-model="t.numero"
+              class="form-control form-control-sm"
+              type="text"
+              :disabled="!hasEditPermission"
+              placeholder="..."
+            />
+          </td>
+          <td>
+            <select
+              v-model="t.telephone_type_id"
+              class="form-select form-select-sm"
+              :disabled="!hasEditPermission"
+            >
+              <option v-for="t in telephoneTypes" :key="t.id" :value="t.id">
+                {{ t.type }}
+              </option>
+            </select>
+          </td>
+          <td v-if="sapeurType === 0" class="align-middle text-center">
+            <input
+              v-model="t.rta"
+              type="checkbox"
+              class="form-check-input"
+              :disabled="!hasEditPermission"
+            />
+          </td>
+          <td v-if="hasEditPermission" class="align-middle text-center">
+            <button
+              type="button"
+              class="btn btn-outline-danger border-0"
+              required
+              @click="removeTelephone(t.priorite)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
+          </td>
+        </tr>
       </table>
       <button
         v-if="hasEditPermission"
@@ -100,13 +97,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import draggable from 'vuedraggable';
 
 export default {
   name: 'MonTelephones',
-  components: {
-    draggable,
-  },
   props: {
     modelValue: {
       type: Array,

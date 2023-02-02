@@ -25,7 +25,6 @@
     "vue": "^3.2.45",
     "vue-advanced-cropper": "^2.8.8",
     "vue-router": "^4.1.6",
-    "vuedraggable": "^4.1.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
