@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "02.02.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème lors de la suppression des exercices d'un sapeurs inactif"
+      ]
+    },
+    {
       "date": "31.01.2023",
       "version": "3.0",
       "app": "GestSIS APP",
