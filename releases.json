@@ -5,7 +5,7 @@
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Correction d'un problème pour l'affichage des téléphones dans `mes infos`",
+        "Correction d'un problème pour l'affichage des téléphones dans `mes infos`"
       ]
     },
     {
