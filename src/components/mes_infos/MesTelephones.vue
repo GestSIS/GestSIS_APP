@@ -36,8 +36,7 @@
         <tr
           v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)"
           :key="t.id"
-        ></tr>
-        <tr>
+        >
           <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
             {{ t.priorite }}
           </td>
@@ -99,7 +98,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'MonTelephones',
+  name: 'MesTelephones',
   props: {
     modelValue: {
       type: Array,
@@ -112,9 +111,9 @@ export default {
   },
   data() {
     return {
-      telephones: [...(this.modelValue?.map((t) => ({ ...t })) ?? [])].sort(
-        (t1, t2) => t1.priorite?.toString()?.localeCompare(t2.priorite)
-      ),
+      telephones: [
+        ...(this.modelValue?.filter((t) => t)?.map((t) => ({ ...t })) ?? []),
+      ]?.sort((t1, t2) => t1.priorite?.toString()?.localeCompare(t2.priorite)),
       hasEditPermission: false,
       fields: [
         { title: 'Priorité', key: 'priorite' },
