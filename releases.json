@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "15.02.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour l'affichage des téléphones dans `mes infos`",
+      ]
+    },
+    {
+      "date": "07.02.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise en place de l'infrastructure pour documenter le projet"
+      ]
+    },
+    {
       "date": "02.02.2023",
       "version": "2.0",
       "app": "GestSIS APP",
