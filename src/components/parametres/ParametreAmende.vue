@@ -14,7 +14,7 @@
           class="mb-3 col-6"
           :class="{ 'is-invalid': errors['compte_id'] }"
           label="Compte"
-          :options="listeCompte.map((c) => ({ ...c, designation: compte(c) }))"
+          :options="listeCompte.map((c) => ({ ...c, designation: c?.label }))"
         />
         <base-select
           v-model="params.ecriture_categorie_id"
@@ -125,9 +125,6 @@ export default {
     },
     addAmende() {
       this.params.amendes = [...this.params.amendes, { montant: 0 }];
-    },
-    compte(compte) {
-      return `${compte.numero} ${compte.designation}`;
     },
     async save() {
       this.$store
