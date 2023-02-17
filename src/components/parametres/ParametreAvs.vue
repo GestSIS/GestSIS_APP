@@ -73,9 +73,7 @@
             class="mb-3"
             :class="{ 'is-invalid': errors['compte_id'] }"
             label="Compte"
-            :options="
-              listeCompte.map((c) => ({ ...c, designation: compte(c) }))
-            "
+            :options="listeCompte.map((c) => ({ ...c, designation: c?.label }))"
           />
           <base-select
             v-model="params.ecriture_categorie_id"
@@ -132,9 +130,6 @@ export default {
     this.params = this.avsParams ? this.avsParams : this.params;
   },
   methods: {
-    compte(compte) {
-      return `${compte.numero} ${compte.designation}`;
-    },
     ...mapMutations(['SHOW_MODAL']),
     async save() {
       this.$store
