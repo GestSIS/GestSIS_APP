@@ -89,7 +89,7 @@ export default {
               (c) => c.id == e.exercice_categorie_id
             )?.designation,
           }))
-          .sort((e1, e2) => e1.date.localeCompare(e2.date)),
+          .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
     }),
   },
   watch: {
@@ -111,8 +111,8 @@ export default {
     init(sapeurId) {
       this.$store.dispatch('fetchSapeurExercices', sapeurId).then(() => {
         this.exercices
-          .filter((e) => e.heures.length)
-          .forEach((e) => this.$refs.table.showDetailRow(e.id));
+          ?.filter((e) => e.heures.length)
+          ?.forEach((e) => this.$refs.table.showDetailRow(e.id));
       });
     },
     edit() {

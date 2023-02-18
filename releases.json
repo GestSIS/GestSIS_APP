@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "date": "15.02.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour l'affichage des téléphones dans `mes infos`"
+      ]
+    },
+    {
+      "date": "07.02.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise en place de l'infrastructure pour documenter le projet"
+      ]
+    },
+    {
+      "date": "02.02.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème lors de la suppression des exercices d'un sapeurs inactif",
+        "Augmentation de la qualité des photos de sapeurs",
+        "Ajout colonne remarque pour matériel personnel"
+      ]
+    },
+    {
       "date": "31.01.2023",
       "version": "3.0",
       "app": "GestSIS APP",

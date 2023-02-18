@@ -43,6 +43,7 @@ export default {
         { title: 'Taille', key: 'taille' },
         { title: 'Quantité', key: 'quantite' },
         { title: 'Numéro', key: 'numero' },
+        { title: 'Remarque', key: 'remarque' },
         { title: 'Attribution', key: 'attribution', type: Date },
         { title: 'Retour', key: 'retour', type: Date },
       ],

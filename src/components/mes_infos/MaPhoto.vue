@@ -53,4 +53,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+img {
+  max-width: 128px;
+}
+</style>
