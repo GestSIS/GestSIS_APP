@@ -221,11 +221,9 @@
             <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input
-                id="inputGroupFile01"
                 ref="file-justificatif"
                 type="file"
                 class="form-control form-control-sm"
-                aria-describedby="inputGroupFileAddon01"
                 accept="application/pdf"
                 @change="onFileChange"
               />
@@ -239,7 +237,7 @@
               </button>
             </div>
           </div>
-          <pdf-viewer :pdf-data="pdfData" />
+          <pdf-viewer v-if="controleMedical.filename" :pdf-data="pdfData" />
         </div>
       </div>
     </div>

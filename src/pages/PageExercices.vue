@@ -163,7 +163,7 @@
                   :model-value="filters.statut"
                   @update:model-value="(value) => setFilter('statut', value)"
                 />
-                <div v-if="canReset" class="col-md-4">
+                <div v-if="canReset" class="col-md-4 mt-1">
                   <button class="btn btn-sm btn-warning w-100" @click="reset">
                     Réinitialiser
                   </button>
