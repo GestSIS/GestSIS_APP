@@ -6,6 +6,9 @@ export default {
       params: { exercice_comptable_id: exerciceComptableId },
     });
   },
+  getAbsences(exerciceComptableId) {
+    return Api.api().get('/exercices-absences/' + exerciceComptableId);
+  },
   getExercice(exerciceId) {
     return Api.api().get('/exercices/' + exerciceId);
   },

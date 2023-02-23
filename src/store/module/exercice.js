@@ -4,6 +4,7 @@ import ExerciceService from '../../services/ExerciceService.js';
 export default {
   state: {
     liste: [],
+    absences: [],
     active: {
       id: 0,
       sapeurs: [],
@@ -23,6 +24,9 @@ export default {
       state.liste = payload
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
+    },
+    [types.UPDATE_EXERCICE_ABSENCES](state, payload) {
+      state.absences = payload;
     },
     [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
       state.liste = state.liste.map((e) => (e.id == id ? { ...e, statut } : e));
@@ -56,6 +60,11 @@ export default {
       return ExerciceService.getExercices(
         getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
+    },
+    fetchExerciceAbsences({ getters, commit }) {
+      return ExerciceService.getAbsences(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_EXERCICE_ABSENCES, data));
     },
     fetchExercice({ commit }, payload) {
       return ExerciceService.getExercice(payload).then((data) =>

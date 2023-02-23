@@ -77,13 +77,13 @@
                 </button>
               </router-link>
               <!-- <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
-              class="btn btn-outline-primary">
-              Annuler
-            </button>
-            <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
-              class="btn btn-outline-primary">
-              Annuler
-            </button> -->
+                class="btn btn-outline-primary">
+                Annuler
+              </button>
+              <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
+                class="btn btn-outline-primary">
+                Annuler
+              </button> -->
               <div class="row">
                 <div class="col-6">
                   <button
