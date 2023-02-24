@@ -285,15 +285,21 @@ const router = createRouter({
     },
     {
       path: '/exercices',
-      name: 'exercices',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       component: () => import('/src/pages/PageExercices.vue'),
-    },
-    {
-      path: '/excuses',
-      name: 'excuses',
-      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-      component: () => import('/src/pages/PageExcuse.vue'),
+      children: [
+        {
+          path: '',
+          name: 'exercices',
+          component: () => import('/src/components/exercice/ExerciceListe.vue'),
+        },
+        {
+          path: 'absences',
+          name: 'absences',
+          component: () =>
+            import('/src/components/exercice/ExerciceAbsences.vue'),
+        },
+      ],
     },
     {
       path: '/cours',
@@ -424,41 +430,35 @@ const router = createRouter({
         {
           path: '',
           name: 'stat-dashboard',
-          meta: {},
           component: () =>
             import('/src/components/statistique/StatDashboard.vue'),
         },
         {
           path: 'sapeur',
           name: 'stat-sapeur',
-          meta: {},
           component: () => import('/src/components/statistique/StatSapeur.vue'),
         },
         {
           path: 'exercice',
           name: 'stat-exercice-simple',
-          meta: {},
           component: () =>
             import('/src/components/statistique/StatExercice.vue'),
         },
         {
           path: 'exercice-presence',
           name: 'stat-exercice-presence',
-          meta: {},
           component: () =>
             import('/src/components/statistique/StatExercicePresence.vue'),
         },
         {
           path: 'intervention',
           name: 'stat-intervention',
-          meta: {},
           component: () =>
             import('/src/components/statistique/StatIntervention.vue'),
         },
         {
           path: 'comptabilite',
           name: 'stat-comptabilite',
-          meta: {},
           component: () =>
             import('/src/components/statistique/StatComptabilite.vue'),
         },
@@ -487,7 +487,6 @@ const router = createRouter({
           path: '',
           name: 'mat-perso-dashboard',
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          meta: {},
           component: () =>
             import(
               '/src/components/materiel_personnel/MaterielTabDashboard.vue'
@@ -497,7 +496,6 @@ const router = createRouter({
           path: 'attribution',
           name: 'mat-perso-materiel',
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          meta: {},
           component: () =>
             import(
               '/src/components/materiel_personnel/MaterielTabAttribution.vue'
@@ -507,7 +505,6 @@ const router = createRouter({
           path: 'inventaire',
           name: 'mat-perso-inventaire',
           beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          meta: {},
           component: () =>
             import(
               '/src/components/materiel_personnel/MaterielTabInventaire.vue'
@@ -556,7 +553,6 @@ const router = createRouter({
             permissions.SMS.CONFIG,
             permissions.UTILISATEUR.CONFIG
           ),
-          meta: {},
           component: () =>
             import('/src/components/parametres/ParametreTabGeneral.vue'),
         },

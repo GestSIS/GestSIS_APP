@@ -34,6 +34,17 @@
             ]"
             @click="sort(f)"
           >
+            <font-awesome-icon
+              v-if="f.key && sorted.key == (f.sortKey ?? f.key) && sorted.asc"
+              :icon="['fas', 'sort-down']"
+            />
+            <font-awesome-icon
+              v-else-if="
+                f.key && sorted.key == (f.sortKey ?? f.key) && !sorted.asc
+              "
+              :icon="['fas', 'sort-up']"
+            />
+            <font-awesome-icon v-else-if="f.key" :icon="['fas', 'sort']" />
             {{ f.title }}
           </th>
         </tr>
