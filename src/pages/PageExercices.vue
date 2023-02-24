@@ -23,28 +23,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
-          <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-            <a
-              class="nav-item nav-link"
-              role="tab"
-              :class="{ active: tab == 'exercice' }"
-              @click="tab = 'exercice'"
-              >Exercices</a
-            >
-            <a
-              class="nav-item nav-link"
-              role="tab"
-              :class="{ active: tab == 'excuse' }"
-              @click="tab = 'excuse'"
-              >Excuses</a
-            >
-          </nav>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-md-3">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Actions</h5>
@@ -114,7 +93,6 @@
           </div>
         </div>
         <div class="col-md-3">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Impressions</h5>
@@ -145,7 +123,6 @@
           </div>
         </div>
         <div class="col-md-6">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>

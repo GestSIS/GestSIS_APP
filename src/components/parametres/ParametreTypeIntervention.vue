@@ -1,9 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
       <div class="card card-primary card-outline">
-        <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Type d'intervention</h3>
           <button type="button" class="btn btn-primary" @click="ajoutType()">
@@ -37,9 +35,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
       <div class="card card-primary card-outline">
-        <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Statistiques</h3>
           <button type="button" class="btn btn-primary" @click="ajoutStat()">

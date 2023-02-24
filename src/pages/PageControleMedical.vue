@@ -29,7 +29,6 @@
             </button>
           </div>
           <div class="card-body">
-            <!-- NOM -->
             <div v-if="!modeAjout" class="mb-3">
               <label for="m-exe-des">Sapeur</label>
               <input

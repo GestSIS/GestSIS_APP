@@ -48,7 +48,6 @@
         <div class="timeline"></div>
       </div>
       <div class="col-md-4">
-        <!-- /.card-header -->
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>A propos</h3>

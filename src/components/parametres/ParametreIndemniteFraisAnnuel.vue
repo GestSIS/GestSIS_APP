@@ -1,6 +1,5 @@
 <template>
   <div class="card card-primary card-outline">
-    <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Frais &amp; indemnités annuels</h3>
       <div class="form-check form-switch mb-2">

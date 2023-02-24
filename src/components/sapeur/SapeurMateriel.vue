@@ -3,7 +3,6 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Matériel personnel</h3>
     </div>
-    <!-- /.card-header -->
     <!-- form start -->
     <form role="form">
       <div class="card-body">

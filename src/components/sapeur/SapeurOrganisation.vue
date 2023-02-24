@@ -1,10 +1,8 @@
 <template>
-  <!-- general form elements -->
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Organisation</h3>
     </div>
-    <!-- /.card-header -->
     <div class="card-body table-responsive">
       <base-table
         :fields="fields"

@@ -1,6 +1,5 @@
 <template>
   <div class="card card-primary card-outline">
-    <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title me-auto">Catégories et type de matériel</h3>
       <button

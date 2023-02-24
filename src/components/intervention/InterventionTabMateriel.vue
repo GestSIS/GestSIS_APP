@@ -2,7 +2,6 @@
   <div class="col-xs-12 col-lg-6">
     <!-- general form elements -->
     <div class="card card-primary card-outline mb-3">
-      <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Matériel consommable et en prêt</h3>
         <button

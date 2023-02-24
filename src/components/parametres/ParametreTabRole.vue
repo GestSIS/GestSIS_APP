@@ -1,7 +1,5 @@
 <template>
-  <!-- general form elements -->
   <div class="card card-primary card-outline">
-    <!-- /.card-header -->
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Rôles</h3>
       <button type="button" class="btn btn-primary" @click="newRole">

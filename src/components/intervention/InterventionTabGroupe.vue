@@ -2,7 +2,6 @@
   <div class="col-xs-12 col-md-6">
     <!-- general form elements -->
     <div class="card card-primary card-outline mb-3">
-      <!-- /.card-header -->
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Groupes</h3>
         <button

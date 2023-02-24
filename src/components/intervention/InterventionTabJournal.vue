@@ -29,7 +29,6 @@
       <div class="col-sm-12 col-md-8 col-xl-8">
         <!-- general form elements -->
         <div class="card card-primary card-outline mb-3">
-          <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Appels</h3>
             <button
@@ -87,7 +86,6 @@
 
         <!-- general form elements -->
         <div class="card card-primary card-outline mb-3">
-          <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Missions</h3>
             <button
