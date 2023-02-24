@@ -50,6 +50,9 @@ import {
   faBusinessTime,
   faDownLeftAndUpRightToCenter,
   faUpRightAndDownLeftFromCenter,
+  faSort,
+  faSortUp,
+  faSortDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -70,6 +73,9 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faSort,
+  faSortUp,
+  faSortDown,
   faDownLeftAndUpRightToCenter,
   faUpRightAndDownLeftFromCenter,
   faBusinessTime,

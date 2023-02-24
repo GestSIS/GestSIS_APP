@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "date": "24.02.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout icons pour tri des tables"]
+    },
+    {
+      "date": "23.02.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Documentation des `Publipostage` et `RTA`"]
+    },
+    {
       "date": "15.02.2023",
       "version": "2.0",
       "app": "GestSIS APP",
@@ -12,9 +24,7 @@
       "date": "07.02.2023",
       "version": "2.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise en place de l'infrastructure pour documenter le projet"
-      ]
+      "changes": ["Mise en place de l'infrastructure pour documenter le projet"]
     },
     {
       "date": "02.02.2023",
