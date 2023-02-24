@@ -1,5 +1,4 @@
 <template>
-  <!-- general form elements -->
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>

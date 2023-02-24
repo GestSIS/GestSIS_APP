@@ -290,6 +290,12 @@ const router = createRouter({
       component: () => import('/src/pages/PageExercices.vue'),
     },
     {
+      path: '/excuses',
+      name: 'excuses',
+      beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
+      component: () => import('/src/pages/PageExcuse.vue'),
+    },
+    {
       path: '/cours',
       name: 'cours',
       beforeEnter: permissionGuard(permissions.COURS.LECTURE),

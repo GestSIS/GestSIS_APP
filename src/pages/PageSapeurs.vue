@@ -17,7 +17,6 @@
     </div>
     <div class="row overflow-hidden">
       <div class="col-3 col-md-3 custom-scroll-column">
-        <!-- /.card-header -->
         <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>

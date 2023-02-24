@@ -1,9 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
-        <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">General</h3>
           <button
@@ -145,9 +143,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <!-- general form elements -->
       <div class="card card-primary card-outline mb-3">
-        <!-- /.card-header -->
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Localités du sis</h3>
           <button

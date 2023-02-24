@@ -1,7 +1,6 @@
 <template>
   <div class="row">
     <div class="col-12 col-xl-6">
-      <!-- /.card-header -->
       <div class="card card-primary card-outline mb-2">
         <div class="card-header d-flex justify-content-between">
           <h4>Filtres</h4>
@@ -31,7 +30,6 @@
       </div>
     </div>
     <div class="col-12 col-xl-6">
-      <!-- /.card-header -->
       <div class="card card-primary card-outline mb-2">
         <div class="card-header d-flex justify-content-between">
           <h4>Légende</h4>
@@ -73,7 +71,6 @@
       </div>
     </div>
     <div class="col-12">
-      <!-- /.card-header -->
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Présences aux exercices</h3>

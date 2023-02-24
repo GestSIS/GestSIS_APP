@@ -15,7 +15,6 @@
       </div>
     </div>
     <div class="row">
-      <!-- Jeton -->
       <div class="col-12 col-sm-6">
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
@@ -48,7 +47,6 @@
           </div>
         </div>
       </div>
-      <!-- Mot de passe -->
       <div class="col-12 col-sm-6">
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">

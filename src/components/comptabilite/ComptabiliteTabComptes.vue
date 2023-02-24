@@ -67,7 +67,6 @@
       <div class="col-12">
         <!-- general form elements -->
         <div class="card card-primary card-outline mb-3">
-          <!-- /.card-header -->
           <div class="card-header d-flex justify-content-between">
             <div class="card-title">
               <h3 class="card-title">Comptes</h3>
