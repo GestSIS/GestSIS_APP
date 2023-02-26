@@ -168,18 +168,19 @@ import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
 import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
-import excuseParam from '../../store/module/excuseParam';
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
   const loadAbsences = store.dispatch('fetchExerciceAbsences');
-  Promise.all([loadAbsences, loadExercices]).then(() => {
+  const loadExcuseParams = store.dispatch('fetchExcuseParams');
+
+  Promise.all([loadAbsences, loadExercices, loadExcuseParams]).then(() => {
     next();
   });
 }
 
 export default {
-  name: 'PageExercices',
+  name: 'ExerciceAbsences',
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -187,6 +188,7 @@ export default {
     loadData(routeTo, next);
   },
   data() {
+    const svm = this;
     return {
       loading: true,
       tab: 'exercice',
@@ -217,10 +219,23 @@ export default {
             if (rowData.excuse_type_id) {
               return statuts[value];
             }
-            if (excuseParam?.delai_excuse) {
+
+            var dateParts = rowData.date.split('-');
+            const d = new Date(
+              dateParts[0],
+              dateParts[1] - 1,
+              dateParts[2].substr(0, 2)
+            );
+
+            d.setDate(d.getDate() + (svm.excuseParam?.delai_excuse ?? 0));
+            const diffDays = Math.ceil(
+              Math.abs(new Date() - d) / (1000 * 60 * 60 * 24)
+            );
+
+            if (d < new Date()) {
               return 'Non excusé';
             } else {
-              return 'Non excusé (n jours restants)';
+              return 'Non excusé (' + diffDays + ' jours restants)';
             }
           },
         },
