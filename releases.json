@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "26.02.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction de la navigation avec le clavier pour les sapeurs"
+      ]
+    },
+    {
       "date": "24.02.2023",
       "version": "1.0",
       "app": "GestSIS APP",
