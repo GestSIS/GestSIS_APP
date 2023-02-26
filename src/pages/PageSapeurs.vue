@@ -187,55 +187,21 @@ import ExerciceComptable from '/src/components/exercice_comptable/ExerciceCompta
 
 //TODO Implémenter Matériel personnel
 const links = [
-  {
-    title: 'General',
-    urlName: 'sapeur-details',
-    politique: true,
-  },
-  {
-    title: 'Mutations',
-    urlName: 'sapeur-mutations',
-  },
+  { title: 'General', urlName: 'sapeur-details', politique: true },
+  { title: 'Mutations', urlName: 'sapeur-mutations' },
   {
     title: 'Contrôles médicaux',
     urlName: 'sapeur-controles-medicaux',
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
-  {
-    title: 'Fonctions',
-    urlName: 'sapeur-fonctions',
-  },
-  {
-    title: 'Cours',
-    urlName: 'sapeur-cours',
-  },
-  {
-    title: 'Promotion',
-    urlName: 'sapeur-promotions',
-  },
-  {
-    title: 'Materiel',
-    urlName: 'sapeur-materiels',
-  },
-  {
-    title: 'Organisation',
-    urlName: 'sapeur-organisation',
-    politique: true,
-  },
-  {
-    title: 'Permis',
-    urlName: 'sapeur-permis',
-  },
-  {
-    title: 'Banque',
-    urlName: 'sapeur-banque',
-    politique: true,
-  },
-  {
-    title: 'Exercice',
-    urlName: 'sapeur-exercices',
-    politique: true,
-  },
+  { title: 'Fonctions', urlName: 'sapeur-fonctions' },
+  { title: 'Cours', urlName: 'sapeur-cours' },
+  { title: 'Promotion', urlName: 'sapeur-promotions' },
+  { title: 'Materiel', urlName: 'sapeur-materiels' },
+  { title: 'Organisation', urlName: 'sapeur-organisation', politique: true },
+  { title: 'Permis', urlName: 'sapeur-permis' },
+  { title: 'Banque', urlName: 'sapeur-banque', politique: true },
+  { title: 'Exercice', urlName: 'sapeur-exercices', politique: true },
 ];
 
 const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
@@ -351,6 +317,7 @@ export default {
     },
   },
   mounted() {
+    const svm = this;
     this.eventListener = (e) => {
       if (e.key == 'ArrowDown' || e.key == 'ArrowUp') {
         e.preventDefault();
@@ -359,7 +326,7 @@ export default {
     this.$refs['liste-sapeurs'].addEventListener('keydown', this.eventListener);
     this.$refs['liste-sapeurs'].addEventListener(
       'keyup',
-      this.navigationEventListener
+      svm.navigationEventListener
     );
   },
   methods: {
@@ -371,21 +338,18 @@ export default {
     },
     async navigationEventListener(e) {
       const ids = this.filteredSapeurs.map((s) => s.id);
-      const i = ids.indexOf(this.activeSapeurId);
-      if (e.key == 'ArrowDown') {
-        if (i < ids.length - 1) {
-          this.$router.push({
-            name: 'sapeur-details',
-            params: { id: ids[i + 1] },
-          });
-        }
-      } else if (e.key == 'ArrowUp') {
-        if (i > 0) {
-          this.$router.push({
-            name: 'sapeur-details',
-            params: { id: ids[i - 1] },
-          });
-        }
+      const i = ids.indexOf(parseInt(this.$route.params?.id));
+      let nextId = null;
+      if (e.key == 'ArrowDown' && i < ids.length - 1) {
+        nextId = i + 1;
+      } else if (e.key == 'ArrowUp' && i > 0) {
+        nextId = i - 1;
+      }
+      if (nextId != null) {
+        this.$router.push({
+          name: this.$route.name,
+          params: { id: ids[nextId] },
+        });
       }
     },
     addSapeur() {
