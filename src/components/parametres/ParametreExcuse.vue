@@ -77,7 +77,12 @@ export default {
   data() {
     return {
       errors: {},
-      params: {},
+      params: {
+        actif: true,
+        delai_excuse: null,
+        email_rappel: '',
+        texte_email_rappel: '',
+      },
     };
   },
   computed: {
@@ -86,7 +91,10 @@ export default {
     }),
   },
   mounted() {
-    this.params = this.excuseParams ? this.excuseParams : this.params;
+    this.params = {
+      ...this.params,
+      ...this.excuseParams,
+    };
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

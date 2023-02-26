@@ -251,7 +251,7 @@ async function loadData(routeTo, next) {
 }
 
 export default {
-  name: 'PageExercices',
+  name: 'ExerciceListe',
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
