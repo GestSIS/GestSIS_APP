@@ -61,6 +61,7 @@ export default {
     computedSize() {
       const sizesClass = {
         [-1]: 'modal-sm',
+        0: '', // Default
         1: 'modal-lg',
         2: 'modal-xl',
       };

@@ -14,6 +14,7 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
+      state.absences = [];
       state.active = {
         id: 0,
         sapeurs: [],
@@ -27,6 +28,16 @@ export default {
     },
     [types.UPDATE_EXERCICE_ABSENCES](state, payload) {
       state.absences = payload;
+    },
+    [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
+      if (state.active.id == presence.id) {
+        state.active.data.sapeurs = state.active.data.sapeurs.map((s) =>
+          s.id == presence.id ? presence : s
+        );
+      }
+      state.absences = state.absences.map((s) =>
+        s.id == presence.id ? presence : s
+      );
     },
     [types.UPDATE_EXERCICE_STATUT](state, { id, statut }) {
       state.liste = state.liste.map((e) => (e.id == id ? { ...e, statut } : e));
@@ -184,6 +195,18 @@ export default {
         });
         return data;
       });
+    },
+    editPresenceExercice({ commit }, presence) {
+      return ExerciceService.editPresence(presence.id, presence).then(
+        async (data) => {
+          await commit(types.UPDATE_EXERCICE_PRESENCE, presence);
+          await commit(types.UPDATE_EXERCICE_STATUT, {
+            id: presence.exercice_id,
+            statut: data,
+          });
+          return data;
+        }
+      );
     },
   },
 };

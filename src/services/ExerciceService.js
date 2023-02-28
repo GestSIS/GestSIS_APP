@@ -47,6 +47,10 @@ export default {
       data: sapeursIds,
     });
   },
+  // Nouvelle API
+  editPresence(presenceId, presence) {
+    return Api.api().put('/exercices/presence/' + presenceId, presence);
+  },
   downloadListPresence(exerciceId, filename) {
     return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
   },

@@ -15,7 +15,7 @@
         label="Excuse type"
       />
       <div class="mb-3">
-        <label for="remarque">Raison <em>(optionnel)</em></label>
+        <label for="remarque">Raison</label>
         <input
           id="remarque"
           v-model="activeExcuse.remarque"
@@ -25,37 +25,13 @@
         />
       </div>
       <div class="mb-3">
-        <label>Justificatif <em>(optionnel)</em></label>
+        <label>Justificatif</label>
         <input
           ref="file-justificatif"
           type="file"
           class="form-control form-control-sm"
           accept="application/pdf"
           @change="onFileChange"
-        />
-      </div>
-      <base-select
-        v-if="hasValidationPermission"
-        v-model="activeExcuse.excuse_statut"
-        class="mb-3"
-        :class="{ 'is-invalid': errors['excuse_type_id'] }"
-        :options="[
-          { designation: 'Refusé', id: -1 },
-          { designation: 'A traiter', id: 0 },
-          { designation: 'Validé', id: 1 },
-        ]"
-        label="Statut"
-      />
-      <div v-if="hasValidationPermission" class="mb-3">
-        <label for="justification"
-          >Justification de la décision <em>(optionnel)</em></label
-        >
-        <input
-          id="justification"
-          v-model="activeExcuse.justification"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['justification'] }"
         />
       </div>
     </div>
@@ -71,7 +47,7 @@ import { mapMutations, mapState } from 'vuex';
 import permissions from '/src/store/permissions.js';
 
 export default {
-  name: 'ModalExcuse',
+  name: 'ModalSExcuser',
   props: {
     callback: {
       type: Function,
@@ -111,18 +87,13 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     validate() {
-      (this.callback(this.activeExcuse) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
+      // TODO: s'excuser
+      this.HIDE_MODAL();
+      this.$awn.warning('Excuse non enregistrée');
     },
     close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
+      this.HIDE_MODAL();
+      this.$awn.warning('Excuse non enregistrée');
     },
   },
 };

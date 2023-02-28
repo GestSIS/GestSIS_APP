@@ -34,7 +34,6 @@ import {
   faBirthdayCake,
   faCopy,
   faFire,
-  faHandshake,
   faBell,
   faBan,
   faShirt,
@@ -70,6 +69,7 @@ import {
   faAddressCard,
   faAddressBook,
   faClipboard,
+  faHandshake,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(

@@ -223,15 +223,15 @@ export default {
       }));
     },
     filteredSapeurs() {
-      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
+      const ids = new Set(this.ecritures?.map((i) => i.sapeur_id));
       return this.sapeurs.filter((t) => ids.has(t.id));
     },
     filteredComptes() {
-      const ids = new Set(this.ecritures.map((i) => i.compte_id));
+      const ids = new Set(this.ecritures?.map((i) => i.compte_id));
       return this.comptes.filter((t) => ids.has(t.id));
     },
     filteredCategories() {
-      const ids = new Set(this.ecritures.map((i) => i.ecriture_categorie_id));
+      const ids = new Set(this.ecritures?.map((i) => i.ecriture_categorie_id));
       return this.categories.filter((t) => ids.has(t.id));
     },
   },

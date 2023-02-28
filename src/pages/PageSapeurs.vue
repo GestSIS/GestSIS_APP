@@ -84,7 +84,7 @@
                 >{{ sapeur.nom_prenom }}
                 <font-awesome-icon
                   v-if="sapeur.type !== 0"
-                  :icon="['fas', 'handshake']"
+                  :icon="['far', 'handshake']"
                 />
               </a>
             </router-link>

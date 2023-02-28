@@ -2,6 +2,14 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mes exercices</h3>
+      <button
+        type="button"
+        class="btn btn-primary"
+        :disabled="!activeItemId"
+        @click="excuse(exercices.find((e) => e.id == activeItemId))"
+      >
+        S'excuser
+      </button>
       <button type="button" class="btn btn-primary" @click="download">
         Télécharger fichier <em>iCalendrier</em>
       </button>
@@ -13,16 +21,27 @@
         :data="exercices"
         :selectable="true"
         :hide-download="true"
-        no-data="Aucun exercice pour le
-      moment"
+        no-data="Aucun exercice pour le moment"
         :detail-row-component="detailRowComponent"
-      />
+        @selected="(elem) => (activeItemId = elem?.id)"
+      >
+        <template #actions="{ rowData }">
+          <button
+            title="S'excuser"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="excuse(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'handshake']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
@@ -56,6 +75,7 @@ export default {
   },
   data() {
     return {
+      activeItemId: null,
       detailRowComponent: markRaw(MesHeuresSuppDetailRow),
       fields: [
         { title: 'Date', key: 'date', type: Date },
@@ -71,6 +91,7 @@ export default {
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
         { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -119,11 +140,18 @@ export default {
       ?.forEach((e) => this.$refs.table.showDetailRow(e.id));
   },
   methods: {
+    ...mapMutations(['SHOW_MODAL']),
     download() {
       if (this.exercices.length <= 0) {
         this.$awn.alert('Aucun exercice à exporter');
       }
       exercicesToIcs(this.exercices, this.sisName, this.sisKey, this.annee);
+    },
+    excuse(exercice) {
+      this.SHOW_MODAL({
+        component: 'ModalSExcuser',
+        data: exercice,
+      });
     },
   },
 };

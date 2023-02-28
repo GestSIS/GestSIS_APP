@@ -44,14 +44,14 @@
           <div class="card-body">
             <div class="row">
               <base-select
-                class="col-md-4"
+                class="col-md-6"
                 :options="filteredLocalites"
                 base-option="<Localité>"
                 :model-value="filters.localite_id"
                 @update:model-value="(value) => setFilter('localite_id', value)"
               />
               <base-select
-                class="col-md-4"
+                class="col-md-6"
                 :options="filteredExercicesCategories"
                 base-option="<Catégorie>"
                 :model-value="filters.exercice_categorie_id"
@@ -59,20 +59,7 @@
                   (value) => setFilter('exercice_categorie_id', value)
                 "
               />
-              <base-select
-                class="col-md-4"
-                base-option="<Statut>"
-                :options="[
-                  { id: 0, designation: 'Annulé' },
-                  { id: 1, designation: 'Sapeurs à ajouter' },
-                  { id: 2, designation: 'En attente de validation' },
-                  { id: 3, designation: 'Validé' },
-                  { id: 4, designation: 'Imputé' },
-                ]"
-                :model-value="filters.statut"
-                @update:model-value="(value) => setFilter('statut', value)"
-              />
-              <div v-if="canReset" class="col-md-4 mt-1">
+              <div v-if="canReset" class="col-md-6 mt-1">
                 <button class="btn btn-sm btn-warning w-100" @click="reset">
                   Réinitialiser
                 </button>
@@ -104,54 +91,24 @@
             @selected="selectExercice"
           >
             <template #actions="{ rowData }">
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/exercices/' + rowData.id"
-                custom
-              >
-                <button
-                  title="modifier"
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-              </router-link>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 2"
-                title="valider"
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
               <button
                 v-if="
                   hasValidationPermission &&
-                  rowData.statut <= 3 &&
-                  rowData.statut > 0
+                  (rowData.excuse_statut == -1 || rowData.excuse_statut == 1)
                 "
-                title="annuler"
+                title="Examen"
                 class="btn btn-outline-warning border-0"
-                @click="annulerExercice(rowData.id)"
+                @click="cancelReviewAbsence(rowData)"
               >
-                <font-awesome-icon :icon="['fas', 'ban']" />
+                <font-awesome-icon :icon="['fas', 'cancel']" />
               </button>
               <button
-                v-if="hasValidationPermission && rowData.statut == 0"
-                title="réactiver"
+                v-if="hasValidationPermission && rowData.excuse_statut == 0"
+                title="Examen"
                 class="btn btn-outline-success border-0"
-                @click="reactiverExercice(rowData.id)"
+                @click="reviewAbsence(rowData)"
               >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut <= 3"
-                title="supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
+                <font-awesome-icon :icon="['far', 'eye']" />
               </button>
             </template>
           </base-table>
@@ -213,7 +170,7 @@ export default {
           formatter(value, rowData) {
             const statuts = {
               '-1': 'Refusée',
-              0: 'A traiter',
+              0: 'Excuse à traiter',
               1: 'Acceptée',
             };
             if (rowData.excuse_type_id) {
@@ -239,12 +196,7 @@ export default {
             }
           },
         },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -312,6 +264,24 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     selectExercice(row) {
       this.selectedId = row?.id;
+    },
+    reviewAbsence(absence) {
+      this.SHOW_MODAL({ component: 'ModalReviewAbsence', data: absence });
+    },
+    cancelReviewAbsence(absence) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: "Voulez-vous vraiment annuler l'examen de cette absence ?",
+          question:
+            "Attention, la justification fournie lors de l'examen sera perdue.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('cancelReviewAbsence', absence?.id);
+          }
+        },
+      });
     },
     onRowClass(dataItem, isSelected) {
       if (isSelected) {
