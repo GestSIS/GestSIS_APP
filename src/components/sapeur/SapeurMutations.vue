@@ -101,10 +101,7 @@ export default {
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
     finServiceButtonState() {
-      return (
-        this.mutations.length > 0 &&
-        (this.mutations[this.mutations.length - 1].sortie || '') === ''
-      );
+      return this.mutations.length > 0 && this.mutations.find((m) => !m.sortie);
     },
   },
   watch: {
