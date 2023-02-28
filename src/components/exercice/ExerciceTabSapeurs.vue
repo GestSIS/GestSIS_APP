@@ -26,13 +26,6 @@
       >
         Valider
       </button>
-      <button
-        v-if="hasPresencePermission"
-        class="btn btn-outline-primary"
-        @click="save"
-      >
-        Sauvegarder
-      </button>
     </div>
     <table class="table table-sm">
       <thead>
@@ -65,6 +58,7 @@
                 class="form-check-input"
                 :true-value="1"
                 :false-value="0"
+                @change="savePresence(sap)"
               />
             </div>
           </td>
@@ -134,6 +128,7 @@
                   !amendable ||
                   !!(sap.remplace || sap.present)
                 "
+                @change="savePresence(sap)"
               />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
@@ -401,34 +396,42 @@ export default {
         data,
       });
     },
+    savePresence(sapeur) {
+      this.$store
+        .dispatch('editPresenceExercice', sapeur)
+        .then((res) =>
+          this.$awn.success(res?.message || 'Modifications enregistrées')
+        )
+        .catch((err) =>
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+        );
+    },
     selectPresent(sapeur) {
       sapeur.remplace = 0;
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
+      this.savePresence(sapeur);
     },
     selectRemplace(sapeur) {
       sapeur.present = 0;
       sapeur.amende = false;
       sapeur.excuse_type_id = null;
+      this.savePresence(sapeur);
     },
     async selectExcuse(sapeur) {
-      if (sapeur.excuse_type_id) {
-        sapeur.excuse_type_id = null;
-      }
-      let self = this;
       this.SHOW_MODAL({
         component: 'ModalExcuse',
-        callback: (excuseTypeId) => {
-          if (excuseTypeId !== null && excuseTypeId !== undefined) {
-            let excuseType = self.excusesTypes.find(
-              (e) => e.id == excuseTypeId
-            );
-            sapeur.present = 0;
-            sapeur.remplace = 0;
-            sapeur.amende = this.amendable && excuseType.amende;
-            sapeur.excuse_type_id = excuseTypeId;
-          } else {
-            sapeur.excuse_type_id = null;
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
           }
         },
       });

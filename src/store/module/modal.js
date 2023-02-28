@@ -12,15 +12,15 @@ export default {
     [types.SHOW_MODAL](state, payload) {
       state.modalVisible = true;
       if (typeof payload === 'string') {
-        state.modalComponent = payload;
         state.modalCallback = () => Promise.resolve();
         state.modalSize = 0;
         state.modalData = {};
+        state.modalComponent = payload;
       } else {
-        state.modalComponent = payload.component;
         state.modalCallback = payload.callback || (() => Promise.resolve());
         state.modalSize = payload?.size ?? 0;
         state.modalData = payload?.data ?? {};
+        state.modalComponent = payload.component;
       }
     },
     [types.HIDE_MODAL](state) {

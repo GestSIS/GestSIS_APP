@@ -68,8 +68,7 @@ export default {
             nom_prenom: `${payload.nom} ${payload.prenom}`,
             actif: payload.actif,
             date_naissance: payload.date_naissance,
-          }
-          : s
+          } : s
       );
     },
     [types.UPDATE_CURRENT_SAPEUR_TELEPHONES](state, payload) {

@@ -198,13 +198,7 @@ export default {
         { title: 'Charges AVS', key: 'avs_total' },
         { title: 'Charges AC', key: 'ac_total' },
         { title: 'Total', key: 'total' },
-        {
-          title: 'Actions',
-          titleClass: 'text-center',
-          key: 'id',
-          slot: 'actions',
-          columnClass: 'text-center align-middle',
-        },
+        { title: 'Actions', key: 'id', slot: 'actions' },
       ],
     };
   },

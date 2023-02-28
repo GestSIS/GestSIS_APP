@@ -1,22 +1,22 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Revue du travail</h5>
+      <h5 id="exampleModalLabel" class="modal-title">Revue absence</h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
       <base-select
-        v-model="activeTravail.travail_type_id"
+        v-model="activeExercice.exercice_categorie_id"
         class="mb-3"
-        :options="travailTypes"
-        label="Travail"
+        :options="categories"
+        label="Catégorie"
         disabled
       />
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeTravail.designation"
+          v-model="activeExercice.designation"
           type="text"
           class="form-control form-control-sm"
           disabled
@@ -28,7 +28,7 @@
             <label for="date">Date</label>
             <input
               id="date"
-              v-model="activeTravail.date"
+              v-model="activeExercice.date"
               type="date"
               class="form-control form-control-sm"
               disabled
@@ -37,7 +37,7 @@
         </div>
         <div class="col-6">
           <base-select
-            v-model="activeTravail.sapeur_id"
+            v-model="activeAbsence.sapeur_id"
             class="mb-3"
             label="Sapeur"
             display-key="nom_prenom"
@@ -50,7 +50,7 @@
       <div class="input-group input-group-sm mb-3">
         <input
           id="quantite"
-          v-model="activeTravail.quantite"
+          v-model="activeAbsence.quantite"
           name="quantite"
           type="number"
           min="0"
@@ -62,7 +62,7 @@
             unites.find(
               (u) =>
                 u.id ==
-                travailTypes.find((t) => t.id == activeTravail.travail_type_id)
+                travailTypes.find((t) => t.id == activeAbsence.travail_type_id)
                   ?.type_unite_id
             )?.unite
           }}</span
@@ -71,7 +71,7 @@
       <div class="row">
         <div class="col-6">
           <base-select
-            v-model="activeTravail.auteur_id"
+            v-model="activeAbsence.auteur_id"
             class="mb-3"
             label="Saisie par"
             display-key="nom_prenom"
@@ -84,7 +84,7 @@
             <label for="date">Le</label>
             <input
               id="date"
-              v-model="activeTravail.date_demande"
+              v-model="activeAbsence.date_demande"
               type="date"
               class="form-control form-control-sm"
               disabled
@@ -97,7 +97,7 @@
         <textarea
           id="justification"
           ref="justification"
-          v-model="activeTravail.justification"
+          v-model="activeAbsence.justification"
           class="form-control form-control-sm"
           placeholder="(optionnel)"
         ></textarea>
@@ -134,7 +134,7 @@ import { mapState, mapMutations } from 'vuex';
 import permissions from '../../store/permissions.js';
 
 export default {
-  name: 'ModalReviewTravail',
+  name: 'ModalReviewAbsence',
   props: {
     data: {
       type: Object,
@@ -147,7 +147,7 @@ export default {
       columnCreationIndex: 0,
       columns: [],
       base: [],
-      activeTravail: {
+      activeAbsence: {
         exercice_comptable_id: null,
         sapeurs: [{ sapeur_id: null, quantite: null }],
       },
@@ -165,20 +165,23 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
         ),
+      activeExercice() {
+        return this.sapeurs.find((s) => s.id == this.activeAbsence?.sapeur_id);
+      },
     }),
   },
   mounted() {
     if (this.data.id) {
-      this.activeTravail = {
+      this.activeAbsence = {
         ...this.data,
         sapeurs: [
           { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
         ],
       };
     } else {
-      this.activeTravail.exercice_comptable_id = this.activeExerciceComptableId;
+      this.activeAbsence.exercice_comptable_id = this.activeExerciceComptableId;
       if (!this.hasSaisieCommunePermission) {
-        this.activeTravail.sapeurs[0].sapeur_id = this.activeSapeurId;
+        this.activeAbsence.sapeurs[0].sapeur_id = this.activeSapeurId;
       }
     }
     this.$refs.justification.focus();
@@ -187,7 +190,7 @@ export default {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
     async review(accepte) {
       this.$store
-        .dispatch('reviewTravail', { ...this.activeTravail, accepte })
+        .dispatch('reviewTravail', { ...this.activeAbsence, accepte })
         .then(() => {
           this.errors = {};
           this.HIDE_MODAL();
