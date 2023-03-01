@@ -38,7 +38,7 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
-  let loadFonction = store.dispatch('fetchFonctions');
+  const loadFonction = store.dispatch('fetchFonctions');
 
   Promise.all([loadFonction]).then(() => {
     next();

@@ -66,7 +66,7 @@ import PublipostageService from '/src/services/PublipostageService.js';
 import store from '/src/store/index';
 
 function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
 
   Promise.all([loadSapeurs]).then(() => {
     next();

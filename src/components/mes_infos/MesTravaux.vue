@@ -20,9 +20,9 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMesTravaux = store.dispatch('fetchMesTravaux');
-  let loadTravailTypes = store.dispatch('fetchTravailTypes');
-  let loadUnites = store.dispatch('fetchUnites');
+  const loadMesTravaux = store.dispatch('fetchMesTravaux');
+  const loadTravailTypes = store.dispatch('fetchTravailTypes');
+  const loadUnites = store.dispatch('fetchUnites');
 
   Promise.all([loadMesTravaux, loadTravailTypes, loadUnites]).then(() => {
     next();

@@ -91,8 +91,8 @@ import store from '/src/store/index';
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadAmendes = store.dispatch('fetchAmendesExerciceComptable');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadAmendes = store.dispatch('fetchAmendesExerciceComptable');
   Promise.all([loadSapeurs, loadAmendes]).then(() => {
     next();
   });

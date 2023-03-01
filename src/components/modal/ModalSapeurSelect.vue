@@ -468,7 +468,7 @@ export default {
     this.$store.dispatch('fetchPermisType');
 
     this.$store.dispatch('fetchGroupes').then(() => {
-      let svm = this;
+      const svm = this;
       let recursive = (item) => {
         svm.expanded = { ...svm.expanded, [item.id]: false };
         item.groupes.forEach(recursive);

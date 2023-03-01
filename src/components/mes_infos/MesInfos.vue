@@ -102,12 +102,12 @@ import MesReferencesProfessionelles from './MesReferencesProfessionelles.vue';
 import MesTelephones from './MesTelephones.vue';
 
 async function loadData(routeTo, next) {
-  let loadMesInfos = store.dispatch('fetchMesInfos');
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadCivilites = store.dispatch('fetchCivilites');
-  let loadTelephoneTypes = store.dispatch('fetchTelephoneTypes');
-  let loadFonctions = store.dispatch('fetchFonctions');
-  let loadGrades = store.dispatch('fetchGrades');
+  const loadMesInfos = store.dispatch('fetchMesInfos');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  const loadCivilites = store.dispatch('fetchCivilites');
+  const loadTelephoneTypes = store.dispatch('fetchTelephoneTypes');
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadGrades = store.dispatch('fetchGrades');
 
   Promise.all([
     loadMesInfos,

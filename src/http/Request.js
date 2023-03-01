@@ -28,7 +28,7 @@ const request = {
   },
 
   print(filename, options = {}) {
-    let api = axios.create({
+    const api = axios.create({
       baseURL: PRINT_URL,
       responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
       headers: {
@@ -97,7 +97,7 @@ const request = {
   },
 
   apiFileDownload(filename) {
-    let api = axios.create({
+    const api = axios.create({
       baseURL: API_URL,
       responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
       headers: {
@@ -148,7 +148,7 @@ const request = {
   },
 
   api() {
-    let api = axios.create({
+    const api = axios.create({
       baseURL: API_URL,
       headers: {
         Accept: 'application/json',
@@ -249,7 +249,7 @@ const request = {
   },
 
   auth: () => {
-    let auth = axios.create({
+    const auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
         Accept: 'application/json',

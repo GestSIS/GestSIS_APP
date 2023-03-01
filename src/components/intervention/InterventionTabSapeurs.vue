@@ -301,16 +301,16 @@ export default {
     this.$store.dispatch('fetchInterventionPhases', this.id);
     this.$store.dispatch('fetchInterventionSapeurs', this.id);
 
-    let startFloored = new Date(
+    const startFloored = new Date(
       this.data.date_debut + ' ' + this.data.heure_debut
     );
-    let end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
+    const end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
 
     startFloored.setMinutes(0);
-    let diff = Math.abs(startFloored - end) / 3600000;
+    const diff = Math.abs(startFloored - end) / 3600000;
 
     // Génère une colonne par heure
-    let min = startFloored.getHours();
+    const min = startFloored.getHours();
     for (let i = 0; i < Math.ceil(diff); ++i) {
       this.columns.push((min + i) % 24);
     }
@@ -357,7 +357,7 @@ export default {
       });
     },
     editPresence(presence) {
-      let clone = {};
+      const clone = {};
       Object.assign(clone, presence);
       this.SHOW_MODAL({
         component: 'ModalPresenceIntervention',
@@ -386,7 +386,7 @@ export default {
       });
     },
     editPhase(phase) {
-      let clone = {};
+      const clone = {};
       Object.assign(clone, phase);
       this.$store.dispatch('updateActivePhase', clone);
       this.SHOW_MODAL({
@@ -402,7 +402,7 @@ export default {
       this.$store.dispatch('removePhase', id);
     },
     editQuittance(e, id) {
-      let quittances = this.quittances.filter(
+      const quittances = this.quittances.filter(
         (q) => q.sapeur_id === parseInt(id)
       );
       if (quittances.length === 1) {
@@ -415,16 +415,19 @@ export default {
     },
     computeSapeur(id) {
       let res = {};
-      let start = new Date(this.data.date_debut + ' ' + this.data.heure_debut);
+      const start = new Date(
+        this.data.date_debut + ' ' + this.data.heure_debut
+      );
       start.setMinutes(0);
 
       this.presences
         .filter((s) => s.sapeur_id === id)
         .forEach((q) => {
           // Offset calculé à partir de l'heure de début d'intervention arrondi
-          let offset = ((new Date(q.debut) - start) / 3600000.0) * 4.0;
+          const offset = ((new Date(q.debut) - start) / 3600000.0) * 4.0;
           // Durée de la présence en quart d'heures
-          let duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000.0) * 4.0;
+          const duree =
+            ((new Date(q.fin) - new Date(q.debut)) / 3600000.0) * 4.0;
 
           for (let i = 0; i < duree; ++i) {
             let code = null;
@@ -433,7 +436,7 @@ export default {
               code = 3;
             } else {
               // DetectPhase
-              let currentDate = new Date(q.debut);
+              const currentDate = new Date(q.debut);
               currentDate.setMinutes(currentDate.getMinutes() + i * 15);
               code = this.getPhaseTypeAt(currentDate);
             }
@@ -446,7 +449,7 @@ export default {
       return res;
     },
     getPhaseTypeAt(date) {
-      let res = this.phases
+      const res = this.phases
         .filter((p) => p.debut == null || new Date(p.debut) <= date)
         .sort((d1, d2) =>
           d1.debut == null

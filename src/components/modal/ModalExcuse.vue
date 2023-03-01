@@ -40,9 +40,9 @@
         class="mb-3"
         :class="{ 'is-invalid': errors['excuse_type_id'] }"
         :options="[
-          { designation: 'Refusé', id: -1 },
+          { designation: 'Refusée', id: -1 },
           { designation: 'A traiter', id: 0 },
-          { designation: 'Validé', id: 1 },
+          { designation: 'Validée', id: 1 },
         ]"
         label="Statut"
       />

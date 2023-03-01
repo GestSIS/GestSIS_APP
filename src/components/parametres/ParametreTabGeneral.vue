@@ -200,9 +200,9 @@ import permissions from '../../store/permissions';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadParams = store.dispatch('fetchSisParams');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadParams = store.dispatch('fetchSisParams');
 
   Promise.all([loadLocalites, loadSapeurs, loadParams]).then(() => {
     next();

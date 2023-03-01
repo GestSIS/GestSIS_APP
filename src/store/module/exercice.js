@@ -30,8 +30,8 @@ export default {
       state.absences = payload;
     },
     [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
-      if (state.active.id == presence.id) {
-        state.active.data.sapeurs = state.active.data.sapeurs.map((s) =>
+      if (state.active.id == presence.exercice_id) {
+        state.active.sapeurs = state.active.sapeurs.map((s) =>
           s.id == presence.id ? presence : s
         );
       }
@@ -204,6 +204,14 @@ export default {
             id: presence.exercice_id,
             statut: data,
           });
+          return data;
+        }
+      );
+    },
+    addExcuse({ commit }, excuse) {
+      return ExerciceService.createExcuse(excuse.exercice_id, excuse).then(
+        async (data) => {
+          await commit(types.UPDATE_EXERCICE_PRESENCE, data);
           return data;
         }
       );

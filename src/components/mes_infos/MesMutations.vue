@@ -20,8 +20,8 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMesMutations = store.dispatch('fetchMesMutations');
-  let loadLocalites = store.dispatch('fetchLocalites');
+  const loadMesMutations = store.dispatch('fetchMesMutations');
+  const loadLocalites = store.dispatch('fetchLocalites');
 
   Promise.all([loadMesMutations, loadLocalites]).then(() => {
     next();

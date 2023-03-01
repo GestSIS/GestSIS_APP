@@ -196,8 +196,8 @@ import GroupeEdition from '../components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadGroupes = store.dispatch('fetchGroupes');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadGroupes = store.dispatch('fetchGroupes');
 
   Promise.all([loadSapeurs, loadGroupes]).then(() => {
     next();

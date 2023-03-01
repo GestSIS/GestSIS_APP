@@ -34,9 +34,9 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
-  let loadFonction = store.dispatch('fetchFonctions');
-  let loadCours = store.dispatch('fetchCours');
-  let loadGrade = store.dispatch('fetchGrades');
+  const loadFonction = store.dispatch('fetchFonctions');
+  const loadCours = store.dispatch('fetchCours');
+  const loadGrade = store.dispatch('fetchGrades');
 
   Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
     next();

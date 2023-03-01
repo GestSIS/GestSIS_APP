@@ -20,8 +20,8 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMesGroupes = store.dispatch('fetchMesGroupes');
-  let loadGroupes = store.dispatch('fetchGroupes');
+  const loadMesGroupes = store.dispatch('fetchMesGroupes');
+  const loadGroupes = store.dispatch('fetchGroupes');
 
   Promise.all([loadMesGroupes, loadGroupes]).then(() => {
     next();

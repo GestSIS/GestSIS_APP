@@ -192,13 +192,13 @@ import store from '/src/store/index';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadUnites = store.dispatch('fetchUnites');
-  let loadTravailTypes = store.dispatch('fetchTravailTypes');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadUnites = store.dispatch('fetchUnites');
+  const loadTravailTypes = store.dispatch('fetchTravailTypes');
 
   await store.dispatch('fetchExercicesComptables');
 
-  let loadTravaux = store.dispatch('fetchTravaux');
+  const loadTravaux = store.dispatch('fetchTravaux');
   Promise.all([loadSapeurs, loadUnites, loadTravaux, loadTravailTypes]).then(
     () => next()
   );
@@ -352,7 +352,7 @@ export default {
         data: {
           title: 'Voulez-vous vraiment supprimer ce travail ?',
           question:
-            "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront suppriméses définitivement.",
+            "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
         },
         callback: (confirmed) => {
           if (confirmed) {

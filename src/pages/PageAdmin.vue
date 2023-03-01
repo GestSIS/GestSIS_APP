@@ -44,7 +44,7 @@
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadExercicesComptables = store.dispatch('fetchExercicesComptables');
+  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
 
   Promise.all([loadExercicesComptables]).then(() => {
     next();

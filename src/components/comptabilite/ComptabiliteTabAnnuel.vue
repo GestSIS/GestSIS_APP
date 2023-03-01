@@ -109,9 +109,9 @@ import store from '/src/store/index';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(routeTo, next) {
-  let loadComptes = store.dispatch('fetchComptes');
-  let loadFonctions = store.dispatch('fetchFonctions');
-  let loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+  const loadComptes = store.dispatch('fetchComptes');
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
 
   Promise.all([loadComptes, loadFraisIndemnites, loadFonctions]).then(() => {
     next();
@@ -127,7 +127,7 @@ export default {
     loadData(routeTo, next);
   },
   data() {
-    let svm = this;
+    const svm = this;
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,

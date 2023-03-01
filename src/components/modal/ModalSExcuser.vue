@@ -87,9 +87,17 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     validate() {
-      // TODO: s'excuser
-      this.HIDE_MODAL();
-      this.$awn.warning('Excuse non enregistrée');
+      this.$store
+        .dispatch('addExcuse', this.activeExcuse)
+        .then(() => {
+          this.$awn.success('Excuse enregistrée');
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.$awn.alert(
+            err?.message ?? "Erreur lors de la création de l'excuse"
+          );
+        });
     },
     close() {
       this.HIDE_MODAL();

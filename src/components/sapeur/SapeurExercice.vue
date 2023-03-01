@@ -62,6 +62,7 @@ export default {
         { title: 'Communications', key: 'communications' },
         { title: 'Convoqué', type: Boolean, key: 'convoque' },
         { title: 'Présent', type: Boolean, key: 'present' },
+        { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
         { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },

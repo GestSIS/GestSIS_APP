@@ -177,7 +177,7 @@ export default {
     },
   },
   data() {
-    let svm = this;
+    const svm = this;
     return {
       degres: [
         { id: 1, designation: 'Fausse alarme' },

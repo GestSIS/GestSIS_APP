@@ -99,7 +99,7 @@ export default {
   },
   watch: {
     activeExerciceId() {
-      let id = parseInt(this.id);
+      const id = parseInt(this.id);
 
       this.$store.dispatch('selectExercice', id);
       this.$store.dispatch('fetchExercice', id);
@@ -115,7 +115,7 @@ export default {
     this.$store.dispatch('fetchHeuresExercice');
     this.$store.dispatch('fetchUnites');
 
-    let id = parseInt(this.id);
+    const id = parseInt(this.id);
 
     if (this.newMode) {
       this.$store.dispatch('resetActiveExercice');

@@ -33,7 +33,7 @@ import MesInfosService from '../../services/MesInfosService';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMesDecomptes = store.dispatch('fetchMesDecomptes');
+  const loadMesDecomptes = store.dispatch('fetchMesDecomptes');
 
   Promise.all([loadMesDecomptes]).then(() => {
     next();

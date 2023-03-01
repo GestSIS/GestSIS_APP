@@ -24,6 +24,7 @@
       </div>
       <div class="row">
         <div class="col-md-3">
+          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Actions</h5>
@@ -67,6 +68,7 @@
           </div>
         </div>
         <div class="col-md-3">
+          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Impressions</h5>
@@ -83,6 +85,7 @@
           </div>
         </div>
         <div class="col-md-6">
+          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
@@ -149,6 +152,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+          <!-- /.card-header -->
           <div class="card card-primary card-outline table-responsive">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
@@ -209,17 +213,17 @@ import store from '/src/store/index';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadLocalities = store.dispatch('fetchLocalites');
-  let loadStatFederal = store.dispatch('fetchStatFederals');
-  let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-  let loadInterventionTraitement = store.dispatch(
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadLocalities = store.dispatch('fetchLocalites');
+  const loadStatFederal = store.dispatch('fetchStatFederals');
+  const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+  const loadInterventionTraitement = store.dispatch(
     'fetchInterventionTraitements'
   );
 
   await store.dispatch('fetchExercicesComptables');
 
-  let loadInterventions = store.dispatch('fetchListeIntervention');
+  const loadInterventions = store.dispatch('fetchListeIntervention');
   Promise.all([
     loadSapeurs,
     loadLocalities,

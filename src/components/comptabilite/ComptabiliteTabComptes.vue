@@ -185,7 +185,7 @@ export default {
       comptes: (state) => state.compte.liste,
     }),
     computedData() {
-      let svm = this;
+      const svm = this;
       return this.ecritures.map((e) => ({
         ...e,
         sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,

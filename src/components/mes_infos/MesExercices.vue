@@ -48,11 +48,12 @@ import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
 import { exercicesToIcs } from '../../tools/exportExercices';
 
 async function loadData(routeTo, next) {
-  let loadMesExercices = store.dispatch('fetchMesExercices');
-  let loadUnites = store.dispatch('fetchUnites');
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadExerciceCategories = store.dispatch('fetchExerciceCategories');
-  let loadExcuseTypes = store.dispatch('fetchExcuseTypes');
+  const loadMesExercices = store.dispatch('fetchMesExercices');
+  const loadUnites = store.dispatch('fetchUnites');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+  const loadExcuseTypes = store.dispatch('fetchExcuseTypes');
+  const loadExcuseParams = store.dispatch('fetchExcuseParams');
 
   Promise.all([
     loadUnites,
@@ -60,6 +61,7 @@ async function loadData(routeTo, next) {
     loadLocalites,
     loadExerciceCategories,
     loadExcuseTypes,
+    loadExcuseParams,
   ]).then(() => {
     next();
   });
@@ -88,6 +90,7 @@ export default {
         { title: 'Communications', key: 'communications' },
         { title: 'Convoqué', type: Boolean, key: 'convoque' },
         { title: 'Présent', type: Boolean, key: 'present' },
+        { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
         { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },
