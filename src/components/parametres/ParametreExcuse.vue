@@ -3,17 +3,38 @@
     <div class="col-12">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">paramètres pour excuses</h3>
+          <h3 class="card-title">Paramètres pour excuses</h3>
           <button type="button" class="btn btn-primary" @click="save">
             Enregistrer
           </button>
         </div>
         <div class="card-body">
           <div class="mb-3">
+            <div class="form-check form-switch">
+              <input
+                id="module-excuse"
+                v-model="params.actif"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+              />
+              <label class="form-check-label" for="module-excuse"
+                >Activer le module excuse<font-awesome-icon
+                  v-tooltip.bottom="{
+                    content:
+                      'Les utilisateurs pourront saisir des excuses individuelles',
+                  }"
+                  class="ms-1"
+                  :icon="['far', 'question-circle']"
+              /></label>
+            </div>
+          </div>
+          <div class="mb-3">
             <label for="delai_excuse"
               >Délai pour excuse [Jour]<font-awesome-icon
                 v-tooltip.bottom="{
-                  content: 'Nb jour disponible pour s\'excuser',
+                  content:
+                    'Nb jour disponible pour s\'excuser à partir de l\'exercice',
                 }"
                 class="ms-1"
                 :icon="['far', 'question-circle']"
@@ -26,7 +47,7 @@
               :class="{ 'is-invalid': errors['delai_excuse'] }"
             />
           </div>
-          <base-checkbox
+          <!-- <base-checkbox
             v-model="params.email_rappel"
             class="mb-3"
             label="Envoyer email si non excusé"
@@ -47,7 +68,7 @@
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_ac'] }"
             />
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

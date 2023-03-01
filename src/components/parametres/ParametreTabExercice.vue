@@ -34,10 +34,10 @@
     <div v-if="tab === 'categorie'" class="col-sm-12 col-xl-9">
       <parametre-exercice-categorie />
     </div>
-    <div v-if="tab === 'excuse'" class="col-sm-12 col-xl-6 col-md-6">
+    <div v-if="tab === 'excuse'" class="col-sm-12 col-xl-4 col-md-6">
       <parametre-excuse />
     </div>
-    <div v-if="tab === 'excuse'" class="col-sm-12 col-xl-6 col-md-6">
+    <div v-if="tab === 'excuse'" class="col-sm-12 col-xl-5 col-md-6">
       <parametre-excuse-type />
     </div>
   </div>
