@@ -78,10 +78,10 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 function loadData(routeTo, next) {
-  let loadUsers = store.dispatch('fetchUsers');
-  let loadPermissions = store.dispatch('fetchPermissions');
-  let loadRoles = store.dispatch('fetchRoles');
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadUsers = store.dispatch('fetchUsers');
+  const loadPermissions = store.dispatch('fetchPermissions');
+  const loadRoles = store.dispatch('fetchRoles');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
 
   Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(() => {
     next();

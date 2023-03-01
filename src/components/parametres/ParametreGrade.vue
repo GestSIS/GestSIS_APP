@@ -34,7 +34,7 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
-  let loadGrade = store.dispatch('fetchGrades');
+  const loadGrade = store.dispatch('fetchGrades');
 
   Promise.all([loadGrade]).then(() => {
     next();

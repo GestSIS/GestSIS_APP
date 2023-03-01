@@ -51,6 +51,9 @@ export default {
   editPresence(presenceId, presence) {
     return Api.api().put('/exercices/presence/' + presenceId, presence);
   },
+  createExcuse(exerciceId, excuse) {
+    return Api.api().put('/mes-excuses/' + exerciceId, excuse);
+  },
   downloadListPresence(exerciceId, filename) {
     return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
   },

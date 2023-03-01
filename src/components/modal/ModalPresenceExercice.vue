@@ -75,6 +75,19 @@
             </td>
             <td class="text-center">
               <input
+                v-model="e.absent"
+                type="checkbox"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                :disabled="
+                  !canEditAbsence(e) || (!canEditPresence(e) && e.present)
+                "
+                @change="editRemplaceCheckbox(e)"
+              />
+            </td>
+            <td class="text-center">
+              <input
                 v-model="e.remplace"
                 type="checkbox"
                 class="form-check-input"
@@ -221,8 +234,15 @@ export default {
       exercice.amende = false;
       exercice.excuse_type_id = null;
     },
+    editAbsentCheckbox(exercice) {
+      exercice.present = 0;
+      exercice.remplace = 0;
+      exercice.amende = false;
+      exercice.excuse_type_id = null;
+    },
     editRemplaceCheckbox(exercice) {
       exercice.present = 0;
+      exercice.absent = 0;
       exercice.amende = false;
       exercice.excuse_type_id = null;
     },
@@ -231,6 +251,8 @@ export default {
       exercice.remplace = 0;
     },
     editExcuseCheckbox(exercice) {
+      // FIXME: Excuse
+      exercice.present = 0;
       exercice.present = 0;
       exercice.remplace = 0;
       exercice.excuse_type_id = exercice.excuse_type_id

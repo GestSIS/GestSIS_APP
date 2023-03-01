@@ -209,10 +209,10 @@ import { DateTime } from 'luxon';
 import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
 
 async function loadData(routeTo, next) {
-  let loadLocalites = store.dispatch('fetchLocalites');
-  let loadGrades = store.dispatch('fetchGrades');
-  let loadFonctions = store.dispatch('fetchFonctions');
-  let loadGroupes = store.dispatch('fetchGroupes');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  const loadGrades = store.dispatch('fetchGrades');
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadGroupes = store.dispatch('fetchGroupes');
 
   Promise.all([loadLocalites, loadFonctions, loadGrades, loadGroupes]).then(
     () => {

@@ -160,7 +160,7 @@ export default {
     },
   },
   data() {
-    let svm = this;
+    const svm = this;
     return {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,

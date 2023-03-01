@@ -123,7 +123,7 @@ import permissions from '/src/store/permissions.js';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMateriel = store.dispatch('fetchMatPerso');
+  const loadMateriel = store.dispatch('fetchMatPerso');
 
   Promise.all([loadMateriel]).then(() => {
     next();

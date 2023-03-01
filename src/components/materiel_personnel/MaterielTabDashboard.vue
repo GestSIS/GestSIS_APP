@@ -15,8 +15,8 @@ import MaterielAlertes from '/src/components/materiel_personnel/MaterielAlertes.
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
-  let loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
+  const loadMaterielARecuperer = store.dispatch('fetchMatPersoARecuperer');
+  const loadMaterielAlertes = store.dispatch('fetchMatPersoAlertes');
 
   Promise.all([loadMaterielARecuperer, loadMaterielAlertes]).then(() => {
     next();

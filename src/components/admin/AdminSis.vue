@@ -39,7 +39,7 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadSis = store.dispatch('loadSisListe');
+  const loadSis = store.dispatch('loadSisListe');
 
   Promise.all([loadSis]).then(() => {
     next();

@@ -244,7 +244,7 @@ import { exercicesToIcs } from '../../tools/exportExercices';
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
-  let loadExercices = store.dispatch('fetchListeExercice');
+  const loadExercices = store.dispatch('fetchListeExercice');
   Promise.all([loadExercices]).then(() => {
     next();
   });

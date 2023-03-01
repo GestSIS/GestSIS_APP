@@ -225,9 +225,9 @@ export default {
       // Convert hours and minutes to time in minutes
       time = hours * 60 + minutes;
 
-      let rounded = Math.round(time / minutesToRound) * minutesToRound;
-      let rHr = '' + Math.floor(rounded / 60);
-      let rMin = '' + (rounded % 60);
+      const rounded = Math.round(time / minutesToRound) * minutesToRound;
+      const rHr = '' + Math.floor(rounded / 60);
+      const rMin = '' + (rounded % 60);
 
       return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
     },
@@ -242,10 +242,10 @@ export default {
       }
     },
     async save() {
-      let debut = this.date_debut + ' ' + this.heure_debut;
-      let fin = this.date_fin + ' ' + this.heure_fin;
+      const debut = this.date_debut + ' ' + this.heure_debut;
+      const fin = this.date_fin + ' ' + this.heure_fin;
       if (this.editMode) {
-        let presence = {
+        const presence = {
           ...this.data.presence,
           debut,
           fin,
@@ -261,8 +261,8 @@ export default {
             });
           })
           .catch((error) => {
-            let debut = error['sapeurs.0.debut'];
-            let fin = error['sapeurs.0.fin'];
+            const debut = error['sapeurs.0.debut'];
+            const fin = error['sapeurs.0.fin'];
             this.errors = {
               ...error,
               date_debut: debut,
@@ -291,8 +291,8 @@ export default {
             });
           })
           .catch((error) => {
-            let debut = error['sapeurs.0.debut'];
-            let fin = error['sapeurs.0.fin'];
+            const debut = error['sapeurs.0.debut'];
+            const fin = error['sapeurs.0.fin'];
             this.errors = {
               ...error,
               date_debut: debut,

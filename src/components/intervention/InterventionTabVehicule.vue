@@ -123,7 +123,7 @@ export default {
     },
     updateVehicules(value) {
       this.selected = {};
-      let svm = this;
+      const svm = this;
 
       value.forEach(
         (v) => (svm.selected = { ...svm.selected, [v.vehicule_id]: true })

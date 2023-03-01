@@ -20,8 +20,8 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMesGrades = store.dispatch('fetchMesGrades');
-  let loadGrades = store.dispatch('fetchGrades');
+  const loadMesGrades = store.dispatch('fetchMesGrades');
+  const loadGrades = store.dispatch('fetchGrades');
 
   Promise.all([loadMesGrades, loadGrades]).then(() => {
     next();

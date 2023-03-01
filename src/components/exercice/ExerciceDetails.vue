@@ -25,6 +25,14 @@
       >
     </div>
     <div class="me-3">
+      Absent
+      <span
+        class="badge"
+        :class="{ 'bg-warning': absent, 'bg-secondary': !absent }"
+        >{{ absent }}</span
+      >
+    </div>
+    <div class="me-3">
       Excusé
       <span
         class="badge"
@@ -67,6 +75,7 @@ export default {
       data: {},
       convoque: 0,
       present: 0,
+      absent: 0,
       remplace: 0,
       excuse: 0,
       amende: 0,
@@ -76,6 +85,7 @@ export default {
     ExerciceService.getSapeurs(this.rowData.id).then((data) => {
       this.convoque = data.filter((s) => s.convoque).length;
       this.present = data.filter((s) => s.present).length;
+      this.absent = data.filter((s) => s.absent).length;
       this.remplace = data.filter((s) => s.remplace).length;
       this.excuse = data.filter((s) => s.excuse_type_id).length;
       this.amende = data.filter((s) => s.amende).length;

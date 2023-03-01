@@ -118,17 +118,17 @@ import InterventionTabJournal from '/src/components/intervention/InterventionTab
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadLocalities = store.dispatch('fetchLocalites');
-  let loadStatFederal = store.dispatch('fetchStatFederals');
-  let loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-  let loadInterventionTraitement = store.dispatch(
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadLocalities = store.dispatch('fetchLocalites');
+  const loadStatFederal = store.dispatch('fetchStatFederals');
+  const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+  const loadInterventionTraitement = store.dispatch(
     'fetchInterventionTraitements'
   );
 
   await store.dispatch('fetchExercicesComptables');
 
-  let loadInterventions = store.dispatch('fetchListeIntervention');
+  const loadInterventions = store.dispatch('fetchListeIntervention');
   Promise.all([
     loadSapeurs,
     loadLocalities,
@@ -184,7 +184,7 @@ export default {
   },
   watch: {
     id() {
-      let svm = this;
+      const svm = this;
       if (!this.newMode) {
         let id = parseInt(this.id);
 
@@ -208,7 +208,7 @@ export default {
     this.$store.dispatch('fetchStatFederals');
 
     let id = parseInt(this.id);
-    let svm = this;
+    const svm = this;
     if (this.newMode) {
       this.$store
         .dispatch('resetActiveIntervention')

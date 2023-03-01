@@ -110,10 +110,10 @@ import store from '/src/store/index';
 import MaterielTypeCategorieSelect from '/src/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
 
 async function loadData(routeTo, next) {
-  let loadSapeurs = store.dispatch('fetchListeSapeur');
-  let loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
-  let loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
-  let loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
+  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
 
   Promise.all([
     loadSapeurs,

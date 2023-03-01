@@ -259,7 +259,7 @@ function loadData(routeTo, next) {
     'fetchControlesMedicauxTypes'
   );
 
-  let loadControleMedicale =
+  const loadControleMedicale =
     idControle > 0
       ? store.dispatch('fetchControleMedical', idControle)
       : store.dispatch('resetControleMedical');

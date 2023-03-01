@@ -33,6 +33,7 @@
           <th>Nom</th>
           <th class="text-center">Convoque</th>
           <th class="text-center">Present</th>
+          <th class="text-center">Absent</th>
           <th class="text-center">Remplace</th>
           <th class="text-center">Excuse</th>
           <th class="text-center">Amende</th>
@@ -80,6 +81,21 @@
           <td>
             <div class="text-center">
               <input
+                :id="sap.id + 'absent'"
+                v-model="sap.absent"
+                type="checkbox"
+                :disabled="!canEditPresence"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                @change="selectAbsent(sap)"
+              />
+              <label class="form-check-label" :for="sap.id + 'absent'"></label>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <input
                 :id="sap.id + 'remplace'"
                 v-model="sap.remplace"
                 type="checkbox"
@@ -97,20 +113,34 @@
           </td>
           <td>
             <div class="text-center">
-              <input
-                :id="sap.id + 'excuse'"
-                type="checkbox"
-                :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
-                class="form-check-input"
-                :checked="!!sap.excuse_type_id"
-                @change.stop.prevent="selectExcuse(sap)"
-              />
-              <label class="form-check-label" :for="sap.id + 'excuse'">
-                <span
-                  v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-                  >{{ formatExcuseType(sap.excuse_type_id) }}</span
-                >
-              </label>
+              <span
+                v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
+                class="badge rounded-pill text-bg-primary"
+                :class="{
+                  'text-bg-danger': sap.excuse_statut == -1,
+                  'text-bg-secondary': sap.excuse_statut == 0,
+                  'text-bg-success': sap.excuse_statut == 1,
+                }"
+                @click="detailExcuse(sap)"
+                >{{
+                  excusesTypes.find((e) => e.id == sap.excuse_type_id)
+                    ?.designation
+                }}</span
+              >
+              <button
+                v-if="!sap.excuse_type_id"
+                class="btn btn-outline-primary border-0"
+                @click="addExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
+              <button
+                v-else
+                class="btn btn-outline-danger border-0"
+                @click="removeExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
             </div>
           </td>
           <td>
@@ -158,7 +188,7 @@
           </td>
         </tr>
         <tr v-if="activeExerciceSapeurs.length === 0">
-          <td :colspan="6 + heureTypes.length">Aucun sapeur</td>
+          <td :colspan="7 + heureTypes.length">Aucun sapeur</td>
         </tr>
       </tbody>
       <tfoot>
@@ -332,14 +362,11 @@ export default {
     formatUnite(type_unite_id) {
       return this.unites.find((u) => u.id == type_unite_id)?.abreviation;
     },
-    formatExcuseType(id) {
-      return this.excusesTypes.find((e) => e.id == id)?.designation;
-    },
     manageSapeurs() {
       const data = {
         ids: this.presences.map((s) => s.sapeur_id).slice(0),
       };
-      let svm = this;
+      const svm = this;
       let callback = (param) => {
         if (!param) {
           return;
@@ -408,17 +435,22 @@ export default {
     },
     selectPresent(sapeur) {
       sapeur.remplace = 0;
+      sapeur.absent = 0;
       sapeur.amende = false;
-      sapeur.excuse_type_id = null;
+      this.savePresence(sapeur);
+    },
+    selectAbsent(sapeur) {
+      sapeur.remplace = 0;
+      sapeur.present = 0;
       this.savePresence(sapeur);
     },
     selectRemplace(sapeur) {
       sapeur.present = 0;
+      sapeur.absent = 0;
       sapeur.amende = false;
-      sapeur.excuse_type_id = null;
       this.savePresence(sapeur);
     },
-    async selectExcuse(sapeur) {
+    detailExcuse(sapeur) {
       this.SHOW_MODAL({
         component: 'ModalExcuse',
         data: sapeur,
@@ -432,6 +464,39 @@ export default {
                 parseInt(p.id) == parseInt(presence.id) ? presence : p
               ),
             ];
+          }
+        },
+      });
+    },
+    async addExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalExcuse',
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
+          }
+        },
+      });
+    },
+    removeExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette excuse ?',
+          question:
+            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeTravail', sapeur?.id);
           }
         },
       });

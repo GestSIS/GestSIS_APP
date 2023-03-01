@@ -208,7 +208,7 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
     computedData() {
-      let svm = this;
+      const svm = this;
       const formatCompte = (compte) =>
         compte?.numero + ' ' + compte?.designation;
       return this.ecritures?.map((e) => ({

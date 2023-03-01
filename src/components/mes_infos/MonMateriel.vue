@@ -20,8 +20,8 @@ import { mapState } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
-  let loadMonMateriel = store.dispatch('fetchMonMateriel');
-  let loadMaterielType = store.dispatch('fetchMatPersoTypes');
+  const loadMonMateriel = store.dispatch('fetchMonMateriel');
+  const loadMaterielType = store.dispatch('fetchMatPersoTypes');
 
   Promise.all([loadMonMateriel, loadMaterielType]).then(() => {
     next();

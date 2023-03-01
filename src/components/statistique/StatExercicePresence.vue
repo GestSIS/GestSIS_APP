@@ -110,6 +110,7 @@
                 </th>
                 <th class="text-center">Nb Cvq</th>
                 <th class="text-center">Nb Pre</th>
+                <th class="text-center">Nb Abs</th>
                 <th class="text-center">Nb Rpl</th>
                 <th class="text-center">Nb Exc</th>
                 <th class="text-center">Nb Abs</th>
@@ -143,6 +144,7 @@
                 </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
                 <td class="text-center">{{ s.stats.present }}</td>
+                <td class="text-center">{{ s.stats.absent }}</td>
                 <td class="text-center">{{ s.stats.remplace }}</td>
                 <td class="text-center">{{ s.stats.excuse }}</td>
                 <td class="text-center">{{ s.stats.amende }}</td>
@@ -157,6 +159,7 @@
                 ></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
+                <th class="text-center">{{ computedStats.absent }}</th>
                 <th class="text-center">{{ computedStats.remplace }}</th>
                 <th class="text-center">{{ computedStats.excuse }}</th>
                 <th class="text-center">{{ computedStats.amende }}</th>
@@ -249,6 +252,7 @@ export default {
           exercice_id: parseInt(e.exercice_id),
           convoque: parseInt(e.convoque),
           present: parseInt(e.present),
+          absent: parseInt(e.absent),
           remplace: parseInt(e.remplace),
           excuse_type_id: parseInt(e.excuse_type_id),
           amende: parseInt(e.amende),
@@ -368,6 +372,7 @@ export default {
         .map((p) => [
           p.convoque ? 1 : 0,
           p.present ? 1 : 0,
+          p.absent ? 1 : 0,
           p.remplace ? 1 : 0,
           p.excuse_type_id ? 1 : 0,
           p.amende ? 1 : 0,
@@ -379,9 +384,10 @@ export default {
       return {
         convoque: stats[0],
         present: stats[1],
-        remplace: stats[2],
-        excuse: stats[3],
-        amende: stats[4],
+        absent: stats[2],
+        remplace: stats[3],
+        excuse: stats[4],
+        amende: stats[5],
       };
     },
     formatPresence(presence) {
@@ -490,6 +496,7 @@ export default {
               ...s.presences.map((p) => this.formatPresenceExport(p)),
               s.stats.convoque,
               s.stats.present,
+              s.stats.absent,
               s.stats.remplace,
               s.stats.excuse,
               s.stats.amende,
@@ -504,6 +511,7 @@ export default {
           ...this.displayExercice.map(() => ''),
           this.computedStats.convoque,
           this.computedStats.present,
+          this.computedStats.absent,
           this.computedStats.remplace,
           this.computedStats.excuse,
           this.computedStats.amende,
