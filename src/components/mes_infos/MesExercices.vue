@@ -3,6 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mes exercices</h3>
       <button
+        v-if="excuseParams?.actif"
         type="button"
         class="btn btn-primary"
         :disabled="!activeItemId"
@@ -100,6 +101,7 @@ export default {
   },
   computed: {
     ...mapState({
+      excuseParams: (state) => state.excuseParam.params,
       anneeComptableId: (state) => state.exerciceComptable.activeId,
       annee: (state) =>
         state.exerciceComptable.liste.find(
