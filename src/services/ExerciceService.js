@@ -52,7 +52,11 @@ export default {
     return Api.api().put('/exercices/presence/' + presenceId, presence);
   },
   createExcuse(exerciceId, excuse) {
-    return Api.api().put('/mes-excuses/' + exerciceId, excuse);
+    const form = new FormData();
+    Object.entries(excuse).forEach(([k, v]) => form.append(k, v));
+    return Api.api().post('/mes-excuses/' + exerciceId, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
   downloadListPresence(exerciceId, filename) {
     return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);

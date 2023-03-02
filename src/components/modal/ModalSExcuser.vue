@@ -66,6 +66,7 @@ export default {
         excuse_type_id: null,
         excuse_statut: 0,
         justification: '',
+        justificatif_file: null,
       },
     };
   },
@@ -80,13 +81,24 @@ export default {
   mounted() {
     console.log(this.data);
     this.activeExcuse = {
-      ...this.activeExcuse,
-      ...this.data,
+      remarque: this.data?.remarque ?? '',
+      exercice_id: this.data?.exercice_id ?? 0,
+      justification: this.data?.justification ?? 0,
+      excuse_type_id: this.data?.excuse_type_id ?? 0,
+      justificatif_file: null,
     };
+    console.log('Test');
+    console.log(this.activeExcuse);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    onFileChange(event) {
+      const files = event.target.files || event.dataTransfer.files;
+      if (!files.length) return;
+      this.activeExcuse.justificatif_file = files[0];
+    },
     validate() {
+      console.log(this.activeExcuse);
       this.$store
         .dispatch('addExcuse', this.activeExcuse)
         .then(() => {

@@ -24,6 +24,7 @@
         :hide-download="true"
         no-data="Aucun exercice pour le moment"
         :detail-row-component="detailRowComponent"
+        :row-class="onRowClass"
         @selected="(elem) => (activeItemId = elem?.id)"
       >
         <template #actions="{ rowData }">
@@ -35,6 +36,29 @@
           >
             <font-awesome-icon :icon="['far', 'handshake']" />
           </button>
+        </template>
+        <template #excuse="{ rowData }">
+          <div class="text-center">
+            <span
+              v-if="rowData.excuse_type_id && rowData.excuse_type_id !== true"
+              class="badge rounded-pill text-bg-primary"
+              :class="{
+                'text-bg-danger': rowData.excuse_statut == -1,
+                'text-bg-secondary': rowData.excuse_statut == 0,
+                'text-bg-success': rowData.excuse_statut == 1,
+              }"
+              @click="detailExcuse(rowData)"
+              >{{ rowData?.excuse }}</span
+            >
+            {{ rowData?.justificatif_filename }}
+            <button
+              v-if="rowData.justificatif_filename"
+              class="btn"
+              @click="downloadJustificatif(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'file-pdf']" />
+            </button>
+          </div>
         </template>
       </base-table>
     </div>
@@ -93,7 +117,7 @@ export default {
         { title: 'Présent', type: Boolean, key: 'present' },
         { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
-        { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
+        { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },
         { title: 'Actions', slot: 'actions' },
       ],
@@ -115,8 +139,9 @@ export default {
           .map((e) => ({
             ...e.presence,
             ...e,
-            excuse: state.excuseType.liste.find((t) => t.id == e.excuse_type_id)
-              ?.designation,
+            excuse: state.excuseType.liste.find(
+              (t) => t.id == e.presence.excuse_type_id
+            )?.designation,
             localite: state.localite.liste.find((l) => l.id == e.localite_id)
               ?.designation,
             categorie: state.exerciceCategorie.liste.find(
@@ -157,6 +182,9 @@ export default {
         component: 'ModalSExcuser',
         data: exercice,
       });
+    },
+    onRowClass(dataItem) {
+      return dataItem.statut == 0 ? 'text-danger' : '';
     },
   },
 };

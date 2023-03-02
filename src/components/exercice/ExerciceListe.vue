@@ -432,12 +432,15 @@ export default {
       exercicesToIcs(filteredExercices, this.sisName, this.sisKey, this.annee);
     },
     onRowClass(dataItem, isSelected) {
+      if (statutsClass[dataItem.statut] == 0) {
+        return 'text-danger';
+      }
       if (isSelected) {
         return '';
       }
 
       const statutsClass = {
-        0: 'text-danger', //'Annulé',
+        0: '', //'Annulé',
         1: '', //'A saisir',
         2: '', //'Saisie',
         3: '', //'Validé',
