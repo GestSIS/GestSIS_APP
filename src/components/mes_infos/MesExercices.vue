@@ -50,7 +50,6 @@
               @click="detailExcuse(rowData)"
               >{{ rowData?.excuse }}</span
             >
-            {{ rowData?.justificatif_filename }}
             <button
               v-if="rowData.justificatif_filename"
               class="btn"
@@ -71,6 +70,7 @@ import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
 import { exercicesToIcs } from '../../tools/exportExercices';
+import ExerciceService from '../../services/ExerciceService';
 
 async function loadData(routeTo, next) {
   const loadMesExercices = store.dispatch('fetchMesExercices');
@@ -182,6 +182,16 @@ export default {
         component: 'ModalSExcuser',
         data: exercice,
       });
+    },
+    downloadJustificatif(exercice) {
+      ExerciceService.downloadMonExcuseJustificatif(
+        exercice.exercice_id,
+        'justificatf.pdf'
+      ).catch((err) =>
+        this.$awn.alert(
+          err?.message ?? 'Erreur lors du chargement du justificatif'
+        )
+      );
     },
     onRowClass(dataItem) {
       return dataItem.statut == 0 ? 'text-danger' : '';

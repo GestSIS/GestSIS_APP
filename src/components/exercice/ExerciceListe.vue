@@ -432,7 +432,7 @@ export default {
       exercicesToIcs(filteredExercices, this.sisName, this.sisKey, this.annee);
     },
     onRowClass(dataItem, isSelected) {
-      if (statutsClass[dataItem.statut] == 0) {
+      if (dataItem.statut == 0) {
         return 'text-danger';
       }
       if (isSelected) {
