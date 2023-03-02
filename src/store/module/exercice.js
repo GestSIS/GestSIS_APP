@@ -172,18 +172,6 @@ export default {
         return data;
       });
     },
-    editSapeurs({ state, commit }, payload) {
-      return ExerciceService.editSapeurs(state.active.data.id, {
-        sapeurs: payload,
-      }).then(async (data) => {
-        await commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data.sapeurs);
-        await commit(types.UPDATE_EXERCICE_STATUT, {
-          id: state.active.data.id,
-          statut: data.statut,
-        });
-        return data;
-      });
-    },
     removeSapeurs({ state, commit }, payload) {
       return ExerciceService.removeSapeurs(state.active.data.id, {
         sapeurs: payload,

@@ -338,6 +338,7 @@ export default {
       }
     },
     async save() {
+      // FIXME: Edit sapeurs pour exercice
       this.$store
         .dispatch('editSapeurs', this.presences)
         .then((res) =>

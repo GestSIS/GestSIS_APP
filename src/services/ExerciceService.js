@@ -39,9 +39,6 @@ export default {
   addSapeurs(exercieId, sapeursData) {
     return Api.api().post('/exercices/' + exercieId + '/sapeurs', sapeursData);
   },
-  editSapeurs(exercieId, sapeursData) {
-    return Api.api().put('/exercices/' + exercieId + '/sapeurs', sapeursData);
-  },
   removeSapeurs(exercieId, sapeursIds) {
     return Api.api().delete('/exercices/' + exercieId + '/sapeurs', {
       data: sapeursIds,
@@ -49,7 +46,11 @@ export default {
   },
   // Nouvelle API
   editPresence(presenceId, presence) {
-    return Api.api().put('/exercices/presence/' + presenceId, presence);
+    const form = new FormData();
+    Object.entries(presence).forEach(([k, v]) => form.append(k, v));
+    return Api.api().post('/exercices/presence/' + presenceId, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
   createExcuse(exerciceId, excuse) {
     const form = new FormData();
@@ -57,6 +58,11 @@ export default {
     return Api.api().post('/mes-excuses/' + exerciceId, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
+  },
+  downloadMonExcuseJustificatif(exerciceId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/mes-excuses/${exerciceId}/justificatif`
+    );
   },
   downloadListPresence(exerciceId, filename) {
     return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
