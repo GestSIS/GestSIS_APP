@@ -101,7 +101,7 @@ export default {
       params: {
         actif: true,
         delai_excuse: null,
-        email_rappel: '',
+        email_rappel: false,
         texte_email_rappel: '',
       },
     };
