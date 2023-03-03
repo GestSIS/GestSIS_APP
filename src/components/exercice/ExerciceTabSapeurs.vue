@@ -128,6 +128,13 @@
                 }}</span
               >
               <button
+                v-if="sap.justificatif_filename"
+                class="btn"
+                @click="downloadJustificatif(sap)"
+              >
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
+              </button>
+              <button
                 v-if="!sap.excuse_type_id"
                 class="btn btn-outline-primary border-0"
                 @click="addExcuse(sap)"
@@ -238,6 +245,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -476,6 +484,7 @@ export default {
         callback: (presence) => {
           if (presence !== null && presence !== undefined) {
             presence.present = 0;
+            presence.absent = 1;
             presence.remplace = 0;
             this.savePresence(presence);
             this.presences = [
@@ -501,6 +510,17 @@ export default {
           }
         },
       });
+    },
+    downloadJustificatif(sapeur) {
+      ExerciceService.downloadExcuseJustificatif(
+        sapeur.exercice_id,
+        sapeur.sapeur_id,
+        'justificatif.pdf'
+      ).catch((err) =>
+        this.$awn.alert(
+          err?.message ?? 'Erreur lors du chargement du justificatif'
+        )
+      );
     },
   },
 };

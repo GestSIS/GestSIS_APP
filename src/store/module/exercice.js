@@ -186,13 +186,13 @@ export default {
     },
     editPresenceExercice({ commit }, presence) {
       return ExerciceService.editPresence(presence.id, presence).then(
-        async (data) => {
-          await commit(types.UPDATE_EXERCICE_PRESENCE, presence);
+        async ({ statut, sapeur }) => {
+          await commit(types.UPDATE_EXERCICE_PRESENCE, sapeur);
           await commit(types.UPDATE_EXERCICE_STATUT, {
-            id: presence.exercice_id,
-            statut: data,
+            id: sapeur.exercice_id,
+            statut,
           });
-          return data;
+          return sapeur;
         }
       );
     },
