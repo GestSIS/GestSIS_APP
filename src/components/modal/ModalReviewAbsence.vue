@@ -125,8 +125,6 @@
 import { mapState, mapMutations } from 'vuex';
 import SapeurService from '../../services/SapeurService';
 
-import permissions from '../../store/permissions.js';
-
 export default {
   name: 'ModalReviewAbsence',
   props: {
