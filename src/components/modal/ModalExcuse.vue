@@ -110,6 +110,11 @@ export default {
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
+    onFileChange(event) {
+      const files = event.target.files || event.dataTransfer.files;
+      if (!files.length) return;
+      this.activeExcuse.justificatif_file = files[0];
+    },
     validate() {
       (this.callback(this.activeExcuse) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {

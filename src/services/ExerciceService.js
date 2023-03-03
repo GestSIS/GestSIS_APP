@@ -64,6 +64,11 @@ export default {
       `/mes-excuses/${exerciceId}/justificatif`
     );
   },
+  downloadExcuseJustificatif(exerciceId, sapeurId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `exercices/${exerciceId}/excuse/${sapeurId}/justificatif`
+    );
+  },
   downloadListPresence(exerciceId, filename) {
     return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
   },
