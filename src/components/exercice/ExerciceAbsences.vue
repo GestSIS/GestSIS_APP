@@ -13,30 +13,15 @@
           <div class="card-body d-grid gap-2">
             <button
               class="btn btn-outline-primary"
-              @click="downloadIcs(filteredData)"
+              :disabled="!computedData.length"
+              @click="review"
             >
-              Fichier <em>Icalc</em>
+              Examiner les excuses non traitées
             </button>
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impressions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button
-              class="btn btn-outline-primary"
-              :disabled="!exercices.length"
-              @click="convoquer"
-            >
-              Convocations
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
+      <div class="col-md-9">
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
@@ -265,8 +250,16 @@ export default {
     selectExercice(row) {
       this.selectedId = row?.id;
     },
+    review() {
+      // TODO: Select première absence
+      this.SHOW_MODAL({ component: 'ModalReviewAbsence', size: 2 });
+    },
     reviewAbsence(absence) {
-      this.SHOW_MODAL({ component: 'ModalReviewAbsence', data: absence });
+      this.SHOW_MODAL({
+        component: 'ModalReviewAbsence',
+        size: 2,
+        data: absence,
+      });
     },
     cancelReviewAbsence(absence) {
       this.SHOW_MODAL({

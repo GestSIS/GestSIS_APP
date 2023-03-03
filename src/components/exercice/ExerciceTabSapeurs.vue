@@ -345,17 +345,6 @@ export default {
         heure.quantite = parseFloat(quantite) || null;
       }
     },
-    async save() {
-      // FIXME: Edit sapeurs pour exercice
-      this.$store
-        .dispatch('editSapeurs', this.presences)
-        .then((res) =>
-          this.$awn.success(res?.message || 'Modifications enregistrées')
-        )
-        .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
-        );
-    },
     async validate() {
       this.$store
         .dispatch('validerExercice', this.activeExerciceId)
