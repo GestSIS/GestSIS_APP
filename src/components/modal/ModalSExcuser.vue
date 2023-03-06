@@ -100,7 +100,7 @@ export default {
     validate() {
       console.log(this.activeExcuse);
       this.$store
-        .dispatch('addExcuse', this.activeExcuse)
+        .dispatch('addMonExcuse', this.activeExcuse)
         .then(() => {
           this.$awn.success('Excuse enregistrée');
           this.HIDE_MODAL();

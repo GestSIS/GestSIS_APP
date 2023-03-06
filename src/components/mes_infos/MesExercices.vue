@@ -7,7 +7,7 @@
         type="button"
         class="btn btn-primary"
         :disabled="!activeItemId"
-        @click="excuse(exercices.find((e) => e.id == activeItemId))"
+        @click="addExcuse(exercices.find((e) => e.id == activeItemId))"
       >
         S'excuser
       </button>
@@ -27,16 +27,6 @@
         :row-class="onRowClass"
         @selected="(elem) => (activeItemId = elem?.id)"
       >
-        <template #actions="{ rowData }">
-          <button
-            title="S'excuser"
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="excuse(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'handshake']" />
-          </button>
-        </template>
         <template #excuse="{ rowData }">
           <div class="text-center">
             <span
@@ -56,6 +46,20 @@
               @click="downloadJustificatif(rowData)"
             >
               <font-awesome-icon :icon="['far', 'file-pdf']" />
+            </button>
+            <button
+              v-if="!rowData.excuse_type_id"
+              class="btn btn-outline-primary border-0"
+              @click="addExcuse(rowData)"
+            >
+              <font-awesome-icon :icon="['fas', 'plus']" />
+            </button>
+            <button
+              v-else
+              class="btn btn-outline-danger border-0"
+              @click="removeExcuse(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
             </button>
           </div>
         </template>
@@ -119,7 +123,6 @@ export default {
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
         { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },
-        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -177,10 +180,32 @@ export default {
       }
       exercicesToIcs(this.exercices, this.sisName, this.sisKey, this.annee);
     },
-    excuse(exercice) {
+    addExcuse(exercice) {
       this.SHOW_MODAL({
         component: 'ModalSExcuser',
         data: exercice,
+      });
+    },
+    removeExcuse(exercice) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer votre excuse ?',
+          question:
+            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store
+              .dispatch('removeMonExcuse', exercice)
+              .then(() => this.$awn.success('Excuse supprimée avec succès'))
+              .catch((err) =>
+                this.$awn.alert(
+                  err?.message ?? "Impossible de supprimer l'excuse"
+                )
+              );
+          }
+        },
       });
     },
     // FIXME: detailExcuse fonction non existante
