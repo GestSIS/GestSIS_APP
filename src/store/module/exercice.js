@@ -184,8 +184,8 @@ export default {
         return data;
       });
     },
-    editPresenceExercice({ commit }, presence) {
-      return ExerciceService.editPresence(presence.id, presence).then(
+    editPresenceExercice({ commit }, { presenceId, presence }) {
+      return ExerciceService.editPresence(presenceId, presence).then(
         async ({ statut, sapeur }) => {
           await commit(types.UPDATE_EXERCICE_PRESENCE, sapeur);
           await commit(types.UPDATE_EXERCICE_STATUT, {
@@ -206,6 +206,15 @@ export default {
     },
     removeMonExcuse({ commit }, exercice) {
       return ExerciceService.removeMonExcuse(exercice.id).then(async (data) => {
+        await commit(types.UPDATE_EXERCICE_PRESENCE, data);
+        return data;
+      });
+    },
+    removeExcuse({ commit }, presence) {
+      return ExerciceService.removeExcuse(
+        presence.exercice_id,
+        presence.sapeur_id
+      ).then(async (data) => {
         await commit(types.UPDATE_EXERCICE_PRESENCE, data);
         return data;
       });

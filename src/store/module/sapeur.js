@@ -98,6 +98,11 @@ export default {
     [types.UPDATE_CURRENT_SAPEUR_EXERCICES](state, payload) {
       state.active.exercices = payload;
     },
+    [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
+      state.active.exercices = state.active.exercices.map((s) =>
+        s?.presence?.id == presence?.id ? { ...s, presence } : s
+      );
+    },
     [types.UPDATE_CURRENT_SAPEUR_MATERIELS](state, payload) {
       state.active.materiels = payload;
     },
@@ -505,12 +510,6 @@ export default {
 
     supprimerConvocation({ state }, payload) {
       return SapeurService.supprimerConvocation(state.active.data.id, payload);
-    },
-
-    updateSapeurPresencesExercice({ dispatch }, payload) {
-      return ExerciceService.updatePresences(payload).then(() => {
-        return dispatch('fetchSapeurExercices');
-      });
     },
   },
 };

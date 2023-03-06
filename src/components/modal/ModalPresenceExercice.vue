@@ -149,7 +149,7 @@
                   (!canEditPresence(e) && e.present) ||
                   !e.amendable
                 "
-                @change="editAmendeCheckbox(e)"
+                @change="selectAmende(e)"
               />
             </td>
           </tr>
@@ -246,8 +246,11 @@ export default {
       );
     },
     savePresence(sapeur) {
-      this.$store
-        .dispatch('editPresenceExercice', sapeur)
+      return this.$store
+        .dispatch('editPresenceExercice', {
+          presenceId: sapeur?.presence?.id,
+          presence: sapeur,
+        })
         .then((res) =>
           this.$awn.success(res?.message || 'Modifications enregistrées')
         )
@@ -270,6 +273,14 @@ export default {
       sapeur.present = 0;
       sapeur.absent = 0;
       sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    selectAmende(sapeur) {
+      if (sapeur.amende) {
+        sapeur.present = 0;
+        sapeur.absent = 1;
+        sapeur.remplace = 0;
+      }
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {
@@ -299,12 +310,12 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalExcuse',
         data: sapeur,
-        callback: (presence) => {
+        callback: async (presence) => {
           if (presence !== null && presence !== undefined) {
             presence.present = 0;
             presence.absent = 1;
             presence.remplace = 0;
-            this.savePresence(presence);
+            await this.savePresence(presence);
             this.presences = [
               ...this.presences.map((p) =>
                 parseInt(p.id) == parseInt(presence.id) ? presence : p
@@ -327,14 +338,15 @@ export default {
           question:
             "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
         },
-        callback: (confirmed) => {
+        callback: async (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeExcuse', sapeur?.id);
+            await this.$store.dispatch('removeExcuse', sapeur?.presence);
           }
           this.SHOW_MODAL({
             component: 'ModalPresenceExercice',
             size: 2,
           });
+
           return Promise.resolve(false);
         },
       });
