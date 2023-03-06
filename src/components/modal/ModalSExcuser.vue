@@ -11,7 +11,7 @@
         v-model="activeExcuse.excuse_type_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['excuse_type_id'] }"
-        :options="listeExcuseTypes"
+        :options="excuseTypes"
         label="Excuse type"
       />
       <div class="mb-3">
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeExcuseTypes: (state) => state.excuseType.liste,
+      excuseTypes: (state) => state.excuseType.liste.filter((e) => e.statut),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
