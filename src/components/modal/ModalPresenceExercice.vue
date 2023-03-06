@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        Modifier présences de {{ sapeur.nom_prenom }}
+        Modifier présences de {{ sapeur?.nom_prenom }}
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
@@ -17,6 +17,7 @@
             <th>Désignation</th>
             <th class="text-center">Convoqué</th>
             <th class="text-center">Présent</th>
+            <th class="text-center">Absent</th>
             <th class="text-center">Remplacé</th>
             <th class="text-center">Excusé</th>
             <th class="text-center">Amende</th>
@@ -70,7 +71,7 @@
                 :true-value="1"
                 :false-value="0"
                 :disabled="!canEditPresence(e)"
-                @change="editPresentCheckbox(e)"
+                @change="selectPresent(e)"
               />
             </td>
             <td class="text-center">
@@ -83,7 +84,7 @@
                 :disabled="
                   !canEditAbsence(e) || (!canEditPresence(e) && e.present)
                 "
-                @change="editRemplaceCheckbox(e)"
+                @change="selectAbsent(e)"
               />
             </td>
             <td class="text-center">
@@ -96,30 +97,46 @@
                 :disabled="
                   !canEditAbsence(e) || (!canEditPresence(e) && e.present)
                 "
-                @change="editRemplaceCheckbox(e)"
+                @change="selectRemplace(e)"
               />
             </td>
-            <td class="text-center">
-              <div class="d-inline-flex">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :checked="e.excuse_type_id"
-                  :disabled="
-                    !canEditAbsence(e) || (!canEditPresence(e) && e.present)
-                  "
-                  @change="editExcuseCheckbox(e)"
-                />
-                <base-select
-                  v-if="e.excuse_type_id"
-                  v-model="e.excuse_type_id"
-                  class="ms-1"
-                  :options="excusesType"
-                  :select-class="{
-                    'is-invalid': errors['ecriture_categorie_id'],
+            <td>
+              <div class="text-center">
+                <span
+                  v-if="e.excuse_type_id && e.excuse_type_id !== true"
+                  class="badge rounded-pill text-bg-primary"
+                  :class="{
+                    'text-bg-danger': e.excuse_statut == -1,
+                    'text-bg-secondary': e.excuse_statut == 0,
+                    'text-bg-success': e.excuse_statut == 1,
                   }"
-                  @update:model-value="selectExcuseType(e)"
-                />
+                  @click="detailExcuse(e)"
+                  >{{
+                    excusesTypes.find((i) => i.id == e.excuse_type_id)
+                      ?.designation
+                  }}</span
+                >
+                <button
+                  v-if="e.justificatif_filename"
+                  class="btn"
+                  @click="downloadJustificatif(e)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+                <button
+                  v-if="!e.excuse_type_id"
+                  class="btn btn-outline-primary border-0"
+                  @click="addExcuse(e)"
+                >
+                  <font-awesome-icon :icon="['fas', 'plus']" />
+                </button>
+                <button
+                  v-else
+                  class="btn btn-outline-danger border-0"
+                  @click="removeExcuse(e)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
               </div>
             </td>
             <td class="text-center">
@@ -143,15 +160,13 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Enregistrer
-      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -174,8 +189,9 @@ export default {
   },
   computed: {
     ...mapState({
-      excusesType: (state) => state.excuseType.liste,
-      sapeur: (state) => state.sapeur.active.data,
+      excusesTypes: (state) => state.excuseType.liste,
+      sapeur: (state) =>
+        state.sapeur.liste.find((s) => s.id == state.sapeur.active.id),
       localites: (state) => state.localite.liste,
       categories: (state) => state.exerciceCategorie.liste,
       activeSapeurId: (state) => state.sapeur.active.id,
@@ -213,7 +229,7 @@ export default {
     ];
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     canEditAbsence(exercice) {
       // Possible de l'éditer si permission de validation ou si pas encore validé
       return (
@@ -229,58 +245,110 @@ export default {
           (this.hasValidationPermission && exercice.statut <= 3))
       );
     },
-    editPresentCheckbox(exercice) {
-      exercice.remplace = 0;
-      exercice.amende = false;
-      exercice.excuse_type_id = null;
-    },
-    editAbsentCheckbox(exercice) {
-      exercice.present = 0;
-      exercice.remplace = 0;
-      exercice.amende = false;
-      exercice.excuse_type_id = null;
-    },
-    editRemplaceCheckbox(exercice) {
-      exercice.present = 0;
-      exercice.absent = 0;
-      exercice.amende = false;
-      exercice.excuse_type_id = null;
-    },
-    editAmendeCheckbox(exercice) {
-      exercice.present = 0;
-      exercice.remplace = 0;
-    },
-    editExcuseCheckbox(exercice) {
-      // FIXME: Excuse
-      exercice.present = 0;
-      exercice.present = 0;
-      exercice.remplace = 0;
-      exercice.excuse_type_id = exercice.excuse_type_id
-        ? null
-        : this.excusesType[0].id;
-    },
-    selectExcuseType(exercice) {
-      if (exercice.amendable) {
-        const excuse = this.excusesType.find(
-          (e) => e.id == exercice.excuse_type_id
-        );
-        exercice.amende = excuse.amende;
-      } else {
-        exercice.amende = false;
-      }
-    },
-    async save() {
+    savePresence(sapeur) {
       this.$store
-        .dispatch(
-          'updateSapeurPresencesExercice',
-          this.presences.map((p) => ({ ...p, id: p?.presence?.id }))
+        .dispatch('editPresenceExercice', sapeur)
+        .then((res) =>
+          this.$awn.success(res?.message || 'Modifications enregistrées')
         )
-        .then(this.HIDE_MODAL)
-        .catch((error) => {
-          this.errors = {
-            ...error,
-          };
-        });
+        .catch((err) =>
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+        );
+    },
+    selectPresent(sapeur) {
+      sapeur.remplace = 0;
+      sapeur.absent = 0;
+      sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    selectAbsent(sapeur) {
+      sapeur.remplace = 0;
+      sapeur.present = 0;
+      this.savePresence(sapeur);
+    },
+    selectRemplace(sapeur) {
+      sapeur.present = 0;
+      sapeur.absent = 0;
+      sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    detailExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalExcuse',
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
+          }
+          this.SHOW_MODAL({
+            component: 'ModalPresenceExercice',
+            size: 2,
+          });
+          return Promise.resolve(false);
+        },
+      });
+    },
+    async addExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalExcuse',
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.absent = 1;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
+          }
+          this.SHOW_MODAL({
+            component: 'ModalPresenceExercice',
+            size: 2,
+          });
+          return Promise.resolve(false);
+        },
+      });
+    },
+    removeExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette excuse ?',
+          question:
+            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeExcuse', sapeur?.id);
+          }
+          this.SHOW_MODAL({
+            component: 'ModalPresenceExercice',
+            size: 2,
+          });
+          return Promise.resolve(false);
+        },
+      });
+    },
+    downloadJustificatif(sapeur) {
+      ExerciceService.downloadExcuseJustificatif(
+        sapeur.exercice_id,
+        sapeur.sapeur_id,
+        'justificatif.pdf'
+      ).catch((err) =>
+        this.$awn.alert(
+          err?.message ?? 'Erreur lors du chargement du justificatif'
+        )
+      );
     },
   },
 };

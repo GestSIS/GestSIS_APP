@@ -132,8 +132,8 @@
                 @click="selectedSapeurId = s.id"
               >
                 <td>{{ s.nom_prenom }}</td>
-                <td>{{ formatLocalite(s.localite_id) }}</td>
-                <td>{{ formatFonction(s.fonction_id) }}</td>
+                <td>{{ s.localite }}</td>
+                <td>{{ s.fonction }}</td>
                 <td
                   v-for="(p, index) in s.presences"
                   :key="index"
@@ -184,6 +184,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import ExerciceService from '../../services/ExerciceService';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -336,6 +337,10 @@ export default {
           ),
           stats: this.computeStats(sapeurIndexedPresence[s.id] || []),
           temp: sapeurIndexedPresence[s.id] || [],
+          localite: this.localites.find((l) => l.id == s.localiteId)
+            ?.designation,
+          fonction:
+            this.fonctions.find((f) => f.id == s.fonction_id)?.nom || '-',
         }));
     },
     computedStats() {
@@ -451,12 +456,6 @@ export default {
         return 'table-success';
       }
     },
-    formatFonction(fonctionId) {
-      return this.fonctions.find((f) => f.id == fonctionId)?.nom || '-';
-    },
-    formatLocalite(localiteId) {
-      return this.localites.find((l) => l.id == localiteId)?.designation;
-    },
     toCvs() {
       // TODO: Migrate to BaseTable and remove duplicates
       const data =
@@ -491,8 +490,8 @@ export default {
           .map((s) =>
             [
               s.nom_prenom,
-              this.formatLocalite(s.localite_id),
-              this.formatFonction(s.fonction_id),
+              s.localite,
+              s.fonction,
               ...s.presences.map((p) => this.formatPresenceExport(p)),
               s.stats.convoque,
               s.stats.present,

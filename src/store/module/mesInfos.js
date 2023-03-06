@@ -59,10 +59,9 @@ export default {
       state.exercices = payload;
     },
     [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
-      console.log(presence)
-      state.exercices = [
-        ...state.exercices.map((p) => (p.i == presence.id ? presence : p)),
-      ];
+      state.exercices = state.exercices.map((p) =>
+        p.i == presence.id ? presence : p
+      );
     },
     [types.UPDATE_MES_INTERVENTIONS](state, payload) {
       state.interventions = payload;
