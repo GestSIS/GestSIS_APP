@@ -20,7 +20,7 @@
     "bootstrap": "^5.2.3",
     "floating-vue": "^2.0.0-beta.20",
     "jwt-decode": "^3.1.2",
-    "luxon": "^3.2.1",
+    "luxon": "^3.3.0",
     "nprogress": "^0.2.0",
     "vue": "^3.2.47",
     "vue-advanced-cropper": "^2.8.8",

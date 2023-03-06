@@ -7,28 +7,11 @@
       "changes": [
         "Nouveau module excuse ! Option à activer dans paramètres pour activer certaines fonctionalités",
         "Possibilité de s'excuser aux exercices et de fournir un justificatif",
-        "Mise en évidence des exercices supprimés dans `Mes exercices`"
+        "Mise en évidence des exercices supprimés dans `Mes exercices`",
+        "Correction de la navigation avec le clavier pour les sapeurs",
+        "Ajout icons pour tri des tables",
+        "Documentation des modules `Publipostage` et `RTA`"
       ]
-    },
-    {
-      "date": "26.02.2023",
-      "version": "1.0",
-      "app": "GestSIS APP",
-      "changes": [
-        "Correction de la navigation avec le clavier pour les sapeurs"
-      ]
-    },
-    {
-      "date": "24.02.2023",
-      "version": "1.0",
-      "app": "GestSIS APP",
-      "changes": ["Ajout icons pour tri des tables"]
-    },
-    {
-      "date": "23.02.2023",
-      "version": "1.0",
-      "app": "GestSIS APP",
-      "changes": ["Documentation des `Publipostage` et `RTA`"]
     },
     {
       "date": "15.02.2023",
