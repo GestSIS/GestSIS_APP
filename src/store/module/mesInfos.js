@@ -60,7 +60,7 @@ export default {
     },
     [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
       state.exercices = state.exercices.map((p) =>
-        p.i == presence.id ? presence : p
+        p.presence?.id == presence.id ? { ...p, presence } : p
       );
     },
     [types.UPDATE_MES_INTERVENTIONS](state, payload) {
