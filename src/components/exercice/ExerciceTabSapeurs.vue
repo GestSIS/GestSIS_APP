@@ -165,7 +165,7 @@
                   !amendable ||
                   !!(sap.remplace || sap.present)
                 "
-                @change="savePresence(sap)"
+                @change="selectAmende(sap)"
               />
               <label class="form-check-label" :for="sap.id + 'amende'"></label>
             </div>
@@ -427,7 +427,10 @@ export default {
     },
     savePresence(sapeur) {
       this.$store
-        .dispatch('editPresenceExercice', sapeur)
+        .dispatch('editPresenceExercice', {
+          presenceId: sapeur.id,
+          presence: sapeur,
+        })
         .then((res) =>
           this.$awn.success(res?.message || 'Modifications enregistrées')
         )
@@ -450,6 +453,14 @@ export default {
       sapeur.present = 0;
       sapeur.absent = 0;
       sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    selectAmende(sapeur) {
+      if (sapeur.amende) {
+        sapeur.present = 0;
+        sapeur.absent = 1;
+        sapeur.remplace = 0;
+      }
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {

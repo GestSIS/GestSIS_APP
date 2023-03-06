@@ -33,9 +33,6 @@ export default {
   saveExercice(exerciceId, exerciceData) {
     return Api.api().put('/exercices/' + exerciceId, exerciceData);
   },
-  updatePresences(presences) {
-    return Api.api().put('/exercices/sapeurs', { presences });
-  },
   addSapeurs(exercieId, sapeursData) {
     return Api.api().post('/exercices/' + exercieId + '/sapeurs', sapeursData);
   },
@@ -62,6 +59,11 @@ export default {
   removeMonExcuse(exerciceId) {
     return Api.api().delete('/mes-excuses/' + exerciceId);
   },
+  removeExcuse(exerciceId, sapeurId) {
+    return Api.api().delete(
+      '/exercices/' + exerciceId + '/excuses/' + sapeurId
+    );
+  },
   downloadMonExcuseJustificatif(exerciceId, filename) {
     return Api.apiFileDownload(filename).get(
       `/mes-excuses/${exerciceId}/justificatif`
@@ -69,7 +71,7 @@ export default {
   },
   downloadExcuseJustificatif(exerciceId, sapeurId, filename) {
     return Api.apiFileDownload(filename).get(
-      `exercices/${exerciceId}/excuse/${sapeurId}/justificatif`
+      `exercices/${exerciceId}/excuses/${sapeurId}/justificatif`
     );
   },
   downloadListPresence(exerciceId, filename) {
