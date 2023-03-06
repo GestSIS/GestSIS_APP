@@ -6,7 +6,10 @@
         v-if="excuseParams?.actif"
         type="button"
         class="btn btn-primary"
-        :disabled="!activeItemId"
+        :disabled="
+          !activeItemId ||
+          exercices.find((e) => e.id == activeItemId)?.statut == 0
+        "
         @click="addExcuse(exercices.find((e) => e.id == activeItemId))"
       >
         S'excuser
@@ -48,14 +51,18 @@
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
             <button
-              v-if="!rowData.excuse_type_id"
+              v-if="
+                excuseParams.actif &&
+                !rowData.excuse_type_id &&
+                rowData.statut != 0
+              "
               class="btn btn-outline-primary border-0"
               @click="addExcuse(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'plus']" />
             </button>
             <button
-              v-else
+              v-else-if="excuseParams.actif && rowData.statut != 0"
               class="btn btn-outline-danger border-0"
               @click="removeExcuse(rowData)"
             >

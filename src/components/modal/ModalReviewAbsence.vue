@@ -208,7 +208,7 @@ export default {
       return null;
     },
   },
-  created() {
+  mounted() {
     if (this.data?.id) {
       this.activeAbsence = this.computedAbsence.find(
         (a) => a.id == this.data.id
@@ -218,8 +218,8 @@ export default {
       this.$awn.warning('Attention, aucune absence à traiter');
     } else {
       this.activeAbsence = this.computedAbsence[0];
-      this.loadSapeurExercices();
     }
+    this.loadSapeurExercices();
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
