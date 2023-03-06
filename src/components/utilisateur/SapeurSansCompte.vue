@@ -158,13 +158,6 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    formatSapeur(user) {
-      if (!user?.sapeur?.length > 0) {
-        return '-';
-      }
-      const sapeurId = user.sapeur[0].sapeur_id;
-      return this.sapeurs.find((s) => s.id === sapeurId)?.nom_prenom ?? '-';
-    },
     onRowClass(dataItem) {
       if (!dataItem?.sapeur?.length > 0) {
         return '';
