@@ -207,6 +207,9 @@
           {{ presences.filter((s) => s.present).length }}
         </th>
         <th class="text-center">
+          {{ presences.filter((s) => s.absent).length }}
+        </th>
+        <th class="text-center">
           {{ presences.filter((s) => s.remplace).length }}
         </th>
         <th class="text-center">
@@ -344,6 +347,7 @@ export default {
         // Modification de l'heure
         heure.quantite = parseFloat(quantite) || null;
       }
+      this.savePresence(sap);
     },
     async validate() {
       this.$store
@@ -495,7 +499,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeTravail', sapeur?.id);
+            this.$store.dispatch('removeExcuse', sapeur?.id);
           }
         },
       });

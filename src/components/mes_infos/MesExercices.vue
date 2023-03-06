@@ -183,6 +183,7 @@ export default {
         data: exercice,
       });
     },
+    // FIXME: detailExcuse fonction non existante
     downloadJustificatif(exercice) {
       ExerciceService.downloadMonExcuseJustificatif(
         exercice.exercice_id,
