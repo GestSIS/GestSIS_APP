@@ -99,7 +99,7 @@ export default {
     return {
       errors: {},
       params: {
-        actif: true,
+        actif: false,
         delai_excuse: null,
         email_rappel: false,
         texte_email_rappel: '',
