@@ -115,8 +115,14 @@ async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
   const loadAbsences = store.dispatch('fetchExerciceAbsences');
   const loadExcuseParams = store.dispatch('fetchExcuseParams');
+  const loadExcuseTypes = store.dispatch('fetchExcuseTypes');
 
-  Promise.all([loadAbsences, loadExercices, loadExcuseParams]).then(() => {
+  Promise.all([
+    loadAbsences,
+    loadExercices,
+    loadExcuseParams,
+    loadExcuseTypes,
+  ]).then(() => {
     next();
   });
 }
