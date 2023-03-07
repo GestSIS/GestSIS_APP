@@ -154,7 +154,34 @@
             :selectable="false"
             :row-class="rowClass"
             no-data="Aucun exercice pour ce sapeur"
-          />
+          >
+            <template #excuse="{ rowData }">
+              <div class="text-center">
+                <span
+                  v-if="
+                    rowData.excuse_type_id && rowData.excuse_type_id !== true
+                  "
+                  class="badge rounded-pill text-bg-primary"
+                  :class="{
+                    'text-bg-danger': rowData.excuse_statut == -1,
+                    'text-bg-secondary': rowData.excuse_statut == 0,
+                    'text-bg-success': rowData.excuse_statut == 1,
+                  }"
+                  >{{
+                    excuseTypes.find((e) => e.id == rowData?.excuse_type_id)
+                      ?.designation
+                  }}</span
+                >
+                <button
+                  v-if="rowData.justificatif_filename != ''"
+                  class="btn"
+                  @click="downloadJustificatif(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+              </div>
+            </template>
+          </base-table>
           <!-- :detail-row-component="detailRowComponent" -->
         </div>
       </div>
@@ -194,6 +221,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import ExerciceService from '../../services/ExerciceService';
 import SapeurService from '../../services/SapeurService';
 
 export default {
@@ -225,7 +253,7 @@ export default {
         { title: 'Présent', type: Boolean, key: 'present' },
         { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
-        { title: 'Excuse', type: Boolean, key: 'excuse_type_id' },
+        { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
         { title: 'Amende', type: Boolean, key: 'amende' },
       ],
     };
@@ -308,8 +336,10 @@ export default {
           presenceId: this.activeAbsence?.id,
           presence: this.activeAbsence,
         })
-        .then((res) =>
-          this.$awn.success(res?.message || 'Modifications enregistrées')
+        .then(
+          (res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          // TODO: Update locale stored presences
         )
         .catch((err) =>
           this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
@@ -366,6 +396,16 @@ export default {
             'Une erreur a eu lieu durant la récupération des exercices du sapeur'
           );
         });
+    },
+    downloadJustificatif(exercice) {
+      ExerciceService.downloadMonExcuseJustificatif(
+        exercice.exercice_id,
+        'justificatif.pdf'
+      ).catch((err) =>
+        this.$awn.alert(
+          err?.message ?? 'Erreur lors du chargement du justificatif'
+        )
+      );
     },
     rowClass(rowData) {
       return rowData.id == this.activeAbsence.exercice_id
