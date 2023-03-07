@@ -79,7 +79,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.data);
     this.activeExcuse = {
       remarque: this.data?.remarque ?? '',
       exercice_id: this.data?.exercice_id ?? 0,
@@ -87,8 +86,6 @@ export default {
       excuse_type_id: this.data?.excuse_type_id ?? 0,
       justificatif_file: null,
     };
-    console.log('Test');
-    console.log(this.activeExcuse);
   },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
@@ -98,7 +95,6 @@ export default {
       this.activeExcuse.justificatif_file = files[0];
     },
     validate() {
-      console.log(this.activeExcuse);
       this.$store
         .dispatch('addMonExcuse', this.activeExcuse)
         .then(() => {

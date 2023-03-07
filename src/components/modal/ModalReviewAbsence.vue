@@ -308,9 +308,9 @@ export default {
       return null;
     },
     computedButtonState() {
-      return this.activeAbsence.amende && this.activeAbsence.excuseStatut != 0
+      return this.activeAbsence.amende && this.activeAbsence.excuse_statut != 0
         ? -2
-        : this.activeAbsence.excuseStatut;
+        : this.activeAbsence.excuse_statut || 0;
     },
   },
   mounted() {
@@ -330,7 +330,7 @@ export default {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
     async review(state) {
       this.activeAbsence.amende = state == -2;
-      this.activeAbsence.excuseStatut = state == -2 ? -1 : state;
+      this.activeAbsence.excuse_statut = state == -2 ? -1 : state;
       return this.$store
         .dispatch('editPresenceExercice', {
           presenceId: this.activeAbsence?.id,
@@ -351,7 +351,6 @@ export default {
         (a) => a.id == this.activeAbsence?.id
       );
       const previousSapeurId = this.activeAbsence.sapeur_id;
-      console.log(activeIndex);
       if (this.computedAbsences.length - 1 > activeIndex) {
         this.activeAbsence = { ...this.computedAbsences[activeIndex + 1] };
       } else {
@@ -368,7 +367,6 @@ export default {
         (a) => a.id == this.activeAbsence?.id
       );
       const previousSapeurId = this.activeAbsence.sapeur_id;
-      console.log(activeIndex);
       if (activeIndex > 0) {
         this.activeAbsence = { ...this.computedAbsences[activeIndex - 1] };
       } else {
