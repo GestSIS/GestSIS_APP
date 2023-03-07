@@ -257,8 +257,12 @@ export default {
       const func = this.sorted.func;
       const key = this.sorted.key;
       sorted.sort((a, b) => {
-        const aVal = func(a[key]);
-        const bVal = func(b[key]);
+        let aVal = func(a[key]);
+        let bVal = func(b[key]);
+        if (parseInt(aVal) == aVal && parseInt(bVal) == bVal) {
+          aVal = parseInt(aVal);
+          bVal = parseInt(bVal);
+        }
         const res =
           typeof aVal === String ? aVal.localeCompare(bVal) : aVal < bVal;
         return (this.sorted.asc ? !res : res) ? 1 : -1;

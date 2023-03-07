@@ -6,22 +6,31 @@
     </div>
     <div class="modal-body row">
       <div :class="activeItem.events ? 'col-6' : 'col-12'">
+        <base-select
+          :model-value="activeItem.materiel_type_id"
+          :options="types"
+          class="mb-3"
+          label="Matériel type"
+          disabled
+        />
         <div class="mb-3">
-          <label for="categorie">Matériel type</label>
-          <base-select
-            :model-value="activeItem.materiel_type_id"
-            :options="types"
-            disabled
-          />
-        </div>
-        <div class="mb-3">
-          <label for="categorie">Sapeur</label>
           <base-select
             :model-value="activeItem.retour == null ? activeItem.sapeur_id : 0"
             :options="sapeurs"
             base-option="<Non-attribué>"
             display-key="nom_prenom"
+            label="Sapeur"
             disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="attribution">Attribution</label>
+          <input
+            id="attribution"
+            v-model="activeItem.attribution"
+            type="date"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['attribution'] }"
           />
         </div>
         <div v-if="activeItem?.materiel?.uuid" class="mb-3">
