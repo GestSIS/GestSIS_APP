@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="card card-primary card-outline mb-2 table-responsive">
+      <div class="card card-primary card-outline mb-2">
         <div class="card-header">
           <h4>Matériel numéroté</h4>
         </div>
@@ -45,41 +45,43 @@
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          :fields="fieldsNumerote"
-          no-data="Aucun sapeur à afficher"
-          :data="computedMaterielNumerote"
-        >
-          <template #actions="{ rowData }">
-            <button
-              title="Info"
-              class="btn btn-outline-primary border-0"
-              @click="info(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
-            <button
-              title="Retour"
-              class="btn btn-outline-primary border-0"
-              @click="retourSimple(rowData)"
-            >
-              <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="supprimer(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </template>
-        </base-table>
+        <div class="table-responsive">
+          <base-table
+            v-show="!loading"
+            :selectable="true"
+            :fields="fieldsNumerote"
+            no-data="Aucun sapeur à afficher"
+            :data="computedMaterielNumerote"
+          >
+            <template #actions="{ rowData }">
+              <button
+                title="Info"
+                class="btn btn-outline-primary border-0"
+                @click="info(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                title="Retour"
+                class="btn btn-outline-primary border-0"
+                @click="retourSimple(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimer(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
     <div class="col-md-6">
-      <div class="card card-primary card-outline mb-2 table-responsive">
+      <div class="card card-primary card-outline mb-2">
         <div class="card-header">
           <h4>Matériel générique</h4>
         </div>
@@ -88,38 +90,40 @@
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <base-table
-          v-show="!loading"
-          :selectable="true"
-          :fields="fieldsGeneric"
-          no-data="Aucun sapeur à afficher"
-          :data="computedMaterielGeneric"
-          @selected="selectSapeur"
-        >
-          <template #actions="{ rowData }">
-            <button
-              title="Info"
-              class="btn btn-outline-primary border-0"
-              @click="info(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
-            <button
-              title="Retour"
-              class="btn btn-outline-primary border-0"
-              @click="retourSimple(rowData)"
-            >
-              <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="supprimer(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </template>
-        </base-table>
+        <div class="table-responsive">
+          <base-table
+            v-show="!loading"
+            :selectable="true"
+            :fields="fieldsGeneric"
+            no-data="Aucun sapeur à afficher"
+            :data="computedMaterielGeneric"
+            @selected="selectSapeur"
+          >
+            <template #actions="{ rowData }">
+              <button
+                title="Info"
+                class="btn btn-outline-primary border-0"
+                @click="info(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                title="Retour"
+                class="btn btn-outline-primary border-0"
+                @click="retourSimple(rowData)"
+              >
+                <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimer(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
   </div>

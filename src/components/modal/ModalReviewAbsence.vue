@@ -48,7 +48,7 @@
               />
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-6">
               <base-select
                 v-model="activeAbsence.auteur_id"
@@ -71,9 +71,12 @@
                 />
               </div>
             </div>
-          </div>
+          </div> -->
+
           <div class="mb-3">
-            <label for="justification">Justification</label>
+            <label for="justification"
+              >Justification <em>(optionnel)</em></label
+            >
             <textarea
               id="justification"
               ref="justification"
@@ -82,22 +85,69 @@
               placeholder="(optionnel)"
             ></textarea>
           </div>
-
-          <div class="row">
-            <div class="col-6">
-              <button class="btn btn-primary col-12" @click="review(true)">
-                Accepter
-              </button>
-            </div>
-            <div class="col-6">
-              <button class="btn btn-danger col-12" @click="review(false)">
-                Refuser
-              </button>
-            </div>
+          <div
+            class="btn-group btn-group-sm mb-3"
+            role="group"
+            aria-label="Small button group"
+          >
+            <button
+              type="button"
+              class="btn"
+              :class="
+                'btn-' +
+                (computedButtonState == -2 ? '' : 'outline-') +
+                'danger'
+              "
+              @click="review(-2)"
+            >
+              Amendé
+            </button>
+            <button
+              type="button"
+              class="btn"
+              :class="
+                'btn-' +
+                (computedButtonState == -1 ? '' : 'outline-') +
+                'warning'
+              "
+              @click="review(-1)"
+            >
+              Refusé
+            </button>
+            <button
+              type="button"
+              class="btn"
+              :class="
+                'btn-' +
+                (computedButtonState == 0 ? '' : 'outline-') +
+                'primary'
+              "
+              @click="review(0)"
+            >
+              A traiter
+            </button>
+            <button
+              type="button"
+              class="btn"
+              :class="
+                'btn-' +
+                (computedButtonState == 1 ? '' : 'outline-') +
+                'success'
+              "
+              @click="review(1)"
+            >
+              Accepté
+            </button>
           </div>
         </div>
         <div class="col-9">
+          <div v-if="loading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
           <base-table
+            v-show="!loading"
             ref="table"
             :fields="fields"
             :data="computedSapeurExercices"
@@ -112,10 +162,31 @@
     <div class="modal-footer">
       <button
         type="button"
+        class="btn btn-outline-primary"
+        :disabled="
+          !computedAbsences || computedAbsences[0]?.id == activeAbsence?.id
+        "
+        @click="previousAbsence()"
+      >
+        Précédent
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        :disabled="
+          !computedAbsences ||
+          computedAbsences[computedAbsences.length - 1]?.id == activeAbsence?.id
+        "
+        @click="nextAbsence()"
+      >
+        Suivant
+      </button>
+      <button
+        type="button"
         class="btn btn-outline-secondary"
         @click="HIDE_MODAL()"
       >
-        Annuler
+        Fermer
       </button>
     </div>
   </div>
@@ -135,6 +206,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       errors: {},
       columnCreationIndex: 0,
       columns: [],
@@ -190,11 +262,11 @@ export default {
         (e) => e.id == this.activeAbsence?.exercice_id
       );
     },
-    computedAbsence() {
+    computedAbsences() {
       return this.absences
         .map((a) => ({
           ...a,
-          sapeur: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
+          nom_prenom: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
           exercice_date: this.exercices.find((e) => e.id == a.exercice_id)
             ?.date,
         }))
@@ -207,45 +279,68 @@ export default {
     activeSapeurExcuses() {
       return null;
     },
+    computedButtonState() {
+      return this.activeAbsence.amende && this.activeAbsence.excuseStatut != 0
+        ? -2
+        : this.activeAbsence.excuseStatut;
+    },
   },
   mounted() {
     if (this.data?.id) {
-      this.activeAbsence = this.computedAbsence.find(
+      this.activeAbsence = this.computedAbsences.find(
         (a) => a.id == this.data.id
       );
-    } else if (!this.computedAbsence.length) {
+    } else if (!this.computedAbsences.length) {
       this.HIDE_MODAL();
       this.$awn.warning('Attention, aucune absence à traiter');
     } else {
-      this.activeAbsence = this.computedAbsence[0];
+      this.activeAbsence = this.computedAbsences[0];
     }
     this.loadSapeurExercices();
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
-    async review(accepte) {
-      this.$store
-        .dispatch('reviewTravail', { ...this.activeAbsence, accepte })
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
+    async review(state) {
+      this.activeAbsence.amende = state == -2;
+      this.activeAbsence.excuseStatut = state == -2 ? -1 : state;
+      return this.$store
+        .dispatch('editPresenceExercice', {
+          presenceId: this.activeAbsence?.id,
+          presence: this.activeAbsence,
         })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            })
+        .then((res) =>
+          this.$awn.success(res?.message || 'Modifications enregistrées')
+        )
+        .catch((err) =>
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
         );
     },
     nextAbsence() {
       // Switch to next absence
-      const activeIndex = this.absences.findIndex(
+      const activeIndex = this.computedAbsences.findIndex(
         (a) => a.id == this.activeAbsence?.id
       );
       const previousSapeurId = this.activeAbsence.sapeur_id;
+      console.log(activeIndex);
+      if (this.computedAbsences.length - 1 > activeIndex) {
+        this.activeAbsence = { ...this.computedAbsences[activeIndex + 1] };
+      } else {
+        // TODO: Loop sur les excuses non-traitées ??
+      }
 
-      if (this.absences.length - 1 < activeIndex) {
-        this.activeAbsence = this.absences[activeIndex + 1];
+      if (previousSapeurId != this.activeAbsence.sapeur_id) {
+        this.loadSapeurExercices();
+      }
+    },
+    previousAbsence() {
+      // Switch to next absence
+      const activeIndex = this.computedAbsences.findIndex(
+        (a) => a.id == this.activeAbsence?.id
+      );
+      const previousSapeurId = this.activeAbsence.sapeur_id;
+      console.log(activeIndex);
+      if (activeIndex > 0) {
+        this.activeAbsence = { ...this.computedAbsences[activeIndex - 1] };
       } else {
         // TODO: Loop sur les excuses non-traitées ??
       }
@@ -257,12 +352,14 @@ export default {
     loadSapeurExercices() {
       // Load sapeurs exercices
       // FIXME: Check permissions pour cette route
+      this.loading = true;
       return SapeurService.getExercices(
         this.activeAbsence.sapeur_id,
         this.activeExerciceComptableId
       )
         .then((data) => {
           this.activeSapeurExercices = data;
+          this.loading = false;
         })
         .catch(() => {
           this.$awn.alert(

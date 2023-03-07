@@ -277,18 +277,18 @@ export default {
       });
     },
     onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return '';
-      }
+      // if (isSelected) {
+      return '';
+      // }
 
-      const statutsClass = {
-        0: 'text-danger', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'Saisie',
-        3: '', //'Validé',
-        4: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
+      // const statutsClass = {
+      //   0: 'text-danger', //'Annulé',
+      //   1: '', //'A saisir',
+      //   2: '', //'Saisie',
+      //   3: '', //'Validé',
+      //   4: 'table-success', //'Imputée'
+      // };
+      // return statutsClass[dataItem.statut];
     },
   },
 };

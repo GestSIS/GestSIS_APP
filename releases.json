@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "07.03.2023",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Matériel personnel, tri par numéro correct si les numéros ne comportent pas de lettres",
-        "Possibilité de modifier la date d'attribution du matériel personnel"
+        "Possibilité de modifier la date d'attribution du matériel personnel",
+        "Nouvelle fenêtre de revue et traitement des absences"
       ]
     },
     {
