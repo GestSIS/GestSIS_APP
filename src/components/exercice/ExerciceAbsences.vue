@@ -77,20 +77,14 @@
           >
             <template #actions="{ rowData }">
               <button
-                v-if="
-                  hasValidationPermission &&
-                  (rowData.excuse_statut == -1 || rowData.excuse_statut == 1)
+                v-if="hasValidationPermission"
+                :title="rowData.excuse_statut == 0 ? 'Examen' : 'Réexaminer'"
+                class="btn border-0"
+                :class="
+                  rowData.excuse_statut == 0
+                    ? 'btn-outline-success'
+                    : 'btn-outline'
                 "
-                title="Examen"
-                class="btn btn-outline-warning border-0"
-                @click="cancelReviewAbsence(rowData)"
-              >
-                <font-awesome-icon :icon="['fas', 'cancel']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.excuse_statut == 0"
-                title="Examen"
-                class="btn btn-outline-success border-0"
                 @click="reviewAbsence(rowData)"
               >
                 <font-awesome-icon :icon="['far', 'eye']" />

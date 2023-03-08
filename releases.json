@@ -1,6 +1,16 @@
 {
   "releases": [
     {
+      "date": "08.03.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise en évidence des absences selon leur statut",
+        "Amélioration de l'interface de revue des absences",
+        "Correction de petits détails pour les justificatifs d'excuses"
+      ]
+    },
+    {
       "date": "07.03.2023",
       "version": "2.0",
       "app": "GestSIS APP",
