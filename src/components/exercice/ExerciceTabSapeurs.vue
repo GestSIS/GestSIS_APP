@@ -510,7 +510,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeExcuse', sapeur?.id);
+            this.$store.dispatch('removeExcuse', sapeur);
           }
         },
       });

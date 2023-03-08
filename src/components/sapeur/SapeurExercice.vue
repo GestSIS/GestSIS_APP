@@ -148,8 +148,9 @@ export default {
     },
     // FIXME: detailExcuse fonction non existante
     downloadJustificatif(exercice) {
-      ExerciceService.downloadMonExcuseJustificatif(
+      ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
+        exercice.sapeur_id,
         'justificatif.pdf'
       ).catch((err) =>
         this.$awn.alert(

@@ -48,6 +48,39 @@
               />
             </div>
           </div>
+          <base-select
+            v-model="activeAbsence.excuse_type_id"
+            class="mb-3"
+            :options="excuseTypes"
+            base-option="<Non excusé>"
+            :base-value="null"
+            label="Excuse type"
+            disabled
+          />
+          <div class="mb-3">
+            <label for="remarque">Raison <em>(optionnel)</em></label>
+            <input
+              id="remarque"
+              v-model="activeAbsence.remarque"
+              type="text"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['remarque'] }"
+              disabled
+            />
+          </div>
+          <div class="mb-3">
+            <label>Justificatif</label>
+            <button
+              v-if="activeAbsence.justificatif_filename"
+              class="btn btn-outline-primary"
+              @click="downloadJustificatif(activeAbsence)"
+            >
+              Justificatif
+              <font-awesome-icon :icon="['far', 'file-pdf']" />
+            </button>
+            <!-- {{ activeAbsence.justificatif_filename }} -->
+            <span v-else>Aucun justificatif</span>
+          </div>
           <!-- <div class="row">
             <div class="col-6">
               <base-select
@@ -97,6 +130,11 @@
                 'btn-' +
                 (computedButtonState == -2 ? '' : 'outline-') +
                 'danger'
+              "
+              :disabled="
+                !categories.find(
+                  (c) => c.id == activeExercice?.exercice_categorie_id
+                )?.amendable
               "
               @click="review(-2)"
             >
@@ -396,8 +434,9 @@ export default {
         });
     },
     downloadJustificatif(exercice) {
-      ExerciceService.downloadMonExcuseJustificatif(
+      ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
+        exercice.sapeur_id,
         'justificatif.pdf'
       ).catch((err) =>
         this.$awn.alert(
