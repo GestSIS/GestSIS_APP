@@ -159,6 +159,9 @@ export default {
           title: 'Statut',
           key: 'excuse_statut',
           formatter(value, rowData) {
+            if (rowData?.excuse_statut == -1 && rowData.amende) {
+              return 'Amendée';
+            }
             const statuts = {
               '-1': 'Refusée',
               0: 'Excuse à traiter',
@@ -282,19 +285,16 @@ export default {
         },
       });
     },
-    onRowClass(dataItem, isSelected) {
-      // if (isSelected) {
-      return '';
-      // }
-
-      // const statutsClass = {
-      //   0: 'text-danger', //'Annulé',
-      //   1: '', //'A saisir',
-      //   2: '', //'Saisie',
-      //   3: '', //'Validé',
-      //   4: 'table-success', //'Imputée'
-      // };
-      // return statutsClass[dataItem.statut];
+    onRowClass(dataItem) {
+      if (dataItem?.excuse_statut == -1 && dataItem?.amende) {
+        return 'text-danger';
+      }
+      const statutsClass = {
+        '-1': 'text-warning', //'Annulé',
+        0: '', //'A saisir',
+        1: 'text-success', //'Saisie',
+      };
+      return statutsClass[dataItem.excuse_statut];
     },
   },
 };
