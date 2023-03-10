@@ -79,7 +79,7 @@ export default {
 }
 @media (min-width: 600px) {
   .content {
-    padding-bottom: 4rem;
+    padding-bottom: 0rem;
   }
 }
 </style>
