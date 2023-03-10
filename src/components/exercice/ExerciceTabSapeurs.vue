@@ -382,6 +382,7 @@ export default {
           let newSapeurs = ajoute.map((s) => ({
             convoque: true,
             present: false,
+            absent: false,
             remplace: false,
             excuse_type_id: null,
             sapeur_id: s,
