@@ -28,7 +28,7 @@ export default {
     return Api.print(filename).get(`/decomptes/${decompteId}/print`);
   },
   downloadDecompteParSapeur(decompteId, filename) {
-    return Api.api(filename).get(`/decomptes/${decompteId}/print-par-sapeur`);
+    return Api.print(filename).get(`/decomptes/${decompteId}/print-par-sapeur`);
   },
   downloadDecompteParCompte(decompteId, filename) {
     return Api.print(filename).get(`/decomptes/${decompteId}/print-par-compte`);
