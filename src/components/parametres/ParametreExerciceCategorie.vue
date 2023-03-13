@@ -59,7 +59,7 @@ export default {
         { title: 'Désignation', key: 'designation' },
         { title: 'Durée de base [min]', key: 'duree_base' },
         { title: 'Amendable', key: 'amendable', type: Boolean },
-        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Actif', key: 'statut', type: Boolean },
         { title: 'Actions', slot: 'actions' },
       ],
     };
