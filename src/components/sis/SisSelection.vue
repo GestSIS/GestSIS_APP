@@ -48,10 +48,12 @@ export default {
   },
   methods: {
     selectSis(sisId) {
-      const sis = this.listeSis.find((s) => s.id == sisId);
-      this.$store.dispatch('selectSis', sis).then(() => {
-        this.$router.push({ name: 'dashboard' });
-      });
+      if (sisId != this.activeSisId) {
+        const sis = this.listeSis.find((s) => s.id == sisId);
+        this.$store.dispatch('selectSis', sis).then(() => {
+          this.$router.push({ name: 'dashboard' });
+        });
+      }
     },
   },
 };
