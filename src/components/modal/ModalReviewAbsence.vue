@@ -219,6 +219,31 @@
                 </button>
               </div>
             </template>
+            <template #foot="{ data }">
+              <tr>
+                <th colspan="4">Total</th>
+                <th class="text-center">
+                  {{ data.reduce((acc, e) => acc + (e.convoque ? 1 : 0), 0) }}
+                </th>
+                <th class="text-center">
+                  {{ data.reduce((acc, e) => acc + (e.present ? 1 : 0), 0) }}
+                </th>
+                <th class="text-center">
+                  {{ data.reduce((acc, e) => acc + (e.absent ? 1 : 0), 0) }}
+                </th>
+                <th class="text-center">
+                  {{ data.reduce((acc, e) => acc + (e.remplace ? 1 : 0), 0) }}
+                </th>
+                <th class="text-center">
+                  {{
+                    data.reduce((acc, e) => acc + (e.excuse_type_id ? 1 : 0), 0)
+                  }}
+                </th>
+                <th class="text-center">
+                  {{ data.reduce((acc, e) => acc + (e.amende ? 1 : 0), 0) }}
+                </th>
+              </tr>
+            </template>
           </base-table>
           <!-- :detail-row-component="detailRowComponent" -->
         </div>
