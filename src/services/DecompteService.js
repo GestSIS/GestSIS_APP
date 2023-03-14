@@ -48,6 +48,11 @@ export default {
       `/decomptes/${decompteId}/a-facturer`
     );
   },
+  downloadExcelEcritures(decompteId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/decomptes/${decompteId}/export-ecritures`
+    );
+  },
   downloadCertificatSalaires(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
       `/exercices-comptable/${exerciceComptableId}/certificat-salaire`

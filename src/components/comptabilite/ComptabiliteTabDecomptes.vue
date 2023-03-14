@@ -81,6 +81,23 @@
         </div>
       </div>
     </div>
+
+    <div class="col-12 col-sm-3 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Export</h3>
+        </div>
+        <div class="card-body row g-2">
+          <button
+            class="btn btn-outline-primary col-12"
+            :disabled="!selectedId"
+            @click="exportEcritures(selectedId)"
+          >
+            Ecritures (Excel)
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
@@ -334,6 +351,26 @@ export default {
       DecompteService.downloadExcelAFacturer(
         decompteId,
         `decompte_${decompte.date}_a_facturer.xlsx`
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
+          );
+        });
+    },
+    exportEcritures(decompteId) {
+      const decompte = this.decomptes.find((d) => d.id == decompteId);
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
+      DecompteService.downloadExcelEcritures(
+        decompteId,
+        `decompte_${decompte.date}_ecritures.xlsx`
       )
         .then(() => {
           this.HIDE_MODAL();
