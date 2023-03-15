@@ -8,6 +8,6 @@ export default {
     return Api.auth().patch('/sis/' + sis.id, sis);
   },
   getAllUsers() {
-    return Api.auth().get('/utilisateurs/');
+    return Api.auth().get('/utilisateurs');
   },
 };
