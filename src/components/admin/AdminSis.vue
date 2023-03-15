@@ -21,13 +21,11 @@
           >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <!-- <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="supprimer(value)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button> -->
+        </template>
+        <template #foot>
+          <tr>
+            <th :colspan="fields.length">Nb : {{ sis.length }}</th>
+          </tr>
         </template>
       </base-table>
     </div>

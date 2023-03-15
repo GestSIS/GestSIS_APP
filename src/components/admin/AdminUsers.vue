@@ -13,40 +13,24 @@
         :hide-download="true"
         no-data="Aucun utilisateur"
       >
-        <template #liste="{ key, value, rowData }">
+        <template #liste="{ value }">
           <span v-for="(item, i) in value" :key="i" class="badge bg-primary">{{
             sis.find((s) => s.id == item.sis_id)?.api_key
           }}</span>
+        </template>
+        <template #actions>
           <!-- <button
             type="button"
             class="btn btn-outline-primary border-0"
             @click="editSis(rowData)"
           >
             <font-awesome-icon :icon="['far', 'edit']" />
-          </button> -->
-          <!-- <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="supprimer(value)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button> -->
         </template>
-        <template #actions="{ rowData }">
-          <!-- <button
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="editSis(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'edit']" />
-          </button> -->
-          <!-- <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="supprimer(value)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button> -->
+        <template #foot>
+          <tr>
+            <th :colspan="fields.length">Nb : {{ users.length }}</th>
+          </tr>
         </template>
       </base-table>
     </div>
