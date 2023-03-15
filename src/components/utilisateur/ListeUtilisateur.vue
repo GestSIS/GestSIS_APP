@@ -121,11 +121,7 @@ export default {
       },
       fields: [
         { title: 'Utilisateur', key: 'name' },
-        {
-          title: 'Sapeur',
-          key: 'sapeur_id',
-          formatter: (_, data) => this.formatSapeur(data),
-        },
+        { title: 'Sapeur', key: 'sapeur' },
         { title: 'Email', key: 'email' },
         { title: 'Rôles', key: 'roles', slot: 'badges' },
         { title: 'Actions', slot: 'actions' },
@@ -150,6 +146,11 @@ export default {
             inactif:
               (!u.user_roles?.length ?? false) &&
               (!this.sapeurs?.find((s) => s.id === sapeurId)?.actif ?? false),
+            sapeur:
+              !u?.sapeur?.length > 0
+                ? '-'
+                : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
+                    ?.nom_prenom ?? '-',
           };
         })
         .filter((u) => (this.filters.inactif ? true : !u.inactif))
@@ -191,13 +192,6 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     formatRole(id) {
       return this.roles.find((r) => r.id === id)?.nom;
-    },
-    formatSapeur(user) {
-      if (!user?.sapeur?.length > 0) {
-        return '-';
-      }
-      const sapeurId = user.sapeur[0].sapeur_id;
-      return this.sapeurs.find((s) => s.id === sapeurId)?.nom_prenom ?? '-';
     },
     invite() {
       this.SHOW_MODAL({ component: 'ModalRegisterToken' });

@@ -2,9 +2,10 @@
   "releases": [
     {
       "date": "15.03.2023",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
+        "Page utilisateurs, tri par sapeur",
         "Documentation module `Organisation`",
         "Documentation de la création de compte",
         "Documentation module `Intervention`"
