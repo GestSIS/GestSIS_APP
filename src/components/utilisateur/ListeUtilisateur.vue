@@ -121,7 +121,7 @@ export default {
       },
       fields: [
         { title: 'Utilisateur', key: 'name' },
-        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Sapeur', key: 'nom_prenom' },
         { title: 'Email', key: 'email' },
         { title: 'Rôles', key: 'roles', slot: 'badges' },
         { title: 'Actions', slot: 'actions' },
@@ -146,7 +146,7 @@ export default {
             inactif:
               (!u.user_roles?.length ?? false) &&
               (!this.sapeurs?.find((s) => s.id === sapeurId)?.actif ?? false),
-            sapeur:
+            nom_prenom:
               !u?.sapeur?.length > 0
                 ? '-'
                 : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
