@@ -7,6 +7,9 @@ export default {
     users: [],
   },
   mutations: {
+    [types.ADMIN_USER_LISTE](state, payload) {
+      state.users = payload;
+    },
     [types.AUTH_SIS_LISTE](state, payload) {
       state.sis = payload;
     },
@@ -26,6 +29,11 @@ export default {
     editSis({ commit }, sis) {
       return AdminService.editSis(sis).then((data) =>
         commit(types.EDIT_SIS, data.data)
+      );
+    },
+    loadAllUsers({ commit }) {
+      return AdminService.getAllUsers().then((data) =>
+        commit(types.ADMIN_USER_LISTE, data.data)
       );
     },
   },

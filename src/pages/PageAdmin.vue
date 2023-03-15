@@ -26,6 +26,13 @@
             :to="{ name: 'admin-sis' }"
             >Sis</router-link
           >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
+            :to="{ name: 'admin-users' }"
+            >Utilisateurs</router-link
+          >
         </nav>
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
