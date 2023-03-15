@@ -1,10 +1,29 @@
 {
   "releases": [
     {
-      "date": "14.03.2023",
+      "date": "15.03.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Export des ecritures de décomptes au format Excel (.xlsx)"]
+      "changes": [
+        "Documentation module `Organisation`",
+        "Documentation de la création de compte",
+        "Documentation module `Intervention`"
+      ]
+    },
+    {
+      "date": "14.03.2023",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Export des ecritures de décomptes au format Excel (.xlsx)",
+        "Interface absences, affichage uniquement des absences amendables",
+        "Documentation module `Exercices & Séances`",
+        "Documentation module `Fiche travail`",
+        "Documentation module `Utilisateurs`",
+        "Documentation module `Contrôles médicaux`",
+        "Documentation module `Mes infos`",
+        "Documentation module `Statistiques`"
+      ]
     },
     {
       "date": "08.03.2023",

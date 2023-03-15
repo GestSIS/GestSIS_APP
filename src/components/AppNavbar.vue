@@ -13,6 +13,11 @@
           <font-awesome-icon :icon="['fas', 'bars']" />
         </button>
       </li>
+      <li class="nav-item position-relative me-2">
+        <a href="https://doc.gestsis.ch" target="_blank" class="btn btn-link"
+          >Documentation</a
+        >
+      </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
         <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
           <button class="btn btn-link" @click="clickInfo(navigate)">
