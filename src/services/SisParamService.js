@@ -13,7 +13,7 @@ export default {
   updateLogo(logo) {
     const form = new FormData();
     form.append('logo', logo);
-    return Api.api().post('/sis-logo/', form, {
+    return Api.api().post('/sis-logo', form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
