@@ -69,6 +69,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import Api from '/src/http/Request';
 
 export default {
   name: 'PageHome',
@@ -112,7 +113,7 @@ export default {
   },
   methods: {
     getImageUrl(sis) {
-      return new URL(`../assets/sis/${sis.api_key}.jpg`, import.meta.url).href;
+      return Api.API_URL + `/sis-logo/${sis.api_key}`;
     },
     connectToSis(sis) {
       this.$store.dispatch('selectSis', sis).then(() => {

@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "17.03.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de configurer le logo du SIS",
+        "Ajout du logo en en-tête des fichiers PDF"
+      ]
+    },
+    {
       "date": "15.03.2023",
       "version": "2.0",
       "app": "GestSIS APP",
