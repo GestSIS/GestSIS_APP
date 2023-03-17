@@ -145,6 +145,36 @@
     <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Logo</h3>
+          <button
+            v-if="hasConfigGeneralPermission"
+            type="button"
+            class="btn btn-primary"
+            @click="updateLocalitesSis()"
+          >
+            Modifier
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="input-group">
+            <input type="file" class="form-control" @change="onFileChange" />
+            <button class="btn btn-primary" @click="saveLogo">save</button>
+          </div>
+        </div>
+        <div class="card-body d-flex justify-content-center">
+          <div v-if="loadingLogo" class="spinner-border" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+          <img
+            v-else
+            class="img-thumbnail img-responsive"
+            :src="loadingLogo ? '' : logoUrl"
+            alt="Logo"
+          />
+        </div>
+      </div>
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Localités du sis</h3>
           <button
             v-if="hasConfigGeneralPermission"
@@ -196,8 +226,10 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import SisParamService from '../../services/SisParamService';
 import permissions from '../../store/permissions';
 import store from '/src/store/index';
+import Api from '/src/http/Request';
 
 async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
@@ -219,6 +251,9 @@ export default {
   },
   data() {
     return {
+      logo: null,
+      logoUrl: '',
+      loadingLogo: true,
       errors: {},
       sisParam: {},
       fields: [
@@ -232,6 +267,7 @@ export default {
       hasConfigGeneralPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SIS.CONFIG),
+      activeSisKey: (state) => state.auth.sis.activeKey,
       params: (state) => state.sisParam.params,
       localites: (state) => state.localite.liste,
       localitesSis: (state) =>
@@ -247,6 +283,7 @@ export default {
   mounted() {
     this.sisParam = { ...this.params };
     this.$store.dispatch('fetchLocalitesSis');
+    this.loadSisLogo();
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
@@ -282,6 +319,32 @@ export default {
         .then((res) => {
           this.errors = {};
           this.$awn.success(res?.message || 'Modifications enregistrées');
+        })
+        .catch((errors) => {
+          this.errors = {
+            ...errors,
+          };
+          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+        });
+    },
+    loadSisLogo() {
+      const timestamp = new Date().getTime();
+      this.logoUrl =
+        Api.API_URL + '/sis-logo/' + this.activeSisKey + '?t=' + timestamp;
+      this.loadingLogo = false;
+    },
+    onFileChange(event) {
+      const files = event.target.files || event.dataTransfer.files;
+      if (!files.length) return;
+      this.logo = files[0];
+    },
+    async saveLogo() {
+      // TODO: Save logo
+      SisParamService.updateLogo(this.logo)
+        .then((res) => {
+          this.errors = {};
+          this.$awn.success(res?.message || 'Modifications enregistrées');
+          this.loadSisLogo();
         })
         .catch((errors) => {
           this.errors = {

@@ -8,10 +8,15 @@ const PRINT_URL = import.meta.env.VITE_PRINT_ENDPOINT;
 import store from '/src/store';
 
 const request = {
+  API_URL: API_URL,
+  AUTH_URL: AUTH_URL,
+  PRINT_URL: PRINT_URL,
+
   _401interceptor: true,
   _refreshToken: null,
   _refreshFailed: null,
   _accessTokenValidity: null,
+  _sisKey: null,
 
   setAccessToken(accessToken) {
     if (accessToken !== '') {
@@ -23,8 +28,13 @@ const request = {
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
 
-  setSisKey: (sis_key) => {
+  setSisKey(sis_key) {
     axios.defaults.headers.common['Sis-Id'] = sis_key;
+    this._sisKey = sis_key;
+  },
+
+  getSisKey() {
+    return this._sisKey;
   },
 
   print(filename, options = {}) {
