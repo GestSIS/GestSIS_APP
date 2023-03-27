@@ -44,20 +44,15 @@ export default {
   computed: {
     ...mapState({
       grades: (state) => state.grade.liste,
-      sapeurs: (state) =>
-        state.sapeur.liste
-          .map((s) => ({
-            ...s,
-            grades: new Set(s.grades),
-          }))
-          .filter((s) => s.actif && s.type === 0),
+      sapeurGrades: (state) => state.statistique.grades,
     }),
     occurences() {
-      const occurences = {};
-      this.sapeurs.forEach((s) => {
-        occurences[s.grade_id] = (occurences[s.grade_id] ?? 0) + 1;
-      });
-      return occurences;
+      return this.sapeurGrades.reduce(
+        (prev, { grade_id, nb }) => (
+          (prev[grade_id] = (prev[grade_id] ?? 0) + parseFloat(nb)), prev
+        ),
+        {}
+      );
     },
     filteredGrade() {
       return this.grades

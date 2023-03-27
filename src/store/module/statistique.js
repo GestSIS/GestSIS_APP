@@ -3,6 +3,10 @@ import StatistiqueService from '../../services/StatistiqueService.js';
 
 export default {
   state: {
+    civilites: [],
+    fonctions: [],
+    grades: [],
+    permis: [],
     materiels: [],
     vehicules: [],
     statFederal: [],
@@ -15,12 +19,28 @@ export default {
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
+      state.civilites = [];
+      state.fonctions = [];
+      state.grades = [];
+      state.permis = [];
       state.materiels = [];
       state.vehicules = [];
       state.presences = [];
       state.statFederal = [];
       state.typeIntervention = [];
       state.interventionTraitement = [];
+    },
+    [types.UPDATE_STATISTIQUE_CIVILITE](state, payload) {
+      state.civilites = payload;
+    },
+    [types.UPDATE_STATISTIQUE_FONCTION](state, payload) {
+      state.fonctions = payload;
+    },
+    [types.UPDATE_STATISTIQUE_GRADE](state, payload) {
+      state.grades = payload;
+    },
+    [types.UPDATE_STATISTIQUE_PERMIS](state, payload) {
+      state.permis = payload;
     },
     [types.UPDATE_STATISTIQUE_VEHICULE](state, payload) {
       state.vehicules = payload;
@@ -51,6 +71,26 @@ export default {
     },
   },
   actions: {
+    fetchStatistiqueCivilite({ getters, commit }) {
+      return StatistiqueService.getStatCivilite(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_CIVILITE, data));
+    },
+    fetchStatistiqueFonction({ getters, commit }) {
+      return StatistiqueService.getStatFonction(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_FONCTION, data));
+    },
+    fetchStatistiqueGrade({ getters, commit }) {
+      return StatistiqueService.getStatGrade(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_GRADE, data));
+    },
+    fetchStatistiquePermis({ getters, commit }) {
+      return StatistiqueService.getStatPermis(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_PERMIS, data));
+    },
     fetchStatistiqueCategorieComptable({ getters, commit }) {
       return StatistiqueService.getStatCategorieComptable(
         getters.activeExerciceComptableId

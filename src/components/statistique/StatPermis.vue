@@ -44,20 +44,16 @@ export default {
   computed: {
     ...mapState({
       permis: (state) => state.baseData.permisTypes,
-      sapeurs: (state) =>
-        state.sapeur.liste
-          .map((s) => ({
-            ...s,
-            permis: new Set(s.permis),
-          }))
-          .filter((s) => s.actif && s.type === 0),
+      sapeurPermis: (state) => state.statistique.permis,
     }),
     occurences() {
-      const occurences = {};
-      this.sapeurs.forEach((s) => {
-        s.permis.forEach((f) => (occurences[f] = (occurences[f] ?? 0) + 1));
-      });
-      return occurences;
+      return this.sapeurPermis.reduce(
+        (prev, { permis_type_id, nb }) => (
+          (prev[permis_type_id] = (prev[permis_type_id] ?? 0) + parseFloat(nb)),
+          prev
+        ),
+        {}
+      );
     },
     filteredPermis() {
       return this.permis

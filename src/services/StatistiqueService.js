@@ -1,6 +1,18 @@
 import Api from '/src/http/Request';
 
 export default {
+  getStatCivilite(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/civilite`);
+  },
+  getStatFonction(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/fonction`);
+  },
+  getStatGrade(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/grade`);
+  },
+  getStatPermis(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/permis`);
+  },
   getStatVehicule(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/vehicule`);
   },

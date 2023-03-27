@@ -14,6 +14,7 @@ import StatCivilite from '/src/components/statistique/StatCivilite.vue';
 import StatFonction from '/src/components/statistique/StatFonction.vue';
 import StatGrade from '/src/components/statistique/StatGrade.vue';
 import StatPermis from '/src/components/statistique/StatPermis.vue';
+import { mapState } from 'vuex';
 
 async function loadData(_, next) {
   const loadCivilites = store.dispatch('fetchCivilites');
@@ -21,6 +22,18 @@ async function loadData(_, next) {
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadGrades = store.dispatch('fetchGrades');
   const loadPermisTypes = store.dispatch('fetchPermisType');
+  let loadStatistiqueCivilite = Promise.resolve();
+  let loadStatistiqueFonction = Promise.resolve();
+  let loadStatistiqueGrade = Promise.resolve();
+  let loadStatistiquePermis = Promise.resolve();
+
+  // Chargement des données uniquement si exerciceComptableId défini
+  if (store.state.exerciceComptable.activeId) {
+    loadStatistiqueCivilite = store.dispatch('fetchStatistiqueCivilite');
+    loadStatistiqueFonction = store.dispatch('fetchStatistiqueFonction');
+    loadStatistiqueGrade = store.dispatch('fetchStatistiqueGrade');
+    loadStatistiquePermis = store.dispatch('fetchStatistiquePermis');
+  }
 
   Promise.all([
     loadCivilites,
@@ -28,6 +41,10 @@ async function loadData(_, next) {
     loadFonctions,
     loadGrades,
     loadPermisTypes,
+    loadStatistiqueCivilite,
+    loadStatistiqueFonction,
+    loadStatistiqueGrade,
+    loadStatistiquePermis,
   ]).then(() => {
     next();
   });
@@ -46,6 +63,19 @@ export default {
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
+  },
+  computed: {
+    ...mapState({
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+    }),
+  },
+  watch: {
+    activeExerciceComptableId() {
+      this.$store.dispatch('fetchStatistiqueCivilite');
+      this.$store.dispatch('fetchStatistiqueFonction');
+      this.$store.dispatch('fetchStatistiqueGrade');
+      this.$store.dispatch('fetchStatistiquePermis');
+    },
   },
 };
 </script>

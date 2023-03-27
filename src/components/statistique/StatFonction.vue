@@ -44,20 +44,15 @@ export default {
   computed: {
     ...mapState({
       fonctions: (state) => state.fonction.liste,
-      sapeurs: (state) =>
-        state.sapeur.liste
-          .map((s) => ({
-            ...s,
-            fonctions: new Set(s.fonctions),
-          }))
-          .filter((s) => s.actif && s.type === 0),
+      sapeurFonctions: (state) => state.statistique.fonctions,
     }),
     occurences() {
-      const occurences = {};
-      this.sapeurs.forEach((s) => {
-        s.fonctions.forEach((f) => (occurences[f] = (occurences[f] ?? 0) + 1));
-      });
-      return occurences;
+      return this.sapeurFonctions.reduce(
+        (prev, { fonction_id, nb }) => (
+          (prev[fonction_id] = (prev[fonction_id] ?? 0) + parseFloat(nb)), prev
+        ),
+        {}
+      );
     },
     filteredFonction() {
       return this.fonctions

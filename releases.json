@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "27.03.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Statistiques pour effectif misent à jour selon l'exercice comptable"
+      ]
+    },
+    {
       "date": "17.03.2023",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -47,15 +47,15 @@ export default {
   computed: {
     ...mapState({
       civilites: (state) => state.baseData.civilites,
-      sapeurs: (state) =>
-        state.sapeur.liste.filter((s) => s.actif && s.type === 0),
+      sapeurCivilites: (state) => state.statistique.civilites,
     }),
     occurences() {
-      const occurences = {};
-      this.sapeurs.forEach((s) => {
-        occurences[s.civilite_id] = (occurences[s.civilite_id] ?? 0) + 1;
-      });
-      return occurences;
+      return this.sapeurCivilites.reduce(
+        (prev, { civilite_id, nb }) => (
+          (prev[civilite_id] = (prev[civilite_id] ?? 0) + parseFloat(nb)), prev
+        ),
+        {}
+      );
     },
     filteredCivilite() {
       return this.civilites.map((e) => ({
