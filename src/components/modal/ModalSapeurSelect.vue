@@ -30,14 +30,14 @@
           <div class="mb-2 d-flex align-items-center">
             <div class="form-check form-switch">
               <input
-                id="switch-politique"
-                v-model="politique"
+                id="switch-civil"
+                v-model="civil"
                 class="form-check-input"
                 type="checkbox"
                 role="switch"
               />
-              <label class="form-check-label" for="switch-politique"
-                >Inclure les politique</label
+              <label class="form-check-label" for="switch-civil"
+                >Inclure les civil</label
               >
             </div>
             <div class="form-check form-switch ms-3">
@@ -267,7 +267,7 @@ export default {
   data() {
     const svm = this;
     return {
-      politique: true,
+      civil: true,
       inactif: false,
       groupBy: 'groupe',
       chosenSapeurs: [],
@@ -336,7 +336,7 @@ export default {
           label: 'Type',
           collection: () => [
             { id: 0, designation: 'Sapeur' },
-            { id: 1, designation: 'Politique' },
+            { id: 1, designation: 'Civil' },
           ],
           displayKey: 'designation',
         },
@@ -357,8 +357,7 @@ export default {
     filteredSapeurs() {
       return this.sapeurs.filter(
         (s) =>
-          (this.inactif ? true : s?.actif) &&
-          (this.politique ? true : s?.type == 0)
+          (this.inactif ? true : s?.actif) && (this.civil ? true : s?.type == 0)
       );
     },
     filteredLocalites() {

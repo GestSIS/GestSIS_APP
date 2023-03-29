@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "29.03.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Renommage de la catégorie `politique` en `civil`"]
+    },
+    {
       "date": "27.03.2023",
       "version": "1.0",
       "app": "GestSIS APP",

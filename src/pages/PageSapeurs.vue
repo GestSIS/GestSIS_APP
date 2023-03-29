@@ -141,7 +141,7 @@
                     class="btn btn-outline-primary ms-2"
                     @click="addSapeur"
                   >
-                    Ajouter un sapeur/politique
+                    Ajouter un sapeur/civil
                   </button>
                 </div>
               </div>
@@ -153,7 +153,7 @@
                 v-for="(link, index) in links.filter(
                   (link) =>
                     hasPermission(link?.permission) &&
-                    (link.politique || activeSapeur.type == 0)
+                    (link.civil || activeSapeur.type == 0)
                 )"
                 :key="index"
                 :to="{ name: link.urlName, params: { id: activeSapeurId } }"
@@ -187,7 +187,7 @@ import ExerciceComptable from '/src/components/exercice_comptable/ExerciceCompta
 
 //TODO Implémenter Matériel personnel
 const links = [
-  { title: 'General', urlName: 'sapeur-details', politique: true },
+  { title: 'General', urlName: 'sapeur-details', civil: true },
   { title: 'Mutations', urlName: 'sapeur-mutations' },
   {
     title: 'Contrôles médicaux',
@@ -198,10 +198,10 @@ const links = [
   { title: 'Cours', urlName: 'sapeur-cours' },
   { title: 'Promotion', urlName: 'sapeur-promotions' },
   { title: 'Materiel', urlName: 'sapeur-materiels' },
-  { title: 'Organisation', urlName: 'sapeur-organisation', politique: true },
+  { title: 'Organisation', urlName: 'sapeur-organisation', civil: true },
   { title: 'Permis', urlName: 'sapeur-permis' },
-  { title: 'Banque', urlName: 'sapeur-banque', politique: true },
-  { title: 'Exercice', urlName: 'sapeur-exercices', politique: true },
+  { title: 'Banque', urlName: 'sapeur-banque', civil: true },
+  { title: 'Exercice', urlName: 'sapeur-exercices', civil: true },
 ];
 
 const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
@@ -251,13 +251,13 @@ const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
 
   // Load sapeur data
   if (store.state.sapeur.active.id) {
-    // Check politique status
+    // Check civil status
     await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
-    const isPolitique = store.state.sapeur.active.data.type != 0;
+    const isCivil = store.state.sapeur.active.data.type != 0;
 
-    if (isPolitique) {
-      // Politique détecté
-      if (links.find((r) => r.urlName == routeTo.name && r.politique == true)) {
+    if (isCivil) {
+      // Civil détecté
+      if (links.find((r) => r.urlName == routeTo.name && r.civil == true)) {
         next();
       } else {
         // Redirection pour onglet valable

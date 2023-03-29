@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        Ajouter un {{ sapeur.type == 0 ? 'sapeur' : 'politique' }}
+        Ajouter un {{ sapeur.type == 0 ? 'sapeur' : 'civil' }}
       </h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
@@ -10,7 +10,7 @@
       <!-- CIVILITE -->
       <!-- <base-select class="mb-3" label="Type" valueKey="id" displayKey="designation" :options="[
         { designation: 'Sapeur', id: 0 },
-        { designation: 'Politique', id: 1 }
+        { designation: 'Civil', id: 1 }
       ]" v-model="sapeur.type" /> -->
       <div class="mb-3">
         <div class="form-check form-check-inline">
@@ -33,7 +33,7 @@
             name="inlineRadioOptions"
             :value="1"
           />
-          <label class="form-check-label" for="inlineRadio2">Politique</label>
+          <label class="form-check-label" for="inlineRadio2">Civil</label>
         </div>
       </div>
       <base-select

@@ -245,7 +245,7 @@
     <div class="col-sm-12 col-xl-6">
       <div v-if="!estSapeur" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Politique</h3>
+          <h3 class="card-title">Civil</h3>
           <button
             v-if="hasEditPermission"
             class="btn btn-primary"
@@ -259,7 +259,7 @@
             <div class="mb-3">
               <div class="form-check form-switch">
                 <input
-                  id="politiqueActif"
+                  id="civilActif"
                   v-model="activeSapeur.actif"
                   class="form-check-input"
                   type="checkbox"
@@ -267,9 +267,7 @@
                   :true-value="1"
                   :false-value="0"
                 />
-                <label class="form-check-label" for="politiqueActif"
-                  >Actif</label
-                >
+                <label class="form-check-label" for="civilActif">Actif</label>
               </div>
             </div>
           </div>
@@ -424,7 +422,7 @@ export default {
     this.$store.dispatch('fetchGrades');
     this.$store.dispatch('fetchFonctions');
 
-    //TODO Only if sapeur anm not if politique
+    // Photo uniquement pour les sapeurs
     if (this.activeSapeur.type === 0) {
       SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
         this.photo = photo;
