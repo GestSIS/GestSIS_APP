@@ -99,11 +99,15 @@ export default {
   },
   watch: {
     activeExerciceId() {
-      const id = parseInt(this.id);
+      if (this.newMode) {
+        this.$store.dispatch('resetActiveExercice');
+      } else {
+        const id = parseInt(this.id);
 
-      this.$store.dispatch('selectExercice', id);
-      this.$store.dispatch('fetchExercice', id);
-      this.$store.dispatch('fetchExerciceSapeurs', id);
+        this.$store.dispatch('selectExercice', id);
+        this.$store.dispatch('fetchExercice', id);
+        this.$store.dispatch('fetchExerciceSapeurs', id);
+      }
     },
   },
   mounted() {
