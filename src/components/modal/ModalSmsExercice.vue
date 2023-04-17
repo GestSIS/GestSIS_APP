@@ -18,6 +18,7 @@
           <div class="mb-3">
             <label for="date">Date</label>
             <input
+              v-if="params.differe"
               id="date"
               v-model="params.date"
               type="datetime-local"
@@ -186,6 +187,11 @@ export default {
     async send() {
       const params = {
         ...this.params,
+        message: this.params.message
+          .replaceAll('‘', "'")
+          .replaceAll('’', "'")
+          .replaceAll('«', '"')
+          .replaceAll('»', '"'),
         numeros: this.computedSapeurs.map((s) => s?.portable).filter((s) => s),
       };
 
