@@ -167,7 +167,6 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       // TODO: Check si exercice pas déjà imputé
@@ -213,7 +212,7 @@ export default {
           });
       } else {
         this.$store
-          .dispatch('saveActiveExercice', this.activeExerciceData)
+          .dispatch('saveExercice', this.activeExerciceData)
           .then((res) => {
             this.errors = {};
             this.$awn.success(res?.message || 'Modifications enregistrées');

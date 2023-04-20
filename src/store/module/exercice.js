@@ -150,14 +150,13 @@ export default {
         commit(types.REMOVE_EXERCICE, exerciceId);
       });
     },
-    saveActiveExercice({ state, commit }) {
-      return ExerciceService.saveExercice(
-        state.active.id,
-        state.active.data
-      ).then(async (data) => {
-        await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
-        return data;
-      });
+    saveExercice({ commit }, exercice) {
+      return ExerciceService.saveExercice(exercice.id, exercice.data).then(
+        async (data) => {
+          await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
+          return data;
+        }
+      );
     },
 
     addSapeurs({ state, commit }, payload) {

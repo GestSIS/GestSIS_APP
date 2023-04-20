@@ -102,7 +102,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.data);
     this.activeExcuse = {
       ...this.activeExcuse,
       ...this.data,
