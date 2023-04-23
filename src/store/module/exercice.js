@@ -151,7 +151,7 @@ export default {
       });
     },
     saveExercice({ commit }, exercice) {
-      return ExerciceService.saveExercice(exercice.id, exercice.data).then(
+      return ExerciceService.saveExercice(exercice.id, exercice).then(
         async (data) => {
           await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
           return data;
