@@ -314,8 +314,6 @@ export default {
           {
             id: null,
             materiel_type_id: null,
-            numero: null,
-            taille: null,
             remarque: null,
           },
         ],
@@ -440,15 +438,14 @@ export default {
         (m) => m.materiel_type_id == value
       );
       item.id = materiel?.id;
-      item.numero = materiel?.numero;
       item.taille = materiel?.taille;
+      item.numero = materiel?.numero;
       item.remarque = materiel?.remarque;
     },
     selectNumero(item, value) {
-      const materiel = this.materielNumeroteDispo.find(
-        (m) => m.materiel_type_id == item.materiel_type_id && m.numero == value
-      );
+      const materiel = this.materielNumeroteDispo.find((m) => m.id == value);
       item.taille = materiel?.taille;
+      item.numero = materiel?.numero;
       item.id = materiel?.id;
       item.remarque = materiel?.remarque;
     },
