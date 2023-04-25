@@ -80,6 +80,9 @@
                     ) in activeAttribution.numerotesDepuisInventaire"
                     :key="index"
                   >
+                    <td>{{ item.id }}</td>
+                    <td>{{ item }}</td>
+
                     <td>
                       <base-select
                         :ref="'numerote-' + index"
@@ -348,11 +351,11 @@ export default {
             (m) =>
               m.materiel.numero && (m.retour != null || m.sapeur_id == null)
           )
-          .map((m) => ({ ...m, ...m.materiel })),
+          .map((m) => ({ ...m, ...m.materiel, id: m.id })),
       materielGeneriqueDispo: (state) =>
         state.matPersoMateriel.liste
           .filter((m) => m.retour != null || m.sapeur_id == null)
-          .map((m) => ({ ...m, ...m.materiel })),
+          .map((m) => ({ ...m, ...m.materiel, id: m.id })),
       sapeurs: (state) => state.sapeur.liste,
     }),
   },
