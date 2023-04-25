@@ -99,7 +99,7 @@
                     </td>
                     <td>
                       <base-select
-                        v-model="item.numero"
+                        v-model="item.id"
                         :options="
                           materielNumeroteDispo.filter(
                             (m) =>
@@ -312,6 +312,7 @@ export default {
         sapeur_id: null,
         numerotesDepuisInventaire: [
           {
+            id: null,
             materiel_type_id: null,
             numero: null,
             taille: null,
