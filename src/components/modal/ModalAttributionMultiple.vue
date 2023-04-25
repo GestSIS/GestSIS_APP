@@ -80,9 +80,6 @@
                     ) in activeAttribution.numerotesDepuisInventaire"
                     :key="index"
                   >
-                    <td>{{ item.id }}</td>
-                    <td>{{ item }}</td>
-
                     <td>
                       <base-select
                         :ref="'numerote-' + index"
