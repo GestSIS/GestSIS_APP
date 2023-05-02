@@ -336,18 +336,37 @@ export default {
       );
       if (!heure) {
         // Ajout de l'heure
-        sap.heures = [
-          ...sap.heures,
-          {
-            heure_exercice_type_id: h.id,
-            quantite,
-          },
-        ];
+        const newHeure = {
+          heure_exercice_type_id: h.id,
+          quantite: parseFloat(quantite) || null,
+          exercice_id: this.activeExerciceId,
+          sapeur_id: sap.sapeur_id,
+        };
+
+        this.$store
+          .dispatch('addHeure', newHeure)
+          .then(() => this.$awn.success('Heure ajoutée'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      } else if (!(parseFloat(quantite) || null)) {
+        // Suppression de l'heure
+        this.$store
+          .dispatch('removeHeure', heure)
+          .then(() => this.$awn.success('Heure supprimée'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       } else {
-        // Modification de l'heure
         heure.quantite = parseFloat(quantite) || null;
+        // Modification de l'heure
+        this.$store
+          .dispatch('editHeure', heure)
+          .then(() => this.$awn.success('Modifications enregistrées'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
       }
-      this.savePresence(sap);
     },
     async validate() {
       this.$store

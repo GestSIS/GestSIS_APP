@@ -57,6 +57,41 @@ export default {
     [types.UPDATE_CURRENT_EXERCICE_DATA](state, payload) {
       state.active.data = payload;
     },
+    [types.ADD_HEURE](state, payload) {
+      if (state.active.id == payload.exercice_id) {
+        state.active.sapeurs = state.active.sapeurs.map((s) =>
+          s.sapeur_id != payload.sapeur_id
+            ? s
+            : { ...s, heures: [...(s.heures ?? []), payload] }
+        );
+      }
+    },
+    [types.UPDATE_HEURE](state, payload) {
+      if (state.active.id == payload.exercice_id) {
+        state.active.sapeurs = state.active.sapeurs.map((s) =>
+          s.sapeur_id != payload.sapeur_id
+            ? s
+            : {
+              ...s,
+              heures: (s.heures ?? []).map((h) =>
+                h.id == payload.id ? payload : h
+              ),
+            }
+        );
+      }
+    },
+    [types.REMOVE_HEURE](state, payload) {
+      if (state.active.id == payload.exercice_id) {
+        state.active.sapeurs = state.active.sapeurs.map((s) =>
+          s.sapeur_id != payload.sapeur_id
+            ? s
+            : {
+              ...s,
+              heures: (s.heures ?? []).filter((h) => h.id != payload.id),
+            }
+        );
+      }
+    },
     [types.UPDATE_CURRENT_EXERCICE_SAPEURS](state, payload) {
       state.active.sapeurs = payload;
     },
@@ -180,6 +215,24 @@ export default {
           id: state.active.data.id,
           statut: data,
         });
+        return data;
+      });
+    },
+    addHeure({ commit }, heure) {
+      return ExerciceService.addHeure(heure).then(async (data) => {
+        await commit(types.ADD_HEURE, data);
+        return data;
+      });
+    },
+    editHeure({ commit }, heure) {
+      return ExerciceService.editHeure(heure).then(async (data) => {
+        await commit(types.UPDATE_HEURE, data);
+        return data;
+      });
+    },
+    removeHeure({ commit }, heure) {
+      return ExerciceService.removeHeure(heure.id).then(async (data) => {
+        await commit(types.REMOVE_HEURE, heure);
         return data;
       });
     },

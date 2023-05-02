@@ -211,7 +211,6 @@ export default {
             this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
           });
       } else {
-        console.log(this.activeExerciceData);
         this.$store
           .dispatch('saveExercice', this.activeExerciceData)
           .then((res) => {

@@ -1,6 +1,24 @@
 {
   "releases": [
     {
+      "date": "02.05.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration et correction de la saisie des heures supplémentaires pour exercice"
+      ]
+    },
+    {
+      "date": "28.04.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.1.0",
+      "changes": [
+        "Affichage du nombre de personnes présentes, excusées, absentes et remplacées pour les exercices",
+        "Menu dans l'interface Intervention défilable",
+        "Possibilité de faire disparaitre les notifications de synchronisation"
+      ]
+    },
+    {
       "date": "17.04.2023",
       "version": "1.0",
       "app": "GestSIS APP",
