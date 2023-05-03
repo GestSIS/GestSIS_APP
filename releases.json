@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "03.05.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout option pour choisir la disponibilité des excuses types dans le module excuse"
+      ]
+    },
+    {
       "date": "02.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",

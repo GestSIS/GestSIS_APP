@@ -60,7 +60,16 @@ export default {
         { title: 'Abréviation', key: 'abreviation' },
         { title: 'Désignation', key: 'designation' },
         { title: 'Amende', key: 'amende', type: Boolean },
-        { title: 'Actif', key: 'statut', type: Boolean },
+        {
+          title: 'Disponibilité',
+          key: 'statut',
+          formatter: (statut) =>
+            ({
+              0: 'Désactivé',
+              1: "Exercice + S'excuser",
+              2: 'Exercice',
+            }[statut]),
+        },
         { title: 'Actions', slot: 'actions' },
       ],
     };

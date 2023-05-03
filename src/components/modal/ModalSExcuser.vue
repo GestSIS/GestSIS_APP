@@ -72,7 +72,8 @@ export default {
   },
   computed: {
     ...mapState({
-      excuseTypes: (state) => state.excuseType.liste.filter((e) => e.statut),
+      excuseTypes: (state) =>
+        state.excuseType.liste.filter((e) => e.statut == 1),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),

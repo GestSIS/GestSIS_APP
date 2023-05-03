@@ -48,18 +48,17 @@
           <label class="form-check-label" for="amendable-modal">Amende</label>
         </div>
       </div>
-      <div class="mb-3">
-        <div class="form-check">
-          <input
-            id="statut-modal"
-            v-model="activeExcuse.statut"
-            type="checkbox"
-            class="form-check-input"
-            :true-value="1"
-          />
-          <label class="form-check-label" for="statut-modal">Actif</label>
-        </div>
-      </div>
+      <base-select
+        v-model="activeExcuse.statut"
+        class="mb-3"
+        :class="{ 'is-invalid': errors['compte_id'] }"
+        label="Disponibilité"
+        :options="[
+          { id: 0, designation: 'Désactivé' },
+          { id: 1, designation: 'Exercice + S\'excuser' },
+          { id: 2, designation: 'Exercice' },
+        ]"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
@@ -105,7 +104,6 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      this.activeExcuse.statut = this.activeExcuse.statut ? 1 : 0;
       if ((this.activeExcuse.id || 0) === 0) {
         this.$store
           .dispatch('addExcuseType', this.activeExcuse)
