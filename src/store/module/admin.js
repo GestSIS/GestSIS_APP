@@ -10,6 +10,12 @@ export default {
     [types.ADMIN_USER_LISTE](state, payload) {
       state.users = payload;
     },
+    [types.ADMIN_EDIT_USER](state, user) {
+      state.users = state.users.map((u) => (u.id == user.id ? user : u));
+    },
+    [types.ADMIN_REMOVE_USER](state, userId) {
+      state.users = state.users.filter((u) => u.id != userId);
+    },
     [types.AUTH_SIS_LISTE](state, payload) {
       state.sis = payload;
     },
@@ -34,6 +40,16 @@ export default {
     loadAllUsers({ commit }) {
       return AdminService.getAllUsers().then((data) =>
         commit(types.ADMIN_USER_LISTE, data.data)
+      );
+    },
+    editUser({ commit }, user) {
+      return AdminService.editUser(user).then(() =>
+        commit(types.ADMIN_EDIT_USER, user)
+      );
+    },
+    deleteUser({ commit }, userId) {
+      return AdminService.deleteUser(userId).then(() =>
+        commit(types.ADMIN_REMOVE_USER, userId)
       );
     },
   },

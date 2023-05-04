@@ -72,10 +72,16 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     editSis(sis) {
-      this.SHOW_MODAL({ component: 'ModalSis', data: sis });
+      this.SHOW_MODAL({ component: 'ModalSis', data: sis })
+        .then((res) => this.$awn.success(res?.message || 'Sis modifié'))
+        .catch((e) =>
+          this.$awn.alert(e?.message || 'Erreur lors de la modification')
+        );
     },
     ajoutSis() {
-      this.SHOW_MODAL({ component: 'ModalSis' });
+      this.SHOW_MODAL({ component: 'ModalSis' })
+        .then((res) => this.$awn.success(res?.message || 'Sis ajouté'))
+        .catch((e) => this.$awn.alert(e?.message || "Erreur lors de l'ajout"));
     },
   },
 };

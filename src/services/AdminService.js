@@ -10,4 +10,10 @@ export default {
   getAllUsers() {
     return Api.auth().get('/utilisateurs');
   },
+  editUser(user) {
+    return Api.auth().patch('/utilisateurs/' + user.id, user);
+  },
+  deleteUser(userId) {
+    return Api.auth().delete('/utilisateurs/' + userId);
+  },
 };

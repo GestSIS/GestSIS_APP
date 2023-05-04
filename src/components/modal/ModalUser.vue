@@ -2,64 +2,51 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ sis.id ? 'Modifier' : 'Ajouter' }} Sis
+        {{ user.id ? 'Modifier' : 'Ajouter' }} Utilisateur
       </h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <!-- NOM -->
       <div class="mb-3">
-        <label for="m-sis-nom">Nom</label>
+        <label for="m-user-name">Nom</label>
         <input
-          id="m-sis-nom"
-          v-model="sis.nom"
+          id="m-user-name"
+          v-model="user.name"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['nom'] }"
-          name="nom"
+          :class="{ 'is-invalid': errors['name'] }"
+          name="name"
+          required
+          min="1"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="m-user-email">Email</label>
+        <input
+          id="m-user-email"
+          v-model="user.email"
+          type="email"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['email'] }"
+          name="m-user-email"
           required
         />
       </div>
       <div class="mb-3">
-        <label for="m-sis-abreviation">Abréviation</label>
         <input
-          id="m-sis-abreviation"
-          v-model="sis.abreviation"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['abreviation'] }"
-          name="m-sis-abreviation"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="m-sis-api_key">API KEY</label>
-        <input
-          id="m-sis-api_key"
-          v-model="sis.api_key"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['api_key'] }"
-          name="m-sis-api_key"
-          required
-          :readonly="sis?.id"
-          :disabled="sis?.id"
-        />
-      </div>
-      <div class="mb-3">
-        <input
-          id="sis-mobile"
-          v-model="sis.mobile"
-          name="sis-mobile"
+          id="user-admin"
+          v-model="user.admin"
+          name="user-admin"
           type="checkbox"
           class="form-check-input"
         />
-        <label for="sis-mobile" class="ms-1">Mobile</label>
+        <label for="user-admin" class="ms-1">Admin</label>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" @click="save()">
-        {{ sis.id ? 'Modifier' : 'Ajouter' }}
+        {{ user.id ? 'Modifier' : 'Ajouter' }}
       </button>
       <button class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
@@ -84,16 +71,16 @@ export default {
   data() {
     return {
       errors: {},
-      sis: {
-        nom: '',
-        abreviation: '',
-        mobile: false,
+      user: {
+        name: '',
+        email: '',
+        admin: false,
       },
     };
   },
   mounted() {
-    this.sis = {
-      ...this.sis,
+    this.user = {
+      ...this.user,
       ...(this.data ?? {}),
     };
   },
@@ -107,14 +94,19 @@ export default {
       });
     },
     async save() {
+      if (!this.user?.id) {
+        return this.$awn.alert(
+          "Impossible d'ajouter un utilisateur pour le moment"
+        );
+      }
       this.$store
-        .dispatch(this.sis?.id ? 'editSis' : 'addSis', this.sis)
+        .dispatch(this.user?.id ? 'editUser' : 'addUser', this.user)
         .then(() => {
           this.HIDE_MODAL();
         })
         .catch((errors) => {
           this.errors = errors;
-          this.$awn.alert(errors?.message ?? "Erreur lors de l'ajout du SIS");
+          this.$awn.alert(errors?.message ?? "Erreur lors de l'enregistrement");
         });
     },
   },

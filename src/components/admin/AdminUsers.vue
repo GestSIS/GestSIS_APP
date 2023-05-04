@@ -2,7 +2,6 @@
   <div class="card card-primary card-outline mb-3 col-12 col-lg-6">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Utilisateurs</h3>
-      <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -18,14 +17,21 @@
             sis.find((s) => s.id == item.sis_id)?.api_key
           }}</span>
         </template>
-        <template #actions>
-          <!-- <button
+        <template #actions="{ rowData }">
+          <button
             type="button"
             class="btn btn-outline-primary border-0"
-            @click="editSis(rowData)"
+            @click="editUser(rowData)"
           >
             <font-awesome-icon :icon="['far', 'edit']" />
-          </button> -->
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteUser(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
         </template>
         <template #foot>
           <tr>
@@ -82,11 +88,30 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    editSis(sis) {
-      this.SHOW_MODAL({ component: 'ModalSis', data: sis });
+    editUser(user) {
+      this.SHOW_MODAL({ component: 'ModalUser', data: user });
     },
-    ajoutSis() {
-      this.SHOW_MODAL({ component: 'ModalSis' });
+    deleteUser(user) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cet utilisateur ?',
+          question:
+            "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store
+              .dispatch('deleteUser', user?.id)
+              .then((res) =>
+                this.$awn.success(res?.message || 'Utilisateur supprimé')
+              )
+              .catch((e) =>
+                this.$awn.alert(e?.message || 'Erreur lors de la suppression')
+              );
+          }
+        },
+      });
     },
   },
 };
