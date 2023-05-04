@@ -72,10 +72,8 @@ export default {
         { title: 'email', key: 'email' },
         { title: 'admin', key: 'admin', type: Boolean },
         { title: 'sapeur', key: 'sapeur', slot: 'liste' },
-        // { title: 'api_key', key: 'api_key' },
-        // { title: 'Nom', key: 'nom' },
-        // { title: 'Abréviation', key: 'abreviation' },
-        // { title: 'Mobile', key: 'mobile', type: Boolean },
+        { title: 'created_at', key: 'created_at', type: Date },
+        { title: 'email_verified_at', key: 'email_verified_at', type: Date },
         { title: 'Actions', key: 'id', slot: 'actions' },
       ],
     };

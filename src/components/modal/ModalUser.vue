@@ -57,7 +57,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalSis',
+  name: 'ModalUser',
   props: {
     data: {
       type: Object,
