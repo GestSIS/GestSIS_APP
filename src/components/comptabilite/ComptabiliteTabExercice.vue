@@ -356,7 +356,7 @@ export default {
     },
     genererDecompteExercice(exerciceId, designation) {
       this.SHOW_MODAL({
-        component: 'modalDecompte',
+        component: 'ModalDecompte',
         data: {
           exerciceId,
           designation,

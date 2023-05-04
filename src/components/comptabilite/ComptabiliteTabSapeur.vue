@@ -295,7 +295,7 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     genererDecompteSapeur(sapeurId, sapeur) {
       this.SHOW_MODAL({
-        component: 'modalDecompte',
+        component: 'ModalDecompte',
         data: {
           type: 'sapeur',
           sapeurId,

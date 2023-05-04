@@ -64,15 +64,6 @@ export default {
       this.$store.dispatch('fetchSapeurGroupes', id);
     },
   },
-  mounted() {
-    if (this.groupes.length === 0) {
-      this.$store.dispatch('fetchGroupes').then(() => {
-        this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
-      });
-    } else {
-      this.$store.dispatch('fetchSapeurGroupes', this.activeSapeurId);
-    }
-  },
 };
 </script>
 

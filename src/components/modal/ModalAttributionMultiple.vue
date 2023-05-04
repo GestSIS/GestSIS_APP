@@ -309,7 +309,7 @@ export default {
       depuisInventaire: true,
       activeAttribution: {
         date: new Date().toISOString().slice(0, 10),
-        sapeur_id: null,
+        sapeur_id: this.data?.sapeurId ?? null,
         numerotesDepuisInventaire: [
           {
             id: null,

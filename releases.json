@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "04.05.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Attribution de matériel personnel depuis la page sapeur",
+        "Modification et retour matériel depuis page sapeur"
+      ]
+    },
+    {
       "date": "03.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -2,6 +2,14 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Matériel personnel</h3>
+      <button
+        v-if="hasEditPermission"
+        type="button"
+        class="btn btn-primary"
+        @click="attribuer"
+      >
+        Ajouter du matériel
+      </button>
     </div>
     <!-- form start -->
     <form role="form">
@@ -11,24 +19,31 @@
           :data="materiels"
           no-data="Aucun matériel distribué"
         >
-          <template #actions>
-            <div class="d-flex justify-content-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                disabled
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                v-if="materiels.length > 1"
-                type="button"
-                class="btn btn-outline-danger border-0"
-                disabled
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </div>
+          <template #actions="{ rowData }">
+            <button
+              v-if="hasEditPermission"
+              title="Info"
+              class="btn btn-outline-primary border-0"
+              @click="info(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
+              v-if="hasEditPermission"
+              title="Retour"
+              class="btn btn-outline-primary border-0"
+              @click="retourSimple(rowData)"
+            >
+              <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+            </button>
+            <button
+              v-if="hasEditPermission"
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="supprimer(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
           </template>
         </base-table>
       </div>
@@ -72,7 +87,7 @@ export default {
         { title: 'Remarque', key: 'remarque' },
         { title: 'Attribution', key: 'attribution', type: Date },
         { title: 'Retour', key: 'retour', type: Date },
-        // { title: 'Actions', slot: 'actions' },
+        { title: 'Actions', slot: 'actions' },
       ],
     };
   },
@@ -102,11 +117,54 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('fetchMatPersoTypes');
     this.$store.dispatch('fetchSapeurMateriels', this.activeSapeurId);
   },
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    attribuer() {
+      this.SHOW_MODAL({
+        component: 'ModalAttributionMultiple',
+        size: 1,
+        data: { sapeurId: this.activeSapeurId },
+      });
+    },
+    info(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalMatPersoMateriel',
+        size: 1,
+        data: materiel,
+      });
+    },
+    retourSimple(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalRetourUnique',
+        data: materiel,
+      });
+    },
+    supprimer(materiel) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce matériel ?',
+          question:
+            "Attention, celui-ci ne sera pas ajouté dans l'inventaire et toutes ses données seront perdues.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store
+              .dispatch('removeMatPerso', [materiel.id])
+              .then((res) => {
+                this.$awn.success(res?.message ?? 'Matériels supprimés');
+              })
+              .catch((err) => {
+                this.$awn.alert(
+                  err?.message ?? 'Erreur impossible de supprimer ce matériel'
+                );
+              });
+          }
+        },
+      });
+    },
   },
 };
 </script>
