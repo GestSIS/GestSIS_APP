@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mb-3 col-12 col-lg-6">
+  <div class="card card-primary card-outline mb-3 col-12">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Utilisateurs</h3>
     </div>
