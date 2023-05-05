@@ -6,6 +6,7 @@
     <div class="card-body table-responsive">
       <base-table
         ref="table"
+        class="table-striped"
         :fields="fields"
         :data="computedInterventions"
         :selectable="true"

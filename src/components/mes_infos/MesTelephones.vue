@@ -10,7 +10,7 @@
         Enregistrer
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive table-striped">
       <table class="table table-sm">
         <thead>
           <tr>

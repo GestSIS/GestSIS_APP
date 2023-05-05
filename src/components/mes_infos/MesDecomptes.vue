@@ -8,6 +8,7 @@
     </div>
     <div class="card-body table-responsive">
       <base-table
+        class="table-striped"
         :fields="fields"
         :data="paiements"
         :selectable="true"
