@@ -256,12 +256,12 @@ export default {
           this.errors = {};
           this.HIDE_MODAL();
         })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            })
-        );
+        .catch((errors) => {
+          this.errors = {
+            ...errors,
+          };
+          this.$awn.alert(errors?.message ?? "Erreur lors de l'enregistrement");
+        });
     },
   },
 };

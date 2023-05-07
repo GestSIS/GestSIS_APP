@@ -55,7 +55,6 @@
           type="number"
           min="0"
           class="form-control form-control-sm"
-          disabled
         />
         <span class="input-group-text">
           {{
@@ -100,7 +99,16 @@
           v-model="activeTravail.justification"
           class="form-control form-control-sm"
           placeholder="(optionnel)"
+          :required="initialQuantite != activeTravail.quantite"
         ></textarea>
+        <label
+          v-if="initialQuantite != activeTravail.quantite"
+          class="text-danger"
+          ><em
+            >Quantité modifiée, justifiez ce changement pour plus de
+            transparence</em
+          ></label
+        >
       </div>
 
       <div class="row">
@@ -151,6 +159,7 @@ export default {
         exercice_comptable_id: null,
         sapeurs: [{ sapeur_id: null, quantite: null }],
       },
+      initialQuantite: null,
     };
   },
   computed: {
@@ -168,19 +177,13 @@ export default {
     }),
   },
   mounted() {
-    if (this.data.id) {
-      this.activeTravail = {
-        ...this.data,
-        sapeurs: [
-          { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
-        ],
-      };
-    } else {
-      this.activeTravail.exercice_comptable_id = this.activeExerciceComptableId;
-      if (!this.hasSaisieCommunePermission) {
-        this.activeTravail.sapeurs[0].sapeur_id = this.activeSapeurId;
-      }
-    }
+    this.activeTravail = {
+      ...this.data,
+      sapeurs: [
+        { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
+      ],
+    };
+    this.initialQuantite = this.data.quantite;
     this.$refs.justification.focus();
   },
   methods: {

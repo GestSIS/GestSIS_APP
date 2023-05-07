@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "07.05.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction convocations avec sélection des sapeurs",
+        "Possibilité de modifier la quantité lors de la revue des travaux"
+      ]
+    },
+    {
       "date": "05.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",
