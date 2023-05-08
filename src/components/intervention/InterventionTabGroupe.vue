@@ -121,15 +121,16 @@ export default {
           .map((g) => g.id),
       ];
 
-      if (removedIds.length > 0) {
-        this.$store.dispatch('removeInterventionGroupes', removedIds);
-      }
-
-      if (newOnes.length > 0) {
-        this.$store.dispatch('addInterventionGroupes', [
-          ...this.groupes.filter((g) => newOnes.includes(g.no)),
-        ]);
-      }
+      Promise.all([
+        removedIds.length > 0
+          ? this.$store.dispatch('removeInterventionGroupes', removedIds)
+          : Promise.resolved,
+        newOnes.length > 0
+          ? this.$store.dispatch('addInterventionGroupes', [
+              ...this.groupes.filter((g) => newOnes.includes(g.no)),
+            ])
+          : Promise.resolved,
+      ]).then(() => this.$awn.success('Modifications enregistrées'));
     },
     updateGroupes(value) {
       this.selected = {};

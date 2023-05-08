@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "08.05.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout message de confirmations lors des sauvegardes dans intervention"
+      ]
+    },
+    {
       "date": "07.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",

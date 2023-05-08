@@ -114,12 +114,14 @@ export default {
             ?.id
       );
 
-      if (removedIds.length > 0) {
-        this.$store.dispatch('removeInterventionVehicules', removedIds);
-      }
-      if (newOne.length > 0) {
-        this.$store.dispatch('addInterventionVehicules', newOne);
-      }
+      Promise.all([
+        removedIds.length > 0
+          ? this.$store.dispatch('removeInterventionVehicules', removedIds)
+          : Promise.resolved,
+        newOne.length > 0
+          ? this.$store.dispatch('addInterventionVehicules', newOne)
+          : Promise.resolved,
+      ]).then(() => this.$awn.success('Modifications enregistrées'));
     },
     updateVehicules(value) {
       this.selected = {};

@@ -18,8 +18,7 @@ const links = [
     icon: 'user',
     nom: 'Sapeurs',
     permission: permissions.SAPEUR.LECTURE,
-    // TODO: Fix active link pour sapeurs
-    // active: (route) => route?.matched?.includes((r) => r.name == 'sapeur-index') ?? false,
+    active: (route) => !!route?.matched?.find((r) => r.name == 'sapeur-index'),
   },
   {
     to: { name: 'interventions' },

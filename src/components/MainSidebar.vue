@@ -43,6 +43,9 @@
             :to="link.to"
             class="nav-link text-white"
             active-class="active"
+            :class="{
+              active: (link?.active ?? (() => false))($route),
+            }"
           >
             <font-awesome-icon :icon="link.icon" />
             <span class="ms-3">{{ link.nom }}</span>
