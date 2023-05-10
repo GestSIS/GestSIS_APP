@@ -391,6 +391,10 @@ export default {
           .map((m) => ({ ...baseAttribution, ...m })),
       ];
 
+      if (attributions.length == 0) {
+        this.$awn.warning('Aucun matériel saisi');
+        return;
+      }
       this.$store
         .dispatch('attribuerMatPerso', {
           depuisInventaire: this.depuisInventaire,
