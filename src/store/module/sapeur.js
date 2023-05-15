@@ -52,6 +52,21 @@ export default {
         { ...payload, nom_prenom: `${payload.nom} ${payload.prenom}` },
       ].sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom));
     },
+    [types.UPDATE_MAT_PERSO_LISTE](state, materiels) {
+      const indexedMat = materiels.reduce((acc, m) => {
+        acc[m.id] = m;
+        return acc;
+      }, {});
+      state.active.materiels = state.active.materiels
+        .map((m) => indexedMat[m.id])
+        .filter((m) => m?.id);
+    },
+    [types.REMOVE_MAT_PERSO](state, ids) {
+      const idsSet = new Set(ids);
+      state.active.materiels = state.active.materiels.filter(
+        (m) => !idsSet.has(m.id)
+      );
+    },
     [types.DELETE_SAPEUR](state, sapeurId) {
       state.liste = [...state.liste].filter((s) => s.id != sapeurId);
     },
