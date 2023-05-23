@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "23.05.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.1.3",
+      "changes": [
+        "Nouveau module `Annuaire` permettant l'accès aux numéros de téléphone sans passer par un rapport d'intervention",
+        "Tri des appels par ordre chronologique"
+      ]
+    },
+    {
       "date": "08.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",
