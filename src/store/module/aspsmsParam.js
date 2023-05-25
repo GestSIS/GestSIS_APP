@@ -26,17 +26,11 @@ export default {
     },
     fetchAspsmsParams({ dispatch, state, commit }) {
       if (state.params === null) {
-        const test = AspsmsParamService.getParams().then((data) => {
+        return AspsmsParamService.getParams().then((data) => {
           commit(types.UPDATE_ASPSMS_PARAMS, data);
           return data;
         });
-        console.log(test)
-        return test;
-        // return AspsmsParamService.getParams().then((data) =>
-        //   commit(types.UPDATE_ASPSMS_PARAMS, data)
-        // );
       } else {
-        console.log("Test")
         return dispatch('fetchAspsmsCredit');
       }
     },
