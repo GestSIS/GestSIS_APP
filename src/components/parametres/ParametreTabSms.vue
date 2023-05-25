@@ -33,7 +33,7 @@ import store from '/src/store/index';
 import ParametreAspsms from './ParametreAspsms.vue';
 
 async function loadData(_, next) {
-  store.dispatch('fetchAspsmsParams').then(next).catch(next);
+  store.dispatch('fetchAspsmsParams').then(next()).catch(next());
 }
 
 export default {
