@@ -15,73 +15,7 @@
       </div>
     </div>
     <InterventionTabGroupe />
-    <div class="col-xs-12 col-md-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Phases de l'intervention</h3>
-          <button
-            v-if="hasEditPermission"
-            type="button"
-            class="btn btn-primary"
-            @click="newPhase"
-          >
-            Nouvelle phase
-          </button>
-        </div>
-        <div class="card-body">
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Début</th>
-                <th>Type</th>
-                <th v-if="hasEditPermission">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="phases.length <= 0">
-                <td :colspan="hasEditPermission ? 3 : 2">
-                  Erreur, une phase est nécessaire pour chaque intervention,
-                  veuillez contacter l'administrateur du système.
-                </td>
-              </tr>
-              <tr v-for="phase in phases" :key="phase.id">
-                <td>
-                  {{
-                    phase.debut === null
-                      ? `${data.date_debut} ${data.heure_debut}`
-                      : phase.debut.slice(0, 16)
-                  }}
-                </td>
-                <td>
-                  {{
-                    phasesType.find((p) => p.id == phase.phase_type_id)
-                      .designation
-                  }}
-                </td>
-                <td v-if="hasEditPermission">
-                  <button
-                    v-if="phase.debut !== null"
-                    type="button"
-                    class="btn btn-outline-primary border-0 ms-2"
-                    @click="editPhase(phase)"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                  <button
-                    v-if="phase.debut !== null"
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    @click="removePhase(phase.id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <InterventionTabPhase />
     <div class="col-sm-12 col-md-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
@@ -239,11 +173,13 @@
 import { mapState, mapMutations } from 'vuex';
 import permissions from '/src/store/permissions.js';
 import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
+import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
 
 export default {
   name: 'InterventionTabSapeurs',
   components: {
     InterventionTabGroupe,
+    InterventionTabPhase,
   },
   data() {
     return {
@@ -260,7 +196,6 @@ export default {
       presences: (state) => state.intervention.active.sapeurs,
       phases: (state) => state.intervention.active.phases,
       sapeurs: (state) => state.sapeur.liste,
-      phasesType: (state) => state.phaseType.liste,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
         state.auth.admin ||
@@ -373,33 +308,6 @@ export default {
     },
     removePresence(id) {
       this.$store.dispatch('removePresence', id);
-    },
-    newPhase() {
-      this.$store.dispatch('resetActivePhase');
-      this.SHOW_MODAL({
-        component: 'ModalPhase',
-        callback: () => {},
-        data: {
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    editPhase(phase) {
-      const clone = {};
-      Object.assign(clone, phase);
-      this.$store.dispatch('updateActivePhase', clone);
-      this.SHOW_MODAL({
-        component: 'ModalPhase',
-        callback: () => {},
-        data: {
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    removePhase(id) {
-      this.$store.dispatch('removePhase', id);
     },
     editQuittance(e, id) {
       const quittances = this.quittances.filter(
