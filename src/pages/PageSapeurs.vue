@@ -26,7 +26,7 @@
                   id="statutActif"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-md"
                   class="form-check-input"
                   value="actif"
                 />
@@ -37,7 +37,7 @@
                   id="statutInactif"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-md"
                   class="form-check-input"
                   value="inactif"
                 />
@@ -50,7 +50,7 @@
                   id="statutTous"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-md"
                   class="form-check-input"
                   value="all"
                 />
@@ -111,7 +111,7 @@
                   id="statutActif"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-sm"
                   class="form-check-input"
                   value="actif"
                 />
@@ -122,7 +122,7 @@
                   id="statutInactif"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-sm"
                   class="form-check-input"
                   value="inactif"
                 />
@@ -135,7 +135,7 @@
                   id="statutTous"
                   v-model="filter"
                   type="radio"
-                  name="actif"
+                  name="actif-sm"
                   class="form-check-input"
                   value="all"
                 />
