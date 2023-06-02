@@ -399,7 +399,7 @@ export default {
       }
     },
     selectSapeur(sapeurId) {
-      if (sapeurId != null) {
+      if (sapeurId != null && sapeurId != this.activeSapeurId) {
         this.$router.push({
           name: this.$route.name,
           params: { id: sapeurId },
