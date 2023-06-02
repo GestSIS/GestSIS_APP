@@ -30,12 +30,15 @@
           </button>
         </div>
         <div class="card-body">
-          <div class="badge-wrapper">
+          <div class="mb-2">
             <span class="badge bg-secondary me-2">Intervention</span>
             <span class="badge bg-primary me-2">Entretient</span>
             <span class="badge bg-success me-2">Piquet</span>
           </div>
-          <div ref="wrapper" class="table-wrapper">
+          <div
+            ref="wrapper"
+            class="overflow-x-scroll overflow-y-visible position-relative"
+          >
             <table class="table table-sm table-bordered">
               <thead>
                 <tr>
@@ -389,17 +392,6 @@ export default {
 <style scoped>
 .no-wrap {
   white-space: nowrap;
-}
-
-.badge-wrapper {
-  font-size: 16px;
-  margin-bottom: 1rem;
-}
-
-.table-wrapper {
-  overflow-x: scroll;
-  overflow-y: visible;
-  position: relative;
 }
 
 td,
