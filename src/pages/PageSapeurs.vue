@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid overflow-hidden custom-container">
+  <div class="container-fluid custom-container">
     <div class="row">
       <div class="col-sm-6">
         <nav aria-label="breadcrumb">
@@ -15,8 +15,8 @@
         <exercice-comptable />
       </div>
     </div>
-    <div class="row overflow-hidden">
-      <div class="col-3 col-md-3 custom-scroll-column">
+    <div class="row nested-container">
+      <div class="col-3 d-none d-sm-block custom-scroll-column">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>
@@ -101,75 +101,121 @@
           </ul>
         </div>
       </div>
-      <div class="col-9 col-md-9 custom-scroll-column">
-        <div>
-          <div id="nav-tabContent" class="tab-content">
-            <div id="tab-sapeur-details" class="tab-pane fade show active">
-              <div class="card card-primary card-outline mb-3">
-                <div class="card-body d-flex flex-row-reverse">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary ms-2 d-none"
-                    disabled
-                  >
-                    Exporter
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary ms-2 d-none"
-                    disabled
-                  >
-                    Importer
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary ms-2 d-none"
-                    disabled
-                  >
-                    Fiche sapeur
-                  </button>
-                  <button
-                    v-if="activeSapeur?.id && hasEditPermission"
-                    class="btn btn-outline-danger ms-2"
-                    @click="deleteSapeur"
-                  >
-                    Supprimer le sapeur
-                  </button>
-                  <button
-                    v-if="hasEditPermission"
-                    type="button"
-                    class="btn btn-outline-primary ms-2"
-                    @click="addSapeur"
-                  >
-                    Ajouter un sapeur/civil
-                  </button>
-                </div>
+      <div class="col-12 col-sm-9 custom-scroll-column">
+        <div class="card card-primary card-outline mb-3 d-sm-none">
+          <div class="card-header">
+            <h3 class="card-title">Filtres</h3>
+            <div class="card-body p-0">
+              <div class="form-check form-check-inline">
+                <input
+                  id="statutActif"
+                  v-model="filter"
+                  type="radio"
+                  name="actif"
+                  class="form-check-input"
+                  value="actif"
+                />
+                <label class="form-check-label" for="statutActif">Actif</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  id="statutInactif"
+                  v-model="filter"
+                  type="radio"
+                  name="actif"
+                  class="form-check-input"
+                  value="inactif"
+                />
+                <label class="form-check-label" for="statutInactif"
+                  >Inactif</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  id="statutTous"
+                  v-model="filter"
+                  type="radio"
+                  name="actif"
+                  class="form-check-input"
+                  value="all"
+                />
+                <label class="form-check-label" for="statutTous">Tous</label>
               </div>
             </div>
           </div>
-          <nav>
-            <nav class="nav nav-tabs mb-3">
-              <router-link
-                v-for="(link, index) in links.filter(
-                  (link) =>
-                    hasPermission(link?.permission) &&
-                    (link.civil || activeSapeur.type == 0)
-                )"
-                :key="index"
-                :to="{ name: link.urlName, params: { id: activeSapeurId } }"
-                class="nav-link"
-                active-class="active"
-              >
-                {{ link.title }}
-              </router-link>
-            </nav>
+          <base-select
+            base-option="&lt;Sapeur&gt;"
+            :options="filteredSapeurs"
+            display-key="nom_prenom"
+            :model-value="activeSapeurId"
+            @update:model-value="(value) => selectSapeur(value)"
+          />
+          <!-- <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+              Aucun sapeur
+            </li> -->
+        </div>
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-body d-flex flex-row-reverse">
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Exporter
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Importer
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 d-none"
+              disabled
+            >
+              Fiche sapeur
+            </button>
+            <button
+              v-if="activeSapeur?.id && hasEditPermission"
+              class="btn btn-outline-danger ms-2"
+              @click="deleteSapeur"
+            >
+              Supprimer le sapeur
+            </button>
+            <button
+              v-if="hasEditPermission"
+              type="button"
+              class="btn btn-outline-primary ms-2"
+              @click="addSapeur"
+            >
+              Ajouter un sapeur/civil
+            </button>
+          </div>
+        </div>
+        <nav>
+          <nav class="nav nav-tabs mb-3">
+            <router-link
+              v-for="(link, index) in links.filter(
+                (link) =>
+                  hasPermission(link?.permission) &&
+                  (link.civil || activeSapeur.type == 0)
+              )"
+              :key="index"
+              :to="{ name: link.urlName, params: { id: activeSapeurId } }"
+              class="nav-link"
+              active-class="active"
+            >
+              {{ link.title }}
+            </router-link>
           </nav>
-          <div id="nav-tabContent" class="tab-content">
-            <div id="tab-sapeur-details" class="tab-pane fade show active">
-              <div class="row">
-                <div class="col-12">
-                  <router-view />
-                </div>
+        </nav>
+        <div id="nav-tabContent" class="tab-content">
+          <div id="tab-sapeur-details" class="tab-pane fade show active">
+            <div class="row">
+              <div class="col-12">
+                <router-view />
               </div>
             </div>
           </div>
@@ -352,6 +398,14 @@ export default {
         });
       }
     },
+    selectSapeur(sapeurId) {
+      if (sapeurId != null) {
+        this.$router.push({
+          name: this.$route.name,
+          params: { id: sapeurId },
+        });
+      }
+    },
     addSapeur() {
       this.SHOW_MODAL({
         component: 'ModalSapeur',
@@ -411,13 +465,24 @@ export default {
   }
 }
 
-.custom-container {
-  display: flex;
-  flex-flow: column;
-}
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/utilities';
+@import 'bootstrap/scss/mixins/breakpoints';
+@include media-breakpoint-up(md) {
+  .custom-container {
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+  }
 
-.custom-scroll-column {
-  height: 100%;
-  overflow-y: scroll;
+  .nested-container {
+    overflow: hidden;
+  }
+
+  .custom-scroll-column {
+    height: 100%;
+    overflow-y: scroll;
+  }
 }
 </style>
