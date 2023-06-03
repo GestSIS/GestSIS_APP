@@ -272,11 +272,14 @@ const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
       return;
     }
     // Sapeurs disponible
-    if (store.state.sapeur.liste.length > 0) {
-      await store.dispatch('selectSapeur', store.state.sapeur.liste[0]?.id);
+    if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
+      await store.dispatch(
+        'selectSapeur',
+        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id
+      );
       next({
         name: 'sapeur-details',
-        params: { id: store.state.sapeur.liste[0]?.id },
+        params: { id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id },
       });
       return;
     }
