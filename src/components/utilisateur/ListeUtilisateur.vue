@@ -67,6 +67,13 @@
             >{{ formatRole(r.role_id) }}</span
           >
         </template>
+        <template #sapeur="{ rowData }">
+          {{ rowData.nom_prenom }}
+          <font-awesome-icon
+            v-if="rowData?.type === 1"
+            :icon="['far', 'handshake']"
+          />
+        </template>
         <template #actions="{ rowData }">
           <button
             class="btn btn-outline-primary border-0"
@@ -121,7 +128,7 @@ export default {
       },
       fields: [
         { title: 'Utilisateur', key: 'name' },
-        { title: 'Sapeur', key: 'nom_prenom' },
+        { title: 'Sapeur', slot: 'sapeur' },
         { title: 'Email', key: 'email' },
         { title: 'Rôles', key: 'roles', slot: 'badges' },
         { title: 'Actions', slot: 'actions' },
@@ -151,6 +158,11 @@ export default {
                 ? '-'
                 : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
                     ?.nom_prenom ?? '-',
+            type:
+              !u?.sapeur?.length > 0
+                ? '-'
+                : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
+                    ?.type,
           };
         })
         .filter((u) => (this.filters.inactif ? true : !u.inactif))
