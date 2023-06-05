@@ -147,9 +147,7 @@ export default {
       return this.users
         .map((u) => {
           const sapeurId = u.sapeur[0]?.sapeur_id;
-          const sapeur = this.sapeurs.find(
-            (s) => s.id === u.sapeur[0].sapeur_id
-          );
+          const sapeur = this.sapeurs.find((s) => s.id === sapeurId);
           return {
             ...u,
             special: !sapeurId,
