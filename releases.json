@@ -4,7 +4,10 @@
       "date": "04.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Mise en évidence des civiles dans la page utilisateurs"]
+      "changes": [
+        "Mise en évidence des civiles dans la page `Utilisateurs`",
+        "Mise en évidence des sapeurs inactif dans la page `Utilisateurs`"
+      ]
     },
     {
       "date": "01.06.2023",

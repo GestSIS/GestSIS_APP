@@ -147,22 +147,18 @@ export default {
       return this.users
         .map((u) => {
           const sapeurId = u.sapeur[0]?.sapeur_id;
+          const sapeur = this.sapeurs.find(
+            (s) => s.id === u.sapeur[0].sapeur_id
+          );
           return {
             ...u,
             special: !sapeurId,
             inactif:
-              (!u.user_roles?.length ?? false) &&
-              (!this.sapeurs?.find((s) => s.id === sapeurId)?.actif ?? false),
+              (!u.user_roles?.length ?? false) && (!sapeur?.actif ?? false),
+            actifStatut: sapeur?.actif ?? true,
             nom_prenom:
-              !u?.sapeur?.length > 0
-                ? '-'
-                : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
-                    ?.nom_prenom ?? '-',
-            type:
-              !u?.sapeur?.length > 0
-                ? '-'
-                : this.sapeurs.find((s) => s.id === u.sapeur[0].sapeur_id)
-                    ?.type,
+              !u?.sapeur?.length > 0 ? '-' : sapeur?.nom_prenom ?? '-',
+            type: !u?.sapeur?.length > 0 ? '-' : sapeur?.type,
           };
         })
         .filter((u) => (this.filters.inactif ? true : !u.inactif))
@@ -219,10 +215,7 @@ export default {
         return '';
       }
 
-      const sapeurId = dataItem.sapeur[0].sapeur_id;
-      return !this.sapeurs.find((s) => s.id === sapeurId)?.actif
-        ? 'text-danger'
-        : '';
+      return !dataItem?.actifStatut ? 'text-danger' : '';
     },
   },
 };
