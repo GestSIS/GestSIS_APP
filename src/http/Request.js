@@ -19,10 +19,10 @@ const request = {
   _sisKey: null,
 
   setAccessToken(accessToken) {
-    if (accessToken !== '') {
+    try {
       const { exp } = jwt_decode(accessToken);
       this._accessTokenValidity = exp;
-    } else {
+    } catch (exception) {
       this._accessTokenValidity = null;
     }
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -236,12 +236,9 @@ const request = {
             await store.dispatch('refreshToken');
 
             error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common['Authorization']}`;
-
             // Retry the original request
             return axios({
-              method: error.config.method,
-              url: error.config.url,
-              data: error.config.data,
+              ...error.config,
             }).then((response) => {
               return response.data.data;
             });

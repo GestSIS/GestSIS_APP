@@ -261,9 +261,10 @@ export default {
           // Charge la liste des SIS
           return AuthService.sisListe()
             .then((sis) => {
+              console.log("Commit sis list")
               return commit(types.AUTH_SIS_LISTE, sis.data);
             })
-            .then(callback);
+            .then(async () => await callback());
         } else {
           return callback();
         }
