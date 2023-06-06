@@ -254,17 +254,18 @@ export default {
           router.push({ name: 'login' });
           throw e;
         });
+        return p;
       };
       if (!state.refreshTokenPromise) {
         if (state.sis.liste.length == 0) {
           // Charge la liste des SIS
-          AuthService.sisListe()
+          return AuthService.sisListe()
             .then((sis) => {
               return commit(types.AUTH_SIS_LISTE, sis.data);
             })
             .then(callback);
         } else {
-          callback();
+          return callback();
         }
       } else {
         return state.refreshTokenPromise;
