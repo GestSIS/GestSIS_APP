@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "06.06.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Reconnexion automatique lors de session prolongée"]
+    },
+    {
       "date": "04.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
