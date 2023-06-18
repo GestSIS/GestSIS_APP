@@ -6,11 +6,7 @@
         v-if="excuseParams?.actif"
         type="button"
         class="btn btn-primary"
-        :disabled="
-          !activeItemId ||
-          exercices.find((e) => e.id == activeItemId)?.statut == 0
-        "
-        @click="addExcuse(exercices.find((e) => e.id == activeItemId))"
+        @click="addExcuse"
       >
         S'excuser
       </button>
@@ -191,7 +187,10 @@ export default {
     addExcuse(exercice) {
       this.SHOW_MODAL({
         component: 'ModalSExcuser',
-        data: exercice,
+        data: {
+          exercices: this.exercices,
+          exerciceId: exercice?.id,
+        },
       });
     },
     removeExcuse(exercice) {
