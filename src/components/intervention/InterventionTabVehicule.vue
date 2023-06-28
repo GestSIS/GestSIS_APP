@@ -4,14 +4,6 @@
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Véhicules</h3>
-        <button
-          v-if="hasEditPermission"
-          type="button"
-          class="btn btn-primary"
-          @click="save"
-        >
-          Enregistrer
-        </button>
       </div>
       <div class="card-body">
         <table id="int-vehicules" class="table table-sm">
@@ -35,8 +27,9 @@
                   <input
                     :id="'v-' + v.id"
                     v-model="selected[v.id]"
-                    type="checkbox"
+                    @change="editVehicule(v.id)"
                     :disabled="!hasEditPermission"
+                    type="checkbox"
                     class="form-check-input"
                   />
                   <label class="form-check-label" :for="'v-' + v.id"></label>
@@ -81,11 +74,6 @@ export default {
         ),
     }),
   },
-  watch: {
-    interventionVehicules(value) {
-      this.updateVehicules(value);
-    },
-  },
   mounted() {
     if (this.vehicules.length === 0) {
       this.$store.dispatch('fetchVehicules');
@@ -97,31 +85,14 @@ export default {
       });
   },
   methods: {
-    async save() {
-      let vehiculesIds = this.interventionVehicules.map((v) => v.vehicule_id);
-      let ids = Object.keys(this.selected)
-        .filter((item) => this.selected[item])
-        .map((x) => parseInt(x));
+    async editVehicule(vehiculeId) {
+      const event = this.selected[vehiculeId]
+        ? 'addInterventionVehicules'
+        : 'removeInterventionVehicules';
 
-      //New One
-      let newOne = ids.filter((item) => !vehiculesIds.includes(item));
-
-      //Removed
-      let removed = vehiculesIds.filter((item) => !ids.includes(item));
-      let removedIds = removed.map(
-        (vehicule_id) =>
-          this.interventionVehicules.find((v) => v.vehicule_id == vehicule_id)
-            ?.id
-      );
-
-      Promise.all([
-        removedIds.length > 0
-          ? this.$store.dispatch('removeInterventionVehicules', removedIds)
-          : Promise.resolved,
-        newOne.length > 0
-          ? this.$store.dispatch('addInterventionVehicules', newOne)
-          : Promise.resolved,
-      ]).then(() => this.$awn.success('Modifications enregistrées'));
+      this.$store
+        .dispatch(event, [vehiculeId])
+        .then(() => this.$awn.success('Modifications enregistrées'));
     },
     updateVehicules(value) {
       this.selected = {};

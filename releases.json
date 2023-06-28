@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "28.06.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de la saisie des véhicules pour les interventions"
+      ]
+    },
+    {
       "date": "18.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
