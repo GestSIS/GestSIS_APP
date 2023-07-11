@@ -7,9 +7,7 @@
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Exercices
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Absences</li>
           </ol>
         </nav>
       </div>
@@ -24,15 +22,15 @@
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
-            :to="{ name: 'exercices' }"
-            >Exercices</router-link
+            :to="{ name: 'absences' }"
+            >Tableau de bord</router-link
           >
           <router-link
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
-            :to="{ name: 'exercices-absences' }"
-            >Absences</router-link
+            :to="{ name: 'absences-liste' }"
+            >Liste</router-link
           >
         </nav>
       </div>
@@ -41,38 +39,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import store from '/src/store/index';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { onBeforeRouteUpdate } from 'vue-router';
 
-async function loadData(routeTo, next) {
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+async function loadData({ next }) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
+  const loadLocalities = store.dispatch('fetchLocalites');
+  const loadGroupes = store.dispatch('fetchGroupes');
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadPermisType = store.dispatch('fetchPermisType');
 
   Promise.all([
     loadSapeurs,
     loadLocalities,
-    loadExerciceCategories,
-    loadExerciceComptables,
+    loadGroupes,
+    loadFonctions,
+    loadPermisType,
   ]).then(() => {
     next();
   });
 }
-
-export default {
-  name: 'PageExercices',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-};
+onBeforeRouteUpdate((guard) => loadData(guard));
 </script>
 
 <style></style>

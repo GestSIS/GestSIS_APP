@@ -20,6 +20,11 @@ export default {
     VALIDATION: 'exercice.validation',
     CONFIG: 'exercice.config',
   },
+  ABSENCE: {
+    LECTURE: 'exercice.lecture',
+    MODIFICATION: 'exercice.presence',
+    CONFIG: 'exercice.config',
+  },
   COURS: {
     LECTURE: 'cours.lecture',
     MODIFICATION: 'cours.modification',

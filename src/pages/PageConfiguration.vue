@@ -84,6 +84,11 @@ export default {
           permission: permissions.SMS.CONFIG,
         },
         {
+          to: { name: 'param-absence' },
+          name: 'Absences',
+          permission: permissions.ABSENCE.CONFIG,
+        },
+        {
           to: { name: 'param-comptabilite' },
           name: 'Comptabilité',
           permission: permissions.COMPTABILITE.CONFIG,

@@ -55,6 +55,12 @@ const links = [
     permission: permissions.ORGANISATION.MODIFICATION,
   },
   {
+    to: { name: 'absences' },
+    icon: 'bicycle',
+    nom: 'Absences',
+    permission: permissions.ABSENCE.LECTURE,
+  },
+  {
     to: { name: 'comptabilite-decompte' },
     icon: 'calculator',
     nom: 'Comptabilité',

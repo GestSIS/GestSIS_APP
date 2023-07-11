@@ -1,0 +1,56 @@
+<template>
+  <div class="row">
+    <div class="col-sm-12 col-xl-3">
+      <div class="card card-primary card-outline">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Paramètres Absences</h3>
+        </div>
+        <nav
+          class="nav flex-column nav-pills"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'absence' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'absence'"
+          >
+            Général
+          </a>
+        </nav>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xl-9">
+      <parametre-absence v-if="tab === 'absence'" />
+    </div>
+  </div>
+</template>
+
+<script>
+import store from '/src/store/index';
+import ParametreAbsence from './ParametreAbsence.vue';
+
+async function loadData(_, next) {
+  store.dispatch('fetchAbsenceParams').then(next()).catch(next());
+}
+
+export default {
+  name: 'ParametreTabAbsence',
+  components: {
+    ParametreAbsence,
+  },
+  beforeRouteEnter(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  beforeRouteUpdate(routeTo, _, next) {
+    loadData(routeTo, next);
+  },
+  data() {
+    return { tab: 'absence' };
+  },
+};
+</script>
+
+<style scoped></style>

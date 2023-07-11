@@ -52,6 +52,7 @@ import {
   faSort,
   faSortUp,
   faSortDown,
+  faBicycle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -73,6 +74,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faBicycle,
   faSort,
   faSortUp,
   faSortDown,

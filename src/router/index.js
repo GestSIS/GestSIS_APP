@@ -295,9 +295,27 @@ const router = createRouter({
         },
         {
           path: 'absences',
-          name: 'absences',
+          name: 'exercices-absences',
           component: () =>
             import('/src/components/exercice/ExerciceAbsences.vue'),
+        },
+      ],
+    },
+    {
+      path: '/absences',
+      beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
+      component: () => import('/src/pages/PageAbsences.vue'),
+      children: [
+        {
+          path: '',
+          name: 'absences',
+          component: () =>
+            import('/src/components/absence/AbsenceDashboard.vue'),
+        },
+        {
+          path: 'absences',
+          name: 'absences-liste',
+          component: () => import('/src/components/absence/AbsenceListe.vue'),
         },
       ],
     },
@@ -599,6 +617,13 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.SMS.CONFIG),
           component: () =>
             import('/src/components/parametres/ParametreTabSms.vue'),
+        },
+        {
+          path: 'absence',
+          name: 'param-absence',
+          beforeEnter: permissionGuard(permissions.ABSENCE.CONFIG),
+          component: () =>
+            import('/src/components/parametres/ParametreTabAbsence.vue'),
         },
         {
           path: 'comptabilite',
