@@ -56,7 +56,7 @@ const links = [
   },
   {
     to: { name: 'absences' },
-    icon: 'bicycle',
+    icon: 'umbrella-beach',
     nom: 'Absences',
     permission: permissions.ABSENCE.LECTURE,
   },

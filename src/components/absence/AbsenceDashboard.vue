@@ -1,251 +1,149 @@
 <template>
-  <stateful-filter
-    id="exercices"
-    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
-    :data="computedData"
-  >
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="{ name: 'exercice', params: { id: 'new' } }"
-            >
-              <button
-                v-if="hasEditPermission"
-                class="btn btn-outline-primary"
-                @click="navigate"
-              >
-                Ajouter un exercice
-              </button>
-            </router-link>
-            <router-link
-              v-slot="{ navigate }"
-              custom
-              :to="'/exercices/' + selectedId"
-            >
-              <button
-                :disabled="!selectedId"
-                class="btn btn-outline-primary"
-                @click="navigate"
-              >
-                {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
-              </button>
-            </router-link>
-            <!-- <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
-                class="btn btn-outline-primary">
-                Annuler
-              </button>
-              <button v-if="hasValidationPermission" :disabled="!selectedId" @click="annuler({ id: selectedId })"
-                class="btn btn-outline-primary">
-                Annuler
-              </button> -->
-            <div class="row">
-              <div class="col-6">
-                <button
-                  :disabled="!selectedId"
-                  class="btn btn-outline-primary col-12"
-                  @click="sms({ id: selectedId })"
-                >
-                  SMS
-                </button>
-              </div>
-              <div class="col-6">
-                <button
-                  :disabled="!selectedId"
-                  class="btn btn-outline-primary col-12"
-                  @click="email({ id: selectedId })"
-                >
-                  Email
-                </button>
-              </div>
-            </div>
-            <button
-              class="btn btn-outline-primary"
-              @click="downloadIcs(filteredData)"
-            >
-              Fichier <em>Icalc</em>
-            </button>
-          </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Actions</h5>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Impressions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button
-              class="btn btn-outline-primary"
-              :disabled="!exercices.length"
-              @click="convoquer"
-            >
-              Convocations
-            </button>
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="listePresences({ id: selectedId })"
-            >
-              Liste de présences
-            </button>
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="listeAppel({ id: selectedId })"
-            >
-              Liste d'appel
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4"
-                :options="filteredLocalites"
-                base-option="<Localité>"
-                :model-value="filters.localite_id"
-                @update:model-value="(value) => setFilter('localite_id', value)"
-              />
-              <base-select
-                class="col-md-4"
-                :options="filteredExercicesCategories"
-                base-option="<Catégorie>"
-                :model-value="filters.exercice_categorie_id"
-                @update:model-value="
-                  (value) => setFilter('exercice_categorie_id', value)
-                "
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Statut>"
-                :options="[
-                  { id: 0, designation: 'Annulé' },
-                  { id: 1, designation: 'Sapeurs à ajouter' },
-                  { id: 2, designation: 'En attente de validation' },
-                  { id: 3, designation: 'Validé' },
-                  { id: 4, designation: 'Imputé' },
-                ]"
-                :model-value="filters.statut"
-                @update:model-value="(value) => setFilter('statut', value)"
-              />
-              <div v-if="canReset" class="col-md-4 mt-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive">
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-          <base-table
-            v-show="!loading"
-            ref="basetable_exercices"
-            :selectable="true"
-            :fields="fieldsBase"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            detail-row-class="m-td-0"
-            no-data="Aucun exercice/séance à afficher"
-            :data="filteredData"
-            :row-class="onRowClass"
-            @selected="selectExercice"
+        <div class="card-body d-grid gap-2">
+          <!-- <router-link
+            v-slot="{ navigate }"
+            custom
+            :to="{ name: 'absence', params: { id: 'new' } }"
           >
-            <template #actions="{ rowData }">
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/exercices/' + rowData.id"
-                custom
-              >
-                <button
-                  title="modifier"
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-              </router-link>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 2"
-                title="valider"
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="
-                  hasValidationPermission &&
-                  rowData.statut <= 3 &&
-                  rowData.statut > 0
-                "
-                title="annuler"
-                class="btn btn-outline-warning border-0"
-                @click="annulerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'ban']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 0"
-                title="réactiver"
-                class="btn btn-outline-success border-0"
-                @click="reactiverExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut <= 3"
-                title="supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="supprimerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-          </base-table>
+            <button
+              v-if="hasEditPermission"
+              class="btn btn-outline-primary"
+              @click="navigate"
+            >
+              Ajouter une absence
+            </button>
+          </router-link>
+          <router-link
+            v-slot="{ navigate }"
+            custom
+            :to="'/absences/' + selectedId"
+          >
+            <button
+              :disabled="!selectedId"
+              class="btn btn-outline-primary"
+              @click="navigate"
+            >
+              {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
+            </button>
+          </router-link> -->
         </div>
       </div>
     </div>
-  </stateful-filter>
+    <div class="col-md-3">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Impressions</h5>
+        </div>
+        <div class="card-body d-grid gap-2">
+          <!-- <button
+            class="btn btn-outline-primary"
+            :disabled="!absences.length"
+            @click="convoquer"
+          >
+            Convocations
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-primary card-outline table-responsive">
+        <div v-if="loading" class="card-body d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+        </div>
+        <table class="table table-primary">
+          <thead>
+            <tr>
+              <th rowspan="2">
+                <base-select
+                  v-model="displayKey"
+                  :options="[
+                    { designation: 'Fonctions', id: 'fonction_id' },
+                    { designation: 'Permis', id: 'permis_id' },
+                    { designation: 'Localité', id: 'localite_id' },
+                  ]"
+                />
+              </th>
+              <th>Lundi</th>
+              <th>Mardi</th>
+              <th>Mercredi</th>
+              <th>Jeudi</th>
+              <th>Vendredi</th>
+              <th>Samedi</th>
+              <th>Dimanche</th>
+            </tr>
+            <tr>
+              <th v-for="({ jour }, i) in computedData" :key="i">{{ jour }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>CDT</th>
+              <td>1/1</td>
+              <td>1/1</td>
+              <td>1/1</td>
+              <td>1/1</td>
+              <td>1/1</td>
+              <td>1/1</td>
+              <td>1/1</td>
+            </tr>
+            <tr>
+              <th>CI1</th>
+              <td>1/7</td>
+              <td>1/7</td>
+              <td>1/7</td>
+              <td>1/7</td>
+              <td>1/7</td>
+              <td>1/7</td>
+              <td>1/7</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>x/X</th>
+            </tr>
+          </tfoot>
+        </table>
+        <!-- <base-table
+          v-show="!loading"
+          ref="basetable_absences"
+          :selectable="true"
+          :fields="fieldsBase"
+          :detail-row-column="true"
+          :detail-row-component="detailRowComponent"
+          detail-row-class="m-td-0"
+          no-data="Aucun absence à afficher"
+          :data="computedData"
+          :row-class="onRowClass"
+          @selected="selectAbsence"
+        /> -->
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
-
-import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
-
-import ExerciceService from '/src/services/ExerciceService.js';
-
-import { exercicesToIcs } from '../../tools/exportExercices';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
-  const loadExercices = store.dispatch('fetchListeExercice');
-  Promise.all([loadExercices]).then(() => {
+  const loadAbsences = store.dispatch(
+    'fetchAbsences',
+    store.state.exerciceComptable.activeId
+  );
+  Promise.all([loadAbsences]).then(() => {
     next();
   });
 }
@@ -261,99 +159,103 @@ export default {
   data() {
     return {
       loading: true,
-      tab: 'exercice',
+      displayKey: 'fonction_id',
+      displayMonth: 7,
+      tab: 'absence',
       selectedId: null,
-      detailRowComponent: markRaw(ExerciceDetails),
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Categorie', key: 'categorie' },
-        {
-          title: 'Heure',
-          key: 'heure',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
-        },
-        { title: 'Durée', key: 'duree' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Lieu', key: 'lieu' },
-        { title: 'Designation', key: 'designation' },
-        {
-          title: 'Statut',
-          key: 'statut',
-          formatter(value) {
-            const statuts = {
-              0: 'Annulé',
-              1: 'A saisir',
-              2: 'En attente de validation',
-              3: 'Validé',
-              4: 'Imputé',
-            };
-            return statuts[value];
-          },
-        },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
       ],
     };
   },
   computed: {
     ...mapState({
-      sisKey: (state) => state.auth.sis.activeKey,
-      sisName: (state) =>
-        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
-      annee: (state) =>
-        state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId
-        )?.annee,
       sapeurs: (state) => state.sapeur.liste,
-      exercices: (state) =>
-        state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
-      categories: (state) => state.exerciceCategorie.liste,
+      absences: (state) =>
+        state.absence.liste.sort((a, b) => a.date.localeCompare(b.date)),
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceComptable: (state) =>
+        state.exerciceComptable.liste.find(
+          (e) => state.exerciceComptable.activeId === e.id
+        ),
       hasEditPermission: (state) =>
         state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
-      hasSmsEnvoiePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
+        state.auth.sis.permissions.includes(permissions.ABSENCE.MODIFICATION),
     }),
-    computedData() {
-      return this.exercices.map((e) => ({
-        ...e,
-        categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
-          ?.designation,
-        localite: this.localites.find((l) => l.id == e.localite_id)
-          ?.designation,
-      }));
+    indexedSapeurs() {
+      const indexedSapeurs = {};
+      this.sapeurs.forEach((s) => (indexedSapeurs[s.id] = s));
+      return indexedSapeurs;
     },
-    filteredExercicesCategories() {
-      const ids = new Set(
-        this.exercices.map((i) => parseInt(i.exercice_categorie_id))
-      );
-      return this.categories.filter((t) => ids.has(t.id));
+    referenceData() {
+      const data = {
+        permis: {},
+        permisSapeursAbsent: [],
+        fonction: {},
+        fonctionSapeursAbsent: [],
+        localite: {},
+        localiteSapeursAbsent: [],
+      };
+      // TODO: Stats sapeurs
+      // this.sapeurs.foreach()
+      return data;
+    },
+    computedData() {
+      const year = this.activeExerciceComptable.annee;
+      const nbDays = new Date(year, this.displayMonth, 0).getDate();
+      const data = [...Array(nbDays).keys()].map((day) => ({
+        jour:
+          ('0' + (1 + day)).slice(-2) +
+          '.' +
+          ('0' + this.displayMonth).slice(-2),
+        totalAbsent: 0,
+        permis: {},
+        permisSapeursAbsent: [],
+        fonction: {},
+        fonctionSapeursAbsent: [],
+        localite: {},
+        localiteSapeursAbsent: [],
+      }));
+
+      const absences = [{ debut: '2020-07-02', fin: '2020-07-05' }];
+
+      const moisDebut = new Date(year, this.displayMonth - 1, 1);
+      const moisFin = new Date(year, this.displayMonth, 0);
+
+      absences
+        .filter(
+          (a) => new Date(a.debut) <= moisFin && new Date(a.fin) >= moisDebut
+        )
+        .forEach((a) => {
+          let date = new Date(a.debut);
+          const fin = new Date(a.fin);
+          while (date <= fin) {
+            if (date.getMonth() + 1 == this.displayMonth) {
+              data[date.getDate() - 1].totalAbsent++;
+            }
+            date.setDate(date.getDate() + 1);
+          }
+        });
+
+      return data;
+    },
+    filteredSapeurs() {
+      return this.sapeurs;
     },
     filteredLocalites() {
-      const ids = new Set(this.exercices.map((i) => parseInt(i.localite_id)));
+      const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
     },
   },
   watch: {
     activeExerciceComptableId() {
       this.loading = true;
-      this.$store.dispatch('fetchListeExercice').then(() => {
+      this.$store.dispatch('fetchListeAbsence').then(() => {
         this.loading = false;
       });
     },
@@ -373,63 +275,30 @@ export default {
         );
         return;
       }
-      const exercice = this.exercices.find((e) => e.id == id);
+      const absence = this.absences.find((e) => e.id == id);
       this.SHOW_MODAL({
-        component: 'ModalSmsExercice',
+        component: 'ModalSmsAbsence',
         size: 2,
-        data: exercice,
+        data: absence,
       });
     },
-    email({ id }) {
-      ExerciceService.getSapeurs(id).then((presences) => {
-        const link = document.createElement('a');
-        link.href =
-          'mailto:?bcc=' +
-          presences
-            .map((p) => this.sapeurs.find((s) => s.id == p.sapeur_id)?.email)
-            .filter((s) => s)
-            .join(', ');
-        link.click();
-      });
-    },
-    validerExercice(id) {
-      this.$store.dispatch('validerExercice', id);
-    },
-    annulerExercice(id) {
-      this.$store.dispatch('annulerExercice', id);
-    },
-    reactiverExercice(id) {
-      this.$store.dispatch('reactiverExercice', id);
-    },
-    supprimerExercice(id) {
+    supprimerAbsence(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
-          title: 'Voulez-vous vraiment supprimer cet exercice ?',
+          title: 'Voulez-vous vraiment supprimer cet absence ?',
           question:
-            "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
+            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cet absence seront perdues !",
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('supprimerExercice', id);
+            this.$store.dispatch('supprimerAbsence', id);
           }
         },
       });
     },
-    selectExercice(row) {
+    selectAbsence(row) {
       this.selectedId = row?.id;
-    },
-    listePresences({ id }) {
-      ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
-    },
-    listeAppel({ id }) {
-      ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
-    },
-    downloadIcs(filteredExercices) {
-      if (filteredExercices.length <= 0) {
-        this.$awn.alert('Aucun exercice à exporter');
-      }
-      exercicesToIcs(filteredExercices, this.sisName, this.sisKey, this.annee);
     },
     onRowClass(dataItem, isSelected) {
       if (dataItem.statut == 0) {
