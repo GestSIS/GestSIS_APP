@@ -60,7 +60,7 @@
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <table class="table table-primary">
+        <table class="table">
           <thead>
             <tr>
               <th rowspan="2">
@@ -73,38 +73,44 @@
                   ]"
                 />
               </th>
-              <th>Lundi</th>
-              <th>Mardi</th>
-              <th>Mercredi</th>
-              <th>Jeudi</th>
-              <th>Vendredi</th>
-              <th>Samedi</th>
-              <th>Dimanche</th>
+              <td
+                v-for="({ jourSemaine }, i) in computedData"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                {{
+                  [
+                    'Lundi',
+                    'Mardi',
+                    'Mercredi',
+                    'Jeudi',
+                    'Vendredi',
+                    'Samedi',
+                    'Dimanche',
+                  ][jourSemaine]
+                }}
+              </td>
             </tr>
             <tr>
-              <th v-for="({ jour }, i) in computedData" :key="i">{{ jour }}</th>
+              <th
+                v-for="({ date, jourSemaine }, i) in computedData"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                {{ date }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>CDT</th>
-              <td>1/1</td>
-              <td>1/1</td>
-              <td>1/1</td>
-              <td>1/1</td>
-              <td>1/1</td>
-              <td>1/1</td>
-              <td>1/1</td>
-            </tr>
-            <tr>
-              <th>CI1</th>
-              <td>1/7</td>
-              <td>1/7</td>
-              <td>1/7</td>
-              <td>1/7</td>
-              <td>1/7</td>
-              <td>1/7</td>
-              <td>1/7</td>
+            <tr v-for="f in fonctions" :key="f.id">
+              <th>{{ f.name }}</th>
+              <td
+                v-for="({ jourSemaine }, i) in computedData"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                1/1
+              </td>
             </tr>
           </tbody>
           <tfoot>
@@ -143,7 +149,17 @@ async function loadData(routeTo, next) {
     'fetchAbsences',
     store.state.exerciceComptable.activeId
   );
-  Promise.all([loadAbsences]).then(() => {
+  const loadFonctions = store.dispatch('fetchFonctions');
+  const loadPermis = store.dispatch('fetchPermisType');
+  const loadGroupes = store.dispatch('fetchGroupes');
+  const loadLocalites = store.dispatch('fetchLocalites');
+  Promise.all([
+    loadAbsences,
+    loadFonctions,
+    loadPermis,
+    loadGroupes,
+    loadLocalites,
+  ]).then(() => {
     next();
   });
 }
@@ -178,6 +194,8 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
+      fonctions: (state) => state.fonction.liste.sort((a, b) => a.tri - b.tri),
+      permis: (state) => state.permis,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeExerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
@@ -209,7 +227,8 @@ export default {
       const year = this.activeExerciceComptable.annee;
       const nbDays = new Date(year, this.displayMonth, 0).getDate();
       const data = [...Array(nbDays).keys()].map((day) => ({
-        jour:
+        jourSemaine: new Date(year, this.displayMonth - 1, 1 + day).getDay(),
+        date:
           ('0' + (1 + day)).slice(-2) +
           '.' +
           ('0' + this.displayMonth).slice(-2),
