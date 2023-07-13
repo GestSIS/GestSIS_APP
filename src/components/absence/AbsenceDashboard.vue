@@ -103,7 +103,7 @@
           </thead>
           <tbody>
             <tr v-for="f in fonctions" :key="f.id">
-              <th>{{ f.name }}</th>
+              <th>{{ f.nom }}</th>
               <td
                 v-for="({ jourSemaine }, i) in computedData"
                 :key="i"
@@ -115,7 +115,14 @@
           </tbody>
           <tfoot>
             <tr>
-              <th>x/X</th>
+              <th>Total</th>
+              <th
+                v-for="({ jourSemaine }, i) in computedData"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                x/X
+              </th>
             </tr>
           </tfoot>
         </table>
@@ -194,7 +201,10 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
-      fonctions: (state) => state.fonction.liste.sort((a, b) => a.tri - b.tri),
+      fonctions: (state) =>
+        state.fonction.liste
+          .filter((f) => !f.cumulable)
+          .sort((a, b) => b.tri - a.tri),
       permis: (state) => state.permis,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeExerciceComptable: (state) =>
