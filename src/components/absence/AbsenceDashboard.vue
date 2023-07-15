@@ -74,7 +74,7 @@
                 />
               </th>
               <td
-                v-for="({ jourSemaine }, i) in computedData"
+                v-for="({ jourSemaine }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
@@ -93,7 +93,7 @@
             </tr>
             <tr>
               <th
-                v-for="({ date, jourSemaine }, i) in computedData"
+                v-for="({ date, jourSemaine }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
@@ -105,11 +105,47 @@
             <tr v-for="f in fonctions" :key="f.id">
               <th>{{ f.nom }}</th>
               <td
-                v-for="({ jourSemaine }, i) in computedData"
+                v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
-                1/1
+                {{
+                  (referenceData.fonctions[f.id] ?? 0) -
+                  (fonctions[f.id] ?? new Set()).size
+                }}
+                / {{ referenceData.fonctions[f.id] ?? 0 }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr v-for="p in permisTypes" :key="p.id">
+              <th>{{ p.type }}</th>
+              <td
+                v-for="({ jourSemaine, permis }, i) in computedAbsences"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                {{
+                  (referenceData.permis[p.id] ?? 0) -
+                  (permis[p.id] ?? new Set()).size
+                }}
+                / {{ referenceData.permis[p.id] ?? 0 }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr v-for="g in filteredGroupes" :key="g.id">
+              <th>{{ g.no }} {{ g.designation }}</th>
+              <td
+                v-for="({ jourSemaine, groupes }, i) in computedAbsences"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                {{
+                  (referenceData.groupes[g.id] ?? 0) -
+                  (groupes[g.id] ?? new Set()).size
+                }}
+                / {{ referenceData.groupes[g.id] ?? 0 }}
               </td>
             </tr>
           </tbody>
@@ -117,7 +153,7 @@
             <tr>
               <th>Total</th>
               <th
-                v-for="({ jourSemaine }, i) in computedData"
+                v-for="({ jourSemaine }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
@@ -135,7 +171,7 @@
           :detail-row-component="detailRowComponent"
           detail-row-class="m-td-0"
           no-data="Aucun absence à afficher"
-          :data="computedData"
+          :data="computedAbsences"
           :row-class="onRowClass"
           @selected="selectAbsence"
         /> -->
@@ -152,6 +188,7 @@ import permissions from '../../store/permissions.js';
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadAbsences = store.dispatch(
     'fetchAbsences',
     store.state.exerciceComptable.activeId
@@ -161,6 +198,7 @@ async function loadData(routeTo, next) {
   const loadGroupes = store.dispatch('fetchGroupes');
   const loadLocalites = store.dispatch('fetchLocalites');
   Promise.all([
+    loadSapeurs,
     loadAbsences,
     loadFonctions,
     loadPermis,
@@ -201,11 +239,15 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
+      groupes: (state) =>
+        state.groupe.liste
+          .filter((g) => g.type && g.no)
+          .sort((a, b) => a.no - b.no),
       fonctions: (state) =>
         state.fonction.liste
           .filter((f) => !f.cumulable)
           .sort((a, b) => b.tri - a.tri),
-      permis: (state) => state.permis,
+      permisTypes: (state) => state.baseData.permisTypes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeExerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
@@ -215,6 +257,14 @@ export default {
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.ABSENCE.MODIFICATION),
     }),
+    computedSapeurs() {
+      // TODO: Compute main fonction pour chaque sapeur
+      return this.sapeurs.map((s) => ({
+        ...s,
+        mainFonctionId: null,
+        mainGroupe: null,
+      }));
+    },
     indexedSapeurs() {
       const indexedSapeurs = {};
       this.sapeurs.forEach((s) => (indexedSapeurs[s.id] = s));
@@ -223,17 +273,20 @@ export default {
     referenceData() {
       const data = {
         permis: {},
-        permisSapeursAbsent: [],
-        fonction: {},
-        fonctionSapeursAbsent: [],
-        localite: {},
-        localiteSapeursAbsent: [],
+        groupes: {},
+        fonctions: {},
+        localites: {},
       };
       // TODO: Stats sapeurs
-      // this.sapeurs.foreach()
+      this.sapeurs.forEach((s) => {
+        s.permis.forEach(
+          (permisId) =>
+            (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
+        );
+      });
       return data;
     },
-    computedData() {
+    computedAbsences() {
       const year = this.activeExerciceComptable.annee;
       const nbDays = new Date(year, this.displayMonth, 0).getDate();
       const data = [...Array(nbDays).keys()].map((day) => ({
@@ -242,16 +295,16 @@ export default {
           ('0' + (1 + day)).slice(-2) +
           '.' +
           ('0' + this.displayMonth).slice(-2),
-        totalAbsent: 0,
         permis: {},
-        permisSapeursAbsent: [],
-        fonction: {},
-        fonctionSapeursAbsent: [],
-        localite: {},
-        localiteSapeursAbsent: [],
+        groupes: {},
+        fonctions: {},
+        localites: {},
+        total: 0,
       }));
 
-      const absences = [{ debut: '2020-07-02', fin: '2020-07-05' }];
+      const absences = [
+        { debut: '2020-07-02', fin: '2020-07-05', sapeur_id: 1 },
+      ];
 
       const moisDebut = new Date(year, this.displayMonth - 1, 1);
       const moisFin = new Date(year, this.displayMonth, 0);
@@ -265,7 +318,28 @@ export default {
           const fin = new Date(a.fin);
           while (date <= fin) {
             if (date.getMonth() + 1 == this.displayMonth) {
-              data[date.getDate() - 1].totalAbsent++;
+              const sapeur = this.indexedSapeurs[a.sapeur_id];
+
+              const record = data[date.getDate() - 1];
+              record.total++;
+
+              sapeur.permis.forEach(
+                (permisId) =>
+                  (record.permis[permisId] = (
+                    record.permis[permisId] ?? new Set()
+                  ).add(sapeur.id))
+              );
+              record.groupes[sapeur.mainGroupeId] = (
+                record.groupes[sapeur.mainGroupeId] ?? new Set()
+              ).add(sapeur.id);
+              record.fonctions[sapeur.mainFonctionId] = (
+                record.fonctions[sapeur.mainFonctionId] ?? new Set()
+              ).add(sapeur.id);
+              record.localites[sapeur.localite_id] = (
+                record.localites[sapeur.localite_id] ?? new Set()
+              ).add(sapeur.id);
+
+              data[date.getDate() - 1] = record;
             }
             date.setDate(date.getDate() + 1);
           }
@@ -279,6 +353,9 @@ export default {
     filteredLocalites() {
       const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
+    },
+    filteredGroupes() {
+      return this.groupes.filter((g) => g.type);
     },
   },
   watch: {
