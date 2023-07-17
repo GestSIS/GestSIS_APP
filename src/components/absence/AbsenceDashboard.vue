@@ -109,43 +109,71 @@
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
-                {{
-                  (referenceData.fonctions[f.id] ?? 0) -
-                  (fonctions[f.id] ?? new Set()).size
-                }}
-                / {{ referenceData.fonctions[f.id] ?? 0 }}
+                <template v-if="referenceData.fonctions[f.id]">
+                  {{
+                    (referenceData.fonctions[f.id] ?? 0) -
+                    (fonctions[f.id] ?? new Set()).size
+                  }}
+                  / {{ referenceData.fonctions[f.id] ?? 0 }}
+                </template>
+                <template v-else>-</template>
               </td>
             </tr>
           </tbody>
           <tbody>
-            <tr v-for="p in permisTypes" :key="p.id">
+            <tr v-for="p in filteredPermis" :key="p.id">
               <th>{{ p.type }}</th>
               <td
                 v-for="({ jourSemaine, permis }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
-                {{
-                  (referenceData.permis[p.id] ?? 0) -
-                  (permis[p.id] ?? new Set()).size
-                }}
-                / {{ referenceData.permis[p.id] ?? 0 }}
+                <template v-if="referenceData.permis[p.id]">
+                  {{
+                    (referenceData.permis[p.id] ?? 0) -
+                    (permis[p.id] ?? new Set()).size
+                  }}
+                  / {{ referenceData.permis[p.id] ?? 0 }}
+                </template>
+                <template v-else>-</template>
               </td>
             </tr>
           </tbody>
           <tbody>
-            <tr v-for="g in filteredGroupes" :key="g.id">
+            <tr v-for="l in localitesSis" :key="l.id">
+              <th>{{ l.designation }}</th>
+              <td
+                v-for="({ jourSemaine, localites }, i) in computedAbsences"
+                :key="i"
+                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+              >
+                <template v-if="referenceData.localites[l.id]">
+                  {{
+                    (referenceData.localites[l.id] ?? 0) -
+                    (localites[l.id] ?? new Set()).size
+                  }}
+                  / {{ referenceData.localites[l.id] ?? 0 }}
+                </template>
+                <template v-else>-</template>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr v-for="g in groupes" :key="g.id">
               <th>{{ g.no }} {{ g.designation }}</th>
               <td
                 v-for="({ jourSemaine, groupes }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
-                {{
-                  (referenceData.groupes[g.id] ?? 0) -
-                  (groupes[g.id] ?? new Set()).size
-                }}
-                / {{ referenceData.groupes[g.id] ?? 0 }}
+                <template v-if="referenceData.groupes[g.id]">
+                  {{
+                    (referenceData.groupes[g.id] ?? 0) -
+                    (groupes[g.id] ?? new Set()).size
+                  }}
+                  / {{ referenceData.groupes[g.id] ?? 0 }}
+                </template>
+                <template v-else>-</template>
               </td>
             </tr>
           </tbody>
@@ -197,6 +225,8 @@ async function loadData(routeTo, next) {
   const loadPermis = store.dispatch('fetchPermisType');
   const loadGroupes = store.dispatch('fetchGroupes');
   const loadLocalites = store.dispatch('fetchLocalites');
+  const loadLocalitesSis = store.dispatch('fetchLocalitesSis');
+
   Promise.all([
     loadSapeurs,
     loadAbsences,
@@ -204,6 +234,7 @@ async function loadData(routeTo, next) {
     loadPermis,
     loadGroupes,
     loadLocalites,
+    loadLocalitesSis,
   ]).then(() => {
     next();
   });
@@ -239,6 +270,11 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
+      localitesSis: (state) =>
+        state.localite.listeSis.map((l) => ({
+          id: l,
+          ...state.localite.liste.find((e) => e.id == l),
+        })),
       groupes: (state) =>
         state.groupe.liste
           .filter((g) => g.type && g.no)
@@ -259,11 +295,17 @@ export default {
     }),
     computedSapeurs() {
       // TODO: Compute main fonction pour chaque sapeur
-      return this.sapeurs.map((s) => ({
-        ...s,
-        mainFonctionId: null,
-        mainGroupe: null,
-      }));
+      return this.sapeurs.map((s) => {
+        const fonctionsIds = new Set(s.fonctions.map((f) => f));
+        return {
+          ...s,
+          mainFonctionId: this.fonctions.find((f) => fonctionsIds.has(f.id))
+            ?.id,
+          mainGroupeId: this.groupes.find(
+            (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id
+          )?.id,
+        };
+      });
     },
     indexedSapeurs() {
       const indexedSapeurs = {};
@@ -277,8 +319,14 @@ export default {
         fonctions: {},
         localites: {},
       };
-      // TODO: Stats sapeurs
-      this.sapeurs.forEach((s) => {
+
+      this.computedSapeurs.forEach((s) => {
+        data.localites[s.localite_id] =
+          (data.localites[s.localite_id] ?? 0) + 1;
+        data.fonctions[s.mainFonctionId] =
+          (data.fonctions[s.mainFonctionId] ?? 0) + 1;
+        data.groupes[s.mainGroupeId] = (data.groupes[s.mainGroupeId] ?? 0) + 1;
+
         s.permis.forEach(
           (permisId) =>
             (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
@@ -354,8 +402,11 @@ export default {
       const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
       return this.localites.filter((t) => ids.has(t.id));
     },
-    filteredGroupes() {
-      return this.groupes.filter((g) => g.type);
+    filteredPermis() {
+      const ids = new Set(
+        Object.keys(this.referenceData.permis).map((id) => parseInt(id))
+      );
+      return this.permisTypes.filter((p) => ids.has(p.id));
     },
   },
   watch: {

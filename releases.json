@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "XX.07.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Nouveau module `Absences`"]
+    },
+    {
       "date": "28.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
