@@ -44,24 +44,22 @@ import store from '/src/store/index';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { onBeforeRouteUpdate } from 'vue-router';
 
-async function loadData({ next }) {
+async function loadData() {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalities = store.dispatch('fetchLocalites');
   const loadGroupes = store.dispatch('fetchGroupes');
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadPermisType = store.dispatch('fetchPermisType');
 
-  Promise.all([
+  await Promise.all([
     loadSapeurs,
     loadLocalities,
     loadGroupes,
     loadFonctions,
     loadPermisType,
-  ]).then(() => {
-    next();
-  });
+  ]);
 }
-onBeforeRouteUpdate((guard) => loadData(guard));
+onBeforeRouteUpdate(loadData);
 </script>
 
 <style></style>

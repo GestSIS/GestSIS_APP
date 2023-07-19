@@ -313,7 +313,7 @@ const router = createRouter({
             import('/src/components/absence/AbsenceDashboard.vue'),
         },
         {
-          path: 'absences',
+          path: 'liste',
           name: 'absences-liste',
           component: () => import('/src/components/absence/AbsenceListe.vue'),
         },
