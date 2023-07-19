@@ -67,9 +67,10 @@
                 <base-select
                   v-model="displayKey"
                   :options="[
-                    { designation: 'Fonctions', id: 'fonction_id' },
-                    { designation: 'Permis', id: 'permis_id' },
-                    { designation: 'Localité', id: 'localite_id' },
+                    { designation: 'Fonction', id: 'fonction' },
+                    { designation: 'Permis', id: 'permis' },
+                    { designation: 'Localité', id: 'localite' },
+                    { designation: 'Groupe', id: 'groupe' },
                   ]"
                 />
               </th>
@@ -101,14 +102,40 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="displayKey == 'fonction'">
             <tr v-for="f in fonctions" :key="f.id">
               <th>{{ f.nom }}</th>
+              <!-- <v-popover
+                v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
+                :key="i"
+              >
+                <td :class="{ 'table-secondary': jourSemaine in [6, 7] }">
+                  <template v-if="referenceData.fonctions[f.id]">
+                    {{
+                      (referenceData.fonctions[f.id] ?? 0) -
+                      (fonctions[f.id] ?? new Set()).size
+                    }}
+                    / {{ referenceData.fonctions[f.id] ?? 0 }}
+                  </template>
+                  <template v-else>-</template>
+                </td>
+                <template>
+                  <em>Absents</em>
+                  <ul>
+                    <li></li>
+                  </ul>
+                </template>
+              </v-popover> -->
               <td
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
+                <!-- v-tooltip.bottom="{
+                  content:
+                    '<em>Absent</em><ul><li>Tes Confuciani</li><li>Mashal Georeges</li></ul>',
+                  html: true,
+                }" -->
                 <template v-if="referenceData.fonctions[f.id]">
                   {{
                     (referenceData.fonctions[f.id] ?? 0) -
@@ -120,7 +147,7 @@
               </td>
             </tr>
           </tbody>
-          <tbody>
+          <tbody v-if="displayKey == 'permis'">
             <tr v-for="p in filteredPermis" :key="p.id">
               <th>{{ p.type }}</th>
               <td
@@ -139,7 +166,7 @@
               </td>
             </tr>
           </tbody>
-          <tbody>
+          <tbody v-if="displayKey == 'localite'">
             <tr v-for="l in localitesSis" :key="l.id">
               <th>{{ l.designation }}</th>
               <td
@@ -158,7 +185,7 @@
               </td>
             </tr>
           </tbody>
-          <tbody>
+          <tbody v-if="displayKey == 'groupe'">
             <tr v-for="g in groupes" :key="g.id">
               <th>{{ g.no }} {{ g.designation }}</th>
               <td
@@ -251,7 +278,7 @@ export default {
   data() {
     return {
       loading: true,
-      displayKey: 'fonction_id',
+      displayKey: 'fonction',
       displayMonth: 7,
       tab: 'absence',
       selectedId: null,
