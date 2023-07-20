@@ -103,7 +103,13 @@
             </tr>
           </thead>
           <tbody v-if="displayKey == 'fonction'">
-            <tr v-for="f in fonctions" :key="f.id">
+            <tr
+              v-for="f in [
+                ...fonctions,
+                { id: undefined, nom: 'Sans fonction' },
+              ]"
+              :key="f.id"
+            >
               <th>{{ f.nom }}</th>
               <!-- <v-popover
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
@@ -140,8 +146,7 @@
                   {{
                     (referenceData.fonctions[f.id] ?? 0) -
                     (fonctions[f.id] ?? new Set()).size
-                  }}
-                  / {{ referenceData.fonctions[f.id] ?? 0 }}
+                  }}/{{ referenceData.fonctions[f.id] ?? 0 }}
                 </template>
                 <template v-else>-</template>
               </td>
@@ -159,8 +164,7 @@
                   {{
                     (referenceData.permis[p.id] ?? 0) -
                     (permis[p.id] ?? new Set()).size
-                  }}
-                  / {{ referenceData.permis[p.id] ?? 0 }}
+                  }}/{{ referenceData.permis[p.id] ?? 0 }}
                 </template>
                 <template v-else>-</template>
               </td>
@@ -178,8 +182,7 @@
                   {{
                     (referenceData.localites[l.id] ?? 0) -
                     (localites[l.id] ?? new Set()).size
-                  }}
-                  / {{ referenceData.localites[l.id] ?? 0 }}
+                  }}/{{ referenceData.localites[l.id] ?? 0 }}
                 </template>
                 <template v-else>-</template>
               </td>
@@ -197,22 +200,49 @@
                   {{
                     (referenceData.groupes[g.id] ?? 0) -
                     (groupes[g.id] ?? new Set()).size
-                  }}
-                  / {{ referenceData.groupes[g.id] ?? 0 }}
+                  }}/{{ referenceData.groupes[g.id] ?? 0 }}
                 </template>
                 <template v-else>-</template>
               </td>
             </tr>
           </tbody>
-          <tfoot>
+          <tfoot v-if="displayKey !== 'permis'">
             <tr>
               <th>Total</th>
               <th
-                v-for="({ jourSemaine }, i) in computedAbsences"
+                v-for="(
+                  { jourSemaine, groupes, localites, fonctions }, i
+                ) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': jourSemaine in [6, 7] }"
               >
-                x/X
+                <template v-if="displayKey == 'fonction'">
+                  {{
+                    referenceData.total -
+                    Object.values(fonctions).reduce(
+                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
+                      0
+                    )
+                  }}/{{ referenceData.total }}
+                </template>
+                <template v-if="displayKey == 'localite'">
+                  {{
+                    referenceData.total -
+                    Object.values(localites).reduce(
+                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
+                      0
+                    )
+                  }}/{{ referenceData.total }}
+                </template>
+                <template v-if="displayKey == 'groupe'">
+                  {{
+                    referenceData.total -
+                    Object.values(groupes).reduce(
+                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
+                      0
+                    )
+                  }}/{{ referenceData.total }}
+                </template>
               </th>
             </tr>
           </tfoot>
@@ -345,9 +375,11 @@ export default {
         groupes: {},
         fonctions: {},
         localites: {},
+        total: 0,
       };
 
       this.computedSapeurs.forEach((s) => {
+        data.total++;
         data.localites[s.localite_id] =
           (data.localites[s.localite_id] ?? 0) + 1;
         data.fonctions[s.mainFonctionId] =
