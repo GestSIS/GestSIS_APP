@@ -328,7 +328,7 @@ export default {
           .sort((a, b) => a.no - b.no),
       fonctions: (state) =>
         state.fonction.liste
-          .filter((f) => !f.cumulable)
+          .filter((f) => !f.cumulable && f.actif)
           .sort((a, b) => b.tri - a.tri),
       permisTypes: (state) => state.baseData.permisTypes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,

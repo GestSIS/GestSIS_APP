@@ -106,33 +106,21 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
-      if ((this.activeType.id || 0) === 0) {
-        this.$store
-          .dispatch('addControlesMedicauxTypes', this.activeType)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateControlesMedicauxTypes', this.activeType)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+      const action = this.activeType?.id
+        ? 'updateControlesMedicauxTypes'
+        : 'addControlesMedicauxTypes';
+      this.$store
+        .dispatch(action, this.activeType)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };

@@ -66,33 +66,21 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
-      if ((this.activeCategorie.id || 0) === 0) {
-        this.$store
-          .dispatch('addEcritureCategorie', this.activeCategorie)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateEcritureCategorie', this.activeCategorie)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+      const action = this.activeCategorie?.id
+        ? 'updateEcritureCategorie'
+        : 'addEcritureCategorie';
+      this.$store
+        .dispatch(action, this.activeCategorie)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };

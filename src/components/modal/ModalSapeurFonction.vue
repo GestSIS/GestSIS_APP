@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     ...mapState({
-      listeFonctions: (state) => state.fonction.liste,
+      listeFonctions: (state) => state.fonction.liste.filter((f) => f.actif),
       activeSapeurId: (state) => state.sapeur.active.id,
       activeFonction: (state) => state.fonction.currentFonction,
     }),

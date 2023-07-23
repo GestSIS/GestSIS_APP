@@ -147,7 +147,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
+      // Format back dates to SQL Format
       this.activeMission.debut = DateTime.fromISO(
         this.activeMission.debut2
       )?.toFormat(this.format);

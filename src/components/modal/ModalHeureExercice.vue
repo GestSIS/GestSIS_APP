@@ -98,7 +98,6 @@ export default {
   },
   computed: {
     ...mapState({
-      fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
       unites: (state) => state.unite.liste,
       categories: (state) => state.ecritureCategorie.liste,

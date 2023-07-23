@@ -50,6 +50,19 @@
           >
         </div>
       </div>
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            id="fonction-actif-modal"
+            v-model="activeFonction.actif"
+            type="checkbox"
+            class="form-check-input"
+          />
+          <label class="form-check-label" for="fonction-actif-modal"
+            >Actif</label
+          >
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
@@ -78,6 +91,7 @@ export default {
       errors: {},
       activeFonction: {
         cumulable: false,
+        actif: true,
       },
     };
   },
@@ -90,33 +104,19 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
-      if ((this.activeFonction.id || 0) === 0) {
-        this.$store
-          .dispatch('addFonction', this.activeFonction)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateFonction', this.activeFonction)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+      const action = this.activeFonction?.id ? 'updateFonction' : 'addFonction';
+      this.$store
+        .dispatch(action, this.activeFonction)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };

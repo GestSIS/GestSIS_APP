@@ -281,7 +281,7 @@ export default {
           a.designation.localeCompare(b.designation)
         ),
       groupes: (state) => state.groupe.liste,
-      fonctions: (state) => state.fonction.liste,
+      fonctions: (state) => state.fonction.liste.filter((f) => f.actif),
       grades: (state) => state.grade.liste,
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||

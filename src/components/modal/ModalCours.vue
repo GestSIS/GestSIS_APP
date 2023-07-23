@@ -133,7 +133,7 @@ export default {
   computed: {
     ...mapState({
       grades: (state) => state.grade.liste,
-      fonctions: (state) => state.fonction.liste,
+      fonctions: (state) => state.fonction.liste.filter((f) => f.actif),
       cours: (state) => state.cours.liste,
     }),
   },
@@ -149,33 +149,19 @@ export default {
       return localite?.designation;
     },
     async save() {
-      //Format back dates to SQL Format
-      if ((this.activeCours.id || 0) === 0) {
-        this.$store
-          .dispatch('addCours', this.activeCours)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateCours', this.activeCours)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+      const action = this.activeCours?.id ? 'updateCours' : 'addCours';
+      this.$store
+        .dispatch(action, this.activeCours)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };

@@ -4,7 +4,10 @@
       "date": "23.07.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Nouveau module `Absences`"]
+      "changes": [
+        "Nouveau module `Absences`",
+        "Ajout d'un champ `actif` aux fonction afin de pouvoir celles inutilisées"
+      ]
     },
     {
       "date": "28.06.2023",

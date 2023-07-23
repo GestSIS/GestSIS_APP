@@ -60,6 +60,7 @@ export default {
         { title: 'Abréviation', key: 'abreviation' },
         { title: 'Nom', key: 'nom' },
         { title: 'Cumulable', key: 'cumulable', type: Boolean },
+        { title: 'Actif', key: 'actif', type: Boolean },
         { title: 'Actions', slot: 'actions' },
       ],
     };

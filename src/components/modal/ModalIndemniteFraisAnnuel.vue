@@ -93,33 +93,21 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     async save() {
-      //Format back dates to SQL Format
-      if ((this.active.id || 0) === 0) {
-        this.$store
-          .dispatch('addFraisIndemniteAnnuel', this.active)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
-      } else {
-        this.$store
-          .dispatch('updateFraisIndemniteAnnuel', this.active)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
+      const action = this.active?.id
+        ? 'updateFraisIndemniteAnnuel'
+        : 'addFraisIndemniteAnnuel';
+      this.$store
+        .dispatch(action, this.active)
+        .then(() => {
+          this.errors = {};
+          this.HIDE_MODAL();
+        })
+        .catch(
+          (errors) =>
+            (this.errors = {
               ...errors,
-            };
-          });
-      }
+            })
+        );
     },
   },
 };
