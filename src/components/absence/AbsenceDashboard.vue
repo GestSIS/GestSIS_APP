@@ -127,6 +127,15 @@
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                :style="
+                  'background-color:hsl(' +
+                  (
+                    (((referenceData.fonctions[f.id] ?? 0) -
+                      (fonctions[f.id] ?? new Set()).size) /
+                      referenceData.fonctions[f.id] ?? 0) * 120
+                  ).toString(10) +
+                  ',100%,50%)'
+                "
               >
                 <!-- v-tooltip.bottom="{
                   content:
@@ -150,6 +159,15 @@
                 v-for="({ jourSemaine, permis }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                :style="
+                  'background-color:hsl(' +
+                  (
+                    (((referenceData.permis[p.id] ?? 0) -
+                      (permis[p.id] ?? new Set()).size) /
+                      referenceData.permis[p.id] ?? 0) * 120
+                  ).toString(10) +
+                  ',100%,50%)'
+                "
               >
                 <template v-if="referenceData.permis[p.id]">
                   {{
@@ -168,6 +186,15 @@
                 v-for="({ jourSemaine, localites }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                :style="
+                  'background-color:hsl(' +
+                  (
+                    (((referenceData.localites[l.id] ?? 0) -
+                      (localites[l.id] ?? new Set()).size) /
+                      referenceData.localites[l.id] ?? 0) * 120
+                  ).toString(10) +
+                  ',100%,50%)'
+                "
               >
                 <template v-if="referenceData.localites[l.id]">
                   {{
@@ -186,6 +213,15 @@
                 v-for="({ jourSemaine, groupes }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                :style="
+                  'background-color:hsl(' +
+                  (
+                    (((referenceData.groupes[g.id] ?? 0) -
+                      (groupes[g.id] ?? new Set()).size) /
+                      referenceData.groupes[g.id] ?? 0) * 120
+                  ).toString(10) +
+                  ',100%,50%)'
+                "
               >
                 <template v-if="referenceData.groupes[g.id]">
                   {{
@@ -315,7 +351,7 @@ export default {
     computedSapeurs() {
       // TODO: Compute main fonction pour chaque sapeur
       return this.sapeurs.map((s) => {
-        const fonctionsIds = new Set(s.fonctions.map((f) => f));
+        const fonctionsIds = new Set(s.fonctions);
         return {
           ...s,
           mainFonctionId: this.fonctions.find((f) => fonctionsIds.has(f.id))
@@ -328,7 +364,7 @@ export default {
     },
     indexedSapeurs() {
       const indexedSapeurs = {};
-      this.sapeurs.forEach((s) => (indexedSapeurs[s.id] = s));
+      this.computedSapeurs.forEach((s) => (indexedSapeurs[s.id] = s));
       return indexedSapeurs;
     },
     referenceData() {

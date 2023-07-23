@@ -2,8 +2,8 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
-  
+    branches: [master]
+
   workflow_dispatch:
 
 jobs:
@@ -56,4 +56,4 @@ jobs:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
       - name: Deploy build
-        run: scp -r dist staging:app.gestsis.ch
+        run: scp -rCv dist staging:app.gestsis.ch
