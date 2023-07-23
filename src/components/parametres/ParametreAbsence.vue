@@ -22,7 +22,7 @@
                 >Activer le module absence<font-awesome-icon
                   v-tooltip.bottom="{
                     content:
-                      'Les utilisateurs pourront saisir des absences individuelles',
+                      'Les utilisateurs pourront saisir des absences individuellement',
                   }"
                   class="ms-1"
                   :icon="['far', 'question-circle']"
@@ -69,6 +69,7 @@ export default {
     }),
   },
   mounted() {
+    console.log(this.absenceParams);
     this.params = {
       ...this.params,
       ...this.absenceParams,

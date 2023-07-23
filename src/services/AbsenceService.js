@@ -13,4 +13,13 @@ export default {
   removeAbsence(absence_id) {
     return Api.api().delete(`/absences/${absence_id}`);
   },
+  addMonAbsence(absence) {
+    return Api.api().post('/mes-absences', absence);
+  },
+  updateMonAbsence(absence) {
+    return Api.api().put(`/mes-absences/${absence.id}`, absence);
+  },
+  removeMonAbsence(absence_id) {
+    return Api.api().delete(`/mes-absences/${absence_id}`);
+  },
 };

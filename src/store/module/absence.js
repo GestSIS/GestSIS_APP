@@ -33,6 +33,28 @@ export default {
         commit(types.UPDATE_ABSENCE_LISTE, data)
       );
     },
+    addMonAbsence({ commit }, absence) {
+      return AbsenceService.addMonAbsence(absence).then(
+        async (data) => {
+          await commit(types.ADD_ABSENCE, data);
+          return data;
+        }
+      );
+    },
+    editMonAbsence({ commit }, absence) {
+      return AbsenceService.updateMonAbsence(absence).then(
+        async (data) => {
+          await commit(types.UPDATE_ABSENCE, data);
+          return data;
+        }
+      );
+    },
+    removeMonAbsence({ commit }, absence) {
+      return AbsenceService.removeMonAbsence(absence.id).then(async (data) => {
+        await commit(types.REMOVE_ABSENCE, absence.id);
+        return data;
+      });
+    },
     addAbsence({ commit }, absence) {
       return AbsenceService.addAbsence(absence).then((data) => {
         commit(types.ADD_ABSENCE, data);

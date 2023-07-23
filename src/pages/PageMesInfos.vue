@@ -46,6 +46,13 @@
             class="nav-item nav-link"
             role="tab"
             active-class="active"
+            :to="{ name: 'mes-absences' }"
+            >Mes absences</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
             :to="{ name: 'mon-materiel' }"
             >Mon matériel</router-link
           >

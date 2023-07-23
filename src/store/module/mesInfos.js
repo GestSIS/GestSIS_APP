@@ -12,6 +12,7 @@ export default {
     materiels: [],
     travaux: [],
     exercices: [],
+    absences: [],
     interventions: [],
     paiements: [],
     ecritures: [],
@@ -27,6 +28,7 @@ export default {
       state.materiels = [];
       state.travaux = [];
       state.exercices = [];
+      state.absences = [];
       state.interventions = [];
       state.paiements = [];
       state.ecritures = [];
@@ -57,6 +59,20 @@ export default {
     },
     [types.UPDATE_MES_EXERCICES](state, payload) {
       state.exercices = payload;
+    },
+    [types.UPDATE_MES_ABSENCES](state, payload) {
+      state.absences = payload;
+    },
+    [types.ADD_ABSENCE](state, absence) {
+      state.absences = [...state.absences, absence];
+    },
+    [types.UPDATE_ABSENCE](state, absence) {
+      state.absences = [
+        ...state.absences.map((a) => (a.id === absence.id ? absence : a)),
+      ];
+    },
+    [types.REMOVE_ABSENCE](state, absenceId) {
+      state.absences = state.absences.filter((a) => a.id != absenceId);
     },
     [types.UPDATE_EXERCICE_PRESENCE](state, presence) {
       state.exercices = state.exercices.map((p) =>
@@ -118,6 +134,11 @@ export default {
       return MesInfosService.getMesExercices(
         getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_MES_EXERCICES, data));
+    },
+    fetchMesAbsences({ commit, getters }) {
+      return MesInfosService.getMesAbsences(
+        getters.activeExerciceComptableId
+      ).then((data) => commit(types.UPDATE_MES_ABSENCES, data));
     },
     fetchMesInterventions({ commit, getters }) {
       return MesInfosService.getMesInterventions(

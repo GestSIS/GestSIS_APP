@@ -133,6 +133,13 @@ const router = createRouter({
             import('/src/components/mes_infos/MesInterventions.vue'),
         },
         {
+          path: 'absences',
+          name: 'mes-absences',
+          beforeEnter: sapeurGuard(),
+          component: () =>
+            import('/src/components/mes_infos/MesAbsences.vue'),
+        },
+        {
           path: 'materiel',
           name: 'mon-materiel',
           beforeEnter: sapeurGuard(),

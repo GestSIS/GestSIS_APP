@@ -7,14 +7,6 @@
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
     <div class="modal-body">
-      <base-select
-        :disabled="activeAbsence?.id"
-        v-model="activeAbsence.sapeur_id"
-        class="mb-3"
-        label="Sapeur"
-        display-key="nom_prenom"
-        :options="sapeurs"
-      />
       <div class="mb-3">
         <label for="cours-date">Départ</label>
         <input
@@ -63,26 +55,20 @@ export default {
   data() {
     return {
       errors: {},
-      activeAbsence: {
-        sapeur_id: null,
-      },
+      activeAbsence: {},
     };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-    }),
   },
   mounted() {
     this.activeAbsence = {
-      ...this.activeAbsence,
       ...this.data,
     };
   },
   methods: {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     async save() {
-      const action = this.activeAbsence?.id ? 'editAbsence' : 'addAbsence';
+      const action = this.activeAbsence?.id
+        ? 'editMonAbsence'
+        : 'addMonAbsence';
       this.$store
         .dispatch(action, this.activeAbsence)
         .then(() => {

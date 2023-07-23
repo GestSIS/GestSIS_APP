@@ -28,6 +28,9 @@ export default {
   getMesExercices(exerciceComptableId) {
     return Api.api().get('/mes-exercices/' + exerciceComptableId);
   },
+  getMesAbsences(exerciceComptableId) {
+    return Api.api().get('/mes-absences/' + exerciceComptableId);
+  },
   getMesInterventions(exerciceComptableId) {
     return Api.api().get('/mes-interventions/' + exerciceComptableId);
   },

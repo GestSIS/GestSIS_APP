@@ -33,7 +33,7 @@ import store from '/src/store/index';
 import ParametreAbsence from './ParametreAbsence.vue';
 
 async function loadData(_, next) {
-  store.dispatch('fetchAbsenceParams').then(next()).catch(next());
+  store.dispatch('fetchAbsenceParams').then(next).catch(next);
 }
 
 export default {
