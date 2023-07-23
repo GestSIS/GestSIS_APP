@@ -5,29 +5,35 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-3">
+        <div class="card card-primary card-outline mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5>Actions</h5>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <button
+              v-if="hasEditPermission"
+              class="btn btn-outline-primary"
+              @click="addAbsence"
+            >
+              Ajouter une absence
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-6">
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
           </div>
           <div class="card-body">
             <div class="row">
-              <!-- <base-select
-                class="col-md-4"
-                :options="filteredLocalites"
-                base-option="<Localité>"
-                :model-value="filters.localite_id"
-                @update:model-value="(value) => setFilter('localite_id', value)"
-              /> -->
-              <!-- <div v-if="canReset" class="col-md-4 mt-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
-              </div> -->
+              <div class="col-6">// TODO: Affichage par</div>
+              <div class="col-6">// TODO: Mois à afficher</div>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -48,21 +54,16 @@
             @selected="selectAbsence"
           >
             <template #actions="{ rowData }">
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/absences/' + rowData.id"
-                custom
-              >
-                <button
-                  title="modifier"
-                  class="btn btn-outline-primary border-0"
-                  @click="navigate"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-              </router-link>
               <button
-                v-if="hasValidationPermission && rowData.statut <= 3"
+                v-if="hasEditPermission"
+                title="modifier"
+                class="btn btn-outline-primary border-0"
+                @click="modifierAbsence(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                v-if="hasEditPermission"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerAbsence(rowData.id)"
@@ -110,8 +111,8 @@ export default {
       selectedId: null,
       fieldsBase: [
         { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Départ', key: 'date', type: Date },
-        { title: 'Retour', key: 'date', type: Date },
+        { title: 'Départ', key: 'debut', type: Date },
+        { title: 'Retour', key: 'fin', type: Date },
         {
           title: 'Actions',
           slot: 'actions',
@@ -125,8 +126,8 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       absences: (state) =>
-        state.absence.liste.sort((a, b) => a.date.localeCompare(b.date)),
-      activeAbsenceComptableId: (state) => state.exerciceComptable.activeId,
+        state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.ABSENCE.MODIFICATION),
@@ -143,7 +144,7 @@ export default {
     },
   },
   watch: {
-    activeAbsenceComptableId() {
+    activeExerciceComptableId() {
       this.loading = true;
       this.$store.dispatch('fetchListeAbsence').then(() => {
         this.loading = false;
@@ -155,17 +156,23 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    addAbsence() {
+      this.SHOW_MODAL({ component: 'ModalAbsence' });
+    },
+    modifierAbsence(absence) {
+      this.SHOW_MODAL({ component: 'ModalAbsence', data: absence });
+    },
     supprimerAbsence(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
-          title: 'Voulez-vous vraiment supprimer cette absence ?',
+          title: 'Voulez-vous vraiment supprimer cet absence ?',
           question:
-            "Attention, la suppression d'une absence est irréversible ! Toutes les données de cette asbence seront perdues !",
+            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cet absence seront perdues !",
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('supprimerAbsence', id);
+            this.$store.dispatch('removeAbsence', id);
           }
         },
       });

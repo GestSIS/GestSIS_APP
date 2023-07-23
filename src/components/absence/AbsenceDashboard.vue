@@ -6,48 +6,38 @@
           <h5>Actions</h5>
         </div>
         <div class="card-body d-grid gap-2">
-          <!-- <router-link
-            v-slot="{ navigate }"
-            custom
-            :to="{ name: 'absence', params: { id: 'new' } }"
+          <button
+            v-if="hasEditPermission"
+            class="btn btn-outline-primary"
+            @click="addAbsence"
           >
-            <button
-              v-if="hasEditPermission"
-              class="btn btn-outline-primary"
-              @click="navigate"
-            >
-              Ajouter une absence
-            </button>
-          </router-link>
-          <router-link
-            v-slot="{ navigate }"
-            custom
-            :to="'/absences/' + selectedId"
-          >
-            <button
-              :disabled="!selectedId"
-              class="btn btn-outline-primary"
-              @click="navigate"
-            >
-              {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
-            </button>
-          </router-link> -->
+            Ajouter une absence
+          </button>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="card card-primary card-outline mb-2">
         <div class="card-header d-flex justify-content-between">
-          <h5>Impressions</h5>
+          <h5>Affichage</h5>
         </div>
-        <div class="card-body d-grid gap-2">
-          <!-- <button
-            class="btn btn-outline-primary"
-            :disabled="!absences.length"
-            @click="convoquer"
-          >
-            Convocations
-          </button> -->
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <base-select
+                v-model="displayKey"
+                :options="[
+                  { designation: 'Par fonction', id: 'fonction' },
+                  { designation: 'Par permis', id: 'permis' },
+                  { designation: 'Par localité', id: 'localite' },
+                  { designation: 'Par groupe', id: 'groupe' },
+                ]"
+              />
+            </div>
+            <div class="col-6">
+              <base-select v-model="displayMonth" :options="mois" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,6 +56,7 @@
               <th rowspan="2">
                 <base-select
                   v-model="displayKey"
+                  style="min-width: 100px"
                   :options="[
                     { designation: 'Fonction', id: 'fonction' },
                     { designation: 'Permis', id: 'permis' },
@@ -77,17 +68,17 @@
               <td
                 v-for="({ jourSemaine }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 {{
                   [
+                    'Dimanche',
                     'Lundi',
                     'Mardi',
                     'Mercredi',
                     'Jeudi',
                     'Vendredi',
                     'Samedi',
-                    'Dimanche',
                   ][jourSemaine]
                 }}
               </td>
@@ -96,7 +87,7 @@
               <th
                 v-for="({ date, jourSemaine }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 {{ date }}
               </th>
@@ -115,7 +106,7 @@
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
               >
-                <td :class="{ 'table-secondary': jourSemaine in [6, 7] }">
+                <td :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }">
                   <template v-if="referenceData.fonctions[f.id]">
                     {{
                       (referenceData.fonctions[f.id] ?? 0) -
@@ -135,7 +126,7 @@
               <td
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 <!-- v-tooltip.bottom="{
                   content:
@@ -158,7 +149,7 @@
               <td
                 v-for="({ jourSemaine, permis }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 <template v-if="referenceData.permis[p.id]">
                   {{
@@ -176,7 +167,7 @@
               <td
                 v-for="({ jourSemaine, localites }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 <template v-if="referenceData.localites[l.id]">
                   {{
@@ -194,7 +185,7 @@
               <td
                 v-for="({ jourSemaine, groupes }, i) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 <template v-if="referenceData.groupes[g.id]">
                   {{
@@ -214,7 +205,7 @@
                   { jourSemaine, groupes, localites, fonctions }, i
                 ) in computedAbsences"
                 :key="i"
-                :class="{ 'table-secondary': jourSemaine in [6, 7] }"
+                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
                 <template v-if="displayKey == 'fonction'">
                   {{
@@ -247,19 +238,6 @@
             </tr>
           </tfoot>
         </table>
-        <!-- <base-table
-          v-show="!loading"
-          ref="basetable_absences"
-          :selectable="true"
-          :fields="fieldsBase"
-          :detail-row-column="true"
-          :detail-row-component="detailRowComponent"
-          detail-row-class="m-td-0"
-          no-data="Aucun absence à afficher"
-          :data="computedAbsences"
-          :row-class="onRowClass"
-          @selected="selectAbsence"
-        /> -->
       </div>
     </div>
   </div>
@@ -309,12 +287,24 @@ export default {
     return {
       loading: true,
       displayKey: 'fonction',
-      displayMonth: 7,
-      tab: 'absence',
-      selectedId: null,
+      displayMonth: new Date().getMonth() + 1,
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Categorie', key: 'categorie' },
+      ],
+      mois: [
+        { id: 1, designation: 'Janvier' },
+        { id: 2, designation: 'Février' },
+        { id: 3, designation: 'Mars' },
+        { id: 4, designation: 'Avril' },
+        { id: 5, designation: 'Mai' },
+        { id: 6, designation: 'Juin' },
+        { id: 7, designation: 'Juillet' },
+        { id: 8, designation: 'Août' },
+        { id: 9, designation: 'Septembre' },
+        { id: 10, designation: 'Octobre' },
+        { id: 11, designation: 'Novembre' },
+        { id: 12, designation: 'Decembre' },
       ],
     };
   },
@@ -322,7 +312,7 @@ export default {
     ...mapState({
       sapeurs: (state) => state.sapeur.liste,
       absences: (state) =>
-        state.absence.liste.sort((a, b) => a.date.localeCompare(b.date)),
+        state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
@@ -409,14 +399,10 @@ export default {
         total: 0,
       }));
 
-      const absences = [
-        { debut: '2020-07-02', fin: '2020-07-05', sapeur_id: 1 },
-      ];
-
       const moisDebut = new Date(year, this.displayMonth - 1, 1);
       const moisFin = new Date(year, this.displayMonth, 0);
 
-      absences
+      this.absences
         .filter(
           (a) => new Date(a.debut) <= moisFin && new Date(a.fin) >= moisDebut
         )
@@ -469,9 +455,9 @@ export default {
     },
   },
   watch: {
-    activeExerciceComptableId() {
+    activeExerciceComptableId(id) {
       this.loading = true;
-      this.$store.dispatch('fetchListeAbsence').then(() => {
+      this.$store.dispatch('fetchAbsences', id).then(() => {
         this.loading = false;
       });
     },
@@ -481,22 +467,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
-    convoquer() {
-      this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 });
-    },
-    sms({ id }) {
-      if (!this.hasSmsEnvoiePermission) {
-        this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
-        );
-        return;
-      }
-      const absence = this.absences.find((e) => e.id == id);
-      this.SHOW_MODAL({
-        component: 'ModalSmsAbsence',
-        size: 2,
-        data: absence,
-      });
+    addAbsence() {
+      this.SHOW_MODAL({ component: 'ModalAbsence' });
     },
     supprimerAbsence(id) {
       this.SHOW_MODAL({
@@ -512,9 +484,6 @@ export default {
           }
         },
       });
-    },
-    selectAbsence(row) {
-      this.selectedId = row?.id;
     },
     onRowClass(dataItem, isSelected) {
       if (dataItem.statut == 0) {
