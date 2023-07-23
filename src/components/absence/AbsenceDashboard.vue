@@ -201,39 +201,11 @@
             <tr>
               <th>Total</th>
               <th
-                v-for="(
-                  { jourSemaine, groupes, localites, fonctions }, i
-                ) in computedAbsences"
+                v-for="({ jourSemaine, total }, i) in computedAbsences"
                 :key="i"
                 :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
               >
-                <template v-if="displayKey == 'fonction'">
-                  {{
-                    referenceData.total -
-                    Object.values(fonctions).reduce(
-                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
-                      0
-                    )
-                  }}/{{ referenceData.total }}
-                </template>
-                <template v-if="displayKey == 'localite'">
-                  {{
-                    referenceData.total -
-                    Object.values(localites).reduce(
-                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
-                      0
-                    )
-                  }}/{{ referenceData.total }}
-                </template>
-                <template v-if="displayKey == 'groupe'">
-                  {{
-                    referenceData.total -
-                    Object.values(groupes).reduce(
-                      (acc, e) => acc + [...e].reduce((acc, e) => acc + e, 0),
-                      0
-                    )
-                  }}/{{ referenceData.total }}
-                </template>
+                {{ referenceData.total - total }}/{{ referenceData.total }}
               </th>
             </tr>
           </tfoot>
