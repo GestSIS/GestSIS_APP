@@ -82,7 +82,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     async save() {
-      const action = this.activeAbsence?.id ? 'editAbsence' : 'addAbsence';
+      const action = this.activeAbsence?.id ? 'updateAbsence' : 'addAbsence';
       this.$store
         .dispatch(action, this.activeAbsence)
         .then(() => {
