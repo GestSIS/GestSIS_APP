@@ -144,9 +144,9 @@ export default {
     },
   },
   watch: {
-    activeExerciceComptableId() {
+    activeExerciceComptableId(id) {
       this.loading = true;
-      this.$store.dispatch('fetchListeAbsence').then(() => {
+      this.$store.dispatch('fetchAbsences', id).then(() => {
         this.loading = false;
       });
     },
