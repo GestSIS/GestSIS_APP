@@ -141,6 +141,27 @@
           </div>
         </div>
       </div>
+      <div class="card card-primary card-outline">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Listes de diffusion</h3>
+        </div>
+        <div class="card-body">
+          <div class="mb-2">
+            <h5>Newsletter</h5>
+            <div class="form-control">
+              <span class="badge text-bg-primary me-2">test@gmail.com</span>
+              <span class="badge text-bg-primary me-2">test@gmail.com</span>
+            </div>
+          </div>
+          <div>
+            <h5>Facturation</h5>
+            <div class="form-control">
+              <span class="badge text-bg-primary me-2">test@gmail.com</span>
+              <span class="badge text-bg-primary me-2">test@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-sm-12 col-xl-6">
       <div class="card card-primary card-outline mb-3">

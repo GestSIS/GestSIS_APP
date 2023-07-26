@@ -16,7 +16,7 @@
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
         />
-        <div v-if="errors['fin']" class="invalid-feedback">Date invalide</div>
+        <div v-if="errors['debut']" class="invalid-feedback">Date invalide</div>
       </div>
       <div class="mb-3">
         <label for="cours-date">Retour</label>
@@ -75,7 +75,10 @@ export default {
           this.errors = {};
           this.HIDE_MODAL();
         })
-        .catch((errors) => (this.errors = errors));
+        .catch((errors) => {
+          this.errors = errors
+          this.$awn.alert(errors?.message ?? "Impossible d'ajouter cette absence")
+        });
     },
   },
 };
