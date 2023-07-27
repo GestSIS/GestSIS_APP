@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "27.07.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nouveaux paramètres pour le SIS disponible dans le menu `Configuration`, liste des `emails` pour la `facturation` et la `newsletter`"
+      ]
+    },
+    {
       "date": "23.07.2023",
       "version": "1.0",
       "app": "GestSIS APP",

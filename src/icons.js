@@ -53,6 +53,7 @@ import {
   faSortUp,
   faSortDown,
   faUmbrellaBeach,
+  faX
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -74,6 +75,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faX,
   faUmbrellaBeach,
   faSort,
   faSortUp,

@@ -7,6 +7,15 @@ export default {
   updateParams(params) {
     return Api.api().post('/sis-param', params);
   },
+  getContacts() {
+    return Api.api().get('/sis-contacts');
+  },
+  addContact(contact) {
+    return Api.api().post('/sis-contacts', contact);
+  },
+  removeContact(id) {
+    return Api.api().delete('/sis-contacts/' + id);
+  },
   getLogo() {
     return Api.apiFileDownload().get('/sis-logo/' + Api.getSisKey());
   },

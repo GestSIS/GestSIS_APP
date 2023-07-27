@@ -141,23 +141,47 @@
           </div>
         </div>
       </div>
-      <div class="card card-primary card-outline">
+      <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Listes de diffusion</h3>
         </div>
         <div class="card-body">
-          <div class="mb-2">
-            <h5>Newsletter</h5>
-            <div class="form-control">
-              <span class="badge text-bg-primary me-2">test@gmail.com</span>
-              <span class="badge text-bg-primary me-2">test@gmail.com</span>
-            </div>
-          </div>
-          <div>
-            <h5>Facturation</h5>
-            <div class="form-control">
-              <span class="badge text-bg-primary me-2">test@gmail.com</span>
-              <span class="badge text-bg-primary me-2">test@gmail.com</span>
+          <div v-for="liste in listes" :key="liste.id" class="mb-2">
+            <h5>{{ liste.designation }}</h5>
+            <div class="input-group">
+              <div
+                class="form-control"
+                :class="{
+                  'is-invalid':
+                    contacts.filter((c) => c.liste == liste.id).length === 0,
+                }"
+              >
+                <template
+                  v-if="
+                    contacts.filter((c) => c.liste == liste.id).length === 0
+                  "
+                  >1 email minimum requis</template
+                >
+                <span
+                  v-for="c in contacts.filter((c) => c.liste == liste.id)"
+                  :key="c.id"
+                  class="badge text-bg-primary me-2"
+                >
+                  {{ c.email }}
+                  <span
+                    class="badge text-bg-danger m-1"
+                    @click="removeContact(c)"
+                  >
+                    <font-awesome-icon :icon="['fas', 'x']" />
+                  </span>
+                </span>
+              </div>
+              <button
+                class="btn btn-outline-primary"
+                @click="addContact(liste)"
+              >
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
             </div>
           </div>
         </div>
@@ -256,10 +280,13 @@ async function loadData(_, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadParams = store.dispatch('fetchSisParams');
+  const loadContacts = store.dispatch('fetchSisContacts');
 
-  Promise.all([loadLocalites, loadSapeurs, loadParams]).then(() => {
-    next();
-  });
+  Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]).then(
+    () => {
+      next();
+    }
+  );
 }
 
 export default {
@@ -281,6 +308,10 @@ export default {
         { title: 'Npa', key: 'npa' },
         { title: 'Localité', key: 'localite' },
       ],
+      listes: [
+        { id: 'news', designation: 'Newsletter' },
+        { id: 'facturation', designation: 'Facturation' },
+      ],
     };
   },
   computed: {
@@ -290,6 +321,7 @@ export default {
         state.auth.sis.permissions.includes(permissions.SIS.CONFIG),
       activeSisKey: (state) => state.auth.sis.activeKey,
       params: (state) => state.sisParam.params,
+      contacts: (state) => state.sisParam.contacts,
       localites: (state) => state.localite.liste,
       localitesSis: (state) =>
         state.localite.listeSis.map((l) => ({
@@ -310,6 +342,27 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     formatLocalite(localite) {
       return localite?.designation;
+    },
+    addContact(liste) {
+      this.SHOW_MODAL({
+        component: 'ModalSisContact',
+        data: liste,
+      });
+    },
+    removeContact(contact) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cet email ?',
+          question:
+            'Attention, cet email ne recevra plus les emails de cette liste de diffusion !',
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeSisContact', contact.id);
+          }
+        },
+      });
     },
     updateLocalitesSis() {
       const callback = (res) => {
