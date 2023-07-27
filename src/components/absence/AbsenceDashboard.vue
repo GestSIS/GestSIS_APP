@@ -318,7 +318,8 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
+      sapeurs: (state) =>
+        state.sapeur.liste.filter((s) => s.actif && s.type == 0),
       absences: (state) =>
         state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
       localites: (state) =>
