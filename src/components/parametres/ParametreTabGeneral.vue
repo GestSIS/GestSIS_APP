@@ -169,6 +169,7 @@
                 >
                   {{ c.email }}
                   <span
+                    v-if="hasConfigGeneralPermission"
                     class="badge text-bg-danger m-1"
                     @click="removeContact(c)"
                   >
@@ -177,6 +178,7 @@
                 </span>
               </div>
               <button
+                v-if="hasConfigGeneralPermission"
                 class="btn btn-outline-primary"
                 @click="addContact(liste)"
               >
