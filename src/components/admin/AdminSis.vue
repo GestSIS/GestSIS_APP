@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-primary card-outline mb-3 col-12 col-lg-6">
+  <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Sis</h3>
       <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
@@ -8,11 +8,19 @@
       <base-table
         ref="table"
         :fields="fields"
-        :data="sis"
+        :data="computedSis"
         :selectable="true"
         :hide-download="true"
         no-data="Aucun SIS"
       >
+        <template #badges="{ rowData, key }">
+          <span
+            v-for="e in rowData[key]"
+            :key="e.id"
+            class="badge bg-primary me-1"
+            >{{ e.email }}</span
+          >
+        </template>
         <template #actions="{ rowData }">
           <button
             type="button"
@@ -35,11 +43,13 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
+import { faTurkishLiraSign } from '@fortawesome/free-solid-svg-icons';
 
 async function loadData(routeTo, next) {
   const loadSis = store.dispatch('loadSisListe');
+  const loadContacts = store.dispatch('loadAllSisContacts');
 
-  Promise.all([loadSis]).then(() => {
+  Promise.all([loadSis, loadContacts]).then(() => {
     next();
   });
 }
@@ -60,6 +70,8 @@ export default {
         { title: 'Nom', key: 'nom' },
         { title: 'Abréviation', key: 'abreviation' },
         { title: 'Mobile', key: 'mobile', type: Boolean },
+        { title: 'Newsletter', key: 'news', slot: 'badges' },
+        { title: 'Facturation', key: 'facturation', slot: 'badges' },
         { title: 'Actions', key: 'id', slot: 'actions' },
       ],
     };
@@ -67,7 +79,18 @@ export default {
   computed: {
     ...mapState({
       sis: (state) => state.admin.sis,
+      contacts: (state) => state.admin.contacts,
     }),
+    computedSis() {
+      return this.sis?.map((s) => {
+        const contacts = this.contacts[s.api_key] ?? [];
+        return {
+          ...s,
+          news: contacts.filter((c) => c.liste === 'news'),
+          facturation: contacts.filter((c) => c.liste === 'facturation'),
+        };
+      });
+    },
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),

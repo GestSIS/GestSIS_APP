@@ -10,6 +10,9 @@ export default {
   getAllUsers() {
     return Api.auth().get('/utilisateurs');
   },
+  getAllSisContacts() {
+    return Api.api().get('/sis-contacts-tous');
+  },
   editUser(user) {
     return Api.auth().patch('/utilisateurs/' + user.id, user);
   },

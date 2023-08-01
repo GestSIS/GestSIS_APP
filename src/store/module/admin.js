@@ -5,8 +5,12 @@ export default {
   state: {
     sis: [],
     users: [],
+    contacts: {}
   },
   mutations: {
+    [types.ADMIN_SIS_CONTACTS](state, payload) {
+      state.contacts = payload;
+    },
     [types.ADMIN_USER_LISTE](state, payload) {
       state.users = payload;
     },
@@ -40,6 +44,11 @@ export default {
     loadAllUsers({ commit }) {
       return AdminService.getAllUsers().then((data) =>
         commit(types.ADMIN_USER_LISTE, data.data)
+      );
+    },
+    loadAllSisContacts({ commit }) {
+      return AdminService.getAllSisContacts().then((data) =>
+        commit(types.ADMIN_SIS_CONTACTS, data)
       );
     },
     editUser({ commit }, user) {
