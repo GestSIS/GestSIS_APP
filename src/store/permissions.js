@@ -21,9 +21,9 @@ export default {
     CONFIG: 'exercice.config',
   },
   ABSENCE: {
-    LECTURE: 'exercice.lecture',
-    MODIFICATION: 'exercice.presence',
-    CONFIG: 'exercice.config',
+    LECTURE: 'absence.lecture',
+    MODIFICATION: 'absence.presence',
+    CONFIG: 'absence.config',
   },
   COURS: {
     LECTURE: 'cours.lecture',
