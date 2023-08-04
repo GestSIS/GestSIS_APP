@@ -21,7 +21,6 @@
       </div>
       <div class="row">
         <div class="col-md-3">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Actions</h5>
@@ -71,7 +70,6 @@
           </div>
         </div>
         <div class="col-md-3">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Impressions</h5>
@@ -88,7 +86,6 @@
           </div>
         </div>
         <div class="col-md-6">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>
@@ -162,7 +159,6 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <!-- /.card-header -->
           <div class="card card-primary card-outline table-responsive">
             <div class="card-header d-flex justify-content-between">
               <h3>Liste des contrôles médicaux</h3>

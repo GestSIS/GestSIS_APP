@@ -1,4 +1,39 @@
 <template>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Actions</h5>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <a
+            class="btn btn-outline-primary"
+            :href="
+              'mailto:?subject=GestSIS 2.0 - &bcc=' +
+              Object.values(contacts)
+                .flat()
+                .filter((c) => c.liste === 'news')
+                .map((c) => c.email)
+                .join(';')
+            "
+            >Email newsletter
+          </a>
+          <a
+            class="btn btn-outline-primary"
+            :href="
+              'mailto:?bcc=' +
+              Object.values(contacts)
+                .flat()
+                .filter((c) => c.liste === 'facturation')
+                .map((c) => c.email)
+                .join(';')
+            "
+            >Email facturation</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Sis</h3>
@@ -43,7 +78,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
-import { faTurkishLiraSign } from '@fortawesome/free-solid-svg-icons';
 
 async function loadData(routeTo, next) {
   const loadSis = store.dispatch('loadSisListe');
