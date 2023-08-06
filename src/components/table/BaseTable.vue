@@ -373,10 +373,10 @@ export default {
       };
     },
     hideAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries({
+      this.detailsRowVisibility = Object.fromEntries([
         ...Object.keys(this.detailsRowVisibility).map((key) => [key, false]),
         ...this.data.map((d) => [d[this.selectKey], false]),
-      });
+      ]);
     },
     toggleDetailRow(id) {
       this.detailsRowVisibility = {

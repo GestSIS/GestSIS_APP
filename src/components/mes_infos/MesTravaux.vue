@@ -2,6 +2,14 @@
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Ma fiche de travail</h3>
+      <button
+        v-if="hasSaisiePermission"
+        type="button"
+        class="btn btn-primary"
+        @click="addTravail"
+      >
+        Saisir une fiche de travail
+      </button>
     </div>
     <div class="card-body table-responsive">
       <base-table
@@ -17,8 +25,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import store from '/src/store/index';
+import permissions from '../../store/permissions';
 
 async function loadData(routeTo, next) {
   const loadMesTravaux = store.dispatch('fetchMesTravaux');
@@ -79,7 +88,24 @@ export default {
                 ?.type_unite_id
           )?.unite,
         })),
+      hasSaisiePermission: (state) =>
+        state.auth.admin ||
+        [
+          permissions.FICHE_TRAVAIL.SAISIE_PERSO,
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
+        ].some((p) => state.auth.sis.permissions.includes(p)),
     }),
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    addTravail() {
+      this.SHOW_MODAL({
+        component: 'ModalTravail',
+        callback: () => {
+          this.$store.dispatch('fetchMesTravaux');
+        },
+      });
+    },
   },
 };
 </script>

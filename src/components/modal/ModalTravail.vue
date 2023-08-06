@@ -163,6 +163,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    callback: {
+      type: Function,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -254,6 +258,7 @@ export default {
       promise
         .then(() => {
           this.errors = {};
+          this.callback(true);
           this.HIDE_MODAL();
         })
         .catch((errors) => {
