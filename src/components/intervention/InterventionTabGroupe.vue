@@ -28,22 +28,25 @@
                 <em>organisation</em>.
               </td>
             </tr>
-            <tr v-for="g in groupes" :key="g.id">
+            <tr v-for="g in groupes" :key="g.pseudo_id">
               <td>
-                <label :for="'g-' + g.id">
+                <label :for="'g-' + g.pseudo_id">
                   {{ (g.no ? g.no + ' ' : '') + g.designation }}
                 </label>
               </td>
               <td>
                 <div class="text-center">
                   <input
-                    :id="'g-' + g.id"
-                    v-model="selected[g.no]"
+                    :id="'g-' + g.pseudo_id"
+                    v-model="selected[g.pseudo_id]"
                     type="checkbox"
                     :disabled="!hasEditPermission"
                     class="form-check-input"
                   />
-                  <label class="form-check-label" :for="'g-' + g.id"></label>
+                  <label
+                    class="form-check-label"
+                    :for="'g-' + g.pseudo_id"
+                  ></label>
                 </div>
               </td>
             </tr>
@@ -67,8 +70,15 @@ export default {
   },
   computed: {
     ...mapState({
-      groupes: (state) => state.groupe.liste.filter((g) => g.type === 1),
-      interventionGroupes: (state) => state.intervention.active.groupes,
+      groupes: (state) =>
+        state.groupe.liste
+          .filter((g) => g.type === 1)
+          .map((g) => ({ ...g, pseudo_id: g.no + '_' + g.designation })),
+      interventionGroupes: (state) =>
+        state.intervention.active.groupes.map((g) => ({
+          ...g,
+          pseudo_id: g.no + '_' + g.designation,
+        })),
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
@@ -78,10 +88,10 @@ export default {
         ),
     }),
     filteredGroupes() {
-      const nos = new Set(this.interventionGroupes.map((g) => g.no));
+      const ids = new Set(this.interventionGroupes.map((g) => g.pseudo_id));
       return [
         ...this.interventionGroupes,
-        ...this.groupes.filter((g) => !nos.has(g.no)),
+        ...this.groupes.filter((g) => !ids.has(g.pseudo_id)),
       ];
     },
     additionalGroupes() {
@@ -105,19 +115,19 @@ export default {
   },
   methods: {
     async save() {
-      let groupesNo = this.interventionGroupes.map((g) => g.no);
-      let nos = Object.keys(this.selected)
-        .filter((item) => this.selected[item])
-        .map((x) => parseInt(x));
+      let groupesIds = this.interventionGroupes.map((g) => g.pseudo_id);
+      let ids = Object.keys(this.selected).filter(
+        (item) => this.selected[item]
+      );
 
       //New One
-      let newOnes = nos.filter((item) => !groupesNo.includes(item));
+      let newOnes = ids.filter((item) => !groupesIds.includes(item));
 
       //Removed
-      let removed = groupesNo.filter((item) => !nos.includes(item));
+      let removed = groupesIds.filter((item) => !ids.includes(item));
       let removedIds = [
         ...this.interventionGroupes
-          .filter((g) => removed.includes(g.no))
+          .filter((g) => removed.includes(g.pseudo_id))
           .map((g) => g.id),
       ];
 
@@ -127,7 +137,7 @@ export default {
           : Promise.resolved,
         newOnes.length > 0
           ? this.$store.dispatch('addInterventionGroupes', [
-              ...this.groupes.filter((g) => newOnes.includes(g.no)),
+              ...this.groupes.filter((g) => newOnes.includes(g.pseudo_id)),
             ])
           : Promise.resolved,
       ]).then(() => this.$awn.success('Modifications enregistrées'));
@@ -136,7 +146,9 @@ export default {
       this.selected = {};
       const svm = this;
 
-      value.forEach((v) => (svm.selected = { ...svm.selected, [v.no]: true }));
+      value.forEach(
+        (v) => (svm.selected = { ...svm.selected, [v.pseudo_id]: true })
+      );
     },
   },
 };

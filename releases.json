@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "07.08.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Gestion des groupes portant le même numéro dans intervention"
+      ]
+    },
+    {
       "date": "06.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
