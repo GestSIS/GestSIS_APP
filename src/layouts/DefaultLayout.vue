@@ -56,7 +56,7 @@ export default {
   /*adds scroll to this container*/
   display: flex;
   flex-flow: column;
-  height: 100vh;
+  height: 100%;
 }
 
 .custom-sidebar {

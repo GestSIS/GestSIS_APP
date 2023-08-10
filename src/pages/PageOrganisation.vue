@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-8 mb-3">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h3>Groupes</h3>
