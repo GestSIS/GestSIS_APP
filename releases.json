@@ -4,7 +4,10 @@
       "date": "10.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Diverses petites améliorations graphiques"]
+      "changes": [
+        "Diverses petites améliorations graphiques",
+        "Résolution du problème d'affichage sur mobile, les boutons d'actions cachant le bas du contenu"
+      ]
     },
     {
       "date": "07.08.2023",
