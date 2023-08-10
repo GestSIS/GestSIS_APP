@@ -67,19 +67,19 @@ export default {
   height: 100%;
 }
 
-@media (min-width: 320px) {
-  .content {
-    padding-bottom: 4rem;
-  }
-}
-@media (min-width: 480px) {
-  .content {
-    padding-bottom: 4rem;
-  }
-}
-@media (min-width: 600px) {
-  .content {
-    padding-bottom: 0rem;
-  }
-}
+// @media (min-width: 320px) {
+//   .content {
+//     padding-bottom: 4rem;
+//   }
+// }
+// @media (min-width: 480px) {
+//   .content {
+//     padding-bottom: 4rem;
+//   }
+// }
+// @media (min-width: 600px) {
+//   .content {
+//     padding-bottom: 0rem;
+//   }
+// }
 </style>
