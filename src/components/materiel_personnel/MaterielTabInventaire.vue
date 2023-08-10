@@ -204,40 +204,32 @@ export default {
     computedMaterielGeneric() {
       return this.materiels
         .filter((m) => m.materiel?.uuid == null)
-        .filter((m) => this.selectedIds.type[m.materiel_type_id])
-        .filter(
-          (m) =>
-            !this.filtreTaille ||
-            m.taille?.toLowerCase()?.includes(this.filtreTaille.toLowerCase())
-        )
         .map((m) => ({
           ...m.materiel,
           ...m,
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter((m) =>
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     computedMaterielNumerote() {
       return this.materiels
-        .filter(
-          (m) =>
-            m.materiel?.numero &&
-            (!this.filtreNumero ||
-              m.materiel?.numero
-                ?.toLowerCase()
-                ?.includes(this.filtreNumero.toLowerCase()))
-        )
-        .filter((m) => this.selectedIds.type[m.materiel_type_id])
-        .filter(
-          (m) =>
-            !this.filtreTaille ||
-            m.taille?.toLowerCase()?.includes(this.filtreTaille.toLowerCase())
-        )
+        .filter((m) => m.materiel?.numero != null)
         .map((m) => ({
           ...m.materiel,
           ...m,
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter((m) =>
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+        )
+        .filter((m) =>
+          m.numero.toLowerCase().includes(this.filtreNumero.toLowerCase())
+        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     indexedMaterielType() {
