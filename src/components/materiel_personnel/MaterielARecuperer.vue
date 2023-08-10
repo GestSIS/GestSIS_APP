@@ -57,6 +57,11 @@ export default {
       aRecuperer: (state) => state.matPersoMateriel.aRecuperer,
       sapeurs: (state) => state.sapeur.liste,
     }),
+    indexedSapeurs() {
+      const saps = {};
+      this.sapeurs.array.forEach((s) => (saps[s.id] = s));
+      return saps;
+    },
     computedData() {
       return Object.values(
         this.aRecuperer.reduce((acc, m) => {
@@ -73,7 +78,7 @@ export default {
       ).map((m) => {
         return {
           ...m,
-          nom_prenom: this.sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+          nom_prenom: this.indexedSapeurs[m.sapeur_id]?.nom_prenom,
           fin: '-',
         }; // TODO: identifier date de fin de service du sapeur !!! fin: 'TODO' };
       });

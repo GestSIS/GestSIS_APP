@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Diverses petites améliorations graphiques",
-        "Résolution du problème d'affichage sur mobile, les boutons d'actions cachant le bas du contenu"
+        "Résolution du problème d'affichage sur mobile, les boutons d'actions cachant le bas du contenu",
+        "Améliorations des performances du module matériel personnel"
       ]
     },
     {

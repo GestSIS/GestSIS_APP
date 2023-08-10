@@ -213,61 +213,66 @@ export default {
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
     }),
+    filteredSapeurIds() {
+      const normalisedFilter = this.filtreSapeur
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+      return new Set(
+        this.sapeurs
+          .filter(
+            (s) =>
+              !normalisedFilter ||
+              s.nom_prenom
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .includes(normalisedFilter)
+          )
+          .map((s) => s.id)
+      );
+    },
     computedMaterielGeneric() {
       return this.materiels
         .filter((m) => m.materiel?.uuid == null)
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter(
+          (m) =>
+            !this.filtreTaille ||
+            m.taille?.toLowerCase()?.includes(this.filtreTaille.toLowerCase())
+        )
+        .filter((s) => this.filteredSapeurIds.has(s.sapeur_id))
         .map((m) => ({
           ...m.materiel,
           ...m,
           sapeur: this.indexedSapeurs[m.sapeur_id],
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
-        .filter((m) => this.selectedIds.type[m.materiel_type_id])
-        .filter((m) =>
-          m.sapeur
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filtreSapeur
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
-        )
-        .filter((m) =>
-          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
-        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     computedMaterielNumerote() {
       return this.materiels
-        .filter((m) => m.materiel?.numero != null)
+        .filter(
+          (m) =>
+            m.materiel?.numero &&
+            (!this.filtreNumero ||
+              m.materiel?.numero
+                ?.toLowerCase()
+                ?.includes(this.filtreNumero.toLowerCase()))
+        )
+        .filter((m) => this.selectedIds.type[m.materiel_type_id])
+        .filter((s) => this.filteredSapeurIds.has(s.sapeur_id))
+        .filter(
+          (m) =>
+            !this.filtreTaille ||
+            m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+        )
         .map((m) => ({
           ...m.materiel,
           ...m,
           sapeur: this.indexedSapeurs[m.sapeur_id],
           type: this.indexedMaterielType[m.materiel_type_id]?.designation,
         }))
-        .filter((m) => this.selectedIds.type[m.materiel_type_id])
-        .filter((m) =>
-          m.sapeur
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filtreSapeur
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
-        )
-        .filter((m) =>
-          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
-        )
-        .filter((m) =>
-          m.numero.toLowerCase().includes(this.filtreNumero.toLowerCase())
-        )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
     indexedMaterielType() {
