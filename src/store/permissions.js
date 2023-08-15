@@ -22,7 +22,7 @@ export default {
   },
   ABSENCE: {
     LECTURE: 'absence.lecture',
-    MODIFICATION: 'absence.presence',
+    MODIFICATION: 'absence.modification',
     CONFIG: 'absence.config',
   },
   COURS: {
