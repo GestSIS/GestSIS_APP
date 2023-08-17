@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "17.08.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'export de la date d'anniversaire dans le fichiers vcard"
+      ]
+    },
+    {
       "date": "10.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
