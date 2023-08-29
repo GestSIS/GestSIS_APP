@@ -137,6 +137,7 @@
               <button
                 v-if="!sap.excuse_type_id"
                 class="btn btn-outline-primary border-0"
+                :disabled="!hasPresencePermission"
                 @click="addExcuse(sap)"
               >
                 <font-awesome-icon :icon="['fas', 'plus']" />
@@ -144,6 +145,7 @@
               <button
                 v-else
                 class="btn btn-outline-danger border-0"
+                :disabled="!hasPresencePermission"
                 @click="removeExcuse(sap)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />

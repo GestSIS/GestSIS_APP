@@ -93,6 +93,7 @@
               <td class="col-3">
                 <div class="input-group input-group-sm">
                   <input
+                    v-if="activeUnite?.comptable"
                     id="quantite"
                     v-model="item.quantite"
                     type="number"
@@ -100,16 +101,16 @@
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-quantite' + i] }"
                   />
+                  <input
+                    v-if="!activeUnite?.comptable"
+                    :value="1"
+                    type="number"
+                    :disabled="true"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['base-quantite' + i] }"
+                  />
                   <span class="input-group-text">
-                    {{
-                      unites.find(
-                        (u) =>
-                          u.id ==
-                          travailTypes.find(
-                            (t) => t.id == activeTravail.travail_type_id
-                          )?.type_unite_id
-                      )?.unite
-                    }}</span
+                    {{ activeUnite?.unite }}</span
                   >
                 </div>
               </td>
@@ -190,6 +191,15 @@ export default {
           permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
         ),
     }),
+    activeUnite() {
+      return this.unites.find(
+        (u) =>
+          u.id ===
+          this.travailTypes.find(
+            (t) => t.id === this.activeTravail.travail_type_id
+          )?.type_unite_id
+      );
+    },
   },
   mounted() {
     if (this.data.id) {
@@ -237,6 +247,13 @@ export default {
       // Return en cas d'erreurs
       if (Object.keys(this.errors).length > 0) {
         return;
+      }
+
+      if (!this.activeUnite?.comptable) {
+        this.activeTravail.sapeurs = this.activeTravail.sapeurs.map((s) => ({
+          ...s,
+          quantite: 1,
+        }));
       }
 
       let promise = null;

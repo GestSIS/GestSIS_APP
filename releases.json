@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "29.08.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Les fiches de travail comptabilisé en `forfait` sont désormais limité à 1 unité",
+        "Bouton ajouter absence désactivé dans la page exercice en cas de lecture seul"
+      ]
+    },
+    {
       "date": "17.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
