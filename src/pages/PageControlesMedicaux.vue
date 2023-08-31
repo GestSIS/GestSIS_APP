@@ -266,7 +266,7 @@ export default {
         { title: 'Validité', key: 'validite', type: Date },
         { title: 'Designation', key: 'designation' },
         { title: 'Accepté', key: 'accepter', type: Boolean },
-        { title: 'En cours', key: 'en_cours', type: Boolean },
+        // { title: 'En cours', key: 'en_cours', type: Boolean },
         {
           title: 'Doc',
           key: 'doc',
