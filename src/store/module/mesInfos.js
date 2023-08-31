@@ -11,6 +11,7 @@ export default {
     mutations: [],
     materiels: [],
     travaux: [],
+    controlesMedicaux: [],
     exercices: [],
     absences: [],
     interventions: [],
@@ -27,6 +28,7 @@ export default {
       state.mutations = [];
       state.materiels = [];
       state.travaux = [];
+      state.controlesMedicaux = [];
       state.exercices = [];
       state.absences = [];
       state.interventions = [];
@@ -56,6 +58,9 @@ export default {
     },
     [types.UPDATE_MES_TRAVAUX](state, payload) {
       state.travaux = payload;
+    },
+    [types.UPDATE_MES_CONTROLES_MEDICAUX](state, payload) {
+      state.controlesMedicaux = payload;
     },
     [types.UPDATE_MES_EXERCICES](state, payload) {
       state.exercices = payload;
@@ -134,6 +139,11 @@ export default {
       return MesInfosService.getMesExercices(
         getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_MES_EXERCICES, data));
+    },
+    fetchMesControlesMedicaux({ commit }) {
+      return MesInfosService.getMesControlesMedicaux().then((data) =>
+        commit(types.UPDATE_MES_CONTROLES_MEDICAUX, data)
+      );
     },
     fetchMesAbsences({ commit, getters }) {
       return MesInfosService.getMesAbsences(

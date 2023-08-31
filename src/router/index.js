@@ -158,6 +158,12 @@ const router = createRouter({
           component: () => import('/src/components/mes_infos/MesDecomptes.vue'),
         },
         {
+          path: 'controles-medicaux',
+          name: 'mes-controles-medicaux',
+          beforeEnter: sapeurGuard(),
+          component: () => import('/src/components/mes_infos/MesControlesMedicaux.vue'),
+        },
+        {
           path: 'cours',
           name: 'mes-cours',
           beforeEnter: sapeurGuard(),

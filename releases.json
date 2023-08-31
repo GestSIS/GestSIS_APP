@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "31.08.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nouveau onglet `Mes contrôles médicaux` dans le module `Mes Infos`"
+      ]
+    },
+    {
       "date": "29.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",

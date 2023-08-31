@@ -28,6 +28,14 @@ export default {
   getMesExercices(exerciceComptableId) {
     return Api.api().get('/mes-exercices/' + exerciceComptableId);
   },
+  getMesControlesMedicaux() {
+    return Api.api().get('/mes-controles-medicaux');
+  },
+  downloadMonJustificatif(controleMedicalId, filename) {
+    return Api.apiFileDownload(filename).get(
+      '/mon-justificatif/' + controleMedicalId
+    );
+  },
   getMesAbsences(exerciceComptableId) {
     return Api.api().get('/mes-absences/' + exerciceComptableId);
   },

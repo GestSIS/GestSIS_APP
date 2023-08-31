@@ -74,6 +74,13 @@
             class="nav-item nav-link"
             role="tab"
             active-class="active"
+            :to="{ name: 'mes-controles-medicaux' }"
+            >Mes contrôles médicaux</router-link
+          >
+          <router-link
+            class="nav-item nav-link"
+            role="tab"
+            active-class="active"
             :to="{ name: 'mes-cours' }"
             >Mes cours</router-link
           >
