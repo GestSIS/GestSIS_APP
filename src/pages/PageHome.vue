@@ -57,7 +57,7 @@
           >
             <div class="align-vertical">
               <button class="btn btn-link" @click="connectToSis(sis)">
-                <img class="img-fetch" :src="getImageUrl(sis)" />
+                <img class="img-fetch" :src="getImageUrl(sis)" :alt="sis.nom" />
               </button>
             </div>
           </div>
