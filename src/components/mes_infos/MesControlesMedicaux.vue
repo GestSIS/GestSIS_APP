@@ -80,7 +80,7 @@ export default {
     ...mapState({
       controlesMedicaux: (state) =>
         state.mesInfos.controlesMedicaux
-          .sort((a, b) => a.date?.localeCompare(b.date))
+          .sort((a, b) => b.validite?.localeCompare(a.validite))
           .map((c) => ({
             ...c,
             type: state.controlesMedicauxType.liste.find(
