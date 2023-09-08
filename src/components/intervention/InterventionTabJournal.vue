@@ -235,11 +235,21 @@ export default {
         action: () => {},
       };
 
-      const duree = Math.abs(new Date(endDate) - new Date(startDate)) / 36e5;
+      const duree = Math.abs(new Date(endDate) - new Date(startDate)) / 6e4;
+      const heures = Math.floor(duree / 60);
+      const minutes = Math.floor(duree % 60);
+      let dureeFormatee = '';
+      if (heures && minutes) {
+        dureeFormatee = heures + 'h' + minutes;
+      } else if (heures) {
+        dureeFormatee = heures + ' heure' + (heures > 1 ? 's' : '');
+      } else {
+        dureeFormatee = minutes + ' minute' + (minutes > 1 ? 's' : '');
+      }
       const endEvent = {
         date: endDate,
         title: "Fin de l'intervention",
-        description: 'Durée ' + duree + ' heures',
+        description: 'Durée : ' + dureeFormatee,
         type: 'end',
         colorClass: 'default',
         action: () => {},
