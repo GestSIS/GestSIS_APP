@@ -172,6 +172,13 @@
             @selected="selectExercice"
           >
             <template #actions="{ rowData }">
+              <button
+                title="SMS"
+                class="btn btn-outline-primary border-0"
+                @click="sms({ id: rowData.id })"
+              >
+                <font-awesome-icon :icon="['fas', 'comment-sms']" />
+              </button>
               <router-link
                 v-slot="{ navigate }"
                 :to="'/exercices/' + rowData.id"

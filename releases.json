@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "11.09.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Bouton SMS en fin de ligne pour pages exercices"]
+    },
+    {
       "date": "31.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
