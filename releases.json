@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "18.09.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Bouton `Fiche sapeur` pour exporter les données d'un sapeur",
+        "Fenêtre de chargement durant l'impression des rapports d'interventions"
+      ]
+    },
+    {
       "date": "11.09.2023",
       "version": "1.0",
       "app": "GestSIS APP",

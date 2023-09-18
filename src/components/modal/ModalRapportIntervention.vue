@@ -178,15 +178,16 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     generer() {
+      const interventionId = this.data.interventionId;
       const date = this.data.date;
+      this.SHOW_MODAL({ component: 'ModalChargement' });
       InterventionService.downloadRapport(
-        this.data.interventionId,
+        interventionId,
         this.params,
         `${date}_intervention.pdf`
-      );
-      this.HIDE_MODAL();
+      ).then(() => this.HIDE_MODAL());
     },
   },
 };

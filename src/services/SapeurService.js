@@ -9,6 +9,9 @@ export default {
       params: { date },
     });
   },
+  downloadFicheSapeur(sapeurId, filename) {
+    return Api.print(filename).get('/sapeurs/' + sapeurId + '/fiche');
+  },
   getSapeurPourConvocationSms() {
     return Api.api().get('/sapeurs-convocation');
   },

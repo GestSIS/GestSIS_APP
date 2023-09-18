@@ -171,13 +171,6 @@
               Importer
             </button>
             <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
-              Fiche sapeur
-            </button>
-            <button
               v-if="activeSapeur?.id && hasEditPermission"
               class="btn btn-outline-danger ms-2"
               @click="deleteSapeur"
@@ -191,6 +184,14 @@
               @click="addSapeur"
             >
               Ajouter un sapeur/civil
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary ms-2 me-auto"
+              @click="ficheSapeur"
+            >
+              <font-awesome-icon :icon="['fas', 'id-card-clip']" />
+              Fiche sapeur
             </button>
           </div>
         </div>
@@ -230,8 +231,8 @@ import store from '../store/index';
 import permissions from '../store/permissions.js';
 import { mapState, mapMutations } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import SapeurService from '/src/services/SapeurService';
 
-//TODO Implémenter Matériel personnel
 const links = [
   { title: 'General', urlName: 'sapeur-details', civil: true },
   { title: 'Mutations', urlName: 'sapeur-mutations' },
@@ -379,11 +380,20 @@ export default {
     );
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     hasPermission(permission) {
       return (
         !permission || this.permissions.includes(permission) || this.isAdmin
       );
+    },
+    ficheSapeur() {
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+      SapeurService.downloadFicheSapeur(
+        this.activeSapeurId,
+        'fiche-sapeur.pdf'
+      ).then(() => {
+        this.HIDE_MODAL();
+      });
     },
     async navigationEventListener(e) {
       const ids = this.filteredSapeurs.map((s) => s.id);

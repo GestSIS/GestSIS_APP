@@ -56,8 +56,12 @@
               class="form-select form-select-sm"
               :disabled="!hasEditPermission"
             >
-              <option v-for="t in telephoneTypes" :key="t.id" :value="t.id">
-                {{ t.type }}
+              <option
+                v-for="telType in telephoneTypes"
+                :key="telType.id"
+                :value="t.id"
+              >
+                {{ telType.type }}
               </option>
             </select>
           </td>

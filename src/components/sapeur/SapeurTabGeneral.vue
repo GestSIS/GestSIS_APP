@@ -20,7 +20,6 @@
             :disabled="!hasEditPermission"
             :options="civilites"
           />
-          <!-- NOM -->
           <div class="mb-3">
             <label for="m-sap-nom">Nom</label>
             <input
@@ -33,7 +32,6 @@
               name="nom"
             />
           </div>
-          <!-- PRENOM -->
           <div class="mb-3">
             <label for="m-sap-prenom">Prénom</label>
             <input
@@ -46,7 +44,6 @@
               name="prenom"
             />
           </div>
-          <!-- RUE -->
           <div class="row mb-3">
             <div class="col-8">
               <label for="m-sap-rue">Rue</label>
@@ -73,7 +70,6 @@
               />
             </div>
           </div>
-          <!-- NPA + LOCALITE -->
           <base-select
             v-model="activeSapeur.localite_id"
             class="mb-3"
@@ -82,7 +78,6 @@
             :disabled="!hasEditPermission"
             :options="localites"
           />
-          <!-- N° AVS -->
           <div class="row">
             <div class="mb-3 col-6">
               <label for="m-sap-avs">N° AVS</label>
@@ -120,7 +115,6 @@
               </div>
             </div>
           </div>
-          <!-- Email -->
           <div class="mb-3">
             <label for="m-sap-email">Email</label>
             <div class="input-group input-group-sm mb-3">
@@ -138,7 +132,6 @@
               />
             </div>
           </div>
-          <!-- DATE NAISSANCE + SUFFIXE -->
           <div v-if="activeSapeur.type === 0" class="row mb-3">
             <div class="col-6">
               <label for="m-sap-date-naissance">Date de naissance</label>
@@ -177,7 +170,6 @@
               />
             </div>
           </div>
-          <!-- REMARQUE -->
           <div class="mb-3">
             <label for="m-sap-remarques">Remarques</label>
             <textarea
@@ -341,7 +333,6 @@
                 :icon="['far', 'question-circle']"
               />
             </div>
-            <!-- TODO Porteur checkbox -->
           </div>
         </form>
       </div>
