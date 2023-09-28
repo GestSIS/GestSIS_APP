@@ -59,7 +59,7 @@
               <option
                 v-for="telType in telephoneTypes"
                 :key="telType.id"
-                :value="t.id"
+                :value="telType.id"
               >
                 {{ telType.type }}
               </option>
