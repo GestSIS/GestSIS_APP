@@ -30,6 +30,23 @@
             "
             >Email facturation</a
           >
+          <a
+            class="btn btn-outline-primary"
+            :href="
+              'mailto:?bcc=' +
+              Object.entries(contacts)
+                .filter(
+                  ([key, _]) => sis.find((s) => s.api_key === key)?.mobile
+                )
+                .map(([_, value]) => value)
+                .flat()
+                .filter((c) => c.liste === 'news')
+                .map((c) => c.email)
+                .join(';')
+            "
+            >Email mobile</a
+          >
+          {{}}
         </div>
       </div>
     </div>
