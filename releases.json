@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "date": "02.10.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.2.0",
+      "changes": [
+        "Nouvelle fonctionalité alarmes, récupérations des informations du POC fourni par le CET",
+        "Visualisation des quittances",
+        "Bouton naviger pour ouvrir google maps",
+        "Création d'intervention à partir des données du POC",
+        "Amélioration de l'affichage des fenêtes pour les heures"
+      ]
+    },
+    {
       "date": "18.09.2023",
       "version": "1.0",
       "app": "GestSIS APP",
