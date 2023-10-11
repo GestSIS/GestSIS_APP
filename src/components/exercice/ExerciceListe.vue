@@ -132,7 +132,7 @@
                 base-option="<Statut>"
                 :options="[
                   { id: 0, designation: 'Annulé' },
-                  { id: 1, designation: 'Sapeurs à ajouter' },
+                  { id: 1, designation: 'A saisir' },
                   { id: 2, designation: 'En attente de validation' },
                   { id: 3, designation: 'Validé' },
                   { id: 4, designation: 'Imputé' },
