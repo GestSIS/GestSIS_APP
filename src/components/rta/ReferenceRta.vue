@@ -6,7 +6,7 @@
         Réinitialiser
       </button>
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>

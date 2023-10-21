@@ -3,7 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mutations</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0">
       <div class="row g-3 align-items-center mb-3">
         <div class="col-auto">
           <input
@@ -53,6 +53,8 @@
           />
         </div>
       </div>
+    </div>
+    <div class="card-body table-responsive pt-0">
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>

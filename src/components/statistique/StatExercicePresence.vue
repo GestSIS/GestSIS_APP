@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-12 col-xl-6">
-      <div class="card card-primary card-outline mb-2">
+    <div class="col-12 col-xl-6 mb-3">
+      <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h4>Filtres</h4>
         </div>
@@ -29,8 +29,8 @@
         </form>
       </div>
     </div>
-    <div class="col-12 col-xl-6">
-      <div class="card card-primary card-outline mb-2">
+    <div class="col-12 col-xl-6 mb-3">
+      <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h4>Légende</h4>
         </div>
@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 mb-3">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Présences aux exercices</h3>
@@ -184,7 +184,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import ExerciceService from '../../services/ExerciceService';
 import store from '/src/store/index';
 
 async function loadData(_, next) {

@@ -65,7 +65,7 @@
         </div>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline mb-3">
+        <div class="card card-primary card-outline table-responsive mb-3">
           <div class="card-header d-flex justify-content-between">
             <div class="card-title">
               <h3 class="card-title">Comptes</h3>

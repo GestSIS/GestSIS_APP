@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <div class="card card-primary card-outline">
+        <div class="card card-primary card-outline table-responsive mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>Amendes</h3>
           </div>

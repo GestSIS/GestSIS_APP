@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <ol class="breadcrumb m-3">
           <li class="breadcrumb-item">
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>

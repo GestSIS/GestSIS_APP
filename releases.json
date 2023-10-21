@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "date": "21.10.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Diverses améliorations graphiques pour l'affichage sur mobile"
+      ]
+    },
+    {
+      "date": "14.10.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction de l'export intervention depuis GestSIS Mobile",
+        "Correction d'un porblème pour la validation des exercices"
+      ]
+    },
+    {
       "date": "02.10.2023",
       "version": "1.0",
       "app": "GestSIS Mobile 2.2.0",

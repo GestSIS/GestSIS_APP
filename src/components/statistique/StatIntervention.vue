@@ -1,8 +1,8 @@
 <template>
   <div class="row">
-    <stat-intervention-basic />
-    <stat-vehicule />
-    <stat-materiel />
+    <stat-intervention-basic class="mb-3" />
+    <stat-vehicule class="mb-3" />
+    <stat-materiel class="mb-3" />
   </div>
 </template>
 

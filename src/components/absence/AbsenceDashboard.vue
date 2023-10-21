@@ -321,7 +321,7 @@ export default {
       sapeurs: (state) =>
         state.sapeur.liste.filter((s) => s.actif && s.type == 0),
       absences: (state) =>
-        state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
+        state.absence.liste.sort((a, b) => a.debut?.localeCompare(b.debut)),
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
