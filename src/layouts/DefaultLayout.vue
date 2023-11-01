@@ -4,6 +4,15 @@
       <!-- Main Sidebar Container -->
       <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
+        <!-- <div class="position-absolute top-0">
+          <button
+            v-if="!noSidebar"
+            class="btn btn-outline-secondary"
+            @click="hideSidebar = !hideSidebar"
+          >
+            <font-awesome-icon :icon="['fas', 'bars']" />
+          </button>
+        </div> -->
         <app-navbar @toggle-sidebar="hideSidebar = !hideSidebar" />
         <slot />
       </div>

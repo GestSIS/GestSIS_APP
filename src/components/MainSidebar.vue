@@ -5,32 +5,8 @@
       <h2 class="brand-text m-0 text-center">GestSIS</h2>
     </div>
     <sis-selection />
-    <!--    <hr class="bg-secondary" />-->
-    <!--    &lt;!&ndash; Sidebar user panel (optional) &ndash;&gt;-->
-    <!--    <div class="sidebar-user">-->
-    <!--      <div class="image">-->
-    <!--        &lt;!&ndash; @if($user_details['photo'])-->
-    <!--        <img-->
-    <!--          src="{{ $user_details['photo'] }}"-->
-    <!--          class="img-circle elevation-2"-->
-    <!--        >-->
-    <!--        @endif&ndash;&gt;-->
-    <!--        Image-->
-    <!--      </div>-->
-    <!--      <div class="info">-->
-    <!--        <a href="#" class="d-block">-->
-    <!--          &lt;!&ndash; @if(!empty($user_details['nom']))-->
-    <!--          {{ $user_details['prenom'] }} {{ $user_details['nom'] }}-->
-    <!--          @else-->
-    <!--          {{ $user_details['nom_utilisateur'] }}-->
-    <!--          @endif&ndash;&gt;-->
-    <!--          John Doe-->
-    <!--        </a>-->
-    <!--      </div>-->
-    <!--    </div>-->
     <hr />
 
-    <!-- Sidebar Menu -->
     <nav class="menu-options mt-2">
       <ul
         class="nav nav-pills nav-sidebar flex-column"
@@ -54,7 +30,6 @@
       </ul>
     </nav>
   </aside>
-  <!-- /.sidebar -->
 </template>
 
 <script>

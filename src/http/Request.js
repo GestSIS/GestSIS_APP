@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const API_URL = import.meta.env.VITE_API_ENDPOINT;
 const AUTH_URL = import.meta.env.VITE_AUTH_ENDPOINT;
@@ -20,7 +20,7 @@ const request = {
 
   setAccessToken(accessToken) {
     try {
-      const { exp } = jwt_decode(accessToken);
+      const { exp } = jwtDecode(accessToken);
       this._accessTokenValidity = exp;
     } catch (exception) {
       this._accessTokenValidity = null;

@@ -3,7 +3,7 @@ import types from '../mutationTypes';
 import { TokenService } from '../../services/StorageService.js';
 import AuthService from '../../services/AuthService.js';
 import Api from '../../http/Request';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import router from '../../router/index';
 
 export default {
@@ -41,7 +41,7 @@ export default {
 
       state.user = payload.user;
 
-      const jwt = jwt_decode(payload.accessToken);
+      const jwt = jwtDecode(payload.accessToken);
       const permissionsParSis = jwt.data.permissions ?? {};
       const sapeurParSis = jwt.data.sapeurs ?? {};
       const availableSis = [
