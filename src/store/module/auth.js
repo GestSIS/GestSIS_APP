@@ -150,7 +150,9 @@ export default {
     isLoggedIn: (state) => !!state.user,
     availableSisListe: (state) => {
       return state.sis.liste
-        .filter((sis) => state.sis.available.includes(sis.api_key))
+        .filter(
+          (sis) => state.sis.available.includes(sis.api_key) || state.sis.admin
+        )
         .sort((s1, s2) => s1.nom.localeCompare(s2.nom));
     },
   },

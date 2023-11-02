@@ -56,4 +56,4 @@ jobs:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
       - name: Deploy build
-        run: scp -rCv dist staging:app.gestsis.ch
+        run: scp -rC dist staging:app.gestsis.ch
