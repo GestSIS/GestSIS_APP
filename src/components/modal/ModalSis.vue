@@ -88,6 +88,7 @@ export default {
         nom: '',
         abreviation: '',
         mobile: false,
+        api_key: '',
       },
     };
   },
