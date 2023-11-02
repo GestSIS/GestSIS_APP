@@ -53,7 +53,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th rowspan="2">
+              <th rowspan="2" class="sticky">
                 <base-select
                   v-model="displayKey"
                   style="min-width: 100px"
@@ -101,7 +101,7 @@
               ]"
               :key="f.id"
             >
-              <th>{{ f.nom }}</th>
+              <th class="sticky">{{ f.nom }}</th>
               <!-- <v-popover
                 v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
                 :key="i"
@@ -154,7 +154,7 @@
           </tbody>
           <tbody v-if="displayKey == 'permis'">
             <tr v-for="p in filteredPermis" :key="p.id">
-              <th>{{ p.type }}</th>
+              <th class="sticky">{{ p.type }}</th>
               <td
                 v-for="({ jourSemaine, permis }, i) in computedAbsences"
                 :key="i"
@@ -181,7 +181,7 @@
           </tbody>
           <tbody v-if="displayKey == 'localite'">
             <tr v-for="l in localitesSis" :key="l.id">
-              <th>{{ l.designation }}</th>
+              <th class="sticky">{{ l.designation }}</th>
               <td
                 v-for="({ jourSemaine, localites }, i) in computedAbsences"
                 :key="i"
@@ -208,7 +208,7 @@
           </tbody>
           <tbody v-if="displayKey == 'groupe'">
             <tr v-for="g in groupes" :key="g.id">
-              <th>{{ g.no }} {{ g.designation }}</th>
+              <th class="sticky">{{ g.no }} {{ g.designation }}</th>
               <td
                 v-for="({ jourSemaine, groupes }, i) in computedAbsences"
                 :key="i"
@@ -235,7 +235,7 @@
           </tbody>
           <tfoot v-if="displayKey !== 'permis'">
             <tr>
-              <th>Total</th>
+              <th class="sticky">Total</th>
               <th
                 v-for="({ jourSemaine, total }, i) in computedAbsences"
                 :key="i"
@@ -515,4 +515,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.sticky {
+  position: sticky;
+  left: 0px;
+  background-color: white;
+}
+</style>

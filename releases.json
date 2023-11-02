@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "02.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Tableau de bord des absence, première colonne fixe",
+        "Ajout de localités"
+      ]
+    },
+    {
       "date": "21.10.2023",
       "version": "1.0",
       "app": "GestSIS APP",
