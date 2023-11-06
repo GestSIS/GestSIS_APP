@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "06.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité d'ajouter plusieurs événements pour du matériel personnel en une fois"
+      ]
+    },
+    {
       "date": "02.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",

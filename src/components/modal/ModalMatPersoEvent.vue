@@ -36,6 +36,14 @@
                 <th>Numéro</th>
                 <th>Sapeur</th>
                 <th>Remarque</th>
+                <th v-if="displayNb">
+                  Nombre
+                  {{
+                    eventTypes
+                      .find((t) => t.id == activeEvent.materiel_event_type_id)
+                      ?.nom?.toLowerCase()
+                  }}
+                </th>
                 <th
                   v-if="
                     eventTypes.find(
@@ -117,6 +125,15 @@
                     :class="{ 'is-invalid': errors['remarque'] }"
                   />
                 </td>
+                <td v-if="displayNb">
+                  <input
+                    id="nb"
+                    v-model="materiel.nb"
+                    type="number"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['nb'] }"
+                  />
+                </td>
                 <td
                   v-if="
                     eventTypes.find(
@@ -159,6 +176,16 @@
               </tr>
             </tbody>
           </table>
+          <div class="form-check form-switch">
+            <input
+              id="displayNb"
+              v-model="displayNb"
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+            />
+            <label class="form-check-label" for="displayNb">Mode avancé</label>
+          </div>
         </div>
       </div>
     </div>
@@ -186,13 +213,14 @@ export default {
   },
   data() {
     return {
+      displayNb: false,
       errors: {},
       materielTypeIds: {},
       activeEvent: {
         success: true,
         materiel_event_type_id: null,
         date: new Date().toISOString().slice(0, 10),
-        materiels: [{ succes: true }],
+        materiels: [{ succes: true, nb: 1 }],
       },
     };
   },
@@ -239,7 +267,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     addMateriel() {
-      this.activeEvent.materiels.push({ succes: true });
+      this.activeEvent.materiels.push({ succes: true, nb: 1 });
 
       const count = this.activeEvent.materiels.length;
       this.$nextTick(() => {
@@ -287,11 +315,13 @@ export default {
       };
       const events = this.activeEvent.materiels
         .filter((m) => m.materiel_nominal_id)
-        .map((m) => ({
-          ...baseData,
-          ...m,
-          materiel_nominal_id: m.materiel_nominal_id,
-        }));
+        .flatMap((m) =>
+          Array(m.nb).fill({
+            ...baseData,
+            ...m,
+            materiel_nominal_id: m.materiel_nominal_id,
+          })
+        );
 
       this.$store
         .dispatch('addMatPersoEvents', events)
