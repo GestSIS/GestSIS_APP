@@ -1,6 +1,20 @@
 {
   "releases": [
     {
+      "date": "14.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Affichage du NPA dans la fiche sapeur"]
+    },
+    {
+      "date": "11.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème d'affichage des alarmes dans GestSIS Mobile"
+      ]
+    },
+    {
       "date": "06.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",

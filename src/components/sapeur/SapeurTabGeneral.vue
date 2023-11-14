@@ -77,6 +77,7 @@
             required
             :disabled="!hasEditPermission"
             :options="localites"
+            display-key="npa_localite"
           />
           <div class="row">
             <div class="mb-3 col-6">
@@ -389,7 +390,11 @@ export default {
       activeSapeurId: (state) => state.sapeur.active.id ?? 0,
       estSapeur: (state) => state.sapeur.active.data.type === 0,
       civilites: (state) => state.baseData.civilites,
-      localites: (state) => state.localite.liste,
+      localites: (state) =>
+        state.localite.liste.map((l) => ({
+          ...l,
+          npa_localite: `${l.npa} ${l.designation}`,
+        })),
       fonctions: (state) => state.fonction.liste,
       grades: (state) => state.grade.liste,
       hasEditPermission: (state) =>
