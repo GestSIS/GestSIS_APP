@@ -27,22 +27,22 @@ __metadata:
   linkType: hard
 
 "@babel/parser@npm:^7.23.0":
-  version: 7.23.0
-  resolution: "@babel/parser@npm:7.23.0"
+  version: 7.23.3
+  resolution: "@babel/parser@npm:7.23.3"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 453fdf8b9e2c2b7d7b02139e0ce003d1af21947bbc03eb350fb248ee335c9b85e4ab41697ddbdd97079698de825a265e45a0846bb2ed47a2c7c1df833f42a354
+  checksum: 4aa7366e401b5467192c1dbf2bef99ac0958c45ef69ed6704abbae68f98fab6409a527b417d1528fddc49d7664450670528adc7f45abb04db5fafca7ed766d57
   languageName: node
   linkType: hard
 
 "@babel/types@npm:^7.8.3":
-  version: 7.23.0
-  resolution: "@babel/types@npm:7.23.0"
+  version: 7.23.3
+  resolution: "@babel/types@npm:7.23.3"
   dependencies:
     "@babel/helper-string-parser": ^7.22.5
     "@babel/helper-validator-identifier": ^7.22.20
     to-fast-properties: ^2.0.0
-  checksum: 215fe04bd7feef79eeb4d33374b39909ce9cad1611c4135a4f7fdf41fe3280594105af6d7094354751514625ea92d0875aba355f53e86a92600f290e77b0e604
+  checksum: b96f1ec495351aeb2a5f98dd494aafa17df02a351548ae96999460f35c933261c839002a34c1e83552ff0d9f5e94d0b5b8e105d38131c7c9b0f5a6588676f35d
   languageName: node
   linkType: hard
 
@@ -445,26 +445,26 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:^8.4.5":
-  version: 8.44.6
-  resolution: "@types/eslint@npm:8.44.6"
+  version: 8.44.7
+  resolution: "@types/eslint@npm:8.44.7"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: ed8de582ab3dbd7ec0bf97d41f4f3de28dd8a37fc48bc423e1c406bbb70d1fd8c4175ba17ad6495ef9ef99a43df71421277b7a2a0355097489c4c4cf6bb266ff
+  checksum: 72a52f74477fbe7cc95ad290b491f51f0bc547cb7ea3672c68da3ffd3fb21ba86145bc36823a37d0a186caedeaee15b2d2a6b4c02c6c55819ff746053bd28310
   languageName: node
   linkType: hard
 
 "@types/estree@npm:*":
-  version: 1.0.4
-  resolution: "@types/estree@npm:1.0.4"
-  checksum: dcd08e6e967def3afff745774b6b9b912d6394ddacbb3e8be05bb291c1803f5f03f1ab0eeb852bf8a85ca14842663f461f3dac82179dcdccbf45fbc067673bbc
+  version: 1.0.5
+  resolution: "@types/estree@npm:1.0.5"
+  checksum: dd8b5bed28e6213b7acd0fb665a84e693554d850b0df423ac8076cc3ad5823a6bc26b0251d080bdc545af83179ede51dd3f6fa78cad2c46ed1f29624ddf3e41a
   languageName: node
   linkType: hard
 
 "@types/json-schema@npm:*":
-  version: 7.0.14
-  resolution: "@types/json-schema@npm:7.0.14"
-  checksum: 4b3dd99616c7c808201c56f6c7f6552eb67b5c0c753ab3fa03a6cb549aae950da537e9558e53fa65fba23d1be624a1e4e8d20c15027efbe41e03ca56f2b04fb0
+  version: 7.0.15
+  resolution: "@types/json-schema@npm:7.0.15"
+  checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
   languageName: node
   linkType: hard
 
@@ -475,13 +475,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-vue@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "@vitejs/plugin-vue@npm:4.4.0"
+"@vitejs/plugin-vue@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "@vitejs/plugin-vue@npm:4.4.1"
   peerDependencies:
     vite: ^4.0.0
     vue: ^3.2.25
-  checksum: 37b6987951f2e6fac0d2b7bad58aa4392142c1f325b7d189865426dbf97ee6c545aa489f952fa16d2f422adce5b6c9977785f398868c5d2f5333e43e361a0e0b
+  checksum: 3423f8faf09600b0bcf65fe845ea3fd1b130d1fc0671c355ce340675e1a5f6937edcca0339f5894630154bc48754ed5240c0819e2faa83c5f2e77332942cdcb5
   languageName: node
   linkType: hard
 
@@ -752,14 +752,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "axios@npm:1.6.0"
+"axios@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "axios@npm:1.6.1"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: c7c9f2ae9e0b9bad7d6f9a4dff030930b12ee667dedf54c3c776714f91681feb743c509ac0796ae5c01e12c4ab4a2bee74905068dd200fbc1ab86f9814578fb0
+  checksum: 573f03f59b7487d54551b16f5e155d1d130ad4864ed32d1da93d522b78a57123b34e3bde37f822a65ee297e79f1db840f9ad6514addff50d3cbf5caeed39e8dc
   languageName: node
   linkType: hard
 
@@ -888,9 +888,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001538, caniuse-lite@npm:^1.0.30001541":
-  version: 1.0.30001561
-  resolution: "caniuse-lite@npm:1.0.30001561"
-  checksum: 949829fe037e23346595614e01d362130245920503a12677f2506ce68e1240360113d6383febed41e8aa38cd0f5fd9c69c21b0af65a71c0246d560db489f1373
+  version: 1.0.30001562
+  resolution: "caniuse-lite@npm:1.0.30001562"
+  checksum: 414ed45ae47a432607be1c9588bd478440acb033e46ede74c97501bfdb9ba4b1615e221d3ce7c7be55e1e0834725fd1ce5bf5e037bb9dd384c8e85b5e83dc6d1
   languageName: node
   linkType: hard
 
@@ -1089,9 +1089,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.535":
-  version: 1.4.576
-  resolution: "electron-to-chromium@npm:1.4.576"
-  checksum: cf26065d95b0ecdd01f6daeec15b1e684a3b39680ae9f6d5d33c1391a6c1aa5ea2cb81cce699878e4fbb942328fc1076726f2d9ab1e8df9fbe02c84f1a5bbf1f
+  version: 1.4.582
+  resolution: "electron-to-chromium@npm:1.4.582"
+  checksum: a87ea18b4fbad7c96ae5fe587c3273c3878ee52b08c8a7acd6156949d05fd370f91809691126b0cee223a6cdd4688e6ff2f086c6603a712d004485f36a4b9093
   languageName: node
   linkType: hard
 
@@ -1505,13 +1505,13 @@ __metadata:
   linkType: hard
 
 "flat-cache@npm:^3.0.4":
-  version: 3.1.1
-  resolution: "flat-cache@npm:3.1.1"
+  version: 3.2.0
+  resolution: "flat-cache@npm:3.2.0"
   dependencies:
     flatted: ^3.2.9
     keyv: ^4.5.3
     rimraf: ^3.0.2
-  checksum: 4958cfe0f46acf84953d4e16676ef5f0d38eab3a92d532a1e8d5f88f11eea8b36d5d598070ff2aeae15f1fde18f8d7d089eefaf9db10b5a587cc1c9072325c7a
+  checksum: e7e0f59801e288b54bee5cb9681e9ee21ee28ef309f886b312c9d08415b79fc0f24ac842f84356ce80f47d6a53de62197ce0e6e148dc42d5db005992e2a756ec
   languageName: node
   linkType: hard
 
@@ -1522,7 +1522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"floating-vue@npm:^2.0.0-y.0":
+"floating-vue@npm:^2.0.0-beta.24":
   version: 2.0.0-y.0
   resolution: "floating-vue@npm:2.0.0-y.0"
   dependencies:
@@ -1626,22 +1626,22 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": ^6.4.2
     "@fortawesome/vue-fontawesome": ^3.0.5
     "@popperjs/core": ^2.11.8
-    "@vitejs/plugin-vue": ^4.4.0
+    "@vitejs/plugin-vue": ^4.4.1
     "@vue/compiler-sfc": ^3.3.8
     "@vue/eslint-config-prettier": ^8.0.0
     autoprefixer: ^10.4.16
     awesome-notifications: ^3.1.3
-    axios: ^1.6.0
+    axios: ^1.6.1
     bootstrap: ^5.3.2
     eslint: ^8.53.0
     eslint-plugin-prettier: ^5.0.1
     eslint-plugin-vue: ^9.18.1
-    floating-vue: ^2.0.0-y.0
+    floating-vue: ^2.0.0-beta.24
     jwt-decode: ^4.0.0
     lodash.camelcase: ^4.3.0
-    luxon: ^3.4.3
+    luxon: ^3.4.4
     nprogress: ^0.2.0
-    prettier: ^3.0.3
+    prettier: ^3.1.0
     sass: ^1.69.5
     vite: ^4.5.0
     vite-plugin-eslint: ^1.8.1
@@ -2070,9 +2070,11 @@ __metadata:
   linkType: hard
 
 "lru-cache@npm:^10.0.1, lru-cache@npm:^9.1.1 || ^10.0.0":
-  version: 10.0.1
-  resolution: "lru-cache@npm:10.0.1"
-  checksum: 06f8d0e1ceabd76bb6f644a26dbb0b4c471b79c7b514c13c6856113879b3bf369eb7b497dad4ff2b7e2636db202412394865b33c332100876d838ad1372f0181
+  version: 10.0.2
+  resolution: "lru-cache@npm:10.0.2"
+  dependencies:
+    semver: ^7.3.5
+  checksum: 83ad0e899d79f48574bdda131fe8157c6d65cbd073a6e78e0d1a3467a85dce1ef4d8dc9fd618a56c57a068271501c81d54471e13f84dd121e046b155ed061ed4
   languageName: node
   linkType: hard
 
@@ -2085,10 +2087,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^3.4.3":
-  version: 3.4.3
-  resolution: "luxon@npm:3.4.3"
-  checksum: 3eade81506224d038ed24035a0cd0dd4887848d7eba9361dce9ad8ef81380596a68153240be3988721f9690c624fb449fcf8fd8c3fc0681a6a8496faf48e92a3
+"luxon@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "luxon@npm:3.4.4"
+  checksum: 36c1f99c4796ee4bfddf7dc94fa87815add43ebc44c8934c924946260a58512f0fd2743a629302885df7f35ccbd2d13f178c15df046d0e3b6eb71db178f1c60c
   languageName: node
   linkType: hard
 
@@ -2586,12 +2588,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "prettier@npm:3.0.3"
+"prettier@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "prettier@npm:3.1.0"
   bin:
     prettier: bin/prettier.cjs
-  checksum: e10b9af02b281f6c617362ebd2571b1d7fc9fb8a3bd17e371754428cda992e5e8d8b7a046e8f7d3e2da1dcd21aa001e2e3c797402ebb6111b5cd19609dd228e0
+  checksum: 44b556bd56f74d7410974fbb2418bb4e53a894d3e7b42f6f87779f69f27a6c272fa7fc27cec0118cd11730ef3246478052e002cbd87e9a253f9cd04a56aa7d9b
   languageName: node
   linkType: hard
 
