@@ -386,7 +386,7 @@ export default {
         component: 'ModalLocaliteSelect',
         callback,
         size: 1,
-        data: { ids: this.localitesSis },
+        data: { ids: this.localitesSis.map((l) => l?.id ?? l) },
       });
     },
     async save() {
