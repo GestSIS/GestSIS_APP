@@ -65,6 +65,13 @@ export default {
       credit: (state) => state.aspsmsParam.credit,
     }),
   },
+  watch: {
+    aspsmsParams(value) {
+      if (value && value?.username && value?.password) {
+        this.params = value;
+      }
+    },
+  },
   mounted() {
     this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
   },

@@ -6,6 +6,7 @@
       "app": "GestSIS APP",
       "changes": [
         "Correction d'un problèmes d'affichage dans la fenêtre de sélection des localités",
+        "Correction de l'affichage des paramètres ASPSMS",
         "Améliorations diverses de l'interface graphique"
       ]
     },
