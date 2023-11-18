@@ -124,7 +124,7 @@ export default {
           .catch(
             (errors) =>
               (this.errors = {
-                ...errors,
+                ...(errors?.errors ?? errors),
               })
           );
       } else {
@@ -136,7 +136,7 @@ export default {
           })
           .catch((errors) => {
             this.errors = {
-              ...errors,
+              ...(errors?.errors ?? errors),
             };
           });
       }
