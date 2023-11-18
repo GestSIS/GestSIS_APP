@@ -1,7 +1,7 @@
 import camelCase from 'lodash.camelcase';
 // Storing in variable a context with all files in this folder
 // ending with `.js`.
-const requireModule = import.meta.globEager('./*.js');
+const requireModule = import.meta.glob('./*.js', { eager: true });
 const modules = {};
 
 Object.keys(requireModule).forEach((fileName) => {

@@ -86,13 +86,6 @@ app
   })
   .use(FloatingVue);
 
-// Object.entries(import.meta.globEager('./modal/*.vue')).forEach(
-//   ([key, value]) => {
-//     const name = key.match(/\w+/)[0];
-//     app.component(letterToUpperCase(key), defineAsyncComponent(value));
-//   }
-// );
-
 app
   .component('BaseDropdown', BaseDropdown)
   .component('BaseSelect', BaseSelect)
