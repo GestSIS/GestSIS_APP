@@ -196,7 +196,7 @@ export default {
     },
   },
   mounted() {
-    this.chosen = this.data.ids.slice(0);
+    this.chosen = this.data.ids.map((l) => l?.id ?? l).slice(0);
     this.$store.dispatch('fetchLocalites');
   },
   methods: {

@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "18.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problèmes d'affichage dans la fenêtre de sélection des localités",
+        "Améliorations diverses de l'interface graphique"
+      ]
+    },
+    {
       "date": "14.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -101,6 +101,9 @@ export default {
     ...mapMutations(['HIDE_MODAL']),
     presetDebutFin() {
       const annee = parseInt(this.activeExercice.annee);
+      if (!this.activeExercice.designation) {
+        this.activeExercice.designation = 'Exercice comptable ' + annee;
+      }
       if (!this.activeExercice.debut) {
         this.activeExercice.debut = annee + '-01-01';
         this.activeExercice.fin = annee + '-12-31';

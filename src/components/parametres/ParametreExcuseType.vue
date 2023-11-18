@@ -11,6 +11,7 @@
         :data="listeExcuse"
         :fields="fields"
         no-data="Aucune excuse type"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button
