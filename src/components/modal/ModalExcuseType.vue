@@ -87,6 +87,7 @@ export default {
       errors: {},
       activeExcuse: {
         statut: 1,
+        amende: false,
       },
     };
   },

@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "21.11.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problèmes pour ajouter une excuse type",
+        "Exercices, ajout de filtres pour l'onglet `Absences`"
+      ]
+    },
+    {
       "date": "18.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",

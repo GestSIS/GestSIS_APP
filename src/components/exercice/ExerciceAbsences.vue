@@ -29,14 +29,23 @@
           <div class="card-body">
             <div class="row">
               <base-select
-                class="col-md-6"
+                class="col-md-4"
+                :options="absenceStatuts"
+                base-option="<Statut>"
+                :model-value="filters.computedStatut"
+                @update:model-value="
+                  (value) => setFilter('computedStatut', value)
+                "
+              />
+              <base-select
+                class="col-md-4"
                 :options="filteredLocalites"
                 base-option="<Localité>"
                 :model-value="filters.localite_id"
                 @update:model-value="(value) => setFilter('localite_id', value)"
               />
               <base-select
-                class="col-md-6"
+                class="col-md-4"
                 :options="filteredExercicesCategories"
                 base-option="<Catégorie>"
                 :model-value="filters.exercice_categorie_id"
@@ -44,7 +53,7 @@
                   (value) => setFilter('exercice_categorie_id', value)
                 "
               />
-              <div v-if="canReset" class="col-md-6 mt-1">
+              <div v-if="canReset" class="col-md-4 mt-1">
                 <button class="btn btn-sm btn-warning w-100" @click="reset">
                   Réinitialiser
                 </button>
@@ -136,6 +145,12 @@ export default {
       tab: 'exercice',
       selectedId: null,
       detailRowComponent: markRaw(ExerciceDetails),
+      absenceStatuts: [
+        { id: 1, designation: 'Amendé' },
+        { id: 2, designation: 'Refusé' },
+        { id: 3, designation: 'A traiter' },
+        { id: 4, designation: 'Accepté' },
+      ],
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Sapeur', key: 'sapeur' },
@@ -213,6 +228,8 @@ export default {
           sapeur: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
           ...this.exercices.find((e) => e.id == a.exercice_id),
           id: a.id,
+          computedStatut:
+            (a.amende && a.excuse_statut != 0 ? -2 : a.excuse_statut || 0) + 3,
         }))
         .map((e) => ({
           ...e,
