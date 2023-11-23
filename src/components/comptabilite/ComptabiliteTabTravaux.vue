@@ -256,14 +256,14 @@ export default {
     computedData() {
       return this.travaux.map((e) => ({
         ...e,
-        travail_type: this.travailTypes.find((e) => e.id == e.travail_type_id)
+        travail_type: this.travailTypes.find((t) => t.id == e.travail_type_id)
           ?.designation,
         sapeur: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
         auteur: this.sapeurs.find((s) => s.id == e.auteur_id)?.nom_prenom,
         unite: this.unites.find(
           (u) =>
             u.id ==
-            this.travailTypes.find((e) => e.id == e.travail_type_id)
+            this.travailTypes.find((t) => t.id == e.travail_type_id)
               ?.type_unite_id
         )?.unite,
         getData: () => Promise.resolve(e.ecritures),

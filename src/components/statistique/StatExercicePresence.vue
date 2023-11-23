@@ -82,7 +82,6 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <!-- <th class="text-center">Groupes</th> -->
                 <th v-for="e in displayExercice" :key="e.id" class="rotate">
                   <div>
                     <span>{{ e.designation }}</span>
@@ -100,7 +99,6 @@
                 <th>Sapeur</th>
                 <th>Localité</th>
                 <th>Fonction</th>
-                <!-- <th class="text-center">Groupes</th> -->
                 <th
                   v-for="e in displayExercice"
                   :key="e.id"
