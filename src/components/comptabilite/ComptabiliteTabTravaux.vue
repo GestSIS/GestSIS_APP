@@ -14,17 +14,17 @@
             <button
               v-if="!selectedItem || selectedItem?.statut == 1"
               class="btn btn-outline-primary"
-              :disabled="selectedItem && selectedItem.statut == 1"
-              @click="imputer()"
+              :disabled="selectedItem?.statut != 1"
+              @click="imputer(selectedId)"
             >
-              Imputer le travail sélectionné
+              Imputer le travail
             </button>
             <button
               v-if="selectedItem?.statut == 2"
               class="btn btn-outline-danger"
-              @click="imputer()"
+              @click="annulerImputer(selectedId)"
             >
-              Annuler l'imputation sélectionnée
+              Annuler l'imputation du travail
             </button>
             <button class="btn btn-outline-primary" @click="imputer()">
               Tout imputer
