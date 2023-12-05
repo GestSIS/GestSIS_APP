@@ -37,6 +37,14 @@
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
         </button>
+        <a
+          href="https://www.gestionrta-jura.ch/gestionRtaJura/"
+          target="_blank"
+          class="col-auto btn btn-link"
+          @click="mutate"
+        >
+          gestionrta-jura.ch
+        </a>
       </div>
       <div class="mb-3">
         <div class="input-group input-group-sm">

@@ -401,7 +401,7 @@ export default {
         prefix = 'i';
       }
       if (presence.present) {
-        return prefix + 'P';
+        return prefix + '✓';
       }
       if (presence.remplace) {
         return prefix + 'Rpl';
@@ -412,7 +412,7 @@ export default {
         );
         return prefix + excuse?.abreviation;
       }
-      return prefix + '-';
+      return prefix + '✕';
     },
     formatPresenceExport(presence) {
       if (!presence) {
@@ -420,7 +420,7 @@ export default {
       }
       let prefix = '';
       if (!presence.convoque) {
-        prefix = 'Pour information';
+        prefix = 'A';
       }
       if (presence.present) {
         return prefix + 'Présent';
@@ -443,13 +443,13 @@ export default {
       if (presence.amende) {
         return 'table-danger';
       }
-      if (!presence.convoque) {
-        return 'table-secondary';
+      if (presence.status == -1) {
+        return 'table-warning';
       }
-      if (presence.remplace) {
+      if (presence.status == 0) {
         return 'table-primary';
       }
-      if (presence.excuse_type_id) {
+      if (presence.remplace || presence.statut == 1) {
         return 'table-success';
       }
     },

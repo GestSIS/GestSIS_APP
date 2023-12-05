@@ -7,7 +7,6 @@
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
-            <!-- <th></th> -->
             <th>Nom Prénom</th>
             <th>Date de naissance</th>
             <th>Localité</th>

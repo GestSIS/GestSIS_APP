@@ -209,11 +209,11 @@ export default {
       });
     },
     onRowClass(dataItem) {
-      if (!dataItem?.sapeur?.length > 0) {
+      if (!dataItem) {
         return '';
       }
 
-      return !dataItem?.actifStatut ? 'text-danger' : '';
+      return !dataItem?.actifStatut ? 'table-danger' : '';
     },
   },
 };
