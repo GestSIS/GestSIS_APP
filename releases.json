@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "06.12.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Convoquer/déconvoquer tous les sapeurs dans exercices"]
+    },
+    {
       "date": "05.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",

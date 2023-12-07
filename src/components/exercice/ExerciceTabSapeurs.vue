@@ -31,7 +31,15 @@
       <thead>
         <tr>
           <th>Nom</th>
-          <th class="text-center">Convoque</th>
+          <th class="text-center">
+            <input
+              v-model="allConvoque"
+              class="form-check-input"
+              type="checkbox"
+              @change="(e) => selectAllConvoque(e.target.checked)"
+            />
+            Convoque
+          </th>
           <th class="text-center">Present</th>
           <th class="text-center">Absent</th>
           <th class="text-center">Remplace</th>
@@ -59,7 +67,7 @@
                 class="form-check-input"
                 :true-value="1"
                 :false-value="0"
-                @change="savePresence(sap)"
+                @change="selectConvoque(sap)"
               />
             </div>
           </td>
@@ -259,6 +267,7 @@ export default {
     return {
       presences: [],
       dismissedWarning: false,
+      allConvoque: false,
     };
   },
   computed: {
@@ -321,12 +330,27 @@ export default {
     computedExerciceSapeurs() {
       this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
     },
+    presences(values) {
+      const status = values?.map((p) => (p.convoque === 1 ? true : false));
+      this.allConvoque = status.length
+        ? status.reduce((c2, c1) => (c1 === c2 ? c1 : ''))
+        : false;
+    },
   },
   mounted() {
     this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    selectAllConvoque(status) {
+      this.presences = this.presences.map((p) => ({
+        ...p,
+        convoque: status ? 1 : 0,
+      }));
+      Promise.all(this.presences.map((p) => this.savePresence(p, true))).then(
+        this.$awn.success('Modifications enregistrées')
+      );
+    },
     getHeureValue(sapeur) {
       return sapeur?.quantite;
     },
@@ -438,8 +462,6 @@ export default {
           }
         });
       };
-      //this.$store.dispatch('resetActiveFonction')
-
       this.SHOW_MODAL({
         component: 'ModalSapeurSelect',
         size: 1,
@@ -447,18 +469,25 @@ export default {
         data,
       });
     },
-    savePresence(sapeur) {
-      this.$store
-        .dispatch('editPresenceExercice', {
-          presenceId: sapeur.id,
-          presence: sapeur,
-        })
-        .then((res) =>
-          this.$awn.success(res?.message || 'Modifications enregistrées')
-        )
-        .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
-        );
+    savePresence(sapeur, hideNotification) {
+      const promise = this.$store.dispatch('editPresenceExercice', {
+        presenceId: sapeur.id,
+        presence: sapeur,
+      });
+      if (!hideNotification) {
+        return promise
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      } else {
+        return promise;
+      }
+    },
+    selectConvoque(sapeur) {
+      this.savePresence(sapeur);
     },
     selectPresent(sapeur) {
       sapeur.remplace = 0;
