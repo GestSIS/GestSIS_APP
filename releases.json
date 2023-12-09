@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "09.12.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Possibilité de saisir des fonctions aux civiles"]
+    },
+    {
       "date": "06.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
