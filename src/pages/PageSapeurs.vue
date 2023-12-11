@@ -241,7 +241,7 @@ const links = [
     urlName: 'sapeur-controles-medicaux',
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
-  { title: 'Fonctions', urlName: 'sapeur-fonctions' },
+  { title: 'Fonctions', urlName: 'sapeur-fonctions', civil: true },
   { title: 'Cours', urlName: 'sapeur-cours' },
   { title: 'Promotion', urlName: 'sapeur-promotions' },
   { title: 'Materiel', urlName: 'sapeur-materiels' },
