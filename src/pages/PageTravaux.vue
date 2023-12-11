@@ -79,10 +79,8 @@
                   display-key="nom_prenom"
                   base-option="<Sapeur>"
                   :options="filteredSapeurs"
-                  :model-value="filters.localite_id"
-                  @update:model-value="
-                    (value) => setFilter('localite_id', value)
-                  "
+                  :model-value="filters.sapeur_id"
+                  @update:model-value="(value) => setFilter('sapeur_id', value)"
                 />
                 <base-select
                   class="mb-1 col-md-4"

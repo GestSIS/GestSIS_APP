@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "11.12.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Correction des filtres de la page travaux"]
+    },
+    {
       "date": "06.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
