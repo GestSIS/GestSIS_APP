@@ -95,7 +95,7 @@
                   class="col-md-4"
                   base-option="<Statut>"
                   :options="[
-                    { id: [-1], designation: 'Refusé' },
+                    { id: -1, designation: 'Refusé' },
                     { id: 0, designation: 'En attente' },
                     { id: 1, designation: 'Accepté' },
                   ]"
