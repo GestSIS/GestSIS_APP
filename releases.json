@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "16.12.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.3.0",
+      "changes": [
+        "Résolution d'un bug avec des icons manquants lors du premier démarrage, si hors-ligne",
+        "Diverses améliorations de l'expérience utilisateur"
+      ]
+    },
+    {
       "date": "11.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
