@@ -317,7 +317,14 @@ const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
         });
       }
     } else {
-      next();
+      if (routeTo.name == 'sapeur-index') {
+        next({
+          name: 'sapeur-details',
+          params: { id: store.state.sapeur.active.id },
+        });
+      } else {
+        next();
+      }
     }
     return;
   }
