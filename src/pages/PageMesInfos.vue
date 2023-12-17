@@ -22,95 +22,13 @@
       <div class="col-md-12">
         <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
           <router-link
+            v-for="{ route, label } in tabs"
+            :key="route"
             class="nav-item nav-link"
             role="tab"
             exact-active-class="active"
-            :to="{ name: 'mes-infos' }"
-            >Mes infos</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-exercices' }"
-            >Mes exercices</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-interventions' }"
-            >Mes interventions</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-absences' }"
-            >Mes absences</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mon-materiel' }"
-            >Mon matériel</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-travaux' }"
-            >Ma fiche de travail</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-decomptes' }"
-            >Mes décomptes</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-controles-medicaux' }"
-            >Mes contrôles médicaux</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-cours' }"
-            >Mes cours</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-fonctions' }"
-            >Mes fonctions</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-grades' }"
-            >Mes grades</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-groupes' }"
-            >Mes groupes</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'mes-mutations' }"
-            >Mes mutations</router-link
+            :to="{ name: route }"
+            >{{ label }}</router-link
           >
         </nav>
         <div id="nav-tabContent" class="tab-content">
@@ -140,6 +58,68 @@ async function loadData(routeTo, next) {
 export default {
   name: 'PageMesInfos',
   components: { ExerciceComptable },
+  data() {
+    return {
+      tabs: [
+        {
+          route: 'mes-infos',
+          label: 'Mes infos',
+        },
+        {
+          route: 'mes-exercices',
+          label: 'Mes exercices',
+        },
+        {
+          route: 'mes-interventions',
+          label: 'Mes interventions',
+        },
+        {
+          route: 'mes-absences',
+          label: 'Mes absences',
+        },
+        {
+          route: 'mon-materiel',
+          label: 'Mon matériel',
+        },
+        {
+          route: 'mes-travaux',
+          label: 'Ma fiche de travail',
+        },
+        {
+          route: 'mes-decomptes',
+          label: 'Mes décomptes',
+        },
+        {
+          route: 'mes-controles-medicaux',
+          label: 'Mes contrôles médicaux',
+        },
+        {
+          route: 'mes-cours',
+          label: 'Mes cours',
+        },
+        {
+          route: 'mes-fonctions',
+          label: 'Mes fonctions',
+        },
+        {
+          route: 'mes-grades',
+          label: 'Mes grades',
+        },
+        {
+          route: 'mes-groupes',
+          label: 'Mes groupes',
+        },
+        {
+          route: 'mes-mutations',
+          label: 'Mes mutations',
+        },
+        {
+          route: 'mes-permis',
+          label: 'Mes permis',
+        },
+      ],
+    };
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },

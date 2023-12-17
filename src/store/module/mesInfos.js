@@ -17,6 +17,7 @@ export default {
     interventions: [],
     paiements: [],
     ecritures: [],
+    permis: [],
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
@@ -34,6 +35,7 @@ export default {
       state.interventions = [];
       state.paiements = [];
       state.ecritures = [];
+      state.permis = [];
     },
     [types.UPDATE_MES_INFOS](state, payload) {
       state.infos = payload;
@@ -43,6 +45,9 @@ export default {
     },
     [types.UPDATE_MES_COURS](state, payload) {
       state.cours = payload;
+    },
+    [types.UPDATE_MES_PERMIS](state, payload) {
+      state.permis = payload;
     },
     [types.UPDATE_MES_FONCTIONS](state, payload) {
       state.fonctions = payload;
@@ -108,6 +113,11 @@ export default {
     fetchMesCours({ commit }) {
       return MesInfosService.getMesCours().then((data) =>
         commit(types.UPDATE_MES_COURS, data)
+      );
+    },
+    fetchMesPermis({ commit }) {
+      return MesInfosService.getMesPermis().then((data) =>
+        commit(types.UPDATE_MES_PERMIS, data)
       );
     },
     fetchMesFonctions({ commit }) {

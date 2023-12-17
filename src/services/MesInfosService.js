@@ -19,6 +19,9 @@ export default {
   getMesCours() {
     return Api.api().get('/mes-cours');
   },
+  getMesPermis() {
+    return Api.api().get('/mes-permis');
+  },
   getMonMateriel() {
     return Api.api().get('/mon-materiel');
   },

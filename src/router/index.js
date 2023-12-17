@@ -193,6 +193,12 @@ const router = createRouter({
           beforeEnter: sapeurGuard(),
           component: () => import('/src/components/mes_infos/MesMutations.vue'),
         },
+        {
+          path: 'permis',
+          name: 'mes-permis',
+          beforeEnter: sapeurGuard(),
+          component: () => import('/src/components/mes_infos/MesPermis.vue'),
+        },
       ],
     },
     {
