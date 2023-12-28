@@ -153,10 +153,25 @@ export default {
           { title: 'Date', key: 'date', type: Date },
           { title: 'Ecriture', key: 'designation' },
           {
+            title: 'Module',
+            key: 'module',
+            formatter: (t) => {
+              const mapping = {
+                1: 'Exercice & séance',
+                2: 'Intervention',
+                3: 'Frais et indemnité annuel',
+                0: 'Ecriture divers',
+                5: 'Amende',
+                6: 'Fiche de travail',
+                7: 'Cours',
+                4: 'Avs',
+              };
+              return mapping[t] ?? 'Autre';
+            },
+          },
+          {
             title: 'Type',
             key: 'type',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
             formatter: (t) => {
               const mapping = {
                 0: 'Autre',
@@ -172,7 +187,7 @@ export default {
           {
             title: 'Tarif',
             key: 'tarif',
-            ytpe: Number,
+            type: Number,
             titleClass: 'text-center',
             columnClass: 'text-end',
           },
@@ -228,7 +243,6 @@ export default {
       activeInterventionId: (state) => state.intervention.active.id,
     }),
     computedData() {
-      // Details of ecritures for an intervention will be loaded on the flight
       let ecrituresBySapeur = this.ecritures
         .filter((s) => s.sapeur_id)
         .reduce((acc, e) => {
@@ -262,7 +276,16 @@ export default {
                     : +b.total),
                 0
               ),
-            getData: () => Promise.resolve(ecrituresBySapeur.get(s.id)),
+            getData: () =>
+              Promise.resolve(
+                ecrituresBySapeur
+                  .get(s.id)
+                  .map((e) =>
+                    this.comptes.find((c) => c.id === e.compte_id)?.produit
+                      ? { ...e, total: -e.total, tarif: -e.tarif }
+                      : e
+                  )
+              ),
           };
         });
     },
