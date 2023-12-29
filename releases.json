@@ -2,10 +2,11 @@
   "releases": [
     {
       "date": "29.12.2023",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Correction d'un problème pour la configuration des événements types"
+        "Correction d'un problème pour la configuration des événements types",
+        "Améliorations diverses pour l'affichage du module matériel personnel"
       ]
     },
     {

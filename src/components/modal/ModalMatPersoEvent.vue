@@ -78,11 +78,13 @@
                     value-key="materiel_nominal_id"
                     display-key="numero"
                     :options="
-                      filteredMaterielDispo.filter(
-                        (m) =>
-                          !materiel.materiel_type_id ||
-                          m.materiel_type_id == materiel.materiel_type_id
-                      )
+                      filteredMaterielDispo
+                        .filter(
+                          (m) =>
+                            !materiel.materiel_type_id ||
+                            m.materiel_type_id == materiel.materiel_type_id
+                        )
+                        .sort((a, b) => a.numero?.localeCompare(b.numero))
                     "
                     @update:model-value="
                       (value) => selectNumero(materiel, value)
