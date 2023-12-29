@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "29.12.2023",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour la configuration des événements types"
+      ]
+    },
+    {
       "date": "28.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",

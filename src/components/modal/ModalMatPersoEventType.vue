@@ -52,7 +52,6 @@
               <td colspan="3">Aucune catégorie</td>
             </tr>
             <tr v-for="item in computedData" :key="item.globalId">
-              <!-- @click="select(item.globalId)" -->
               <td class="text-center">
                 <input
                   v-model="selectedIds[item.type][item.id]"
@@ -181,7 +180,7 @@ export default {
     select(item, event) {
       const selected = event.target.checked;
 
-      const categorieIds = new Set([item.id]);
+      const categorieIds = new Set(item.type === 'categorie' ? [item.id] : []);
       this.computedData.forEach((e) => {
         if (e.type === 'categorie' && categorieIds.has(parseInt(e.pere_id))) {
           categorieIds.add(e.id);

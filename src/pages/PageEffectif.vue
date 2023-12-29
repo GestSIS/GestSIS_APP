@@ -384,10 +384,8 @@ export default {
         ...s,
         nom_prenom: `${s.nom} ${s.prenom}`,
       }));
+      this.loading = false;
     });
-  },
-  mounted() {
-    this.loading = false;
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
