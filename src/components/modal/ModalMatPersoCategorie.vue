@@ -24,6 +24,7 @@
         label="Catégorie parente"
         display-key="fullDesignation"
         base-option="<Aucun parent>"
+        :base-value="null"
         :options="computedCategories"
       />
     </div>
