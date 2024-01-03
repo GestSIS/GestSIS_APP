@@ -107,6 +107,15 @@
                 />
                 <base-select
                   class="col-md-6 mb-1"
+                  :options="civilites"
+                  base-option="<Civilité>"
+                  :model-value="filters.civilite_id"
+                  @update:model-value="
+                    (value) => setFilter('civilite_id', value)
+                  "
+                />
+                <base-select
+                  class="col-md-6 mb-1"
                   :options="filteredGrades"
                   base-option="<Grade>"
                   :model-value="filters.grade_id"
@@ -210,15 +219,20 @@ import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
 
 async function loadData(routeTo, next) {
   const loadLocalites = store.dispatch('fetchLocalites');
+  const loadCivilites = store.dispatch('fetchCivilites');
   const loadGrades = store.dispatch('fetchGrades');
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadGroupes = store.dispatch('fetchGroupes');
 
-  Promise.all([loadLocalites, loadFonctions, loadGrades, loadGroupes]).then(
-    () => {
-      next();
-    }
-  );
+  Promise.all([
+    loadLocalites,
+    loadCivilites,
+    loadFonctions,
+    loadGrades,
+    loadGroupes,
+  ]).then(() => {
+    next();
+  });
 }
 
 export default {
@@ -280,6 +294,7 @@ export default {
         state.localite.liste.sort((a, b) =>
           a.designation.localeCompare(b.designation)
         ),
+      civilites: (state) => state.baseData.civilites,
       groupes: (state) => state.groupe.liste,
       fonctions: (state) => state.fonction.liste.filter((f) => f.actif),
       grades: (state) => state.grade.liste,
