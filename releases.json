@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "11.01.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Résumé des comptes, correction du total pour la partie résumé"
+      ]
+    },
+    {
       "date": "03.01.2024",
       "version": "1.0",
       "app": "GestSIS APP",
