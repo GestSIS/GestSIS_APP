@@ -3,6 +3,15 @@
     {
       "date": "17.01.2024",
       "version": "1.0",
+      "app": "GestSIS Mobile 2.4.0",
+      "changes": [
+        "Correction de l'export du `responsable` pour les rapports d'intervention",
+        "Filtre des sapeurs inactifs"
+      ]
+    },
+    {
+      "date": "17.01.2024",
+      "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
         "Amélioration de la validation des indemnités types pour intervention"
