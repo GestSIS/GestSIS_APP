@@ -233,6 +233,8 @@ export default {
         phase_id: 0,
         par_fonction: 0,
         tarif_min_pro_rata: false,
+        taux_nuit: 1,
+        taux_weekend: 1,
       },
       imputationType: 1,
     };
@@ -266,6 +268,27 @@ export default {
         this.activeIndemnite.tarif_min = null;
         this.activeIndemnite.tarif_min_pour = null;
         this.activeIndemnite.phase_id = null;
+
+        if (
+          !this.activeIndemnite.taux_nuit ||
+          !this.activeIndemnite.taux_weekend ||
+          this.activeIndemnite.taux_nuit <= 0 ||
+          this.activeIndemnite.taux_weekend <= 0
+        ) {
+          this.errors = {
+            taux_nuit:
+              !this.activeIndemnite.taux_nuit ||
+              this.activeIndemnite.taux_nuit <= 0
+                ? 'invalide'
+                : null,
+            taux_weekend:
+              !this.activeIndemnite.taux_weekend ||
+              this.activeIndemnite.taux_weekend <= 0
+                ? 'invalide'
+                : null,
+          };
+          return;
+        }
       } else {
         this.activeIndemnite.taux_nuit = null;
         this.activeIndemnite.taux_weekend = null;
