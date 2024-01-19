@@ -1644,7 +1644,7 @@ __metadata:
     nprogress: "npm:^0.2.0"
     prettier: "npm:^3.2.2"
     sass: "npm:^1.69.7"
-    vite: "npm:^5.0.11"
+    vite: "npm:^5.0.12"
     vite-plugin-eslint: "npm:^1.8.1"
     vue: "npm:^3.4.14"
     vue-advanced-cropper: "npm:^2.8.8"
@@ -2872,9 +2872,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.11":
-  version: 5.0.11
-  resolution: "vite@npm:5.0.11"
+"vite@npm:^5.0.12":
+  version: 5.0.12
+  resolution: "vite@npm:5.0.12"
   dependencies:
     esbuild: "npm:^0.19.3"
     fsevents: "npm:~2.3.3"
@@ -2908,7 +2908,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: f1a8fea35ed9f162d7a10fd13efb2c96637028b0a319d726aeec8b31e20e4d047272bda5df82167618e7774a520236c66f3093ed172802660aec5227814072f4
+  checksum: ed0bb26a0d0c8e1dae0b70af9e36adffd7e15d80297443fe4da762596dc81570bad7f0291f590a57c1553f5e435338d8c7ffc483bd9431a95c09d9ac90665fad
   languageName: node
   linkType: hard
 

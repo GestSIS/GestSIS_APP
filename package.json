@@ -38,7 +38,7 @@
     "lodash.camelcase": "^4.3.0",
     "prettier": "^3.2.2",
     "sass": "^1.69.7",
-    "vite": "^5.0.11",
+    "vite": "^5.0.12",
     "vite-plugin-eslint": "^1.8.1",
     "vue-eslint-parser": "^9.4.0"
   },
