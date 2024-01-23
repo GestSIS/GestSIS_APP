@@ -406,7 +406,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     selectSapeur(id) {
       this.selectedId = id;
     },
