@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "23.01.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout d'un trombinoscope dans la page `effectif`"]
+    },
+    {
       "date": "17.01.2024",
       "version": "1.0",
       "app": "GestSIS Mobile 2.4.0",

@@ -69,6 +69,9 @@
               <button class="btn btn-outline-primary" @click="listeFssp">
                 Liste FSSP
               </button>
+              <button class="btn btn-outline-primary" @click="trombinoscope">
+                Trombinoscope
+              </button>
             </div>
           </div>
         </div>
@@ -406,6 +409,21 @@ export default {
     ...mapMutations(['SHOW_MODAL']),
     selectSapeur(id) {
       this.selectedId = id;
+    },
+    trombinoscope() {
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
+      SapeurService.downloadTrombinoscope('trombinoscope.pdf')
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              'Une erreur a eu lieu durant la génération du trombinoscope'
+          );
+        });
     },
     listeFssp() {
       this.SHOW_MODAL({

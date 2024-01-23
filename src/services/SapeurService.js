@@ -9,6 +9,9 @@ export default {
       params: { date },
     });
   },
+  downloadTrombinoscope(filename) {
+    return Api.print(filename).get('/trombinoscope');
+  },
   downloadFicheSapeur(sapeurId, filename) {
     return Api.print(filename).get('/sapeurs/' + sapeurId + '/fiche');
   },
