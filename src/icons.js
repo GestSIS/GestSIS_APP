@@ -5,6 +5,7 @@ import {
   faSitemap,
   faCalculator,
   faCalendarAlt as fasCalendarAlt,
+  faBuildingColumns,
   faHandHoldingUsd,
   faEnvelope,
   faToolbox,
@@ -77,6 +78,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faBuildingColumns,
   faIdCardClip,
   faCommentSms,
   faX,

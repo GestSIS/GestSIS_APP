@@ -100,9 +100,6 @@
           />
         </div>
       </div>
-      <!-- NPA + LOCALITE -->
-      <div class="mb-3"></div>
-      <!-- N° AVS -->
       <div class="mb-3">
         <label for="m-sap-avs">N° AVS</label>
         <input
@@ -114,24 +111,40 @@
           name="no_avs"
         />
       </div>
-      <!-- Email -->
-      <div class="mb-3">
-        <label for="m-sap-email">Email</label>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-text">
-            <font-awesome-icon icon="envelope" />
+      <div class="mb-3 row">
+        <div class="col-6">
+          <label for="m-sap-email">Email</label>
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-text">
+              <font-awesome-icon icon="envelope" />
+            </div>
+            <input
+              id="m-sap-email"
+              v-model="sapeur.email"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['email'] }"
+              type="email"
+              name="email"
+            />
           </div>
-          <input
-            id="m-sap-email"
-            v-model="sapeur.email"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['email'] }"
-            type="email"
-            name="email"
-          />
+        </div>
+        <div class="col-6">
+          <label for="m-sap-iban">Iban</label>
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-text">
+              <font-awesome-icon :icon="['fas', 'building-columns']" />
+            </div>
+            <input
+              id="m-sap-iban"
+              v-model="sapeur.iban"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['iban'] }"
+              type="iban"
+              name="iban"
+            />
+          </div>
         </div>
       </div>
-      <!-- DATE NAISSANCE + SUFFIXE -->
       <div v-if="sapeur.type === 0" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
