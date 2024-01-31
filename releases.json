@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "31.01.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Filtres des sapeurs inactifs dans les contrôles médicaux"]
+    },
+    {
       "date": "23.01.2024",
       "version": "1.0",
       "app": "GestSIS APP",

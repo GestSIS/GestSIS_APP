@@ -308,6 +308,7 @@ export default {
           return {
             ...s,
             sapeur: sapeur?.nom_prenom,
+            sapeurActif: sapeur?.actif,
             age,
             type: this.types.find((t) => t.id == s.controle_medical_type_id)
               ?.designation,
@@ -315,6 +316,7 @@ export default {
               ?.designation,
           };
         })
+        .filter((c) => c.sapeurActif)
         .sort(
           (a, b) =>
             a.sapeur.localeCompare(b.sapeur) ||
