@@ -369,7 +369,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     convoquer() {
       this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 });
     },
@@ -427,10 +427,32 @@ export default {
       this.selectedId = row?.id;
     },
     listePresences({ id }) {
-      ExerciceService.downloadListPresence(id, 'liste-presence.pdf');
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+      ExerciceService.downloadListPresence(id, 'liste-presence.pdf')
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+          );
+        });
     },
     listeAppel({ id }) {
-      ExerciceService.downloadListAppel(id, 'liste-appel.pdf');
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+      ExerciceService.downloadListAppel(id, 'liste-appel.pdf')
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message ||
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+          );
+        });
     },
     downloadIcs(filteredExercices) {
       if (filteredExercices.length <= 0) {

@@ -294,7 +294,7 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       interventions: (state) =>
         state.intervention.liste.sort((a, b) =>
-          a.date_debut.localeCompare(b.date_debut)
+          b.date_debut.localeCompare(a.date_debut)
         ),
       types: (state) => state.typeIntervention.liste,
       stats: (state) => state.statFederal.liste,
