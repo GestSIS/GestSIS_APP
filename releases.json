@@ -1,6 +1,16 @@
 {
   "releases": [
     {
+      "date": "04.02.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout numéro IBAN dans la fiche sapeur",
+        "Correction des permissions pour l'accès aux paramètres des fiches de travail",
+        "Ajout d'une fenêtre de chargement pour la génération des fiches de convocations"
+      ]
+    },
+    {
       "date": "02.02.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -187,7 +187,9 @@ export default {
         interventionId,
         this.params,
         `${date}_intervention.pdf`
-      ).then(() => this.HIDE_MODAL());
+      )
+        .then(() => this.HIDE_MODAL())
+        .catch(() => this.HIDE_MODAL());
     },
   },
 };
