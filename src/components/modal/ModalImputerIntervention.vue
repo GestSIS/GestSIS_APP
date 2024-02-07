@@ -5,7 +5,6 @@
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
-      <!-- fieldsets -->
       <multi-step
         :steps="['Type de frais', 'Résultat']"
         :active-index="phase - 1"
@@ -17,6 +16,7 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
+          <!-- TODO: Use BaseTable -->
           <table
             class="table table-sm"
             @keydown.down="onKeyDown"
@@ -26,9 +26,10 @@
               <tr>
                 <th>Designation</th>
                 <th>Tarif</th>
+                <th class="text-center">Pro-rata</th>
                 <th>Tarif min</th>
                 <th>Pour</th>
-                <th class="text-center">Pro-rata</th>
+                <th class="text-center">Pro-rata tarif min</th>
                 <th>Taux nuit</th>
                 <th>Taux weekend</th>
                 <th>Unité</th>
@@ -53,6 +54,13 @@
               >
                 <td>{{ indemnite.designation }}</td>
                 <td>{{ indemnite.tarif }}</td>
+                <td class="text-center">
+                  <input
+                    v-model="indemnite.tarif_pro_rata"
+                    type="checkbox"
+                    class="form-check-input"
+                  />
+                </td>
                 <td>{{ indemnite.tarif_min }}</td>
                 <td>{{ indemnite.tarif_min_pour }}</td>
                 <td class="text-center">

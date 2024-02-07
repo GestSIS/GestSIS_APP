@@ -18,15 +18,36 @@
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="tarif">Tarif</label>
-        <input
-          id="tarif"
-          v-model="activeIndemnite.tarif"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['tarif'] }"
-        />
+      <div class="row mb-3">
+        <div :class="imputationType != 'taux' ? 'col-9' : 'col-12'">
+          <label for="tarif">Tarif</label>
+          <input
+            id="tarif"
+            v-model="activeIndemnite.tarif"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['tarif'] }"
+          />
+        </div>
+        <div :class="imputationType != 'taux' ? 'col-3' : 'd-none'">
+          <label for="pro-rata">Pro-rata</label>
+          <font-awesome-icon
+            v-tooltip.bottom="
+              'A cocher si le nombre d\'heures effectives doit être arrondi à l\'heure pleine précédente.'
+            "
+            class="ms-1"
+            :icon="['far', 'question-circle']"
+          />
+          <div class="form-check text-center col-6">
+            <input
+              id="pro-rata"
+              v-model="activeIndemnite.tarif_pro_rata"
+              type="checkbox"
+              class="form-check-input"
+            />
+            <label class="form-check-label" for="pro-rata"></label>
+          </div>
+        </div>
       </div>
       <div class="mb-3">
         <label class="d-block">Type d'imputation</label>
@@ -91,7 +112,7 @@
             </select>
           </div>
           <div class="mb-3 col-3">
-            <label for="pro-rata">Pro-rata</label>
+            <label for="min-pro-rata">Pro-rata</label>
             <font-awesome-icon
               v-tooltip.bottom="
                 'A cocher si le montant du tarif min doit être calculé au pro-rata du nombre d\'heures effectuées.'
@@ -101,12 +122,12 @@
             />
             <div class="form-check text-center col-6">
               <input
-                id="pro-rata"
+                id="min-pro-rata"
                 v-model="activeIndemnite.tarif_min_pro_rata"
                 type="checkbox"
                 class="form-check-input"
               />
-              <label class="form-check-label" for="pro-rata"></label>
+              <label class="form-check-label" for="min-pro-rata"></label>
             </div>
           </div>
           <div class="mb-3 col-12">
@@ -232,6 +253,7 @@ export default {
       activeIndemnite: {
         phase_id: 0,
         par_fonction: 0,
+        tarif_pro_rata: true,
         tarif_min_pro_rata: false,
         taux_nuit: 1,
         taux_weekend: 1,
@@ -265,6 +287,7 @@ export default {
     async save() {
       if (this.imputationType == 'taux') {
         this.activeIndemnite.type_unite_id = 2; // Par heure
+        this.activeIndemnite.tarif_pro_rata = null;
         this.activeIndemnite.tarif_min = null;
         this.activeIndemnite.tarif_min_pour = null;
         this.activeIndemnite.phase_id = null;

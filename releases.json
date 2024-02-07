@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "07.02.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout option `pro-rata` pour l'imputation des interventions"]
+    },
+    {
       "date": "04.02.2024",
       "version": "1.0",
       "app": "GestSIS APP",
