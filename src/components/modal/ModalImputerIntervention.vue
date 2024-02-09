@@ -59,6 +59,7 @@
                     v-model="indemnite.tarif_pro_rata"
                     type="checkbox"
                     class="form-check-input"
+                    disabled
                   />
                 </td>
                 <td>{{ indemnite.tarif_min }}</td>
@@ -68,6 +69,7 @@
                     v-model="indemnite.tarif_min_pro_rata"
                     type="checkbox"
                     class="form-check-input"
+                    disabled
                   />
                 </td>
                 <td>{{ indemnite.taux_nuit }}</td>
