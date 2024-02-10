@@ -78,7 +78,7 @@ export default {
         {
           to: { name: 'stat-comptabilite' },
           name: 'Comptabilité',
-          permission: permissions.COMPTABILITE.TOUT,
+          permission: permissions.COMPTABILITE.LECTURE,
         },
       ],
     };

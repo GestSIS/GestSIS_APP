@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-md-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -87,6 +87,7 @@ import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import store from '/src/store/index';
+import permissions from '../../store/permissions';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
@@ -134,6 +135,11 @@ export default {
         ),
       amendes: (state) => state.imputation.ecritures.amendes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     computedData() {
       const sapeurs = this.amendes.reduce((rv, a) => {

@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -57,9 +57,6 @@
         <div class="card card-primary card-outline table-responsive mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Sapeurs</h3>
-            <!--          <button @click.prevent="save" class="btn btn-primary">-->
-            <!--            Enregistrer-->
-            <!--          </button>-->
           </div>
           <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
@@ -80,6 +77,7 @@
           >
             <template #actions="{ rowData }">
               <button
+                v-if="hasEditPermission"
                 class="btn btn-outline-primary border-0"
                 title="Décompte sapeur"
                 :disabled="!rowData.aPayer"
@@ -117,6 +115,7 @@ import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
+import permissions from '../../store/permissions';
 
 async function loadData(_, next) {
   const loadExercicesComptable = store.dispatch('fetchExercicesComptables');
@@ -247,6 +246,11 @@ export default {
       exercicesComptable: (state) => state.exerciceComptable.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeInterventionId: (state) => state.intervention.active.id,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     computedData() {
       let ecrituresBySapeur = this.ecritures

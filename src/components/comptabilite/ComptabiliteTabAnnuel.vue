@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-md-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -74,6 +74,7 @@
           >
             <template #actions="{ rowData }">
               <button
+                v-if="hasEditPermission"
                 title="Regénérer les frais de ce sapeur"
                 class="btn btn-outline-primary border-0"
                 @click="regenererSapeur(rowData)"
@@ -107,6 +108,7 @@ import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 import store from '/src/store/index';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
 
 async function loadData(routeTo, next) {
   const loadComptes = store.dispatch('fetchComptes');
@@ -134,10 +136,7 @@ export default {
       selectedId: null,
       detailRowOptions: {
         fields: [
-          {
-            title: 'Designation',
-            key: 'designation',
-          },
+          { title: 'Designation', key: 'designation' },
           {
             title: 'Type',
             key: 'type',
@@ -181,19 +180,9 @@ export default {
         ],
       },
       fields: [
-        {
-          title: 'Sapeur',
-          key: 'nom_prenom',
-        },
-        {
-          title: 'Fonction',
-          key: 'fonction',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-          type: Number,
-        },
+        { title: 'Sapeur', key: 'nom_prenom' },
+        { title: 'Fonction', key: 'fonction' },
+        { title: 'Total', key: 'total', type: Number },
         {
           title: 'Actions',
           slot: 'actions',
@@ -211,6 +200,11 @@ export default {
       fonctions: (state) => state.fonction.liste,
       exercicesComptable: (state) => state.exerciceComptable.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     computedData() {
       //Group by sapeur ID

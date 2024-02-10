@@ -174,7 +174,7 @@ export default {
     ...mapState({
       hasComptabilitePermission: (state) =>
         state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.COMPTABILITE.TOUT),
+        state.auth.sis.permissions.includes(permissions.COMPTABILITE.LECTURE),
     }),
   },
   methods: {

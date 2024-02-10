@@ -376,34 +376,34 @@ const router = createRouter({
     {
       path: '/comptabilite',
       name: 'comptabilite',
-      beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+      beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
       component: () => import('/src/pages/PageComptabilite.vue'),
       children: [
         {
           path: '',
           name: 'comptabilite-decompte',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabDecomptes.vue'),
         },
         {
           path: 'comptes',
           name: 'comptabilite-compte',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabComptes.vue'),
         },
         {
           path: 'exercices',
           name: 'comptabilite-exercice',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabExercice.vue'),
         },
         {
           path: 'interventions',
           name: 'comptabilite-intervention',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import(
               '/src/components/comptabilite/ComptabiliteTabIntervention.vue'
@@ -412,42 +412,42 @@ const router = createRouter({
         {
           path: 'cours',
           name: 'comptabilite-cours',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabCours.vue'),
         },
         {
           path: 'travaux',
           name: 'comptabilite-travaux',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabTravaux.vue'),
         },
         {
           path: 'annuel',
           name: 'comptabilite-annuel',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabAnnuel.vue'),
         },
         {
           path: 'sapeurs',
           name: 'comptabilite-sapeurs',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabSapeur.vue'),
         },
         {
           path: 'divers',
           name: 'comptabilite-divers',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabDivers.vue'),
         },
         {
           path: 'amendes',
           name: 'comptabilite-amendes',
-          beforeEnter: permissionGuard(permissions.COMPTABILITE.TOUT),
+          beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () =>
             import('/src/components/comptabilite/ComptabiliteTabAmendes.vue'),
         },

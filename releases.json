@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "10.02.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout d'une nouvelle permission `comptabilité lecture` pour accéder uniquement en lecture à ce module"
+      ]
+    },
+    {
       "date": "07.02.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -105,6 +105,7 @@
           >
             <template #actions="{ rowData }">
               <button
+                v-if="hasEditPermission"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="editEcriture(rowData)"
@@ -112,6 +113,7 @@
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                v-if="hasEditPermission"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 @click="deleteEcriture(rowData?.id)"
@@ -144,6 +146,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 import store from '/src/store/index';
+import permissions from '../../store/permissions';
 
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -206,6 +209,11 @@ export default {
       categories: (state) => state.ecritureCategorie.liste,
       ecritures: (state) => state.imputation.ecritures.divers,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     computedData() {
       const svm = this;

@@ -64,7 +64,7 @@ const links = [
     to: { name: 'comptabilite-decompte' },
     icon: 'calculator',
     nom: 'Comptabilité',
-    permission: permissions.COMPTABILITE.TOUT,
+    permission: permissions.COMPTABILITE.LECTURE,
   },
   {
     to: { name: 'publipostage' },

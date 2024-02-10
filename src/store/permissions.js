@@ -46,7 +46,8 @@ export default {
     CONFIG: 'utilisateur.config',
   },
   COMPTABILITE: {
-    TOUT: 'comptabilite.tout',
+    LECTURE: 'comptabilite.lecture',
+    MODIFICATION: 'comptabilite.modification',
     CONFIG: 'comptabilite.config',
   },
   ORGANISATION: {

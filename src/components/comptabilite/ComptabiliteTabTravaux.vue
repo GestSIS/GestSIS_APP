@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-md-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -109,7 +109,7 @@
           >
             <template #actions="{ rowData }">
               <button
-                v-if="rowData.statut == 2"
+                v-if="hasEditPermission && rowData.statut == 2"
                 class="btn btn-outline-primary border-0"
                 title="Annuler imputation"
                 @click="annulerImputer(rowData.id)"
@@ -117,7 +117,7 @@
                 <font-awesome-icon :icon="['fas', 'ban']" />
               </button>
               <button
-                v-if="rowData.statut == 1"
+                v-if="hasEditPermission && rowData.statut == 1"
                 class="btn btn-outline-primary border-0"
                 title="Imputer travail"
                 @click="imputer(rowData.id)"
@@ -138,6 +138,7 @@ import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
 
 async function loadData(_, next) {
   const loadCategories = store.dispatch('fetchEcritureCategories');
@@ -252,6 +253,11 @@ export default {
       travailTypes: (state) => state.travailType.liste,
       categories: (state) => state.ecritureCategorie.liste,
       unites: (state) => state.unite.liste,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     computedData() {
       return this.travaux.map((e) => ({

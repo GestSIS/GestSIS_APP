@@ -5,7 +5,7 @@
     :data="computedData"
   >
     <div class="row">
-      <div class="col-12 col-md-4 col-xl-3">
+      <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Actions</h3>
@@ -109,14 +109,14 @@
           >
             <template #actions="{ rowData }">
               <button
-                v-if="rowData.statut === 3"
+                v-if="hasEditPermission && rowData.statut === 3"
                 class="btn btn-outline-primary border-0"
                 @click="imputer(rowData.id)"
               >
                 <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
               </button>
               <button
-                v-if="rowData.statut === 4"
+                v-if="hasEditPermission && rowData.statut === 4"
                 class="btn btn-outline-primary border-0"
                 title="Décompte sapeur"
                 :disabled="!rowData.aPayer"
@@ -141,6 +141,7 @@ import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
+import permissions from '../../store/permissions';
 
 async function loadData(_, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
@@ -300,6 +301,11 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       listeExerciceComptable: (state) => state.exerciceComptable.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.COMPTABILITE.MODIFICATION
+        ),
     }),
     selectedItem() {
       return this.exercices.find((e) => e.id == this.selectedItemId);
