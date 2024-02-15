@@ -42,5 +42,5 @@
     "vite-plugin-eslint": "^1.8.1",
     "vue-eslint-parser": "^9.4.2"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.1.0"
 }
