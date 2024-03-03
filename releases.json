@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "03.03.2023",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.5.0",
+      "changes": [
+        "Possibilité d'ajouter des présences à partir des quittances",
+        "Possibilité d'ouvrir l'application téléphone depuis l'annuaire",
+        "Message explicite en cas d'absence de connexion internet lors de la re/connexion",
+        "Valeur par défaut lors de l'ajout de matériel en prêt et consommable"
+      ]
+    },
+    {
       "date": "10.02.2024",
       "version": "1.0",
       "app": "GestSIS APP",
