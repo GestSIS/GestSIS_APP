@@ -69,7 +69,7 @@ export default {
             localite: state.localite.liste.find((l) => l.id == m.localite_id)
               ?.designation,
           }))
-          .sort((a, b) => a.designation.localeCompare(b.designation)),
+          .sort((a, b) => a.designation?.localeCompare(b.designation)),
     }),
   },
   methods: {
