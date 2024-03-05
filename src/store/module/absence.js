@@ -25,10 +25,7 @@ export default {
     },
   },
   actions: {
-    fetchAbsences({ commit, state }, exerciceComptableId) {
-      if (state.liste.length > 0) {
-        return Promise.resolve();
-      }
+    fetchAbsences({ commit }, exerciceComptableId) {
       return AbsenceService.getAbsences(exerciceComptableId).then((data) =>
         commit(types.UPDATE_ABSENCE_LISTE, data)
       );
