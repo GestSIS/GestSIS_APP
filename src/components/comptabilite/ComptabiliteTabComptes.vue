@@ -70,6 +70,7 @@
             <div class="card-title">
               <h3 class="card-title">Comptes</h3>
               <base-dropdown
+                v-if="comptes.length"
                 ref="dropdown"
                 button-class="ms-1 btn btn-outline-secondary dropdown-toggle"
                 menu-class="dropdown-menu"
@@ -91,6 +92,12 @@
                 </template>
               </base-dropdown>
             </div>
+          </div>
+          <div v-if="!comptes.length" class="card-body">
+            Veuillez configurer les comptes dans
+            <router-link class="btn-link" :to="{ name: 'param-comptabilite' }"
+              >Configuration</router-link
+            >
           </div>
           <base-table
             v-show="!loading"

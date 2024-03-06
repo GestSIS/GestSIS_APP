@@ -421,7 +421,9 @@ export default {
           while (date <= fin) {
             if (date.getMonth() + 1 == this.displayMonth) {
               const sapeur = this.indexedSapeurs[a.sapeur_id];
-
+              if (!sapeur) {
+                return;
+              }
               const record = data[date.getDate() - 1];
               record.total++;
 

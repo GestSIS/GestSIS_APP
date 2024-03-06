@@ -33,8 +33,22 @@
       </div>
       <div class="col-md-4">
         <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
             <h3>Actions</h3>
+            <div v-if="hasEditPermission" class="form-check form-switch">
+              <input
+                id="modeEdition"
+                v-model="editMode"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+              />
+              <label class="form-check-label" for="modeEdition"
+                >Mode édition</label
+              >
+            </div>
           </div>
           <div class="card-body pb-2">
             <button
@@ -50,13 +64,6 @@
               @click="contract"
             >
               <font-awesome-icon :icon="['far', 'minus-square']" />
-            </button>
-            <button
-              v-tooltip.top="editMode ? 'Mode affichage' : 'Mode édition'"
-              class="btn btn-info me-1"
-              @click="editMode = !editMode"
-            >
-              <font-awesome-icon :icon="['far', editMode ? 'eye' : 'edit']" />
             </button>
           </div>
           <div v-if="!editMode" class="card-body pt-0">
@@ -194,6 +201,7 @@ import store from '/src/store/index';
 
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
+import permissions from '../store/permissions';
 
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -233,6 +241,11 @@ export default {
           label: (g.no ? g.no + ' ' : '') + g.designation,
         })),
       sapeurs: (state) => state.sapeur.liste,
+      hasEditPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(
+          permissions.ORGANISATION.MODIFICATION
+        ),
     }),
     filteredGroupes() {
       const activeId = this.active?.data?.id || 0;

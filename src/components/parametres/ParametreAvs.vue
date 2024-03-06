@@ -67,6 +67,20 @@
               :class="{ 'is-invalid': errors['franchise_imposition'] }"
             />
           </div>
+          <div class="mb-3">
+            <label for="franchise_imposition"
+              >Franchise imposition cantonale</label
+            >
+            <input
+              id="franchise_imposition_cantonale"
+              v-model="params.franchise_imposition_cantonale"
+              type="text"
+              class="form-control form-control-sm"
+              :class="{
+                'is-invalid': errors['franchise_imposition_cantonale'],
+              }"
+            />
+          </div>
           <base-select
             v-model="params.compte_id"
             class="mb-3"
@@ -113,7 +127,9 @@ export default {
       params: {
         taux_avs: null,
         taux_ac: null,
-        franchise: null,
+        franchise_avs: null,
+        franchise_imposition: null,
+        franchise_imposition_cantonale: null,
         compte_id: null,
       },
     };

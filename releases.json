@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "06.03.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Résolution d'un problème en cas d'ajout d'absence par des civils",
+        "Amélioration du bouton `Mode édition/affichage` pour le module `Organisation`",
+        "Ajout de la franchise cantonale sur les soldes pour les `certificat de salaire`",
+        "Améliorations graphiques diverses"
+      ]
+    },
+    {
       "date": "03.03.2024",
       "version": "1.0",
       "app": "GestSIS Mobile 2.5.0",
