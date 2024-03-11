@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "11.03.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Documentation du module absence",
+        "Mise à jour des icones dans la documentation"
+      ]
+    },
+    {
       "date": "06.03.2024",
       "version": "1.0",
       "app": "GestSIS APP",
