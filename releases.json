@@ -1,12 +1,18 @@
 {
   "releases": [
     {
-      "date": "12.03.2024",
+      "date": "13.03.2024",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Résolution d'un problème pour l'export des données RTA"
+        "Excuses consultables uniquement avec la permission `exercice.presence`"
       ]
+    },
+    {
+      "date": "12.03.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Résolution d'un problème pour l'export des données RTA"]
     },
     {
       "date": "11.03.2024",
@@ -14,7 +20,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Documentation du module absence",
-        "Mise à jour des icones dans la documentation"
+        "Mise à jour des icones dans la documentation",
+        "Résolution d'un problème pour accéder à `Mon matériel`"
       ]
     },
     {

@@ -136,7 +136,7 @@
                 }}</span
               >
               <button
-                v-if="sap.justificatif_filename"
+                v-if="sap.justificatif_path"
                 class="btn"
                 @click="downloadJustificatif(sap)"
               >
@@ -515,6 +515,12 @@ export default {
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {
+      if (!this.hasPresencePermission) {
+        this.$awn.warning(
+          "Permissions insuffisantes pour accéder au détails de l'excuse"
+        );
+        return;
+      }
       this.SHOW_MODAL({
         component: 'ModalExcuse',
         data: sapeur,
@@ -567,6 +573,12 @@ export default {
       });
     },
     downloadJustificatif(sapeur) {
+      if (!this.hasPresencePermission) {
+        this.$awn.warning(
+          "Permissions insuffisantes pour accéder au détails de l'excuse"
+        );
+        return;
+      }
       ExerciceService.downloadExcuseJustificatif(
         sapeur.exercice_id,
         sapeur.sapeur_id,
