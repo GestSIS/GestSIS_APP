@@ -76,6 +76,12 @@ const links = [
     to: { name: 'stat-dashboard' },
     icon: ['far', 'chart-bar'],
     nom: 'Statistiques',
+    permissions: [
+      permissions.SAPEUR.LECTURE,
+      permissions.EXERCICE.LECTURE,
+      permissions.INTERVENTION.LECTURE,
+      permissions.COMPTABILITE.LECTURE,
+    ],
   },
   {
     to: { name: 'controles-medicaux' },
