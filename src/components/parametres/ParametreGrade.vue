@@ -55,7 +55,7 @@ export default {
         { title: 'Tri', key: 'tri' },
         { title: 'Abréviation', key: 'abreviation' },
         { title: 'Désignation', key: 'designation' },
-        { title: 'Groupe', key: 'groupe' },
+        { title: 'Groupe', key: 'groupeDesignation' },
         { title: 'Actions', slot: 'actions' },
       ],
     };
@@ -66,7 +66,7 @@ export default {
         state.grade.liste
           .map((g) => ({
             ...g,
-            groupe: {
+            groupeDesignation: {
               1: 'Officier',
               2: 'Sous-Officier',
               3: 'Spécialiste',

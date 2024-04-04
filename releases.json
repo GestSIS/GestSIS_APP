@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "04.04.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise à jour des grades pour les cours selon directive cantonale"
+      ]
+    },
+    {
       "date": "13.03.2024",
       "version": "1.0",
       "app": "GestSIS APP",
