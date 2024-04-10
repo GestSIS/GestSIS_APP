@@ -59,8 +59,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import * as data from '../../releases.json';
-
-const DOC_URL = import.meta.env.VITE_DOC_ENDPOINT;
+import { DOC_URL } from '../http/Env.js';
 
 export default {
   name: 'AppNavbar',
