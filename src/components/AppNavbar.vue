@@ -2,7 +2,6 @@
   <nav
     class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
   >
-    <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item position-relative me-2 ms-4">
         <button
@@ -14,9 +13,7 @@
         </button>
       </li>
       <li class="nav-item position-relative me-2">
-        <a href="https://doc.gestsis.ch" target="_blank" class="btn btn-link"
-          >Documentation</a
-        >
+        <a :href="docUrl" target="_blank" class="btn btn-link">Documentation</a>
       </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
         <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
@@ -63,6 +60,8 @@
 import { mapGetters, mapState } from 'vuex';
 import * as data from '../../releases.json';
 
+const DOC_URL = import.meta.env.VITE_DOC_ENDPOINT;
+
 export default {
   name: 'AppNavbar',
   props: {
@@ -80,6 +79,7 @@ export default {
     return {
       releases: data.releases,
       showNotif: false,
+      docUrl: DOC_URL,
     };
   },
   computed: {
