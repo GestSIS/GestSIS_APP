@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-const API_URL = import.meta.env.VITE_API_ENDPOINT;
-const AUTH_URL = import.meta.env.VITE_AUTH_ENDPOINT;
-const PRINT_URL = import.meta.env.VITE_PRINT_ENDPOINT;
+import { API_URL, AUTH_URL, PRINT_URL } from '../http/Env.js';
 
 import store from '/src/store';
 
