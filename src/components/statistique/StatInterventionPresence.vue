@@ -71,7 +71,7 @@ export default {
       fields: [
         { title: 'Sapeur', key: 'nom_prenom' },
         { title: 'Nombre', key: 'nb' },
-        { title: 'Durée', key: 'duree' },
+        { title: 'Durée [h]', key: 'duree' },
       ],
     };
   },
