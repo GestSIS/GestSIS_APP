@@ -23,7 +23,7 @@
     <div class="col-12 mb-3">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
-          <h3>Stats Présences aux intervention</h3>
+          <h3>Présences aux interventions</h3>
         </div>
         <div class="card-body table-responsive">
           <base-table
