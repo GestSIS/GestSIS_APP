@@ -197,13 +197,11 @@ async function loadData(_, next) {
     loadFonctions,
     loadSapeurs,
     loadExcuses,
-    // loadExercies,
     loadCategories,
-    // loadPresences,
     loadExercicesComptables,
   ]).then(() => {
     store.dispatch('fetchListeExercice');
-    store.dispatch('fetchStatistiquePresence');
+    store.dispatch('fetchStatistiquePresenceExercice');
     next();
   });
 }
@@ -244,7 +242,7 @@ export default {
         }, new Map()),
       categories: (state) => state.exerciceCategorie.liste,
       presences: (state) =>
-        state.statistique.presences.map((e) => ({
+        state.statistique.presencesExercice.map((e) => ({
           ...e,
           sapeur_id: parseInt(e.sapeur_id),
           exercice_id: parseInt(e.exercice_id),
@@ -362,7 +360,7 @@ export default {
   watch: {
     activeExerciceComptableId() {
       this.$store.dispatch('fetchListeExercice');
-      this.$store.dispatch('fetchStatistiquePresence').then();
+      this.$store.dispatch('fetchStatistiquePresenceExercice').then();
     },
   },
   mounted() {

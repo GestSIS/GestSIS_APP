@@ -12,7 +12,8 @@ export default {
     statFederal: [],
     typeIntervention: [],
     interventionTraitement: [],
-    presences: [],
+    presencesExercice: [],
+    presencesIntervention: [],
     comptes: [],
     modulesComptable: [],
     categoriesComptable: [],
@@ -25,7 +26,8 @@ export default {
       state.permis = [];
       state.materiels = [];
       state.vehicules = [];
-      state.presences = [];
+      state.presencesExercice = [];
+      state.presencesIntervention = [];
       state.statFederal = [];
       state.typeIntervention = [];
       state.interventionTraitement = [];
@@ -48,8 +50,11 @@ export default {
     [types.UPDATE_STATISTIQUE_MATERIEL](state, payload) {
       state.materiels = payload;
     },
-    [types.UPDATE_STATISTIQUE_PRESENCE](state, payload) {
-      state.presences = payload;
+    [types.UPDATE_STATISTIQUE_PRESENCE_EXERCICE](state, payload) {
+      state.presencesExercice = payload;
+    },
+    [types.UPDATE_STATISTIQUE_PRESENCE_INTERVENTION](state, payload) {
+      state.presencesIntervention = payload;
     },
     [types.UPDATE_STATISTIQUE_STAT_FEDERAL](state, payload) {
       state.statFederal = payload;
@@ -117,10 +122,19 @@ export default {
         getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_MATERIEL, data));
     },
-    fetchStatistiquePresence({ getters, commit }) {
-      return StatistiqueService.getStatPresences(
+    fetchStatistiquePresenceExercice({ getters, commit }) {
+      return StatistiqueService.getStatPresencesExercice(
         getters.activeExerciceComptableId
-      ).then((data) => commit(types.UPDATE_STATISTIQUE_PRESENCE, data));
+      ).then((data) =>
+        commit(types.UPDATE_STATISTIQUE_PRESENCE_EXERCICE, data)
+      );
+    },
+    fetchStatistiquePresenceIntervention({ getters, commit }) {
+      return StatistiqueService.getStatPresencesIntervention(
+        getters.activeExerciceComptableId
+      ).then((data) =>
+        commit(types.UPDATE_STATISTIQUE_PRESENCE_INTERVENTION, data)
+      );
     },
     fetchStatistiqueTypeIntervention({ getters, commit }) {
       return StatistiqueService.getStatTypeIntervention(

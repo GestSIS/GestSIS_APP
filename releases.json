@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "16.04.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Statistiques sapeurs interventions"]
+    },
+    {
       "date": "04.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",

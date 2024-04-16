@@ -19,8 +19,15 @@ export default {
   getStatMateriel(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/materiel`);
   },
-  getStatPresences(exercieComptableId) {
-    return Api.api().get(`/statistiques/${exercieComptableId}/presence`);
+  getStatPresencesExercice(exercieComptableId) {
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/presence-exercice`
+    );
+  },
+  getStatPresencesIntervention(exercieComptableId) {
+    return Api.api().get(
+      `/statistiques/${exercieComptableId}/presence-intervention`
+    );
   },
   getStatTypeIntervention(exercieComptableId) {
     return Api.api().get(

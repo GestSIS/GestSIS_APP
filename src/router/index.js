@@ -494,6 +494,12 @@ const router = createRouter({
             import('/src/components/statistique/StatIntervention.vue'),
         },
         {
+          path: 'intervention-presence',
+          name: 'stat-intervention-presence',
+          component: () =>
+            import('/src/components/statistique/StatInterventionPresence.vue'),
+        },
+        {
           path: 'comptabilite',
           name: 'stat-comptabilite',
           component: () =>

@@ -76,6 +76,11 @@ export default {
           permission: permissions.INTERVENTION.MODIFICATION,
         },
         {
+          to: { name: 'stat-intervention-presence' },
+          name: 'Présences interventions',
+          permission: permissions.INTERVENTION.LECTURE,
+        },
+        {
           to: { name: 'stat-comptabilite' },
           name: 'Comptabilité',
           permission: permissions.COMPTABILITE.LECTURE,
