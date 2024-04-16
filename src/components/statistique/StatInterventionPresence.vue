@@ -99,7 +99,7 @@ export default {
           ...s,
           ...(reducedPresences[s.id] ?? { duree: 0, nb: 0 }),
         }))
-        .filter((s) => this.allSapeurs || s.duree !== 0);
+        .filter((s) => (this.allSapeurs && s.actif) || s.duree !== 0);
     },
   },
   watch: {
