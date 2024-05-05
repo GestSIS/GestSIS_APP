@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "06.05.2024",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.5.1",
+      "changes": ["Mise à jour de compatibilité pour Android 14"]
+    },
+    {
       "date": "16.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",
