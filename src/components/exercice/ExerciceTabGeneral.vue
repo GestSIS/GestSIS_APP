@@ -58,7 +58,7 @@
         <div class="col-6">
           <!-- HEURE -->
           <div class="mb-3">
-            <label for="m-exe-heure">Heure</label>
+            <label for="m-exe-heure">Heure de début</label>
             <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['far', 'clock']" />
@@ -80,7 +80,7 @@
         <div class="col-6">
           <!-- DUREE -->
           <div class="mb-3">
-            <label for="m-exe-duree">Durée</label>
+            <label for="m-exe-duree">Durée (facturée)</label>
             <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['fas', 'hourglass-end']" />
@@ -94,9 +94,28 @@
                 :class="{ 'is-invalid': errors['duree'] }"
                 min="1"
                 max="780"
-                name="nom"
+                name="duree"
               />
               <span class="input-group-text">min</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <!-- Heure de fin -->
+          <div class="mb-3">
+            <label for="m-exe-duree">Heure de fin</label>
+            <div class="input-group input-group-sm">
+              <div class="input-group-text">
+                <font-awesome-icon :icon="['far', 'clock']" />
+              </div>
+              <input
+                id="m-exe-fin"
+                v-model="activeExerciceData.fin"
+                type="time"
+                :readonly="!hasEditPermission"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['fin'] }"
+              />
             </div>
           </div>
         </div>
@@ -180,6 +199,9 @@ export default {
     exerciceHeure() {
       return this.activeExerciceData.heure;
     },
+    duree() {
+      return this.activeExerciceData.duree;
+    },
   },
   watch: {
     exerciceCategorie(id) {
@@ -189,6 +211,10 @@ export default {
     },
     exerciceHeure(data) {
       this.activeExerciceData.heure = this.formatHeure(data);
+    },
+    duree(data) {
+      // TODO: heure de fin = heure de début + durée
+      this.activeExerciceData.fin = this.formatHeure(data);
     },
   },
   mounted() {
