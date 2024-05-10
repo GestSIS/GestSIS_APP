@@ -384,7 +384,7 @@ export default {
         data.fonctions[s.mainFonctionId] =
           (data.fonctions[s.mainFonctionId] ?? 0) + 1;
 
-        s.groupeIds.forEach(
+        s.groupeIds?.forEach(
           (groupeId) => 
             (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1)
         )
@@ -436,7 +436,7 @@ export default {
                     record.permis[permisId] ?? new Set()
                   ).add(sapeur.id))
               );
-              record.groupes.forEach(
+              record.groupes?.forEach(
                 (groupeId) =>
                   (record.groupes[groupeId] = (
                     record.groupes[groupeId] ?? new Set()
