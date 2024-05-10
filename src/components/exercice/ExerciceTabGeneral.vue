@@ -100,8 +100,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
-          <!-- Heure de fin -->
+        <!-- <div class="col-6">
           <div class="mb-3">
             <label for="m-exe-duree">Heure de fin</label>
             <div class="input-group input-group-sm">
@@ -118,7 +117,7 @@
               />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="row">
         <div class="col-6">
