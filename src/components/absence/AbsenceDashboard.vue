@@ -357,9 +357,9 @@ export default {
           ...s,
           mainFonctionId: this.fonctions.find((f) => fonctionsIds.has(f.id))
             ?.id,
-          mainGroupeId: this.groupes.find(
+          groupeIds: this.groupes.map(
             (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id
-          )?.id,
+          ),
         };
       });
     },
@@ -383,8 +383,11 @@ export default {
           (data.localites[s.localite_id] ?? 0) + 1;
         data.fonctions[s.mainFonctionId] =
           (data.fonctions[s.mainFonctionId] ?? 0) + 1;
-        data.groupes[s.mainGroupeId] = (data.groupes[s.mainGroupeId] ?? 0) + 1;
 
+        s.groupeIds.forEach(
+          (groupeId) => 
+            (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1)
+        )
         s.permis.forEach(
           (permisId) =>
             (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
@@ -433,9 +436,12 @@ export default {
                     record.permis[permisId] ?? new Set()
                   ).add(sapeur.id))
               );
-              record.groupes[sapeur.mainGroupeId] = (
-                record.groupes[sapeur.mainGroupeId] ?? new Set()
-              ).add(sapeur.id);
+              record.groupes.forEach(
+                (groupeId) =>
+                  (record.groupes[groupeId] = (
+                    record.groupes[groupeId] ?? new Set()
+                  ).add(sapeur.id))
+              );
               record.fonctions[sapeur.mainFonctionId] = (
                 record.fonctions[sapeur.mainFonctionId] ?? new Set()
               ).add(sapeur.id);
