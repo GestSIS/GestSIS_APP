@@ -436,7 +436,7 @@ export default {
                     record.permis[permisId] ?? new Set()
                   ).add(sapeur.id))
               );
-              record.groupes?.forEach(
+              sapeur.groupes?.forEach(
                 (groupeId) =>
                   (record.groupes[groupeId] = (
                     record.groupes[groupeId] ?? new Set()
