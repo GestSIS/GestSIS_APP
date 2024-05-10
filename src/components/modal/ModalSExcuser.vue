@@ -51,6 +51,7 @@
           <label for="remarque">Raison</label>
           <input
             id="remarque"
+            required
             v-model="activeExcuse.remarque"
             type="text"
             class="form-control form-control-sm"
@@ -173,6 +174,7 @@ export default {
           this.HIDE_MODAL();
         })
         .catch((err) => {
+          this.errors = err;
           this.$awn.alert(
             err?.message ?? "Erreur lors de la création de l'excuse"
           );

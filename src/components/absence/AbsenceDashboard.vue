@@ -294,7 +294,7 @@ export default {
   data() {
     return {
       loading: true,
-      displayKey: 'fonction',
+      displayKey: 'groupe',
       displayMonth: new Date().getMonth() + 1,
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
