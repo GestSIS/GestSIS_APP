@@ -403,8 +403,8 @@ export default {
           ('0' + (1 + day)).slice(-2) +
           '.' +
           ('0' + this.displayMonth).slice(-2),
-        permis: new Set(),
-        groupes: new Set(),
+        permis: {},
+        groupes: {},
         fonctions: {},
         localites: {},
         total: 0,
