@@ -350,7 +350,6 @@ export default {
         state.auth.sis.permissions.includes(permissions.ABSENCE.MODIFICATION),
     }),
     computedSapeurs() {
-      // TODO: Compute main fonction pour chaque sapeur
       return this.sapeurs.map((s) => {
         const fonctionsIds = new Set(s.fonctions);
         return {
@@ -404,8 +403,8 @@ export default {
           ('0' + (1 + day)).slice(-2) +
           '.' +
           ('0' + this.displayMonth).slice(-2),
-        permis: {},
-        groupes: {},
+        permis: new Set(),
+        groupes: new Set(),
         fonctions: {},
         localites: {},
         total: 0,
@@ -436,7 +435,7 @@ export default {
                     record.permis[permisId] ?? new Set()
                   ).add(sapeur.id))
               );
-              sapeur.groupes?.forEach(
+              sapeur.groupeIds?.forEach(
                 (groupeId) =>
                   (record.groupes[groupeId] = (
                     record.groupes[groupeId] ?? new Set()
