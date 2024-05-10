@@ -45,7 +45,7 @@
         :options="[
           { id: 1, designation: 'Officier' },
           { id: 2, designation: 'Sous-Officier' },
-          { id: 3, designation: 'Spécialiste' },
+          { id: 3, designation: 'Sapeur' },
         ]"
       />
     </div>

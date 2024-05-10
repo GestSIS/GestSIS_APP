@@ -69,7 +69,7 @@ export default {
             groupeDesignation: {
               1: 'Officier',
               2: 'Sous-Officier',
-              3: 'Spécialiste',
+              3: 'Sapeur',
             }[g?.groupe ?? 0],
           }))
           .sort((a, b) => b.tri - a.tri),
