@@ -395,7 +395,11 @@ export default {
       return data;
     },
     computedAbsences() {
-      const year = this.activeExerciceComptable.annee;
+      if (!this.activeExerciceComptable){
+        return [];
+      }
+      const year = this.activeExerciceComptable?.annee;
+      
       const nbDays = new Date(year, this.displayMonth, 0).getDate();
       const data = [...Array(nbDays).keys()].map((day) => ({
         jourSemaine: new Date(year, this.displayMonth - 1, 1 + day).getDay(),
