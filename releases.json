@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "13.05.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Tableau de bord des absences, possibilité d'afficher les personnes absentes"]
+    },
+    {
       "date": "10.05.2024",
       "version": "1.0",
       "app": "GestSIS APP",
