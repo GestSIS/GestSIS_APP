@@ -151,7 +151,7 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
         exercice.sapeur_id,
-        'justificatif.pdf'
+        'justificatif_'+sapeur.justificatif_filename,
       ).catch((err) =>
         this.$awn.alert(
           err?.message ?? 'Erreur lors du chargement du justificatif'
