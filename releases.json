@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "18.05.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout export de la liste FOAD sur la page effectif"]
+    },
+    {
       "date": "13.05.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -9,6 +9,11 @@ export default {
       params: { date },
     });
   },
+  listeFoad(date) {
+    return Api.apiFileDownload('liste_foad.xlsx').get('/liste-foad', {
+      params: { date },
+    });
+  },
   downloadTrombinoscope(filename) {
     return Api.print(filename).get('/trombinoscope');
   },

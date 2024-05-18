@@ -69,6 +69,9 @@
               <button class="btn btn-outline-primary" @click="listeFssp">
                 Liste FSSP
               </button>
+              <button class="btn btn-outline-primary" @click="listeFoad">
+                Liste FOAD
+              </button>
               <button class="btn btn-outline-primary" @click="trombinoscope">
                 Trombinoscope
               </button>
@@ -428,6 +431,11 @@ export default {
     listeFssp() {
       this.SHOW_MODAL({
         component: 'ModalListeFssp',
+      });
+    },
+    listeFoad() {
+      this.SHOW_MODAL({
+        component: 'ModalListeFoad',
       });
     },
     sms(sapeurs) {
