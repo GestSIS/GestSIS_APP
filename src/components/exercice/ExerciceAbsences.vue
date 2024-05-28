@@ -76,9 +76,6 @@
             ref="basetable_exercices"
             :selectable="true"
             :fields="fieldsBase"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            detail-row-class="m-td-0"
             no-data="Aucun exercice/séance à afficher"
             :data="filteredData"
             :row-class="onRowClass"
@@ -108,11 +105,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
-import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
@@ -144,7 +139,6 @@ export default {
       loading: true,
       tab: 'exercice',
       selectedId: null,
-      detailRowComponent: markRaw(ExerciceDetails),
       absenceStatuts: [
         { id: 1, designation: 'Amendé' },
         { id: 2, designation: 'Refusé' },
