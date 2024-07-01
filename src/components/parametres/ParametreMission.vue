@@ -11,6 +11,7 @@
         :data="listeMission"
         :fields="fields"
         no-data="Aucune mission"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

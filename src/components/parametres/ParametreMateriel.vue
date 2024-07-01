@@ -11,6 +11,7 @@
         :data="listeMateriel"
         :fields="fields"
         no-data="Aucun materiel"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

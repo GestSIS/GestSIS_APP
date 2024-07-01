@@ -11,6 +11,7 @@
         :data="listeTraitement"
         :fields="fields"
         no-data="Aucun traitement"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

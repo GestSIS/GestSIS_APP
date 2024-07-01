@@ -14,6 +14,7 @@
       <base-table
         :data="listeExerciceComptable"
         :fields="fields"
+        :selectable="true"
         no-data="Aucun exercice comptable"
       >
         <template #actions="{ rowData }">

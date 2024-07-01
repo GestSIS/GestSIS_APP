@@ -8,6 +8,7 @@
         :data="statsFederales"
         :fields="fields"
         no-data="Aucune statistique fédérale"
+        :selectable="true"
       />
     </div>
   </div>

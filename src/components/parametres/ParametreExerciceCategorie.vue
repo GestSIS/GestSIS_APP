@@ -11,6 +11,7 @@
         :data="listeCategorie"
         :fields="fields"
         no-data="Aucune catégorie"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

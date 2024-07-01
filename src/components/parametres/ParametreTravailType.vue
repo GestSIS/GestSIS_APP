@@ -16,6 +16,7 @@
         :detail-row-column="true"
         :detail-row-component="detailRowComponent"
         :detail-row-options="detailRowOptions"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <td class="align-middle text-center">

@@ -11,6 +11,7 @@
         :data="listeFonction"
         :fields="fields"
         no-data="Aucune fonction"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

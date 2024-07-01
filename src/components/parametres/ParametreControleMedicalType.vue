@@ -11,6 +11,7 @@
         :data="listeType"
         :fields="fields"
         no-data="Aucun contrôle médical type"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button

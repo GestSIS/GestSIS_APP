@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="card-body table-responsive">
-      <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule">
+      <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule" :selectable="true">
         <template #actions="{ rowData }">
           <button
             type="button"

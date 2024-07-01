@@ -13,6 +13,7 @@
             :data="listeType"
             :fields="fieldsType"
             no-data="Aucun type"
+            :selectable="true"
           >
             <template #actions="{ rowData }">
               <button

@@ -11,6 +11,7 @@
         :data="listeTelephone"
         :fields="fields"
         no-data="Aucun téléphone"
+        :selectable="true"
       >
         <template #actions="{ rowData }">
           <button
