@@ -9,6 +9,7 @@ export default {
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.params = null;
+      state.credit = 0;
     },
     [types.UPDATE_ASPSMS_PARAMS](state, { username, password, credit }) {
       state.params = { ...state.params, username, password };
