@@ -32,7 +32,7 @@
         <div class="card-body">
           <div class="mb-2">
             <span class="badge bg-secondary me-2">Intervention</span>
-            <span class="badge bg-primary me-2">Entretient</span>
+            <span class="badge bg-primary me-2">Entretien</span>
             <span class="badge bg-success me-2">Piquet</span>
           </div>
           <div
