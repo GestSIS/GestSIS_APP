@@ -153,7 +153,19 @@ export default {
       this.SHOW_MODAL({ component: 'ModalRole', data: {} });
     },
     remove(role) {
-      this.$store.dispatch('deleteRole', role.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce rôle ?',
+          question:
+            "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('deleteRole', role.id);
+          }
+        },
+      });
     },
     moduleMapping(key) {
       // Permet d'améliorer certains textes à afficher
