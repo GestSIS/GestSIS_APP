@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "16.07.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de sélection des sapeurs lors de la création de décomptes",
+        "Amélioration de l'interface de saisie des sapeurs pour `Publipostage`"
+      ]
+    },
+    {
       "date": "03.07.2024",
       "version": "1.0",
       "app": "GestSIS APP",

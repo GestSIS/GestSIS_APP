@@ -38,20 +38,15 @@
             <h3>Options</h3>
           </div>
           <div class="card-body">
-            <button class="btn btn-outline-primary mb-2" @click="select">
-              Sélection des sapeurs
-            </button>
-
-            <h4 class="h5">Sélection actuel</h4>
-            <p v-if="sapeurIds.length <= 0">Sapeurs actifs (défault)</p>
-            <p v-else>{{ sapeurIds.length }} sapeurs sélectionnés</p>
-            <button
-              v-if="sapeurIds.length > 0"
-              class="btn btn-outline-secondary"
-              @click="resetSelection"
-            >
-              Annuler la sélection
-            </button>
+            <h5>Sélection des sapeurs</h5>
+            <div class="input-group mb-3">
+              <button class="btn btn-outline-primary" @click="select">
+                Sélection
+              </button>
+              <input type="text" disabled class="form-control"
+                :value="sapeurIds.length <= 0 ? 'Tous les sapeurs' : sapeurIds.length + ' sapeurs sélectionnés'" />
+              <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
+            </div>
           </div>
         </div>
       </div>

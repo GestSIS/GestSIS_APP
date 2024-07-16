@@ -66,7 +66,6 @@ import AspsmsParamService from '../../services/AspsmsParamService';
 
 export default {
   name: 'ModalSmsExercice',
-
   props: {
     data: {
       type: Object,
@@ -86,6 +85,7 @@ export default {
         differe: true,
         date: '',
         sapeurIds: [],
+        exerciceId: null,
       },
       fields: [
         {
@@ -172,6 +172,7 @@ export default {
       (l) => l.id == this.data.exercice_categorie_id
     );
     this.params.date = this.data.date + ' ' + this.data.heure;
+    this.params.exerciceId = this.data.exerciceId;
 
     this.params.message =
       `Rappel\n` +

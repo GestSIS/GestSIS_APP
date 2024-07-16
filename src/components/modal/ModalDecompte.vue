@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        Paramètres pour le décompte
-      </h5>
+      <h5 id="exampleModalLabel" class="modal-title">Paramètres pour le décompte</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -14,7 +12,7 @@
           v-model="params.designation"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['designation'] }"
+          :class="{ 'is-invalid': config.errors['designation'] }"
           name="designation"
           :disabled="params.exercice_id || params.sapeur_id"
         />
@@ -23,7 +21,7 @@
         v-if="!params.exercice_id"
         v-model="params.exercice_comptable_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['exercice_comptable_id'] }"
+        :class="{ 'is-invalid': config.errors['exercice_comptable_id'] }"
         label="Exercice comptable id"
         :options="listeExerciceComptable"
       />
@@ -34,11 +32,11 @@
           v-model="params.date"
           type="date"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date'] }"
+          :class="{ 'is-invalid': config.errors['date'] }"
           name="date"
         />
       </div>
-      <div v-if="mode === 'genererDecompteAnnuel'" class="mb-3">
+      <div v-if="config.mode === 'genererDecompteAnnuel'" class="mb-3">
         <label>Sélection des écritures</label>
         <div class="form-check form-switch">
           <input
@@ -121,6 +119,25 @@
           <label class="form-check-label" for="ecritures-amende">Amendes</label>
         </div>
       </div>
+      <hr v-if="!params.exercice_id" />
+      <div v-if="!params.exercice_id" class="mb-3">
+        <h5>Sélection des sapeurs</h5>
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-primary" @click="select">Sélection</button>
+          <input
+            type="text"
+            disabled
+            class="form-control"
+            :value="
+              params.sapeurIds.length <= 0
+                ? 'Tous les sapeurs'
+                : params.sapeurIds.length + ' sapeurs sélectionnés'
+            "
+          />
+          <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
+        </div>
+      </div>
+
       <div v-if="params.exercice_id" class="mb-3">
         <div class="form-check">
           <input
@@ -129,9 +146,7 @@
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="m-sap-cotisation_avs"
-            >Déduction</label
-          >
+          <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
         </div>
       </div>
     </div>
@@ -143,10 +158,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from "vuex";
 
 export default {
-  name: 'ModalDecompte',
+  name: "ModalDecompte",
   props: {
     callback: {
       type: Function,
@@ -159,11 +174,14 @@ export default {
   },
   data() {
     return {
-      errors: {},
-      mode: 'genererDecompte',
+      config: {
+        errors: {},
+        mode: "genererDecompte",
+      },
       params: {
+        sapeurIds: [],
         date: new Date().toJSON().slice(0, 10),
-        designation: '',
+        designation: "",
         exercice_comptable_id: null,
         sapeur_id: null,
         exercice_id: null,
@@ -188,25 +206,30 @@ export default {
     }),
   },
   mounted() {
-    this.params.exercice_comptable_id = this.activeExerciceComptableId;
-    this.params.sapeur_id = this.data?.sapeurId;
-    this.params.exercice_id = this.data?.exerciceId;
-    this.params.designation = `Décompte ${this.data?.designation ?? ''}`;
+    if (this.data.remount) {
+      this.config = this.data.state.config;
+      this.params = this.data.state.params;
+    } else {
+      this.params.exercice_comptable_id = this.activeExerciceComptableId;
+      this.params.sapeur_id = this.data?.sapeurId;
+      this.params.exercice_id = this.data?.exerciceId;
+      this.params.designation = `Décompte ${this.data?.designation ?? ""}`;
 
-    this.mode = this.params.sapeur_id
-      ? 'genererDecompteSapeur'
-      : this.params.exercice_id
-      ? 'genererDecompteExercice'
-      : 'genererDecompteAnnuel';
+      this.config.mode = this.params.sapeur_id
+        ? "genererDecompteSapeur"
+        : this.params.exercice_id
+        ? "genererDecompteExercice"
+        : "genererDecompteAnnuel";
+    }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapMutations(["SHOW_MODAL", "HIDE_MODAL"]),
     close() {
       this.HIDE_MODAL();
     },
     creer() {
       this.$store
-        .dispatch(this.mode, this.params)
+        .dispatch(this.config.mode, this.params)
         .then(() => {
           (this.callback() ?? Promise.resolve()).then((close) => {
             if (close ?? true) {
@@ -216,10 +239,42 @@ export default {
         })
         .catch((errors) => {
           this.errors = errors;
-          this.$awn.alert(
-            errors?.message ?? 'Erreur lors de la création du décompte'
-          );
+          this.$awn.alert(errors?.message ?? "Erreur lors de la création du décompte");
         });
+    },
+    select() {
+      const save = {
+        callback: this.callback,
+        data: {
+          ...this.data,
+          remount: true,
+          state: { config: { ...this.config }, params: { ...this.params } },
+        },
+      };
+      const data = {
+        ids: this.params.sapeurIds.slice(0),
+      };
+      const callback = (res) => {
+        if (res) {
+          console.log(save.data.state.sapeurIds);
+          save.data.state.params.sapeurIds = res.tous;
+        }
+        this.SHOW_MODAL({
+          component: "ModalDecompte",
+          callback: save.callback,
+          data: save.data,
+        });
+        return Promise.resolve(false);
+      };
+      this.SHOW_MODAL({
+        component: "ModalSapeurSelect",
+        size: 1,
+        callback,
+        data,
+      });
+    },
+    resetSelection() {
+      this.params.sapeurIds = [];
     },
   },
 };
