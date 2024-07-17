@@ -1,0 +1,603 @@
+<template>
+  <div
+    v-if="!dismissedWarning && canEditAbsence && !canEditPresence"
+    class="alert alert-dismissible alert-warning"
+  >
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      @click="dismissedWarning = true"
+    ></button>
+    Exercice déjà imputé, uniquement possible de modifier le type d'absence et
+    la mise à l'amende.
+  </div>
+  <div class="card card-primary card-outline">
+    <div class="card-header d-flex">
+      <h3 class="me-auto">
+        {{ activeExerciceData.designation }} &ndash;
+        {{ new Date(activeExerciceData.date).toLocaleDateString('fr-CH') }}
+      </h3>
+      <button
+        v-if="hasValidationPermission"
+        class="btn btn-outline-primary me-2"
+        :disabled="!canValidate"
+        @click="validate"
+      >
+        Valider
+      </button>
+    </div>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th class="text-center">
+            <input
+              v-model="allConvoque"
+              class="form-check-input"
+              type="checkbox"
+              @change="(e) => selectAllConvoque(e.target.checked)"
+            />
+            Convoque
+          </th>
+          <th class="text-center">Present</th>
+          <th class="text-center">Absent</th>
+          <th class="text-center">Remplace</th>
+          <th class="text-center">Excuse</th>
+          <th class="text-center">Amende</th>
+          <th v-for="h in heureTypes" :key="h.id">
+            {{ h.designation }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="sap in presences"
+          :key="sap.id"
+          :class="{ 'table-danger': !sap.actif }"
+        >
+          <td>{{ sap.nom_prenom }}</td>
+          <td>
+            <div class="text-center">
+              <input
+                :id="sap.id + 'convoque'"
+                v-model="sap.convoque"
+                type="checkbox"
+                :disabled="!canEditPresence"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                @change="selectConvoque(sap)"
+              />
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <input
+                :id="sap.id + 'present'"
+                v-model="sap.present"
+                type="checkbox"
+                :disabled="!canEditPresence"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                @change="selectPresent(sap)"
+              />
+              <label class="form-check-label" :for="sap.id + 'present'"></label>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <input
+                :id="sap.id + 'absent'"
+                v-model="sap.absent"
+                type="checkbox"
+                :disabled="!canEditPresence"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                @change="selectAbsent(sap)"
+              />
+              <label class="form-check-label" :for="sap.id + 'absent'"></label>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <input
+                :id="sap.id + 'remplace'"
+                v-model="sap.remplace"
+                type="checkbox"
+                :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
+                class="form-check-input"
+                :true-value="1"
+                :false-value="0"
+                @change="selectRemplace(sap)"
+              />
+              <label
+                class="form-check-label"
+                :for="sap.id + 'remplace'"
+              ></label>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <span
+                v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
+                class="badge rounded-pill text-bg-primary"
+                :class="{
+                  'text-bg-danger': sap.excuse_statut == -1,
+                  'text-bg-secondary': sap.excuse_statut == 0,
+                  'text-bg-success': sap.excuse_statut == 1,
+                }"
+                @click="detailExcuse(sap)"
+                >{{
+                  excusesTypes.find((e) => e.id == sap.excuse_type_id)
+                    ?.designation
+                }}</span
+              >
+              <button
+                v-if="sap.justificatif_path"
+                class="btn"
+                @click="downloadJustificatif(sap)"
+              >
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
+              </button>
+              <button
+                v-if="!sap.excuse_type_id"
+                class="btn btn-outline-primary border-0"
+                :disabled="!hasPresencePermission"
+                @click="addExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
+              <button
+                v-else
+                class="btn btn-outline-danger border-0"
+                :disabled="!hasPresencePermission"
+                @click="removeExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="text-center">
+              <input
+                :id="sap.id + 'amende'"
+                v-model="sap.amende"
+                type="checkbox"
+                class="form-check-input"
+                :true-value="true"
+                :false-value="false"
+                :disabled="
+                  !canEditAbsence ||
+                  (!canEditPresence && sap.present) ||
+                  !amendable ||
+                  !!(sap.remplace || sap.present)
+                "
+                @change="selectAmende(sap)"
+              />
+              <label class="form-check-label" :for="sap.id + 'amende'"></label>
+            </div>
+          </td>
+          <td v-for="h in heureTypes" :key="h.id">
+            <div class="input-group input-group-sm">
+              <input
+                class="form-control form-control-sm"
+                type="text"
+                :readonly="!canEditPresence"
+                :value="
+                  getHeureValue(
+                    sap.heures.find(
+                      (e) =>
+                        e.heure_exercice_type_id == h.id ||
+                        (!e.heure_exercice_type_id &&
+                          e.designation == h.designation)
+                    )
+                  )
+                "
+                @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
+              />
+              <span class="input-group-text">{{
+                formatUnite(h.type_unite_id)
+              }}</span>
+            </div>
+          </td>
+        </tr>
+        <tr v-if="activeExerciceSapeurs.length === 0">
+          <td :colspan="7 + heureTypes.length">Aucun sapeur</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <th>Nb sapeurs : {{ presences.length }}</th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.convoque).length }}
+        </th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.present).length }}
+        </th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.absent).length }}
+        </th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.remplace).length }}
+        </th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.excuse_type_id).length }}
+        </th>
+        <th class="text-center">
+          {{ presences.filter((s) => s.amende).length }}
+        </th>
+        <th v-for="h in heureTypes" :key="h.id" class="text-center">
+          {{
+            presences
+              .map((s) =>
+                parseFloat(
+                  s.heures.find((e) => e.heure_exercice_type_id == h.id)
+                    ?.quantite ?? 0
+                )
+              )
+              .reduce((acc, a) => acc + a, 0)
+          }}
+          {{ formatUnite(h.type_unite_id) }}
+        </th>
+      </tfoot>
+    </table>
+    <div class="card-footer">
+      <button
+        v-if="hasPresencePermission"
+        class="btn btn-outline-primary"
+        :disabled="!canEditPresence"
+        @click="manageSapeurs"
+      >
+        Gérer la liste des sapeurs
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapMutations, mapState } from 'vuex';
+import ExerciceService from '../../services/ExerciceService';
+import permissions from '/src/store/permissions.js';
+
+export default {
+  name: 'ExerciceTabSapeurs',
+  data: () => {
+    return {
+      presences: [],
+      dismissedWarning: false,
+      allConvoque: false,
+    };
+  },
+  computed: {
+    ...mapState({
+      excusesTypes: (state) => state.excuseType.liste,
+      sapeurs: (state) => state.sapeur.liste,
+      hasPresencePermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
+      hasValidationPermission: (state) =>
+        state.auth.admin ||
+        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
+      activeExerciceId: (state) => state.exercice.active.id,
+      activeExerciceData: (state) => state.exercice.active.data,
+      activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
+      heureTypes: (state) => state.heureExercice.liste,
+      unites: (state) => state.unite.liste,
+      categories: (state) => state.exerciceCategorie.liste,
+      id: (state) => state.exercice.active.data?.exercice_categorie_id,
+      amendable: (state) =>
+        state.exerciceCategorie.liste.find(
+          (c) => c.id == state.exercice.active.data?.exercice_categorie_id
+        )?.amendable,
+    }),
+    isImpute() {
+      return this.activeExerciceData.statut == 4;
+    },
+    canEditAbsence() {
+      // Possible de l'éditer si permission de validation ou si pas encore validé
+      return (
+        this.activeExerciceData.statut > 0 &&
+        (this.hasValidationPermission ||
+          (this.hasPresencePermission && this.activeExerciceData.statut <= 2))
+      );
+    },
+    canEditPresence() {
+      return (
+        this.activeExerciceData.statut > 0 &&
+        ((this.hasPresencePermission && this.activeExerciceData.statut <= 2) ||
+          (this.hasValidationPermission && this.activeExerciceData.statut <= 3))
+      );
+    },
+    canValidate() {
+      return this.activeExerciceData.statut == 2;
+    },
+    computedExerciceSapeurs() {
+      return this.activeExerciceSapeurs
+        .map((s) => {
+          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
+          return {
+            ...s,
+            nom_prenom: sapeur?.nom_prenom ?? '...',
+            actif: sapeur?.actif,
+          };
+        })
+        .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
+    },
+  },
+  watch: {
+    computedExerciceSapeurs() {
+      this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
+    },
+    presences(values) {
+      const status = values?.map((p) => (p.convoque === 1 ? true : false));
+      this.allConvoque = status.length
+        ? status.reduce((c2, c1) => (c1 === c2 ? c1 : ''))
+        : false;
+    },
+  },
+  mounted() {
+    this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
+  },
+  methods: {
+    ...mapMutations(['SHOW_MODAL']),
+    selectAllConvoque(status) {
+      this.presences = this.presences.map((p) => ({
+        ...p,
+        convoque: status ? 1 : 0,
+      }));
+      Promise.all(this.presences.map((p) => this.savePresence(p, true))).then(
+        this.$awn.success('Modifications enregistrées')
+      );
+    },
+    getHeureValue(sapeur) {
+      return sapeur?.quantite;
+    },
+    updateHeureSapeur(sap, h, quantite) {
+      const heure = sap.heures.find(
+        (e) =>
+          e.heure_exercice_type_id == h.id ||
+          (!e.heure_exercice_type_id && e.designation == h.designation)
+      );
+      if (!heure) {
+        // Ajout de l'heure
+        const newHeure = {
+          heure_exercice_type_id: h.id,
+          quantite: parseFloat(quantite) || null,
+          exercice_id: this.activeExerciceId,
+          sapeur_id: sap.sapeur_id,
+        };
+
+        this.$store
+          .dispatch('addHeure', newHeure)
+          .then(() => this.$awn.success('Heure ajoutée'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      } else if (!(parseFloat(quantite) || null)) {
+        // Suppression de l'heure
+        this.$store
+          .dispatch('removeHeure', heure)
+          .then(() => this.$awn.success('Heure supprimée'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      } else {
+        heure.quantite = parseFloat(quantite) || null;
+        // Modification de l'heure
+        this.$store
+          .dispatch('editHeure', heure)
+          .then(() => this.$awn.success('Modifications enregistrées'))
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      }
+    },
+    async validate() {
+      this.$store
+        .dispatch('validerExercice', this.activeExerciceId)
+        .then((res) =>
+          this.$awn.success(res?.message || 'Exercice validé avec succès.')
+        )
+        .catch((err) =>
+          this.$awn.alert(
+            err?.message || "Erreur lors de la validation de l'exercice."
+          )
+        );
+    },
+    formatUnite(type_unite_id) {
+      return this.unites.find((u) => u.id == type_unite_id)?.abreviation;
+    },
+    manageSapeurs() {
+      const data = {
+        ids: this.presences.map((s) => s.sapeur_id).slice(0),
+      };
+      const svm = this;
+      let callback = (param) => {
+        if (!param) {
+          return;
+        }
+        const { ajoute, supprime } = param;
+        if (ajoute === null || ajoute === undefined) {
+          return;
+        }
+
+        return new Promise((resolve, reject) => {
+          let newSapeurs = ajoute.map((s) => ({
+            convoque: true,
+            present: false,
+            absent: false,
+            remplace: false,
+            excuse_type_id: null,
+            sapeur_id: s,
+            amende: false,
+          }));
+
+          //Sapeurs ajoutés
+          if (newSapeurs.length > 0) {
+            svm.$store
+              .dispatch('addSapeurs', newSapeurs)
+              .then(() => {
+                if (supprime.length <= 0) {
+                  resolve();
+                }
+              })
+              .catch(() => {
+                reject("Erreur lors de l'opération");
+              });
+          }
+
+          if (supprime.length > 0) {
+            svm.$store
+              .dispatch('removeSapeurs', supprime)
+              .then(resolve)
+              .catch(() => {
+                reject("Erreur lors de l'opération");
+              });
+          }
+
+          if (newSapeurs.length <= 0 && supprime.length <= 0) {
+            resolve('Solved');
+          }
+        });
+      };
+      this.SHOW_MODAL({
+        component: 'ModalSapeurSelect',
+        size: 1,
+        callback,
+        data,
+      });
+    },
+    savePresence(sapeur, hideNotification) {
+      const promise = this.$store.dispatch('editPresenceExercice', {
+        presenceId: sapeur.id,
+        presence: sapeur,
+      });
+      if (!hideNotification) {
+        return promise
+          .then((res) =>
+            this.$awn.success(res?.message || 'Modifications enregistrées')
+          )
+          .catch((err) =>
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          );
+      } else {
+        return promise;
+      }
+    },
+    selectConvoque(sapeur) {
+      this.savePresence(sapeur);
+    },
+    selectPresent(sapeur) {
+      sapeur.remplace = 0;
+      sapeur.absent = 0;
+      sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    selectAbsent(sapeur) {
+      sapeur.remplace = 0;
+      sapeur.present = 0;
+      this.savePresence(sapeur);
+    },
+    selectRemplace(sapeur) {
+      sapeur.present = 0;
+      sapeur.absent = 0;
+      sapeur.amende = false;
+      this.savePresence(sapeur);
+    },
+    selectAmende(sapeur) {
+      if (sapeur.amende) {
+        sapeur.present = 0;
+        sapeur.absent = 1;
+        sapeur.remplace = 0;
+      }
+      this.savePresence(sapeur);
+    },
+    detailExcuse(sapeur) {
+      if (!this.hasPresencePermission) {
+        this.$awn.warning(
+          "Permissions insuffisantes pour accéder au détails de l'excuse"
+        );
+        return;
+      }
+      this.SHOW_MODAL({
+        component: 'ModalExcuse',
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
+          }
+        },
+      });
+    },
+    async addExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalExcuse',
+        data: sapeur,
+        callback: (presence) => {
+          if (presence !== null && presence !== undefined) {
+            presence.present = 0;
+            presence.absent = 1;
+            presence.remplace = 0;
+            this.savePresence(presence);
+            this.presences = [
+              ...this.presences.map((p) =>
+                parseInt(p.id) == parseInt(presence.id) ? presence : p
+              ),
+            ];
+          }
+        },
+      });
+    },
+    removeExcuse(sapeur) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette excuse ?',
+          question:
+            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeExcuse', sapeur);
+          }
+        },
+      });
+    },
+    downloadJustificatif(sapeur) {
+      if (!this.hasPresencePermission) {
+        this.$awn.warning(
+          "Permissions insuffisantes pour accéder au détails de l'excuse"
+        );
+        return;
+      }
+      ExerciceService.downloadExcuseJustificatif(
+        sapeur.exercice_id,
+        sapeur.sapeur_id,
+        'justificatif_' + sapeur.justificatif_filename
+      ).catch((err) =>
+        this.$awn.alert(
+          err?.message ?? 'Erreur lors du chargement du justificatif'
+        )
+      );
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  background-color: white;
+}
+</style>
