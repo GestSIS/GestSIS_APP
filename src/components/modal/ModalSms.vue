@@ -62,7 +62,7 @@ import { mapState, mapMutations } from 'vuex';
 import AspsmsParamService from '../../services/AspsmsParamService';
 
 export default {
-  name: 'ModalSmsExercice',
+  name: 'ModalSms',
 
   props: {
     data: {

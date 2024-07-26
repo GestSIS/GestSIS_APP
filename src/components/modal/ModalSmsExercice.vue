@@ -172,7 +172,7 @@ export default {
       (l) => l.id == this.data.exercice_categorie_id
     );
     this.params.date = this.data.date + ' ' + this.data.heure;
-    this.params.exerciceId = this.data.exerciceId;
+    this.params.exerciceId = this.data.id;
 
     this.params.message =
       `Rappel\n` +
