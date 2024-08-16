@@ -13,9 +13,7 @@
       "date": "03.07.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'un problème d'affichage des cours imputés"
-      ]
+      "changes": ["Correction d'un problème d'affichage des cours imputés"]
     },
     {
       "date": "01.07.2024",
@@ -36,7 +34,9 @@
       "date": "13.05.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Tableau de bord des absences, possibilité d'afficher les personnes absentes"]
+      "changes": [
+        "Tableau de bord des absences, possibilité d'afficher les personnes absentes"
+      ]
     },
     {
       "date": "10.05.2024",

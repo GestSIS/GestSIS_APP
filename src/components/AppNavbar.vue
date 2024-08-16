@@ -12,9 +12,6 @@
           <font-awesome-icon :icon="['fas', 'bars']" />
         </button>
       </li>
-      <li class="nav-item position-relative me-2">
-        <a :href="docUrl" target="_blank" class="btn btn-link">Documentation</a>
-      </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
         <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
           <button class="btn btn-link" @click="clickInfo(navigate)">
@@ -24,6 +21,11 @@
       </li>
     </ul>
     <ul class="navbar-nav me-2">
+      <li class="position-relative me-2">
+        <a :href="docUrl" target="_blank" class="btn btn-link nav-link">
+          <font-awesome-icon :icon="['far', 'question-circle']" />
+        </a>
+      </li>
       <router-link v-slot="{ navigate }" :to="{ name: 'about' }" custom>
         <li class="position-relative me-2">
           <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
@@ -32,7 +34,7 @@
               v-if="showNotif"
               class="position-absolute translate-middle p-1 bg-danger rounded-circle"
             >
-              <span class="visually-hidden">Notifications</span>
+              <span class="visually-hidden">nouveautés disponibles</span>
             </span>
           </button>
         </li>
