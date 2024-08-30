@@ -63,7 +63,6 @@ import AspsmsParamService from '../../services/AspsmsParamService';
 
 export default {
   name: 'ModalSms',
-
   props: {
     data: {
       type: Object,

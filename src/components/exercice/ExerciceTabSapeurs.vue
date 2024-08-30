@@ -14,10 +14,6 @@
   </div>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex">
-      <h3 class="me-auto">
-        {{ activeExerciceData.designation }} &ndash;
-        {{ new Date(activeExerciceData.date).toLocaleDateString('fr-CH') }}
-      </h3>
       <button
         v-if="hasValidationPermission"
         class="btn btn-outline-primary me-2"
@@ -582,7 +578,7 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         sapeur.exercice_id,
         sapeur.sapeur_id,
-        'justificatif_'+sapeur.justificatif_filename,
+        'justificatif_' + sapeur.justificatif_filename
       ).catch((err) =>
         this.$awn.alert(
           err?.message ?? 'Erreur lors du chargement du justificatif'

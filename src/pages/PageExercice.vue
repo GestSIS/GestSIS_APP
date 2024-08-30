@@ -30,28 +30,37 @@
         >
           <a
             class="nav-item nav-link"
-            :class="{ active: !tabPresence }"
+            :class="{ active: tab == 'info' }"
             role="tab"
             href="#"
-            @click.prevent="tabPresence = false"
+            @click.prevent="tab = 'info'"
             >Informations</a
           >
           <a
             class="nav-item nav-link"
-            :class="{ active: tabPresence }"
+            :class="{ active: tab == 'presence' }"
             role="tab"
             href="#"
-            @click.prevent="tabPresence = true"
+            @click.prevent="tab = 'presence'"
             >Présences</a
+          >
+          <a
+            class="nav-item nav-link"
+            :class="{ active: tab == 'sms' }"
+            role="tab"
+            href="#"
+            @click.prevent="tab = 'sms'"
+            >Sms</a
           >
         </nav>
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
-            <ExerciceTabSapeurs v-if="tabPresence"></ExerciceTabSapeurs>
+            <ExerciceTabSapeurs v-if="tab == 'presence'"></ExerciceTabSapeurs>
             <ExerciceTabGeneral
-              v-if="!tabPresence"
+              v-if="tab == 'info'"
               :new-mode="newMode"
             ></ExerciceTabGeneral>
+            <ExerciceTabSms v-if="tab == 'sms'"></ExerciceTabSms>
           </div>
         </div>
       </div>
@@ -64,6 +73,7 @@ import { mapState } from 'vuex';
 
 import ExerciceTabSapeurs from '/src/components/exercice/ExerciceTabSapeurs.vue';
 import ExerciceTabGeneral from '/src/components/exercice/ExerciceTabGeneral.vue';
+import ExerciceTabSms from '/src/components/exercice/ExerciceTabSms.vue';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
@@ -71,6 +81,7 @@ export default {
   components: {
     ExerciceTabSapeurs,
     ExerciceTabGeneral,
+    ExerciceTabSms,
     ExerciceComptable,
   },
   props: {
@@ -81,7 +92,7 @@ export default {
   },
   data() {
     return {
-      tabPresence: true,
+      tab: 'presence',
       loading: true,
     };
   },
@@ -94,7 +105,11 @@ export default {
       return this.id === 'new';
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeExerciceData?.designation;
+      return this.newMode
+        ? 'Nouveau'
+        : new Date(this.activeExerciceData.date).toLocaleDateString('fr-CH') +
+            ' - ' +
+            this.activeExerciceData?.designation;
     },
   },
   watch: {
@@ -107,6 +122,7 @@ export default {
         this.$store.dispatch('selectExercice', id);
         this.$store.dispatch('fetchExercice', id);
         this.$store.dispatch('fetchExerciceSapeurs', id);
+        this.$store.dispatch('fetchExerciceSms', id);
       }
     },
   },

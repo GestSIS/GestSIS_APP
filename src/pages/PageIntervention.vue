@@ -179,7 +179,13 @@ export default {
       return this.id === 'new';
     },
     breadcrumbFinal() {
-      return this.newMode ? 'Nouveau' : this.activeInterventionData.objet;
+      return this.newMode
+        ? 'Nouveau'
+        : new Date(this.activeInterventionData.date_debut).toLocaleDateString(
+            'fr-CH'
+          ) +
+            ' - ' +
+            this.activeInterventionData.objet;
     },
   },
   watch: {

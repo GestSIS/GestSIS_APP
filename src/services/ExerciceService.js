@@ -15,6 +15,9 @@ export default {
   getSapeurs(exerciceId) {
     return Api.api().get('/exercices/' + exerciceId + '/sapeurs');
   },
+  getSms(exerciceId) {
+    return Api.api().get('/exercices/' + exerciceId + '/sms');
+  },
   createExercice(exerciceData) {
     return Api.api().post('/exercices', exerciceData);
   },

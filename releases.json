@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "30.08.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout de la date dans la navigation des exercices et interventions",
+        "Exercice, nouvel onglet avec affichage des SMS envoyés"
+      ]
+    },
+    {
       "date": "16.07.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -9,6 +9,7 @@ export default {
       id: 0,
       sapeurs: [],
       data: {},
+      sms: [],
     },
   },
   mutations: {
@@ -19,12 +20,16 @@ export default {
         id: 0,
         sapeurs: [],
         data: {},
+        sms: [],
       };
     },
     [types.UPDATE_EXERCICE_LISTE](state, payload) {
       state.liste = payload
         .slice(0)
         .sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
+    },
+    [types.UPDATE_CURRENT_EXERCICE_SMS](state, payload) {
+      state.active.sms = payload;
     },
     [types.UPDATE_EXERCICE_ABSENCES](state, payload) {
       state.absences = payload;
@@ -112,13 +117,18 @@ export default {
         getters.activeExerciceComptableId
       ).then((data) => commit(types.UPDATE_EXERCICE_ABSENCES, data));
     },
-    fetchExercice({ commit }, payload) {
-      return ExerciceService.getExercice(payload).then((data) =>
+    fetchExercice({ commit }, exerciceId) {
+      return ExerciceService.getExercice(exerciceId).then((data) =>
         commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
       );
     },
-    fetchExerciceSapeurs({ commit }, payload) {
-      return ExerciceService.getSapeurs(payload).then((data) =>
+    fetchExerciceSms({ commit }, exerciceId) {
+      return ExerciceService.getSms(exerciceId).then((data) =>
+        commit(types.UPDATE_CURRENT_EXERCICE_SMS, data)
+      );
+    },
+    fetchExerciceSapeurs({ commit }, exerciceId) {
+      return ExerciceService.getSapeurs(exerciceId).then((data) =>
         commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
       );
     },

@@ -128,6 +128,15 @@
             <template v-else-if="f.type === 'datetime'">
               {{ new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16) }}
             </template>
+            <!-- Multiline types -->
+            <template v-else-if="f.type === 'multiline'">
+              <template
+                v-for="(line, i) in r[f.key].toString().split('\n')"
+                :key="i"
+              >
+                {{ line }}<br />
+              </template>
+            </template>
             <!-- No type -->
             <slot
               v-else
