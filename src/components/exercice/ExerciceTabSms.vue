@@ -16,6 +16,9 @@
       :data="smsListe"
     ></base-table>
   </div>
+  <div class="alert alert-info mt-3" role="alert">
+    Seul les sms envoyé à partir du <em>26 juillet</em> ont été enregistrés !
+  </div>
 </template>
 
 <script>

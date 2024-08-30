@@ -54,7 +54,7 @@
           >
         </nav>
         <div id="nav-tabContent" class="tab-content">
-          <div class="tab-pane fade show active" role="tabpanel">
+          <div class="tab-pane fade show active mb-3" role="tabpanel">
             <ExerciceTabSapeurs v-if="tab == 'presence'"></ExerciceTabSapeurs>
             <ExerciceTabGeneral
               v-if="tab == 'info'"
