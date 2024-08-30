@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Ajout de la date dans la navigation des exercices et interventions",
-        "Exercice, nouvel onglet avec affichage des SMS envoyés"
+        "Exercice, nouvel onglet avec affichage des SMS envoyés",
+        "Amélioration diverses de l'interface de saisie des présences aux exercices"
       ]
     },
     {

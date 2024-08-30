@@ -15,232 +15,6 @@
   <div class="card card-primary card-outline">
     <div class="card-header d-flex">
       <button
-        v-if="hasValidationPermission"
-        class="btn btn-outline-primary me-2"
-        :disabled="!canValidate"
-        @click="validate"
-      >
-        Valider
-      </button>
-    </div>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th class="text-center">
-            <input
-              v-model="allConvoque"
-              class="form-check-input"
-              type="checkbox"
-              @change="(e) => selectAllConvoque(e.target.checked)"
-            />
-            Convoque
-          </th>
-          <th class="text-center">Present</th>
-          <th class="text-center">Absent</th>
-          <th class="text-center">Remplace</th>
-          <th class="text-center">Excuse</th>
-          <th class="text-center">Amende</th>
-          <th v-for="h in heureTypes" :key="h.id">
-            {{ h.designation }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="sap in presences"
-          :key="sap.id"
-          :class="{ 'table-danger': !sap.actif }"
-        >
-          <td>{{ sap.nom_prenom }}</td>
-          <td>
-            <div class="text-center">
-              <input
-                :id="sap.id + 'convoque'"
-                v-model="sap.convoque"
-                type="checkbox"
-                :disabled="!canEditPresence"
-                class="form-check-input"
-                :true-value="1"
-                :false-value="0"
-                @change="selectConvoque(sap)"
-              />
-            </div>
-          </td>
-          <td>
-            <div class="text-center">
-              <input
-                :id="sap.id + 'present'"
-                v-model="sap.present"
-                type="checkbox"
-                :disabled="!canEditPresence"
-                class="form-check-input"
-                :true-value="1"
-                :false-value="0"
-                @change="selectPresent(sap)"
-              />
-              <label class="form-check-label" :for="sap.id + 'present'"></label>
-            </div>
-          </td>
-          <td>
-            <div class="text-center">
-              <input
-                :id="sap.id + 'absent'"
-                v-model="sap.absent"
-                type="checkbox"
-                :disabled="!canEditPresence"
-                class="form-check-input"
-                :true-value="1"
-                :false-value="0"
-                @change="selectAbsent(sap)"
-              />
-              <label class="form-check-label" :for="sap.id + 'absent'"></label>
-            </div>
-          </td>
-          <td>
-            <div class="text-center">
-              <input
-                :id="sap.id + 'remplace'"
-                v-model="sap.remplace"
-                type="checkbox"
-                :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
-                class="form-check-input"
-                :true-value="1"
-                :false-value="0"
-                @change="selectRemplace(sap)"
-              />
-              <label
-                class="form-check-label"
-                :for="sap.id + 'remplace'"
-              ></label>
-            </div>
-          </td>
-          <td>
-            <div class="text-center">
-              <span
-                v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-                class="badge rounded-pill text-bg-primary"
-                :class="{
-                  'text-bg-danger': sap.excuse_statut == -1,
-                  'text-bg-secondary': sap.excuse_statut == 0,
-                  'text-bg-success': sap.excuse_statut == 1,
-                }"
-                @click="detailExcuse(sap)"
-                >{{
-                  excusesTypes.find((e) => e.id == sap.excuse_type_id)
-                    ?.designation
-                }}</span
-              >
-              <button
-                v-if="sap.justificatif_path"
-                class="btn"
-                @click="downloadJustificatif(sap)"
-              >
-                <font-awesome-icon :icon="['far', 'file-pdf']" />
-              </button>
-              <button
-                v-if="!sap.excuse_type_id"
-                class="btn btn-outline-primary border-0"
-                :disabled="!hasPresencePermission"
-                @click="addExcuse(sap)"
-              >
-                <font-awesome-icon :icon="['fas', 'plus']" />
-              </button>
-              <button
-                v-else
-                class="btn btn-outline-danger border-0"
-                :disabled="!hasPresencePermission"
-                @click="removeExcuse(sap)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </div>
-          </td>
-          <td>
-            <div class="text-center">
-              <input
-                :id="sap.id + 'amende'"
-                v-model="sap.amende"
-                type="checkbox"
-                class="form-check-input"
-                :true-value="true"
-                :false-value="false"
-                :disabled="
-                  !canEditAbsence ||
-                  (!canEditPresence && sap.present) ||
-                  !amendable ||
-                  !!(sap.remplace || sap.present)
-                "
-                @change="selectAmende(sap)"
-              />
-              <label class="form-check-label" :for="sap.id + 'amende'"></label>
-            </div>
-          </td>
-          <td v-for="h in heureTypes" :key="h.id">
-            <div class="input-group input-group-sm">
-              <input
-                class="form-control form-control-sm"
-                type="text"
-                :readonly="!canEditPresence"
-                :value="
-                  getHeureValue(
-                    sap.heures.find(
-                      (e) =>
-                        e.heure_exercice_type_id == h.id ||
-                        (!e.heure_exercice_type_id &&
-                          e.designation == h.designation)
-                    )
-                  )
-                "
-                @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
-              />
-              <span class="input-group-text">{{
-                formatUnite(h.type_unite_id)
-              }}</span>
-            </div>
-          </td>
-        </tr>
-        <tr v-if="activeExerciceSapeurs.length === 0">
-          <td :colspan="7 + heureTypes.length">Aucun sapeur</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <th>Nb sapeurs : {{ presences.length }}</th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.convoque).length }}
-        </th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.present).length }}
-        </th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.absent).length }}
-        </th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.remplace).length }}
-        </th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.excuse_type_id).length }}
-        </th>
-        <th class="text-center">
-          {{ presences.filter((s) => s.amende).length }}
-        </th>
-        <th v-for="h in heureTypes" :key="h.id" class="text-center">
-          {{
-            presences
-              .map((s) =>
-                parseFloat(
-                  s.heures.find((e) => e.heure_exercice_type_id == h.id)
-                    ?.quantite ?? 0
-                )
-              )
-              .reduce((acc, a) => acc + a, 0)
-          }}
-          {{ formatUnite(h.type_unite_id) }}
-        </th>
-      </tfoot>
-    </table>
-    <div class="card-footer">
-      <button
         v-if="hasPresencePermission"
         class="btn btn-outline-primary"
         :disabled="!canEditPresence"
@@ -248,6 +22,243 @@
       >
         Gérer la liste des sapeurs
       </button>
+      <button
+        v-if="hasValidationPermission"
+        class="btn btn-outline-primary ms-2"
+        :disabled="!canValidate"
+        @click="validate"
+      >
+        Valider
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th class="text-center">
+              <input
+                v-model="allConvoque"
+                class="form-check-input"
+                type="checkbox"
+                @change="(e) => selectAllConvoque(e.target.checked)"
+              />
+              Convoque
+            </th>
+            <th class="text-center">Present</th>
+            <th class="text-center">Absent</th>
+            <th class="text-center">Remplace</th>
+            <th class="text-center">Excuse</th>
+            <th class="text-center">Amende</th>
+            <th v-for="h in heureTypes" :key="h.id">
+              {{ h.designation }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="sap in presences"
+            :key="sap.id"
+            :class="{ 'table-danger': !sap.actif }"
+          >
+            <td>{{ sap.nom_prenom }}</td>
+            <td>
+              <div class="text-center">
+                <input
+                  :id="sap.id + 'convoque'"
+                  v-model="sap.convoque"
+                  type="checkbox"
+                  :disabled="!canEditPresence"
+                  class="form-check-input"
+                  :true-value="1"
+                  :false-value="0"
+                  @change="selectConvoque(sap)"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="text-center">
+                <input
+                  :id="sap.id + 'present'"
+                  v-model="sap.present"
+                  type="checkbox"
+                  :disabled="!canEditPresence"
+                  class="form-check-input"
+                  :true-value="1"
+                  :false-value="0"
+                  @change="selectPresent(sap)"
+                />
+                <label
+                  class="form-check-label"
+                  :for="sap.id + 'present'"
+                ></label>
+              </div>
+            </td>
+            <td>
+              <div class="text-center">
+                <input
+                  :id="sap.id + 'absent'"
+                  v-model="sap.absent"
+                  type="checkbox"
+                  :disabled="!canEditPresence"
+                  class="form-check-input"
+                  :true-value="1"
+                  :false-value="0"
+                  @change="selectAbsent(sap)"
+                />
+                <label
+                  class="form-check-label"
+                  :for="sap.id + 'absent'"
+                ></label>
+              </div>
+            </td>
+            <td>
+              <div class="text-center">
+                <input
+                  :id="sap.id + 'remplace'"
+                  v-model="sap.remplace"
+                  type="checkbox"
+                  :disabled="
+                    !canEditAbsence || (!canEditPresence && sap.present)
+                  "
+                  class="form-check-input"
+                  :true-value="1"
+                  :false-value="0"
+                  @change="selectRemplace(sap)"
+                />
+                <label
+                  class="form-check-label"
+                  :for="sap.id + 'remplace'"
+                ></label>
+              </div>
+            </td>
+            <td>
+              <div class="text-center">
+                <span
+                  v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
+                  class="badge rounded-pill text-bg-primary"
+                  :class="{
+                    'text-bg-danger': sap.excuse_statut == -1,
+                    'text-bg-secondary': sap.excuse_statut == 0,
+                    'text-bg-success': sap.excuse_statut == 1,
+                  }"
+                  @click="detailExcuse(sap)"
+                  >{{
+                    excusesTypes.find((e) => e.id == sap.excuse_type_id)
+                      ?.designation
+                  }}</span
+                >
+                <button
+                  v-if="sap.justificatif_path"
+                  class="btn"
+                  @click="downloadJustificatif(sap)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
+                <button
+                  v-if="!sap.excuse_type_id"
+                  class="btn btn-outline-primary border-0"
+                  :disabled="!hasPresencePermission"
+                  @click="addExcuse(sap)"
+                >
+                  <font-awesome-icon :icon="['fas', 'plus']" />
+                </button>
+                <button
+                  v-else
+                  class="btn btn-outline-danger border-0"
+                  :disabled="!hasPresencePermission"
+                  @click="removeExcuse(sap)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="text-center">
+                <input
+                  :id="sap.id + 'amende'"
+                  v-model="sap.amende"
+                  type="checkbox"
+                  class="form-check-input"
+                  :true-value="true"
+                  :false-value="false"
+                  :disabled="
+                    !canEditAbsence ||
+                    (!canEditPresence && sap.present) ||
+                    !amendable ||
+                    !!(sap.remplace || sap.present)
+                  "
+                  @change="selectAmende(sap)"
+                />
+                <label
+                  class="form-check-label"
+                  :for="sap.id + 'amende'"
+                ></label>
+              </div>
+            </td>
+            <td v-for="h in heureTypes" :key="h.id">
+              <div class="input-group input-group-sm">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  :readonly="!canEditPresence"
+                  :value="
+                    getHeureValue(
+                      sap.heures.find(
+                        (e) =>
+                          e.heure_exercice_type_id == h.id ||
+                          (!e.heure_exercice_type_id &&
+                            e.designation == h.designation)
+                      )
+                    )
+                  "
+                  @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
+                />
+                <span class="input-group-text">{{
+                  formatUnite(h.type_unite_id)
+                }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="activeExerciceSapeurs.length === 0">
+            <td :colspan="7 + heureTypes.length">Aucun sapeur</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <th>Nb sapeurs : {{ presences.length }}</th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.convoque).length }}
+          </th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.present).length }}
+          </th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.absent).length }}
+          </th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.remplace).length }}
+          </th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.excuse_type_id).length }}
+          </th>
+          <th class="text-center">
+            {{ presences.filter((s) => s.amende).length }}
+          </th>
+          <th v-for="h in heureTypes" :key="h.id" class="text-center">
+            {{
+              presences
+                .map((s) =>
+                  parseFloat(
+                    s.heures.find((e) => e.heure_exercice_type_id == h.id)
+                      ?.quantite ?? 0
+                  )
+                )
+                .reduce((acc, a) => acc + a, 0)
+            }}
+            {{ formatUnite(h.type_unite_id) }}
+          </th>
+        </tfoot>
+      </table>
     </div>
   </div>
 </template>
