@@ -146,7 +146,7 @@ export default {
       });
       this.$store.dispatch('fetchExerciceSapeurs', id);
     }
-    this.tabPresence = !this.newMode;
+    this.tab = this.newMode ? 'info' : 'presence';
   },
 };
 </script>
