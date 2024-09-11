@@ -458,7 +458,7 @@ export default {
     },
     onRowClass(dataItem, isSelected) {
       if (dataItem.statut == 0) {
-        return 'text-danger';
+        return 'table-danger';
       }
       if (isSelected) {
         return '';

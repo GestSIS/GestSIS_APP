@@ -31,7 +31,7 @@
         Valider
       </button>
     </div>
-    <div class="table-responsive">
+    <div>
       <table class="table table-sm">
         <thead>
           <tr>
