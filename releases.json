@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "16.09.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de la fenêtre d'ajout dévénement pour le matériel personnel",
+        "Amélioration de la fenêtre de saisie de l'inventaire pour le matériel personnel"
+      ]
+    },
+    {
       "date": "30.08.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -45,6 +45,15 @@
                 <th></th>
               </tr>
             </thead>
+            <thead v-if="filteredInventaire.length">
+              <tr>
+                <td colspan="5">
+                  <button class="btn btn-outline-primary" @click="add(true)">
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                  </button>
+                </td>
+              </tr>
+            </thead>
             <tbody>
               <tr v-for="(m, index) in filteredInventaire" :key="m.id">
                 <td>
@@ -106,7 +115,7 @@
             <tfoot>
               <tr>
                 <td colspan="5">
-                  <button class="btn btn-outline-primary" @click="add">
+                  <button class="btn btn-outline-primary" @click="add(false)">
                     <font-awesome-icon :icon="['fas', 'plus']" />
                   </button>
                 </td>
@@ -201,39 +210,52 @@ export default {
       this.selectedTypes = selected.type;
     },
     remove(materiel) {
-      this.inventaire = this.inventaire.filter((m) => m.id !== materiel.id);
-      this.removedIds.push(materiel.id);
-    },
-    add() {
-      if (this.tab === 'generique') {
-        this.inventaire.push({
-          id: null,
-          remarque: '',
-          taille: '',
-          attribution: null,
-          retour: null,
-          sapeur_id: null,
-          materiel_type_id: null,
-          materiel: { quantite: 0 },
-        });
+      if (materiel.id) {
+        this.inventaire = this.inventaire.filter((m) => m.id !== materiel.id);
       } else {
-        this.inventaire.push({
-          id: null,
-          remarque: '',
-          taille: '',
-          attribution: null,
-          retour: null,
-          sapeur_id: null,
-          materiel_type_id: null,
-          materiel: { numero: '', achat: '' },
-        });
+        this.inventaire = this.inventaire.filter(
+          (m) => m.tempId !== materiel.tempId
+        );
+      }
+      if (materiel.id) {
+        this.removedIds.push(materiel.id);
+      }
+    },
+    add(debut = true) {
+      const data =
+        this.tab === 'generique'
+          ? {
+              id: null,
+              tempId: Math.random(),
+              remarque: '',
+              taille: '',
+              attribution: null,
+              retour: null,
+              sapeur_id: null,
+              materiel_type_id: null,
+              materiel: { quantite: 0 },
+            }
+          : {
+              id: null,
+              tempId: Math.random(),
+              remarque: '',
+              taille: '',
+              attribution: null,
+              retour: null,
+              sapeur_id: null,
+              materiel_type_id: null,
+              materiel: { numero: '', achat: '' },
+            };
+      let index = 0;
+      if (debut == true) {
+        this.inventaire.unshift(data);
+      } else {
+        this.inventaire.push(data);
+        index = this.filteredInventaire.length - 1;
       }
 
       this.$nextTick(() => {
-        const count = this.filteredInventaire.length;
-        if (count > 0) {
-          this.$refs[`materiel-${count - 1}`][0].focus();
-        }
+        this.$refs[`materiel-${index}`][0].focus();
       });
     },
     async save() {

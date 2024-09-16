@@ -74,7 +74,7 @@
                 </td>
                 <td>
                   <base-select
-                    v-model="materiel.id"
+                    v-model="materiel.materiel_nominal_id"
                     value-key="materiel_nominal_id"
                     display-key="numero"
                     :options="
@@ -110,11 +110,7 @@
                       )
                     "
                     @update:model-value="
-                      (value) =>
-                        selectSapeur(
-                          materiel,
-                          materiel.retour == null ? value : null
-                        )
+                      (value) => selectSapeur(materiel, value)
                     "
                   />
                 </td>
@@ -280,9 +276,9 @@ export default {
       const mat = this.filteredMaterielDispo.find(
         (m) => m.materiel_type_id == materielTypeId
       );
-      materiel.id = mat?.materiel_nominal_id;
-      materiel.numero = mat?.numero;
+      materiel.materiel_nominal_id = mat?.materiel_nominal_id;
       materiel.sapeur_id = mat?.retour == null ? mat?.sapeur_id : null;
+      materiel.materiel_type_id = mat?.materiel_type_id;
     },
     selectNumero(materiel, matId) {
       if (matId) {
@@ -290,24 +286,21 @@ export default {
           (m) => m.materiel_nominal_id == matId
         );
         materiel.materiel_nominal_id = mat?.materiel_nominal_id;
-        materiel.numero = mat?.numero;
         materiel.sapeur_id = mat?.retour != null ? null : mat?.sapeur_id;
         materiel.materiel_type_id = mat?.materiel_type_id;
       }
     },
     selectSapeur(materiel, sapeurId) {
-      if (sapeurId) {
-        const mat = this.filteredMaterielDispo.find(
-          (m) =>
-            m.sapeur_id == sapeurId &&
-            (!materiel.materiel_type_id ||
-              m.materiel_type_id == materiel.materiel_type_id)
-        );
-        materiel.materiel_nominal_id = mat?.materiel_nominal_id;
-        materiel.numero = mat?.numero;
-        materiel.sapeur_id = mat?.retour ? null : mat?.sapeur_id;
-        materiel.materiel_type_id = mat?.materiel_type_id;
-      }
+      const mat = this.filteredMaterielDispo.find(
+        (m) =>
+          (!materiel.materiel_type_id ||
+            m.materiel_type_id == materiel.materiel_type_id) &&
+          m.sapeur_id == sapeurId &&
+          !m.retour
+      );
+      materiel.materiel_nominal_id = mat?.materiel_nominal_id;
+      materiel.sapeur_id = mat?.sapeur_id;
+      materiel.materiel_type_id = mat?.materiel_type_id;
     },
     async save() {
       const baseData = {
