@@ -5,7 +5,7 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Amélioration de la fenêtre d'ajout dévénement pour le matériel personnel",
+        "Amélioration de la fenêtre d'ajout d'événements pour le matériel personnel",
         "Amélioration de la fenêtre de saisie de l'inventaire pour le matériel personnel"
       ]
     },
