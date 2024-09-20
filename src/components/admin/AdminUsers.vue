@@ -27,6 +27,13 @@
           </button>
           <button
             type="button"
+            class="btn btn-outline-primary border-0"
+            @click="tokenForUser(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'key']" />
+          </button>
+          <button
+            type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteUser(rowData)"
           >
@@ -46,6 +53,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
+import AdminService from '../../services/AdminService';
 
 async function loadData(routeTo, next) {
   const loadSis = store.dispatch('loadSisListe');
@@ -86,6 +94,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    tokenForUser(user) {
+      AdminService.getUserToken(user.id).then(console.log);
+    },
     editUser(user) {
       this.SHOW_MODAL({ component: 'ModalUser', data: user });
     },

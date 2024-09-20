@@ -193,21 +193,26 @@
 export default {
   name: 'BaseTable',
   props: {
-    fields: {
-      type: Array,
-      default: () => [],
-    },
     data: {
       type: Array,
       default: () => [],
     },
-    noData: {
-      type: String,
-      default: () => 'Aucune donné à afficher',
+    fields: {
+      type: Array,
+      default: () => [],
     },
     filter: {
       type: Object,
       default: () => {},
+    },
+    // loading: {
+    //   // TODO: à implémenter
+    //   type: Boolean,
+    //   default: () => {},
+    // },
+    noData: {
+      type: String,
+      default: () => 'Aucune donné à afficher',
     },
     selectable: {
       type: Boolean,
