@@ -108,7 +108,7 @@
                   : ''
               }}
             </template>
-            <template v-else-if="f.type === 'dateTime' || f.type == Date">
+            <template v-else-if="f.type === 'datetime' || f.type == Date">
               {{
                 r[f.key]
                   ? new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16)
@@ -123,10 +123,6 @@
                     })
                   : ''
               }}
-            </template>
-            <!-- Date time types -->
-            <template v-else-if="f.type === 'datetime'">
-              {{ new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16) }}
             </template>
             <!-- Multiline types -->
             <template v-else-if="f.type === 'multiline'">

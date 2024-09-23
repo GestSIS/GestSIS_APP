@@ -53,7 +53,7 @@ export default {
     return {
       selected: {},
       fields: [
-        { title: 'Début', key: 'date_heure', type: 'dateTime' },
+        { title: 'Début', key: 'date_heure', type: 'datetime' },
         { title: 'Type', key: 'designation' },
         { title: 'Actions', slot: 'actions' },
       ],
