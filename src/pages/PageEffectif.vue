@@ -36,7 +36,7 @@
                 class="btn btn-outline-primary"
                 @click="outlookCsv(filteredData)"
               >
-                CSV Outlook
+                CSV Outlook, TODO: caldav server
               </button> -->
               <a
                 :disabled="filteredData.length == 0"
@@ -271,18 +271,21 @@ export default {
         { title: 'Groupes', key: 'formatedGroupes' },
         {
           title: 'Tel n°1',
-          key: 'tels',
-          formatter: (t) => (t.length >= 1 ? t[0] : ''),
+          key: 'rta_1',
+          labelKey: 'tel_1',
+          type: Boolean,
         },
         {
           title: 'Tel n°2',
-          key: 'tels',
-          formatter: (t) => (t.length >= 2 ? t[1] : ''),
+          key: 'rta_2',
+          labelKey: 'tel_2',
+          type: Boolean,
         },
         {
           title: 'Tel n°3',
-          key: 'tels',
-          formatter: (t) => (t.length >= 3 ? t[2] : ''),
+          key: 'rta_3',
+          labelKey: 'tel_3',
+          type: Boolean,
         },
         { title: 'Naissance', key: 'date_naissance', type: Date },
         {
@@ -353,7 +356,12 @@ export default {
           fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
           grade: indexedGrades.get(s.grade_id)?.designation || '',
           grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
-          tels: s.telephones.map((t) => t.numero),
+          tel_1: s.telephones.length > 0 ? s.telephones[0].numero : '',
+          tel_2: s.telephones.length > 1 ? s.telephones[1].numero : '',
+          tel_3: s.telephones.length > 2 ? s.telephones[2].numero : '',
+          rta_1: s.telephones.length > 0 ? s.telephones[0].rta : false,
+          rta_2: s.telephones.length > 1 ? s.telephones[1].rta : false,
+          rta_3: s.telephones.length > 2 ? s.telephones[2].rta : false,
           groupes: s.groupes,
           formatedGroupes: s.groupes
             .map((g) => indexedGroupes.get(g.groupe_id))

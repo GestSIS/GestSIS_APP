@@ -282,8 +282,8 @@ export default {
             bVal = parseInt(bVal);
           }
           const res =
-            typeof aVal === String ? aVal.localeCompare(bVal) : aVal < bVal;
-          return (this.sorted.asc ? !res : res) ? 1 : -1;
+            typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal < bVal;
+          return this.sorted.asc ? -1 * res : res;
         });
       }
       return sorted;
