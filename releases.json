@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Amélioration du tri pour le texte avec des accents dans les tables"
+        "Amélioration du tri pour le texte avec des accents dans les tables",
+        "Page effectif, mise en évidence des numéros transmis au CET"
       ]
     },
     {
