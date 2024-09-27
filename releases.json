@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "27.09.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème lié au suivi des SMS envoyés",
+        "Amélioration de l'interface des SMS afin de prévenir l'envoie à double"
+      ]
+    },
+    {
       "date": "26.09.2024",
       "version": "1.0",
       "app": "GestSIS APP",

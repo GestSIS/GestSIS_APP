@@ -59,7 +59,11 @@ export default {
     ...mapState({
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
-      smsListe: (state) => state.exercice.active.sms,
+      smsListe: (state) =>
+        state.exercice.active.sms.map((sms) => ({
+          ...sms,
+          numeros: sms.sms_numeros.map((s) => s.numero).join('; '),
+        })),
       hasSmsEnvoiePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
