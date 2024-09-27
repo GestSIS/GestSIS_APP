@@ -49,7 +49,12 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="send()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="send()"
+        :disabled="sending"
+      >
         Envoyer
       </button>
     </div>
@@ -71,6 +76,7 @@ export default {
   },
   data() {
     return {
+      sending: false,
       errors: {},
       loadingSapeurs: true,
       loadingCredit: true,
@@ -133,10 +139,12 @@ export default {
           .replaceAll('’', "'")
           .replaceAll('«', '"')
           .replaceAll('»', '"'),
-        numeros: this.computedSapeurs.map((s) => s?.portable).filter((s) => s),
+        contacts: this.computedSapeurs
+          .filter((s) => s?.portable)
+          .map((s) => ({ sapeurId: s.id, numero: s?.portable })),
       };
 
-      if (params.numeros.length == 0) {
+      if (params.contacts.length == 0) {
         return this.$awn.alert('Aucun numéro disponible');
       }
 
@@ -147,11 +155,13 @@ export default {
       AspsmsParamService.sendSms(params)
         .then(() => {
           this.errors = {};
+          this.sending = false;
           this.$store.dispatch('fetchAspsmsCredit');
           return this.$awn.success('Message envoyé avec succès');
         })
         .catch((errors) => {
           this.errors = { ...errors };
+          this.sending = false;
           return this.$awn.alert(
             errors?.message ?? "Erreur lors de l'envoie des SMS"
           );
