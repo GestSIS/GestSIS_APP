@@ -4,46 +4,32 @@
       <h3 class="card-title">Permis de conduire</h3>
     </div>
     <div class="card-body">
-      <table class="table table-sm">
-        <tbody>
-          <tr v-for="permis in listPermisType" :key="permis.id">
-            <!-- :class="{ 'table-primary': permis.date }" -->
-            <td class="text-end">
-              <font-awesome-icon
-                v-if="permis.type.toLowerCase().includes('118')"
-                class="text-danger"
-                style="font-size: 1.7em"
-                :icon="['fab', 'gripfire']"
-              />
-              <img
-                :src="`${publicPath}permis/${permis.type
-                  .toLowerCase()
-                  .replace(' ', '_')}.gif`"
-              />
-            </td>
-            <td>
-              {{ permis.type }}
-            </td>
-            <td>
-              <div class="input-group input-group-sm">
-                <div class="input-group-text">
-                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                </div>
-                <input
-                  :value="
-                    activeSapeurPermis.find(
-                      (p) => p.permis_type_id == permis.id
-                    )?.date
-                  "
-                  type="date"
-                  class="form-control form-control-sm"
-                  disabled
-                />
-              </div>
-            </td>
+      <base-table
+        :fields="fields"
+        :data="permisData"
+        :selectable="true"
+        no-data="Aucun permis"
+      >
+        <template #head>
+          <tr>
+            <th colspan="2" class="text-center">Permis</th>
+            <th>Date</th>
           </tr>
-        </tbody>
-      </table>
+        </template>
+        <template #logo="{ rowData }">
+          <font-awesome-icon
+            v-if="rowData.type.toLowerCase().includes('118')"
+            class="text-danger"
+            style="font-size: 1.7em"
+            :icon="['fab', 'gripfire']"
+          />
+          <img
+            :src="`${publicPath}permis/${rowData.type
+              .toLowerCase()
+              .replace(' ', '_')}.gif`"
+          />
+        </template>
+      </base-table>
     </div>
   </div>
 </template>
@@ -72,6 +58,23 @@ export default {
   data() {
     return {
       publicPath: import.meta.env.BASE_URL,
+      fields: [
+        {
+          title: 'Permis',
+          slot: 'logo',
+          key: 'type',
+          columnClass: 'col-1 text-end',
+        },
+        {
+          key: 'type',
+          columnClass: 'col-1 ',
+        },
+        {
+          title: 'date',
+          key: 'date',
+          type: Date,
+        },
+      ],
     };
   },
   computed: {
@@ -80,28 +83,25 @@ export default {
       activeSapeurId: (state) => state.sapeur.active.id,
       activeSapeurPermis: (state) => state.mesInfos.permis,
     }),
-  },
-  methods: {
-    initPermisData() {
-      this.permisData = {};
-      this.errors = {};
-
-      this.listPermisType.forEach((p) => {
-        this.permisData[p.id] = {
-          permis_type_id: p.id,
-          type: p.type,
-          date: null,
-          id: null,
-        };
-      });
+    permisData() {
+      let permisData = Object.fromEntries(
+        this.listPermisType.map((p) => [
+          p.id,
+          {
+            id: p.id,
+            type: p.type,
+            date: null,
+          },
+        ])
+      );
       this.activeSapeurPermis.forEach((p) => {
-        this.permisData[p.permis_type_id] = {
-          ...this.permisData[p.permis_type_id],
+        permisData[p.permis_type_id] = {
+          ...permisData[p.permis_type_id],
           date: p.date,
-          id: p.id,
         };
-        this.permisData[p.permis_type_id].date = p.date;
       });
+      console.log(permisData);
+      return Object.values(permisData);
     },
   },
 };

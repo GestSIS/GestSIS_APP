@@ -11,14 +11,14 @@
       </button>
     </div>
     <div class="card-body">
-      <table class="table table-sm">
+      <table class="table table-sm col-6">
         <tbody>
           <tr
             v-for="permis in permisData"
             :key="permis.permis_type_id"
             :class="{ 'table-primary': permis.date }"
           >
-            <td class="text-end">
+            <td class="text-end col-1">
               <font-awesome-icon
                 v-if="permis.type.toLowerCase().includes('118')"
                 class="text-danger"
@@ -31,7 +31,7 @@
                   .replace(' ', '_')}.gif`"
               />
             </td>
-            <td>
+            <td class="col-1">
               {{ permis.type }}
             </td>
             <td>
@@ -150,7 +150,6 @@ export default {
           date: p.date,
           id: p.id,
         };
-        this.permisData[p.permis_type_id].date = p.date;
       });
     },
     saveSuccessfull(permis_type_id) {
