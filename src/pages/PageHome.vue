@@ -1,7 +1,7 @@
 <template>
   <div class="columns">
     <div class="album text-muted">
-      <div class="container">
+      <div class="container mb-3">
         <div class="row mt-5">
           <h2 id="C1">Vos SIS</h2>
         </div>
