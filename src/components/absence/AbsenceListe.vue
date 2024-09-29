@@ -166,9 +166,9 @@ export default {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
-          title: 'Voulez-vous vraiment supprimer cet absence ?',
+          title: 'Voulez-vous vraiment supprimer cette absence ?',
           question:
-            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cet absence seront perdues !",
+            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
         },
         callback: (confirmed) => {
           if (confirmed) {

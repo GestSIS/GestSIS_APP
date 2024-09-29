@@ -6,38 +6,23 @@
         <h3 class="card-title">Véhicules</h3>
       </div>
       <div class="card-body">
-        <table id="int-vehicules" class="table table-sm">
-          <thead>
-            <tr>
-              <th>Véhicule</th>
-              <th>Présent</th>
-            </tr>
-          </thead>
-          <tbody id="vehicules">
-            <tr v-if="vehicules.length <= 0">
-              <td colspan="2">
-                Aucun véhicule de disponible pour votre SIS, ajoutez-en dans
-                <em>configuration</em>.
-              </td>
-            </tr>
-            <tr v-for="v in vehicules" :key="v.id">
-              <td>{{ v.designation }}</td>
-              <td>
-                <div class="text-center">
-                  <input
-                    :id="'v-' + v.id"
-                    v-model="selected[v.id]"
-                    @change="editVehicule(v.id)"
-                    :disabled="!hasEditPermission"
-                    type="checkbox"
-                    class="form-check-input"
-                  />
-                  <label class="form-check-label" :for="'v-' + v.id"></label>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table
+          :data="vehicules"
+          :fields="fields"
+          no-data="Aucun véhicule de disponible pour votre SIS, ajoutez-en dans configuration."
+        >
+          <template #check="{ rowData }">
+            <input
+              :id="'v-' + rowData.id"
+              v-model="selected[rowData.id]"
+              @change="editVehicule(rowData.id)"
+              :disabled="!hasEditPermission"
+              type="checkbox"
+              class="form-check-input"
+            />
+            <label class="form-check-label" :for="'v-' + rowData.id"></label>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -52,6 +37,18 @@ export default {
   data() {
     return {
       selected: {},
+      fields: [
+        {
+          title: 'Véhicule',
+          key: 'designation',
+        },
+        {
+          title: 'Présent',
+          key: 'id',
+          slot: 'check',
+          columnClass: 'ps-4',
+        },
+      ],
     };
   },
   computed: {

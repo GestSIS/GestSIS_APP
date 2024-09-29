@@ -115,6 +115,13 @@
                   : ''
               }}
             </template>
+            <template v-else-if="f.type === 'time' || f.type == Date">
+              {{
+                r[f.key]
+                  ? new Date(r[f.key]).toLocaleString('fr-CH').slice(14, 19)
+                  : ''
+              }}
+            </template>
             <template v-else-if="f.type === 'number' || f.type == Number">
               {{
                 r[f.key]

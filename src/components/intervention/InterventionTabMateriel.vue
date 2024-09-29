@@ -14,53 +14,31 @@
         </button>
       </div>
       <div class="card-body">
-        <table
-          id="int-materiel"
-          class="table table-sm"
-          cellspacing="0"
-          width="100%"
+        <base-table
+          :fields="fields"
+          :data="activeMateriels"
+          :selectable="true"
+          no-data="Erreur, une phase est nécessaire pour chaque intervention, veuillez contacter l'administrateur du système."
         >
-          <thead>
-            <tr>
-              <th>Matériel</th>
-              <th>Quantité</th>
-              <th v-if="hasEditPermission" class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="materiels">
-            <tr v-if="activeMateriels.length <= 0">
-              <td :colspan="hasEditPermission ? 3 : 2">
-                Aucun matériel ajouté.
-              </td>
-            </tr>
-            <tr v-for="m in activeMateriels" :key="m.id">
-              <td>
-                {{
-                  materiels.find((mat) => mat.id == m.materiel_id).designation
-                }}
-              </td>
-              <td>{{ m.quantite }}</td>
-              <td v-if="hasEditPermission">
-                <div class="d-flex justify-content-center">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary border-0"
-                    @click="editMateriel(m.id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'edit']" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger border-0"
-                    @click="supprimerMateriel(m.id)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <template #actions="{ rowData }">
+            <div class="d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="editMateriel(rowData.id)"
+              >
+                <font-awesome-icon :icon="['far', 'edit']" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerMateriel(rowData.id)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </div>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
@@ -72,10 +50,25 @@ import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'InterventionTabMateriel',
+  data() {
+    return {
+      fields: [
+        { title: 'Matériel', key: 'designation' },
+        { title: 'Quantité', key: 'quantite' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       materiels: (state) => state.materiel.liste,
-      activeMateriels: (state) => state.intervention.active.materiels,
+      activeMateriels: (state) =>
+        state.intervention.active.materiels.map((m) => ({
+          ...m,
+          designation: state.materiel.liste?.find(
+            (mat) => mat.id == m.materiel_id
+          )?.designation,
+        })),
       activeInterventionId: (state) => state.intervention.active.id,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>

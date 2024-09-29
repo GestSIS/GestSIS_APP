@@ -40,46 +40,31 @@
             </button>
           </div>
           <div class="card-body table-responsive">
-            <table id="int-appels" class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Numéro</th>
-                  <th>Nom</th>
-                  <th>Commentaire</th>
-                  <th v-if="hasEditPermission" class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="appels">
-                <tr v-if="appels.length <= 0">
-                  <td :colspan="hasEditPermission ? 5 : 4">Aucun appel</td>
-                </tr>
-                <tr v-for="a in appels" :key="a.id">
-                  <td>{{ formatTime(a.date) }}</td>
-                  <td>{{ a.numero }}</td>
-                  <td>{{ a.nom }}</td>
-                  <td>{{ a.commentaire }}</td>
-                  <td v-if="hasEditPermission">
-                    <div class="d-flex justify-content-center">
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary border-0"
-                        @click="editAppel(a.id)"
-                      >
-                        <font-awesome-icon :icon="['far', 'edit']" />
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger border-0"
-                        @click="supprimerAppel(a.id)"
-                      >
-                        <font-awesome-icon :icon="['far', 'trash-alt']" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <base-table
+              :data="appels"
+              :fields="fieldsAppels"
+              :selectable="true"
+              no-data="Aucune mission"
+            >
+              <template #actions="{ rowData }">
+                <div class="d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    @click="editAppel(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerAppel(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </div>
+              </template>
+            </base-table>
           </div>
         </div>
 
@@ -96,53 +81,31 @@
             </button>
           </div>
           <div class="card-body table-responsive">
-            <table id="int-mission" class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Titre</th>
-                  <th>Responsable</th>
-                  <th>Quittance</th>
-                  <th>Résumé</th>
-                  <th class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="missions">
-                <tr v-if="missions.length <= 0">
-                  <td colspan="6">Aucune mission</td>
-                </tr>
-                <tr v-for="m in missions" :key="m.id">
-                  <td>{{ formatTime(m.debut) }}</td>
-                  <td>{{ m.titre }}</td>
-                  <td>
-                    {{
-                      m.sapeur ||
-                      sapeurs.find((s) => s.id == m.sapeur_id)?.nom_prenom
-                    }}
-                  </td>
-                  <td>{{ formatTime(m.fin) }}</td>
-                  <td>{{ m.resume }}</td>
-                  <td>
-                    <div class="d-flex justify-content-center">
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary border-0"
-                        @click="editMission(m.id)"
-                      >
-                        <font-awesome-icon :icon="['far', 'edit']" />
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger border-0"
-                        @click="supprimerMission(m.id)"
-                      >
-                        <font-awesome-icon :icon="['far', 'trash-alt']" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <base-table
+              :data="missions"
+              :fields="fieldsMissions"
+              :selectable="true"
+              no-data="Aucune mission"
+            >
+              <template #actions="{ rowData }">
+                <div class="d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    @click="editMission(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerMission(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </div>
+              </template>
+            </base-table>
           </div>
         </div>
       </div>
@@ -156,13 +119,38 @@ import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'InterventionTabJournal',
+  data() {
+    return {
+      fieldsMissions: [
+        { title: 'Date', type: 'time', key: 'fin' },
+        { title: 'Titre', key: 'titre' },
+        { title: 'Sapeur', key: 'sapeur' },
+        { title: 'Quittance', type: 'time', key: 'fin' },
+        { title: 'Résumé', key: 'resume' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+      fieldsAppels: [
+        { title: 'Date', type: 'time', key: 'date' },
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Nom', key: 'nom' },
+        { title: 'Commentaire', key: 'commentaire' },
+        { title: 'Actions', slot: 'actions' },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       id: (state) => state.intervention.active.id,
       data: (state) => state.intervention.active.data,
-      missions: (state) => state.intervention.active.missions,
-      appels: (state) => state.intervention.active.appels,
       sapeurs: (state) => state.sapeur.liste,
+      missions: (state) =>
+        state.intervention.active.missions.map((m) => ({
+          ...m,
+          sapeur:
+            m.sapeur ||
+            state.sapeur.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+        })),
+      appels: (state) => state.intervention.active.appels,
       // TODO: Check si intervention pas déjà imputé
       hasEditPermission: (state) =>
         state.auth.admin ||
@@ -271,7 +259,19 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     supprimerAppel(id) {
-      this.$store.dispatch('removeInterventionAppel', id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cet appel ?',
+          question:
+            "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeInterventionAppel', id);
+          }
+        },
+      });
     },
     newAppel() {
       const newAppel = {
@@ -307,7 +307,19 @@ export default {
     },
 
     supprimerMission(id) {
-      this.$store.dispatch('removeInterventionMission', id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette mission ?',
+          question:
+            "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeInterventionMission', id);
+          }
+        },
+      });
     },
     newMission() {
       const newMission = {
