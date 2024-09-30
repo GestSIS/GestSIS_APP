@@ -118,7 +118,7 @@ export default {
           Promise.resolve(
             c.fonctions.map((e) => ({
               ...e,
-              unite: this.unites.find((u) => u.id == e.type_unite_id)?.unite,
+              unite: this.unites.find((u) => u.id == c.type_unite_id)?.unite,
               compte: this.comptes.find((c) => c.id == e.compte_id)
                 ?.designation,
             }))
