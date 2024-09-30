@@ -110,6 +110,19 @@ export default {
       this.SHOW_MODAL('ModalInterventionMateriel');
     },
     supprimerMateriel(grade_id) {
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette absence ?',
+          question:
+            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeAbsence', id);
+          }
+        },
+      });
       this.$store.dispatch('removeInterventionMateriel', grade_id);
     },
   },

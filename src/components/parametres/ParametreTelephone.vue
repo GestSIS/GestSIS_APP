@@ -79,7 +79,19 @@ export default {
       this.SHOW_MODAL({ component: 'ModalTelephone', data: { ...telephone } });
     },
     deleteTelephone(telephone) {
-      this.$store.dispatch('removeTelephone', telephone.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce contact ?',
+          question:
+            "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeTelephone', telephone.id);
+          }
+        },
+      });
     },
   },
 };

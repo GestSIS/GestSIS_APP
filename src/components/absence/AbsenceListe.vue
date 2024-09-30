@@ -66,7 +66,7 @@
                 v-if="hasEditPermission"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerAbsence(rowData.id)"
+                @click="removeAbsence(rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -162,7 +162,7 @@ export default {
     modifierAbsence(absence) {
       this.SHOW_MODAL({ component: 'ModalAbsence', data: absence });
     },
-    supprimerAbsence(id) {
+    removeAbsence(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {

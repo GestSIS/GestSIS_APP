@@ -110,7 +110,19 @@ export default {
       this.SHOW_MODAL('ModalSapeurFonction');
     },
     supprimerFonction(fonction) {
-      this.$store.dispatch('removeSapeurFonction', fonction?.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette fonction ?',
+          question:
+            "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeSapeurFonction', fonction?.id);
+          }
+        },
+      });
     },
   },
 };

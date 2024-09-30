@@ -111,7 +111,19 @@ export default {
       this.SHOW_MODAL('ModalSapeurPromotion');
     },
     supprimerGrade(grade) {
-      this.$store.dispatch('removeSapeurGrade', grade?.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce grade ?',
+          question:
+            "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeSapeurGrade', grade?.id);
+          }
+        },
+      });
     },
   },
 };

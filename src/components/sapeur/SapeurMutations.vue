@@ -114,7 +114,19 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     removeMutation(mutation) {
-      this.$store.dispatch('removeMutation', mutation?.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette mutation ?',
+          question:
+            "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeMutation', mutation?.id);
+          }
+        },
+      });
     },
     editMutation(mutation) {
       this.$store.dispatch('updateActiveMutation', Object.assign({}, mutation));

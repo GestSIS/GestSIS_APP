@@ -269,10 +269,22 @@ export default {
       }
     },
     deleteEcriture(ecritureId) {
-      this.$store.dispatch('removeEcriture', ecritureId).catch((err) => {
-        this.$awn.alert(
-          err?.message ?? 'Erreur, impossible de supprimer cette écriture'
-        );
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette écriture ?',
+          question:
+            "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeEcriture', ecritureId).catch((err) => {
+              this.$awn.alert(
+                err?.message ?? 'Erreur, impossible de supprimer cette écriture'
+              );
+            });
+          }
+        },
       });
     },
     selected(item) {

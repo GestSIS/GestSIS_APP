@@ -493,7 +493,7 @@ export default {
       console.log(absences);
       this.SHOW_MODAL({ component: 'ModalAbsencesStats', data: { absences } });
     },
-    supprimerAbsence(id) {
+    removeAbsence(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -503,7 +503,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('supprimerAbsence', id);
+            this.$store.dispatch('removeAbsence', id);
           }
         },
       });

@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "30.09.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout de fenêtres de confirmation pour les suppressions"]
+    },
+    {
       "date": "27.09.2024",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -77,7 +77,19 @@ export default {
       this.SHOW_MODAL({ component: 'ModalMission', data: { ...mission } });
     },
     deleteMission(mission) {
-      this.$store.dispatch('removeMission', mission.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette mission ?',
+          question:
+            "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeMission', mission.id);
+          }
+        },
+      });
     },
   },
 };

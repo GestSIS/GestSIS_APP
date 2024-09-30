@@ -412,7 +412,19 @@ export default {
       }
     },
     removeJustificatif() {
-      this.$store.dispatch('removeJustificatif');
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce justificatif ?',
+          question:
+            "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeJustificatif');
+          }
+        },
+      });
     },
     validite(duree) {
       var d = new Date(this.controleMedical.consultation || Date.now());

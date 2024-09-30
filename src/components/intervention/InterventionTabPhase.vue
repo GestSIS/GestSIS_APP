@@ -116,7 +116,19 @@ export default {
       });
     },
     removePhase(id) {
-      this.$store.dispatch('removePhase', id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette phase ?',
+          question:
+            "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removePhase', id);
+          }
+        },
+      });
     },
   },
 };

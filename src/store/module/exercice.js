@@ -190,7 +190,7 @@ export default {
         return data;
       });
     },
-    supprimerExercice({ commit }, exerciceId) {
+    removeExercice({ commit }, exerciceId) {
       return ExerciceService.deleteExercice(exerciceId).then(() => {
         commit(types.REMOVE_EXERCICE, exerciceId);
       });

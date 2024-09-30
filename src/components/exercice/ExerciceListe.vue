@@ -220,7 +220,7 @@
                 v-if="hasValidationPermission && rowData.statut <= 3"
                 title="supprimer"
                 class="btn btn-outline-danger border-0"
-                @click="supprimerExercice(rowData.id)"
+                @click="removeExercice(rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
@@ -404,7 +404,7 @@ export default {
     reactiverExercice(id) {
       this.$store.dispatch('reactiverExercice', id);
     },
-    supprimerExercice(id) {
+    removeExercice(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
         data: {
@@ -414,7 +414,7 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('supprimerExercice', id);
+            this.$store.dispatch('removeExercice', id);
           }
         },
       });

@@ -150,7 +150,19 @@ export default {
       });
     },
     removeIndemnite(indemnite) {
-      this.$store.dispatch('removeIndemniteExercice', indemnite.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette indemnité ?',
+          question:
+            "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeIndemniteExercice', indemnite.id);
+          }
+        },
+      });
     },
   },
 };

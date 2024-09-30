@@ -310,7 +310,19 @@ export default {
       });
     },
     removePresence(id) {
-      this.$store.dispatch('removePresence', id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer cette présence ?',
+          question:
+            "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removePresence', id);
+          }
+        },
+      });
     },
     editQuittance(e, id) {
       const quittances = this.quittances.filter(

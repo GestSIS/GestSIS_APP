@@ -115,7 +115,19 @@ export default {
       this.SHOW_MODAL('ModalSapeurCours');
     },
     supprimerCours(cours) {
-      this.$store.dispatch('removeSapeurCours', cours?.id);
+      this.SHOW_MODAL({
+        component: 'ModalConfirmation',
+        data: {
+          title: 'Voulez-vous vraiment supprimer ce cours ?',
+          question:
+            "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
+        },
+        callback: (confirmed) => {
+          if (confirmed) {
+            this.$store.dispatch('removeSapeurCours', cours?.id);
+          }
+        },
+      });
     },
   },
 };
