@@ -112,6 +112,7 @@ export default {
     computedSapeurs() {
       return this.sapeurs.map((s) => ({
         ...s,
+        sapeur_id: s.id,
         portable: s.telephones
           .filter((a) => a.telephone_type_id === 3)
           .sort((a, b) => a.priorite - b.priorite)
@@ -141,7 +142,7 @@ export default {
           .replaceAll('»', '"'),
         contacts: this.computedSapeurs
           .filter((s) => s?.portable)
-          .map((s) => ({ sapeurId: s.id, numero: s?.portable })),
+          .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
       };
 
       if (params.contacts.length == 0) {

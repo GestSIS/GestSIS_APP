@@ -135,6 +135,7 @@ export default {
       this.sapeurs.forEach(
         (s) =>
           (indexedSapeurs[s.id] = {
+            sapeur_id: s.id,
             nom_prenom: s.nom_prenom,
             portable: s.telephones
               .filter((a) => a.telephone_type_id === 3)
@@ -201,7 +202,7 @@ export default {
           .replaceAll('»', '"'),
         contacts: this.computedSapeurs
           .filter((s) => s?.portable)
-          .map((s) => ({ sapeurId: s.id, numero: s?.portable })),
+          .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
       };
 
       if (params.contacts.length == 0) {
