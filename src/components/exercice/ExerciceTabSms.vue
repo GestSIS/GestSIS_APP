@@ -83,7 +83,7 @@ export default {
         component: 'ModalSmsExercice',
         size: 2,
         data: this.activeExerciceData,
-      }).then();
+      });
     },
   },
 };
