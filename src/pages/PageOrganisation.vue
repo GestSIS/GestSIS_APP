@@ -164,7 +164,7 @@
               />
             </div>
             <base-select
-              v-model="groupeEdit.pere_id"
+              v-model="groupeEdit.parent_id"
               class="mb-3"
               label="Groupe parent"
               base-option="-"
@@ -252,7 +252,7 @@ export default {
       if (activeId) {
         const rec = (groupeId) => {
           // Retourne la liste des ids des groupes enfants
-          const children = this.groupes.filter((g) => g.pere_id == groupeId);
+          const children = this.groupes.filter((g) => g.parent_id == groupeId);
           return children.flatMap((g) => [g.id, ...rec(g.id)]);
         };
         const filteredIds = new Set([activeId, ...rec(activeId)]);

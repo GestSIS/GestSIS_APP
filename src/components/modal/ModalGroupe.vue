@@ -26,9 +26,9 @@
         />
       </div>
       <base-select
-        v-model="groupe.pere_id"
+        v-model="groupe.parent_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['pere_id'] }"
+        :class="{ 'is-invalid': errors['parent_id'] }"
         label="Groupe parent"
         base-option="-"
         :base-value="null"
@@ -71,7 +71,7 @@ export default {
     return {
       errors: {},
       groupe: {
-        pere_id: null,
+        parent_id: null,
       },
     };
   },

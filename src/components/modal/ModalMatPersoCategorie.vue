@@ -18,9 +18,9 @@
         />
       </div>
       <base-select
-        v-model="activeItem.pere_id"
+        v-model="activeItem.parent_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['pere_id'] }"
+        :class="{ 'is-invalid': errors['parent_id'] }"
         label="Catégorie parente"
         display-key="fullDesignation"
         base-option="<Aucun parent>"
@@ -67,8 +67,9 @@ export default {
     computedCategories() {
       let indexedCategories = {};
       this.categories.forEach((c) => {
-        if (!indexedCategories[c.pere_id]) indexedCategories[c.pere_id] = [c];
-        else indexedCategories[c.pere_id].push(c);
+        if (!indexedCategories[c.parent_id])
+          indexedCategories[c.parent_id] = [c];
+        else indexedCategories[c.parent_id].push(c);
       });
 
       let data = [];
@@ -86,7 +87,7 @@ export default {
       };
 
       recursive(
-        this.categories.filter((c) => !c.pere_id),
+        this.categories.filter((c) => !c.parent_id),
         ''
       );
       return data;

@@ -48,7 +48,7 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
     }),
     groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
+      const groupFilter = (parentId) => (g) => g.parent_id == parentId;
       const sapeurMapping = (s) => {
         const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
           nom: 'Ancien',

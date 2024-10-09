@@ -41,7 +41,7 @@ export default {
     treeGroupesSapeurs: (state) => {
       let insideGroupes = (groupeId) =>
         state.liste
-          .filter((i) => i.pere_id === groupeId)
+          .filter((i) => i.parent_id === groupeId)
           .map((s) => Object.assign({}, s))
           .map((s) => ({
             ...s,

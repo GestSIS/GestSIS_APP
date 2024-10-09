@@ -81,7 +81,7 @@ export default {
       groupes: (state) => state.groupe.liste,
     }),
     groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
+      const groupFilter = (parentId) => (g) => g.parent_id == parentId;
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupeInter',

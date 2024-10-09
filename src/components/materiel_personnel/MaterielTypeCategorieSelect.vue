@@ -78,8 +78,9 @@ export default {
       });
       let indexedCategories = {};
       this.categories.forEach((c) => {
-        if (!indexedCategories[c.pere_id]) indexedCategories[c.pere_id] = [c];
-        else indexedCategories[c.pere_id].push(c);
+        if (!indexedCategories[c.parent_id])
+          indexedCategories[c.parent_id] = [c];
+        else indexedCategories[c.parent_id].push(c);
       });
 
       let data = [];
@@ -110,7 +111,7 @@ export default {
       };
 
       recursive(
-        this.categories.filter((c) => !c.pere_id),
+        this.categories.filter((c) => !c.parent_id),
         0
       );
       return data;
@@ -136,7 +137,7 @@ export default {
       const categorieIds = new Set(item.type === 'categorie' ? [item.id] : []);
 
       this.computedData.forEach((e) => {
-        if (e.type === 'categorie' && categorieIds.has(parseInt(e.pere_id))) {
+        if (e.type === 'categorie' && categorieIds.has(parseInt(e.parent_id))) {
           categorieIds.add(e.id);
           this.selectedIds.categorie[e.id?.toString()] = selected;
         }
