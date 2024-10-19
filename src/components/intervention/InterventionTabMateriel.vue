@@ -18,7 +18,7 @@
           :fields="fields"
           :data="activeMateriels"
           :selectable="true"
-          no-data="Erreur, une phase est nécessaire pour chaque intervention, veuillez contacter l'administrateur du système."
+          no-data="Aucun matériel consommable ou en prêt"
         >
           <template #actions="{ rowData }">
             <div class="d-flex justify-content-center">
