@@ -68,7 +68,7 @@ export default {
         { title: 'Début', key: 'debut', type: Date },
         { title: 'Fin', key: 'fin', type: Date },
         { title: 'Fonction', key: 'fonction' },
-        { title: 'Remarques', key: 'remarques' },
+        { title: 'Remarques', key: 'remarque' },
         { title: 'Actions', slot: 'actions' },
       ],
     };
