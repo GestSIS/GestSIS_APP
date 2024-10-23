@@ -417,7 +417,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-th {
+th,
+tr {
   cursor: pointer;
 }
 
