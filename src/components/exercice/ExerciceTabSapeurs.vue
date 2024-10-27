@@ -138,7 +138,7 @@
                   v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
                   class="badge rounded-pill text-bg-primary"
                   :class="{
-                    'text-bg-danger': sap.excuse_statut == -1,
+                    'text-bg-danger': sap.excuse_statut <= -1,
                     'text-bg-secondary': sap.excuse_statut == 0,
                     'text-bg-success': sap.excuse_statut == 1,
                   }"
@@ -500,6 +500,7 @@ export default {
       sapeur.remplace = 0;
       sapeur.absent = 0;
       sapeur.amende = false;
+      sapeur.excuse_statut = 0;
       this.savePresence(sapeur);
     },
     selectAbsent(sapeur) {
@@ -511,6 +512,7 @@ export default {
       sapeur.present = 0;
       sapeur.absent = 0;
       sapeur.amende = false;
+      sapeur.excuse_statut = 0;
       this.savePresence(sapeur);
     },
     selectAmende(sapeur) {
@@ -518,6 +520,7 @@ export default {
         sapeur.present = 0;
         sapeur.absent = 1;
         sapeur.remplace = 0;
+        sapeur.excuse_statut = -1;
       }
       this.savePresence(sapeur);
     },
