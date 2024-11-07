@@ -61,6 +61,7 @@ export default {
       return Object.values(
         this.aRecuperer.reduce((acc, m) => {
           let reccord = acc[m.sapeur_id] || {
+            id: m.sapeur_id,
             sapeur_id: m.sapeur_id,
             nb: 0,
             materiels: [],
