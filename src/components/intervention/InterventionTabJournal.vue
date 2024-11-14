@@ -44,7 +44,7 @@
               :data="appels"
               :fields="fieldsAppels"
               :selectable="true"
-              no-data="Aucune mission"
+              no-data="Aucune appel"
             >
               <template #actions="{ rowData }">
                 <div class="d-flex justify-content-center">
