@@ -31,7 +31,6 @@
             :fields="fields"
             :data="computedData"
             :selectable="true"
-            :hide-download="true"
             no-data="Aucune intervention"
           />
         </div>
