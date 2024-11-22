@@ -32,9 +32,9 @@
                 class="col-md-4"
                 :options="absenceStatuts"
                 base-option="<Statut>"
-                :model-value="filters.computedStatut"
+                :model-value="filters.excuse_statut"
                 @update:model-value="
-                  (value) => setFilter('computedStatut', value)
+                  (value) => setFilter('excuse_statut', value)
                 "
               />
               <base-select
@@ -73,14 +73,25 @@
           </div>
           <base-table
             v-show="!loading"
-            ref="basetable_exercices"
             :selectable="true"
             :fields="fieldsBase"
-            no-data="Aucun exercice/séance à afficher"
+            no-data="Aucune absence à afficher"
             :data="filteredData"
             :row-class="onRowClass"
             @selected="selectExercice"
           >
+            <template #statut="{ rowData, formatter }">
+              <span
+                class="badge rounded-pill"
+                :class="{
+                  'text-bg-danger': rowData.excuse_statut == -2,
+                  'text-bg-warning': rowData.excuse_statut == -1,
+                  'text-bg-secondary': rowData.excuse_statut == 0,
+                  'text-bg-success': rowData.excuse_statut == 1,
+                }"
+                >{{ formatter(rowData.excuse_statut, rowData) }}</span
+              >
+            </template>
             <template #actions="{ rowData }">
               <button
                 v-if="hasValidationPermission"
@@ -107,7 +118,6 @@
 import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
-
 
 async function loadData(routeTo, next) {
   const loadExercices = store.dispatch('fetchListeExercice');
@@ -140,10 +150,10 @@ export default {
       tab: 'exercice',
       selectedId: null,
       absenceStatuts: [
-        { id: 1, designation: 'Amendé' },
-        { id: 2, designation: 'Refusé' },
-        { id: 3, designation: 'A traiter' },
-        { id: 4, designation: 'Accepté' },
+        { id: -2, designation: 'Amendé' },
+        { id: -1, designation: 'Refusé' },
+        { id: 0, designation: 'A traiter' },
+        { id: -1, designation: 'Accepté' },
       ],
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
@@ -161,13 +171,12 @@ export default {
         {
           title: 'Statut',
           key: 'excuse_statut',
+          slot: 'statut',
           formatter(value, rowData) {
-            if (rowData?.excuse_statut == -1 && rowData.amende) {
-              return 'Amendée';
-            }
             const statuts = {
+              '-2': 'Amendée',
               '-1': 'Refusée',
-              0: 'Excuse à traiter',
+              0: 'Excusé, à traiter',
               1: 'Acceptée',
             };
             if (rowData.excuse_type_id) {
@@ -187,7 +196,7 @@ export default {
             );
 
             if (d < new Date()) {
-              return 'Non excusé';
+              return 'Non excusé, à traiter';
             } else {
               return 'Non excusé (' + diffDays + ' jours restants)';
             }
@@ -222,8 +231,6 @@ export default {
           sapeur: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
           ...this.exercices.find((e) => e.id == a.exercice_id),
           id: a.id,
-          computedStatut:
-            (a.amende && a.excuse_statut != 0 ? -2 : a.excuse_statut || 0) + 3,
         }))
         .map((e) => ({
           ...e,
@@ -291,7 +298,7 @@ export default {
       });
     },
     onRowClass(dataItem) {
-      if (dataItem?.excuse_statut == -1 && dataItem?.amende) {
+      if (dataItem?.excuse_statut === -2) {
         return 'text-danger';
       }
       const statutsClass = {

@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "22.11.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Refonte du système d'amende pour les exercies",
+        "Amélioration de l'affichage du statut des absences",
+        "Amélioration de l'affichage des statistiques d'absences aux exercices",
+        "Ajout lien vers exercice depuis la saisie des présences d'un sapeur"
+      ]
+    },
+    {
       "date": "30.09.2024",
       "version": "1.0",
       "app": "GestSIS APP",

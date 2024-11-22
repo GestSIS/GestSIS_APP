@@ -153,6 +153,7 @@
                   detailRowVisible: detailsRowVisibility[r[selectKey]],
                 },
                 rowData: r,
+                formatter: f.formatter || defaultFormatter,
               }"
             >
               {{ (f.formatter || defaultFormatter)(r[f.key], r) }}

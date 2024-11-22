@@ -49,7 +49,7 @@
             <th class="text-center">Absent</th>
             <th class="text-center">Remplace</th>
             <th class="text-center">Excuse</th>
-            <th class="text-center">Amende</th>
+            <th class="text-center">Statut</th>
             <th v-for="h in heureTypes" :key="h.id">
               {{ h.designation }}
             </th>
@@ -138,7 +138,8 @@
                   v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
                   class="badge rounded-pill text-bg-primary"
                   :class="{
-                    'text-bg-danger': sap.excuse_statut <= -1,
+                    'text-bg-danger': sap.excuse_statut == -2,
+                    'text-bg-warning': sap.excuse_statut == -1,
                     'text-bg-secondary': sap.excuse_statut == 0,
                     'text-bg-success': sap.excuse_statut == 1,
                   }"
@@ -175,25 +176,27 @@
             </td>
             <td>
               <div class="text-center">
-                <input
-                  :id="sap.id + 'amende'"
-                  v-model="sap.amende"
-                  type="checkbox"
-                  class="form-check-input"
-                  :true-value="true"
-                  :false-value="false"
-                  :disabled="
-                    !canEditAbsence ||
-                    (!canEditPresence && sap.present) ||
-                    !amendable ||
-                    !!(sap.remplace || sap.present)
-                  "
-                  @change="selectAmende(sap)"
-                />
-                <label
-                  class="form-check-label"
-                  :for="sap.id + 'amende'"
-                ></label>
+                <span
+                  v-if="sap.absent"
+                  class="badge rounded-pill text-bg-primary"
+                  :class="{
+                    'text-bg-danger': sap.excuse_statut == -2,
+                    'text-bg-warning': sap.excuse_statut == -1,
+                    'text-bg-secondary': sap.excuse_statut == 0,
+                    'text-bg-success': sap.excuse_statut == 1,
+                  }"
+                  @click="detailExcuse(sap)"
+                  >{{
+                    statuts.find((s) => s.id == sap.excuse_statut)?.designation
+                  }}</span
+                >
+                <button
+                  v-if="sap.justificatif_path"
+                  class="btn"
+                  @click="downloadJustificatif(sap)"
+                >
+                  <font-awesome-icon :icon="['far', 'file-pdf']" />
+                </button>
               </div>
             </td>
             <td v-for="h in heureTypes" :key="h.id">
@@ -272,6 +275,12 @@ export default {
   name: 'ExerciceTabSapeurs',
   data: () => {
     return {
+      statuts: [
+        { id: -2, designation: 'Amendée' },
+        { id: -1, designation: 'Refusée' },
+        { id: 0, designation: 'A traiter' },
+        { id: 1, designation: 'Acceptée' },
+      ],
       presences: [],
       dismissedWarning: false,
       allConvoque: false,
@@ -499,7 +508,6 @@ export default {
     selectPresent(sapeur) {
       sapeur.remplace = 0;
       sapeur.absent = 0;
-      sapeur.amende = false;
       sapeur.excuse_statut = 0;
       this.savePresence(sapeur);
     },
@@ -511,17 +519,7 @@ export default {
     selectRemplace(sapeur) {
       sapeur.present = 0;
       sapeur.absent = 0;
-      sapeur.amende = false;
       sapeur.excuse_statut = 0;
-      this.savePresence(sapeur);
-    },
-    selectAmende(sapeur) {
-      if (sapeur.amende) {
-        sapeur.present = 0;
-        sapeur.absent = 1;
-        sapeur.remplace = 0;
-        sapeur.excuse_statut = -1;
-      }
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {

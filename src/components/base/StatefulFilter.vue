@@ -51,7 +51,7 @@ export default {
       );
     },
     canReset() {
-      return Object.entries(this.filters).find(([, value]) => value) ?? false;
+      return !!Object.entries(this.filters).find(([, value]) => value) ?? false;
     },
   },
   watch: {

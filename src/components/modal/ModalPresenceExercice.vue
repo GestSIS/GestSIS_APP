@@ -20,7 +20,8 @@
             <th class="text-center">Absent</th>
             <th class="text-center">Remplacé</th>
             <th class="text-center">Excusé</th>
-            <th class="text-center">Amende</th>
+            <th class="text-center">Statut</th>
+            <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -104,9 +105,10 @@
               <div class="text-center">
                 <span
                   v-if="e.excuse_type_id && e.excuse_type_id !== true"
-                  class="badge rounded-pill text-bg-primary"
+                  class="badge rounded-pill"
                   :class="{
-                    'text-bg-danger': e.excuse_statut == -1,
+                    'text-bg-danger': e.excuse_statut == -2,
+                    'text-bg-warning': e.excuse_statut == -1,
                     'text-bg-secondary': e.excuse_statut == 0,
                     'text-bg-success': e.excuse_statut == 1,
                   }"
@@ -140,17 +142,44 @@
               </div>
             </td>
             <td class="text-center">
-              <input
-                v-model="e.amende"
-                type="checkbox"
-                class="form-check-input"
-                :disabled="
-                  !canEditAbsence(e) ||
-                  (!canEditPresence(e) && e.present) ||
-                  !e.amendable
-                "
-                @change="selectAmende(e)"
-              />
+              <span
+                v-if="!e.present && !e.remplace"
+                class="badge rounded-pill"
+                :class="{
+                  'text-bg-danger': e.excuse_statut == -2,
+                  'text-bg-warning': e.excuse_statut == -1,
+                  'text-bg-secondary': e.excuse_statut == 0,
+                  'text-bg-success': e.excuse_statut == 1,
+                }"
+                >{{
+                  {
+                    '-2': 'Amendée',
+                    '-1': 'Refusée',
+                    '0': 'A traiter',
+                    '1': 'Acceptée',
+                  }[e.excuse_statut.toString()]
+                }}</span
+              >
+            </td>
+            <td>
+              <router-link
+                v-slot="{ navigate }"
+                :to="'/exercices/' + e.exercice_id"
+                custom
+              >
+                <button
+                  title="modifier"
+                  class="btn btn-outline-primary border-0"
+                  @click="
+                    () => {
+                      HIDE_MODAL();
+                      navigate();
+                    }
+                  "
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </button>
+              </router-link>
             </td>
           </tr>
         </tbody>
@@ -261,7 +290,6 @@ export default {
     selectPresent(sapeur) {
       sapeur.remplace = 0;
       sapeur.absent = 0;
-      sapeur.amende = false;
       this.savePresence(sapeur);
     },
     selectAbsent(sapeur) {
@@ -272,15 +300,6 @@ export default {
     selectRemplace(sapeur) {
       sapeur.present = 0;
       sapeur.absent = 0;
-      sapeur.amende = false;
-      this.savePresence(sapeur);
-    },
-    selectAmende(sapeur) {
-      if (sapeur.amende) {
-        sapeur.present = 0;
-        sapeur.absent = 1;
-        sapeur.remplace = 0;
-      }
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {

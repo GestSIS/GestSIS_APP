@@ -38,16 +38,28 @@
           <div class="col-6">
             <table class="table table-sm">
               <tr>
-                <td class="table-danger">Amende</td>
+                <td>
+                  <span class="badge rouded-pill text-bg-danger">Amendée</span>
+                </td>
               </tr>
               <tr>
-                <td class="table-secondary">Pour information</td>
+                <td>
+                  <span class="badge rouded-pill text-bg-warning">Refusée</span>
+                </td>
               </tr>
               <tr>
-                <td class="table-primary">Remplacé</td>
+                <td>
+                  <span class="badge rouded-pill text-bg-secondary"
+                    >A traiter</span
+                  >
+                </td>
               </tr>
               <tr>
-                <td class="table-success">Excusé</td>
+                <td>
+                  <span class="badge rouded-pill text-bg-success"
+                    >Acceptée</span
+                  >
+                </td>
               </tr>
             </table>
           </div>
@@ -56,13 +68,25 @@
               <thead>
                 <tr>
                   <th>Abr</th>
-                  <th>Excuse</th>
+                  <th>Designation</th>
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td>✓</td>
+                  <td>Présent</td>
+                </tr>
+                <tr>
+                  <td>Rpl</td>
+                  <td>Remplacé</td>
+                </tr>
+                <tr>
+                  <td>✕</td>
+                  <td>Absent (non excusé)</td>
+                </tr>
                 <tr v-for="excuse in excuses" :key="excuse.id">
                   <td>{{ excuse.abreviation }}</td>
-                  <td>{{ excuse.designation }}</td>
+                  <td>Excusé, {{ excuse.designation }}</td>
                 </tr>
               </tbody>
             </table>
@@ -111,7 +135,6 @@
                 <th class="text-center">Nb Abs</th>
                 <th class="text-center">Nb Rpl</th>
                 <th class="text-center">Nb Exc</th>
-                <th class="text-center">Nb Abs</th>
               </tr>
             </thead>
             <tbody>
@@ -136,9 +159,17 @@
                   v-for="(p, index) in s.presences"
                   :key="index"
                   class="text-center table-border"
-                  :class="formatPresenceClass(p)"
                 >
-                  {{ formatPresence(p) }}
+                  <span
+                    class="badge rouded-pill"
+                    :class="formatPresenceClass(p)"
+                    ><font-awesome-icon
+                      v-if="p && !p.convoque"
+                      v-tooltip.bottom="'Pour information'"
+                      class="me-1"
+                      :icon="['fas', 'circle-info']"
+                    />{{ formatPresence(p) }}</span
+                  >
                 </td>
                 <td class="text-center">{{ s.stats.convoque }}</td>
                 <td class="text-center">{{ s.stats.present }}</td>
@@ -251,7 +282,7 @@ export default {
           absent: parseInt(e.absent),
           remplace: parseInt(e.remplace),
           excuse_type_id: parseInt(e.excuse_type_id),
-          amende: parseInt(e.amende),
+          excuse_statut: parseInt(e.excuse_statut),
         })),
       excuses: (state) => state.excuseType.liste,
       localites: (state) =>
@@ -375,7 +406,7 @@ export default {
           p.absent ? 1 : 0,
           p.remplace ? 1 : 0,
           p.excuse_type_id ? 1 : 0,
-          p.amende ? 1 : 0,
+          p.excuse_statut === -2 ? 1 : 0,
         ])
         .reduce(
           (accumulator, p) => accumulator.map((v, i) => v + p[i]),
@@ -394,23 +425,19 @@ export default {
       if (!presence) {
         return '';
       }
-      let prefix = '';
-      if (!presence.convoque) {
-        prefix = 'i';
-      }
       if (presence.present) {
-        return prefix + '✓';
+        return '✓';
       }
       if (presence.remplace) {
-        return prefix + 'Rpl';
+        return 'Rpl';
       }
       if (presence.excuse_type_id) {
         const excuse = this.excuses.find(
           (e) => e.id == presence.excuse_type_id
         );
-        return prefix + excuse?.abreviation;
+        return excuse?.abreviation;
       }
-      return prefix + '✕';
+      return '✕';
     },
     formatPresenceExport(presence) {
       if (!presence) {
@@ -438,17 +465,24 @@ export default {
       if (!presence) {
         return '';
       }
-      if (presence.amende) {
-        return 'table-danger';
+      if (
+        presence.excuse_statut == 1 ||
+        presence.present ||
+        presence.remplace
+      ) {
+        return 'text-bg-success';
       }
-      if (presence.status == -1) {
-        return 'table-warning';
+      if (presence.excuse_statut == -2) {
+        return 'text-bg-danger';
       }
-      if (presence.status == 0) {
-        return 'table-primary';
+      if (presence.excuse_statut == -1) {
+        return 'text-bg-warning';
+      }
+      if (presence.excuse_statut == 0) {
+        return 'text-bg-secondary';
       }
       if (presence.remplace || presence.statut == 1) {
-        return 'table-success';
+        return 'text-bg-success';
       }
     },
     toCvs() {

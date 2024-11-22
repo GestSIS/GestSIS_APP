@@ -128,7 +128,7 @@
               class="btn"
               :class="
                 'btn-' +
-                (computedButtonState == -2 ? '' : 'outline-') +
+                (activeAbsence.excuse_statut == -2 ? '' : 'outline-') +
                 'danger'
               "
               :disabled="
@@ -145,7 +145,7 @@
               class="btn"
               :class="
                 'btn-' +
-                (computedButtonState == -1 ? '' : 'outline-') +
+                (activeAbsence.excuse_statut == -1 ? '' : 'outline-') +
                 'warning'
               "
               @click="review(-1)"
@@ -157,7 +157,7 @@
               class="btn"
               :class="
                 'btn-' +
-                (computedButtonState == 0 ? '' : 'outline-') +
+                (activeAbsence.excuse_statut == 0 ? '' : 'outline-') +
                 'primary'
               "
               @click="review(0)"
@@ -169,7 +169,7 @@
               class="btn"
               :class="
                 'btn-' +
-                (computedButtonState == 1 ? '' : 'outline-') +
+                (activeAbsence.excuse_statut == 1 ? '' : 'outline-') +
                 'success'
               "
               @click="review(1)"
@@ -193,17 +193,18 @@
             :row-class="rowClass"
             no-data="Aucun exercice pour ce sapeur"
           >
-            <template #excuse="{ rowData }">
+            <template #excuse="{ value, rowData }">
               <div class="text-center">
                 <span
                   v-if="
                     rowData.excuse_type_id && rowData.excuse_type_id !== true
                   "
-                  class="badge rounded-pill text-bg-primary"
+                  class="badge rounded-pill"
                   :class="{
-                    'text-bg-danger': rowData.excuse_statut == -1,
-                    'text-bg-secondary': rowData.excuse_statut == 0,
-                    'text-bg-success': rowData.excuse_statut == 1,
+                    'text-bg-danger': value == -2,
+                    'text-bg-warning': value == -1,
+                    'text-bg-secondary': value == 0,
+                    'text-bg-success': value == 1,
                   }"
                   >{{
                     excuseTypes.find((e) => e.id == rowData?.excuse_type_id)
@@ -217,6 +218,27 @@
                 >
                   <font-awesome-icon :icon="['far', 'file-pdf']" />
                 </button>
+              </div>
+            </template>
+            <template #statut="{ value, rowData }">
+              <div class="text-center">
+                <span
+                  class="badge rounded-pill"
+                  :class="{
+                    'text-bg-danger': value == -2,
+                    'text-bg-warning': value == -1,
+                    'text-bg-secondary': value == 0,
+                    'text-bg-success': value == 1,
+                  }"
+                  >{{
+                    {
+                      '-2': 'Amendée',
+                      '-1': 'Refusée',
+                      '0': 'A traiter',
+                      '1': 'Acceptée',
+                    }[value.toString()]
+                  }}</span
+                >
               </div>
             </template>
             <template #foot="{ data }">
@@ -240,7 +262,12 @@
                   }}
                 </th>
                 <th class="text-center">
-                  {{ data.reduce((acc, e) => acc + (e.amende ? 1 : 0), 0) }}
+                  {{
+                    data.reduce(
+                      (acc, e) => acc + (e.excuse_statut == -2 ? 1 : 0),
+                      0
+                    )
+                  }}
                 </th>
               </tr>
             </template>
@@ -316,8 +343,8 @@ export default {
         { title: 'Présent', type: Boolean, key: 'present' },
         { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
-        { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
-        { title: 'Amende', type: Boolean, key: 'amende' },
+        { title: 'Excuse', slot: 'excuse', key: 'excuse_statut' },
+        { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
       ],
     };
   },
@@ -370,11 +397,6 @@ export default {
     activeSapeurExcuses() {
       return null;
     },
-    computedButtonState() {
-      return this.activeAbsence.amende && this.activeAbsence.excuse_statut != 0
-        ? -2
-        : this.activeAbsence.excuse_statut || 0;
-    },
   },
   mounted() {
     if (this.data?.id) {
@@ -392,8 +414,7 @@ export default {
   methods: {
     ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
     async review(state) {
-      this.activeAbsence.amende = state == -2;
-      this.activeAbsence.excuse_statut = state == -2 ? -1 : state;
+      this.activeAbsence.excuse_statut = state;
       return this.$store
         .dispatch('editPresenceExercice', {
           presenceId: this.activeAbsence?.id,

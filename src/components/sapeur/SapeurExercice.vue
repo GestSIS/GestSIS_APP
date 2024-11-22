@@ -24,14 +24,45 @@
           <div class="text-center">
             <span
               v-if="rowData.excuse_type_id && rowData.excuse_type_id !== true"
-              class="badge rounded-pill text-bg-primary"
+              class="badge rounded-pill"
               :class="{
-                'text-bg-danger': rowData.excuse_statut == -1,
+                'text-bg-danger': rowData.excuse_statut == -2,
+                'text-bg-warning': rowData.excuse_statut == -1,
                 'text-bg-secondary': rowData.excuse_statut == 0,
                 'text-bg-success': rowData.excuse_statut == 1,
               }"
               @click="detailExcuse(rowData)"
               >{{ rowData?.excuse }}</span
+            >
+            <button
+              v-if="rowData.justificatif_filename"
+              class="btn"
+              @click="downloadJustificatif(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'file-pdf']" />
+            </button>
+          </div>
+        </template>
+        <template #statut="{ rowData }">
+          <div class="text-center">
+            <span
+              v-if="!rowData.present && !rowData.remplace"
+              class="badge rounded-pill"
+              :class="{
+                'text-bg-danger': rowData.excuse_statut == -2,
+                'text-bg-warning': rowData.excuse_statut == -1,
+                'text-bg-secondary': rowData.excuse_statut == 0,
+                'text-bg-success': rowData.excuse_statut == 1,
+              }"
+              @click="detailExcuse(rowData)"
+              >{{
+                {
+                  '-2': 'Amendée',
+                  '-1': 'Refusée',
+                  '0': 'A traiter',
+                  '1': 'Validée',
+                }[rowData.excuse_statut]
+              }}</span
             >
             <button
               v-if="rowData.justificatif_filename"
@@ -89,7 +120,7 @@ export default {
         { title: 'Absent', type: Boolean, key: 'absent' },
         { title: 'Remplacé', type: Boolean, key: 'remplace' },
         { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
-        { title: 'Amende', type: Boolean, key: 'amende' },
+        { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
       ],
     };
   },
@@ -151,7 +182,7 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
         exercice.sapeur_id,
-        'justificatif_'+sapeur.justificatif_filename,
+        'justificatif_' + sapeur.justificatif_filename
       ).catch((err) =>
         this.$awn.alert(
           err?.message ?? 'Erreur lors du chargement du justificatif'
