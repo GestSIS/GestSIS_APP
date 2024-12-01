@@ -71,14 +71,6 @@ export default {
     return {
       active: null,
       types: {
-        homme: {
-          icon: ['fas', 'mars'],
-          color: '#3498db',
-        },
-        femme: {
-          icon: ['fas', 'venus'],
-          color: '#9b59b6',
-        },
         groupe: {
           icon: ['fas', 'sitemap'],
           color: '#2c3e50',
