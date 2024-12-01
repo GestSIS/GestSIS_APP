@@ -112,7 +112,7 @@ export default {
           id: s.sapeur_id,
           key: `s-${s.sapeur_id}`,
           label: sapeur.nom_prenom,
-          type: sapeur.civilite_id == 1 ? 'homme' : 'femme',
+          type: 'sapeur',
         };
       };
       const groupeMapping = (g) => ({
