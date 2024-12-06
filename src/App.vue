@@ -22,8 +22,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'floating-vue/dist/style.css';
-@import 'nprogress/nprogress.css';
-
-@import './assets/sass/main.scss';
+@use './assets/sass/main.scss' as *;
 </style>

@@ -479,16 +479,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/utilities';
+@import 'bootstrap/scss/mixins/breakpoints';
+
 #liste-sapeurs {
   a {
     padding: 0.25rem 0.75rem;
   }
 }
 
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins/utilities';
-@import 'bootstrap/scss/mixins/breakpoints';
 @include media-breakpoint-up(md) {
   .custom-container {
     display: flex;

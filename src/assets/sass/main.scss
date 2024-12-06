@@ -1,8 +1,7 @@
-// @import '~bootstrap/scss/bootstrap';
-@import 'bootstrap/scss/bootstrap';
-
-// @import '~awesome-notifications/src/styles/style.scss';
-@import 'awesome-notifications/src/styles/style.scss';
+@use 'bootstrap/scss/bootstrap' as *;
+@use 'awesome-notifications/src/styles/style.scss' as *;
+@use 'floating-vue/dist/style.css' as *;
+@use 'nprogress/nprogress.css' as *;
 
 html {
   overflow: hidden;
