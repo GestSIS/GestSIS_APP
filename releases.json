@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "14.12.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Choix de l'affichage de la durée pour les exercices"]
+    },
+    {
       "date": "22.11.2024",
       "version": "1.0",
       "app": "GestSIS APP",

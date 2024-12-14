@@ -55,6 +55,11 @@
             />
           </div>
           <base-checkbox
+            v-model="params.afficherDuree"
+            class="mb-3"
+            label="Affichage de la durée"
+          />
+          <base-checkbox
             v-model="params.info"
             class="mb-3"
             label="Affichage des personnes 'Pour information'"
@@ -133,6 +138,7 @@ export default {
         texteDebut: '',
         texteFin: '',
         sapeurIds: [],
+        afficherDuree: true,
       },
       errors: {},
     };
