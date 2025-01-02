@@ -117,16 +117,16 @@
                   "
                 />
                 <base-select
-                  class="col-md-4"
+                  class="mb-1 col-md-4"
                   :options="traitements"
-                  base-option="<Statistique fédérale>"
+                  base-option="<Traitement>"
                   :model-value="filters.intervention_traitement_id"
                   @update:model-value="
                     (value) => setFilter('intervention_traitement_id', value)
                   "
                 />
                 <base-select
-                  class="col-md-4"
+                  class="mb-1 col-md-4"
                   base-option="<Etendue>"
                   :options="[
                     { id: 1, designation: 'Fausse alarme' },
