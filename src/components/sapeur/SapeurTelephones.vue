@@ -15,7 +15,9 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
+            <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">
+              Priorité
+            </th>
             <th>Numéro</th>
             <th>Type</th>
             <th v-if="sapeurType === 0">
