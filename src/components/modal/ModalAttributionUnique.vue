@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
+      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
     }),
   },
   mounted() {

@@ -62,6 +62,8 @@ export default {
       smsListe: (state) =>
         state.exercice.active.sms.map((sms) => ({
           ...sms,
+          date_programme: sms.date_programme.slice(0, 19),
+          date_envoie: sms.date_envoie.slice(0, 19),
           numeros: sms.sms_numeros.map((s) => s.numero).join('; '),
         })),
       hasSmsEnvoiePermission: (state) =>

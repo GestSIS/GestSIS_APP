@@ -1,6 +1,16 @@
 {
   "releases": [
     {
+      "date": "15.01.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction de l'affichage des dates d'envoie pour les SMS",
+        "Stat sapeurs, exclusions des statistiques des sapeurs finissant leur service le 1er janvier",
+        "Filtre des sapeurs actifs pour l'attribution de matériel"
+      ]
+    },
+    {
       "date": "14.12.2024",
       "version": "1.0",
       "app": "GestSIS APP",
