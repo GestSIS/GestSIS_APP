@@ -65,7 +65,16 @@
             label="Affichage des personnes 'Pour information'"
           />
           <div class="input-group input-group-sm mb-3">
-            <span id="info" class="input-group-text">Info</span>
+            <span id="info" class="input-group-text"
+              >Info
+              <font-awesome-icon
+                v-tooltip.bottom="
+                  'Ce texte sera affiché pour les sapeurs ajouté à un exercice mais qui ne sont pas convoqué officiellement.'
+                "
+                class="ms-1"
+                :icon="['far', 'question-circle']"
+              />
+            </span>
             <input
               v-model="params.pourInfo"
               type="text"

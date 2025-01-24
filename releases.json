@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "24.01.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Augmentation de la taille du logo pour les pdf",
+        "Amélioration du rendu des fiches de convocations",
+        "Clarification du champ `Pour info` dans les convocations",
+        "Ajout onglet `Matériel personnel` pour les civils dans la page `Sapeurs`"
+      ]
+    },
+    {
       "date": "15.01.2025",
       "version": "1.0",
       "app": "GestSIS APP",

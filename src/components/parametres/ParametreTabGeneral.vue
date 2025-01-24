@@ -193,14 +193,6 @@
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Logo</h3>
-          <button
-            v-if="hasConfigGeneralPermission"
-            type="button"
-            class="btn btn-primary"
-            @click="updateLocalitesSis()"
-          >
-            Modifier
-          </button>
         </div>
         <div class="card-body">
           <div class="input-group">
