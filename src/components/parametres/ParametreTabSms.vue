@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-3">
+    <div class="col-sm-12 col-xl-3 mb-2">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres SMS</h3>

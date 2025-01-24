@@ -69,7 +69,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.absenceParams);
     this.params = {
       ...this.params,
       ...this.absenceParams,

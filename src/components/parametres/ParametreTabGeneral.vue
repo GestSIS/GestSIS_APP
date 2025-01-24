@@ -407,7 +407,10 @@ export default {
       this.logo = files[0];
     },
     async saveLogo() {
-      // TODO: Save logo
+      if (!this.logo) {
+        this.$awn.warning('Veuillez sélectionner un logo');
+        return;
+      }
       SisParamService.updateLogo(this.logo)
         .then((res) => {
           this.errors = {};
