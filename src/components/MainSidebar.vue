@@ -23,7 +23,7 @@
               active: (link?.active ?? (() => false))($route),
             }"
           >
-            <font-awesome-icon :icon="link.icon" />
+            <font-awesome-icon :icon="link.icon" class="sidebar-icon" />
             <span class="ms-3">{{ link.nom }}</span>
           </router-link>
         </li>
@@ -69,6 +69,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sidebar-icon {
+  width: 20px;
+}
+
 .logo {
   max-width: 80px;
   display: block;
