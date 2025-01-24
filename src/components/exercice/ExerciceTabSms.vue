@@ -16,9 +16,6 @@
       :data="smsListe"
     ></base-table>
   </div>
-  <div class="alert alert-info mt-3" role="alert">
-    Seul les sms envoyé à partir du <em>26 juillet</em> ont été enregistrés !
-  </div>
 </template>
 
 <script>
@@ -27,6 +24,9 @@ import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'ExerciceTabSapeurs',
+  props: {
+    newMode: Boolean,
+  },
   data: () => {
     return {
       fields: [

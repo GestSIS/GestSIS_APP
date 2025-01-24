@@ -14,7 +14,7 @@
             <router-link
               v-slot="{ navigate }"
               custom
-              :to="{ name: 'exercice', params: { id: 'new' } }"
+              :to="{ name: 'exercice-details', params: { id: 'new' } }"
             >
               <button
                 v-if="hasEditPermission"
@@ -27,7 +27,7 @@
             <router-link
               v-slot="{ navigate }"
               custom
-              :to="'/exercices/' + selectedId"
+              :to="'/exercices/' + selectedId + '/presence'"
             >
               <button
                 :disabled="!selectedId"
@@ -177,7 +177,7 @@
               </button>
               <router-link
                 v-slot="{ navigate }"
-                :to="'/exercices/' + rowData.id"
+                :to="'/exercices/' + rowData.id + '/presence'"
                 custom
               >
                 <button

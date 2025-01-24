@@ -136,8 +136,7 @@ const router = createRouter({
           path: 'absences',
           name: 'mes-absences',
           beforeEnter: sapeurGuard(),
-          component: () =>
-            import('/src/components/mes_infos/MesAbsences.vue'),
+          component: () => import('/src/components/mes_infos/MesAbsences.vue'),
         },
         {
           path: 'materiel',
@@ -161,7 +160,8 @@ const router = createRouter({
           path: 'controles-medicaux',
           name: 'mes-controles-medicaux',
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesControlesMedicaux.vue'),
+          component: () =>
+            import('/src/components/mes_infos/MesControlesMedicaux.vue'),
         },
         {
           path: 'cours',
@@ -297,10 +297,31 @@ const router = createRouter({
     },
     {
       path: '/exercices/:id',
-      name: 'exercice',
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
       component: () => import('/src/pages/PageExercice.vue'),
+      children: [
+        {
+          path: '',
+          name: 'exercice-details',
+          beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
+          component: () =>
+            import('../components/exercice/ExerciceTabGeneral.vue'),
+        },
+        {
+          path: 'presence',
+          name: 'exercice-presence',
+          beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
+          component: () =>
+            import('../components/exercice/ExerciceTabSapeurs.vue'),
+        },
+        {
+          path: 'sms',
+          name: 'exercice-sms',
+          beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
+          component: () => import('../components/exercice/ExerciceTabSms.vue'),
+        },
+      ],
     },
     {
       path: '/exercices',

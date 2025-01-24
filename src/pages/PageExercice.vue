@@ -28,39 +28,34 @@
           class="nav nav-tabs mb-3"
           role="tablist"
         >
-          <a
-            class="nav-item nav-link"
-            :class="{ active: tab == 'info' }"
-            role="tab"
-            href="#"
-            @click.prevent="tab = 'info'"
-            >Informations</a
+          <router-link
+            :to="{ name: 'exercice-details', params: { id: activeExerciceId } }"
+            class="nav-link"
+            exact-active-class="active"
           >
-          <a
-            class="nav-item nav-link"
-            :class="{ active: tab == 'presence' }"
-            role="tab"
-            href="#"
-            @click.prevent="tab = 'presence'"
-            >Présences</a
+            Informations
+          </router-link>
+          <router-link
+            :to="{
+              name: 'exercice-presence',
+              params: { id: activeExerciceId },
+            }"
+            class="nav-link"
+            exact-active-class="active"
           >
-          <a
-            class="nav-item nav-link"
-            :class="{ active: tab == 'sms' }"
-            role="tab"
-            href="#"
-            @click.prevent="tab = 'sms'"
-            >Sms</a
+            Presences
+          </router-link>
+          <router-link
+            :to="{ name: 'exercice-sms', params: { id: activeExerciceId } }"
+            class="nav-link"
+            exact-active-class="active"
           >
+            Sms
+          </router-link>
         </nav>
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active mb-3" role="tabpanel">
-            <ExerciceTabSapeurs v-if="tab == 'presence'"></ExerciceTabSapeurs>
-            <ExerciceTabGeneral
-              v-if="tab == 'info'"
-              :new-mode="newMode"
-            ></ExerciceTabGeneral>
-            <ExerciceTabSms v-if="tab == 'sms'"></ExerciceTabSms>
+            <router-view :new-mode="newMode" />
           </div>
         </div>
       </div>
