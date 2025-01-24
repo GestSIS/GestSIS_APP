@@ -100,7 +100,6 @@ export default {
           date: p.date,
         };
       });
-      console.log(permisData);
       return Object.values(permisData);
     },
   },

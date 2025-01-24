@@ -282,7 +282,6 @@ export default {
         return Promise.resolve();
       }
       return AuthService.getPermissions().then(({ data }) => {
-        console.log(data);
         return commit(types.AUTH_PERMISSIONS_LISTE, data);
       });
     },

@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Paramètres pour le décompte</h5>
+      <h5 id="exampleModalLabel" class="modal-title">
+        Paramètres pour le décompte
+      </h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -123,7 +125,9 @@
       <div v-if="!params.exercice_id" class="mb-3">
         <h5>Sélection des sapeurs</h5>
         <div class="input-group mb-3">
-          <button class="btn btn-outline-primary" @click="select">Sélection</button>
+          <button class="btn btn-outline-primary" @click="select">
+            Sélection
+          </button>
           <input
             type="text"
             disabled
@@ -134,7 +138,9 @@
                 : params.sapeurIds.length + ' sapeurs sélectionnés'
             "
           />
-          <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
+          <button class="btn btn-outline-danger" @click="resetSelection">
+            Reset
+          </button>
         </div>
       </div>
 
@@ -146,7 +152,9 @@
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
+          <label class="form-check-label" for="m-sap-cotisation_avs"
+            >Déduction</label
+          >
         </div>
       </div>
     </div>
@@ -158,10 +166,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: "ModalDecompte",
+  name: 'ModalDecompte',
   props: {
     callback: {
       type: Function,
@@ -176,12 +184,12 @@ export default {
     return {
       config: {
         errors: {},
-        mode: "genererDecompte",
+        mode: 'genererDecompte',
       },
       params: {
         sapeurIds: [],
         date: new Date().toJSON().slice(0, 10),
-        designation: "",
+        designation: '',
         exercice_comptable_id: null,
         sapeur_id: null,
         exercice_id: null,
@@ -213,17 +221,17 @@ export default {
       this.params.exercice_comptable_id = this.activeExerciceComptableId;
       this.params.sapeur_id = this.data?.sapeurId;
       this.params.exercice_id = this.data?.exerciceId;
-      this.params.designation = `Décompte ${this.data?.designation ?? ""}`;
+      this.params.designation = `Décompte ${this.data?.designation ?? ''}`;
 
       this.config.mode = this.params.sapeur_id
-        ? "genererDecompteSapeur"
+        ? 'genererDecompteSapeur'
         : this.params.exercice_id
-        ? "genererDecompteExercice"
-        : "genererDecompteAnnuel";
+        ? 'genererDecompteExercice'
+        : 'genererDecompteAnnuel';
     }
   },
   methods: {
-    ...mapMutations(["SHOW_MODAL", "HIDE_MODAL"]),
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     close() {
       this.HIDE_MODAL();
     },
@@ -239,7 +247,9 @@ export default {
         })
         .catch((errors) => {
           this.errors = errors;
-          this.$awn.alert(errors?.message ?? "Erreur lors de la création du décompte");
+          this.$awn.alert(
+            errors?.message ?? 'Erreur lors de la création du décompte'
+          );
         });
     },
     select() {
@@ -256,18 +266,17 @@ export default {
       };
       const callback = (res) => {
         if (res) {
-          console.log(save.data.state.sapeurIds);
           save.data.state.params.sapeurIds = res.tous;
         }
         this.SHOW_MODAL({
-          component: "ModalDecompte",
+          component: 'ModalDecompte',
           callback: save.callback,
           data: save.data,
         });
         return Promise.resolve(false);
       };
       this.SHOW_MODAL({
-        component: "ModalSapeurSelect",
+        component: 'ModalSapeurSelect',
         size: 1,
         callback,
         data,

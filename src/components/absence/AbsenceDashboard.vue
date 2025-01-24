@@ -490,7 +490,6 @@ export default {
       this.SHOW_MODAL({ component: 'ModalAbsence' });
     },
     showAbsences(absences) {
-      console.log(absences);
       this.SHOW_MODAL({ component: 'ModalAbsencesStats', data: { absences } });
     },
     removeAbsence(id) {
