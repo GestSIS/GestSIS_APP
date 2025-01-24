@@ -244,7 +244,7 @@ const links = [
   { title: 'Fonctions', urlName: 'sapeur-fonctions', civil: true },
   { title: 'Cours', urlName: 'sapeur-cours' },
   { title: 'Promotion', urlName: 'sapeur-promotions' },
-  { title: 'Materiel', urlName: 'sapeur-materiels' },
+  { title: 'Materiel', urlName: 'sapeur-materiels', civil: true },
   { title: 'Organisation', urlName: 'sapeur-organisation', civil: true },
   { title: 'Permis', urlName: 'sapeur-permis' },
   { title: 'Banque', urlName: 'sapeur-banque', civil: true },
