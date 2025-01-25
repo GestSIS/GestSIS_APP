@@ -6,19 +6,11 @@
     </div>
     <div class="modal-body">
       <div class="row mb-3">
-        <!-- <div class="col-3">
-          <h6>Options d'impression</h6>
-          <base-checkbox label="Code NIP" v-model="params.nip" />
-          <base-checkbox label="Groupe" v-model="params.groupe" />
-          <base-checkbox label="Téléphone" v-model="params.telephone" />
-          <base-checkbox label="Adresse SIS" v-model="params.adresse" />
-          <base-checkbox label="Exercice détail" v-model="params.details" />
-        </div>-->
         <div class="col-12 mb-3">
           <span v-if="!params.sapeurIds.length" class="me-3"
             >Tous les sapeurs actifs</span
           >
-          <span v-else-if="params.sapeurIds.length == 1" class="me-3"
+          <span v-else-if="params.sapeurIds.length === 1" class="me-3"
             >1 sapeur sélectionné</span
           >
           <span v-else class="me-3"
@@ -46,23 +38,26 @@
           <div class="input-group input-group-sm mb-3">
             <span id="titre" class="input-group-text">Titre</span>
             <input
-              v-model="params.titre"
+              v-model="convocationParams.titre"
               type="text"
               class="form-control form-control-sm"
               placeholder="Convocation"
               aria-label="Convocation"
               aria-describedby="titre"
+              @blur="saveParam"
             />
           </div>
           <base-checkbox
-            v-model="params.afficherDuree"
+            v-model="convocationParams.afficher_duree"
             class="mb-3"
             label="Affichage de la durée"
+            @change="saveParam"
           />
           <base-checkbox
-            v-model="params.info"
+            v-model="convocationParams.afficher_pour_info"
             class="mb-3"
             label="Affichage des personnes 'Pour information'"
+            @change="saveParam"
           />
           <div class="input-group input-group-sm mb-3">
             <span id="info" class="input-group-text"
@@ -76,13 +71,14 @@
               />
             </span>
             <input
-              v-model="params.pourInfo"
+              v-model="convocationParams.texte_pour_info"
               type="text"
               class="form-control form-control-sm"
-              :disabled="!params.info"
+              :disabled="!convocationParams.afficher_pour_info"
               placeholder="Pour information"
               aria-label="Pour information"
               aria-describedby="info"
+              @blur="saveParam"
             />
           </div>
         </div>
@@ -92,20 +88,22 @@
         <label for="debut">Texte de début de convocation</label>
         <textarea
           id="debut"
-          v-model="params.texteDebut"
+          v-model="convocationParams.texte_debut"
           rows="4"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['textDebut'] }"
+          :class="{ 'is-invalid': errors['texte_debut'] }"
+          @blur="saveParam"
         />
       </div>
       <div class="mb-3">
         <label for="fin">Texte de fin de convocation</label>
         <textarea
           id="fin"
-          v-model="params.texteFin"
+          v-model="convocationParams.texte_fin"
           rows="4"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['texteFin'] }"
+          :class="{ 'is-invalid': errors['texte_fin'] }"
+          @blur="saveParam"
         />
       </div>
     </div>
@@ -135,25 +133,14 @@ export default {
   data() {
     return {
       params: {
-        nip: false,
-        groupe: false,
-        telephone: false,
-        adresse: false,
-        details: true,
-        format: 1,
-        titre: 'Convocation',
-        info: true,
-        pourInfo: 'Pour information',
-        texteDebut: '',
-        texteFin: '',
         sapeurIds: [],
-        afficherDuree: true,
       },
       errors: {},
     };
   },
   computed: {
     ...mapState({
+      convocationParams: (state) => state.convocationParam.params,
       exerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
   },
@@ -166,15 +153,22 @@ export default {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     convoquer() {
       this.SHOW_MODAL({ component: 'ModalChargement' });
-      ConvocationService.downloadConvocations(
-        this.exerciceComptableId,
-        this.params
-      )
+      ConvocationService.downloadConvocations(this.exerciceComptableId, {
+        ...this.params,
+        ...this.convocationParams,
+      })
         .then(() => this.HIDE_MODAL())
         .catch(() => this.HIDE_MODAL());
     },
+    saveParam() {
+      this.$store.dispatch('updateConvocationParams', this.convocationParams);
+    },
     select() {
-      const save = { ...this.data, remount: true, save: { ...this.params } };
+      const save = {
+        ...this.data,
+        remount: true,
+        save: { ...this.params },
+      };
       const data = {
         ids: this.params.sapeurIds.slice(0),
       };

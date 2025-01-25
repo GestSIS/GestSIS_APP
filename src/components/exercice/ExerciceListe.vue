@@ -367,7 +367,9 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
     convoquer() {
-      this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 });
+      this.$store
+        .dispatch('fetchConvocationParams')
+        .then(() => this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 }));
     },
     sms({ id }) {
       if (!this.hasSmsEnvoiePermission) {

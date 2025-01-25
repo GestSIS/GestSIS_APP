@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "25.01.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Les paramètres et textes pour les convocations sont maintenant sauvegardés"
+      ]
+    },
+    {
       "date": "24.01.2025",
       "version": "1.0",
       "app": "GestSIS APP",
