@@ -48,13 +48,13 @@
             />
           </div>
           <base-checkbox
-            v-model="convocationParams.afficher_duree"
+            v-model="convocationParams.affichage_duree"
             class="mb-3"
             label="Affichage de la durée"
             @change="saveParam"
           />
           <base-checkbox
-            v-model="convocationParams.afficher_pour_info"
+            v-model="convocationParams.affichage_pour_info"
             class="mb-3"
             label="Affichage des personnes 'Pour information'"
             @change="saveParam"
@@ -74,7 +74,7 @@
               v-model="convocationParams.texte_pour_info"
               type="text"
               class="form-control form-control-sm"
-              :disabled="!convocationParams.afficher_pour_info"
+              :disabled="!convocationParams.affichage_pour_info"
               placeholder="Pour information"
               aria-label="Pour information"
               aria-describedby="info"
