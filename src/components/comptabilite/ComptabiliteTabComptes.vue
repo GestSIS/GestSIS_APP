@@ -282,10 +282,12 @@ export default {
       this.dropdown = false;
     },
     init() {
-      this.$store.dispatch('fetchEcritureComptes').then(() => {
-        this.loading = false;
-        this.selectedId = null;
-      });
+      if (this.activeCompteId) {
+        this.$store.dispatch('fetchEcritureComptes').then(() => {
+          this.loading = false;
+          this.selectedId = null;
+        });
+      }
     },
   },
 };

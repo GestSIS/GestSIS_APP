@@ -32,7 +32,7 @@
               <router-link
                 v-slot="{ navigate }"
                 custom
-                :to="{ name: 'intervention', params: { id: 'new' } }"
+                :to="{ name: 'intervention-details', params: { id: 'new' } }"
               >
                 <button
                   v-if="hasEditPermission"

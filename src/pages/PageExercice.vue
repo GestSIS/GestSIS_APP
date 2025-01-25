@@ -66,17 +66,11 @@
 <script>
 import { mapState } from 'vuex';
 
-import ExerciceTabSapeurs from '/src/components/exercice/ExerciceTabSapeurs.vue';
-import ExerciceTabGeneral from '/src/components/exercice/ExerciceTabGeneral.vue';
-import ExerciceTabSms from '/src/components/exercice/ExerciceTabSms.vue';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 export default {
   name: 'PageExercice',
   components: {
-    ExerciceTabSapeurs,
-    ExerciceTabGeneral,
-    ExerciceTabSms,
     ExerciceComptable,
   },
   props: {
@@ -87,7 +81,6 @@ export default {
   },
   data() {
     return {
-      tab: 'presence',
       loading: true,
     };
   },
@@ -141,7 +134,6 @@ export default {
       });
       this.$store.dispatch('fetchExerciceSapeurs', id);
     }
-    this.tab = this.newMode ? 'info' : 'presence';
   },
 };
 </script>

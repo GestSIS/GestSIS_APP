@@ -2,10 +2,11 @@
   "releases": [
     {
       "date": "25.01.2025",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Les paramètres et textes pour les convocations sont maintenant sauvegardés"
+        "Les paramètres et textes pour les convocations sont maintenant sauvegardés",
+        "Amélioration de la navigation pour le module `intervention`"
       ]
     },
     {
@@ -16,7 +17,8 @@
         "Augmentation de la taille du logo pour les pdf",
         "Amélioration du rendu des fiches de convocations",
         "Clarification du champ `Pour info` dans les convocations",
-        "Ajout onglet `Matériel personnel` pour les civils dans la page `Sapeurs`"
+        "Ajout onglet `Matériel personnel` pour les civils dans la page `Sapeurs`",
+        "Amélioration de la navigation pour le module `exercice`"
       ]
     },
     {

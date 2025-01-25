@@ -331,11 +331,13 @@ const router = createRouter({
         {
           path: '',
           name: 'exercices',
+          beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () => import('/src/components/exercice/ExerciceListe.vue'),
         },
         {
           path: 'absences',
           name: 'exercices-absences',
+          beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () =>
             import('/src/components/exercice/ExerciceAbsences.vue'),
         },
@@ -349,12 +351,14 @@ const router = createRouter({
         {
           path: '',
           name: 'absences',
+          beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
           component: () =>
             import('/src/components/absence/AbsenceDashboard.vue'),
         },
         {
           path: 'liste',
           name: 'absences-liste',
+          beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
           component: () => import('/src/components/absence/AbsenceListe.vue'),
         },
       ],
@@ -383,10 +387,48 @@ const router = createRouter({
     },
     {
       path: '/interventions/:id',
-      name: 'intervention',
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
       component: () => import('/src/pages/PageIntervention.vue'),
+      children: [
+        {
+          path: '',
+          name: 'intervention-details',
+          beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
+          component: () =>
+            import('/src/components/intervention/InterventionTabGeneral.vue'),
+        },
+        {
+          path: 'resume',
+          name: 'intervention-resume',
+          beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
+          component: () =>
+            import('/src/components/intervention/InterventionTabResume.vue'),
+        },
+        {
+          path: 'presence',
+          name: 'intervention-presence',
+          beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
+          component: () =>
+            import('/src/components/intervention/InterventionTabSapeurs.vue'),
+        },
+        {
+          path: 'journal',
+          name: 'intervention-journal',
+          beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
+          component: () =>
+            import('/src/components/intervention/InterventionTabJournal.vue'),
+        },
+        {
+          path: 'materiel-vehicule',
+          name: 'intervention-materiel-vehicule',
+          beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
+          component: () =>
+            import(
+              '/src/components/intervention/InterventionTabMaterielVehicule.vue'
+            ),
+        },
+      ],
     },
     {
       path: '/interventions',

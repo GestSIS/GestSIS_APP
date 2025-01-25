@@ -18,19 +18,21 @@ const links = [
     icon: 'user',
     nom: 'Sapeurs',
     permission: permissions.SAPEUR.LECTURE,
-    active: (route) => !!route?.matched?.find((r) => r.name == 'sapeur-index'),
+    active: (route) => route.name.startsWith('sapeur'),
   },
   {
     to: { name: 'interventions' },
     icon: 'fire-extinguisher',
     nom: 'Interventions',
     permission: permissions.INTERVENTION.LECTURE,
+    active: (route) => route.name.startsWith('intervention'),
   },
   {
     to: { name: 'exercices' },
     icon: ['fas', 'calendar-alt'],
     nom: 'Exercices & Séances',
     permission: permissions.EXERCICE.LECTURE,
+    active: (route) => route.name.startsWith('exercice'),
   },
   {
     to: { name: 'fiche-travail' },
