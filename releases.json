@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "26.01.2025",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": ["Amélioration de la navigation pour le module `utilisateur`"]
+    },
+    {
       "date": "25.01.2025",
       "version": "2.0",
       "app": "GestSIS APP",
