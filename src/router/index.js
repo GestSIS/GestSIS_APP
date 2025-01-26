@@ -620,10 +620,23 @@ const router = createRouter({
     },
     {
       path: '/utilisateurs',
-      name: 'users',
       beforeEnter: permissionGuard(permissions.ADMIN.TOUT),
       props: true,
       component: () => import('/src/pages/PageUtilisateurs.vue'),
+      children: [
+        {
+          path: '',
+          name: 'utilisateurs',
+          component: () =>
+            import('/src/components/utilisateur/ListeUtilisateur.vue'),
+        },
+        {
+          path: 'manquants',
+          name: 'utilisateurs-manquants',
+          component: () =>
+            import('/src/components/utilisateur/SapeurSansCompte.vue'),
+        },
+      ],
     },
     {
       path: '/configuration',

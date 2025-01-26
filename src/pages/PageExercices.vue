@@ -19,22 +19,12 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'exercices' }"
-            >Exercices</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'exercices-absences' }"
-            >Absences</router-link
-          >
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'exercices' }, texte: 'Exercices' },
+            { to: { name: 'exercices-absences' }, texte: 'Absences' },
+          ]"
+        />
       </div>
     </div>
     <router-view />

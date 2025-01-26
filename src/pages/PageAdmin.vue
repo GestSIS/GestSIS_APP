@@ -18,22 +18,12 @@
 
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'admin-sis' }"
-            >Sis</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'admin-users' }"
-            >Utilisateurs</router-link
-          >
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'admin-sis' }, texte: 'Sis' },
+            { to: { name: 'admin-users' }, texte: 'Utilisateurs' },
+          ]"
+        />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <div class="col-12">

@@ -79,11 +79,9 @@ import store from '/src/store/index';
 
 function loadData(routeTo, next) {
   const loadUsers = store.dispatch('fetchUsers');
-  const loadPermissions = store.dispatch('fetchPermissions');
-  const loadRoles = store.dispatch('fetchRoles');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
 
-  Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(() => {
+  Promise.all([loadUsers, loadSapeurs]).then(() => {
     next();
   });
 }
@@ -103,7 +101,6 @@ export default {
         email: '',
       },
       loading: true,
-      tab: 'users',
       fields: [
         { title: 'Sapeur', key: 'nom_prenom' },
         { title: 'Email', key: 'email' },

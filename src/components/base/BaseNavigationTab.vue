@@ -1,0 +1,41 @@
+<template>
+  <nav class="nav nav-tabs mb-3" role="tablist">
+    <router-link
+      v-for="{ to, texte } in filteredRoutes"
+      :key="to"
+      :to="to"
+      role="tab"
+      class="nav-link"
+      exact-active-class="active"
+    >
+      {{ texte }}
+    </router-link>
+  </nav>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const { routes } = defineProps({
+  routes: {
+    type: Array,
+    required: true,
+  },
+});
+
+const store = useStore();
+const isAdmin = computed(() => store.state['auth'].admin);
+const permissions = computed(() => store.state['auth'].sis.permissions);
+
+const filteredRoutes = computed(() =>
+  routes.filter(
+    (r) =>
+      isAdmin ||
+      r.permission === undefined ||
+      permissions.includes(r.permission)
+  )
+);
+</script>
+
+<style lang="scss" scoped></style>

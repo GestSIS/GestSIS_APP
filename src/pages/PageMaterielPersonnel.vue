@@ -68,29 +68,19 @@
             </div>
           </div>
           <div class="col-md-12">
-            <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-              <router-link
-                class="nav-item nav-link"
-                role="tab"
-                exact-active-class="active"
-                :to="{ name: 'mat-perso-dashboard' }"
-                >Tableau de bord</router-link
-              >
-              <router-link
-                class="nav-item nav-link"
-                role="tab"
-                active-class="active"
-                :to="{ name: 'mat-perso-materiel' }"
-                >Matériel distribué</router-link
-              >
-              <router-link
-                class="nav-item nav-link"
-                role="tab"
-                exact-active-class="active"
-                :to="{ name: 'mat-perso-inventaire' }"
-                >Inventaire</router-link
-              >
-            </nav>
+            <base-navigation-tab
+              :routes="[
+                {
+                  to: { name: 'mat-perso-dashboard' },
+                  texte: 'Tableau de bord',
+                },
+                {
+                  to: { name: 'mat-perso-materiel' },
+                  texte: 'Matériel distribué',
+                },
+                { to: { name: 'mat-perso-inventaire' }, texte: 'Inventaire' },
+              ]"
+            />
             <div id="nav-tabContent" class="tab-content">
               <div class="tab-pane fade show active" role="tabpanel">
                 <router-view :selected-ids="selectedIds" />

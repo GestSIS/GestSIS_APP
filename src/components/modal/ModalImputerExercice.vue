@@ -305,7 +305,6 @@ export default {
       this.activeIndemnite = this.computedIndemnites[index];
     },
     cancel() {
-      //TODO Cancel depending on state
       (this.callback() ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
           this.HIDE_MODAL();
@@ -317,7 +316,6 @@ export default {
         return;
       }
 
-      //TODO
       this.$store
         .dispatch('imputerExercice', {
           exercice_id: this.data.id,

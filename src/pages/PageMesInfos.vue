@@ -20,17 +20,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            v-for="{ route, label } in tabs"
-            :key="route"
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: route }"
-            >{{ label }}</router-link
-          >
-        </nav>
+        <base-navigation-tab :routes="routes" />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <div class="col-12">
@@ -43,88 +33,26 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import store from '/src/store/index';
 
-async function loadData(routeTo, next) {
-  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
+store.dispatch('fetchExercicesComptables');
 
-  Promise.all([loadExercicesComptables]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageMesInfos',
-  components: { ExerciceComptable },
-  data() {
-    return {
-      tabs: [
-        {
-          route: 'mes-infos',
-          label: 'Mes infos',
-        },
-        {
-          route: 'mes-exercices',
-          label: 'Mes exercices',
-        },
-        {
-          route: 'mes-interventions',
-          label: 'Mes interventions',
-        },
-        {
-          route: 'mes-absences',
-          label: 'Mes absences',
-        },
-        {
-          route: 'mon-materiel',
-          label: 'Mon matériel',
-        },
-        {
-          route: 'mes-travaux',
-          label: 'Ma fiche de travail',
-        },
-        {
-          route: 'mes-decomptes',
-          label: 'Mes décomptes',
-        },
-        {
-          route: 'mes-controles-medicaux',
-          label: 'Mes contrôles médicaux',
-        },
-        {
-          route: 'mes-cours',
-          label: 'Mes cours',
-        },
-        {
-          route: 'mes-fonctions',
-          label: 'Mes fonctions',
-        },
-        {
-          route: 'mes-grades',
-          label: 'Mes grades',
-        },
-        {
-          route: 'mes-groupes',
-          label: 'Mes groupes',
-        },
-        {
-          route: 'mes-mutations',
-          label: 'Mes mutations',
-        },
-        {
-          route: 'mes-permis',
-          label: 'Mes permis',
-        },
-      ],
-    };
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-};
+const routes = [
+  { to: { name: 'mes-infos' }, texte: 'Mes infos' },
+  { to: { name: 'mes-exercices' }, texte: 'Mes exercices' },
+  { to: { name: 'mes-interventions' }, texte: 'Mes interventions' },
+  { to: { name: 'mes-absences' }, texte: 'Mes absences' },
+  { to: { name: 'mon-materiel' }, texte: 'Mon matériel' },
+  { to: { name: 'mes-travaux' }, texte: 'Ma fiche de travail' },
+  { to: { name: 'mes-decomptes' }, texte: 'Mes décomptes' },
+  { to: { name: 'mes-controles-medicaux' }, texte: 'Mes contrôles médicaux' },
+  { to: { name: 'mes-cours' }, texte: 'Mes cours' },
+  { to: { name: 'mes-fonctions' }, texte: 'Mes fonctions' },
+  { to: { name: 'mes-grades' }, texte: 'Mes grades' },
+  { to: { name: 'mes-groupes' }, texte: 'Mes groupes' },
+  { to: { name: 'mes-mutations' }, texte: 'Mes mutations' },
+  { to: { name: 'mes-permis' }, texte: 'Mes permis' },
+];
 </script>

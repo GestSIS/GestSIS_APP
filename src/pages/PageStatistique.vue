@@ -19,19 +19,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            v-for="action in filteredActions"
-            :key="action.name"
-            :to="action.to"
-            class="nav-item nav-link"
-            exact-active-class="active"
-            role="tab"
-          >
-            <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <a>{{ action.name }}</a>
-          </router-link>
-        </nav>
+        <base-navigation-tab :routes="routes" />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel"></div>
         </div>
@@ -41,68 +29,42 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import permissions from '../store/permissions.js';
-import { mapState } from 'vuex';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
-export default {
-  name: 'PageStatistiques',
-  components: {
-    ExerciceComptable,
+const routes = [
+  { to: { name: 'stat-dashboard' }, texte: 'Résumé' },
+  {
+    to: { name: 'stat-sapeur' },
+    texte: 'Sapeur',
+    permission: permissions.SAPEUR.LECTURE,
   },
-  data() {
-    return {
-      actions: [
-        { to: { name: 'stat-dashboard' }, name: 'Résumé' },
-        {
-          to: { name: 'stat-sapeur' },
-          name: 'Sapeur',
-          permission: permissions.SAPEUR.LECTURE,
-        },
-        {
-          to: { name: 'stat-exercice-simple' },
-          name: 'Exercice',
-          permission: permissions.EXERCICE.PRESENCE,
-        },
-        {
-          to: { name: 'stat-exercice-presence' },
-          name: 'Présences exercices',
-          permission: permissions.EXERCICE.PRESENCE,
-        },
-        {
-          to: { name: 'stat-intervention' },
-          name: 'Intervention',
-          permission: permissions.INTERVENTION.MODIFICATION,
-        },
-        {
-          to: { name: 'stat-intervention-presence' },
-          name: 'Présences interventions',
-          permission: permissions.INTERVENTION.LECTURE,
-        },
-        {
-          to: { name: 'stat-comptabilite' },
-          name: 'Comptabilité',
-          permission: permissions.COMPTABILITE.LECTURE,
-        },
-      ],
-    };
+  {
+    to: { name: 'stat-exercice-simple' },
+    texte: 'Exercice',
+    permission: permissions.EXERCICE.PRESENCE,
   },
-  computed: {
-    ...mapState({
-      isAdmin: (state) => state.auth.admin,
-      permissions: (state) => state.auth.sis.permissions,
-    }),
-    filteredActions() {
-      return this.actions.filter(
-        (s) =>
-          !s.permission ||
-          this.permissions?.includes(s.permission) ||
-          this.isAdmin
-      );
-    },
+  {
+    to: { name: 'stat-exercice-presence' },
+    texte: 'Présences exercices',
+    permission: permissions.EXERCICE.PRESENCE,
   },
-};
+  {
+    to: { name: 'stat-intervention' },
+    texte: 'Intervention',
+    permission: permissions.INTERVENTION.MODIFICATION,
+  },
+  {
+    to: { name: 'stat-intervention-presence' },
+    texte: 'Présences interventions',
+    permission: permissions.INTERVENTION.LECTURE,
+  },
+  {
+    to: { name: 'stat-comptabilite' },
+    texte: 'Comptabilité',
+    permission: permissions.COMPTABILITE.LECTURE,
+  },
+];
 </script>
 
 <style>

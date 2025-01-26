@@ -119,7 +119,6 @@ export default {
     return {
       toggles: {},
       loading: true,
-      tab: 'users',
       filters: {
         inactif: false,
         special: true,

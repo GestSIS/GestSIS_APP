@@ -195,23 +195,16 @@
             </button>
           </div>
         </div>
-        <nav>
-          <nav class="nav nav-tabs mb-3">
-            <router-link
-              v-for="(link, index) in links.filter(
-                (link) =>
-                  hasPermission(link?.permission) &&
-                  (link.civil || activeSapeur.type == 0)
-              )"
-              :key="index"
-              :to="{ name: link.urlName, params: { id: activeSapeurId } }"
-              class="nav-link"
-              active-class="active"
-            >
-              {{ link.title }}
-            </router-link>
-          </nav>
-        </nav>
+        <base-navigation-tab
+          :routes="
+            routes
+              .filter((route) => route.civil || activeSapeur.type == 0)
+              .map((r) => ({
+                ...r,
+                to: { ...r.to, params: { id: activeSapeurId } },
+              }))
+          "
+        />
         <div id="nav-tabContent" class="tab-content">
           <div id="tab-sapeur-details" class="tab-pane fade show active">
             <div class="row">
@@ -233,22 +226,22 @@ import { mapState, mapMutations } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import SapeurService from '/src/services/SapeurService';
 
-const links = [
-  { title: 'General', urlName: 'sapeur-details', civil: true },
-  { title: 'Mutations', urlName: 'sapeur-mutations' },
+const routes = [
+  { texte: 'General', to: { name: 'sapeur-details' }, civil: true },
+  { texte: 'Mutations', to: { name: 'sapeur-mutations' } },
   {
-    title: 'Contrôles médicaux',
-    urlName: 'sapeur-controles-medicaux',
+    texte: 'Contrôles médicaux',
+    to: { name: 'sapeur-controles-medicaux' },
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
-  { title: 'Fonctions', urlName: 'sapeur-fonctions', civil: true },
-  { title: 'Cours', urlName: 'sapeur-cours' },
-  { title: 'Promotion', urlName: 'sapeur-promotions' },
-  { title: 'Materiel', urlName: 'sapeur-materiels', civil: true },
-  { title: 'Organisation', urlName: 'sapeur-organisation', civil: true },
-  { title: 'Permis', urlName: 'sapeur-permis' },
-  { title: 'Banque', urlName: 'sapeur-banque', civil: true },
-  { title: 'Exercice', urlName: 'sapeur-exercices', civil: true },
+  { texte: 'Fonctions', to: { name: 'sapeur-fonctions' }, civil: true },
+  { texte: 'Cours', to: { name: 'sapeur-cours' } },
+  { texte: 'Promotion', to: { name: 'sapeur-promotions' } },
+  { texte: 'Materiel', to: { name: 'sapeur-materiels' }, civil: true },
+  { texte: 'Organisation', to: { name: 'sapeur-organisation' }, civil: true },
+  { texte: 'Permis', to: { name: 'sapeur-permis' } },
+  { texte: 'Banque', to: { name: 'sapeur-banque' }, civil: true },
+  { texte: 'Exercice', to: { name: 'sapeur-exercices' }, civil: true },
 ];
 
 const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
@@ -307,7 +300,7 @@ const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
 
     if (isCivil) {
       // Civil détecté
-      if (links.find((r) => r.urlName == routeTo.name && r.civil == true)) {
+      if (routes.find((r) => r.to.name == routeTo.name && r.civil == true)) {
         next();
       } else {
         // Redirection pour onglet valable
@@ -352,7 +345,7 @@ export default {
         all: () => true,
       },
       eventListener: null,
-      links: links,
+      routes: routes,
     };
   },
   computed: {

@@ -16,65 +16,21 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <button
-            class="nav-item nav-link"
-            role="tab"
-            :class="{ active: tab == 'users' }"
-            @click="tab = 'users'"
-          >
-            Utilisateurs
-          </button>
-          <button
-            class="nav-item nav-link"
-            role="tab"
-            :class="{ active: tab == 'sapeurs' }"
-            @click="tab = 'sapeurs'"
-          >
-            Sapeurs sans comptes
-          </button>
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'utilisateurs' }, texte: 'Utilisateurs' },
+            {
+              to: { name: 'utilisateurs-manquants' },
+              texte: 'Sapeurs sans comptes',
+            },
+          ]"
+        />
       </div>
-      <liste-utilisateur v-if="tab == 'users'" />
-      <sapeur-sans-compte v-if="tab == 'sapeurs'" />
+      <router-view />
     </div>
   </div>
 </template>
 
-<script>
-import ListeUtilisateur from '../components/utilisateur/ListeUtilisateur.vue';
-import SapeurSansCompte from '../components/utilisateur/SapeurSansCompte.vue';
-import store from '/src/store/index';
-
-function loadData(routeTo, next) {
-  const loadUsers = store.dispatch('fetchUsers');
-  const loadPermissions = store.dispatch('fetchPermissions');
-  const loadRoles = store.dispatch('fetchRoles');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-
-  Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageUtilisateurs',
-  components: {
-    ListeUtilisateur,
-    SapeurSansCompte,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      tab: 'users',
-    };
-  },
-};
-</script>
+<script setup></script>
 
 <style></style>

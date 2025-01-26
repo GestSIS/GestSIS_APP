@@ -15,38 +15,16 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            :to="{ name: 'rta-mutations' }"
-            class="nav-item nav-link"
-            exact-active-class="active"
-            role="tab"
-          >
-            <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <span>Mutations</span>
-          </router-link>
-          <router-link
-            :to="{ name: 'rta-gestsis' }"
-            class="nav-item nav-link"
-            active-class="active"
-            role="tab"
-          >
-            <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <span>GestSIS</span>
-          </router-link>
-          <router-link
-            :to="{ name: 'rta-reference' }"
-            class="nav-item nav-link"
-            active-class="active"
-            role="tab"
-          >
-            <!-- <font-awesome-icon icon="fire-extinguisher" /> -->
-            <span>Référence</span>
-          </router-link>
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'rta-mutations' }, texte: 'Mutations' },
+            { to: { name: 'rta-gestsis' }, texte: 'GestSIS' },
+            { to: { name: 'rta-reference' }, texte: 'Référence' },
+          ]"
+        />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active mb-3" role="tabpanel">
-            <router-view></router-view>
+            <router-view />
           </div>
         </div>
       </div>

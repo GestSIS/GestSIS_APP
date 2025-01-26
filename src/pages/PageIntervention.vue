@@ -22,48 +22,18 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav
-          v-if="!newMode"
-          id="nav-tab"
-          class="nav nav-tabs mb-3"
-          role="tablist"
-        >
-          <router-link
-            :to="{ name: 'intervention-details' }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Informations
-          </router-link>
-          <router-link
-            :to="{ name: 'intervention-resume' }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Résume
-          </router-link>
-          <router-link
-            :to="{ name: 'intervention-presence' }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Présences
-          </router-link>
-          <router-link
-            :to="{ name: 'intervention-journal' }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Journal
-          </router-link>
-          <router-link
-            :to="{ name: 'intervention-materiel-vehicule' }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Matériels &amp; Véhicules
-          </router-link>
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'intervention-details' }, texte: 'Informations' },
+            { to: { name: 'intervention-resume' }, texte: 'Résume' },
+            { to: { name: 'intervention-presence' }, texte: 'Présences' },
+            { to: { name: 'intervention-journal' }, texte: 'Journal' },
+            {
+              to: { name: 'intervention-materiel-vehicule' },
+              texte: 'Matériels et Véhicules',
+            },
+          ]"
+        />
         <div id="nav-tabContent" class="tab-content">
           <div
             v-if="!loading"

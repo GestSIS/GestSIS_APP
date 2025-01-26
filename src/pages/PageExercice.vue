@@ -22,37 +22,30 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav
+        <base-navigation-tab
           v-if="!newMode"
-          id="nav-tab"
-          class="nav nav-tabs mb-3"
-          role="tablist"
-        >
-          <router-link
-            :to="{ name: 'exercice-details', params: { id: activeExerciceId } }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Informations
-          </router-link>
-          <router-link
-            :to="{
-              name: 'exercice-presence',
-              params: { id: activeExerciceId },
-            }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Presences
-          </router-link>
-          <router-link
-            :to="{ name: 'exercice-sms', params: { id: activeExerciceId } }"
-            class="nav-link"
-            exact-active-class="active"
-          >
-            Sms
-          </router-link>
-        </nav>
+          :routes="[
+            {
+              to: {
+                name: 'exercice-details',
+                params: { id: activeExerciceId },
+              },
+              texte: 'Informations',
+            },
+            {
+              to: {
+                name: 'exercice-presence',
+                params: { id: activeExerciceId },
+              },
+              texte: 'Presences',
+            },
+            {
+              to: { name: 'exercice-sms', params: { id: activeExerciceId } },
+              texte: 'Sms',
+            },
+          ]"
+        />
+
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active mb-3" role="tabpanel">
             <router-view />

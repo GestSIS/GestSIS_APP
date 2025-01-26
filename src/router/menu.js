@@ -103,7 +103,7 @@ const links = [
   //   nom: 'Impressions',
   // },
   {
-    to: { name: 'users' },
+    to: { name: 'utilisateurs' },
     icon: 'user',
     nom: 'Utilisateurs',
     permission: permissions.ADMIN.TOUT,

@@ -19,80 +19,32 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'comptabilite-decompte' }"
-            >Décomptes</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            exact-active-class="active"
-            :to="{ name: 'comptabilite-compte' }"
-            >Comptes</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-exercice' }"
-            >Exercices &amp; Séances</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-intervention' }"
-            >Interventions</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-cours' }"
-            >Cours</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-travaux' }"
-            >Fiches de travail</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-annuel' }"
-          >
-            Indemnités et Frais annuels</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-sapeurs' }"
-            >Sapeurs</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-divers' }"
-          >
-            Autres</router-link
-          >
-          <router-link
-            class="nav-item nav-link"
-            role="tab"
-            active-class="active"
-            :to="{ name: 'comptabilite-amendes' }"
-            >Amendes</router-link
-          >
-        </nav>
+        <base-navigation-tab
+          :routes="[
+            { to: { name: 'comptabilite-decompte' }, texte: 'Décomptes' },
+            { to: { name: 'comptabilite-compte' }, texte: 'Comptes' },
+            {
+              to: { name: 'comptabilite-exercice' },
+              texte: 'Exercices et Séances',
+            },
+            {
+              to: { name: 'comptabilite-intervention' },
+              texte: 'Interventions',
+            },
+            { to: { name: 'comptabilite-cours' }, texte: 'Cours' },
+            {
+              to: { name: 'comptabilite-travaux' },
+              texte: 'Fiches de travail',
+            },
+            {
+              to: { name: 'comptabilite-annuel' },
+              texte: 'Indemnités et Frais annuels',
+            },
+            { to: { name: 'comptabilite-sapeurs' }, texte: 'Sapeurs' },
+            { to: { name: 'comptabilite-divers' }, texte: 'Autres' },
+            { to: { name: 'comptabilite-amendes' }, texte: 'Amendes' },
+          ]"
+        />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view />

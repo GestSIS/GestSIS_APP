@@ -32,6 +32,7 @@ import BaseRadio from '/src/components/base/BaseRadio.vue';
 import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
 import StatefulFilter from '/src/components/base/StatefulFilter.vue';
 import BaseTable from '/src/components/table/BaseTable.vue';
+import BaseNavigationTab from '/src/components/base/BaseNavigationTab.vue';
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {
@@ -94,6 +95,7 @@ app
   .component('BaseMultiUnselect', BaseMultiUnselect)
   .component('StatefulFilter', StatefulFilter)
   .component('BaseTable', BaseTable)
+  .component('BaseNavigationTab', BaseNavigationTab)
   .component('DefaultLayout', Default)
   .component('EmptyLayout', Empty)
   .component('NoSidebarLayout', NoSidebar)
