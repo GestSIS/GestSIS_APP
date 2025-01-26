@@ -172,7 +172,10 @@ import permissions from '/src/store/permissions.js';
 export default {
   name: 'ExerciceTabGeneral',
   props: {
-    newMode: Boolean,
+    id: {
+      type: String,
+      default: 'new',
+    },
   },
   data() {
     return {
@@ -181,6 +184,9 @@ export default {
     };
   },
   computed: {
+    newMode() {
+      return this.id === 'new';
+    },
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,

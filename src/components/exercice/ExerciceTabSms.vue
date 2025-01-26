@@ -24,9 +24,6 @@ import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'ExerciceTabSapeurs',
-  props: {
-    newMode: Boolean,
-  },
   data: () => {
     return {
       fields: [

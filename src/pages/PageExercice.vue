@@ -55,7 +55,7 @@
         </nav>
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active mb-3" role="tabpanel">
-            <router-view :new-mode="newMode" />
+            <router-view />
           </div>
         </div>
       </div>
