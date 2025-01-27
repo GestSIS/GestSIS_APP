@@ -23,6 +23,7 @@
     <div class="row">
       <div class="col-md-12">
         <base-navigation-tab
+          v-if="!newMode"
           :routes="[
             { to: { name: 'intervention-details' }, texte: 'Informations' },
             { to: { name: 'intervention-resume' }, texte: 'Résume' },
@@ -126,16 +127,16 @@ export default {
   watch: {
     id() {
       const svm = this;
-      if (!this.newMode) {
+      if (this.newMode) {
+        this.$store
+          .dispatch('resetActiveIntervention')
+          .then(() => (svm.loading = false));
+      } else {
         let id = parseInt(this.id);
 
         this.$store.dispatch('selectIntervention', id);
         this.$store
           .dispatch('fetchIntervention', id)
-          .then(() => (svm.loading = false));
-      } else {
-        this.$store
-          .dispatch('resetActiveIntervention')
           .then(() => (svm.loading = false));
       }
     },

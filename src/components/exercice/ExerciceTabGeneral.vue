@@ -178,9 +178,6 @@ export default {
     };
   },
   computed: {
-    newMode() {
-      return this.activeExerciceId === null;
-    },
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,
@@ -192,6 +189,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
+      newMode: (state) => state.exercice.active.id === null,
     }),
     exerciceCategorie() {
       return this.activeExerciceData.exercice_categorie_id;

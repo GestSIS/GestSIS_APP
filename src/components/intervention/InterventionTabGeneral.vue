@@ -384,9 +384,6 @@ export default {
     };
   },
   computed: {
-    newMode() {
-      return this.activeInterventionId === null;
-    },
     ...mapState({
       localites: (state) => state.localite.liste,
       typesIntervention: (state) => state.typeIntervention.liste,
@@ -404,6 +401,7 @@ export default {
         state.auth.sis.permissions.includes(
           permissions.INTERVENTION.MODIFICATION
         ),
+      newMode: (state) => state.intervention.active.id === null,
     }),
     isValidWgs84() {
       const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;

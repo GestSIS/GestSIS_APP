@@ -77,11 +77,11 @@ export default {
           s.sapeur_id != payload.sapeur_id
             ? s
             : {
-              ...s,
-              heures: (s.heures ?? []).map((h) =>
-                h.id == payload.id ? payload : h
-              ),
-            }
+                ...s,
+                heures: (s.heures ?? []).map((h) =>
+                  h.id == payload.id ? payload : h
+                ),
+              }
         );
       }
     },
@@ -91,9 +91,9 @@ export default {
           s.sapeur_id != payload.sapeur_id
             ? s
             : {
-              ...s,
-              heures: (s.heures ?? []).filter((h) => h.id != payload.id),
-            }
+                ...s,
+                heures: (s.heures ?? []).filter((h) => h.id != payload.id),
+              }
         );
       }
     },

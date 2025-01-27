@@ -94,7 +94,7 @@ export default {
     },
   },
   watch: {
-    activeExerciceId() {
+    id() {
       if (this.newMode) {
         this.$store.dispatch('resetActiveExercice');
       } else {
