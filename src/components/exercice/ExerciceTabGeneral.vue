@@ -171,12 +171,6 @@ import permissions from '/src/store/permissions.js';
 
 export default {
   name: 'ExerciceTabGeneral',
-  props: {
-    id: {
-      type: String,
-      default: 'new',
-    },
-  },
   data() {
     return {
       errors: {},
@@ -185,12 +179,13 @@ export default {
   },
   computed: {
     newMode() {
-      return this.id === 'new';
+      return this.activeExerciceId === null;
     },
     ...mapState({
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) => state.localite.liste,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
+      activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceData: (state) => state.exercice.active.data,
       activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
       // TODO: Check si exercice pas déjà imputé

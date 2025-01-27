@@ -377,12 +377,6 @@ const degre = [
 
 export default {
   name: 'InterventionTabGeneral',
-  props: {
-    id: {
-      type: String,
-      default: 'new',
-    },
-  },
   data() {
     return {
       errors: {},
@@ -391,7 +385,7 @@ export default {
   },
   computed: {
     newMode() {
-      return this.id === 'new';
+      return this.activeInterventionId === null;
     },
     ...mapState({
       localites: (state) => state.localite.liste,
