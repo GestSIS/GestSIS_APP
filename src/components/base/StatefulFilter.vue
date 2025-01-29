@@ -5,93 +5,77 @@
   ></slot>
 </template>
 
-<script>
-import { mapState } from 'vuex';
+<script setup>
+import { ref, computed, watch, onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'StatefulFilter',
-  inheritsAttrs: false,
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    data: {
-      type: Array,
-      default: () => [],
-    },
+const { id, data } = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  data() {
-    return {
-      filters: {},
-    };
+  data: {
+    type: Array,
+    default: () => [],
   },
-  computed: {
-    ...mapState({
-      sisKey: (state) => state.auth.sis.activeKey,
-    }),
-    filteredData() {
-      return this.data.filter(
-        Object.entries(this.filters)
-          .filter(
-            ([, val]) =>
-              (val || val == 0) && (val >= 0 || typeof val == 'function')
-          )
-          .map(([key, value]) => {
-            if (typeof value == 'function') {
-              return (x) => value(x[key]);
-            } else {
-              return (x) => x[key] == value;
-            }
-          })
-          .reduce(
-            (f, g) => (x) => f(x) && g(x),
-            () => true
-          )
-      );
-    },
-    canReset() {
-      return !!Object.entries(this.filters).find(([, value]) => value) ?? false;
-    },
-  },
-  watch: {
-    sisKey() {
-      this.init();
-    },
-  },
-  created() {
-    this.init();
-  },
-  methods: {
-    init() {
-      this.filters = {
-        ...JSON.parse(
-          localStorage.getItem(`${this.sisKey}-${this.id}`) ?? '{}'
-        ),
-      };
-    },
-    setFilter(key, value) {
-      const types = new Set(['function', 'undefined']);
-      this.filters = {
-        ...this.filters,
-        [key]: types.has(typeof value) ? value : parseInt(value),
-      };
-      localStorage.setItem(
-        `${this.sisKey}-${this.id}`,
-        JSON.stringify(
-          Object.fromEntries(
-            Object.entries(this.filters).filter(
-              ([, value]) => !types.has(typeof value) && value != null
-            )
-          )
-        )
-      );
-    },
-    reset() {
-      this.filters = {};
-    },
-  },
+});
+
+const store = useStore();
+const sisKey = computed(() => store.state['auth'].sis.activeKey);
+
+const filters = ref({});
+
+const filteredData = computed(() => {
+  return data.filter(
+    Object.entries(filters.value)
+      .filter(([, val]) => val >= 0 || typeof val === 'function')
+      .map(([key, value]) => {
+        if (typeof value == 'function') {
+          return (x) => value(x[key]);
+        } else {
+          return (x) => x[key] == value;
+        }
+      })
+      .reduce(
+        (f, g) => (x) => f(x) && g(x),
+        () => true
+      )
+  );
+});
+const canReset = computed(() => {
+  return !!Object.entries(filters.value).find(([, value]) => value) ?? false;
+});
+
+const init = () => {
+  filters.value = {
+    ...JSON.parse(localStorage.getItem(`${sisKey.value}-${id}`) ?? '{}'),
+  };
 };
+
+const setFilter = (key, value) => {
+  const types = new Set(['function', 'undefined']);
+  filters.value = {
+    ...filters.value,
+    [key]: types.has(typeof value) ? value : parseInt(value),
+  };
+  localStorage.setItem(
+    `${sisKey.value}-${id}`,
+    JSON.stringify(
+      Object.fromEntries(
+        Object.entries(filters.value).filter(
+          ([, value]) => !types.has(typeof value) && value != null
+        )
+      )
+    )
+  );
+};
+
+const reset = () => {
+  filters.value = {};
+};
+
+onBeforeMount(init);
+watch(sisKey, init);
 </script>
 
 <style lang="scss" scoped></style>
