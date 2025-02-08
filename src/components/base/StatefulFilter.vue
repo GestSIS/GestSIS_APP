@@ -9,6 +9,10 @@
 import { ref, computed, watch, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const { id, data } = defineProps({
   id: {
     type: String,
