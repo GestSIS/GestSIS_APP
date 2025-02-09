@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "09.02.2025",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'ajout d'événements pour du matériel personnel"
+      ]
+    },
+    {
       "date": "26.01.2025",
       "version": "2.0",
       "app": "GestSIS APP",
