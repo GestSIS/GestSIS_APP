@@ -253,7 +253,8 @@ export default {
           ...m,
           ...m.materiel,
           materiel_nominal_id: m.materiel?.id,
-        }));
+        }))
+        .sort((a, b) => a.materiel.numero.localeCompare(b.materiel.numero));
     },
   },
   mounted() {
