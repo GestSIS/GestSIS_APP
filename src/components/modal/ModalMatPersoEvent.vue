@@ -247,6 +247,7 @@ export default {
         eventType?.materiel_types?.map((t) => t.id) ?? []
       );
       return this.materielDispo
+        .filter((m) => m.materiel.numero !== undefined)
         .filter((m) => typeIds.has(parseInt(m.materiel_type_id)))
         .map((m) => ({
           ...m,
@@ -283,7 +284,7 @@ export default {
     selectNumero(materiel, matId) {
       if (matId) {
         const mat = this.filteredMaterielDispo.find(
-          (m) => m.materiel_nominal_id == matId
+          (m) => m.materiel_nominal_id === matId
         );
         materiel.materiel_nominal_id = mat?.materiel_nominal_id;
         materiel.sapeur_id = mat?.retour != null ? null : mat?.sapeur_id;
