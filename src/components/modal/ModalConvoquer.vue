@@ -153,10 +153,10 @@ export default {
     ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
     convoquer() {
       this.SHOW_MODAL({ component: 'ModalChargement' });
-      ConvocationService.downloadConvocations(this.exerciceComptableId, {
-        ...this.params,
-        ...this.convocationParams,
-      })
+      ConvocationService.downloadConvocations(
+        this.exerciceComptableId,
+        this.params
+      )
         .then(() => this.HIDE_MODAL())
         .catch(() => this.HIDE_MODAL());
     },

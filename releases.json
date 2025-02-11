@@ -1,8 +1,16 @@
 {
   "releases": [
     {
+      "date": "11.02.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Correction d'un problème pour les convocations pdf avec un texte très long."
+      ]
+    },
+    {
       "date": "09.02.2025",
-      "version": "2.0",
+      "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
         "Amélioration de l'ajout d'événements pour du matériel personnel"
@@ -10,7 +18,7 @@
     },
     {
       "date": "26.01.2025",
-      "version": "2.0",
+      "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Amélioration de la navigation pour le module `utilisateur`"]
     },
