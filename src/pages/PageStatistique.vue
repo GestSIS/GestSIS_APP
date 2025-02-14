@@ -31,6 +31,7 @@
 
 <script setup>
 import permissions from '../store/permissions.js';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 const routes = [
   { to: { name: 'stat-dashboard' }, texte: 'Résumé' },
