@@ -227,7 +227,7 @@ export default {
       );
     },
     onRowClass(dataItem) {
-      return dataItem.statut == 0 ? 'text-danger' : '';
+      return dataItem.statut == 0 ? 'table-danger' : '';
     },
   },
 };
