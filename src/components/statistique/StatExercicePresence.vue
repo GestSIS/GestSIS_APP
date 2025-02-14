@@ -108,7 +108,11 @@
                 <th></th>
                 <th v-for="e in displayExercice" :key="e.id" class="rotate">
                   <div>
-                    <span>{{ e.designation }}</span>
+                    <span
+                      :class="{ 'text-decoration-line-through text-danger' : e.statut == 0 }"
+                    >
+                      {{ e.designation }}
+                    </span>
                   </div>
                 </th>
                 <th></th>
@@ -127,6 +131,7 @@
                   v-for="e in displayExercice"
                   :key="e.id"
                   class="fs-6 fw-normal text-center ps-0 pe-0 border border-1"
+                  :class="{'bg-danger-subtle': e.statut == 0 }"
                 >
                   {{ new Date(e.date).toLocaleDateString('fr-CH').slice(0, 5) }}
                 </th>
@@ -159,6 +164,7 @@
                   v-for="(p, index) in s.presences"
                   :key="index"
                   class="text-center table-border"
+                  :class="{'table-danger': displayExercice[index].statut == 0 }"
                 >
                   <span
                     class="badge rouded-pill"
