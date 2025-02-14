@@ -168,7 +168,7 @@
                   :key="index"
                   class="text-center table-border"
                   :class="{
-                    'table-danger': displayExercice[index].statut === 0,
+                    'bg-danger-subtle': displayExercice[index].statut === 0,
                   }"
                 >
                   <span
