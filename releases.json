@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "14.02.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise en évidence en rouge des exercices annulés dans les statistiques."
+      ]
+    },
+    {
       "date": "11.02.2025",
       "version": "1.0",
       "app": "GestSIS APP",
