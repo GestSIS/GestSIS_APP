@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import MaterielARecuperer from '/src/components/materiel_personnel/MaterielARecuperer.vue';
-import MaterielAlertes from '/src/components/materiel_personnel/MaterielAlertes.vue';
+import MaterielARecuperer from '/src/components/MATERIEL/MaterielARecuperer.vue';
+import MaterielAlertes from '/src/components/MATERIEL/MaterielAlertes.vue';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {

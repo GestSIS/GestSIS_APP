@@ -106,9 +106,7 @@ export default {
         })),
       hasEditPermission: (state) =>
         state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.MATERIEL_PERSONNEL.MODIFICATION
-        ),
+        state.auth.sis.permissions.includes(permissions.MATERIEL.MODIFICATION),
     }),
   },
   watch: {

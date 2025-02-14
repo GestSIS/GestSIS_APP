@@ -584,39 +584,33 @@ const router = createRouter({
       component: () => import('/src/pages/PageControleMedical.vue'),
     },
     {
-      path: '/materiel-personnel',
-      name: 'materiel-personnel',
-      beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-      component: () => import('/src/pages/PageMaterielPersonnel.vue'),
-      children: [
-        {
-          path: '',
-          name: 'mat-perso-dashboard',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabDashboard.vue'
-            ),
-        },
-        {
-          path: 'attribution',
-          name: 'mat-perso-materiel',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabAttribution.vue'
-            ),
-        },
-        {
-          path: 'inventaire',
-          name: 'mat-perso-inventaire',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabInventaire.vue'
-            ),
-        },
-      ],
+      path: '/materiel',
+      name: 'materiel',
+      beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      component: () => import('/src/pages/PageMateriel.vue'),
+      // children: [
+      //   {
+      //     path: '',
+      //     name: 'mat-perso-dashboard',
+      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      //     component: () =>
+      //       import('/src/components/MATERIEL/MaterielTabDashboard.vue'),
+      //   },
+      //   {
+      //     path: 'attribution',
+      //     name: 'mat-perso-materiel',
+      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      //     component: () =>
+      //       import('/src/components/MATERIEL/MaterielTabAttribution.vue'),
+      //   },
+      //   {
+      //     path: 'inventaire',
+      //     name: 'mat-perso-inventaire',
+      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      //     component: () =>
+      //       import('/src/components/MATERIEL/MaterielTabInventaire.vue'),
+      //   },
+      // ],
     },
     {
       path: '/utilisateurs',
@@ -648,7 +642,7 @@ const router = createRouter({
         permissions.EXERCICE.CONFIG,
         permissions.FICHE_TRAVAIL.CONFIG,
         permissions.INTERVENTION.CONFIG,
-        permissions.MATERIEL_PERSONNEL.CONFIG,
+        permissions.MATERIEL.CONFIG,
         permissions.SAPEUR.CONFIG,
         permissions.SIS.CONFIG,
         permissions.SMS.CONFIG,
@@ -666,7 +660,7 @@ const router = createRouter({
             permissions.EXERCICE.CONFIG,
             permissions.FICHE_TRAVAIL.CONFIG,
             permissions.INTERVENTION.CONFIG,
-            permissions.MATERIEL_PERSONNEL.CONFIG,
+            permissions.MATERIEL.CONFIG,
             permissions.SAPEUR.CONFIG,
             permissions.SIS.CONFIG,
             permissions.SMS.CONFIG,
@@ -745,7 +739,7 @@ const router = createRouter({
         {
           path: 'materiel-personnel',
           name: 'param-materiel-personnel',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.CONFIG),
+          beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
           component: () =>
             import(
               '/src/components/parametres/ParametreTabMaterielPersonnel.vue'

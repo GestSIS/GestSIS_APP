@@ -82,7 +82,7 @@ const routes = [
   {
     to: { name: 'param-materiel-personnel' },
     texte: 'Matériel personnel',
-    permission: permissions.MATERIEL_PERSONNEL.CONFIG,
+    permission: permissions.MATERIEL.CONFIG,
   },
   {
     to: { name: 'param-roles' },
