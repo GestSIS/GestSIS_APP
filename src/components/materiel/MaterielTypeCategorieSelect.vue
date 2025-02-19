@@ -1,40 +1,5 @@
-<template>
-  <table class="table table-sm table-hover">
-    <thead>
-      <tr>
-        <th>Designation</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-if="computedData.length <= 0">
-        <td colspan="2">Aucune catégorie</td>
-      </tr>
-      <tr
-        v-for="item in computedData"
-        :key="item.globalId"
-        :class="{
-          'table-primary': item.globalId === selectedId,
-        }"
-      >
-        <td
-          :style="{
-            'padding-left': item.level * 25 + 'px',
-            color: indexedCouleurs[item.couleur_id]?.texte ?? 'black',
-            'background-color': indexedCouleurs[item.couleur_id]?.fond ?? '',
-          }"
-        >
-          <label :for="item.globalId">
-            <!-- <font-awesome-icon class="me-2 ms-2" :icon="['fas', item.tag]" /> -->
-            {{ item.designation }}
-          </label>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</template>
-
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
@@ -83,7 +48,6 @@ const computedData = computed(() => {
         globalId: 'c' + c.id,
         type: 'categorie',
         level: level,
-        tag: 'tag',
       });
 
       if (indexedCategories[c.id])
@@ -95,7 +59,6 @@ const computedData = computed(() => {
           globalId: 't' + t.id,
           type: 'type',
           level: level + 1,
-          tag: 'shirt',
         });
       });
     });
@@ -107,22 +70,37 @@ const computedData = computed(() => {
   );
   return data;
 });
-
-const select = (item, event) => {
-  const selected = event.target.checked;
-  const categorieIds = new Set(item.type === 'categorie' ? [item.id] : []);
-
-  computedData.forEach((e) => {
-    if (e.type === 'categorie' && categorieIds.has(parseInt(e.parent_id))) {
-      categorieIds.add(e.id);
-      selectedIds.categorie[e.id?.toString()] = selected;
-    }
-    if (e.type === 'type' && categorieIds.has(e.materiel_categorie_id)) {
-      selectedIds.type[e.id] = selected;
-    }
-  });
-  $emit('change', selectedIds);
-};
 </script>
+
+<template>
+  <ul class="list-group list-group-flush">
+    <li v-if="computedData.length === 0">
+      <td class="border-bottom-0">Aucune catégorie</td>
+    </li>
+    <router-link
+      v-for="item in computedData"
+      :key="item.globalId"
+      :style="{
+        'padding-left': item.level * 25 + 'px',
+        color: indexedCouleurs[item.couleur_id]?.texte ?? 'black',
+        'background-color': indexedCouleurs[item.couleur_id]?.fond ?? '',
+      }"
+      v-slot="{ navigate }"
+      custom
+      :to="{
+        name: 'materiel-details',
+        params: { id: item.id },
+      }"
+    >
+      <a
+        class="list-group-item list-group-item-action pt-1 pb-1"
+        href="#"
+        role="link"
+        @click="navigate"
+        >{{ item.designation }}
+      </a>
+    </router-link>
+  </ul>
+</template>
 
 <style scoped></style>

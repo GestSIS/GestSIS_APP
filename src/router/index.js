@@ -585,15 +585,24 @@ const router = createRouter({
     },
     {
       path: '/materiel',
-      name: 'materiel',
       beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
       component: () => import('/src/pages/PageMateriel.vue'),
       children: [
         {
           path: '',
-          name: 'materiel-liste',
+          name: 'materiel',
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           component: () => import('/src/components/materiel/TabListe.vue'),
+          children: [
+            {
+              path: ':id',
+              name: 'materiel-details',
+              props: true,
+              beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+              component: () =>
+                import('/src/components/materiel/MaterielDetail.vue'),
+            },
+          ],
         },
         //   {
         //     path: 'attribution',

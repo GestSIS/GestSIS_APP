@@ -7,7 +7,7 @@ export const useMaterielStore = defineStore('materiel', {
     liste: [],
   }),
   actions: {
-    fetchMatPerso() {
+    fetchMaterielType() {
       return MatPersoMaterielService.getMateriel().then(
         (data) => (this.liste = data)
       );

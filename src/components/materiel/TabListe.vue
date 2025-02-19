@@ -1,15 +1,22 @@
 <template>
   <div class="row">
     <div class="col-3">
-      <materiel-type-categorie-select />
+      <div class="card">
+        <div class="card-header">TODO: Ajout filtre</div>
+        <materiel-type-categorie-select />
+      </div>
     </div>
-    <div class="col-6"></div>
+    <div class="col-9">
+      <Suspense>
+        <router-view />
+        <template #fallback>Chargement...</template>
+      </Suspense>
+    </div>
   </div>
 </template>
 
 <script setup>
 import MaterielTypeCategorieSelect from './MaterielTypeCategorieSelect.vue';
-
 </script>
 
 <style>

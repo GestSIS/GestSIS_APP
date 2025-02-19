@@ -16,7 +16,7 @@
       <div class="col-md-12">
         <base-navigation-tab
           :routes="[
-            { to: { name: 'materiel-liste' }, texte: 'Matériel' },
+            { to: { name: 'materiel' }, texte: 'Matériel' },
             // { to: { name: 'materiel-inventaire' }, texte: 'Inventaires' },
             // { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
           ]"
