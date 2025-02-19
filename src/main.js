@@ -4,7 +4,7 @@ import router from './router/index';
 import types from './store/mutationTypes';
 import store from './store/index';
 import { TokenService } from './services/StorageService.js';
-
+import { createPinia } from 'pinia';
 // Page layouts
 import Default from './layouts/DefaultLayout.vue';
 import Empty from './layouts/EmptyLayout.vue';
@@ -54,30 +54,12 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// {
-//   created() {
-//     // console.log('Created !')
-//     // TODO might be improved by checking that token is still valid when launching app
-//     // const user = TokenService.getUser();
-//     // const accessToken = TokenService.getAccessToken();
-//     // const refreshToken = TokenService.getRefreshToken();
-//     // await this.$store.dispatch('loadSisListe').then(() => {
-//     //   if (accessToken !== null && refreshToken !== null) {
-//     //     return this.$store.commit(types.AUTH_SUCCESSFULL, {
-//     //       user,
-//     //       accessToken,
-//     //       refreshToken,
-//     //     });
-//     //   }
-//     // })
-//   },
-
-//   render: () => h(App),
-// }
+const pinia = createPinia();
 const app = createApp(App);
 app
   .use(router)
   .use(store)
+  .use(pinia)
   .use(VueAWN, {
     labels: {
       success: 'Succès',

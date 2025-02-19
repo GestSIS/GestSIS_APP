@@ -588,29 +588,28 @@ const router = createRouter({
       name: 'materiel',
       beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
       component: () => import('/src/pages/PageMateriel.vue'),
-      // children: [
-      //   {
-      //     path: '',
-      //     name: 'mat-perso-dashboard',
-      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-      //     component: () =>
-      //       import('/src/components/MATERIEL/MaterielTabDashboard.vue'),
-      //   },
-      //   {
-      //     path: 'attribution',
-      //     name: 'mat-perso-materiel',
-      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-      //     component: () =>
-      //       import('/src/components/MATERIEL/MaterielTabAttribution.vue'),
-      //   },
-      //   {
-      //     path: 'inventaire',
-      //     name: 'mat-perso-inventaire',
-      //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-      //     component: () =>
-      //       import('/src/components/MATERIEL/MaterielTabInventaire.vue'),
-      //   },
-      // ],
+      children: [
+        {
+          path: '',
+          name: 'materiel-liste',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          component: () => import('/src/components/materiel/TabListe.vue'),
+        },
+        //   {
+        //     path: 'attribution',
+        //     name: 'mat-perso-materiel',
+        //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+        //     component: () =>
+        //       import('/src/components/MATERIEL/MaterielTabAttribution.vue'),
+        //   },
+        //   {
+        //     path: 'inventaire',
+        //     name: 'mat-perso-inventaire',
+        //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+        //     component: () =>
+        //       import('/src/components/MATERIEL/MaterielTabInventaire.vue'),
+        //   },
+      ],
     },
     {
       path: '/utilisateurs',

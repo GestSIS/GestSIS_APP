@@ -6,7 +6,10 @@ export default {
     sis: [],
     users: [],
     contacts: {},
+<<<<<<< HEAD
     params: {},
+=======
+>>>>>>> 076e2c9 (Start new UI)
   },
   mutations: {
     [types.ADMIN_SIS_CONTACTS](state, payload) {

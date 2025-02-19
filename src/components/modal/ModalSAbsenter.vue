@@ -76,8 +76,10 @@ export default {
           this.HIDE_MODAL();
         })
         .catch((errors) => {
-          this.errors = errors
-          this.$awn.alert(errors?.message ?? "Impossible d'ajouter cette absence")
+          this.errors = errors;
+          this.$awn.alert(
+            errors?.message ?? "Impossible d'ajouter cette absence"
+          );
         });
     },
   },

@@ -27,9 +27,9 @@ export default {
   },
   actions: {
     fetchListeSms({ getters, commit }) {
-      return SmsService.getSms(
-        getters.activeExerciceComptableId
-      ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
+      return SmsService.getSms(getters.activeExerciceComptableId).then((data) =>
+        commit(types.UPDATE_EXERCICE_LISTE, data)
+      );
     },
   },
 };

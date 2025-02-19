@@ -100,7 +100,8 @@ export default {
       return StatistiqueService.getStatCategorieComptable(
         getters.activeExerciceComptableId
       ).then((data) =>
-        commit(types.UPDATE_STATISTIQUE_CATEGORIE_COMPTABLE, data));
+        commit(types.UPDATE_STATISTIQUE_CATEGORIE_COMPTABLE, data)
+      );
     },
     fetchStatistiqueCompte({ getters, commit }) {
       return StatistiqueService.getStatCompte(

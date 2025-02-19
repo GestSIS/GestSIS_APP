@@ -40,7 +40,9 @@
             />
           </div>
           <div class="mb-3">
-            <a href="https://www.aspsms.com/en/login/" target="_blank">Recharger des crédits</a>
+            <a href="https://www.aspsms.com/en/login/" target="_blank"
+              >Recharger des crédits</a
+            >
           </div>
         </div>
       </div>

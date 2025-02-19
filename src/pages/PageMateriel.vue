@@ -14,13 +14,13 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <!-- <base-navigation-tab
+        <base-navigation-tab
           :routes="[
             { to: { name: 'materiel-liste' }, texte: 'Matériel' },
-            { to: { name: 'materiel-inventaire' }, texte: 'Inventaires' },
-            { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
+            // { to: { name: 'materiel-inventaire' }, texte: 'Inventaires' },
+            // { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
           ]"
-        /> -->
+        />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <router-view />

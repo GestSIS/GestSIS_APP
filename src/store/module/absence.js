@@ -31,20 +31,16 @@ export default {
       );
     },
     addMonAbsence({ commit }, absence) {
-      return AbsenceService.addMonAbsence(absence).then(
-        async (data) => {
-          await commit(types.ADD_ABSENCE, data);
-          return data;
-        }
-      );
+      return AbsenceService.addMonAbsence(absence).then(async (data) => {
+        await commit(types.ADD_ABSENCE, data);
+        return data;
+      });
     },
     editMonAbsence({ commit }, absence) {
-      return AbsenceService.updateMonAbsence(absence).then(
-        async (data) => {
-          await commit(types.UPDATE_ABSENCE, data);
-          return data;
-        }
-      );
+      return AbsenceService.updateMonAbsence(absence).then(async (data) => {
+        await commit(types.UPDATE_ABSENCE, data);
+        return data;
+      });
     },
     removeMonAbsence({ commit }, absence) {
       return AbsenceService.removeMonAbsence(absence.id).then(async (data) => {
