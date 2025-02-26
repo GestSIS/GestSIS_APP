@@ -69,7 +69,7 @@ export default {
     }),
   },
   mounted() {
-    this.$store.dispatch('fetchExerciceSms', activeExerciceId);
+    this.$store.dispatch('fetchExerciceSms', this.activeExerciceId);
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
