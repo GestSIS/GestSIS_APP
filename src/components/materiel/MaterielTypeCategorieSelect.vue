@@ -93,12 +93,14 @@ const computedData = computed(() => {
       }"
     >
       <a
+        v-if="item.type === 'type'"
         class="list-group-item list-group-item-action pt-1 pb-1"
         href="#"
         role="link"
         @click="navigate"
         >{{ item.designation }}
       </a>
+      <span v-else>{{ item.designation }}</span>
     </router-link>
   </ul>
 </template>
