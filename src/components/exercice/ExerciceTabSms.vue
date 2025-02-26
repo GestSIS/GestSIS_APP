@@ -68,6 +68,9 @@ export default {
         state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
     }),
   },
+  mounted() {
+    this.$store.dispatch('fetchExerciceSms', activeExerciceId);
+  },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     sendSms() {
