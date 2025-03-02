@@ -92,7 +92,7 @@ const links = [
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
   {
-    to: { name: 'materiel' },
+    to: { name: 'materiel-par-type' },
     icon: 'shirt',
     nom: 'Matériel',
     permission: permissions.MATERIEL.LECTURE,

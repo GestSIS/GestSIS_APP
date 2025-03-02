@@ -589,34 +589,68 @@ const router = createRouter({
       component: () => import('/src/pages/PageMateriel.vue'),
       children: [
         {
-          path: '',
-          name: 'materiel',
+          path: 'par-type',
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-          component: () => import('/src/components/materiel/TabListe.vue'),
           children: [
             {
-              path: ':id',
-              name: 'materiel-details',
-              props: true,
-              beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+              path: '',
+              name: 'materiel-par-type',
               component: () =>
-                import('/src/components/materiel/MaterielDetail.vue'),
+                import('/src/components/materiel/TabParType.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-type-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParType.vue'),
             },
           ],
         },
-        //   {
-        //     path: 'attribution',
-        //     name: 'mat-perso-materiel',
-        //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-        //     component: () =>
-        //       import('/src/components/MATERIEL/MaterielTabAttribution.vue'),
-        //   },
+        {
+          path: 'par-emplacement',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: '',
+              name: 'materiel-par-emplacement',
+              component: () =>
+                import('/src/components/materiel/TabParEmplacement.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-emplacement-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParEmplacement.vue'),
+            },
+          ],
+        },
+        {
+          path: 'par-sapeur',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: '',
+              name: 'materiel-par-sapeur',
+              component: () =>
+                import('/src/components/materiel/TabParSapeur.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-sapeur-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParSapeur.vue'),
+            },
+          ],
+        },
         //   {
         //     path: 'inventaire',
         //     name: 'mat-perso-inventaire',
         //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
         //     component: () =>
-        //       import('/src/components/MATERIEL/MaterielTabInventaire.vue'),
+        //       import('/src/components/materiel/MaterielTabInventaire.vue'),
         //   },
       ],
     },

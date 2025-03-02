@@ -1,12 +1,13 @@
 <template>
   <nav class="nav nav-tabs mb-3" role="tablist">
     <router-link
-      v-for="{ to, texte } in filteredRoutes"
+      v-for="{ to, texte, exact = true } in filteredRoutes"
       :key="to"
       :to="to"
       role="tab"
       class="nav-link"
-      exact-active-class="active"
+      :active-class="exact ? '' : 'active'"
+      :exact-active-class="exact ? 'active' : ''"
     >
       {{ texte }}
     </router-link>

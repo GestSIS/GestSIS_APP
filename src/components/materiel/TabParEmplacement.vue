@@ -3,12 +3,12 @@
     <div class="col-3">
       <div class="card">
         <div class="card-header">TODO: Ajout filtre</div>
-        <materiel-type-categorie-select />
+        <navigation-par-emplacement />
       </div>
     </div>
     <div class="col-9">
       <Suspense>
-        <router-view />
+        {{ id }}
         <template #fallback>Chargement...</template>
       </Suspense>
     </div>
@@ -16,7 +16,14 @@
 </template>
 
 <script setup>
-import MaterielTypeCategorieSelect from './MaterielTypeCategorieSelect.vue';
+import NavigationParEmplacement from './NavigationParEmplacement.vue';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
 </script>
 
 <style>
