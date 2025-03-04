@@ -13,12 +13,15 @@
         :class="computedSize"
         role="document"
       >
-        <component
-          :is="component"
-          :callback="callback"
-          :data="data"
-          class="modal-content"
-        ></component>
+        <suspense>
+          <component
+            :is="component"
+            :callback="callback"
+            :data="data"
+            class="modal-content"
+          ></component>
+          <template #fallback>Loading ...</template>
+        </suspense>
       </div>
     </div>
     <!-- Overlay -->

@@ -55,12 +55,23 @@ const computedData = computed(() =>
     }))
     .sort((a1, a2) => a1.type.localeCompare(a2.type))
 );
+
+const attribuer = () => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalAttributionMultiple',
+    size: 1,
+    data: { sapeurId: id },
+  });
+};
 </script>
 
 <template>
   <div class="card mb-2">
-    <div class="card-header">
-      <h5 class="m-0">Matériel distribué ({{ articles.length }})</h5>
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title m-0">Matériel distribué ({{ articles.length }})</h5>
+      <button class="btn btn-primary" @click="attribuer">
+        Attribuer du matériel
+      </button>
     </div>
     <base-table
       :data="computedData"

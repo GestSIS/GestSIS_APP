@@ -1,3 +1,150 @@
+<script setup>
+import { computed, inject, nextTick, ref, useTemplateRef } from 'vue';
+import { useMaterielTypeStore } from '../../stores/materiel/Materiel';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const awn = inject('awn');
+
+const store = useStore();
+
+const errors = ref({});
+const tab = ref('numerote');
+const depuisInventaire = ref(true);
+const activeAttribution = ref({
+  date: new Date().toISOString().slice(0, 10),
+  id: data?.id,
+  quantite: data?.materiel?.quantite ?? null,
+  sapeur_id: data?.sapeurId ?? null,
+  items: [
+    {
+      id: null,
+      materiel_type_id: null,
+      remarque: null,
+    },
+  ],
+});
+
+// FIXME:focus input field
+console.log(useTemplateRef('sapeur').value);
+// useTemplateRef('sapeur').value.focus();
+
+const materielTypeStore = useMaterielTypeStore();
+await Promise.all([
+  materielTypeStore.fetchMaterielType(),
+  store.dispatch('fetchListeSapeur'),
+]);
+
+const types = computed(() => materielTypeStore.liste);
+const articles = ref(await ArticleService.getMaterielLavable(id));
+
+const materielDispo = computed(() =>
+  articles.value
+    .filter(
+      (m) => m.materiel.numero && (m.retour != null || m.sapeur_id == null)
+    )
+    .map((m) => ({ ...m, ...m.materiel, id: m.id }))
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+
+const save = async () => {
+  if (!activeAttribution.value.sapeur_id) {
+    awn.warning('Veuillez sélectionner un sapeur');
+  }
+
+  // Masse attribution
+  const baseAttribution = {
+    sapeur_id: activeAttribution.value.sapeur_id,
+    date: activeAttribution.value.date,
+  };
+
+  const numerotes = depuisInventaire.value
+    ? activeAttribution.value.numerotesDepuisInventaire
+    : activeAttribution.value.numerotesHorsInventaire;
+
+  const attributions = [
+    ...numerotes
+      .filter((m) => m.materiel_type_id && m.numero)
+      .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
+
+    ...activeAttribution.value.generiques
+      .filter((m) => m.materiel_type_id && m.quantite > 0)
+      .map((m) => ({ ...baseAttribution, ...m })),
+  ];
+
+  if (attributions.length == 0) {
+    awn.warning('Aucun matériel saisi');
+    return;
+  }
+  store
+    .dispatch('attribuerMatPerso', {
+      depuisInventaire: depuisInventaire.value,
+      attributions,
+    })
+    .then(() => {
+      errors = {};
+      store.commit('HIDE_MODAL');
+    })
+    .catch((err) => (errors.value = err));
+};
+const addNumerote = () => {
+  const data = depuisInventaire.value
+    ? activeAttribution.value.numerotesDepuisInventaire
+    : activeAttribution.value.numerotesHorsInventaire;
+
+  data.push({
+    materiel_type_id: null,
+    numero: null,
+    taille: null,
+    remarque: null,
+  });
+
+  const count = data.length;
+  nextTick(() => {
+    useTemplateRef(`numerote-${count - 1}`).value.focus();
+  });
+};
+const addGenerique = () => {
+  activeAttribution.value.generiques.push({
+    materiel_type_id: null,
+    taille: null,
+    quantite: null,
+    remarque: null,
+  });
+
+  const count = activeAttribution.value.generiques.length;
+  nextTick(() => {
+    useTemplateRef(`generique-${count - 1}`).value.focus();
+  });
+};
+const selectMaterielTypeNumerote = (item, value) => {
+  // Select première combinaison valable
+  const materiel = materielNumeroteDispo.find(
+    (m) => m.materiel_type_id == value
+  );
+  item.id = materiel?.id;
+  item.taille = materiel?.taille;
+  item.numero = materiel?.numero;
+  item.remarque = materiel?.remarque;
+};
+const selectNumero = (item, value) => {
+  const materiel = materielNumeroteDispo.find((m) => m.id == value);
+  item.taille = materiel?.taille;
+  item.numero = materiel?.numero;
+  item.id = materiel?.id;
+  item.remarque = materiel?.remarque;
+};
+const selectMaterielTypeGenerique = (item) => {
+  item.quantite = 1;
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -290,168 +437,5 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed, nextTick } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Materiel';
-
-const { id } = defineProps({
-  data: {
-    type: Object,
-    default: () => {},
-  },
-});
-
-const store = useStore();
-
-const errors = ref({});
-const tab = ref('numerote');
-const depuisInventaire = ref(true);
-const activeAttribution = ref({
-  date: new Date().toISOString().slice(0, 10),
-  id: data?.id,
-  quantite: data?.materiel?.quantite ?? null,
-  sapeur_id: this.data?.sapeurId ?? null,
-  numerotesDepuisInventaire: [
-    {
-      id: null,
-      materiel_type_id: null,
-      remarque: null,
-    },
-  ],
-  numerotesHorsInventaire: [
-    {
-      materiel_type_id: null,
-      numero: null,
-      taille: null,
-      remarque: null,
-    },
-  ],
-  generiques: [
-    {
-      materiel_type_id: null,
-      taille: null,
-      quantite: null,
-      remarque: null,
-    },
-  ],
-});
-
-useTemplateRef('sapeur').value.focus();
-
-const materielTypeStore = useMaterielTypeStore();
-await Promise.all([
-  materielTypeStore.fetchMaterielType(),
-  store.dispatch('fetchListeSapeur'),
-]);
-
-const types = computed(() => materielTypeStore.liste);
-const articles = ref(await ArticleService.getMaterielLavable(id));
-
-const materielNumeroteDispo = computed(() =>
-  articles.value
-    .filter(
-      (m) => m.materiel.numero && (m.retour != null || m.sapeur_id == null)
-    )
-    .map((m) => ({ ...m, ...m.materiel, id: m.id }))
-);
-const materielGeneriqueDispo = computed(() =>
-  articles.value
-    .filter((m) => m.retour != null || m.sapeur_id == null)
-    .map((m) => ({ ...m, ...m.materiel, id: m.id }))
-);
-const sapeurs = computed(() => store.state.sapeur.liste);
-
-const save = async () => {
-  if (!activeAttribution.sapeur_id) {
-    this.$awn.warning('Veuillez sélectionner un sapeur');
-  }
-
-  // Masse attribution
-  const baseAttribution = {
-    sapeur_id: activeAttribution.sapeur_id,
-    date: activeAttribution.date,
-  };
-
-  const numerotes = this.depuisInventaire
-    ? activeAttribution.numerotesDepuisInventaire
-    : activeAttribution.numerotesHorsInventaire;
-
-  const attributions = [
-    ...numerotes
-      .filter((m) => m.materiel_type_id && m.numero)
-      .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
-
-    ...activeAttribution.generiques
-      .filter((m) => m.materiel_type_id && m.quantite > 0)
-      .map((m) => ({ ...baseAttribution, ...m })),
-  ];
-
-  if (attributions.length == 0) {
-    this.$awn.warning('Aucun matériel saisi');
-    return;
-  }
-  this.$store
-    .dispatch('attribuerMatPerso', {
-      depuisInventaire: this.depuisInventaire,
-      attributions,
-    })
-    .then(() => {
-      this.errors = {};
-      this.HIDE_MODAL();
-    })
-    .catch((errors) => (this.errors = errors));
-};
-const addNumerote = () => {
-  const data = this.depuisInventaire
-    ? activeAttribution.numerotesDepuisInventaire
-    : activeAttribution.numerotesHorsInventaire;
-
-  data.push({
-    materiel_type_id: null,
-    numero: null,
-    taille: null,
-    remarque: null,
-  });
-
-  const count = data.length;
-  nextTick(() => {
-    useTemplateRef(`numerote-${count - 1}`).value.focus();
-  });
-};
-const addGenerique = () => {
-  activeAttribution.generiques.push({
-    materiel_type_id: null,
-    taille: null,
-    quantite: null,
-    remarque: null,
-  });
-
-  const count = activeAttribution.generiques.length;
-  nextTick(() => {
-    useTemplateRef(`generique-${count - 1}`).value.focus();
-  });
-};
-const selectMaterielTypeNumerote = (item, value) => {
-  // Select première combinaison valable
-  const materiel = this.materielNumeroteDispo.find(
-    (m) => m.materiel_type_id == value
-  );
-  item.id = materiel?.id;
-  item.taille = materiel?.taille;
-  item.numero = materiel?.numero;
-  item.remarque = materiel?.remarque;
-};
-const selectNumero = (item, value) => {
-  const materiel = this.materielNumeroteDispo.find((m) => m.id == value);
-  item.taille = materiel?.taille;
-  item.numero = materiel?.numero;
-  item.id = materiel?.id;
-  item.remarque = materiel?.remarque;
-};
-const selectMaterielTypeGenerique = (item) => {
-  item.quantite = 1;
-};
-</script>
 
 <style scoped></style>
