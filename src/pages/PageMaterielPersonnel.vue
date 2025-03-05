@@ -102,7 +102,7 @@ import MaterielTypeCategorieSelect from '/src/components/MATERIEL/MaterielTypeCa
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
-  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielTypes = store.dispatch('fetchMaterielTypes');
   const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
 
   Promise.all([

@@ -6,7 +6,7 @@ export const useMaterielTypeStore = defineStore('materielType', {
     liste: [],
   }),
   actions: {
-    fetchMatPersoTypes() {
+    fetchMaterielTypes() {
       if (this.liste.length > 0) {
         return Promise.resolve();
       } else {

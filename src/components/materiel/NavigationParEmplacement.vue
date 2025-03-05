@@ -35,7 +35,7 @@ const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
 const couleurStore = useCouleurStore();
 
-typeStore.fetchMatPersoTypes();
+typeStore.fetchMaterielTypes();
 categorieStore.fetchMaterielCategories();
 couleurStore.fetchCouleurs();
 

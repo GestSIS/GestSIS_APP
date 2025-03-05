@@ -1,7 +1,18 @@
 <script setup>
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Materiel';
+import {
+  computed,
+  inject,
+  nextTick,
+  onMounted,
+  ref,
+  useTemplateRef,
+} from 'vue';
+
 import { useStore } from 'vuex';
+import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import ArticleService from '../../services/materiel/ArticleService';
+import { indexedData } from '../../tools';
 
 const { data } = defineProps({
   data: {
@@ -11,137 +22,148 @@ const { data } = defineProps({
 });
 
 const awn = inject('awn');
-
-const store = useStore();
+const sapeur = useTemplateRef('sapeur');
+onMounted(() => {
+  sapeur.value.focus();
+});
 
 const errors = ref({});
-const tab = ref('numerote');
 const depuisInventaire = ref(true);
 const activeAttribution = ref({
   date: new Date().toISOString().slice(0, 10),
   id: data?.id,
   quantite: data?.materiel?.quantite ?? null,
   sapeur_id: data?.sapeurId ?? null,
-  items: [
+  articlesDepuisInventaire: [
     {
       id: null,
       materiel_type_id: null,
+      emplacement_id: null,
+      taille: null,
+      remarque: null,
+    },
+  ],
+  articlesHorsInventaire: [
+    {
+      materiel_type_id: null,
+      taille: null,
       remarque: null,
     },
   ],
 });
 
-// FIXME:focus input field
-console.log(useTemplateRef('sapeur').value);
-// useTemplateRef('sapeur').value.focus();
-
 const materielTypeStore = useMaterielTypeStore();
+const emplacementStore = useEmplacementStore();
+const store = useStore();
+
 await Promise.all([
-  materielTypeStore.fetchMaterielType(),
+  materielTypeStore.fetchMaterielTypes(),
+  emplacementStore.fetchEmplacements(),
   store.dispatch('fetchListeSapeur'),
 ]);
 
 const types = computed(() => materielTypeStore.liste);
-const articles = ref(await ArticleService.getMaterielLavable(id));
+const indexedTypes = computed(() => indexedData(types.value));
+const emplacements = computed(() => emplacementStore.liste);
+const indexedEmplacements = computed(() => indexedData(emplacements.value));
+const articles = ref(await ArticleService.getAttribuable());
 
-const materielDispo = computed(() =>
-  articles.value
-    .filter(
-      (m) => m.materiel.numero && (m.retour != null || m.sapeur_id == null)
-    )
-    .map((m) => ({ ...m, ...m.materiel, id: m.id }))
-);
+// types des articles disponible
+const typesDisponible = computed(() => {
+  const ids = new Set(articles.value.map((a) => a.materiel_type_id));
+  return types.value.filter((t) => ids.has(t.id));
+});
+
 const sapeurs = computed(() => store.state.sapeur.liste);
 
 const save = async () => {
   if (!activeAttribution.value.sapeur_id) {
     awn.warning('Veuillez sélectionner un sapeur');
-  }
-
-  // Masse attribution
-  const baseAttribution = {
-    sapeur_id: activeAttribution.value.sapeur_id,
-    date: activeAttribution.value.date,
-  };
-
-  const numerotes = depuisInventaire.value
-    ? activeAttribution.value.numerotesDepuisInventaire
-    : activeAttribution.value.numerotesHorsInventaire;
-
-  const attributions = [
-    ...numerotes
-      .filter((m) => m.materiel_type_id && m.numero)
-      .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
-
-    ...activeAttribution.value.generiques
-      .filter((m) => m.materiel_type_id && m.quantite > 0)
-      .map((m) => ({ ...baseAttribution, ...m })),
-  ];
-
-  if (attributions.length == 0) {
-    awn.warning('Aucun matériel saisi');
     return;
   }
-  store
-    .dispatch('attribuerMatPerso', {
-      depuisInventaire: depuisInventaire.value,
-      attributions,
-    })
-    .then(() => {
-      errors = {};
-      store.commit('HIDE_MODAL');
-    })
-    .catch((err) => (errors.value = err));
-};
-const addNumerote = () => {
-  const data = depuisInventaire.value
-    ? activeAttribution.value.numerotesDepuisInventaire
-    : activeAttribution.value.numerotesHorsInventaire;
 
-  data.push({
+  // // Masse attribution
+  // const baseAttribution = {
+  //   sapeur_id: activeAttribution.value.sapeur_id,
+  //   date: activeAttribution.value.date,
+  // };
+
+  // const numerotes = depuisInventaire.value
+  //   ? activeAttribution.value.articlesDepuisInventaire
+  //   : activeAttribution.value.articlesHorsInventaire;
+
+  // const attributions = [
+  //   ...numerotes
+  //     .filter((m) => m.materiel_type_id && m.numero)
+  //     .map((m) => ({ ...baseAttribution, ...m, quantite: null })),
+
+  //   ...activeAttribution.value.generiques
+  //     .filter((m) => m.materiel_type_id && m.quantite > 0)
+  //     .map((m) => ({ ...baseAttribution, ...m })),
+  // ];
+
+  // if (attributions.length == 0) {
+  //   awn.warning('Aucun matériel saisi');
+  //   return;
+  // }
+  // store
+  //   .dispatch('attribuerMatPerso', {
+  //     depuisInventaire: depuisInventaire.value,
+  //     attributions,
+  //   })
+  //   .then(() => {
+  //     errors = {};
+  //     store.commit('HIDE_MODAL');
+  //   })
+  //   .catch((err) => (errors.value = err));
+};
+const close = () => {
+  store.commit('HIDE_MODAL');
+};
+
+const refArticlesDepuisInventaire = useTemplateRef(`article-depuis-inventaire`);
+const refArticlesHorsInventaire = useTemplateRef(`article-hors-inventaire`);
+const addEmptyLine = () => {
+  const data = computed(() =>
+    depuisInventaire.value
+      ? activeAttribution.value.articlesDepuisInventaire
+      : activeAttribution.value.articlesHorsInventaire,
+  );
+
+  data.value.push({
     materiel_type_id: null,
     numero: null,
     taille: null,
     remarque: null,
   });
 
-  const count = data.length;
   nextTick(() => {
-    useTemplateRef(`numerote-${count - 1}`).value.focus();
+    const reference = depuisInventaire.value
+      ? refArticlesDepuisInventaire.value
+      : refArticlesHorsInventaire.value;
+    reference[reference.length - 1].focus();
   });
 };
-const addGenerique = () => {
-  activeAttribution.value.generiques.push({
-    materiel_type_id: null,
-    taille: null,
-    quantite: null,
-    remarque: null,
-  });
 
-  const count = activeAttribution.value.generiques.length;
-  nextTick(() => {
-    useTemplateRef(`generique-${count - 1}`).value.focus();
-  });
-};
 const selectMaterielTypeNumerote = (item, value) => {
   // Select première combinaison valable
-  const materiel = materielNumeroteDispo.find(
-    (m) => m.materiel_type_id == value
-  );
-  item.id = materiel?.id;
-  item.taille = materiel?.taille;
-  item.numero = materiel?.numero;
-  item.remarque = materiel?.remarque;
+  // const materiel = materielNumeroteDispo.find(
+  //   (m) => m.materiel_type_id == value,
+  // );
+  // item.id = materiel?.id;
+  // item.taille = materiel?.taille;
+  // item.numero = materiel?.numero;
+  // item.remarque = materiel?.remarque;
 };
 const selectNumero = (item, value) => {
-  const materiel = materielNumeroteDispo.find((m) => m.id == value);
-  item.taille = materiel?.taille;
-  item.numero = materiel?.numero;
-  item.id = materiel?.id;
-  item.remarque = materiel?.remarque;
+  // const materiel = materielNumeroteDispo.find((m) => m.id == value);
+  // item.taille = materiel?.taille;
+  // item.numero = materiel?.numero;
+  // item.id = materiel?.id;
+  // item.remarque = materiel?.remarque;
 };
 const selectMaterielTypeGenerique = (item) => {
-  item.quantite = 1;
+  // item.quantite = 1;
 };
 </script>
 
@@ -149,7 +171,7 @@ const selectMaterielTypeGenerique = (item) => {
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Attribuer du matériel</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -189,246 +211,197 @@ const selectMaterielTypeGenerique = (item) => {
           </div>
         </div>
         <div class="col-md-12">
-          <nav id="nav-tab" class="nav nav-tabs mb-3" role="tablist">
-            <button
-              class="nav-item nav-link"
-              role="tab"
-              :class="{ active: tab == 'numerote' }"
-              @click="tab = 'numerote'"
-            >
-              Matériel numéroté
-            </button>
-            <button
-              class="nav-item nav-link"
-              role="tab"
-              exact-active-class="active"
-              :class="{ active: tab == 'generique' }"
-              @click="tab = 'generique'"
-            >
-              Matériel générique
-            </button>
-          </nav>
-          <div class="tab-content">
-            <div class="tab-pane fade show active" role="tabpanel">
-              <table v-if="tab == 'numerote'" class="table table-sm">
-                <thead>
-                  <tr>
-                    <th class="col-4">Matériel type</th>
-                    <th class="col-2">Numéro</th>
-                    <th class="col-2">Taille</th>
-                    <th>Remarque</th>
-                    <th class="col-1"></th>
-                  </tr>
-                </thead>
-                <tbody v-if="depuisInventaire">
-                  <tr
-                    v-for="(
-                      item, index
-                    ) in activeAttribution.numerotesDepuisInventaire"
-                    :key="index"
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th class="col-4">Matériel type</th>
+                <th class="col-2">Numéro</th>
+                <th class="col-2">Taille</th>
+                <th v-if="depuisInventaire" class="col-2">Emplacement</th>
+                <th>Remarque</th>
+                <th class="col-1"></th>
+              </tr>
+            </thead>
+            <tbody v-if="articles.length === 0 && depuisInventaire">
+              <tr>
+                <td colspan="6">
+                  Aucun article dans l'inventaire, utilisez l'attribution hors
+                  inventaire ou ajouter du matériel au préalable.
+                </td>
+              </tr>
+            </tbody>
+            <!-- Depuis inventaire -->
+            <tbody v-else-if="depuisInventaire">
+              <tr
+                v-for="(
+                  item, index
+                ) in activeAttribution.articlesDepuisInventaire"
+                :key="index"
+              >
+                <td>
+                  <base-select
+                    ref="article-depuis-inventaire"
+                    v-model="item.materiel_type_id"
+                    :options="typesDisponible"
+                    base-option="&lt;Matériel type&gt;"
+                    @update:model-value="
+                      (value) => selectMaterielTypeNumerote(item, value)
+                    "
+                  />
+                </td>
+                <td>
+                  <base-select
+                    v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
+                    v-model="item.id"
+                    :options="
+                      articles.filter(
+                        (a) => a.materiel_type_id == item.materiel_type_id,
+                      )
+                    "
+                    base-option="&lt;Aucun matériel correspondant&gt;"
+                    display-key="numero"
+                    @update:model-value="(value) => selectNumero(item, value)"
+                  />
+                  <font-awesome-icon
+                    v-else
+                    class="ms-4"
+                    v-tooltip.bottom="'Matériel non numéroté'"
+                    :icon="['far', 'circle-question']"
+                  />
+                </td>
+                <td>
+                  <base-select
+                    v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
+                    v-model="item.id"
+                    :options="
+                      articles.filter(
+                        (a) => a.materiel_type_id == item.materiel_type_id,
+                      )
+                    "
+                    base-option="&lt;Aucun matériel correspondant&gt;"
+                    display-key="taille"
+                    @update:model-value="(value) => selectNumero(item, value)"
+                  />
+                  <font-awesome-icon
+                    v-else
+                    class="ms-4"
+                    v-tooltip.bottom="'Taille unique'"
+                    :icon="['far', 'circle-question']"
+                  />
+                </td>
+                <td>
+                  <base-select
+                    v-model="item.id"
+                    :options="
+                      articles.filter(
+                        (a) => a.materiel_type_id == item.materiel_type_id,
+                      )
+                    "
+                    base-option="&lt;Aucun matériel correspondant&gt;"
+                    display-key="emplacement_id"
+                    @update:model-value="(value) => selectNumero(item, value)"
+                  />
+                  {{ articles }}
+                </td>
+                <td>{{ item.remarque }}</td>
+                <td>
+                  <button
+                    class="btn btn-outline-danger border-0"
+                    @click="
+                      activeAttribution.articlesDepuisInventaire.splice(
+                        index,
+                        1,
+                      )
+                    "
                   >
-                    <td>
-                      <base-select
-                        :ref="'numerote-' + index"
-                        v-model="item.materiel_type_id"
-                        :options="
-                          types.filter((t) =>
-                            materielNumeroteDispo.find(
-                              (m) => m.materiel_type_id == t.id
-                            )
-                          )
-                        "
-                        base-option="&lt;Matériel type&gt;"
-                        @update:model-value="
-                          (value) => selectMaterielTypeNumerote(item, value)
-                        "
-                      />
-                    </td>
-                    <td>
-                      <base-select
-                        v-model="item.id"
-                        :options="
-                          materielNumeroteDispo.filter(
-                            (m) =>
-                              !item.materiel_type_id ||
-                              m.materiel_type_id == item.materiel_type_id
-                          )
-                        "
-                        base-option="&lt;Aucun matériel correspondant&gt;"
-                        display-key="numero"
-                        @update:model-value="
-                          (value) => selectNumero(item, value)
-                        "
-                      />
-                      <!-- -{{ item.materiel_type_id }}-
-                      {{ materielNumeroteDispo }} -->
-                    </td>
-                    <td>
-                      {{ item.taille }}
-                    </td>
-                    <td>{{ item.remarque }}</td>
-                    <td>
-                      <button
-                        class="btn btn-outline-danger border-0"
-                        @click="
-                          activeAttribution.numerotesDepuisInventaire.splice(
-                            index,
-                            1
-                          )
-                        "
-                      >
-                        <font-awesome-icon :icon="['far', 'trash-alt']" />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="5">
-                      <button
-                        class="btn btn-outline-primary"
-                        @click="addNumerote"
-                      >
-                        <font-awesome-icon :icon="['fas', 'plus']" />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody v-if="!depuisInventaire">
-                  <tr
-                    v-for="(
-                      item, index
-                    ) in activeAttribution.numerotesHorsInventaire"
-                    :key="index"
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="6">
+                  <button class="btn btn-outline-primary" @click="addEmptyLine">
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <!-- Hors inventaire -->
+            <tbody v-if="!depuisInventaire">
+              <tr
+                v-for="(
+                  item, index
+                ) in activeAttribution.articlesHorsInventaire"
+                :key="index"
+              >
+                <td>
+                  <base-select
+                    ref="article-hors-inventaire"
+                    v-model="item.materiel_type_id"
+                    base-option="&lt;Matériel type&gt;"
+                    :options="types"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
+                    v-model="item.numero"
+                    class="form-control form-control-sm"
+                    type="text"
+                  />
+                  <font-awesome-icon
+                    v-else
+                    class="ms-4"
+                    v-tooltip.bottom="'Matériel non numéroté'"
+                    :icon="['far', 'circle-question']"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
+                    v-model="item.taille"
+                    class="form-control form-control-sm"
+                    type="text"
+                  />
+                  <font-awesome-icon
+                    v-else
+                    class="ms-4"
+                    v-tooltip.bottom="'Taille u8nique'"
+                    :icon="['far', 'circle-question']"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="item.remarque"
+                    class="form-control form-control-sm"
+                    type="text"
+                  />
+                </td>
+                <td>
+                  <button
+                    class="btn btn-outline-danger border-0"
+                    @click="
+                      activeAttribution.numerotesHorsInventaire.splice(index, 1)
+                    "
                   >
-                    <td>
-                      <base-select
-                        :ref="'numerote-' + index"
-                        v-model="item.materiel_type_id"
-                        base-option="&lt;Matériel type&gt;"
-                        :options="types"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.numero"
-                        class="form-control form-control-sm"
-                        type="text"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.taille"
-                        class="form-control form-control-sm"
-                        type="text"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.remarque"
-                        class="form-control form-control-sm"
-                        type="text"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        class="btn btn-outline-danger border-0"
-                        @click="
-                          activeAttribution.numerotesHorsInventaire.splice(
-                            index,
-                            1
-                          )
-                        "
-                      >
-                        <font-awesome-icon :icon="['far', 'trash-alt']" />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="5">
-                      <button
-                        class="btn btn-outline-primary"
-                        @click="addNumerote"
-                      >
-                        <font-awesome-icon :icon="['fas', 'plus']" />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <table v-if="tab == 'generique'" class="table table-sm">
-                <thead>
-                  <tr>
-                    <th class="col-4">Matériel type</th>
-                    <th class="col-2">Taille</th>
-                    <th class="col-2">Quantité</th>
-                    <th>Remarque</th>
-                    <th class="col-1"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(item, index) in activeAttribution.generiques"
-                    :key="index"
-                  >
-                    <td>
-                      <base-select
-                        :ref="'generique-' + index"
-                        v-model="item.materiel_type_id"
-                        :options="types"
-                        base-option="&lt;Matériel type&gt;"
-                        @update:model-value="
-                          (value) => selectMaterielTypeGenerique(item, value)
-                        "
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.taille"
-                        class="form-control form-control-sm"
-                        type="text"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.quantite"
-                        class="form-control form-control-sm"
-                        type="number"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        v-model="item.remarque"
-                        class="form-control form-control-sm"
-                        type="text"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        class="btn btn-outline-danger border-0"
-                        @click="activeAttribution.generiques.splice(index, 1)"
-                      >
-                        <font-awesome-icon :icon="['far', 'trash-alt']" />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="5">
-                      <button
-                        class="btn btn-outline-primary"
-                        @click="addGenerique"
-                      >
-                        <font-awesome-icon :icon="['fas', 'plus']" />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <button class="btn btn-outline-primary" @click="addEmptyLine">
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="close">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">

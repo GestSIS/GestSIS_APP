@@ -28,7 +28,7 @@ const loadArticles = async () => {
 
 await Promise.all([
   emplacementStore.fetchEmplacements(),
-  materielTypeStore.fetchMatPersoTypes(),
+  materielTypeStore.fetchMaterielTypes(),
   store.dispatch('fetchListeSapeur'),
   Promise.resolve(await loadArticles()),
 ]);

@@ -13,10 +13,14 @@ const categorieStore = useMaterielCategorieStore();
 const couleurStore = useCouleurStore();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 typeStore.fetchMaterielTypes();
 =======
 typeStore.fetchMatPersoTypes();
 >>>>>>> f32c8d3 (Refactor component, file and router structure)
+=======
+typeStore.fetchMaterielTypes();
+>>>>>>> 9b32428 (Refonte UI materiel)
 categorieStore.fetchMaterielCategories();
 couleurStore.fetchCouleurs();
 

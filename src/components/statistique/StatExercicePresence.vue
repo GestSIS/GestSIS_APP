@@ -178,7 +178,7 @@
                       v-if="p && !p.convoque"
                       v-tooltip.bottom="'Pour information'"
                       class="me-1"
-                      :icon="['fas', 'circle-info']"
+                      :icon="['fas', 'info-circle']"
                     />{{ formatPresence(p) }}</span
                   >
                 </td>
@@ -275,7 +275,7 @@ export default {
       fonctions: (state) => state.fonction.liste,
       exercices: (state) =>
         state.exercice.liste.sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
+          (a, b) => new Date(a.date) - new Date(b.date),
         ),
       indexedExercices: (state) =>
         state.exercice.liste.reduce((map, e) => {
@@ -298,7 +298,7 @@ export default {
       excuses: (state) => state.excuseType.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -312,7 +312,7 @@ export default {
     },
     categorieExercices() {
       const categories = new Set(
-        this.exercices.map((e) => e.exercice_categorie_id)
+        this.exercices.map((e) => e.exercice_categorie_id),
       );
       return this.categories.filter((c) => categories.has(c.id));
     },
@@ -331,7 +331,7 @@ export default {
       return this.exercices.filter(
         (e) =>
           !unselectedCategories.has(e.exercice_categorie_id) &&
-          !unselectedLocalites.has(e.localite_id)
+          !unselectedLocalites.has(e.localite_id),
       );
     },
     computedData() {
@@ -345,7 +345,7 @@ export default {
           !unselectedLocaliteExercice.has(exercice?.localite_id) &&
           !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
           !unselectedLocaliteSapeur.has(
-            this.indexedSapeursLocaliteId.get(p.sapeur_id)
+            this.indexedSapeursLocaliteId.get(p.sapeur_id),
           )
         );
       });
@@ -362,7 +362,7 @@ export default {
           map.set(e.sapeur_id, sapeurMap);
           return map;
         },
-        new Map()
+        new Map(),
       );
 
       return this.filteredSapeurs
@@ -370,7 +370,7 @@ export default {
         .map((s) => ({
           ...s,
           presences: this.displayExercice.map((e) =>
-            sapeurExerciceIndexedPresence.get(s.id)?.get(e.id)
+            sapeurExerciceIndexedPresence.get(s.id)?.get(e.id),
           ),
           stats: this.computeStats(sapeurIndexedPresence[s.id] || []),
           temp: sapeurIndexedPresence[s.id] || [],
@@ -392,10 +392,10 @@ export default {
             !unselectedLocaliteExercice.has(exercice?.localite_id) &&
             !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
             !unselectedLocaliteSapeur.has(
-              this.indexedSapeursLocaliteId.get(p.sapeur_id)
+              this.indexedSapeursLocaliteId.get(p.sapeur_id),
             )
           );
-        })
+        }),
       );
     },
   },
@@ -421,7 +421,7 @@ export default {
         ])
         .reduce(
           (accumulator, p) => accumulator.map((v, i) => v + p[i]),
-          [0, 0, 0, 0, 0]
+          [0, 0, 0, 0, 0],
         );
       return {
         convoque: stats[0],
@@ -444,7 +444,7 @@ export default {
       }
       if (presence.excuse_type_id) {
         const excuse = this.excuses.find(
-          (e) => e.id == presence.excuse_type_id
+          (e) => e.id == presence.excuse_type_id,
         );
         return excuse?.abreviation;
       }
@@ -466,7 +466,7 @@ export default {
       }
       if (presence.excuse_type_id) {
         const excuse = this.excuses.find(
-          (e) => e.id == presence.excuse_type_id
+          (e) => e.id == presence.excuse_type_id,
         );
         return prefix + excuse?.designation;
       }
@@ -517,7 +517,7 @@ export default {
           '',
           '',
           ...this.displayExercice.map((e) =>
-            new Date(e.date).toLocaleDateString('fr-CH')
+            new Date(e.date).toLocaleDateString('fr-CH'),
           ),
           '',
           '',
@@ -539,7 +539,7 @@ export default {
               s.stats.remplace,
               s.stats.excuse,
               s.stats.amende,
-            ].join(';')
+            ].join(';'),
           )
           .join('\n') +
         '\n' +

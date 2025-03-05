@@ -59,7 +59,7 @@ async function loadData(_, next) {
   // TODO: Charger les bonnes données
   const loadEventType = store.dispatch('fetchMatPersoEventTypes');
   const loadAlertType = store.dispatch('fetchMatPersoAlerteTypes');
-  const loadMaterielType = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielType = store.dispatch('fetchMaterielTypes');
   const loadMaterielCategorie = store.dispatch('fetchMatPersoCategories');
 
   Promise.all([

@@ -25,7 +25,7 @@ const loadArticles = async () => {
 };
 
 await Promise.all([
-  materielTypeStore.fetchMatPersoTypes(),
+  materielTypeStore.fetchMaterielTypes(),
   Promise.resolve(await loadArticles()),
 ]);
 

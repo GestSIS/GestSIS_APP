@@ -11,7 +11,7 @@ const { id } = defineProps({
 
 const materielTypeStore = useMaterielTypeStore();
 
-await Promise.all([materielTypeStore.fetchMatPersoTypes()]);
+await Promise.all([materielTypeStore.fetchMaterielTypes()]);
 
 const materielType = computed(() =>
   materielTypeStore.liste.find((m) => m.id === parseInt(id))

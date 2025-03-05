@@ -22,7 +22,7 @@ import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   const loadMonMateriel = store.dispatch('fetchMonMateriel');
-  const loadMaterielType = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielType = store.dispatch('fetchMaterielTypes');
 
   Promise.all([loadMonMateriel, loadMaterielType]).then(() => {
     next();

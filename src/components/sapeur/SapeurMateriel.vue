@@ -57,7 +57,7 @@ import permissions from '/src/store/permissions.js';
 
 import store from '/src/store/index';
 async function loadData(routeTo, next) {
-  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielTypes = store.dispatch('fetchMaterielTypes');
   const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
   const loadSapeurMateriel = store.dispatch('fetchSapeurMateriels');
 

@@ -7,4 +7,7 @@ export default {
   getParSapeur(sapeurId) {
     return Api.api().get(`sapeurs/${sapeurId}/articles`);
   },
+  getAttribuable() {
+    return Api.api().get(`articles?attribuable=true`);
+  },
 };
