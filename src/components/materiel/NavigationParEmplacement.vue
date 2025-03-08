@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { groupedByData, indexedData } from '../../tools';
@@ -29,74 +30,42 @@ const computedData = computed(() => {
 =======
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+=======
+>>>>>>> e10654d (NavigationPrEmplacement)
 import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { groupedByData, indexedData } from '../../tools';
 
-const typeStore = useMaterielTypeStore();
-const categorieStore = useMaterielCategorieStore();
+const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 
-typeStore.fetchMaterielTypes();
-categorieStore.fetchMaterielCategories();
 couleurStore.fetchCouleurs();
+emplacementStore.fetchEmplacements();
 
-const types = computed(() =>
-  typeStore.liste.sort((a, b) => a.designation - b.designation)
-);
-const categories = computed(() =>
-  categorieStore.liste.sort((a, b) => a.designation - b.designation)
-);
-const indexedCouleurs = computed(() =>
-  couleurStore.liste.reduce((acc, c) => {
-    acc[c.id] = c;
-    return acc;
-  }, {})
+const emplacements = computed(() => emplacementStore.liste);
+
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+const emplacementsGroupedByParent = computed(() =>
+  groupedByData(emplacements.value, 'parent_id'),
 );
 
 const computedData = computed(() => {
-  let indexedTypes = {};
-
-  types.value.forEach((t) => {
-    if (!indexedTypes[t.materiel_categorie_id])
-      indexedTypes[t.materiel_categorie_id] = [t];
-    else indexedTypes[t.materiel_categorie_id].push(t);
-  });
-  let indexedCategories = {};
-  categories.value.forEach((c) => {
-    if (!indexedCategories[c.parent_id]) indexedCategories[c.parent_id] = [c];
-    else indexedCategories[c.parent_id].push(c);
-  });
-
-  let data = [];
-
-  const recursive = (categories, level) => {
-    categories.forEach((c) => {
-      data.push({
-        ...c,
-        globalId: 'c' + c.id,
-        type: 'categorie',
-        level: level,
-      });
-
-      if (indexedCategories[c.id])
-        recursive(indexedCategories[c.id], level + 1);
-
-      indexedTypes[c.id]?.forEach((t) => {
-        data.push({
-          ...t,
-          globalId: 't' + t.id,
-          type: 'type',
-          level: level + 1,
-        });
-      });
-    });
+  const recursive = (parent_id, level = 0) => {
+    return [...(emplacementsGroupedByParent.value[parent_id] ?? [])].flatMap(
+      (elem) => [{ ...elem, level }, ...recursive(elem.id, level + 1)],
+    );
   };
 
+<<<<<<< HEAD
   recursive(
     categories.value.filter((c) => !c.parent_id),
     0
   );
   return data;
 >>>>>>> f32c8d3 (Refactor component, file and router structure)
+=======
+  return recursive(null);
+>>>>>>> e10654d (NavigationPrEmplacement)
 });
 </script>
 
@@ -118,7 +87,7 @@ const computedData = computed(() => {
       }"
 =======
     <li v-if="computedData.length === 0">
-      <td class="border-bottom-0">Aucune catégorie</td>
+      <td class="border-bottom-0">Aucun emplacement</td>
     </li>
     <router-link
       v-for="item in computedData"
@@ -138,6 +107,7 @@ const computedData = computed(() => {
     >
       <a
 <<<<<<< HEAD
+<<<<<<< HEAD
         class="nav-link list-group-item list-group-item-action pt-1 pb-1 border-0"
         href="#"
         role="link"
@@ -155,6 +125,8 @@ const computedData = computed(() => {
       </a>
 =======
         v-if="item.type === 'type'"
+=======
+>>>>>>> e10654d (NavigationPrEmplacement)
         class="nav-link list-group-item list-group-item-action pt-1 pb-1"
         href="#"
         role="link"
@@ -162,8 +134,11 @@ const computedData = computed(() => {
         @click="navigate"
         >{{ item.designation }}
       </a>
+<<<<<<< HEAD
       <span v-else>{{ item.designation }}</span>
 >>>>>>> f32c8d3 (Refactor component, file and router structure)
+=======
+>>>>>>> e10654d (NavigationPrEmplacement)
     </router-link>
   </ul>
 </template>

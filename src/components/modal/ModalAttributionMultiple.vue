@@ -366,7 +366,7 @@ const selectMaterielTypeGenerique = (item) => {
                   <font-awesome-icon
                     v-else
                     class="ms-4"
-                    v-tooltip.bottom="'Taille u8nique'"
+                    v-tooltip.bottom="'Taille unique'"
                     :icon="['far', 'circle-question']"
                   />
                 </td>
