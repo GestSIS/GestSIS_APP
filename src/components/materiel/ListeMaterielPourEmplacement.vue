@@ -36,27 +36,9 @@ await Promise.all([
 watch(() => id, loadArticles);
 
 const emplacements = computed(() => emplacementStore.liste);
-const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
-);
+const types = computed(() => materielTypeStore.liste);
 
-// Partie pièces
-const piecesColonnes = [
-  ...(materielType.value.est_numerote
-    ? [{ title: 'Numéro', key: 'numero' }]
-    : []),
-  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
-  ...(materielType.value.est_taillee
-    ? [{ title: 'Taille', key: 'taille' }]
-    : []),
-  { title: 'Compartiment', key: 'compartiment' },
-  // { title: 'Inventaire', key: 'inventaire' },
-  // { title: 'Maintenance', key: 'maintenance' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Ajouté', key: 'created_at', type: 'date' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
-];
-
+const indexedTypes = computed(() => indexedData(types.value));
 const indexedEmplacements = computed(() => indexedData(emplacements.value));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
 
@@ -75,6 +57,23 @@ const computedData = computed(() =>
     sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
   })),
 );
+
+// Partie pièces
+const piecesColonnes = [
+  ...(materielType.value.est_numerote
+    ? [{ title: 'Numéro', key: 'numero' }]
+    : []),
+  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
+  ...(materielType.value.est_taillee
+    ? [{ title: 'Taille', key: 'taille' }]
+    : []),
+  { title: 'Compartiment', key: 'compartiment' },
+  // { title: 'Inventaire', key: 'inventaire' },
+  // { title: 'Maintenance', key: 'maintenance' },
+  { title: 'Remarque', key: 'remarque' },
+  { title: 'Ajouté', key: 'created_at', type: 'date' },
+  { title: 'Actions', key: 'id', slot: 'actions' },
+];
 </script>
 
 <template>

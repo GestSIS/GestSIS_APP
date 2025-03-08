@@ -14,7 +14,7 @@ const materielTypeStore = useMaterielTypeStore();
 await Promise.all([materielTypeStore.fetchMaterielTypes()]);
 
 const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id))
+  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
 );
 
 const formatEmptyString = (str) => (str === '' ? '-' : str);
