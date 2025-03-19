@@ -63,6 +63,13 @@ const attribuer = () => {
     data: { sapeurId: id },
   });
 };
+
+const retourMateriel = (materiel) => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalRetourUnique',
+    data: materiel,
+  });
+};
 </script>
 
 <template>
@@ -87,7 +94,15 @@ const attribuer = () => {
         </div>
       </template>
 
-      <template #actions="{ rowData }"> TODO: </template>
+      <template #actions="{ rowData }">
+        <button
+          title="Retour"
+          class="btn btn-outline-primary border-0"
+          @click="retourMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+        </button>
+      </template>
     </base-table>
   </div>
 </template>

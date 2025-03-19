@@ -5,7 +5,4 @@ export const useArticleStore = defineStore('articles', {
   state: () => ({
     attribuable: [],
   }),
-  actions: {
-    fetchMaterielAtribuable() {},
-  },
 });

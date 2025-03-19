@@ -10,4 +10,7 @@ export default {
   getAttribuable() {
     return Api.api().get(`articles?attribuable=true`);
   },
+  retourArticles(params) {
+    return Api.api().delete(`sapeurs/articles`, params);
+  },
 };
