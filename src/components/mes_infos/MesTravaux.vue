@@ -30,6 +30,8 @@ import store from '/src/store/index';
 import permissions from '../../store/permissions';
 
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadMesTravaux = store.dispatch('fetchMesTravaux');
   const loadTravailTypes = store.dispatch('fetchTravailTypes');
   const loadUnites = store.dispatch('fetchUnites');

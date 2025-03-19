@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "09.03.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Résolution d'un bug au chargement de certaines pages du module `mes-infos`"
+      ]
+    },
+    {
       "date": "14.02.2025",
       "version": "1.0",
       "app": "GestSIS APP",

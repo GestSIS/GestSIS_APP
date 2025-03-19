@@ -48,6 +48,8 @@ import { mapState, mapMutations } from 'vuex';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadMesAbsences = store.dispatch('fetchMesAbsences');
   const loadAbsenceParams = store.dispatch('fetchAbsenceParams');
 

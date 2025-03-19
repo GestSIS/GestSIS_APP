@@ -34,6 +34,8 @@ import MesInfosService from '../../services/MesInfosService';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadMesDecomptes = store.dispatch('fetchMesDecomptes');
 
   Promise.all([loadMesDecomptes]).then(() => {

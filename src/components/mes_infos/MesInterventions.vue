@@ -27,6 +27,8 @@ import store from '/src/store/index';
 import InterventionPresenceDetails from '/src/components/mes_infos/InterventionPresenceDetails.vue';
 
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadMesInterventions = store.dispatch('fetchMesInterventions');
   const loadlocalites = store.dispatch('fetchLocalites');
   const loadTypeInterventions = store.dispatch('fetchTypeInterventions');

@@ -81,6 +81,8 @@ import { exercicesToIcs } from '../../tools/exportExercices';
 import ExerciceService from '../../services/ExerciceService';
 
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadMesExercices = store.dispatch('fetchMesExercices');
   const loadUnites = store.dispatch('fetchUnites');
   const loadLocalites = store.dispatch('fetchLocalites');
