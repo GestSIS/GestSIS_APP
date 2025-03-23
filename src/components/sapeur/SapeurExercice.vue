@@ -88,6 +88,8 @@ import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
 import store from '/src/store/index';
 import ExerciceService from '../../services/ExerciceService';
 async function loadData(routeTo, next) {
+  await store.dispatch('fetchExercicesComptables');
+
   const loadExerciceSapeur = store.dispatch('fetchSapeurExercices');
 
   Promise.all([loadExerciceSapeur]).then(() => {
