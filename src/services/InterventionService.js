@@ -174,7 +174,7 @@ export default {
 
   // Rapport d'intervention
   downloadRapport(interventionId, params, filename) {
-    return Api.print(filename).get(
+    return Api.apiFileDownload(filename).get(
       '/interventions/' + interventionId + '/rapport',
       { params }
     );

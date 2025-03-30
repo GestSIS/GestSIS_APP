@@ -147,7 +147,7 @@ export default {
                 2: 'Indemnité',
                 3: 'Frais forfaitaire',
                 4: 'Frais effectif',
-                5: 'Charge AVS/AC',
+                5: 'Cotisation AVS/AC',
               };
               return mapping[t] ?? 'Autre';
             },

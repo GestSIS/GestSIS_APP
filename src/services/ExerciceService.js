@@ -87,9 +87,13 @@ export default {
     );
   },
   downloadListPresence(exerciceId, filename) {
-    return Api.print(filename).get(`/exercices/${exerciceId}/liste-presence`);
+    return Api.apiFileDownload(filename).get(
+      `/exercices/${exerciceId}/liste-presence`
+    );
   },
   downloadListAppel(exerciceId, filename) {
-    return Api.print(filename).get(`/exercices/${exerciceId}/liste-appel`);
+    return Api.apiFileDownload(filename).get(
+      `/exercices/${exerciceId}/liste-appel`
+    );
   },
 };

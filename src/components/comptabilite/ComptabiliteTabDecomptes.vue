@@ -31,7 +31,7 @@
               :disabled="!selectedId"
               @click="impressionStandard(selectedId)"
             >
-              Impression
+              Impression simple
             </button>
           </div>
           <div class="col-6">
@@ -43,7 +43,7 @@
               Impression par sapeur
             </button>
           </div>
-          <div class="col-6">
+          <!-- <div class="col-6">
             <button
               class="btn btn-outline-primary col-12"
               :disabled="!selectedId"
@@ -51,7 +51,7 @@
             >
               Impression par compte
             </button>
-          </div>
+          </div> -->
           <div class="col-6">
             <button
               class="btn btn-outline-primary col-12"
