@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "02.04.2025",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Migration des justificatifs comptable vers le nouveau système de génération de pdf",
-        "Migration de la fiche sapeur vers le nouveau système de génération de pdf"
+        "Migration de la fiche sapeur vers le nouveau système de génération de pdf",
+        "Migration du trombinoscope vers le nouveau système de génération de pdf"
       ]
     },
     {
@@ -14,7 +15,11 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Nouveau module de rendu de PDF, attention pas encore disponible pour l'ensemble des fichiers"
+        "Nouveau module de rendu de PDF",
+        "Migration des decomptes vers le nouveau système de génération de pdf",
+        "Migration de rapport d'intervention vers le nouveau système de génération de pdf",
+        "Migration des liste de présence et d'appel vers le nouveau système de génération de pdf",
+        "Migration des convocations vers le nouveau système de génération de pdf"
       ]
     },
     {
