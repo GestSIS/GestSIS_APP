@@ -14,12 +14,12 @@ export default {
     return Api.api().delete(`/comptes/${compteId}`);
   },
   downloadJustificatifIndividuel(filename, exerciceComptableId, compteId) {
-    return Api.print(filename).get(
+    return Api.apiFileDownload(filename).get(
       `/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`
     );
   },
   downloadJustificatifComplet(filename, exerciceComptableId) {
-    return Api.print(filename).get(
+    return Api.apiFileDownload(filename).get(
       `/exercices-comptable/${exerciceComptableId}/justificatif`
     );
   },
