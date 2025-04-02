@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Migration des justificatifs comptable vers le nouveau système de génération de pdf"
+        "Migration des justificatifs comptable vers le nouveau système de génération de pdf",
+        "Migration de la fiche sapeur vers le nouveau système de génération de pdf"
       ]
     },
     {

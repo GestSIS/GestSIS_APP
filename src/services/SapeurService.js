@@ -18,7 +18,7 @@ export default {
     return Api.print(filename).get('/trombinoscope');
   },
   downloadFicheSapeur(sapeurId, filename) {
-    return Api.print(filename).get('/sapeurs/' + sapeurId + '/fiche');
+    return Api.apiFileDownload(filename).get('/sapeurs/' + sapeurId + '/fiche');
   },
   getSapeurPourConvocationSms() {
     return Api.api().get('/sapeurs-convocation');
