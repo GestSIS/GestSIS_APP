@@ -15,7 +15,7 @@ export default {
     });
   },
   downloadTrombinoscope(filename) {
-    return Api.print(filename).get('/trombinoscope');
+    return Api.apiFileDownload(filename).get('/trombinoscope');
   },
   downloadFicheSapeur(sapeurId, filename) {
     return Api.apiFileDownload(filename).get('/sapeurs/' + sapeurId + '/fiche');

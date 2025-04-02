@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-import { API_URL, AUTH_URL, PRINT_URL } from '../http/Env.js';
+import { API_URL, AUTH_URL } from '../http/Env.js';
 
 import store from '/src/store';
 
 const request = {
   API_URL: API_URL,
   AUTH_URL: AUTH_URL,
-  PRINT_URL: PRINT_URL,
 
   _401interceptor: true,
   _refreshToken: null,
@@ -33,75 +32,6 @@ const request = {
 
   getSisKey() {
     return this._sisKey;
-  },
-
-  print(filename, options = {}) {
-    const api = axios.create({
-      baseURL: PRINT_URL,
-      responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
-      headers: {
-        Accept: 'application/pdf',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-
-    api.interceptors.request.use(
-      (config) => {
-        const valueFormatter = (value) => {
-          switch (true) {
-            case value === true:
-              return 1;
-            case value === false:
-              return 0;
-            default:
-              return encodeURIComponent(value);
-          }
-        };
-
-        config.params = {
-          ...options,
-          url: encodeURIComponent(
-            API_URL +
-            config.url +
-            '?' +
-            Object.entries(config.params ?? {})
-              .map(([key, value]) => key + '=' + valueFormatter(value))
-              .join('&')
-          ),
-        };
-        config.url = '/print';
-        return config;
-      },
-      () => { }
-    );
-
-    api.interceptors.response.use(
-      function (response) {
-        return response;
-      },
-      function (error) {
-        const decoder = new TextDecoder('utf-8');
-        const res = decoder.decode(error.response.data);
-        throw JSON.parse(res)?.data;
-      }
-    );
-
-    if (filename) {
-      api.interceptors.response.use((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        // link.target = '_blank' // If we want to open it in another tab
-        link.setAttribute('download', filename);
-        // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-        link.click();
-        window.URL.revokeObjectURL(url);
-        return response.data;
-      });
-    }
-
-    return api;
   },
 
   apiFileDownload(filename) {
