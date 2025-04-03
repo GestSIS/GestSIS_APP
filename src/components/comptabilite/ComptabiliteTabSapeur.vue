@@ -26,6 +26,7 @@
             <button
               class="btn btn-outline-primary"
               :disabled="!selected || true"
+              @click="printPourSapeur"
             >
               Résumé des frais
             </button>
@@ -326,6 +327,9 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    printPourSapeur() {
+      // TODO: Résumé des frais pour 1 sapeur
+    },
     genererDecompteSapeur(sapeurId, sapeur) {
       this.SHOW_MODAL({
         component: 'ModalDecompte',
