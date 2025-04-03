@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Correction de problèmes pour le génération des rapports d'intervention et des fiches sapeur"
+        "Correction de problèmes pour le génération des rapports d'intervention et des fiches sapeur",
+        "Nouveau système de monitoring pour détecter, identifier et aider à corriger les erreurs"
       ]
     },
     {
