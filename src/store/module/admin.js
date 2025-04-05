@@ -5,11 +5,15 @@ export default {
   state: {
     sis: [],
     users: [],
-    contacts: {}
+    contacts: {},
+    params: {},
   },
   mutations: {
     [types.ADMIN_SIS_CONTACTS](state, payload) {
       state.contacts = payload;
+    },
+    [types.ADMIN_SIS_PARAMS](state, payload) {
+      state.params = payload;
     },
     [types.ADMIN_USER_LISTE](state, payload) {
       state.users = payload;
@@ -49,6 +53,11 @@ export default {
     loadAllSisContacts({ commit }) {
       return AdminService.getAllSisContacts().then((data) =>
         commit(types.ADMIN_SIS_CONTACTS, data)
+      );
+    },
+    loadAllSisParams({ commit }) {
+      return AdminService.getAllSisParams().then((data) =>
+        commit(types.ADMIN_SIS_PARAMS, data)
       );
     },
     editUser({ commit }, user) {

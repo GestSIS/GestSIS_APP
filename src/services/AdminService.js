@@ -18,6 +18,9 @@ export default {
   getAllSisContacts() {
     return Api.api().get('/sis-contacts-tous');
   },
+  getAllSisParams() {
+    return Api.api().get('/sis-params-tous');
+  },
   editUser(user) {
     return Api.auth().patch('/utilisateurs/' + user.id, user);
   },

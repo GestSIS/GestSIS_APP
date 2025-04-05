@@ -95,7 +95,10 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     tokenForUser(user) {
-      AdminService.getUserToken(user.id).then(console.log);
+      AdminService.getUserToken(user.id).then((data) => {
+        navigator.clipboard.writeText(data.accessToken);
+        this.$awn.success('Token copié dans le press papier');
+      });
     },
     editUser(user) {
       this.SHOW_MODAL({ component: 'ModalUser', data: user });

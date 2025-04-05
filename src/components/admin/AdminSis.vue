@@ -50,6 +50,18 @@
         </div>
       </div>
     </div>
+    <div class="col-md-3">
+      <div class="card card-primary card-outline mb-2">
+        <div class="card-header d-flex justify-content-between">
+          <h5>Données</h5>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" @click="jsonExport">
+            Données JSON
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
     <div class="card-header d-flex justify-content-between">
@@ -98,9 +110,10 @@ import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
   const loadSis = store.dispatch('loadSisListe');
+  const loadParams = store.dispatch('loadAllSisParams');
   const loadContacts = store.dispatch('loadAllSisContacts');
 
-  Promise.all([loadSis, loadContacts]).then(() => {
+  Promise.all([loadSis, loadContacts, loadParams]).then(() => {
     next();
   });
 }
@@ -131,6 +144,7 @@ export default {
     ...mapState({
       sis: (state) => state.admin.sis,
       contacts: (state) => state.admin.contacts,
+      params: (state) => state.admin.params,
     }),
     computedSis() {
       return this.sis?.map((s) => {
@@ -145,6 +159,19 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_MODAL']),
+    jsonExport() {
+      const data = JSON.stringify(
+        this.sis.map((sis) => ({
+          ...sis,
+          contacts: this.contacts[sis.api_key],
+          params: this.params[sis.api_key],
+        }))
+      );
+
+      navigator.clipboard.writeText(data);
+
+      this.$awn.success('Données copiées dans le press papier');
+    },
     editSis(sis) {
       this.SHOW_MODAL({ component: 'ModalSis', data: sis })
         .then((res) => this.$awn.success(res?.message || 'Sis modifié'))

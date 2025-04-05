@@ -11,6 +11,7 @@
       <div class="mb-3">
         <label for="m-sis-email">Email</label>
         <input
+          ref="input"
           id="m-sis-email"
           v-model="contact.email"
           type="email"
@@ -56,7 +57,9 @@ export default {
       },
     };
   },
-  mounted() {},
+  mounted() {
+    this.$refs.input.focus();
+  },
   methods: {
     ...mapMutations(['HIDE_MODAL']),
     close() {
