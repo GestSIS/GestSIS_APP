@@ -51,6 +51,7 @@ const computedData = computed(() => {
     categories.value.filter((c) => !c.parent_id),
     0
   );
+
   return data;
 });
 </script>

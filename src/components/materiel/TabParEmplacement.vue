@@ -3,7 +3,10 @@
     <div class="col-3">
       <div class="card">
         <div class="card-header">TODO: Ajout filtre</div>
-        <navigation-par-emplacement />
+        <suspense>
+          <navigation-par-emplacement />
+          <template #fallback>Chargement...</template>
+        </suspense>
       </div>
     </div>
     <div class="col-9">
@@ -16,7 +19,7 @@
         </div>
         <div class="col-12">
           <Suspense>
-            <liste-materiel-pour-type :id="id" />
+            <liste-materiel-pour-emplacement :id="id" />
             <template #fallback>Chargement...</template>
           </Suspense>
         </div>
@@ -34,7 +37,7 @@
 </template>
 
 <script setup>
-import ListeMaterielPourType from './ListeMaterielPourType.vue';
+import ListeMaterielPourEmplacement from './ListeMaterielPourEmplacement.vue';
 import NavigationParEmplacement from './NavigationParEmplacement.vue';
 import EmplacementDetail from './EmplacementDetail.vue';
 

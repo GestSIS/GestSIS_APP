@@ -3,7 +3,10 @@
     <div class="col-3">
       <div class="card">
         <div class="card-header">TODO: Ajout filtre</div>
-        <navigation-par-type />
+        <suspense>
+          <navigation-par-type />
+          <template #fallback>Chargement...</template>
+        </suspense>
       </div>
     </div>
     <div class="col-9">

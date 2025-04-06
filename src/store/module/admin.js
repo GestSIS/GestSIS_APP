@@ -37,37 +37,37 @@ export default {
   actions: {
     addSis({ commit }, sis) {
       return AdminService.addSis(sis).then((data) =>
-        commit(types.ADD_SIS, data.data)
+        commit(types.ADD_SIS, data.data),
       );
     },
     editSis({ commit }, sis) {
       return AdminService.editSis(sis).then((data) =>
-        commit(types.EDIT_SIS, data.data)
+        commit(types.EDIT_SIS, data.data),
       );
     },
     loadAllUsers({ commit }) {
       return AdminService.getAllUsers().then((data) =>
-        commit(types.ADMIN_USER_LISTE, data.data)
+        commit(types.ADMIN_USER_LISTE, data.data),
       );
     },
     loadAllSisContacts({ commit }) {
       return AdminService.getAllSisContacts().then((data) =>
-        commit(types.ADMIN_SIS_CONTACTS, data)
+        commit(types.ADMIN_SIS_CONTACTS, data),
       );
     },
     loadAllSisParams({ commit }) {
       return AdminService.getAllSisParams().then((data) =>
-        commit(types.ADMIN_SIS_PARAMS, data)
+        commit(types.ADMIN_SIS_PARAMS, data),
       );
     },
     editUser({ commit }, user) {
       return AdminService.editUser(user).then(() =>
-        commit(types.ADMIN_EDIT_USER, user)
+        commit(types.ADMIN_EDIT_USER, user),
       );
     },
     deleteUser({ commit }, userId) {
       return AdminService.deleteUser(userId).then(() =>
-        commit(types.ADMIN_REMOVE_USER, userId)
+        commit(types.ADMIN_REMOVE_USER, userId),
       );
     },
   },

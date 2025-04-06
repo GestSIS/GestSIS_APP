@@ -1,9 +1,8 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
-import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
 
 const { id } = defineProps({
@@ -13,63 +12,40 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
-const emplacementStore = useEmplacementStore();
 const materielTypeStore = useMaterielTypeStore();
+const couleurStore = useCouleurStore();
 
 const articles = ref([]);
 const loading = ref(true);
 
 const loadArticles = async () => {
   loading.value = true;
-  articles.value = await ArticleService.getParMaterielType(id);
+  articles.value = await ArticleService.getParEmplacement(id);
   loading.value = false;
 };
 
 await Promise.all([
-  emplacementStore.fetchEmplacements(),
   materielTypeStore.fetchMaterielTypes(),
-  store.dispatch('fetchListeSapeur'),
+  couleurStore.fetchCouleurs(),
   Promise.resolve(await loadArticles()),
 ]);
 
 watch(() => id, loadArticles);
 
-const emplacements = computed(() => emplacementStore.liste);
-const types = computed(() => materielTypeStore.liste);
-
-const indexedTypes = computed(() => indexedData(types.value));
-const indexedEmplacements = computed(() => indexedData(emplacements.value));
-const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
-
-const linearEmplacements = (emplacement_id) => {
-  if (emplacement_id === null) {
-    return [];
-  }
-  const emplacement = indexedEmplacements[emplacement_id];
-  return [...linearEmplacements(emplacement.parent_id), emplacement];
-};
+const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const computedData = computed(() =>
   articles.value.map((a) => ({
     ...a,
-    emplacements: linearEmplacements(a.emplacement_id),
-    sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
+    type: indexedTypes.value[a.materiel_type_id],
   })),
 );
 
-// Partie pièces
 const piecesColonnes = [
-  ...(materielType.value.est_numerote
-    ? [{ title: 'Numéro', key: 'numero' }]
-    : []),
-  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
-  ...(materielType.value.est_taillee
-    ? [{ title: 'Taille', key: 'taille' }]
-    : []),
   { title: 'Compartiment', key: 'compartiment' },
-  // { title: 'Inventaire', key: 'inventaire' },
-  // { title: 'Maintenance', key: 'maintenance' },
+  { title: 'Type', key: 'type', slot: 'type' },
+  { title: 'Numéro', key: 'numero' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Ajouté', key: 'created_at', type: 'date' },
   { title: 'Actions', key: 'id', slot: 'actions' },
@@ -86,15 +62,17 @@ const piecesColonnes = [
       no-data="Aucune pièce"
       :fields="piecesColonnes"
     >
-      <template #emplacement="{ rowData }">
-        <div v-if="rowData.sapeur_id" class="badge bg-primary">
-          {{ rowData.sapeur }}
-        </div>
-        <div v-else v-for="e in rowData.emplacements" :key="e.id">
-          {{ e }}
+      <template #type="{ rowData }">
+        <div
+          :style="{
+            color: indexedCouleurs[rowData.type.couleur_id]?.texte ?? 'black',
+            'background-color':
+              indexedCouleurs[rowData.type.couleur_id]?.fond ?? '',
+          }"
+        >
+          {{ rowData.type.designation }}
         </div>
       </template>
-
       <template #actions="{ rowData }"> TODO: </template>
     </base-table>
   </div>

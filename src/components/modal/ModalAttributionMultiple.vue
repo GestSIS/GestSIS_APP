@@ -82,11 +82,13 @@ const save = async () => {
     return;
   }
 
-  // // Masse attribution
-  // const baseAttribution = {
-  //   sapeur_id: activeAttribution.value.sapeur_id,
-  //   date: activeAttribution.value.date,
-  // };
+  if (depuisInventaire.value) {
+    ArticleService.attribuer();
+    // TODO: Attribution du matériel
+  } else {
+    // TODO: Création du matériel
+    ArticleService.creer();
+  }
 
   // const numerotes = depuisInventaire.value
   //   ? activeAttribution.value.articlesDepuisInventaire
