@@ -101,7 +101,7 @@ export default {
           ...m.materiel,
           ...m,
           materiel_type: state.matPersoType.liste.find(
-            (t) => t.id == m.materiel_type_id
+            (t) => t.id == m.materiel_type_id,
           )?.designation,
         })),
       hasEditPermission: (state) =>
@@ -122,7 +122,7 @@ export default {
     attribuer() {
       this.SHOW_MODAL({
         component: 'ModalAttributionMultiple',
-        size: 1,
+        size: 2,
         data: { sapeurId: this.activeSapeurId },
       });
     },
@@ -156,7 +156,7 @@ export default {
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? 'Erreur impossible de supprimer ce matériel'
+                  err?.message ?? 'Erreur impossible de supprimer ce matériel',
                 );
               });
           }

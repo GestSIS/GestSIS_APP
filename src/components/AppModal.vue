@@ -41,7 +41,7 @@ const components = Object.fromEntries(
   Object.entries(import.meta.glob('./modal/*.vue')).map(([key, value]) => {
     const name = key.split('/').pop().replace('.vue', '');
     return [name, defineAsyncComponent(value)];
-  })
+  }),
 );
 
 export default {

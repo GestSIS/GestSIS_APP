@@ -200,14 +200,14 @@ export default {
     ...mapState({
       categories: (state) =>
         state.matPersoCategorie.liste.sort(
-          (a, b) => a.designation - b.designation
+          (a, b) => a.designation - b.designation,
         ),
       sapeurs: (state) => state.sapeur.liste,
       types: (state) =>
         state.matPersoType.liste.sort((a, b) => a.designation - b.designation),
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(
-          (m) => m.retour == null && m.sapeur_id != null
+          (m) => m.retour == null && m.sapeur_id != null,
         ),
       hasSapeurModificationPermission: (state) =>
         state.auth.admin ||
@@ -232,11 +232,11 @@ export default {
               this.filtreSapeur
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
+                .toLowerCase(),
+            ),
         )
         .filter((m) =>
-          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase()),
         )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
@@ -259,14 +259,14 @@ export default {
               this.filtreSapeur
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
+                .toLowerCase(),
+            ),
         )
         .filter((m) =>
-          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase())
+          m.taille.toLowerCase().includes(this.filtreTaille.toLowerCase()),
         )
         .filter((m) =>
-          m.numero.toLowerCase().includes(this.filtreNumero.toLowerCase())
+          m.numero.toLowerCase().includes(this.filtreNumero.toLowerCase()),
         )
         .sort((m1, m2) => m1.type.localeCompare(m2.type));
     },
@@ -296,7 +296,7 @@ export default {
     attribuer() {
       this.SHOW_MODAL({
         component: 'ModalAttributionMultiple',
-        size: 1,
+        size: 2,
       });
     },
     retourSimple(materiel) {
@@ -325,7 +325,7 @@ export default {
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? 'Erreur impossible de supprimer ce matériel'
+                  err?.message ?? 'Erreur impossible de supprimer ce matériel',
                 );
               });
           }
