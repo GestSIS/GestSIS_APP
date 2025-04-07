@@ -270,6 +270,8 @@ export default {
       });
     },
     impressionResumeParSapeur() {
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
       DecompteService.downloadResumeParSapeur(
         this.activeExerciceComptableId,
         `resume_par_sapeur.pdf`,
