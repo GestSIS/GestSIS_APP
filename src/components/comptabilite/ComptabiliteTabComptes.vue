@@ -242,7 +242,7 @@ export default {
       CompteService.downloadJustificatifIndividuel(
         filename,
         this.activeExerciceComptableId,
-        compteId
+        compteId,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -251,7 +251,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier'
+              'Une erreur a eu lieu durant la génération de votre fichier',
           );
         });
     },
@@ -262,7 +262,7 @@ export default {
 
       CompteService.downloadJustificatifComplet(
         filename,
-        this.activeExerciceComptableId
+        this.activeExerciceComptableId,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -271,7 +271,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier'
+              'Une erreur a eu lieu durant la génération de votre fichier',
           );
         });
     },
