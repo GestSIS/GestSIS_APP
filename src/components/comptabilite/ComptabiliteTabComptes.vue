@@ -65,7 +65,7 @@
         </div>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <div class="card-title">
               <h3 class="card-title">Comptes</h3>
@@ -99,29 +99,33 @@
               >Configuration</router-link
             >
           </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            no-data="Aucune écriture à afficher"
-            :selectable="true"
-            :data="filteredData"
-            @selected="selected"
-          >
-            <template #foot>
-              <tr>
-                <th colspan="4">Total</th>
-                <th>
-                  {{
-                    filteredData
-                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
-                  }}
-                  CHF
-                </th>
-                <th></th>
-              </tr>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :fields="fields"
+              no-data="Aucune écriture à afficher"
+              :selectable="true"
+              :data="filteredData"
+              @selected="selected"
+            >
+              <template #foot>
+                <tr>
+                  <th colspan="4">Total</th>
+                  <th>
+                    {{
+                      filteredData
+                        .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                        ?.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })
+                    }}
+                    CHF
+                  </th>
+                  <th></th>
+                </tr>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
@@ -242,7 +246,7 @@ export default {
       CompteService.downloadJustificatifIndividuel(
         filename,
         this.activeExerciceComptableId,
-        compteId,
+        compteId
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -251,7 +255,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier',
+              'Une erreur a eu lieu durant la génération de votre fichier'
           );
         });
     },
@@ -262,7 +266,7 @@ export default {
 
       CompteService.downloadJustificatifComplet(
         filename,
-        this.activeExerciceComptableId,
+        this.activeExerciceComptableId
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -271,7 +275,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier',
+              'Une erreur a eu lieu durant la génération de votre fichier'
           );
         });
     },

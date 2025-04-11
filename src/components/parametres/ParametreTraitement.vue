@@ -6,7 +6,7 @@
         Ajouter un traitement
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         :data="listeTraitement"
         :fields="fields"

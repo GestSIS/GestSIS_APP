@@ -68,7 +68,7 @@
       <h3 class="card-title">Sis</h3>
       <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         ref="table"
         :fields="fields"

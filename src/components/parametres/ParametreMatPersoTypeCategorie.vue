@@ -18,7 +18,7 @@
         Ajouter un type de matériel
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <table class="table table-sm table-hover">
         <thead>
           <tr>

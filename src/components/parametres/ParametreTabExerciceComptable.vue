@@ -10,7 +10,7 @@
         Ajouter un exercice comptable
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         :data="listeExerciceComptable"
         :fields="fields"

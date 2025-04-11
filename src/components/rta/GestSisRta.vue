@@ -3,7 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">GestSIS</h3>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>

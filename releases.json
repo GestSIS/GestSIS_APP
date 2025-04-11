@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "date": "11.04.2024",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.0",
+      "changes": [
+        "Amélioration de l'interface de saisie des excuses pour le module `Exercice`"
+      ]
+    },
+    {
+      "date": "11.04.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'affichage des tables sur petits écrans",
+        "Réduction de la taille de la barre de navigation"
+      ]
+    },
+    {
       "date": "03.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -6,8 +6,13 @@
         Ajouter une alerte type
       </button>
     </div>
-    <div class="card-body table-responsive">
-      <base-table :data="types" :fields="fields" no-data="Aucune alerte type" :selectable="true">
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="types"
+        :fields="fields"
+        no-data="Aucune alerte type"
+        :selectable="true"
+      >
         <template #actions="{ rowData }">
           <button
             type="button"

@@ -148,84 +148,86 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            ref="basetable_exercices"
-            :selectable="true"
-            :fields="fieldsBase"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            detail-row-class="m-td-0"
-            no-data="Aucun exercice/séance à afficher"
-            :data="filteredData"
-            :row-class="onRowClass"
-            @selected="selectExercice"
-          >
-            <template #actions="{ rowData }">
-              <button
-                title="SMS"
-                class="btn btn-outline-primary border-0"
-                @click="sms({ id: rowData.id })"
-              >
-                <font-awesome-icon :icon="['fas', 'comment-sms']" />
-              </button>
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/exercices/' + rowData.id + '/presence'"
-                custom
-              >
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              ref="basetable_exercices"
+              :selectable="true"
+              :fields="fieldsBase"
+              :detail-row-column="true"
+              :detail-row-component="detailRowComponent"
+              detail-row-class="m-td-0"
+              no-data="Aucun exercice/séance à afficher"
+              :data="filteredData"
+              :row-class="onRowClass"
+              @selected="selectExercice"
+            >
+              <template #actions="{ rowData }">
                 <button
-                  title="modifier"
+                  title="SMS"
                   class="btn btn-outline-primary border-0"
-                  @click="navigate"
+                  @click="sms({ id: rowData.id })"
                 >
-                  <font-awesome-icon :icon="['far', 'edit']" />
+                  <font-awesome-icon :icon="['fas', 'comment-sms']" />
                 </button>
-              </router-link>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 2"
-                title="valider"
-                class="btn btn-outline-primary border-0"
-                @click="validerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="
-                  hasValidationPermission &&
-                  rowData.statut <= 3 &&
-                  rowData.statut > 0
-                "
-                title="annuler"
-                class="btn btn-outline-warning border-0"
-                @click="annulerExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'ban']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut == 0"
-                title="réactiver"
-                class="btn btn-outline-success border-0"
-                @click="reactiverExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'check']" />
-              </button>
-              <button
-                v-if="hasValidationPermission && rowData.statut <= 3"
-                title="supprimer"
-                class="btn btn-outline-danger border-0"
-                @click="removeExercice(rowData.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-          </base-table>
+                <router-link
+                  v-slot="{ navigate }"
+                  :to="'/exercices/' + rowData.id + '/presence'"
+                  custom
+                >
+                  <button
+                    title="modifier"
+                    class="btn btn-outline-primary border-0"
+                    @click="navigate"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                </router-link>
+                <button
+                  v-if="hasValidationPermission && rowData.statut == 2"
+                  title="valider"
+                  class="btn btn-outline-primary border-0"
+                  @click="validerExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+                <button
+                  v-if="
+                    hasValidationPermission &&
+                    rowData.statut <= 3 &&
+                    rowData.statut > 0
+                  "
+                  title="annuler"
+                  class="btn btn-outline-warning border-0"
+                  @click="annulerExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'ban']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut == 0"
+                  title="réactiver"
+                  class="btn btn-outline-success border-0"
+                  @click="reactiverExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'check']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut <= 3"
+                  title="supprimer"
+                  class="btn btn-outline-danger border-0"
+                  @click="removeExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

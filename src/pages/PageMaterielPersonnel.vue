@@ -17,7 +17,7 @@
 
     <div class="row">
       <div class="col-12 col-md-3">
-        <div class="card card-primary card-outline mb-2 table-responsive">
+        <div class="card card-primary card-outline mb-2">
           <div class="card-header">
             <h5>Filtre matériel type</h5>
           </div>

@@ -44,207 +44,209 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card card-primary card-outline table-responsive mb-3">
+      <div class="card card-primary card-outline mb-3">
         <div v-if="loading" class="card-body d-flex justify-content-center">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th rowspan="2" class="sticky">
-                <base-select
-                  v-model="displayKey"
-                  style="min-width: 100px"
-                  :options="[
-                    { designation: 'Fonction', id: 'fonction' },
-                    { designation: 'Permis', id: 'permis' },
-                    { designation: 'Localité', id: 'localite' },
-                    { designation: 'Groupe', id: 'groupe' },
-                  ]"
-                />
-              </th>
-              <td
-                v-for="({ jourSemaine }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-              >
-                {{
-                  [
-                    'Dimanche',
-                    'Lundi',
-                    'Mardi',
-                    'Mercredi',
-                    'Jeudi',
-                    'Vendredi',
-                    'Samedi',
-                  ][jourSemaine]
-                }}
-              </td>
-            </tr>
-            <tr>
-              <th
-                v-for="({ date, jourSemaine }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-              >
-                {{ date }}
-              </th>
-            </tr>
-          </thead>
+        <div class="card-body table-responsive p-0">
+          <table class="table">
+            <thead>
+              <tr>
+                <th rowspan="2" class="sticky">
+                  <base-select
+                    v-model="displayKey"
+                    style="min-width: 100px"
+                    :options="[
+                      { designation: 'Fonction', id: 'fonction' },
+                      { designation: 'Permis', id: 'permis' },
+                      { designation: 'Localité', id: 'localite' },
+                      { designation: 'Groupe', id: 'groupe' },
+                    ]"
+                  />
+                </th>
+                <td
+                  v-for="({ jourSemaine }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                >
+                  {{
+                    [
+                      'Dimanche',
+                      'Lundi',
+                      'Mardi',
+                      'Mercredi',
+                      'Jeudi',
+                      'Vendredi',
+                      'Samedi',
+                    ][jourSemaine]
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th
+                  v-for="({ date, jourSemaine }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                >
+                  {{ date }}
+                </th>
+              </tr>
+            </thead>
 
-          <tbody v-if="displayKey == 'fonction'">
-            <tr
-              v-for="f in [
-                ...fonctions,
-                { id: undefined, nom: 'Sans fonction' },
-              ]"
-              :key="f.id"
-            >
-              <th class="sticky">{{ f.nom }}</th>
-              <td
-                v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-                :style="
-                  'background-color:hsl(' +
-                  (
-                    (((referenceData.fonctions[f.id] ?? 0) -
-                      (fonctions[f.id] ?? new Set()).size) /
-                      referenceData.fonctions[f.id] ?? 0) * 120
-                  ).toString(10) +
-                  ',100%,50%)'
-                "
+            <tbody v-if="displayKey == 'fonction'">
+              <tr
+                v-for="f in [
+                  ...fonctions,
+                  { id: undefined, nom: 'Sans fonction' },
+                ]"
+                :key="f.id"
               >
-                <template v-if="referenceData.fonctions[f.id]">
-                  <span
-                    class="clickable"
-                    @click="showAbsences(fonctions[f.id] ?? new Set())"
-                  >
-                    {{
-                      (referenceData.fonctions[f.id] ?? 0) -
-                      (fonctions[f.id] ?? new Set()).size
-                    }}/{{ referenceData.fonctions[f.id] ?? 0 }}
-                  </span>
-                </template>
-                <template v-else>-</template>
-              </td>
-            </tr>
-          </tbody>
+                <th class="sticky">{{ f.nom }}</th>
+                <td
+                  v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :style="
+                    'background-color:hsl(' +
+                    (
+                      (((referenceData.fonctions[f.id] ?? 0) -
+                        (fonctions[f.id] ?? new Set()).size) /
+                        referenceData.fonctions[f.id] ?? 0) * 120
+                    ).toString(10) +
+                    ',100%,50%)'
+                  "
+                >
+                  <template v-if="referenceData.fonctions[f.id]">
+                    <span
+                      class="clickable"
+                      @click="showAbsences(fonctions[f.id] ?? new Set())"
+                    >
+                      {{
+                        (referenceData.fonctions[f.id] ?? 0) -
+                        (fonctions[f.id] ?? new Set()).size
+                      }}/{{ referenceData.fonctions[f.id] ?? 0 }}
+                    </span>
+                  </template>
+                  <template v-else>-</template>
+                </td>
+              </tr>
+            </tbody>
 
-          <tbody v-if="displayKey == 'permis'">
-            <tr v-for="p in filteredPermis" :key="p.id">
-              <th class="sticky">{{ p.type }}</th>
-              <td
-                v-for="({ jourSemaine, permis }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-                :style="
-                  'background-color:hsl(' +
-                  (
-                    (((referenceData.permis[p.id] ?? 0) -
-                      (permis[p.id] ?? new Set()).size) /
-                      referenceData.permis[p.id] ?? 0) * 120
-                  ).toString(10) +
-                  ',100%,50%)'
-                "
-              >
-                <template v-if="referenceData.permis[p.id]">
-                  <span
-                    class="clickable"
-                    @click="showAbsences(permis[p.id] ?? new Set())"
-                  >
-                    {{
-                      (referenceData.permis[p.id] ?? 0) -
-                      (permis[p.id] ?? new Set()).size
-                    }}/{{ referenceData.permis[p.id] ?? 0 }}
-                  </span>
-                </template>
-                <template v-else>-</template>
-              </td>
-            </tr>
-          </tbody>
+            <tbody v-if="displayKey == 'permis'">
+              <tr v-for="p in filteredPermis" :key="p.id">
+                <th class="sticky">{{ p.type }}</th>
+                <td
+                  v-for="({ jourSemaine, permis }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :style="
+                    'background-color:hsl(' +
+                    (
+                      (((referenceData.permis[p.id] ?? 0) -
+                        (permis[p.id] ?? new Set()).size) /
+                        referenceData.permis[p.id] ?? 0) * 120
+                    ).toString(10) +
+                    ',100%,50%)'
+                  "
+                >
+                  <template v-if="referenceData.permis[p.id]">
+                    <span
+                      class="clickable"
+                      @click="showAbsences(permis[p.id] ?? new Set())"
+                    >
+                      {{
+                        (referenceData.permis[p.id] ?? 0) -
+                        (permis[p.id] ?? new Set()).size
+                      }}/{{ referenceData.permis[p.id] ?? 0 }}
+                    </span>
+                  </template>
+                  <template v-else>-</template>
+                </td>
+              </tr>
+            </tbody>
 
-          <tbody v-if="displayKey == 'localite'">
-            <tr v-for="l in localitesSis" :key="l.id">
-              <th class="sticky">{{ l.designation }}</th>
-              <td
-                v-for="({ jourSemaine, localites }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-                :style="
-                  'background-color:hsl(' +
-                  (
-                    (((referenceData.localites[l.id] ?? 0) -
-                      (localites[l.id] ?? new Set()).size) /
-                      referenceData.localites[l.id] ?? 0) * 120
-                  ).toString(10) +
-                  ',100%,50%)'
-                "
-              >
-                <template v-if="referenceData.localites[l.id]">
-                  <span
-                    class="clickable"
-                    @click="showAbsences(localites[l.id] ?? new Set())"
-                  >
-                    {{
-                      (referenceData.localites[l.id] ?? 0) -
-                      (localites[l.id] ?? new Set()).size
-                    }}/{{ referenceData.localites[l.id] ?? 0 }}
-                  </span>
-                </template>
-                <template v-else>-</template>
-              </td>
-            </tr>
-          </tbody>
+            <tbody v-if="displayKey == 'localite'">
+              <tr v-for="l in localitesSis" :key="l.id">
+                <th class="sticky">{{ l.designation }}</th>
+                <td
+                  v-for="({ jourSemaine, localites }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :style="
+                    'background-color:hsl(' +
+                    (
+                      (((referenceData.localites[l.id] ?? 0) -
+                        (localites[l.id] ?? new Set()).size) /
+                        referenceData.localites[l.id] ?? 0) * 120
+                    ).toString(10) +
+                    ',100%,50%)'
+                  "
+                >
+                  <template v-if="referenceData.localites[l.id]">
+                    <span
+                      class="clickable"
+                      @click="showAbsences(localites[l.id] ?? new Set())"
+                    >
+                      {{
+                        (referenceData.localites[l.id] ?? 0) -
+                        (localites[l.id] ?? new Set()).size
+                      }}/{{ referenceData.localites[l.id] ?? 0 }}
+                    </span>
+                  </template>
+                  <template v-else>-</template>
+                </td>
+              </tr>
+            </tbody>
 
-          <tbody v-if="displayKey == 'groupe'">
-            <tr v-for="g in groupes" :key="g.id">
-              <th class="sticky">{{ g.no }} {{ g.designation }}</th>
-              <td
-                v-for="({ jourSemaine, groupes }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-                :style="
-                  'background-color:hsl(' +
-                  (
-                    (((referenceData.groupes[g.id] ?? 0) -
-                      (groupes[g.id] ?? new Set()).size) /
-                      referenceData.groupes[g.id] ?? 0) * 120
-                  ).toString(10) +
-                  ',100%,50%)'
-                "
-              >
-                <template v-if="referenceData.groupes[g.id]">
-                  <span
-                    class="clickable"
-                    @click="showAbsences(groupes[g.id] ?? new Set())"
-                  >
-                    {{
-                      (referenceData.groupes[g.id] ?? 0) -
-                      (groupes[g.id] ?? new Set()).size
-                    }}/{{ referenceData.groupes[g.id] ?? 0 }}
-                  </span>
-                </template>
-                <template v-else>-</template>
-              </td>
-            </tr>
-          </tbody>
+            <tbody v-if="displayKey == 'groupe'">
+              <tr v-for="g in groupes" :key="g.id">
+                <th class="sticky">{{ g.no }} {{ g.designation }}</th>
+                <td
+                  v-for="({ jourSemaine, groupes }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :style="
+                    'background-color:hsl(' +
+                    (
+                      (((referenceData.groupes[g.id] ?? 0) -
+                        (groupes[g.id] ?? new Set()).size) /
+                        referenceData.groupes[g.id] ?? 0) * 120
+                    ).toString(10) +
+                    ',100%,50%)'
+                  "
+                >
+                  <template v-if="referenceData.groupes[g.id]">
+                    <span
+                      class="clickable"
+                      @click="showAbsences(groupes[g.id] ?? new Set())"
+                    >
+                      {{
+                        (referenceData.groupes[g.id] ?? 0) -
+                        (groupes[g.id] ?? new Set()).size
+                      }}/{{ referenceData.groupes[g.id] ?? 0 }}
+                    </span>
+                  </template>
+                  <template v-else>-</template>
+                </td>
+              </tr>
+            </tbody>
 
-          <tfoot v-if="displayKey !== 'permis'">
-            <tr>
-              <th class="sticky">Total</th>
-              <th
-                v-for="({ jourSemaine, total }, i) in computedAbsences"
-                :key="i"
-                :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
-              >
-                {{ referenceData.total - total }}/{{ referenceData.total }}
-              </th>
-            </tr>
-          </tfoot>
-        </table>
+            <tfoot v-if="displayKey !== 'permis'">
+              <tr>
+                <th class="sticky">Total</th>
+                <th
+                  v-for="({ jourSemaine, total }, i) in computedAbsences"
+                  :key="i"
+                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                >
+                  {{ referenceData.total - total }}/{{ referenceData.total }}
+                </th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
   </div>

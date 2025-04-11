@@ -64,19 +64,21 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline table-responsive mb-3">
+          <div class="card card-primary card-outline mb-3">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Chargement...</span>
               </div>
             </div>
-            <base-table
-              v-show="!loading"
-              :selectable="true"
-              :fields="fields"
-              no-data="Aucun cours à afficher"
-              :data="filteredData"
-            />
+            <div class="card-body table-responsive">
+              <base-table
+                v-show="!loading"
+                :selectable="true"
+                :fields="fields"
+                no-data="Aucun cours à afficher"
+                :data="filteredData"
+              />
+            </div>
           </div>
         </div>
       </div>

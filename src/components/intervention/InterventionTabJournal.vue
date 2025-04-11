@@ -39,7 +39,7 @@
               Ajouter un appel
             </button>
           </div>
-          <div class="card-body table-responsive">
+          <div class="card-body table-responsive p-0">
             <base-table
               :data="appels"
               :fields="fieldsAppels"
@@ -80,7 +80,7 @@
               Ajouter une mission
             </button>
           </div>
-          <div class="card-body table-responsive">
+          <div class="card-body table-responsive p-0">
             <base-table
               :data="missions"
               :fields="fieldsMissions"

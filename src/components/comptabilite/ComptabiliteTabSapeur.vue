@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-xl-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Sapeurs</h3>
           </div>
@@ -64,45 +64,49 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            :fields="fields"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            :detail-row-options="detailRowOptions"
-            detail-row-class="m-td-0"
-            no-data="Aucun sapeur à afficher"
-            :data="filteredData"
-            @selected="select"
-          >
-            <template #actions="{ rowData }">
-              <button
-                v-if="hasEditPermission"
-                class="btn btn-outline-primary border-0"
-                title="Décompte sapeur"
-                :disabled="!rowData.aPayer"
-                @click="genererDecompteSapeur(rowData.id, rowData.nom_prenom)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </template>
-            <template #foot>
-              <tr>
-                <th></th>
-                <th :colspan="filteredData.length ? 2 : 1">Total</th>
-                <th>
-                  {{
-                    filteredData
-                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
-                  }}
-                  CHF
-                </th>
-                <th></th>
-              </tr>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              :fields="fields"
+              :detail-row-column="true"
+              :detail-row-component="detailRowComponent"
+              :detail-row-options="detailRowOptions"
+              detail-row-class="m-td-0"
+              no-data="Aucun sapeur à afficher"
+              :data="filteredData"
+              @selected="select"
+            >
+              <template #actions="{ rowData }">
+                <button
+                  v-if="hasEditPermission"
+                  class="btn btn-outline-primary border-0"
+                  title="Décompte sapeur"
+                  :disabled="!rowData.aPayer"
+                  @click="genererDecompteSapeur(rowData.id, rowData.nom_prenom)"
+                >
+                  <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+                </button>
+              </template>
+              <template #foot>
+                <tr>
+                  <th></th>
+                  <th :colspan="filteredData.length ? 2 : 1">Total</th>
+                  <th>
+                    {{
+                      filteredData
+                        .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                        ?.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })
+                    }}
+                    CHF
+                  </th>
+                  <th></th>
+                </tr>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

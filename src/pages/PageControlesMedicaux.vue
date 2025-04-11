@@ -159,7 +159,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline table-responsive mb-3">
+          <div class="card card-primary card-outline mb-3">
             <div class="card-header d-flex justify-content-between">
               <h3>Liste des contrôles médicaux</h3>
             </div>
@@ -168,49 +168,51 @@
                 <span class="visually-hidden">Chargement...</span>
               </div>
             </div>
-            <base-table
-              v-show="!loading"
-              :fields="fields"
-              no-data="Aucun contrôle médical à afficher"
-              :row-class="onRowClass"
-              :data="filteredData"
-              :selectable="true"
-              @selected="selected"
-            >
-              <template #doc="{ rowData }">
-                <button
-                  v-if="rowData.filename"
-                  class="btn"
-                  @click="downloadJustificatif(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'file-pdf']" />
-                </button>
-              </template>
-              <template #actions="{ rowData }">
-                <router-link
-                  v-slot="{ navigate }"
-                  :to="{
-                    name: 'controle-medical',
-                    params: { id: rowData.id },
-                  }"
-                  custom
-                >
+            <div class="card-body table-responsive">
+              <base-table
+                v-show="!loading"
+                :fields="fields"
+                no-data="Aucun contrôle médical à afficher"
+                :row-class="onRowClass"
+                :data="filteredData"
+                :selectable="true"
+                @selected="selected"
+              >
+                <template #doc="{ rowData }">
                   <button
-                    class="btn btn-outline-primary border-0"
-                    @click="navigate"
+                    v-if="rowData.filename"
+                    class="btn"
+                    @click="downloadJustificatif(rowData)"
                   >
-                    <font-awesome-icon :icon="['far', 'edit']" />
+                    <font-awesome-icon :icon="['far', 'file-pdf']" />
                   </button>
-                </router-link>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimer(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </template>
-            </base-table>
+                </template>
+                <template #actions="{ rowData }">
+                  <router-link
+                    v-slot="{ navigate }"
+                    :to="{
+                      name: 'controle-medical',
+                      params: { id: rowData.id },
+                    }"
+                    custom
+                  >
+                    <button
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                  </router-link>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimer(rowData)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </template>
+              </base-table>
+            </div>
           </div>
         </div>
       </div>

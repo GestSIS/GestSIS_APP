@@ -6,7 +6,7 @@
         Ajouter une catégorie
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         :data="listeCategorie"
         :fields="fields"

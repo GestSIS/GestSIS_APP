@@ -6,7 +6,7 @@
         Certificat de salaire
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         class="table-striped"
         :fields="fields"

@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="card card-primary card-outline table-responsive mb-3">
+    <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3>Liste des sapeurs n'ayant pas créé de compte</h3>
         <a
@@ -48,27 +48,29 @@
           <span class="visually-hidden">Chargement...</span>
         </div>
       </div>
-      <base-table
-        v-show="!loading"
-        :fields="fields"
-        no-data="Aucun sapeur à afficher"
-        :data="computedData"
-        :selectable="true"
-      >
-        <template #actions="{ rowData }">
-          <a
-            class="btn btn-sm btn-outline-primary border-0"
-            :href="'mailto:' + rowData.email"
-          >
-            <font-awesome-icon :icon="['fas', 'envelope']" />
-          </a>
-        </template>
-        <template #foot>
-          <tr>
-            <th colspan="5">Nombre : {{ computedData.length }}</th>
-          </tr>
-        </template>
-      </base-table>
+      <div class="card-body table-responsive">
+        <base-table
+          v-show="!loading"
+          :fields="fields"
+          no-data="Aucun sapeur à afficher"
+          :data="computedData"
+          :selectable="true"
+        >
+          <template #actions="{ rowData }">
+            <a
+              class="btn btn-sm btn-outline-primary border-0"
+              :href="'mailto:' + rowData.email"
+            >
+              <font-awesome-icon :icon="['fas', 'envelope']" />
+            </a>
+          </template>
+          <template #foot>
+            <tr>
+              <th colspan="5">Nombre : {{ computedData.length }}</th>
+            </tr>
+          </template>
+        </base-table>
+      </div>
     </div>
   </div>
 </template>

@@ -6,7 +6,7 @@
       </h5>
       <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
     </div>
-    <div class="modal-body table-responsive">
+    <div class="modal-body table-responsive p-0">
       <table id="sap-fonctions" class="table table-sm">
         <thead>
           <tr>

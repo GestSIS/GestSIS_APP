@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="card card-primary card-outline table-responsive mb-3">
+    <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3>Liste des utilisateurs</h3>
         <button class="btn btn-outline-primary" @click="invite">Inviter</button>
@@ -51,43 +51,45 @@
           <span class="visually-hidden">Chargement...</span>
         </div>
       </div>
-      <base-table
-        v-show="!loading"
-        :fields="fields"
-        no-data="Aucun utilisateur"
-        :data="computedData"
-        :selectable="true"
-        :row-class="onRowClass"
-      >
-        <template #badges="{ rowData }">
-          <span
-            v-for="r in rowData.user_roles"
-            :key="r.id"
-            class="badge bg-primary me-1"
-            >{{ formatRole(r.role_id) }}</span
-          >
-        </template>
-        <template #sapeur="{ rowData }">
-          {{ rowData.nom_prenom }}
-          <font-awesome-icon
-            v-if="rowData?.type === 1"
-            :icon="['far', 'handshake']"
-          />
-        </template>
-        <template #actions="{ rowData }">
-          <button
-            class="btn btn-outline-primary border-0"
-            @click="edit(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'edit']" />
-          </button>
-        </template>
-        <template #foot>
-          <tr>
-            <th colspan="5">Nombre : {{ computedData.length }}</th>
-          </tr>
-        </template>
-      </base-table>
+      <div class="card-body table-responsive">
+        <base-table
+          v-show="!loading"
+          :fields="fields"
+          no-data="Aucun utilisateur"
+          :data="computedData"
+          :selectable="true"
+          :row-class="onRowClass"
+        >
+          <template #badges="{ rowData }">
+            <span
+              v-for="r in rowData.user_roles"
+              :key="r.id"
+              class="badge bg-primary me-1"
+              >{{ formatRole(r.role_id) }}</span
+            >
+          </template>
+          <template #sapeur="{ rowData }">
+            {{ rowData.nom_prenom }}
+            <font-awesome-icon
+              v-if="rowData?.type === 1"
+              :icon="['far', 'handshake']"
+            />
+          </template>
+          <template #actions="{ rowData }">
+            <button
+              class="btn btn-outline-primary border-0"
+              @click="edit(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+          </template>
+          <template #foot>
+            <tr>
+              <th colspan="5">Nombre : {{ computedData.length }}</th>
+            </tr>
+          </template>
+        </base-table>
+      </div>
     </div>
   </div>
 </template>

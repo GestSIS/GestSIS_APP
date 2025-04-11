@@ -65,49 +65,51 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div v-if="loading" class="card-body d-flex justify-content-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :selectable="true"
-            :fields="fieldsBase"
-            no-data="Aucune absence à afficher"
-            :data="filteredData"
-            :row-class="onRowClass"
-            @selected="selectExercice"
-          >
-            <template #statut="{ rowData, formatter }">
-              <span
-                class="badge rounded-pill"
-                :class="{
-                  'text-bg-danger': rowData.excuse_statut == -2,
-                  'text-bg-warning': rowData.excuse_statut == -1,
-                  'text-bg-secondary': rowData.excuse_statut == 0,
-                  'text-bg-success': rowData.excuse_statut == 1,
-                }"
-                >{{ formatter(rowData.excuse_statut, rowData) }}</span
-              >
-            </template>
-            <template #actions="{ rowData }">
-              <button
-                v-if="hasValidationPermission"
-                :title="rowData.excuse_statut == 0 ? 'Examen' : 'Réexaminer'"
-                class="btn border-0"
-                :class="
-                  rowData.excuse_statut == 0
-                    ? 'btn-outline-success'
-                    : 'btn-outline'
-                "
-                @click="reviewAbsence(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'eye']" />
-              </button>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :selectable="true"
+              :fields="fieldsBase"
+              no-data="Aucune absence à afficher"
+              :data="filteredData"
+              :row-class="onRowClass"
+              @selected="selectExercice"
+            >
+              <template #statut="{ rowData, formatter }">
+                <span
+                  class="badge rounded-pill"
+                  :class="{
+                    'text-bg-danger': rowData.excuse_statut == -2,
+                    'text-bg-warning': rowData.excuse_statut == -1,
+                    'text-bg-secondary': rowData.excuse_statut == 0,
+                    'text-bg-success': rowData.excuse_statut == 1,
+                  }"
+                  >{{ formatter(rowData.excuse_statut, rowData) }}</span
+                >
+              </template>
+              <template #actions="{ rowData }">
+                <button
+                  v-if="hasValidationPermission"
+                  :title="rowData.excuse_statut == 0 ? 'Examen' : 'Réexaminer'"
+                  class="btn border-0"
+                  :class="
+                    rowData.excuse_statut == 0
+                      ? 'btn-outline-success'
+                      : 'btn-outline'
+                  "
+                  @click="reviewAbsence(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'eye']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

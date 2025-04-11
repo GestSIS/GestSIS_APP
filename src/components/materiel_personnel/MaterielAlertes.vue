@@ -1,21 +1,23 @@
 <template>
-  <div class="card card-primary card-outline mb-2 table-responsive">
+  <div class="card card-primary card-outline mb-2">
     <div class="card-header d-flex justify-content-between">
       <h5>Alertes</h5>
     </div>
-    <base-table
-      :selectable="true"
-      :fields="fields"
-      no-data="Aucune alerte"
-      :data="computedData"
-    >
-      <!-- @selected="selectSapeur" -->
-      <template #actions>
-        <button class="btn btn-outline-primary border-0" disabled>
-          <font-awesome-icon :icon="['far', 'edit']" />
-        </button>
-      </template>
-    </base-table>
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :selectable="true"
+        :fields="fields"
+        no-data="Aucune alerte"
+        :data="computedData"
+      >
+        <!-- @selected="selectSapeur" -->
+        <template #actions>
+          <button class="btn btn-outline-primary border-0" disabled>
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+        </template>
+      </base-table>
+    </div>
   </div>
 </template>
 

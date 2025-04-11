@@ -45,7 +45,7 @@
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive p-0">
           <base-table
             v-show="!loading"
             :selectable="true"
@@ -90,7 +90,7 @@
             <span class="visually-hidden">Chargement...</span>
           </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive p-0">
           <base-table
             v-show="!loading"
             :selectable="true"

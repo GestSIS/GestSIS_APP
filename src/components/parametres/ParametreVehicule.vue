@@ -6,8 +6,13 @@
         Ajouter un véhicule
       </button>
     </div>
-    <div class="card-body table-responsive">
-      <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule" :selectable="true">
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="vehicules"
+        :fields="fields"
+        no-data="Aucun véhicule"
+        :selectable="true"
+      >
         <template #actions="{ rowData }">
           <button
             type="button"

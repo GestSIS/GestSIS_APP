@@ -6,10 +6,10 @@
         Nouveau rôle
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <table
         id="sap-cours"
-        class="table table-sm table-responsive table-bordered"
+        class="table table-sm table-bordered"
         cellspacing="0"
         width="100%"
       >

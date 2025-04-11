@@ -14,7 +14,7 @@
         Télécharger fichier <em>iCalendrier</em>
       </button>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         ref="table"
         class="table-striped"

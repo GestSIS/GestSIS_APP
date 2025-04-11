@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>Amendes</h3>
           </div>
@@ -48,33 +48,35 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucune amende à afficher"
-            :detail-row-column="true"
-            :detail-row-options="detailRowOptions"
-            :detail-row-component="detailRowComponent"
-            detail-row-class="m-td-0"
-            :data="filteredData"
-            :selectable="true"
-            @selected="selected"
-          >
-            <template #foot="{ data }">
-              <tr>
-                <th :colspan="data.length ? 3 : 2">Total</th>
-                <th>
-                  {{
-                    data
-                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      .toLocaleString(undefined, { minimumFractionDigits: 2 })
-                  }}
-                  CHF
-                </th>
-              </tr>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucune amende à afficher"
+              :detail-row-column="true"
+              :detail-row-options="detailRowOptions"
+              :detail-row-component="detailRowComponent"
+              detail-row-class="m-td-0"
+              :data="filteredData"
+              :selectable="true"
+              @selected="selected"
+            >
+              <template #foot="{ data }">
+                <tr>
+                  <th :colspan="data.length ? 3 : 2">Total</th>
+                  <th>
+                    {{
+                      data
+                        .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                        .toLocaleString(undefined, { minimumFractionDigits: 2 })
+                    }}
+                    CHF
+                  </th>
+                </tr>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

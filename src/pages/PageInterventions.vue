@@ -149,51 +149,53 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline table-responsive mb-3">
+          <div class="card card-primary card-outline mb-3">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Chargement...</span>
               </div>
             </div>
-            <base-table
-              :class="{ 'd-none': loading }"
-              :fields="fields"
-              :row-class="onRowClass"
-              no-data="Aucune intervention à afficher"
-              :data="filteredData ?? []"
-              :selectable="true"
-              @selected="select"
-            >
-              <template #actions="{ rowData }">
-                <router-link
-                  v-slot="{ navigate }"
-                  :to="'/interventions/' + rowData.id"
-                  custom
-                >
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="navigate"
+            <div class="card-body table-responsive">
+              <base-table
+                :class="{ 'd-none': loading }"
+                :fields="fields"
+                :row-class="onRowClass"
+                no-data="Aucune intervention à afficher"
+                :data="filteredData ?? []"
+                :selectable="true"
+                @selected="select"
+              >
+                <template #actions="{ rowData }">
+                  <router-link
+                    v-slot="{ navigate }"
+                    :to="'/interventions/' + rowData.id"
+                    custom
                   >
-                    <font-awesome-icon :icon="['far', 'edit']" />
+                    <button
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                  </router-link>
+                  <button
+                    v-if="hasValidationPermission && rowData.statut === 1"
+                    class="btn btn-outline-primary border-0"
+                    @click="validerIntervention(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['fas', 'check']" />
                   </button>
-                </router-link>
-                <button
-                  v-if="hasValidationPermission && rowData.statut === 1"
-                  class="btn btn-outline-primary border-0"
-                  @click="validerIntervention(rowData.id)"
-                >
-                  <font-awesome-icon :icon="['fas', 'check']" />
-                </button>
-                <button
-                  v-if="hasEditPermission && rowData.statut <= 3"
-                  title="supprimer"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimerIntervention(rowData.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </template>
-            </base-table>
+                  <button
+                    v-if="hasEditPermission && rowData.statut <= 3"
+                    title="supprimer"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerIntervention(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </template>
+              </base-table>
+            </div>
           </div>
         </div>
       </div>

@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title me-auto">Indemnités et Frais annuels</h3>
           </div>
@@ -59,44 +59,48 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :data="filteredData"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucune écriture à afficher"
-            :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            :detail-row-options="detailRowOptions"
-            detail-row-class="m-td-0 p-0"
-            :selectable="true"
-            @selected="selected"
-          >
-            <template #actions="{ rowData }">
-              <button
-                v-if="hasEditPermission"
-                title="Regénérer les frais de ce sapeur"
-                class="btn btn-outline-primary border-0"
-                @click="regenererSapeur(rowData)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </template>
-            <template #foot>
-              <tr>
-                <th :colspan="filteredData.length ? 3 : 2">Total</th>
-                <th>
-                  {{
-                    filteredData
-                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
-                  }}
-                  CHF
-                </th>
-                <th></th>
-              </tr>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :data="filteredData"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucune écriture à afficher"
+              :detail-row-column="true"
+              :detail-row-component="detailRowComponent"
+              :detail-row-options="detailRowOptions"
+              detail-row-class="m-td-0 p-0"
+              :selectable="true"
+              @selected="selected"
+            >
+              <template #actions="{ rowData }">
+                <button
+                  v-if="hasEditPermission"
+                  title="Regénérer les frais de ce sapeur"
+                  class="btn btn-outline-primary border-0"
+                  @click="regenererSapeur(rowData)"
+                >
+                  <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+                </button>
+              </template>
+              <template #foot>
+                <tr>
+                  <th :colspan="filteredData.length ? 3 : 2">Total</th>
+                  <th>
+                    {{
+                      filteredData
+                        .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                        ?.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })
+                    }}
+                    CHF
+                  </th>
+                  <th></th>
+                </tr>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

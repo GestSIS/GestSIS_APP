@@ -3,7 +3,7 @@
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Statistique fédéral</h3>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <base-table
         :data="statsFederales"
         :fields="fields"

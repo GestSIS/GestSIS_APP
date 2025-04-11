@@ -14,7 +14,7 @@
         >
       </div>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <table id="frais-annuels" class="table table-sm">
         <thead>
           <tr>

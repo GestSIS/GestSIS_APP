@@ -6,8 +6,13 @@
         Ajouter un compte
       </button>
     </div>
-    <div class="card-body table-responsive">
-      <base-table :data="listeCompte" :fields="fields" no-data="Aucun compte" :selectable="true">
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="listeCompte"
+        :fields="fields"
+        no-data="Aucun compte"
+        :selectable="true"
+      >
         <template #actions="{ rowData }">
           <button
             type="button"

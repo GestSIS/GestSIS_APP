@@ -6,8 +6,13 @@
         Ajouter un médecin
       </button>
     </div>
-    <div class="card-body table-responsive">
-      <base-table :data="listeMedecin" :fields="fields" no-data="Aucun médecin" :selectable="true">
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="listeMedecin"
+        :fields="fields"
+        no-data="Aucun médecin"
+        :selectable="true"
+      >
         <template #actions="{ rowData }">
           <button
             type="button"

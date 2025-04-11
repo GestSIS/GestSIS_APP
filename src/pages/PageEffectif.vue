@@ -156,56 +156,58 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline table-responsive mb-3">
+          <div class="card card-primary card-outline mb-3">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Chargement...</span>
               </div>
             </div>
-            <base-table
-              v-show="!loading"
-              :selectable="true"
-              :fields="fieldsBase"
-              no-data="Aucun sapeur à afficher"
-              :data="filteredData"
-              @selected="selectSapeur"
-            >
-              <template #foot>
-                <tr>
-                  <th :colspan="fieldsBase.length">
-                    Nombre sapeurs : {{ filteredData.length }} /
-                    {{ computedData.length }}
-                  </th>
-                </tr>
-              </template>
-              <template #actions="{ rowData }">
-                <router-link
-                  v-if="hasSapeurModificationPermission"
-                  v-slot="{ navigate }"
-                  :to="'/sapeurs/' + rowData.id"
-                  custom
-                >
+            <div class="card-body table-responsive">
+              <base-table
+                v-show="!loading"
+                :selectable="true"
+                :fields="fieldsBase"
+                no-data="Aucun sapeur à afficher"
+                :data="filteredData"
+                @selected="selectSapeur"
+              >
+                <template #foot>
+                  <tr>
+                    <th :colspan="fieldsBase.length">
+                      Nombre sapeurs : {{ filteredData.length }} /
+                      {{ computedData.length }}
+                    </th>
+                  </tr>
+                </template>
+                <template #actions="{ rowData }">
+                  <router-link
+                    v-if="hasSapeurModificationPermission"
+                    v-slot="{ navigate }"
+                    :to="'/sapeurs/' + rowData.id"
+                    custom
+                  >
+                    <button
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
+                      <font-awesome-icon :icon="['far', 'edit']" />
+                    </button>
+                  </router-link>
+                  <a
+                    class="btn btn-outline-primary border-0"
+                    :href="'mailto:' + rowData.email"
+                  >
+                    <font-awesome-icon :icon="['fas', 'envelope']" />
+                  </a>
                   <button
                     class="btn btn-outline-primary border-0"
-                    @click="navigate"
+                    @click="vcard([rowData])"
                   >
-                    <font-awesome-icon :icon="['far', 'edit']" />
+                    <font-awesome-icon :icon="['far', 'address-card']" />
                   </button>
-                </router-link>
-                <a
-                  class="btn btn-outline-primary border-0"
-                  :href="'mailto:' + rowData.email"
-                >
-                  <font-awesome-icon :icon="['fas', 'envelope']" />
-                </a>
-                <button
-                  class="btn btn-outline-primary border-0"
-                  @click="vcard([rowData])"
-                >
-                  <font-awesome-icon :icon="['far', 'address-card']" />
-                </button>
-              </template>
-            </base-table>
+                </template>
+              </base-table>
+            </div>
           </div>
         </div>
       </div>

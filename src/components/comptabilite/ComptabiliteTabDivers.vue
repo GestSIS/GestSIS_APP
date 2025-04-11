@@ -85,7 +85,7 @@
         </div>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline table-responsive mb-3">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3>Autres</h3>
           </div>
@@ -94,48 +94,52 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucune écriture à afficher"
-            :data="filteredData"
-            :selectable="true"
-            @selected="selected"
-          >
-            <template #actions="{ rowData }">
-              <button
-                v-if="hasEditPermission"
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="editEcriture(rowData)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                v-if="hasEditPermission"
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="deleteEcriture(rowData?.id)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-            <template #foot>
-              <tr>
-                <th :colspan="9">Total</th>
-                <th>
-                  {{
-                    filteredData
-                      .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
-                      ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
-                  }}
-                  CHF
-                </th>
-                <th></th>
-              </tr>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucune écriture à afficher"
+              :data="filteredData"
+              :selectable="true"
+              @selected="selected"
+            >
+              <template #actions="{ rowData }">
+                <button
+                  v-if="hasEditPermission"
+                  type="button"
+                  class="btn btn-outline-primary border-0"
+                  @click="editEcriture(rowData)"
+                >
+                  <font-awesome-icon :icon="['far', 'edit']" />
+                </button>
+                <button
+                  v-if="hasEditPermission"
+                  type="button"
+                  class="btn btn-outline-danger border-0"
+                  @click="deleteEcriture(rowData?.id)"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+              <template #foot>
+                <tr>
+                  <th :colspan="9">Total</th>
+                  <th>
+                    {{
+                      filteredData
+                        .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
+                        ?.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        })
+                    }}
+                    CHF
+                  </th>
+                  <th></th>
+                </tr>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

@@ -1,24 +1,26 @@
 <template>
-  <div class="card card-primary card-outline table-responsive mb-3">
+  <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h5>Matériel à récupérer</h5>
     </div>
-    <base-table
-      :selectable="true"
-      :fields="fields"
-      no-data="Aucun matériel personnel à récupérer"
-      :data="computedData"
-    >
-      <template #actions="{ rowData }">
-        <button
-          title="Retour"
-          class="btn btn-outline-primary border-0"
-          @click="retourMultiple(rowData)"
-        >
-          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-        </button>
-      </template>
-    </base-table>
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :selectable="true"
+        :fields="fields"
+        no-data="Aucun matériel personnel à récupérer"
+        :data="computedData"
+      >
+        <template #actions="{ rowData }">
+          <button
+            title="Retour"
+            class="btn btn-outline-primary border-0"
+            @click="retourMultiple(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+          </button>
+        </template>
+      </base-table>
+    </div>
   </div>
 </template>
 

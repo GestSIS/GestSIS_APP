@@ -87,7 +87,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-xl-12">
-        <div class="card card-primary card-outline mb-3 table-responsive">
+        <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Interventions</h3>
             <!--          <button @click.prevent="save" class="btn btn-primary">-->
@@ -99,30 +99,32 @@
               <span class="visually-hidden">Chargement...</span>
             </div>
           </div>
-          <base-table
-            v-show="!loading"
-            :fields="fields"
-            :row-class="onRowClass"
-            no-data="Aucune écriture à afficher"
-            :detail-row-column="true"
-            :detail-row-column-hide-button="(r) => r.statut !== 3"
-            :detail-row-component="detailRowComponent"
-            :detail-row-options="detailRowOptions"
-            detail-row-class="m-td-0"
-            :data="filteredData"
-            :selectable="true"
-            @selected="selected"
-          >
-            <template #actions="{ rowData }">
-              <button
-                v-if="hasEditPermission && rowData.statut === 2"
-                class="btn btn-outline-primary border-0"
-                @click="imputer(rowData.id)"
-              >
-                <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
-              </button>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              v-show="!loading"
+              :fields="fields"
+              :row-class="onRowClass"
+              no-data="Aucune écriture à afficher"
+              :detail-row-column="true"
+              :detail-row-column-hide-button="(r) => r.statut !== 3"
+              :detail-row-component="detailRowComponent"
+              :detail-row-options="detailRowOptions"
+              detail-row-class="m-td-0"
+              :data="filteredData"
+              :selectable="true"
+              @selected="selected"
+            >
+              <template #actions="{ rowData }">
+                <button
+                  v-if="hasEditPermission && rowData.statut === 2"
+                  class="btn btn-outline-primary border-0"
+                  @click="imputer(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>

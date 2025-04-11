@@ -98,38 +98,40 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="card card-primary card-outline table-responsive mb-3">
+      <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
           <button class="btn btn-primary" @click.prevent="generer">
             Nouveau
           </button>
         </div>
-        <base-table
-          :fields="fields"
-          :data="computedData"
-          :selectable="true"
-          :detail-row-column="true"
-          :detail-row-component="detailRowComponent"
-          :detail-row-options="detailRowOptions"
-          detail-row-class="m-td-0"
-          no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
-          @selected="selected"
-        >
-          <template #actions="{ value }">
-            <!-- <button type="button" class="btn btn-outline-primary border-0">
+        <div class="card-body table-responsive p-0">
+          <base-table
+            :fields="fields"
+            :data="computedData"
+            :selectable="true"
+            :detail-row-column="true"
+            :detail-row-component="detailRowComponent"
+            :detail-row-options="detailRowOptions"
+            detail-row-class="m-td-0"
+            no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
+            @selected="selected"
+          >
+            <template #actions="{ value }">
+              <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
-            <button
-              v-if="hasEditPermission"
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="supprimer(value)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </template>
-        </base-table>
+              <button
+                v-if="hasEditPermission"
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimer(value)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+          </base-table>
+        </div>
       </div>
     </div>
   </div>
@@ -230,7 +232,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
+          permissions.COMPTABILITE.MODIFICATION
         ),
     }),
     computedData() {
@@ -274,7 +276,7 @@ export default {
 
       DecompteService.downloadResumeParSapeur(
         this.activeExerciceComptableId,
-        `resume_par_sapeur.pdf`,
+        `resume_par_sapeur.pdf`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -282,7 +284,7 @@ export default {
         .catch((err) => {
           this.HIDE_MODAL();
           this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé par sapeur',
+            err?.message || 'Erreur lors de la génération du résumé par sapeur'
           );
         });
     },
@@ -293,7 +295,7 @@ export default {
 
       DecompteService.downloadDecompte(
         decompteId,
-        `decompte_${decompte.date}.pdf`,
+        `decompte_${decompte.date}.pdf`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -302,7 +304,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
           );
         });
     },
@@ -313,7 +315,7 @@ export default {
 
       DecompteService.downloadDecompteParSapeur(
         decompteId,
-        `decompte_${decompte.date}.pdf`,
+        `decompte_${decompte.date}.pdf`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -322,7 +324,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
           );
         });
     },
@@ -333,7 +335,7 @@ export default {
 
       DecompteService.downloadDecompteParCompte(
         decompteId,
-        `decompte_${decompte.date}.pdf`,
+        `decompte_${decompte.date}.pdf`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -342,7 +344,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
           );
         });
     },
@@ -353,7 +355,7 @@ export default {
 
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
-        `decompte_${decompte.date}.xml`,
+        `decompte_${decompte.date}.xml`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -362,7 +364,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
           );
         });
     },
@@ -373,7 +375,7 @@ export default {
 
       DecompteService.downloadExcelAFacturer(
         decompteId,
-        `decompte_${decompte.date}_a_facturer.xlsx`,
+        `decompte_${decompte.date}_a_facturer.xlsx`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -382,7 +384,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
           );
         });
     },
@@ -393,7 +395,7 @@ export default {
 
       DecompteService.downloadExcelEcritures(
         decompteId,
-        `decompte_${decompte.date}_ecritures.xlsx`,
+        `decompte_${decompte.date}_ecritures.xlsx`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -402,26 +404,26 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
           );
         });
     },
     certificatsDeSalaire() {
       if (this.decomptes.length === 0) {
         return this.$awn.warning(
-          'Impossible de générer les certificats de salaire sans décompte !',
+          'Impossible de générer les certificats de salaire sans décompte !'
         );
       }
 
       const annee = this.exercicesComptables.find(
-        (e) => e.id == this.activeExerciceComptableId,
+        (e) => e.id == this.activeExerciceComptableId
       )?.annee;
 
       this.SHOW_MODAL({ component: 'ModalChargement' });
 
       DecompteService.downloadCertificatSalaires(
         this.activeExerciceComptableId,
-        `certificats_salaire_${annee}.pdf`,
+        `certificats_salaire_${annee}.pdf`
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -430,7 +432,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
+              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système"
           );
         });
     },
