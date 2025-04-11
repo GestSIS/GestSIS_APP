@@ -31,12 +31,13 @@
             <th class="sticky" data-field="date">Rôle</th>
             <th class="sticky" data-field="designation">Désignation</th>
             <template
-              v-for="[key, permissions] in groupedPermissions"
+              v-for="[key, permissions] in groupedPermissions.filter(
+                ([, permissions]) => permissions.length !== 1
+              )"
               :key="key"
             >
               <th
                 v-for="(p, i) in permissions"
-                v-if="permissions.length !== 1"
                 :key="i"
                 class="text-center text-capitalize"
               >

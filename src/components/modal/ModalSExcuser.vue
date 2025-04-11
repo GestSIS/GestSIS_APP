@@ -51,8 +51,8 @@
           <label for="remarque">Raison</label>
           <input
             id="remarque"
-            required
             v-model="activeExcuse.remarque"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"

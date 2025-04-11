@@ -43,9 +43,19 @@
               <button class="btn btn-outline-primary" @click="select">
                 Sélection
               </button>
-              <input type="text" disabled class="form-control"
-                :value="sapeurIds.length <= 0 ? 'Tous les sapeurs' : sapeurIds.length + ' sapeurs sélectionnés'" />
-              <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
+              <input
+                type="text"
+                disabled
+                class="form-control"
+                :value="
+                  sapeurIds.length <= 0
+                    ? 'Tous les sapeurs'
+                    : sapeurIds.length + ' sapeurs sélectionnés'
+                "
+              />
+              <button class="btn btn-outline-danger" @click="resetSelection">
+                Reset
+              </button>
             </div>
           </div>
         </div>

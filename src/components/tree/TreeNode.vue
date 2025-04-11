@@ -73,7 +73,6 @@ export default {
     select: {
       type: Function,
       required: true,
-      default: () => {},
     },
     active: {
       type: Object,

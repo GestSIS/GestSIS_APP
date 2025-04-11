@@ -52,8 +52,8 @@
       <button
         type="button"
         class="btn btn-primary"
-        @click="send()"
         :disabled="sending"
+        @click="send()"
       >
         Envoyer
       </button>

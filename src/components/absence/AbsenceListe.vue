@@ -1,9 +1,5 @@
 <template>
-  <stateful-filter
-    id="absences"
-    v-slot="{ setFilter, filters, filteredData, canReset, reset }"
-    :data="computedData"
-  >
+  <stateful-filter id="absences" v-slot="{ filteredData }" :data="computedData">
     <div class="row">
       <div class="col-md-3">
         <div class="card card-primary card-outline mb-2">

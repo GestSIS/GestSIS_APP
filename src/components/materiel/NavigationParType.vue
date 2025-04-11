@@ -14,10 +14,10 @@ categorieStore.fetchMaterielCategories();
 couleurStore.fetchCouleurs();
 
 const types = computed(() =>
-  typeStore.liste.sort((a, b) => a.designation - b.designation)
+  [...typeStore.liste].sort((a, b) => a.designation - b.designation)
 );
 const categories = computed(() =>
-  categorieStore.liste.sort((a, b) => a.designation - b.designation)
+  [...categorieStore.liste].sort((a, b) => a.designation - b.designation)
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
@@ -75,12 +75,12 @@ const computedData = computed(() => {
     <router-link
       v-for="item in computedData"
       :key="item.globalId"
+      v-slot="{ navigate, isExactActive }"
       :style="{
         'padding-left': item.level * 25 + 'px',
         color: indexedCouleurs[item.couleur_id]?.texte ?? 'black',
         'background-color': indexedCouleurs[item.couleur_id]?.fond ?? '',
       }"
-      v-slot="{ navigate, isExactActive }"
       custom
       :to="{
         name: 'materiel-par-type-details',

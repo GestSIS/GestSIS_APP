@@ -31,9 +31,9 @@ const permissions = computed(() => store.state['auth'].sis.permissions);
 const filteredRoutes = computed(() =>
   routes.filter(
     (r) =>
-      isAdmin ||
+      isAdmin.value ||
       r.permission === undefined ||
-      permissions.includes(r.permission)
+      permissions.value.includes(r.permission)
   )
 );
 </script>

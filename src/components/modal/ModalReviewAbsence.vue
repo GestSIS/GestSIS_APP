@@ -188,7 +188,7 @@
             v-show="!loading"
             ref="table"
             :fields="fields"
-            :data="computedSapeurExercices"
+            :data="computedData"
             :selectable="false"
             :row-class="rowClass"
             no-data="Aucun exercice pour ce sapeur"
@@ -220,7 +220,7 @@
                 </button>
               </div>
             </template>
-            <template #statut="{ value, rowData }">
+            <template #statut="{ value }">
               <div class="text-center">
                 <span
                   class="badge rounded-pill"
@@ -241,29 +241,49 @@
                 >
               </div>
             </template>
-            <template #foot="{ data }">
+            <template #foot>
               <tr>
                 <th colspan="4">Total</th>
                 <th class="text-center">
-                  {{ data.reduce((acc, e) => acc + (e.convoque ? 1 : 0), 0) }}
-                </th>
-                <th class="text-center">
-                  {{ data.reduce((acc, e) => acc + (e.present ? 1 : 0), 0) }}
-                </th>
-                <th class="text-center">
-                  {{ data.reduce((acc, e) => acc + (e.absent ? 1 : 0), 0) }}
-                </th>
-                <th class="text-center">
-                  {{ data.reduce((acc, e) => acc + (e.remplace ? 1 : 0), 0) }}
-                </th>
-                <th class="text-center">
                   {{
-                    data.reduce((acc, e) => acc + (e.excuse_type_id ? 1 : 0), 0)
+                    computedData.reduce(
+                      (acc, e) => acc + (e.convoque ? 1 : 0),
+                      0
+                    )
                   }}
                 </th>
                 <th class="text-center">
                   {{
-                    data.reduce(
+                    computedData.reduce(
+                      (acc, e) => acc + (e.present ? 1 : 0),
+                      0
+                    )
+                  }}
+                </th>
+                <th class="text-center">
+                  {{
+                    computedData.reduce((acc, e) => acc + (e.absent ? 1 : 0), 0)
+                  }}
+                </th>
+                <th class="text-center">
+                  {{
+                    computedData.reduce(
+                      (acc, e) => acc + (e.remplace ? 1 : 0),
+                      0
+                    )
+                  }}
+                </th>
+                <th class="text-center">
+                  {{
+                    computedData.reduce(
+                      (acc, e) => acc + (e.excuse_type_id ? 1 : 0),
+                      0
+                    )
+                  }}
+                </th>
+                <th class="text-center">
+                  {{
+                    computedData.reduce(
                       (acc, e) => acc + (e.excuse_statut == -2 ? 1 : 0),
                       0
                     )
@@ -360,7 +380,7 @@ export default {
       excuseTypes: (state) => state.excuseType.liste,
       localites: (state) => state.localite.liste,
     }),
-    computedSapeurExercices() {
+    computedData() {
       return this.activeSapeurExercices
         ?.map((e) => ({
           ...e.presence,

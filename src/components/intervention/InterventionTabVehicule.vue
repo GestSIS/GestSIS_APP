@@ -15,10 +15,10 @@
             <input
               :id="'v-' + rowData.id"
               v-model="selected[rowData.id]"
-              @change="editVehicule(rowData.id)"
               :disabled="!hasEditPermission"
               type="checkbox"
               class="form-check-input"
+              @change="editVehicule(rowData.id)"
             />
             <label class="form-check-label" :for="'v-' + rowData.id"></label>
           </template>

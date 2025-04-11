@@ -9,7 +9,12 @@
       >
         Ajouter une catégorie
       </button>
-      <button type="button" class="btn btn-primary" @click="ajoutType" :selectable="true">
+      <button
+        type="button"
+        class="btn btn-primary"
+        :selectable="true"
+        @click="ajoutType"
+      >
         Ajouter un type de matériel
       </button>
     </div>
