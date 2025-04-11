@@ -1,12 +1,12 @@
 <template>
   <nav
-    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
+    class="navbar navbar-expand-sm bg-light navbar-light border-bottom border-left justify-content-between"
   >
     <ul class="navbar-nav">
       <li class="nav-item position-relative me-2 ms-4">
         <button
           v-if="!noSidebar"
-          class="btn btn-outline-secondary"
+          class="btn btn-sm btn-outline-secondary"
           @click="$emit('toggleSidebar')"
         >
           <font-awesome-icon :icon="['fas', 'bars']" />
@@ -14,7 +14,7 @@
       </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
         <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
-          <button class="btn btn-link" @click="clickInfo(navigate)">
+          <button class="btn btn-sm btn-link" @click="clickInfo(navigate)">
             Admin
           </button>
         </router-link>
@@ -22,13 +22,20 @@
     </ul>
     <ul class="navbar-nav me-2">
       <li class="position-relative me-2">
-        <a :href="docUrl" target="_blank" class="btn btn-link nav-link">
+        <a
+          :href="docUrl"
+          target="_blank"
+          class="btn btn-sm btn-link nav-link pt-0 pb-0"
+        >
           <font-awesome-icon :icon="['far', 'question-circle']" />
         </a>
       </li>
       <router-link v-slot="{ navigate }" :to="{ name: 'about' }" custom>
         <li class="position-relative me-2">
-          <button class="btn btn-link nav-link" @click="clickInfo(navigate)">
+          <button
+            class="btn btn-sm btn-link nav-link pt-0 pb-0"
+            @click="clickInfo(navigate)"
+          >
             <font-awesome-icon :icon="['fas', 'bell']" />
             <span
               v-if="showNotif"
@@ -42,7 +49,7 @@
       <base-dropdown
         ref="dropdown"
         tag="li"
-        button-class="btn btn-link nav-link"
+        button-class="btn btn-sm btn-link nav-link pt-0 pb-0"
         menu-class="dropdown-menu-end"
       >
         <template #title>
@@ -50,7 +57,7 @@
         </template>
         <template #default>
           <button class="dropdown-item" @click="parametres">Paramètres</button>
-          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider" />
           <button class="dropdown-item" @click="logout">Déconnexion</button>
         </template>
       </base-dropdown>
