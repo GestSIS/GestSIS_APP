@@ -13,7 +13,7 @@
           Enregistrer
         </button>
       </div>
-      <div class="card-body">
+      <div class="card-body table-responsive p-0">
         <table id="int-groupes" class="table table-sm">
           <thead>
             <tr>

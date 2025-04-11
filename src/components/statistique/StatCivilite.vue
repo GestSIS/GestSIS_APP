@@ -4,7 +4,7 @@
       <div class="card-header d-flex justify-content-between">
         <h3>Stats sapeurs</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body table-responsive p-0">
         <base-table
           :fields="fields"
           :data="filteredCivilite"

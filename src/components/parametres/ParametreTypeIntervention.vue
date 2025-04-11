@@ -8,7 +8,7 @@
             Ajouter un type
           </button>
         </div>
-        <div class="card-body">
+        <div class="card-body table-responsive p-0">
           <base-table
             :data="listeType"
             :fields="fieldsType"
@@ -43,7 +43,7 @@
             Ajouter un type de statistique
           </button>
         </div>
-        <div class="card-body">
+        <div class="card-body table-responsive p-0">
           <base-table
             :data="listeStat"
             :fields="fieldsStat"

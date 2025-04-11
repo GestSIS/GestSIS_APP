@@ -10,8 +10,8 @@
         Enregistrer
       </button>
     </div>
-    <div class="card-body table-responsive table-striped">
-      <table class="table table-sm">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-sm table-striped">
         <thead>
           <tr>
             <th :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>

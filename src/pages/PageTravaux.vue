@@ -114,67 +114,69 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline table-responsive mb-3">
+          <div class="card card-primary card-outline mb-3">
             <div v-if="loading" class="card-body d-flex justify-content-center">
               <div class="spinner-border" role="status">
                 <span class="visually-hidden">Chargement...</span>
               </div>
             </div>
-            <base-table
-              :class="{ 'd-none': loading }"
-              :fields="fields"
-              :row-class="onRowClass"
-              no-data="Aucun travail à afficher"
-              :data="filteredData"
-              :selectable="true"
-              @selected="select"
-            >
-              <template #actions="{ rowData }">
-                <button
-                  v-if="
-                    hasEditPermission &&
-                    rowData.auteur_id == activeSapeurId &&
-                    rowData.statut == 0
-                  "
-                  title="Modifier"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateTravail(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  v-if="
-                    hasValidationPermission &&
-                    (rowData.statut == -1 || rowData.statut == 1)
-                  "
-                  title="Examen"
-                  class="btn btn-outline-warning border-0"
-                  @click="cancelReviewTravail(rowData)"
-                >
-                  <font-awesome-icon :icon="['fas', 'cancel']" />
-                </button>
-                <button
-                  v-if="hasValidationPermission && rowData.statut == 0"
-                  title="Examen"
-                  class="btn btn-outline-success border-0"
-                  @click="reviewTravail(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'eye']" />
-                </button>
-                <button
-                  v-if="
-                    hasEditPermission &&
-                    rowData.auteur_id == activeSapeurId &&
-                    rowData.statut == 0
-                  "
-                  title="Supprimer"
-                  class="btn btn-outline-danger border-0"
-                  @click="supprimerTravail(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </template>
-            </base-table>
+            <div class="card-body table-responsive p-0">
+              <base-table
+                :class="{ 'd-none': loading }"
+                :fields="fields"
+                :row-class="onRowClass"
+                no-data="Aucun travail à afficher"
+                :data="filteredData"
+                :selectable="true"
+                @selected="select"
+              >
+                <template #actions="{ rowData }">
+                  <button
+                    v-if="
+                      hasEditPermission &&
+                      rowData.auteur_id == activeSapeurId &&
+                      rowData.statut == 0
+                    "
+                    title="Modifier"
+                    class="btn btn-outline-primary border-0"
+                    @click="updateTravail(rowData)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    v-if="
+                      hasValidationPermission &&
+                      (rowData.statut == -1 || rowData.statut == 1)
+                    "
+                    title="Examen"
+                    class="btn btn-outline-warning border-0"
+                    @click="cancelReviewTravail(rowData)"
+                  >
+                    <font-awesome-icon :icon="['fas', 'cancel']" />
+                  </button>
+                  <button
+                    v-if="hasValidationPermission && rowData.statut == 0"
+                    title="Examen"
+                    class="btn btn-outline-success border-0"
+                    @click="reviewTravail(rowData)"
+                  >
+                    <font-awesome-icon :icon="['far', 'eye']" />
+                  </button>
+                  <button
+                    v-if="
+                      hasEditPermission &&
+                      rowData.auteur_id == activeSapeurId &&
+                      rowData.statut == 0
+                    "
+                    title="Supprimer"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerTravail(rowData)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </template>
+              </base-table>
+            </div>
           </div>
         </div>
       </div>

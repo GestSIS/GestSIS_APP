@@ -48,7 +48,7 @@
           <span class="visually-hidden">Chargement...</span>
         </div>
       </div>
-      <div class="card-body table-responsive">
+      <div class="card-body table-responsive p-0">
         <base-table
           v-show="!loading"
           :fields="fields"

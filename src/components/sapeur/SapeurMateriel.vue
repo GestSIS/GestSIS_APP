@@ -13,7 +13,7 @@
     </div>
     <!-- form start -->
     <form role="form">
-      <div class="card-body">
+      <div class="card-body table-responsive p-0">
         <base-table
           :fields="fields"
           :data="materiels"

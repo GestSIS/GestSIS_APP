@@ -4,7 +4,7 @@
       <h3 class="card-title">Contrôles médicaux</h3>
     </div>
     <form role="form">
-      <div class="card-body">
+      <div class="card-body table-responsive p-0">
         <base-table
           :fields="fields"
           :data="controles"
