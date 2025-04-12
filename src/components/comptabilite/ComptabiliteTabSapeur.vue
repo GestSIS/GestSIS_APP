@@ -23,11 +23,7 @@
             <h3 class="card-title">Impressions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button
-              class="btn btn-outline-primary"
-              :disabled="!selectedId"
-              @click="printPourSapeur(selectedId)"
-            >
+            <button class="btn btn-outline-primary" @click="printParSapeur">
               Résumé des frais complet
             </button>
             <button
