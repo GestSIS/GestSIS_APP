@@ -25,10 +25,17 @@
           <div class="card-body d-grid gap-1">
             <button
               class="btn btn-outline-primary"
-              :disabled="!selected || true"
-              @click="printPourSapeur"
+              :disabled="!selectedId"
+              @click="printPourSapeur(selectedId)"
             >
-              Résumé des frais
+              Résumé des frais complet
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              :disabled="!selectedId"
+              @click="printPourSapeur(selectedId)"
+            >
+              Résumé des frais pour sapeur
             </button>
           </div>
         </div>
@@ -119,6 +126,7 @@ import { mapState, mapMutations } from 'vuex';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import DecompteService from '../../services/DecompteService';
 import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 
@@ -157,7 +165,7 @@ export default {
       detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       ecritures: [],
-      selected: null,
+      selectedId: null,
       detailRowOptions: {
         fields: [
           { title: 'Date', key: 'date', type: Date },
@@ -330,9 +338,41 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
-    printPourSapeur() {
-      // TODO: Résumé des frais pour 1 sapeur
+    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    printPourSapeur(sapeurId) {
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
+      DecompteService.downloadResumePourSapeur(
+        this.activeExerciceComptableId,
+        sapeurId,
+        `resume_pour_sapeur.pdf`
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message || 'Erreur lors de la génération du résumé pour sapeur'
+          );
+        });
+    },
+    printParSapeur() {
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
+      DecompteService.downloadResumeParSapeur(
+        this.activeExerciceComptableId,
+        `resume_par_sapeur.pdf`
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((err) => {
+          this.HIDE_MODAL();
+          this.$awn.alert(
+            err?.message || 'Erreur lors de la génération du résumé par sapeur'
+          );
+        });
     },
     genererDecompteSapeur(sapeurId, sapeur) {
       this.SHOW_MODAL({
@@ -344,8 +384,8 @@ export default {
         },
       });
     },
-    select(id) {
-      this.selected = id;
+    select(sapeur) {
+      this.selectedId = sapeur.id;
     },
   },
 };

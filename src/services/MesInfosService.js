@@ -53,6 +53,11 @@ export default {
       `/mes-decomptes/${decompteId}/print`
     );
   },
+  downloadMonResumeAnnuel(exerciceComptableId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `mes-exercices-comptable/${exerciceComptableId}/print`
+    );
+  },
   downloadMonCertificatSalaire(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
       `/mon-certificat-salaire/${exerciceComptableId}`

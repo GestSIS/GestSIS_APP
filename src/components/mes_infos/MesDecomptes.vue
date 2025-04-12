@@ -5,6 +5,9 @@
       <button class="btn btn-primary" @click="certificatSalaire">
         Certificat de salaire
       </button>
+      <button class="btn btn-primary" @click="resumeAnnuel">
+        Résumé annuel
+      </button>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
@@ -100,6 +103,37 @@ export default {
         .catch((error) => {
           this.$awn.warning(
             error?.message ?? 'Erreur lors de la génération de votre décompte'
+          );
+          this.HIDE_MODAL();
+        });
+    },
+    resumeAnnuel() {
+      if (this.paiements.length == 0) {
+        this.$awn.alert(
+          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire'
+        );
+        return;
+      }
+      if (Date.now() < new Date(this.exerciceComptable.fin)) {
+        this.$awn.warning(
+          "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !"
+        );
+      }
+      const filename = `${this.exerciceComptable?.annee}_resume.pdf`;
+
+      this.SHOW_MODAL({ component: 'ModalChargement' });
+
+      MesInfosService.downloadMonResumeAnnuel(
+        this.exerciceComptableId,
+        filename
+      )
+        .then(() => {
+          this.HIDE_MODAL();
+        })
+        .catch((error) => {
+          this.$awn.warning(
+            error?.message ??
+              'Erreur lors de la génération de votre résumé annuel'
           );
           this.HIDE_MODAL();
         });

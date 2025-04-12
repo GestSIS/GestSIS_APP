@@ -1,9 +1,10 @@
+import sapeur from '../store/module/sapeur';
 import Api from '/src/http/Request';
 
 export default {
   getDecomptes(exerciceComptableId) {
     return Api.api().get(
-      `/decomptes/exercice-comptable/${exerciceComptableId}`,
+      `/decomptes/exercice-comptable/${exerciceComptableId}`
     );
   },
   creerDecompte(params) {
@@ -24,9 +25,14 @@ export default {
   getEcritures(decompteId) {
     return Api.api().get(`decomptes/${decompteId}/ecritures`);
   },
+  downloadResumePourSapeur(exerciceComptableId, sapeurId, filename) {
+    return Api.apiFileDownload(filename).get(
+      `/exercices-comptable/${exerciceComptableId}/resume-pour-sapeur/${sapeurId}`
+    );
+  },
   downloadResumeParSapeur(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/exercices-comptable/${exerciceComptableId}/resume-par-sapeur`,
+      `/exercices-comptable/${exerciceComptableId}/resume-par-sapeur`
     );
   },
   downloadDecompte(decompteId, filename) {
@@ -34,7 +40,7 @@ export default {
   },
   downloadDecompteParSapeur(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/decomptes/${decompteId}/print-par-sapeur`,
+      `/decomptes/${decompteId}/print-par-sapeur`
     );
   },
   downloadDecompteParCompte(decompteId, filename) {
@@ -42,32 +48,32 @@ export default {
   },
   downloadIso20022PourDecompte(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/decomptes/${decompteId}/iso20022`,
+      `/decomptes/${decompteId}/iso20022`
     );
   },
   downloadIso20022PourPaiement(paiementId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/paiements/${paiementId}/iso20022`,
+      `/paiements/${paiementId}/iso20022`
     );
   },
   downloadExcelAFacturer(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/decomptes/${decompteId}/a-facturer`,
+      `/decomptes/${decompteId}/a-facturer`
     );
   },
   downloadExcelEcritures(decompteId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/decomptes/${decompteId}/export-ecritures`,
+      `/decomptes/${decompteId}/export-ecritures`
     );
   },
   downloadCertificatSalaires(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/exercices-comptable/${exerciceComptableId}/certificat-salaire`,
+      `/exercices-comptable/${exerciceComptableId}/certificat-salaire`
     );
   },
   downloadCertificatSalaireSapeur(exerciceComptableId, sapeurId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/exercices-comptable/${exerciceComptableId}/certificat-salaire/${sapeurId}`,
+      `/exercices-comptable/${exerciceComptableId}/certificat-salaire/${sapeurId}`
     );
   },
 };
