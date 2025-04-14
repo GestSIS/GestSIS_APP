@@ -266,7 +266,10 @@ export default {
         .then((data) => {
           this.phase = 2;
           this.ecritures = data.ecritures;
-        });
+        })
+        .catch((err) =>
+          this.$awn.alert(err?.message ?? "Impossible d'effectuer cette action")
+        );
     },
     onKeyDown() {
       // console.log('Key down');

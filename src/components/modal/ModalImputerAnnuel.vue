@@ -208,12 +208,17 @@ export default {
       this.HIDE_MODAL();
     },
     imputer() {
-      this.$store.dispatch('imputerAnnuel').then((data) => {
-        this.phase = 2;
-        this.ecritures = [...data].sort(
-          (e1, e2) => e2.sapeur_id - e1.sapeur_id
+      this.$store
+        .dispatch('imputerAnnuel')
+        .then((data) => {
+          this.phase = 2;
+          this.ecritures = [...data].sort(
+            (e1, e2) => e2.sapeur_id - e1.sapeur_id
+          );
+        })
+        .catch((err) =>
+          this.$awn.alert(err?.message ?? "Impossible d'effectuer cette action")
         );
-      });
     },
   },
 };

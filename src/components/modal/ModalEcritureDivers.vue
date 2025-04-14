@@ -197,12 +197,15 @@ export default {
             this.errors = {};
             this.HIDE_MODAL();
           })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              })
-          );
+          .catch((errors) => {
+            this.errors = {
+              ...errors,
+            };
+
+            if (errors.message) {
+              this.$awn.alert(errors?.message);
+            }
+          });
       } else {
         this.$store
           .dispatch('updateEcriture', this.activeEcriture)

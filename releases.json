@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "14.04.2024",
+      "version": "2.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Gestion des exercices comptable cloturé",
+        "Ajout d'un bouton sélectionner/désélectionner tous pour mutation RTA"
+      ]
+    },
+    {
       "date": "12.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",

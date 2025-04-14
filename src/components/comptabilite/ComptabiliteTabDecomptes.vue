@@ -266,7 +266,13 @@ export default {
         },
         callback: (confirmed) => {
           if (confirmed) {
-            this.$store.dispatch('removeDecompte', decompteId);
+            this.$store
+              .dispatch('removeDecompte', decompteId)
+              .catch((err) =>
+                this.$awn.alert(
+                  err?.message ?? "Impossible d'effectuer cette action"
+                )
+              );
           }
         },
       });

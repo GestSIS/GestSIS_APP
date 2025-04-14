@@ -66,7 +66,18 @@
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
-            <th></th>
+            <th class="text-center">
+              <input
+                id="select-all"
+                checked
+                @change="switchAll"
+                type="checkbox"
+                class="form-check-input"
+                :false-value="true"
+                :true-value="false"
+              />
+              <label class="form-check-label" for="select-all"></label>
+            </th>
             <th>Nom Prénom</th>
             <th>Date de naissance</th>
             <th>Localité</th>
@@ -394,6 +405,11 @@ export default {
     };
   },
   methods: {
+    switchAll(valeur) {
+      this.mutations.forEach(
+        (m) => (this.unselected[m.sapeur_id] = !valeur.target.checked)
+      );
+    },
     mutate() {
       if (!this.password) {
         this.errors.password = 'Mot de passe invalide';
