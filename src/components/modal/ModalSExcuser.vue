@@ -9,7 +9,7 @@
         v-model="activeExcuse.exercice_id"
         class="mb-3"
         :class="{
-          'is-invalid': errors['excuse_type_id'],
+          'is-invalid': errors['exercice_id'],
         }"
         :options="excuses"
         :formatter="
@@ -57,6 +57,9 @@
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"
           />
+          <div v-if="errors['remarque']" class="invalid-feedback">
+            Trop long
+          </div>
         </div>
         <div class="mb-3">
           <label>Justificatif</label>
