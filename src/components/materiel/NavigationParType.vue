@@ -41,10 +41,20 @@ const computedData = computed(() => {
         type: 'categorie',
         level: level,
       });
-    });
 
-    if (categoriesGroupedByParentId[c.id])
-      recursive(categoriesGroupedByParentId[c.id], level + 1);
+      if (typesGroupedByCategorieId[c.id])
+        typesGroupedByCategorieId[c.id].forEach((t) => {
+          data.push({
+            ...t,
+            globalId: 't' + c.id,
+            type: 'type',
+            level: level + 1,
+          });
+        });
+
+      if (categoriesGroupedByParentId[c.id])
+        recursive(categoriesGroupedByParentId[c.id], level + 1);
+    });
   };
 
   recursive(
