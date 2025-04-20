@@ -28,11 +28,24 @@
           >
           <a
             class="nav-link"
-            :class="{ active: tab === 'indemnite-frais-annuel' }"
+            :class="{ active: tab === 'indemnite-exercice' }"
             href="#"
-            role="tab"
-            @click.prevent="tab = 'indemnite-frais-annuel'"
-            >Frais &amp; indemnité annuel</a
+            @click.prevent="tab = 'indemnite-exercice'"
+            >Imputation exercice &amp; séance</a
+          >
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'indemnite-intervention' }"
+            href="#"
+            @click.prevent="tab = 'indemnite-intervention'"
+            >Imputation intervention</a
+          >
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'indemnite-cours' }"
+            href="#"
+            @click.prevent="tab = 'indemnite-cours'"
+            >Imputation cours</a
           >
           <a
             class="nav-link"
@@ -43,31 +56,18 @@
           >
           <a
             class="nav-link"
-            :class="{ active: tab === 'indemnite-exercice' }"
+            :class="{ active: tab === 'indemnite-frais-annuel' }"
             href="#"
-            @click.prevent="tab = 'indemnite-exercice'"
-            >Indemnité exercice &amp; séance</a
-          >
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'indemnite-intervention' }"
-            href="#"
-            @click.prevent="tab = 'indemnite-intervention'"
-            >Indemnité intervention</a
-          >
-          <a
-            class="nav-link"
-            :class="{ active: tab === 'indemnite-cours' }"
-            href="#"
-            @click.prevent="tab = 'indemnite-cours'"
-            >Indemnité cours</a
+            role="tab"
+            @click.prevent="tab = 'indemnite-frais-annuel'"
+            >Frais &amp; indemnité annuel</a
           >
           <a
             class="nav-link"
             :class="{ active: tab === 'comptabilite' }"
             href="#"
             @click.prevent="tab = 'comptabilite'"
-            >AVS</a
+            >Côtisations sociales</a
           >
           <a
             class="nav-link"
