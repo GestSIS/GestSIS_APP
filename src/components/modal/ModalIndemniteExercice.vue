@@ -45,7 +45,7 @@
               </thead>
               <tbody>
                 <tr v-for="(indemnite, i) in base" :key="i">
-                  <td class="col-4">
+                  <td class="col-2">
                     <base-select
                       v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
@@ -55,18 +55,16 @@
                       ]"
                     />
                   </td>
-                  <td class="col-4">
+                  <td class="col-2">
                     <input
-                      id="tarif"
                       v-model="base[i].tarif"
                       type="text"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['base-tarif' + i] }"
                     />
                   </td>
-                  <td class="col-4">
+                  <td class="col-6">
                     <select
-                      id="compte"
                       v-model="base[i].compte_id"
                       class="form-select form-select-sm"
                       :class="{ 'is-invalid': errors['base-compte' + i] }"
@@ -266,7 +264,7 @@ export default {
   },
   watch: {
     parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 0);
+      this.UPDATE_MODAL_SIZE(val ? 2 : 1);
     },
   },
   mounted() {

@@ -38,7 +38,7 @@
               </thead>
               <tbody>
                 <tr v-for="(indemnite, i) in base" :key="i">
-                  <td class="col-3">
+                  <td class="col-2">
                     <base-select
                       v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
@@ -59,7 +59,7 @@
                       :class="{ 'is-invalid': errors['base-tarif' + i] }"
                     />
                   </td>
-                  <td class="col-3">
+                  <td class="col-2">
                     <base-select
                       v-model="base[i].type_unite_id"
                       :class="{ 'is-invalid': errors['base-unite' + i] }"
@@ -67,7 +67,7 @@
                       :options="unites"
                     />
                   </td>
-                  <td class="col-4">
+                  <td class="col-6">
                     <base-select
                       v-model="base[i].compte_id"
                       :class="{ 'is-invalid': errors['base-compte' + i] }"

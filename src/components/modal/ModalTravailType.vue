@@ -49,23 +49,26 @@
                   ]"
                 />
               </td>
-              <td class="col-2 input-group input-group-sm">
-                <input
-                  id="tarif"
-                  v-model="base[i].tarif"
-                  type="text"
-                  class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['base-tarif' + i] }"
-                />
-                <span class="input-group-text">
-                  CHF /
-                  {{
-                    unites.find((u) => u.id == activeTravailType.type_unite_id)
-                      ?.unite
-                  }}</span
-                >
+              <td class="col-3">
+                <div class="input-group input-group-sm">
+                  <input
+                    id="tarif"
+                    v-model="base[i].tarif"
+                    type="text"
+                    class="form-control form-control-sm"
+                    :class="{ 'is-invalid': errors['base-tarif' + i] }"
+                  />
+                  <span class="input-group-text">
+                    CHF /
+                    {{
+                      unites.find(
+                        (u) => u.id == activeTravailType.type_unite_id
+                      )?.unite
+                    }}</span
+                  >
+                </div>
               </td>
-              <td class="col-4">
+              <td class="col-7">
                 <base-select
                   v-model="base[i].compte_id"
                   :class="{ 'is-invalid': errors['base-compte' + i] }"
