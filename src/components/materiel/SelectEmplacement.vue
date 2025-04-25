@@ -74,4 +74,8 @@ const emplacements = computed(() => {
 :root {
   --vs-option-padding: 4px 6px;
 }
+
+.single-value {
+  overflow: visible !important;
+}
 </style>
