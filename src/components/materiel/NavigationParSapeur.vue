@@ -19,7 +19,7 @@ const sapeurs = computed(() =>
 
 <template>
   <ul class="list-group list-group-flush">
-    <li v-if="sapeurs.length === 0">
+    <li v-if="sapeurs.length === 0" class="list-group-item pt-1 pb-1">
       <td class="border-bottom-0">Aucun sapeur</td>
     </li>
     <router-link

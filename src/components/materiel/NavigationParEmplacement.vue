@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { groupedByData, indexedData } from '../../tools';
+import TagCouleur from './TagCouleur.vue';
 
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
@@ -30,10 +31,7 @@ const computedData = computed(() => {
 
 <template>
   <ul class="list-group list-group-flush">
-    <li
-      v-if="computedData.length === 0"
-      class="nav-link list-group-item list-group-item-action pt-1 pb-1"
-    >
+    <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
       <span class="border-bottom-0">Aucun emplacement</span>
     </li>
     <router-link
@@ -55,15 +53,10 @@ const computedData = computed(() => {
         role="link"
         :class="{ 'bg-primary-subtle': isExactActive }"
         @click="navigate"
-        ><span
-          class="m-0 p-1"
-          :style="{
-            color: indexedCouleurs[item.couleur_id]?.texte ?? 'black',
-            'background-color': indexedCouleurs[item.couleur_id]?.fond ?? '',
-          }"
-        >
+      >
+        <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
           {{ item.designation }}
-        </span>
+        </tag-couleur>
       </a>
     </router-link>
   </ul>

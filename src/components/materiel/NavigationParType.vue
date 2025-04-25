@@ -68,11 +68,8 @@ const computedData = computed(() => {
 
 <template>
   <ul class="list-group list-group-flush">
-    <li
-      v-if="computedData.length === 0"
-      class="nav-link list-group-item list-group-item-action pt-1 pb-1"
-    >
-      <span class="border-bottom-0">Aucun catégorie</span>
+    <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
+      <span class="border-bottom-0">Aucune catégorie</span>
     </li>
     <router-link
       v-for="item in computedData"

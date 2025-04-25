@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -16,13 +17,13 @@ const couleurStore = useCouleurStore();
 
 await Promise.all([
   emplacementStore.fetchEmplacements(),
-  couleurStore.fetchCouleurs,
+  couleurStore.fetchCouleurs(),
 ]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const emplacement = computed(() =>
-  emplacementStore.liste.find((e) => e.id === parseInt(id)),
+  emplacementStore.liste.find((e) => e.id === parseInt(id))
 );
 
 const etiquettage = computed(() => {
@@ -59,16 +60,11 @@ const formatEmptyString = (str) => (str === '' ? '-' : str);
       <div class="row">
         <div class="col-3">Etiquettage</div>
         <div class="col-9">
-          <span
+          <tag-couleur
             v-for="etiquette in etiquettage"
             :key="etiquette.id"
-            :style="{
-              color: indexedCouleurs[etiquette.couleur_id]?.texte ?? 'black',
-              'background-color':
-                indexedCouleurs[etiquette.couleur_id]?.fond ?? '',
-            }"
-            class="me-1 p-1"
-            >{{ etiquette.designation }}</span
+            :couleur="indexedCouleurs[etiquette.couleur_id]"
+            >{{ etiquette.designation }}</tag-couleur
           >
           <font-awesome-icon
             v-if="!emplacement.est_etiquete"

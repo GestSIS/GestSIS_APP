@@ -4,6 +4,7 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -39,7 +40,7 @@ const computedData = computed(() =>
   articles.value.map((a) => ({
     ...a,
     type: indexedTypes.value[a.materiel_type_id],
-  })),
+  }))
 );
 
 const piecesColonnes = [
@@ -63,15 +64,9 @@ const piecesColonnes = [
       :fields="piecesColonnes"
     >
       <template #type="{ rowData }">
-        <div
-          :style="{
-            color: indexedCouleurs[rowData.type.couleur_id]?.texte ?? 'black',
-            'background-color':
-              indexedCouleurs[rowData.type.couleur_id]?.fond ?? '',
-          }"
-        >
+        <tag-couleur :couleur="indexedCouleurs[rowData.type.couleur_id]">
           {{ rowData.type.designation }}
-        </div>
+        </tag-couleur>
       </template>
       <template #actions="{ rowData }"> TODO: </template>
     </base-table>
