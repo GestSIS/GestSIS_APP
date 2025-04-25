@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { indexedData } from '../../tools';
+import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { useStore } from 'vuex';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
 
@@ -12,6 +13,7 @@ const { id } = defineProps({
   },
 });
 
+const store = useStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 
@@ -23,7 +25,7 @@ await Promise.all([
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const emplacement = computed(() =>
-  emplacementStore.liste.find((e) => e.id === parseInt(id))
+  emplacementStore.liste.find((e) => e.id === parseInt(id)),
 );
 
 const etiquettage = computed(() => {
@@ -38,6 +40,13 @@ const etiquettage = computed(() => {
   return recursive(emplacement.value);
 });
 const formatEmptyString = (str) => (str === '' ? '-' : str);
+
+const editEmplacement = () => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalEmplacement',
+    data: emplacement,
+  });
+};
 </script>
 
 <template>
@@ -47,7 +56,7 @@ const formatEmptyString = (str) => (str === '' ? '-' : str);
       <button
         type="button"
         class="btn btn-primary btn-sm"
-        @click="editMateriel(rowData.id)"
+        @click="editEmplacement"
       >
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>
