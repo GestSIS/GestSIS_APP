@@ -53,7 +53,7 @@ const computedData = computed(() =>
       type: indexedTypes.value[a.materiel_type_id]?.designation,
       sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
     }))
-    .sort((a1, a2) => a1.type.localeCompare(a2.type)),
+    .sort((a1, a2) => a1.type.localeCompare(a2.type))
 );
 
 const attribuer = () => {
@@ -84,6 +84,7 @@ const retourMateriel = (materiel) => {
       :data="computedData"
       no-data="Aucune pièce"
       :fields="piecesColonnes"
+      :selectable="true"
     >
       <template #emplacement="{ rowData }">
         <div v-if="rowData.sapeur_id" class="badge bg-primary">

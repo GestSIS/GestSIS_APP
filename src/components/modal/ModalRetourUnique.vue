@@ -12,7 +12,7 @@ const { data } = defineProps({
 });
 
 const errors = ref({});
-const date = ref(Date.now());
+const date = ref(new Date().toISOString().slice(0, 10));
 const emplacement_id = ref(null);
 
 const store = useStore();

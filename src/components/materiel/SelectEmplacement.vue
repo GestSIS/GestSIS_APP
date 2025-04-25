@@ -28,17 +28,27 @@ const emplacements = computed(() => {
     ];
   };
   return emplacementStore.liste
-    .map((e) => ({
-      ...e,
-      value: e.id,
-      emplacements: recursive(e.id),
-    }))
+    .map((e) => {
+      const ids = recursive(e.id);
+      return {
+        ...e,
+        value: e.id,
+        emplacements: ids,
+        label: ids
+          .map((id) => indexedEmplacements.value[id].designation)
+          .join(' '),
+      };
+    })
     .sort((a, b) => a.tri - b.tri);
 });
 </script>
 
 <template>
-  <VueSelect v-model="model" :options="emplacements" placeholder="">
+  <VueSelect
+    v-model="model"
+    :options="emplacements"
+    placeholder="Sélectionnez un emplacement"
+  >
     <template #value="{ option }">
       <tag-couleur
         v-for="id in option.emplacements"
