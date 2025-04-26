@@ -4,65 +4,59 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { groupedByData, indexedData } from '../../tools';
+import TagCouleur from './TagCouleur.vue';
 
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
 const couleurStore = useCouleurStore();
 
-typeStore.fetchMaterielTypes();
-categorieStore.fetchMaterielCategories();
-couleurStore.fetchCouleurs();
+await Promise.all([
+  typeStore.fetchMaterielTypes(),
+  couleurStore.fetchCouleurs(),
+  categorieStore.fetchMaterielCategories(),
+]);
 
-const types = computed(() =>
-  [...typeStore.liste].sort((a, b) => a.designation - b.designation)
-);
-const categories = computed(() =>
-  [...categorieStore.liste].sort((a, b) => a.designation - b.designation)
-);
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+const indexedCategories = computed(() => indexedData(categorieStore.liste));
+
+const linearCategories = (categorieId) => {
+  if (categorieId === null) {
+    return [];
+  }
+  const categorie = indexedCategories.value[categorieId] ?? null;
+  if (categorie === null) {
+    return [];
+  }
+  return [...linearCategories(categorie.parent_id), categorie];
+};
 
 const computedData = computed(() => {
-  let typesGroupedByCategorieId = groupedByData(
-    types.value,
-    'materiel_categorie_id'
-  );
-  let categoriesGroupedByParentId = groupedByData(
-    categories.value,
-    'parent_id'
+  // TODO: Trier les categories par `tri`
+  const sortedCategories = [...categorieStore.liste].sort(
+    (a, b) => a.tri - b.tri,
   );
 
-  let data = [];
-
-  const recursive = (categories, level) => {
-    categories.forEach((c) => {
-      data.push({
-        ...c,
-        globalId: 'c' + c.id,
-        type: 'categorie',
-        level: level,
-      });
-
-      if (typesGroupedByCategorieId[c.id])
-        typesGroupedByCategorieId[c.id].forEach((t) => {
-          data.push({
-            ...t,
-            globalId: 't' + c.id,
-            type: 'type',
-            level: level + 1,
-          });
-        });
-
-      if (categoriesGroupedByParentId[c.id])
-        recursive(categoriesGroupedByParentId[c.id], level + 1);
-    });
-  };
-
-  recursive(
-    categories.value.filter((c) => !c.parent_id),
-    0
+  // Grouper les types par categorie
+  const groupedTypesByCategorieId = groupedByData(
+    typeStore.liste,
+    'materiel_categorie_id',
   );
 
-  return data;
+  // Map categories avec leurs types et les filtrer
+  return sortedCategories
+    .map((c) => ({
+      categorie: c,
+      types: groupedTypesByCategorieId[c.id] ?? [],
+    }))
+    .filter((groupe) => groupe.types.length > 0)
+    .flatMap(({ categorie, types }) => [
+      { type: 'categorie', globalId: 'c' + categorie.id, data: categorie },
+      ...types.map((t) => ({
+        type: 'type',
+        globalId: 't' + categorie.id,
+        data: t,
+      })),
+    ]);
 });
 </script>
 
@@ -75,27 +69,31 @@ const computedData = computed(() => {
       v-for="item in computedData"
       :key="item.globalId"
       v-slot="{ navigate, isExactActive }"
-      :style="{
-        'padding-left': item.level * 25 + 'px',
-        color: indexedCouleurs[item.couleur_id]?.texte ?? 'black',
-        'background-color': indexedCouleurs[item.couleur_id]?.fond ?? '',
-      }"
       custom
       :to="{
         name: 'materiel-par-type-details',
-        params: { id: item.id },
+        params: { id: item.data.id },
       }"
     >
       <a
         v-if="item.type === 'type'"
-        class="nav-link list-group-item list-group-item-action pt-1 pb-1"
+        class="nav-link list-group-item list-group-item-action p-1 ps-3"
         href="#"
         role="link"
         :class="{ active: isExactActive }"
         @click="navigate"
-        >{{ item.designation }}
+      >
+        {{ item.data.designation }}
       </a>
-      <span v-else>{{ item.designation }}</span>
+      <div v-else class="list-group-item p-1">
+        <tag-couleur
+          v-for="categorie in linearCategories(item.data.id)"
+          :key="categorie.id"
+          :couleur="indexedCouleurs[categorie.couleur_id]"
+        >
+          {{ categorie.designation }}
+        </tag-couleur>
+      </div>
     </router-link>
   </ul>
 </template>

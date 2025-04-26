@@ -3,7 +3,10 @@ import { computed, ref, watch } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import { useStore } from 'vuex';
-import { indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -13,7 +16,9 @@ const { id } = defineProps({
 });
 
 const store = useStore();
+const materielCategorieStore = useMaterielCategorieStore();
 const materielTypeStore = useMaterielTypeStore();
+const couleurStore = useCouleurStore();
 
 const articles = ref([]);
 const loading = ref(true);
@@ -26,12 +31,12 @@ const loadArticles = async () => {
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
+  materielCategorieStore.fetchMaterielCategories(),
+  couleurStore.fetchCouleurs(),
   Promise.resolve(await loadArticles()),
 ]);
 
 watch(() => id, loadArticles);
-
-const types = computed(() => materielTypeStore.liste);
 
 // Partie pièces
 const piecesColonnes = [
@@ -39,21 +44,32 @@ const piecesColonnes = [
   { title: 'Numéro', key: 'numero' },
   { title: 'Taille', key: 'taille' },
   { title: 'Remarque', key: 'remarque' },
-  { title: 'Ajouté', key: 'created_at', type: 'date' },
+  { title: 'Attribué', key: 'attribution', type: 'date' },
   { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 
-const indexedTypes = computed(() => indexedData(types.value));
+const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+const indexedCategories = computed(() =>
+  indexedData(materielCategorieStore.liste),
+);
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
 
 const computedData = computed(() =>
-  articles.value
-    .map((a) => ({
-      ...a,
-      type: indexedTypes.value[a.materiel_type_id]?.designation,
-      sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-    }))
-    .sort((a1, a2) => a1.type.localeCompare(a2.type)),
+  Object.entries(
+    groupedByData(
+      articles.value
+        .map((a) => ({
+          ...a,
+          type: indexedTypes.value[a.materiel_type_id]?.designation,
+          categorie_id:
+            indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+          sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
+        }))
+        .sort((a1, a2) => a1.type.localeCompare(a2.type)),
+      'categorie_id',
+    ),
+  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
 
 const attribuer = () => {
@@ -70,6 +86,17 @@ const retourMateriel = (materiel) => {
     data: materiel,
   });
 };
+
+const linearCategories = (categorieId) => {
+  if (categorieId === null) {
+    return [];
+  }
+  const categorie = indexedCategories.value[categorieId] ?? null;
+  if (categorie === null) {
+    return [];
+  }
+  return [...linearCategories(categorie.parent_id), categorie];
+};
 </script>
 
 <template>
@@ -82,11 +109,21 @@ const retourMateriel = (materiel) => {
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        :data="computedData"
+        :grouped-data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
         :selectable="true"
       >
+        <template #groupeHeader="{ categorie_id }">
+          <tag-couleur
+            v-for="categorie in linearCategories(categorie_id)"
+            :key="categorie.id"
+            :couleur="indexedCouleurs[categorie.couleur_id]"
+          >
+            {{ categorie.designation }}
+          </tag-couleur>
+        </template>
+
         <template #emplacement="{ rowData }">
           <div v-if="rowData.sapeur_id" class="badge bg-primary">
             {{ rowData.sapeur }}
