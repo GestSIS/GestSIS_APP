@@ -61,7 +61,10 @@ export default {
   },
   methods: {
     async login() {
-      if (this.email?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
+      if (
+        this.email?.trim()?.toLowerCase()?.endsWith('@gestsis.ch') &&
+        !this.email?.trim()?.toLowerCase()?.endsWith('demo@gestsis.ch')
+      ) {
         this.error = {
           email: 'Email invalid',
         };
