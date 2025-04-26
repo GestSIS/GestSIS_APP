@@ -1,8 +1,10 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
+import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
 
@@ -15,6 +17,7 @@ const { id } = defineProps({
 
 const store = useStore();
 const emplacementStore = useEmplacementStore();
+const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
 
 const articles = ref([]);
@@ -28,6 +31,7 @@ const loadArticles = async () => {
 
 await Promise.all([
   emplacementStore.fetchEmplacements(),
+  couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
   store.dispatch('fetchListeSapeur'),
   Promise.resolve(await loadArticles()),
@@ -35,7 +39,6 @@ await Promise.all([
 
 watch(() => id, loadArticles);
 
-const emplacements = computed(() => emplacementStore.liste);
 const materielType = computed(() =>
   materielTypeStore.liste.find((m) => m.id === parseInt(id)),
 );
@@ -57,14 +60,18 @@ const piecesColonnes = [
   { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 
-const indexedEmplacements = computed(() => indexedData(emplacements.value));
+const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const linearEmplacements = (emplacement_id) => {
   if (emplacement_id === null) {
     return [];
   }
-  const emplacement = indexedEmplacements[emplacement_id];
+  const emplacement = indexedEmplacements.value[emplacement_id] ?? null;
+  if (emplacement === null) {
+    return [];
+  }
   return [...linearEmplacements(emplacement.parent_id), emplacement];
 };
 
@@ -82,22 +89,30 @@ const computedData = computed(() =>
     <div class="card-header">
       <h5 class="m-0">Pièces ({{ articles.length }})</h5>
     </div>
-    <base-table
-      :data="computedData"
-      no-data="Aucune pièce"
-      :fields="piecesColonnes"
-    >
-      <template #emplacement="{ rowData }">
-        <div v-if="rowData.sapeur_id" class="badge bg-primary">
-          {{ rowData.sapeur }}
-        </div>
-        <div v-else v-for="e in rowData.emplacements" :key="e.id">
-          {{ e }}
-        </div>
-      </template>
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="computedData"
+        no-data="Aucune pièce"
+        :fields="piecesColonnes"
+        :selectable="true"
+      >
+        <template #emplacement="{ rowData }">
+          <div v-if="rowData.sapeur_id" class="badge bg-primary">
+            {{ rowData.sapeur }}
+          </div>
+          <div v-else>
+            <tag-couleur
+              v-for="e in rowData.emplacements"
+              :key="e.id"
+              :couleur="indexedCouleurs[e.couleur_id]"
+              >{{ e.designation }}</tag-couleur
+            >
+          </div>
+        </template>
 
-      <template #actions="{ rowData }"> TODO: </template>
-    </base-table>
+        <template #actions="{ rowData }"> TODO: </template>
+      </base-table>
+    </div>
   </div>
 </template>
 

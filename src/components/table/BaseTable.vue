@@ -343,7 +343,7 @@ export default {
                     return (f.formatter || this.defaultFormatter)(e[f.key], e);
                 }
               })
-              .join(';')
+              .join(';'),
           )
           .join('\n');
       // V1

@@ -13,10 +13,15 @@ const { couleur } = defineProps({
       color: couleur?.texte ?? 'black',
       'background-color': couleur?.fond ?? '',
     }"
-    class="me-1 p-1 border border-black"
+    class="custom-badge me-1 p-1 border border-black"
   >
     <slot />
   </span>
 </template>
 
-<style></style>
+<style scoped>
+.custom-badge {
+  --bs-badge-font-size: 0.75em;
+  font-size: var(--bs-badge-font-size);
+}
+</style>

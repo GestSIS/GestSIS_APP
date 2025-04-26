@@ -80,31 +80,33 @@ const retourMateriel = (materiel) => {
         Attribuer du matériel
       </button>
     </div>
-    <base-table
-      :data="computedData"
-      no-data="Aucune pièce"
-      :fields="piecesColonnes"
-      :selectable="true"
-    >
-      <template #emplacement="{ rowData }">
-        <div v-if="rowData.sapeur_id" class="badge bg-primary">
-          {{ rowData.sapeur }}
-        </div>
-        <div v-else v-for="e in rowData.emplacements" :key="e.id">
-          {{ e }}
-        </div>
-      </template>
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="computedData"
+        no-data="Aucune pièce"
+        :fields="piecesColonnes"
+        :selectable="true"
+      >
+        <template #emplacement="{ rowData }">
+          <div v-if="rowData.sapeur_id" class="badge bg-primary">
+            {{ rowData.sapeur }}
+          </div>
+          <div v-else v-for="e in rowData.emplacements" :key="e.id">
+            {{ e }}
+          </div>
+        </template>
 
-      <template #actions="{ rowData }">
-        <button
-          title="Retour"
-          class="btn btn-outline-primary border-0"
-          @click="retourMateriel(rowData)"
-        >
-          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-        </button>
-      </template>
-    </base-table>
+        <template #actions="{ rowData }">
+          <button
+            title="Retour"
+            class="btn btn-outline-primary border-0"
+            @click="retourMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+          </button>
+        </template>
+      </base-table>
+    </div>
   </div>
 </template>
 

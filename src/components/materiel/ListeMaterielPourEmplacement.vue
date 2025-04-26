@@ -40,7 +40,7 @@ const computedData = computed(() =>
   articles.value.map((a) => ({
     ...a,
     type: indexedTypes.value[a.materiel_type_id],
-  }))
+  })),
 );
 
 const piecesColonnes = [
@@ -58,18 +58,19 @@ const piecesColonnes = [
     <div class="card-header">
       <h5 class="m-0">Pièces ({{ articles.length }})</h5>
     </div>
-    <base-table
-      :data="computedData"
-      no-data="Aucune pièce"
-      :fields="piecesColonnes"
-    >
-      <template #type="{ rowData }">
-        <tag-couleur :couleur="indexedCouleurs[rowData.type.couleur_id]">
+    <div class="card-body table-responsive p-0">
+      <base-table
+        :data="computedData"
+        no-data="Aucune pièce"
+        :fields="piecesColonnes"
+        :selectable="true"
+      >
+        <template #type="{ rowData }">
           {{ rowData.type.designation }}
-        </tag-couleur>
-      </template>
-      <template #actions="{ rowData }"> TODO: </template>
-    </base-table>
+        </template>
+        <template #actions="{ rowData }"> TODO: </template>
+      </base-table>
+    </div>
   </div>
 </template>
 

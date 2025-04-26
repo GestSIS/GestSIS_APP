@@ -171,6 +171,7 @@ const selectMaterielTypeGenerique = (item) => {
           />
         </td>
         <td>
+          // TODO: Emplacement selecteur
           <base-select
             v-model="item.id"
             :options="
