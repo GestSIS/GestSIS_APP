@@ -40,7 +40,7 @@ await Promise.all([
 watch(() => id, loadArticles);
 
 const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
+  materielTypeStore.liste.find((m) => m.id === parseInt(id))
 );
 
 // Partie pièces
@@ -80,7 +80,7 @@ const computedData = computed(() =>
     ...a,
     emplacements: linearEmplacements(a.emplacement_id),
     sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-  })),
+  }))
 );
 </script>
 
@@ -110,7 +110,23 @@ const computedData = computed(() =>
           </div>
         </template>
 
-        <template #actions="{ rowData }"> TODO: </template>
+        <template #actions="{ rowData }">
+          <button
+            title="Infos"
+            class="btn btn-outline-primary border-0"
+            @click="attribuerMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info']" />
+          </button>
+          <button
+            v-if="materielType.est_attribuable"
+            title="Attribuer"
+            class="btn btn-outline-primary border-0"
+            @click="attribuerMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+          </button>
+        </template>
       </base-table>
     </div>
   </div>

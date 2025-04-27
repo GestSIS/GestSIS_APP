@@ -48,7 +48,7 @@ const computedData = computed(() => {
       }"
     >
       <a
-        class="nav-link list-group-item list-group-item-action pt-1 pb-1 border-0"
+        class="nav-link list-group-item list-group-item-action pt-1 pb-1"
         href="#"
         role="link"
         :class="{ 'bg-primary-subtle': isExactActive }"

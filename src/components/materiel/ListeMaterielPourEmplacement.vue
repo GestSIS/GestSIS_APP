@@ -4,7 +4,6 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
-import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -40,12 +39,12 @@ const computedData = computed(() =>
   articles.value.map((a) => ({
     ...a,
     type: indexedTypes.value[a.materiel_type_id],
-  })),
+  }))
 );
 
 const piecesColonnes = [
-  { title: 'Compartiment', key: 'compartiment' },
   { title: 'Type', key: 'type', slot: 'type' },
+  { title: 'Compartiment', key: 'compartiment' },
   { title: 'Numéro', key: 'numero' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Ajouté', key: 'created_at', type: 'date' },
