@@ -186,6 +186,7 @@
               Ajouter un sapeur/civil
             </button>
             <button
+              v-if="activeSapeur?.id"
               type="button"
               class="btn btn-outline-primary ms-2 me-auto"
               @click="ficheSapeur"
@@ -196,6 +197,7 @@
           </div>
         </div>
         <base-navigation-tab
+          v-if="activeSapeur?.id"
           :routes="
             routes
               .filter((route) => route.civil || activeSapeur.type == 0)
@@ -208,8 +210,13 @@
         <div id="nav-tabContent" class="tab-content">
           <div id="tab-sapeur-details" class="tab-pane fade show active">
             <div class="row">
-              <div class="col-12">
+              <div v-if="activeSapeur?.id" class="col-12">
                 <router-view />
+              </div>
+              <div v-else class="col-12">
+                <div class="card">
+                  <div class="card-body">Commencez par ajouter un sapeur</div>
+                </div>
               </div>
             </div>
           </div>
