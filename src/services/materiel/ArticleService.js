@@ -7,6 +7,9 @@ export default {
   attribuerArticles(sapeurId, articles) {
     return Api.api().post(`sapeurs/${sapeurId}/articles`, articles);
   },
+  retourArticles(emplacementId, articles) {
+    return Api.api().post(`emplacements/${emplacementId}/articles`, articles);
+  },
   getParMaterielType(materieltypeId) {
     return Api.api().get(`materiel-types/${materieltypeId}/articles`);
   },
@@ -18,8 +21,5 @@ export default {
   },
   getAttribuable() {
     return Api.api().get(`articles?attribuable=true`);
-  },
-  retourArticles(params) {
-    return Api.api().delete(`sapeurs/articles`, params);
   },
 };

@@ -69,7 +69,9 @@ const save = async () => {
         callback();
         close();
       })
-      .catch((error) => awn.alert(error.message));
+      .catch((error) =>
+        awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
+      );
   } else {
     // Création du matériel
     const articles = activeAttribution.value.articlesHorsInventaire.map(
@@ -85,7 +87,9 @@ const save = async () => {
         callback();
         close();
       })
-      .catch((error) => awn.alert(error.message));
+      .catch((error) =>
+        awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
+      );
   }
 };
 const close = () => {

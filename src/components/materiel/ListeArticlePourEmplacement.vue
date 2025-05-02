@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
+import { useStore } from 'vuex';
 
 const { id } = defineProps({
   id: {
@@ -12,8 +12,8 @@ const { id } = defineProps({
   },
 });
 
+const store = useStore();
 const materielTypeStore = useMaterielTypeStore();
-const couleurStore = useCouleurStore();
 
 const articles = ref([]);
 const loading = ref(true);
@@ -26,20 +26,18 @@ const loadArticles = async () => {
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
-  couleurStore.fetchCouleurs(),
   Promise.resolve(await loadArticles()),
 ]);
 
 watch(() => id, loadArticles);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
-const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const computedData = computed(() =>
   articles.value.map((a) => ({
     ...a,
     type: indexedTypes.value[a.materiel_type_id],
-  }))
+  })),
 );
 
 const piecesColonnes = [
@@ -50,6 +48,14 @@ const piecesColonnes = [
   { title: 'Ajouté', key: 'created_at', type: 'date' },
   { title: 'Actions', key: 'id', slot: 'actions' },
 ];
+
+const attribuerMateriel = (materiel) => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalAttributionUnique',
+    data: materiel,
+    callback: loadArticles,
+  });
+};
 </script>
 
 <template>
@@ -67,7 +73,24 @@ const piecesColonnes = [
         <template #type="{ rowData }">
           {{ rowData.type.designation }}
         </template>
-        <template #actions="{ rowData }"> TODO: </template>
+        <template #actions="{ rowData }">
+          <button
+            v-if="rowData.type.est_attribuable && rowData.sapeur_id !== null"
+            title="Attribuer"
+            class="btn btn-outline-primary border-0"
+            @click="retourMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+          </button>
+          <button
+            v-if="rowData.type.est_attribuable && rowData.sapeur_id === null"
+            title="Attribuer"
+            class="btn btn-outline-primary border-0"
+            @click="attribuerMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+          </button>
+        </template>
       </base-table>
     </div>
   </div>

@@ -40,7 +40,7 @@ await Promise.all([
 watch(() => id, loadArticles);
 
 const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id))
+  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
 );
 
 // Partie pièces
@@ -80,20 +80,22 @@ const computedData = computed(() =>
     ...a,
     emplacements: linearEmplacements(a.emplacement_id),
     sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-  }))
+  })),
 );
 
 const retourMateriel = (materiel) => {
   store.commit('SHOW_MODAL', {
     component: 'ModalRetourUnique',
     data: materiel,
+    callback: loadArticles,
   });
 };
 
 const attribuerMateriel = (materiel) => {
   store.commit('SHOW_MODAL', {
     component: 'ModalAttributionUnique',
-    data: { materiel },
+    data: materiel,
+    callback: loadArticles,
   });
 };
 </script>

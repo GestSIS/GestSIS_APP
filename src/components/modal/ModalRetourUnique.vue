@@ -4,10 +4,14 @@ import { useStore } from 'vuex';
 import ArticleService from '../../services/materiel/ArticleService';
 import SelectEmplacement from '../materiel/SelectEmplacement.vue';
 
-const { data } = defineProps({
+const { data, callback } = defineProps({
   data: {
     type: Object,
     required: true,
+  },
+  callback: {
+    type: Function,
+    default: () => {},
   },
 });
 
@@ -19,12 +23,14 @@ const store = useStore();
 
 const close = () => store.commit('HIDE_MODAL');
 const save = async () =>
-  ArticleService.retourArticles({
+  ArticleService.retourArticles(emplacement_id.value, {
     date: date.value,
-    emplacement_id: emplacement_id.value,
     articleIds: [data.id],
   })
-    .then(close)
+    .then(() => {
+      callback();
+      close();
+    })
     .catch((err) => (errors.value = err));
 </script>
 

@@ -1,3 +1,16 @@
+<script setup>
+import ListeArticlePourEmplacement from './ListeArticlePourEmplacement.vue';
+import NavigationParEmplacement from './NavigationParEmplacement.vue';
+import EmplacementDetail from './EmplacementDetail.vue';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-3">
@@ -19,7 +32,7 @@
         </div>
         <div class="col-12">
           <Suspense>
-            <liste-materiel-pour-emplacement :id="id" />
+            <liste-article-pour-emplacement :id="id" />
             <template #fallback>Chargement...</template>
           </Suspense>
         </div>
@@ -35,19 +48,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import ListeMaterielPourEmplacement from './ListeMaterielPourEmplacement.vue';
-import NavigationParEmplacement from './NavigationParEmplacement.vue';
-import EmplacementDetail from './EmplacementDetail.vue';
-
-const { id } = defineProps({
-  id: {
-    type: String,
-    required: false,
-  },
-});
-</script>
 
 <style>
 table button.btn {

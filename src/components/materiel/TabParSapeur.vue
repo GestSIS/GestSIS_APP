@@ -1,3 +1,15 @@
+<script setup>
+import NavigationParSapeur from './NavigationParSapeur.vue';
+import ListeArticlePourSapeur from './ListeArticlePourSapeur.vue';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-3">
@@ -11,7 +23,7 @@
     </div>
     <div class="col-9">
       <suspense v-if="parseInt(id) > 0">
-        <liste-materiel-pour-sapeur :id="id" />
+        <liste-article-pour-sapeur :id="id" />
         <template #fallback>Chargement...</template>
       </suspense>
       <div v-else class="card">
@@ -25,17 +37,5 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import NavigationParSapeur from './NavigationParSapeur.vue';
-import ListeMaterielPourSapeur from './ListeMaterielPourSapeur.vue';
-
-const { id } = defineProps({
-  id: {
-    type: String,
-    required: false,
-  },
-});
-</script>
 
 <style></style>
