@@ -84,6 +84,7 @@ const attribuer = () => {
     component: 'ModalAttributionMultiple',
     data: ref({ sapeurId: id }),
     size: 2,
+    callback: loadArticles,
   });
 };
 

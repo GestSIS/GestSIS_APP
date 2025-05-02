@@ -152,16 +152,6 @@ const selectMaterielTypeNumerote = (item, value) => {
                 }))
             "
           />
-          <!-- <base-select
-            v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
-            v-model="item.id"
-            :options="
-              articlesAttribuable.filter(
-                (a) => a.materiel_type_id == item.materiel_type_id,
-              )
-            "
-            display-key="numero"
-          /> -->
           <font-awesome-icon
             v-else
             class="ms-4"

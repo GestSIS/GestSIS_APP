@@ -129,14 +129,14 @@ const save = () => {
         </td>
         <td>
           <input
-            v-model="item.remarque"
+            v-model="item.achat"
             class="form-control form-control-sm"
             type="text"
           />
         </td>
         <td>
           <input
-            v-model="item.achat"
+            v-model="item.remarque"
             class="form-control form-control-sm"
             type="text"
           />

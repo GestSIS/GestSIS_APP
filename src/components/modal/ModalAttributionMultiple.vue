@@ -9,9 +9,13 @@ import ArticleService from '../../services/materiel/ArticleService';
 import ArticleCreation from '../materiel/ArticleCreation.vue';
 import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
 
-const { data } = defineProps({
+const { data, callback } = defineProps({
   data: {
     type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
     default: () => {},
   },
 });
@@ -50,28 +54,38 @@ const save = async () => {
   }
 
   if (depuisInventaire.value) {
+    // Attribution du matériel
     const attribution = {
       date: activeAttribution.value.date,
       articleIds: activeAttribution.value.articlesDepuisInventaire.map(
         (a) => a.id,
       ),
     };
-    // TODO: Attribution du matériel
     ArticleService.attribuerArticles(
       activeAttribution.value.sapeur_id,
       attribution,
-    );
+    )
+      .then((data) => {
+        callback();
+        close();
+      })
+      .catch((error) => awn.alert(error.message));
   } else {
-    // TODO: Création du matériel
+    // Création du matériel
     const articles = activeAttribution.value.articlesHorsInventaire.map(
       (a) => ({
         sapeur_id: activeAttribution.value.sapeur_id,
         emplacement_id: null,
-        date: activeAttribution.value.date,
+        attribution: activeAttribution.value.date,
         ...a,
       }),
     );
-    ArticleService.creerArticles(articles);
+    ArticleService.creerArticles(articles)
+      .then((data) => {
+        callback();
+        close();
+      })
+      .catch((error) => awn.alert(error.message));
   }
 };
 const close = () => {
