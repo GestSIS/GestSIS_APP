@@ -70,12 +70,26 @@ const emplacements = computed(() => {
   </VueSelect>
 </template>
 
-<style>
-:root {
+<style scoped>
+:deep(:root) {
   --vs-option-padding: 4px 6px;
 }
-
-.single-value {
+:deep(.single-value) {
   overflow: visible !important;
+}
+:deep(.control) {
+  border-radius: var(--bs-border-radius-sm);
+  min-height: 31px;
+}
+:deep(.menu) {
+  --vs-menu-offset-top: 0px;
+}
+:deep(.single-value) {
+  font-size: 0.875rem;
+  padding-left: 4px;
+  display: flex;
+}
+:deep(.value-container) {
+  padding: 0px;
 }
 </style>

@@ -138,7 +138,21 @@ const selectMaterielTypeNumerote = (item, value) => {
         </td>
         <td v-if="!item.materiel_type_id" colspan="3"></td>
         <td v-if="item.materiel_type_id">
-          <base-select
+          <vue-select
+            v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
+            v-model="item.id"
+            :is-clearable="false"
+            noResults="Aucun article correspondant"
+            :options="
+              articlesAttribuable
+                .filter((a) => a.materiel_type_id == item.materiel_type_id)
+                .map((a) => ({
+                  value: a.id,
+                  label: a.numero?.length ? a.numero : '<sans numéro>',
+                }))
+            "
+          />
+          <!-- <base-select
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.id"
             :options="
@@ -147,7 +161,7 @@ const selectMaterielTypeNumerote = (item, value) => {
               )
             "
             display-key="numero"
-          />
+          /> -->
           <font-awesome-icon
             v-else
             class="ms-4"
@@ -176,6 +190,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         <td v-if="item.materiel_type_id">
           <VueSelect
             v-model="item.id"
+            :is-clearable="false"
             :options="
               articlesAttribuable
                 .filter((a) => a.materiel_type_id == item.materiel_type_id)
@@ -234,4 +249,20 @@ const selectMaterielTypeNumerote = (item, value) => {
   </table>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.control) {
+  border-radius: var(--bs-border-radius-sm);
+  min-height: 31px;
+}
+:deep(.menu) {
+  --vs-menu-offset-top: 0px;
+}
+:deep(.single-value) {
+  font-size: 0.875rem;
+  padding-left: 4px;
+  display: flex;
+}
+:deep(.value-container) {
+  padding: 0px;
+}
+</style>

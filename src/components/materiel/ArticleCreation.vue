@@ -83,7 +83,8 @@ const save = () => {
           <base-select
             ref="articles-reference"
             v-model="item.materiel_type_id"
-            base-option="&lt;Matériel type&gt;"
+            base-option="&lt;Sélectionnez un matériel type&gt;"
+            :base-value="null"
             :options="types"
           />
         </td>
