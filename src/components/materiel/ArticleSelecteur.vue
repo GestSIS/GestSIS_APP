@@ -1,12 +1,5 @@
 <script setup>
-import {
-  computed,
-  inject,
-  nextTick,
-  onMounted,
-  ref,
-  useTemplateRef,
-} from 'vue';
+import { computed, inject, nextTick, ref, useTemplateRef } from 'vue';
 
 import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -14,6 +7,9 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
 import SelectEmplacement from './SelectEmplacement.vue';
+import VueSelect from 'vue3-select-component';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
+import TagCouleur from './TagCouleur.vue';
 
 const { data } = defineProps({
   data: {
@@ -22,37 +18,61 @@ const { data } = defineProps({
   },
 });
 
-const awn = inject('awn');
-
-const selectedArticles = ref([
-  {
-    id: null,
-    materiel_type_id: null,
-    emplacement_id: null,
-    taille: null,
-    remarque: null,
-  },
-]);
+const selectedArticles = defineModel({ default: () => [] });
+selectedArticles.value.push({
+  id: null,
+  materiel_type_id: null,
+  emplacement_id: null,
+  taille: null,
+  remarque: null,
+});
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
+const couleurStore = useCouleurStore();
 const store = useStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
+  couleurStore.fetchCouleurs(),
   store.dispatch('fetchListeSapeur'),
 ]);
 
 const types = computed(() => materielTypeStore.liste);
-const indexedTypes = computed(() => indexedData(types.value));
-const emplacements = computed(() => emplacementStore.liste);
-const indexedEmplacements = computed(() => indexedData(emplacements.value));
-const articles = ref(await ArticleService.getAttribuable());
+const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+
+const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
+const emplacements = computed(() => {
+  const recursive = (id) => {
+    return [
+      ...(indexedEmplacements.value[id]?.parent_id > 0
+        ? recursive(indexedEmplacements.value[id]?.parent_id)
+        : []),
+      id,
+    ];
+  };
+  return emplacementStore.liste
+    .map((e) => {
+      const ids = recursive(e.id);
+      return {
+        ...e,
+        value: e.id,
+        emplacements: ids,
+        label: ids
+          .map((id) => indexedEmplacements.value[id].designation)
+          .join(' '),
+      };
+    })
+    .sort((a, b) => a.tri - b.tri);
+});
+
+const articlesAttribuable = ref(await ArticleService.getAttribuable());
 
 // types des articles disponible
 const typesDisponible = computed(() => {
-  const ids = new Set(articles.value.map((a) => a.materiel_type_id));
+  const ids = new Set(articlesAttribuable.value.map((a) => a.materiel_type_id));
   return types.value.filter((t) => ids.has(t.id));
 });
 
@@ -74,27 +94,11 @@ const selectEmplacement = (item, value) => {
   // TODO: a implémenter
 };
 const selectMaterielTypeNumerote = (item, value) => {
-  // TODO: a implémenter
   // Select première combinaison valable
-  // const materiel = materielNumeroteDispo.find(
-  //   (m) => m.materiel_type_id == value,
-  // );
-  // item.id = materiel?.id;
-  // item.taille = materiel?.taille;
-  // item.numero = materiel?.numero;
-  // item.remarque = materiel?.remarque;
-};
-const selectNumero = (item, value) => {
-  // TODO: a implémenter
-  // const materiel = materielNumeroteDispo.find((m) => m.id == value);
-  // item.taille = materiel?.taille;
-  // item.numero = materiel?.numero;
-  // item.id = materiel?.id;
-  // item.remarque = materiel?.remarque;
-};
-const selectMaterielTypeGenerique = (item) => {
-  // TODO: a implémenter
-  // item.quantite = 1;
+  const materiel = articlesAttribuable.value.find(
+    (m) => m.materiel_type_id == value,
+  );
+  item.id = materiel?.id;
 };
 </script>
 
@@ -110,7 +114,7 @@ const selectMaterielTypeGenerique = (item) => {
         <th class="col-1"></th>
       </tr>
     </thead>
-    <tbody v-if="articles.length === 0">
+    <tbody v-if="articlesAttribuable.length === 0">
       <tr>
         <td colspan="6">
           Aucun article dans l'inventaire, utilisez l'attribution hors
@@ -125,24 +129,24 @@ const selectMaterielTypeGenerique = (item) => {
             ref="articles-reference"
             v-model="item.materiel_type_id"
             :options="typesDisponible"
-            base-option="&lt;Matériel type&gt;"
+            base-option="&lt;Sélectionnez le matériel type&gt;"
+            :base-value="null"
             @update:model-value="
               (value) => selectMaterielTypeNumerote(item, value)
             "
           />
         </td>
-        <td>
+        <td v-if="!item.materiel_type_id" colspan="3"></td>
+        <td v-if="item.materiel_type_id">
           <base-select
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.id"
             :options="
-              articles.filter(
+              articlesAttribuable.filter(
                 (a) => a.materiel_type_id == item.materiel_type_id,
               )
             "
-            base-option="&lt;Aucun matériel correspondant&gt;"
             display-key="numero"
-            @update:model-value="(value) => selectNumero(item, value)"
           />
           <font-awesome-icon
             v-else
@@ -151,18 +155,16 @@ const selectMaterielTypeGenerique = (item) => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <td>
+        <td v-if="item.materiel_type_id">
           <base-select
             v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
             v-model="item.id"
             :options="
-              articles.filter(
+              articlesAttribuable.filter(
                 (a) => a.materiel_type_id == item.materiel_type_id,
               )
             "
-            base-option="&lt;Aucun matériel correspondant&gt;"
             display-key="taille"
-            @update:model-value="(value) => selectNumero(item, value)"
           />
           <font-awesome-icon
             v-else
@@ -171,21 +173,45 @@ const selectMaterielTypeGenerique = (item) => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <td>
-          <!-- TODO: v-model -->
-          <select-emplacement v-model="item.emplacement_id" />
-          <!-- <base-select
+        <td v-if="item.materiel_type_id">
+          <VueSelect
             v-model="item.id"
             :options="
-              articles.filter(
-                (a) => a.materiel_type_id == item.materiel_type_id
-              )
+              articlesAttribuable
+                .filter((a) => a.materiel_type_id == item.materiel_type_id)
+                .map((a) => ({ ...v, value: a.id, label: a.designation }))
             "
-            base-option="&lt;Aucun matériel correspondant&gt;"
-            display-key="emplacement_id"
-            @update:model-value="(value) => selectNumero(item, value)"
-          /> -->
-          <!-- {{ articles }} -->
+            placeholder="Sélectionnez un emplacement"
+          >
+            <template #value="{ option }">
+              <tag-couleur
+                v-for="id in emplacements.find(
+                  (e) =>
+                    e.id ===
+                    articlesAttribuable.find((a) => a.id === option.value)
+                      .emplacement_id,
+                ).emplacements ?? []"
+                :key="id"
+                :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+              >
+                {{ indexedEmplacements[id].designation }}
+              </tag-couleur>
+            </template>
+            <template #option="{ option }">
+              <tag-couleur
+                v-for="id in emplacements.find(
+                  (e) =>
+                    e.id ===
+                    articlesAttribuable.find((a) => a.id === option.value)
+                      .emplacement_id,
+                ).emplacements ?? []"
+                :key="id"
+                :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+              >
+                {{ indexedEmplacements[id].designation }}
+              </tag-couleur>
+            </template>
+          </VueSelect>
         </td>
         <td>{{ item.remarque }}</td>
         <td>

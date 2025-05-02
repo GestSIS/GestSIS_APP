@@ -71,7 +71,7 @@ const save = async () => {
         ...a,
       }),
     );
-    ArticleService.addMateriel(articles);
+    ArticleService.creerArticles(articles);
   }
 };
 const close = () => {
@@ -123,8 +123,14 @@ const close = () => {
           </div>
         </div>
         <div class="col-md-12">
-          <article-selecteur v-show="depuisInventaire" />
-          <article-creation v-show="!depuisInventaire" />
+          <article-selecteur
+            v-show="depuisInventaire"
+            v-model="activeAttribution.articlesDepuisInventaire"
+          />
+          <article-creation
+            v-show="!depuisInventaire"
+            v-model="activeAttribution.articlesHorsInventaire"
+          />
         </div>
       </div>
     </div>
@@ -132,7 +138,7 @@ const close = () => {
       <button type="button" class="btn btn-secondary" @click="close">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="save">
         Attribuer
       </button>
     </div>

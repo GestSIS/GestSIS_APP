@@ -14,13 +14,12 @@ const { data, avecCompartiment } = defineProps({
   },
 });
 
-const articles = ref([
-  {
-    materiel_type_id: null,
-    taille: null,
-    remarque: null,
-  },
-]);
+const articles = defineModel({ default: () => [] });
+articles.value.push({
+  materiel_type_id: null,
+  taille: null,
+  remarque: null,
+});
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
@@ -52,6 +51,10 @@ const addEmptyLine = () => {
     articleReference.value[articleReference.value.length - 1].focus();
   });
 };
+
+const save = () => {
+  console.log('Save is forwarded');
+};
 </script>
 
 <template>
@@ -60,7 +63,9 @@ const addEmptyLine = () => {
       <tr>
         <th class="col-4">Matériel type</th>
         <th class="col-2">Numéro</th>
-        <th class="col-2">Taille</th>
+        <th class="col-1">Est etiqueté</th>
+        <th class="col-1">Taille</th>
+        <th class="col-1">Achat</th>
         <th>Remarque</th>
         <th class="col-1"></th>
       </tr>
@@ -96,8 +101,17 @@ const addEmptyLine = () => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <!-- TODO: Checkbox est libellé correctement -->
-        <!-- TODO: Checkbox est unique -->
+        <td>
+          <div class="form-check">
+            <!-- Checkbox est etiqueté correctement -->
+            <input
+              v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
+              type="checkbox"
+              v-model="item.est_etiquete"
+              class="form-check-input"
+            />
+          </div>
+        </td>
         <td>
           <input
             v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
@@ -129,14 +143,14 @@ const addEmptyLine = () => {
         <td>
           <button
             class="btn btn-outline-danger border-0"
-            @click="activeAttribution.numerotesHorsInventaire.splice(index, 1)"
+            @click="articles.splice(index, 1)"
           >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </td>
       </tr>
       <tr>
-        <td colspan="5">
+        <td colspan="7">
           <button class="btn btn-outline-primary" @click="addEmptyLine">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
