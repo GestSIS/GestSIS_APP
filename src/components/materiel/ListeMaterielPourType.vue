@@ -82,6 +82,20 @@ const computedData = computed(() =>
     sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
   }))
 );
+
+const retourMateriel = (materiel) => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalRetourUnique',
+    data: materiel,
+  });
+};
+
+const attribuerMateriel = (materiel) => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalAttributionUnique',
+    data: { materiel },
+  });
+};
 </script>
 
 <template>
@@ -111,15 +125,23 @@ const computedData = computed(() =>
         </template>
 
         <template #actions="{ rowData }">
-          <button
+          <!-- <button
             title="Infos"
             class="btn btn-outline-primary border-0"
-            @click="attribuerMateriel(rowData)"
+            @click="infoMateriel(rowData)"
           >
             <font-awesome-icon :icon="['fas', 'info']" />
+          </button> -->
+          <button
+            v-if="materielType.est_attribuable && rowData.sapeur_id !== null"
+            title="Attribuer"
+            class="btn btn-outline-primary border-0"
+            @click="retourMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
           </button>
           <button
-            v-if="materielType.est_attribuable"
+            v-if="materielType.est_attribuable && rowData.sapeur_id === null"
             title="Attribuer"
             class="btn btn-outline-primary border-0"
             @click="attribuerMateriel(rowData)"

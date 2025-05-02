@@ -18,6 +18,10 @@ const materielType = computed(() =>
 );
 
 const formatEmptyString = (str) => (str === '' ? '-' : str);
+
+const editMateriel = () => {
+  console.log('TODO: à implémenter');
+};
 </script>
 
 <template>
@@ -27,7 +31,7 @@ const formatEmptyString = (str) => (str === '' ? '-' : str);
       <button
         type="button"
         class="btn btn-primary btn-sm"
-        @click="editMateriel(rowData.id)"
+        @click="editMateriel"
       >
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>

@@ -13,6 +13,7 @@ import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
+import SelectEmplacement from './SelectEmplacement.vue';
 
 const { data } = defineProps({
   data: {
@@ -171,19 +172,20 @@ const selectMaterielTypeGenerique = (item) => {
           />
         </td>
         <td>
-          // TODO: Emplacement selecteur
-          <base-select
+          <!-- TODO: v-model -->
+          <select-emplacement v-model="item.emplacement_id" />
+          <!-- <base-select
             v-model="item.id"
             :options="
               articles.filter(
-                (a) => a.materiel_type_id == item.materiel_type_id,
+                (a) => a.materiel_type_id == item.materiel_type_id
               )
             "
             base-option="&lt;Aucun matériel correspondant&gt;"
             display-key="emplacement_id"
             @update:model-value="(value) => selectNumero(item, value)"
-          />
-          {{ articles }}
+          /> -->
+          <!-- {{ articles }} -->
         </td>
         <td>{{ item.remarque }}</td>
         <td>

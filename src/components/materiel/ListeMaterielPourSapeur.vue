@@ -72,18 +72,18 @@ const computedData = computed(() =>
   ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
 
-const attribuer = () => {
-  store.commit('SHOW_MODAL', {
-    component: 'ModalAttributionMultiple',
-    size: 2,
-    data: { sapeurId: id },
-  });
-};
-
 const retourMateriel = (materiel) => {
   store.commit('SHOW_MODAL', {
     component: 'ModalRetourUnique',
     data: materiel,
+  });
+};
+
+const attribuer = () => {
+  store.commit('SHOW_MODAL', {
+    component: 'ModalAttributionMultiple',
+    data: ref({ sapeurId: id }),
+    size: 2,
   });
 };
 

@@ -45,7 +45,7 @@ const save = async () =>
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
-      <SelectEmplacement v-model="emplacement_id" />
+      <select-emplacement v-model="emplacement_id" />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="close">
