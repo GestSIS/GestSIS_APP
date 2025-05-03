@@ -19,12 +19,22 @@
           >
             Catégories et type de matériel
           </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'couleur' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'couleur'"
+          >
+            Couleurs
+          </a>
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
       <suspense>
         <parametre-materiel-type-categorie v-if="tab === 'categorie'" />
+        <parametre-materiel-couleur v-else-if="tab === 'couleur'" />
         <template #fallback>Chargement...</template>
       </suspense>
     </div>
@@ -33,11 +43,13 @@
 
 <script>
 import ParametreMaterielTypeCategorie from './ParametreMaterielTypeCategorie.vue';
+import ParametreMaterielCouleur from './ParametreMaterielCouleur.vue';
 
 export default {
   name: 'ParametreTabMaterielPersonnel',
   components: {
     ParametreMaterielTypeCategorie,
+    ParametreMaterielCouleur,
   },
   data() {
     return { tab: 'categorie' };

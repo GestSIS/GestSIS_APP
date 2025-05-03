@@ -122,6 +122,7 @@ const remove = (elem) => {
         <thead>
           <tr>
             <th>Designation</th>
+            <th>Couleur</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -151,6 +152,14 @@ const remove = (elem) => {
                 {{ item.designation }}
               </tag-couleur>
               <template v-else>{{ item.designation }}</template>
+            </td>
+            <td>
+              <template v-if="item.type === 'categorie'">
+                <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
+                  A
+                </tag-couleur>
+                {{ indexedCouleurs[item.couleur_id]?.nom }}
+              </template>
             </td>
             <td>
               <button
