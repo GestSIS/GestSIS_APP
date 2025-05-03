@@ -40,8 +40,8 @@ watch(() => id, loadArticles);
 
 // Partie pièces
 const piecesColonnes = [
+  { title: 'N°', key: 'numero' },
   { title: 'Matériel type', key: 'type' },
-  { title: 'Numéro', key: 'numero' },
   { title: 'Taille', key: 'taille' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Attribué', key: 'attribution', type: 'date' },

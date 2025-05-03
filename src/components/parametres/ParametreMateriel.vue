@@ -83,16 +83,19 @@ export default {
   methods: {
     ...mapMutations(['SHOW_MODAL']),
     ajoutMateriel() {
-      this.SHOW_MODAL({ component: 'ModalMateriel', data: {} });
+      this.SHOW_MODAL({ component: 'ModalMaterielIntervention', data: {} });
     },
     updateMateriel(materiel) {
-      this.SHOW_MODAL({ component: 'ModalMateriel', data: { ...materiel } });
+      this.SHOW_MODAL({
+        component: 'ModalMaterielIntervention',
+        data: { ...materiel },
+      });
     },
     deleteMateriel(materiel) {
       this.$store
         .dispatch('removeMateriel', materiel.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

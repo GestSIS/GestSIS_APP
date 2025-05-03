@@ -779,12 +779,12 @@ const router = createRouter({
             ),
         },
         {
-          path: 'materiel-personnel',
-          name: 'param-materiel-personnel',
+          path: 'materiel',
+          name: 'param-materiel',
           beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
           component: () =>
             import(
-              '/src/components/parametres/ParametreTabMaterielPersonnel.vue'
+              '/src/components/parametres/ParametreTabMateriel.vue'
             ),
         },
         {

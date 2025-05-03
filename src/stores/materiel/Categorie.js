@@ -12,9 +12,9 @@ export const useMaterielCategorieStore = defineStore('materielCategorie', {
       } else {
         return MaterielCategorieService.getCategories().then(
           (data) =>
-            (this.liste = data
-              .slice(0)
-              .sort((t1, t2) => t1.designation > t2.designation))
+          (this.liste = data
+            .slice(0)
+            .sort((t1, t2) => t1.designation > t2.designation))
         );
       }
     },

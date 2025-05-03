@@ -88,7 +88,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'ModalMateriel',
+  name: 'ModalMaterielIntervention',
   props: {
     data: {
       type: Object,
@@ -134,7 +134,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...errors,
-              })
+              }),
           );
       } else {
         this.$store

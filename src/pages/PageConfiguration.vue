@@ -80,8 +80,8 @@ const routes = [
     permission: permissions.CONTROLE_MEDICAL.CONFIG,
   },
   {
-    to: { name: 'param-materiel-personnel' },
-    texte: 'Matériel personnel',
+    to: { name: 'param-materiel' },
+    texte: 'Matériel',
     permission: permissions.MATERIEL.CONFIG,
   },
   {

@@ -59,7 +59,7 @@ export default {
     ...mapState({
       categories: (state) =>
         state.matPersoCategorie.liste.sort(
-          (a, b) => a.designation - b.designation
+          (a, b) => a.designation - b.designation,
         ),
     }),
     computedCategories() {
@@ -85,7 +85,7 @@ export default {
 
       recursive(
         this.categories.filter((c) => !c.parent_id),
-        ''
+        '',
       );
       return data;
     },
@@ -104,7 +104,7 @@ export default {
           (this.activeItem.id || 0) === 0
             ? 'addMatPersoType'
             : 'updateMatPersoType',
-          this.activeItem
+          this.activeItem,
         )
         .then(() => {
           this.errors = {};
@@ -114,7 +114,7 @@ export default {
           (errors) =>
             (this.errors = {
               ...errors,
-            })
+            }),
         );
     },
   },
