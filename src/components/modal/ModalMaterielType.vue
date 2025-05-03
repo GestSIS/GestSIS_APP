@@ -1,10 +1,77 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+import store from '../../store';
+import { groupedByData } from '../../tools';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const activeItem = ref({ ...data });
+
+const categorieStore = useMaterielCategorieStore();
+const categories = computed(() =>
+  categorieStore.liste.sort((a, b) => a.designation - b.designation),
+);
+const indexedCategories = computed(() =>
+  groupedByData(categorieStore.liste, 'parent_id'),
+);
+
+const computedCategories = computed(() => {
+  let data = [];
+
+  const recursive = (categories, prefix) => {
+    categories.forEach((c) => {
+      data.push({
+        ...c,
+        fullDesignation: prefix + c.designation,
+      });
+      if (indexedCategories.value[c.id])
+        recursive(
+          indexedCategories.value[c.id],
+          prefix + c.designation + ' > ',
+        );
+    });
+  };
+
+  recursive(
+    categories.value.filter((c) => !c.parent_id),
+    '',
+  );
+  return data;
+});
+
+const close = () => store.commit('HIDE_MODAL');
+const save = async () => {
+  this.$store
+    .dispatch(
+      (activeItem.value.id || 0) === 0
+        ? 'addMatPersoType'
+        : 'updateMatPersoType',
+      activeItem.value,
+    )
+    .then(close)
+    .catch(
+      (errors) =>
+        (errors.value = {
+          ...errors,
+        }),
+    );
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un matériel type
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -27,98 +94,14 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="close">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="save">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapMutations, mapState } from 'vuex';
-
-export default {
-  name: 'ModalMatPersoType',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      eventTypeIds: {},
-      activeItem: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      categories: (state) =>
-        state.matPersoCategorie.liste.sort(
-          (a, b) => a.designation - b.designation,
-        ),
-    }),
-    computedCategories() {
-      let indexedCategories = {};
-      this.categories.forEach((c) => {
-        if (!indexedCategories[c.parent_id])
-          indexedCategories[c.parent_id] = [c];
-        else indexedCategories[c.parent_id].push(c);
-      });
-
-      let data = [];
-
-      const recursive = (categories, prefix) => {
-        categories.forEach((c) => {
-          data.push({
-            ...c,
-            fullDesignation: prefix + c.designation,
-          });
-          if (indexedCategories[c.id])
-            recursive(indexedCategories[c.id], prefix + c.designation + ' > ');
-        });
-      };
-
-      recursive(
-        this.categories.filter((c) => !c.parent_id),
-        '',
-      );
-      return data;
-    },
-  },
-  mounted() {
-    this.activeItem = {
-      ...this.activeItem,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapMutations(['HIDE_MODAL']),
-    async save() {
-      this.$store
-        .dispatch(
-          (this.activeItem.id || 0) === 0
-            ? 'addMatPersoType'
-            : 'updateMatPersoType',
-          this.activeItem,
-        )
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>
 
 <style scoped></style>

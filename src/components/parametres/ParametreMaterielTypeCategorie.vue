@@ -73,22 +73,22 @@ const select = (item) => {
   selectedId.value = item?.globalId;
 };
 const ajoutCategorie = () => {
-  store.commit('SHOW_MODAL', { component: 'ModalMatPersoCategorie', data: {} });
+  store.commit('SHOW_MODAL', { component: 'ModalMaterielCategorie', data: {} });
 };
 const ajoutType = () => {
-  store.commit('SHOW_MODAL', { component: 'ModalMatPersoType', data: {} });
+  store.commit('SHOW_MODAL', { component: 'ModalMaterielType', data: {} });
 };
 const update = (elem) => {
   store.commit('SHOW_MODAL', {
     component:
-      elem.type == 'type' ? 'ModalMatPersoType' : 'ModalMatPersoCategorie',
+      elem.type == 'type' ? 'ModalMaterielType' : 'ModalMaterielCategorie',
     data: { ...elem },
   });
 };
 const remove = (elem) => {
   store
     .dispatch(
-      elem.type === 'type' ? 'removeMatPersoType' : 'removeMatPersoCategorie',
+      elem.type === 'type' ? 'removeMaterielType' : 'removeMaterielCategorie',
       elem.id,
     )
     .catch((res) =>
