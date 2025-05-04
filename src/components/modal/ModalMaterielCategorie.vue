@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useStore } from 'vuex';
 import { groupedByData } from '../../tools';
+import useModal from '../../hooks/useModal';
 
 const { data } = defineProps({
   data: {
@@ -47,31 +48,19 @@ const computedCategories = computed(() => {
   return data;
 });
 
-const store = useStore();
-const close = () => store.commit('HIDE_MODAL');
+const { closeModal } = useModal();
 
 const save = async () => {
-  if ((activeItem.value.id || 0) === 0) {
-    categorieStore
-      .addMaterielCategorie(activeItem.value)
-      .then(close)
-      .catch(
-        (errors) =>
-          (this.errors = {
-            ...errors,
-          }),
-      );
-  } else {
-    categorieStore
-      .updateMaterielCategorie(activeItem.value)
-      .then(close)
-      .catch(
-        (errors) =>
-          (this.errors = {
-            ...errors,
-          }),
-      );
-  }
+  ((activeItem.value.id || 0) === 0
+    ? categorieStore.addMaterielCategorie
+    : categorieStore.updateMaterielCategorie)(activeItem.value)
+    .then(closeModal)
+    .catch(
+      (errors) =>
+        (this.errors = {
+          ...errors,
+        }),
+    );
 };
 </script>
 
@@ -107,7 +96,7 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save">

@@ -14,8 +14,8 @@ const { data } = defineProps({
 const errors = ref({});
 const activeItem = ref({
   ...data,
-  fond: data?.fond?.slice(0, 7),
-  texte: data?.texte?.slice(0, 7),
+  fond: data?.fond?.slice(0, 7) ?? '#ffffff',
+  texte: data?.texte?.slice(0, 7) ?? '#000000',
 });
 
 const couleurStore = useCouleurStore();
@@ -25,8 +25,8 @@ const close = () => store.commit('HIDE_MODAL');
 
 const save = async () => {
   if ((activeItem.value.id || 0) === 0) {
-    categorieStore
-      .addMaterielCategorie(activeItem.value)
+    couleurStore
+      .addCouleur(activeItem.value)
       .then(close)
       .catch(
         (errors) =>
@@ -35,8 +35,8 @@ const save = async () => {
           }),
       );
   } else {
-    categorieStore
-      .updateMaterielCategorie(activeItem.value)
+    couleurStore
+      .updateCouleur(activeItem.value)
       .then(close)
       .catch(
         (errors) =>

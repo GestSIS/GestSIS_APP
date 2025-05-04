@@ -1,8 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import store from '../../store';
 import { groupedByData } from '../../tools';
+import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import useModal from '../../hooks/useModal';
 
 const { data } = defineProps({
   data: {
@@ -14,6 +15,7 @@ const { data } = defineProps({
 const errors = ref({});
 const activeItem = ref({ ...data });
 
+const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
 const categories = computed(() =>
   categorieStore.liste.sort((a, b) => a.designation - b.designation),
@@ -46,19 +48,15 @@ const computedCategories = computed(() => {
   return data;
 });
 
-const close = () => store.commit('HIDE_MODAL');
+const { closeModal } = useModal();
 const save = async () => {
-  this.$store
-    .dispatch(
-      (activeItem.value.id || 0) === 0
-        ? 'addMatPersoType'
-        : 'updateMatPersoType',
-      activeItem.value,
-    )
-    .then(close)
+  ((activeItem.value.id || 0) === 0
+    ? typeStore.addMaterielType
+    : typeStore.updateMaterielType)(activeItem.value)
+    .then(closeModal)
     .catch(
       (errors) =>
-        (errors.value = {
+        (this.errors = {
           ...errors,
         }),
     );
@@ -71,7 +69,7 @@ const save = async () => {
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un matériel type
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">

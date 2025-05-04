@@ -2,12 +2,11 @@
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
+import useModal from '../../hooks/useModal';
 
-const store = useStore();
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
@@ -69,31 +68,47 @@ const computedData = computed(() => {
   return data;
 });
 
+const { showModal } = useModal();
+
 const select = (item) => {
   selectedId.value = item?.globalId;
 };
 const ajoutCategorie = () => {
-  store.commit('SHOW_MODAL', { component: 'ModalMaterielCategorie', data: {} });
+  showModal({ component: 'ModalMaterielCategorie', data: {} });
 };
 const ajoutType = () => {
-  store.commit('SHOW_MODAL', { component: 'ModalMaterielType', data: {} });
+  showModal({ component: 'ModalMaterielType', data: {} });
 };
 const update = (elem) => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component:
       elem.type == 'type' ? 'ModalMaterielType' : 'ModalMaterielCategorie',
     data: { ...elem },
   });
 };
 const remove = (elem) => {
-  store
-    .dispatch(
-      elem.type === 'type' ? 'removeMaterielType' : 'removeMaterielCategorie',
-      elem.id,
-    )
-    .catch((res) =>
-      this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-    );
+  const designation = elem.type == 'type' ? 'ce type' : 'cette catégorie';
+  showModal({
+    component: 'ModalConfirmation',
+    data: {
+      title: `Voulez-vous vraiment supprimer ${designation} ?`,
+      question: 'Attention, la suppression de cet élément est irréversible !',
+    },
+    callback: (confirmed) => {
+      if (confirmed) {
+        (elem.type === 'type'
+          ? typeStore.removeMatPersoType
+          : categorieStore.removeMaterielCategorie)(elem.id).catch((res) =>
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
+        );
+        couleurStore
+          .removeCouleur(elem.id)
+          .catch((error) =>
+            awn.alert(error.message ?? 'Impossible de supprimer cette couleur'),
+          );
+      }
+    },
+  });
 };
 </script>
 

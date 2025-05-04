@@ -1,13 +1,9 @@
 <script setup>
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
-import { groupedByData, indexedData } from '../../tools';
+import { computed, inject, ref, warn } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
+import useModal from '../../hooks/useModal';
 
-const store = useStore();
 const couleurStore = useCouleurStore();
 
 await couleurStore.fetchCouleurs();
@@ -15,27 +11,35 @@ const couleurs = computed(() =>
   couleurStore.liste.sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );
 
-const selectedId = ref(null);
+const awn = inject('awn');
+const { showModal } = useModal();
 
 const ajout = () => {
-  console.log('TODO: à implémenter');
-  // store.commit('SHOW_MODAL', { component: 'ModalMaterielCategorie', data: {} });
+  showModal({ component: 'ModalCouleur', data: {} });
 };
 const update = (elem) => {
-  store.commit('SHOW_MODAL', {
-    component: 'modalCouleur',
+  showModal({
+    component: 'ModalCouleur',
     data: { ...elem },
   });
 };
 const remove = (elem) => {
-  store
-    .dispatch(
-      elem.type === 'type' ? 'removeMaterielType' : 'removeMaterielCategorie',
-      elem.id,
-    )
-    .catch((res) =>
-      this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-    );
+  showModal({
+    component: 'ModalConfirmation',
+    data: {
+      title: 'Voulez-vous vraiment supprimer cette couleur ?',
+      question: "Attention, la suppression d'une couleur est irréversible !",
+    },
+    callback: (confirmed) => {
+      if (confirmed) {
+        couleurStore
+          .removeCouleur(elem.id)
+          .catch((error) =>
+            awn.alert(error.message ?? 'Impossible de supprimer cette couleur'),
+          );
+      }
+    },
+  });
 };
 
 const fields = [
