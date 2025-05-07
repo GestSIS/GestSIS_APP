@@ -140,7 +140,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '/src/components/MultiStep.vue';
 
 export default {
@@ -180,13 +182,13 @@ export default {
     },
     filteredFonctions() {
       const fonctionIds = new Set(
-        this.typesAnnuel.flatMap((t) => t.fonctions.map((f) => f.fonction_id))
+        this.typesAnnuel.flatMap((t) => t.fonctions.map((f) => f.fonction_id)),
       );
       return this.fonctions.filter((f) => fonctionIds.has(f.id));
     },
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     montantAnnuelTypePourFonction(type, fonction) {
       const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       return elem?.quantite * elem?.montant || '';
@@ -213,11 +215,13 @@ export default {
         .then((data) => {
           this.phase = 2;
           this.ecritures = [...data].sort(
-            (e1, e2) => e2.sapeur_id - e1.sapeur_id
+            (e1, e2) => e2.sapeur_id - e1.sapeur_id,
           );
         })
         .catch((err) =>
-          this.$awn.alert(err?.message ?? "Impossible d'effectuer cette action")
+          this.$awn.alert(
+            err?.message ?? "Impossible d'effectuer cette action",
+          ),
         );
     },
   },

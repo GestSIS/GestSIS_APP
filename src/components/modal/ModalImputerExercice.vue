@@ -184,7 +184,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '/src/components/MultiStep.vue';
 
 export default {
@@ -224,7 +226,7 @@ export default {
       const configurations = new Set(
         this.activeIndemnite?.fonctions
           ?.filter((f) => f.fonction_id)
-          ?.map((f) => f.type + ' ' + f.compte_id) || []
+          ?.map((f) => f.type + ' ' + f.compte_id) || [],
       );
       const columns = Object.fromEntries(
         [...configurations]
@@ -236,7 +238,7 @@ export default {
               compte_id: parseInt(e[1]),
               fonctions: {},
             },
-          ])
+          ]),
       );
 
       this.activeIndemnite?.fonctions
@@ -253,7 +255,7 @@ export default {
           ...Object.values(this.columns)
             .map((e) => new Set(Object.keys(e.fonctions)))
             .reduce((acc, b) => new Set([...acc, ...b])),
-        ].map((a) => parseInt(a))
+        ].map((a) => parseInt(a)),
       );
       return this.fonctions.filter((f) => fonctionsIds.has(parseInt(f.id)));
     },
@@ -275,8 +277,8 @@ export default {
             soldes.length == 0
               ? null
               : soldes.length == 1
-              ? soldes[0].compte_id
-              : NaN,
+                ? soldes[0].compte_id
+                : NaN,
           total_indemnite: indemnites
             .map((e) => e.tarif)
             .reduce(sumReducer, 0.0),
@@ -287,8 +289,8 @@ export default {
             indemnites.length == 0
               ? null
               : indemnites.length == 1
-              ? indemnites[0].compte_id
-              : NaN,
+                ? indemnites[0].compte_id
+                : NaN,
         };
       });
     },
@@ -299,7 +301,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     selectIndemnite(index) {
       this.activeIndemniteIndex = index;
       this.activeIndemnite = this.computedIndemnites[index];
@@ -331,7 +333,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : ++this.activeIndemniteIndex % this.indemnitesTypes.length
+          : ++this.activeIndemniteIndex % this.indemnitesTypes.length,
       );
     },
     onKeyUp() {
@@ -339,7 +341,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : --this.activeIndemniteIndex % this.indemnitesTypes.length
+          : --this.activeIndemniteIndex % this.indemnitesTypes.length,
       );
     },
     formatFonction(fonctionId) {
@@ -350,7 +352,7 @@ export default {
     },
     formatCompte(compteId) {
       const compte = this.comptes.find(
-        (f) => parseInt(f.id) == parseInt(compteId)
+        (f) => parseInt(f.id) == parseInt(compteId),
       );
       return compte ? compte?.numero + ' - ' + compte?.designation : '';
     },

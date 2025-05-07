@@ -357,12 +357,13 @@ export default {
     filteredSapeurs() {
       return this.sapeurs.filter(
         (s) =>
-          (this.inactif ? true : s?.actif) && (this.civil ? true : s?.type == 0)
+          (this.inactif ? true : s?.actif) &&
+          (this.civil ? true : s?.type == 0),
       );
     },
     filteredLocalites() {
       const localitesIds = new Set(
-        this.availableSapeur.map((s) => s.localite_id)
+        this.availableSapeur.map((s) => s.localite_id),
       );
       return this.localites.filter((l) => localitesIds.has(l.id));
     },
@@ -384,7 +385,7 @@ export default {
           option.collection(),
           option.comparison ??
             ((sapeur, value) => sapeur[this.groupBy] == value),
-          option.displayKey
+          option.displayKey,
         );
       }
 
@@ -412,7 +413,7 @@ export default {
         ];
         if (expanded) {
           groupe.groupes.forEach(
-            (g) => (flaten = [...flaten, ...recursive(g, level + 1)])
+            (g) => (flaten = [...flaten, ...recursive(g, level + 1)]),
           );
           groupe.sapeurs
             .filter(svm.filtreSapeur())
@@ -429,14 +430,14 @@ export default {
                     parent_id: groupe.id,
                     id: s.id,
                   },
-                ])
+                ]),
             );
         }
         return flaten;
       };
 
       this.treeGroupesSapeurs.forEach(
-        (i) => (flattened = [...flattened, ...recursive(i, 0)])
+        (i) => (flattened = [...flattened, ...recursive(i, 0)]),
       );
       return flattened;
     },
@@ -444,7 +445,7 @@ export default {
       return (
         Object.entries(this.selectedGeneric.sapeur).find(
           ([id, selected]) =>
-            selected && !this.chosenSapeurs.includes(parseInt(id))
+            selected && !this.chosenSapeurs.includes(parseInt(id)),
         ) != null
       );
     },
@@ -452,7 +453,7 @@ export default {
       return (
         Object.entries(this.selectedGeneric.sapeur).find(
           ([id, selected]) =>
-            selected && this.chosenSapeurs.includes(parseInt(id))
+            selected && this.chosenSapeurs.includes(parseInt(id)),
         ) != null
       );
     },
@@ -476,7 +477,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     flattenedSapeurGeneric(relation, comparison, displayKey) {
       let liste = [];
       const svm = this;
@@ -527,11 +528,11 @@ export default {
     async save() {
       // Sapeurs ajoutés
       const newSap = this.chosenSapeurs.filter(
-        (s) => !this.data.ids.includes(s)
+        (s) => !this.data.ids.includes(s),
       );
       // Sapeurs supprimés
       const removedSap = this.data.ids.filter(
-        (s) => !this.chosenSapeurs.includes(s)
+        (s) => !this.chosenSapeurs.includes(s),
       );
       // Sapeurs tous
       const sapeurs = this.chosenSapeurs;
@@ -606,7 +607,7 @@ export default {
       const svm = this;
       return (s) =>
         svm.filteredSapeurs.find(
-          (sap) => sap.id == s?.sapeur_id || sap.id == s
+          (sap) => sap.id == s?.sapeur_id || sap.id == s,
         ) != null && !svm.chosenSapeurs.includes(s.sapeur_id || s);
     },
     groupeFormatter(g) {
@@ -625,7 +626,7 @@ export default {
           ...Object.entries(this.selectedGeneric.sapeur)
             .filter(([, selected]) => selected)
             .map(([id]) => parseInt(id)),
-        ])
+        ]),
       );
     },
     removeSapeurs() {
@@ -635,7 +636,7 @@ export default {
           .map(([id]) => parseInt(id)),
       ]);
       this.chosenSapeurs = this.chosenSapeurs.filter(
-        (id) => !sapeursToRemove.has(id)
+        (id) => !sapeursToRemove.has(id),
       );
     },
     addSingleSapeur(id) {

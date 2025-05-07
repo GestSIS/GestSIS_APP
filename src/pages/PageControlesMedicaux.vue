@@ -221,7 +221,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import store from '/src/store/index';
 import permissions from '../store/permissions.js';
 
@@ -232,7 +234,7 @@ function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadMedecins = store.dispatch('fetchMedecins');
   const loadControlesMedicauxTypes = store.dispatch(
-    'fetchControlesMedicauxTypes'
+    'fetchControlesMedicauxTypes',
   );
   const loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
 
@@ -305,7 +307,7 @@ export default {
             (now - new Date(sapeur?.date_naissance || 0).getTime()) /
               1000 /
               (60 * 60 * 24) /
-              365.25
+              365.25,
           );
           return {
             ...s,
@@ -322,7 +324,7 @@ export default {
         .sort(
           (a, b) =>
             a.sapeur.localeCompare(b.sapeur) ||
-            b.consultation.localeCompare(a.consultation)
+            b.consultation.localeCompare(a.consultation),
         );
 
       // Additional filter check
@@ -341,7 +343,7 @@ export default {
     },
     filteredTypes() {
       const ids = new Set(
-        this.controlesMedicaux.map((e) => e.controle_medical_type_id)
+        this.controlesMedicaux.map((e) => e.controle_medical_type_id),
       );
       return this.types.filter((t) => ids.has(t.id));
     },
@@ -356,7 +358,7 @@ export default {
           .filter((e) => e)
           .map((d) => new Date(d).getFullYear())
           .sort()
-          .reverse()
+          .reverse(),
       );
     },
     filteredAnneesExpiration() {
@@ -366,7 +368,7 @@ export default {
           .filter((e) => e)
           .map((d) => new Date(d).getFullYear())
           .sort()
-          .reverse()
+          .reverse(),
       );
     },
   },
@@ -374,7 +376,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selected(item) {
       this.selectedItem = item;
     },
@@ -384,7 +386,7 @@ export default {
     sms(controleMedicaux) {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
         );
         return;
       }

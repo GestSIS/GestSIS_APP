@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
@@ -80,7 +81,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     loadFile(event) {
       var files = event.target.files || event.dataTransfer.files;
       if (!files.length) {
@@ -104,7 +105,7 @@ export default {
           })
           .catch((err) => {
             this.$awn.alert(
-              err?.message || "Erreur lors de la modification de l'image"
+              err?.message || "Erreur lors de la modification de l'image",
             );
           });
       }, 'image/jpeg');

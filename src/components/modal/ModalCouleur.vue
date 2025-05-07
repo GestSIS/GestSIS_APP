@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
   data: {
@@ -20,9 +20,7 @@ const activeItem = ref({
 
 const couleurStore = useCouleurStore();
 
-const store = useStore();
-const close = () => store.commit('HIDE_MODAL');
-
+const { closeModal } = useModalStore();
 const save = async () => {
   if ((activeItem.value.id || 0) === 0) {
     couleurStore
@@ -54,7 +52,7 @@ const save = async () => {
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} une couleur
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -95,7 +93,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save">

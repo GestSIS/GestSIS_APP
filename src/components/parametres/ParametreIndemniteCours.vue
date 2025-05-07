@@ -41,7 +41,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -117,7 +119,7 @@ export default {
               unite: this.unites.find((u) => u.id == e.type_unite_id)?.unite,
               compte: this.comptes.find((c) => c.id == e.compte_id)
                 ?.designation,
-            }))
+            })),
           ),
         categorie: this.categories.find((e) => e.id == c.ecriture_categorie_id)
           ?.designation,
@@ -128,7 +130,7 @@ export default {
     this.$refs.table.showAllDetailRow();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutIndemnite() {
       this.SHOW_MODAL({
         component: 'ModalIndemniteCours',
@@ -147,7 +149,7 @@ export default {
       this.$store
         .dispatch('removeIndemniteCours', indemnite.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

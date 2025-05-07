@@ -222,7 +222,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalIndemniteExercice',
@@ -274,7 +276,7 @@ export default {
     const configurations = new Set(
       this.data?.fonctions
         ?.filter((f) => f.fonction_id)
-        ?.map((f) => f.type + ' ' + f.compte_id) || []
+        ?.map((f) => f.type + ' ' + f.compte_id) || [],
     );
     this.columns = Object.fromEntries(
       [...configurations]
@@ -286,7 +288,7 @@ export default {
             compte_id: e[1],
             fonctions: {},
           },
-        ])
+        ]),
     );
 
     this.data?.fonctions
@@ -327,7 +329,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    ...mapActions(useModalStore, {
+      HIDE_MODAL: 'closeModal',
+      UPDATE_MODAL_SIZE: 'resize',
+    }),
     unite(id) {
       return this.unites.find((u) => u.id == id)?.abreviation;
     },
@@ -374,18 +379,18 @@ export default {
       const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
       if (baseSet.size != this.base.length) {
         this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises."
+          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
         );
         return;
       }
 
       if (this.activeIndemnite.par_fonction) {
         const columnsFonctionsSet = new Set(
-          Object.values(this.columns).map((e) => e.type + ' ' + e.compte_id)
+          Object.values(this.columns).map((e) => e.type + ' ' + e.compte_id),
         );
         if (columnsFonctionsSet.size != Object.keys(this.columns).length) {
           this.$awn.alert(
-            "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprise dans les fonctions."
+            "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprise dans les fonctions.",
           );
           return;
         }
@@ -428,7 +433,7 @@ export default {
                 tarif: tarif,
               })),
             ])
-            .reduce((e, acc) => [...acc, ...e], [])
+            .reduce((e, acc) => [...acc, ...e], []),
         );
       }
 
@@ -451,7 +456,7 @@ export default {
           (errors) =>
             (this.errors = {
               ...errors,
-            })
+            }),
         );
     },
   },

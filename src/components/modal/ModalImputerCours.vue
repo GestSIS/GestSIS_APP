@@ -102,7 +102,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '/src/components/MultiStep.vue';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -177,7 +179,7 @@ export default {
               unite: this.unites.find((u) => u.id == e.type_unite_id)?.unite,
               compte: this.comptes.find((c) => c.id == e.compte_id)
                 ?.designation,
-            }))
+            })),
           ),
         categorie: this.categories.find((e) => e.id == c.ecriture_categorie_id)
           ?.designation,
@@ -188,7 +190,7 @@ export default {
     this.$refs.table.showAllDetailRow();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     selectIndemnite(indemnite) {
       this.activeIndemnite = indemnite;
     },

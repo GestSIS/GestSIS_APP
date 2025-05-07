@@ -73,7 +73,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
@@ -138,7 +140,7 @@ export default {
       anneeComptableId: (state) => state.exerciceComptable.activeId,
       annee: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId
+          (e) => e.id == state.exerciceComptable.activeId,
         )?.annee,
       sisKey: (state) => state.auth.sis.activeKey,
       sisName: (state) =>
@@ -149,12 +151,12 @@ export default {
             ...e.presence,
             ...e,
             excuse: state.excuseType.liste.find(
-              (t) => t.id == e.presence.excuse_type_id
+              (t) => t.id == e.presence.excuse_type_id,
             )?.designation,
             localite: state.localite.liste.find((l) => l.id == e.localite_id)
               ?.designation,
             categorie: state.exerciceCategorie.liste.find(
-              (c) => c.id == e.exercice_categorie_id
+              (c) => c.id == e.exercice_categorie_id,
             )?.designation,
           }))
           .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
@@ -179,7 +181,7 @@ export default {
       ?.forEach((e) => this.$refs.table.showDetailRow(e.id));
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     download() {
       if (this.exercices.length <= 0) {
         this.$awn.alert('Aucun exercice à exporter');
@@ -210,8 +212,8 @@ export default {
               .then(() => this.$awn.success('Excuse supprimée avec succès'))
               .catch((err) =>
                 this.$awn.alert(
-                  err?.message ?? "Impossible de supprimer l'excuse"
-                )
+                  err?.message ?? "Impossible de supprimer l'excuse",
+                ),
               );
           }
         },
@@ -221,11 +223,11 @@ export default {
     downloadJustificatif(exercice) {
       ExerciceService.downloadMonExcuseJustificatif(
         exercice.exercice_id,
-        'justificatif.pdf'
+        'justificatif.pdf',
       ).catch((err) =>
         this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif'
-        )
+          err?.message ?? 'Erreur lors du chargement du justificatif',
+        ),
       );
     },
     onRowClass(dataItem) {

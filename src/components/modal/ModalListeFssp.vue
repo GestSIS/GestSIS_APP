@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import SapeurService from '../../services/SapeurService';
 
 export default {
@@ -48,7 +49,10 @@ export default {
     this.$refs.cancelButton.focus();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     cancel() {
       this.HIDE_MODAL();
     },
@@ -60,7 +64,7 @@ export default {
         })
         .catch((error) => {
           this.$awn.warning(
-            error?.message ?? 'Erreur lors de la génération de la liste FSSP'
+            error?.message ?? 'Erreur lors de la génération de la liste FSSP',
           );
           this.HIDE_MODAL();
         });

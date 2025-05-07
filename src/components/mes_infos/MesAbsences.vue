@@ -44,7 +44,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
@@ -82,7 +84,7 @@ export default {
       anneeComptableId: (state) => state.exerciceComptable.activeId,
       absences: (state) =>
         state.mesInfos.absences.sort((e1, e2) =>
-          e1.debut?.localeCompare(e2.debut)
+          e1.debut?.localeCompare(e2.debut),
         ),
     }),
   },
@@ -92,7 +94,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     addAbsence() {
       this.SHOW_MODAL({
         component: 'ModalSAbsenter',
@@ -119,8 +121,8 @@ export default {
               .then(() => this.$awn.success('Absence supprimée avec succès'))
               .catch((err) =>
                 this.$awn.alert(
-                  err?.message ?? "Impossible de supprimer l'absence"
-                )
+                  err?.message ?? "Impossible de supprimer l'absence",
+                ),
               );
           }
         },

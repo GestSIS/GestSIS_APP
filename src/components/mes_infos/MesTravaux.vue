@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import permissions from '../../store/permissions';
 
@@ -79,7 +81,7 @@ export default {
         state.mesInfos.travaux.map((t) => ({
           ...t,
           travail_type: state.travailType.liste.find(
-            (e) => e.id == t.travail_type_id
+            (e) => e.id == t.travail_type_id,
           )?.designation,
           auteur: state.sapeur.liste.find((s) => s.id == t.auteur_id)
             ?.nom_prenom,
@@ -87,7 +89,7 @@ export default {
             (u) =>
               u.id ==
               state.travailType.liste.find((e) => e.id == t.travail_type_id)
-                ?.type_unite_id
+                ?.type_unite_id,
           )?.unite,
         })),
       hasSaisiePermission: (state) =>
@@ -99,7 +101,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     addTravail() {
       this.SHOW_MODAL({
         component: 'ModalTravail',

@@ -8,6 +8,7 @@ import ArticleService from '../../services/materiel/ArticleService';
 
 import ArticleCreation from '../materiel/ArticleCreation.vue';
 import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data, callback } = defineProps({
   data: {
@@ -47,6 +48,7 @@ await Promise.all([
 
 const sapeurs = computed(() => store.state.sapeur.liste);
 
+const { closeModal } = useModalStore();
 const save = async () => {
   if (!activeAttribution.value.sapeur_id) {
     awn.warning('Veuillez sélectionner un sapeur');
@@ -67,7 +69,7 @@ const save = async () => {
     )
       .then((data) => {
         callback();
-        close();
+        closeModal();
       })
       .catch((error) =>
         awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
@@ -85,15 +87,12 @@ const save = async () => {
     ArticleService.creerArticles(articles)
       .then((data) => {
         callback();
-        close();
+        closeModal();
       })
       .catch((error) =>
         awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
       );
   }
-};
-const close = () => {
-  store.commit('HIDE_MODAL');
 };
 </script>
 
@@ -101,7 +100,7 @@ const close = () => {
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Attribuer du matériel</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="row">

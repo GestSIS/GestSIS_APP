@@ -62,7 +62,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import AspsmsParamService from '../../services/AspsmsParamService';
 
@@ -131,7 +133,7 @@ export default {
       });
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async send() {
       const params = {
         ...this.params,
@@ -164,7 +166,7 @@ export default {
           this.errors = { ...errors };
           this.sending = false;
           return this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'envoie des SMS"
+            errors?.message ?? "Erreur lors de l'envoie des SMS",
           );
         });
     },

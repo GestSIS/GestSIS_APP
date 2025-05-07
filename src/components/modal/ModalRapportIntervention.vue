@@ -140,7 +140,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import InterventionService from '/src/services/InterventionService.js';
@@ -178,7 +180,10 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     generer() {
       const interventionId = this.data.interventionId;
       const date = this.data.date;
@@ -186,7 +191,7 @@ export default {
       InterventionService.downloadRapport(
         interventionId,
         this.params,
-        `${date}_intervention.pdf`
+        `${date}_intervention.pdf`,
       )
         .then(() => this.HIDE_MODAL())
         .catch(() => this.HIDE_MODAL());

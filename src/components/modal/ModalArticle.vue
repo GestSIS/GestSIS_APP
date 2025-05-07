@@ -115,7 +115,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalMatPersoMateriel',
@@ -152,19 +154,19 @@ export default {
         ?.map((e) => ({
           ...e,
           eventType: this.eventTypes.find(
-            (t) => t.id == e.materiel_event_type_id
+            (t) => t.id == e.materiel_event_type_id,
           )?.nom,
         }))
         ?.sort((e1, e2) => e2?.date?.localeCompare(e1?.date)),
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       this.$store
         .dispatch(
           (this.activeItem.id || 0) === 0 ? 'addMatPerso' : 'updateMatPerso',
-          [this.activeItem]
+          [this.activeItem],
         )
         .then(() => {
           this.errors = {};
@@ -175,7 +177,7 @@ export default {
             ...errors,
           };
           this.$awn.warning(
-            errors?.message ?? 'Erreur lors de la modification'
+            errors?.message ?? 'Erreur lors de la modification',
           );
         });
     },

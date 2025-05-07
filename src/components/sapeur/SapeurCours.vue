@@ -41,7 +41,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import store from '/src/store/index';
@@ -81,7 +83,7 @@ export default {
           .map((c) => ({
             ...c,
             designation: state.cours.liste.find(
-              (cours) => cours.id == c.cours_id
+              (cours) => cours.id == c.cours_id,
             )?.designation,
             localite: state.localite.liste.find((l) => l.id == c.localite_id)
               ?.designation,
@@ -102,7 +104,7 @@ export default {
     this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     newCours() {
       this.$store.dispatch('resetActiveCours');
       this.SHOW_MODAL('ModalSapeurCours');
@@ -110,7 +112,7 @@ export default {
     editCours(cours) {
       this.$store.dispatch(
         'updateActiveCours',
-        Object.assign({ precedent_id: 0 }, cours)
+        Object.assign({ precedent_id: 0 }, cours),
       );
       this.SHOW_MODAL('ModalSapeurCours');
     },

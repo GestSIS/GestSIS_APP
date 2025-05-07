@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { groupedByData } from '../../tools';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import useModal from '../../hooks/useModal';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
   data: {
@@ -48,7 +48,7 @@ const computedCategories = computed(() => {
   return data;
 });
 
-const { closeModal } = useModal();
+const { closeModal } = useModalStore();
 const save = async () => {
   ((activeItem.value.id || 0) === 0
     ? typeStore.addMaterielType

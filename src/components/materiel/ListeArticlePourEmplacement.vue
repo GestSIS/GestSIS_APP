@@ -4,6 +4,7 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
 import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { id } = defineProps({
   id: {
@@ -12,7 +13,6 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
 const materielTypeStore = useMaterielTypeStore();
 
 const articles = ref([]);
@@ -49,8 +49,9 @@ const piecesColonnes = [
   { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 
+const { showModal } = useModalStore();
 const attribuerMateriel = (materiel) => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
     callback: loadArticles,

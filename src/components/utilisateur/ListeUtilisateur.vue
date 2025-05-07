@@ -95,7 +95,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 function loadData(routeTo, next) {
@@ -156,7 +158,7 @@ export default {
               (!u.user_roles?.length ?? false) && (!sapeur?.actif ?? false),
             actifStatut: sapeur?.actif ?? true,
             nom_prenom:
-              !u?.sapeur?.length > 0 ? '-' : sapeur?.nom_prenom ?? '-',
+              !u?.sapeur?.length > 0 ? '-' : (sapeur?.nom_prenom ?? '-'),
             type: !u?.sapeur?.length > 0 ? '-' : sapeur?.type,
           };
         })
@@ -174,7 +176,7 @@ export default {
                 this.filters.sapeur
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
-                  .toLowerCase()
+                  .toLowerCase(),
               ) ?? true
           );
         })
@@ -187,8 +189,8 @@ export default {
               this.filters.user
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
+                .toLowerCase(),
+            ),
         );
     },
   },
@@ -196,7 +198,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     formatRole(id) {
       return this.roles.find((r) => r.id === id)?.nom;
     },

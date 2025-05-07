@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalAbsencesStats',
@@ -38,7 +40,10 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
   },
 };
 </script>

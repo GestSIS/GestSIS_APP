@@ -237,7 +237,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalIndemniteIntervention',
@@ -283,7 +285,7 @@ export default {
         : 'tarif-min';
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       if (this.imputationType == 'taux') {
         this.activeIndemnite.type_unite_id = 2; // Par heure
@@ -330,7 +332,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...errors,
-              })
+              }),
           );
       } else {
         this.$store

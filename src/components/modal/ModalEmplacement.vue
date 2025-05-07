@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite';
 
 const { data } = defineProps({
   data: {
@@ -9,8 +10,8 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
-await store.dispatch('fetchUnites');
+const uniteStore = useUniteStore();
+await uniteStore.fetchUnites();
 
 const errors = ref({});
 const emplacement = ref({
@@ -19,18 +20,16 @@ const emplacement = ref({
   type_unite_id: data.type_unite_id ?? 0,
 });
 
-const listeUnite = computed(() => store.state.unite.liste);
+const listeUnite = computed(() => uniteStore.liste);
 
-const close = async () => {
-  store.commit('HIDE_MODAL');
-};
+const { closeModal } = useModalStore();
 const save = async () => {
   if ((emplacement.id || 0) === 0) {
     store
       .dispatch('addVehicule', emplacement)
       .then(() => {
         errors = {};
-        store.commit('HIDE_MODAL');
+        closeModal;
       })
       .catch(
         (errors) =>
@@ -43,7 +42,7 @@ const save = async () => {
       .dispatch('updateVehicule', emplacement)
       .then(() => {
         errors = {};
-        store.commit('HIDE_MODAL');
+        closeModal;
       })
       .catch((errors) => {
         errors = {
@@ -60,7 +59,7 @@ const save = async () => {
       <h5 id="exampleModalLabel" class="modal-title">
         {{ emplacement.id ? 'Modifier' : 'Ajouter' }} un emplacement
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <!-- <div class="mb-3">
@@ -129,10 +128,10 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close()">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="save">
         {{ emplacement.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>

@@ -41,7 +41,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import store from '/src/store/index';
 
@@ -80,7 +82,7 @@ export default {
           .map((g) => ({
             ...g,
             designation: state.grade.liste.find(
-              (grade) => grade.id == g.grade_id
+              (grade) => grade.id == g.grade_id,
             )?.designation,
           })),
       hasEditPermission: (state) =>
@@ -98,7 +100,7 @@ export default {
     this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     formatGrade(grade) {
       return grade?.designation;
     },

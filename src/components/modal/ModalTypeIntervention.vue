@@ -48,7 +48,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalTypeIntervention',
@@ -75,7 +77,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       if ((this.activeTypeIntervention.id || 0) === 0) {
         this.$store
@@ -88,7 +90,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...errors,
-              })
+              }),
           );
       } else {
         this.$store

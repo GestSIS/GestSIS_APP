@@ -79,7 +79,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import { markRaw } from 'vue';
@@ -139,12 +141,12 @@ export default {
             ...e.presence,
             ...e,
             excuse: state.excuseType.liste.find(
-              (t) => t.id == e.presence?.excuse_type_id
+              (t) => t.id == e.presence?.excuse_type_id,
             )?.designation,
             localite: state.localite.liste.find((l) => l.id == e.localite_id)
               ?.designation,
             categorie: state.exerciceCategorie.liste.find(
-              (c) => c.id == e.exercice_categorie_id
+              (c) => c.id == e.exercice_categorie_id,
             )?.designation,
           }))
           .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
@@ -165,7 +167,7 @@ export default {
     this.init(this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     init(sapeurId) {
       this.$store.dispatch('fetchSapeurExercices', sapeurId).then(() => {
         this.exercices
@@ -184,11 +186,11 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
         exercice.sapeur_id,
-        'justificatif_' + sapeur.justificatif_filename
+        'justificatif_' + sapeur.justificatif_filename,
       ).catch((err) =>
         this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif'
-        )
+          err?.message ?? 'Erreur lors du chargement du justificatif',
+        ),
       );
     },
   },

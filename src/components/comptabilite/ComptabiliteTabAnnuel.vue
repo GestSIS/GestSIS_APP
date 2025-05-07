@@ -108,7 +108,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 import store from '/src/store/index';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -207,7 +209,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -218,7 +220,7 @@ export default {
             (reduced[ecriture.sapeur_id] =
               reduced[ecriture.sapeur_id] || []).push(ecriture);
             return reduced;
-          }, {})
+          }, {}),
         )
           // Map to real data
           .map(([key, value]) => ({
@@ -245,7 +247,7 @@ export default {
               new Promise(
                 function (resolve) {
                   resolve(this.ecritures);
-                }.bind(s)
+                }.bind(s),
               ),
           }))
       );
@@ -278,7 +280,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selected(id) {
       this.selectedId = id;
     },
@@ -299,13 +301,13 @@ export default {
             this.$store
               .dispatch(
                 'annulerImputationAnnuel',
-                this.activeExerciceComptableId
+                this.activeExerciceComptableId,
               )
               .catch((err) =>
                 this.$awn.alert(
                   err?.message ??
-                    "Une erreur est survenue durant l'annulation des indemnités/frais annuelles"
-                )
+                    "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
+                ),
               );
           }
         },

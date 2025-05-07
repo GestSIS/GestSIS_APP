@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalConfirmation',
@@ -42,7 +43,7 @@ export default {
     this.$refs.cancelButton.focus();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     cancel() {
       (this.callback(false) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {

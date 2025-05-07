@@ -83,7 +83,7 @@
                 <td>
                   {{
                     formatCompte(
-                      comptes.find((f) => f.id == indemnite.compte_id)
+                      comptes.find((f) => f.id == indemnite.compte_id),
                     )
                   }}
                 </td>
@@ -203,7 +203,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '/src/components/MultiStep.vue';
 
 export default {
@@ -243,7 +245,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     selectIndemnite(index) {
       this.activeIndemniteIndex = index;
       this.activeIndemnite = this.indemnitesTypes[index];
@@ -268,7 +270,9 @@ export default {
           this.ecritures = data.ecritures;
         })
         .catch((err) =>
-          this.$awn.alert(err?.message ?? "Impossible d'effectuer cette action")
+          this.$awn.alert(
+            err?.message ?? "Impossible d'effectuer cette action",
+          ),
         );
     },
     onKeyDown() {
@@ -276,7 +280,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : ++this.activeIndemniteIndex % this.indemnitesTypes.length
+          : ++this.activeIndemniteIndex % this.indemnitesTypes.length,
       );
     },
     onKeyUp() {
@@ -284,7 +288,7 @@ export default {
       this.selectIndemnite(
         this.activeIndemniteIndex === null
           ? 1
-          : --this.activeIndemniteIndex % this.indemnitesTypes.length
+          : --this.activeIndemniteIndex % this.indemnitesTypes.length,
       );
     },
     formatCompte(compte) {

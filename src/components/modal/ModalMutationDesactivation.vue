@@ -129,7 +129,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalMutationDesactivation',
@@ -167,7 +169,7 @@ export default {
     exercices() {
       return this.activeSapeurExercice
         .filter(
-          (e) => e.statut <= 2 && e.statut > 0 && e.date > this.mutationDate // Saisie ou vide et pas annulé
+          (e) => e.statut <= 2 && e.statut > 0 && e.date > this.mutationDate, // Saisie ou vide et pas annulé
         )
         .map((e) => ({
           ...e,
@@ -200,7 +202,7 @@ export default {
     // Récupère la date de la dernière mutation
     if (this.activeSapeurMutations.length) {
       this.mutationDate = this.activeSapeurMutations.sort(
-        (a, b) => new Date(b.sortie) - new Date(a.sortie)
+        (a, b) => new Date(b.sortie) - new Date(a.sortie),
       )[0].sortie;
     }
 
@@ -209,7 +211,7 @@ export default {
     this.selectFonction(true);
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     formatDate(date) {
       var monthNames = [
         'janvier',
@@ -237,7 +239,7 @@ export default {
         this.sapFonctions.length > 0 &&
         (!this.mutationDate ||
           this.sapFonctions.some(
-            (f) => new Date(f.debut) >= new Date(this.mutationDate)
+            (f) => new Date(f.debut) >= new Date(this.mutationDate),
           ))
       ) {
         this.erreurs = {
@@ -264,13 +266,15 @@ export default {
           'supprimerConvocation',
           this.exercices
             .filter((e) => this.selectedExercices[e.id])
-            .map(mapToId)
+            .map(mapToId),
         );
       }
       if (this.sapGroupes.filter((e) => this.selectedGroupes[e.id]).length) {
         this.$store.dispatch(
           'quitterGroupes',
-          this.sapGroupes.filter((e) => this.selectedGroupes[e.id]).map(mapToId)
+          this.sapGroupes
+            .filter((e) => this.selectedGroupes[e.id])
+            .map(mapToId),
         );
       }
 
@@ -282,7 +286,7 @@ export default {
         this.selectedGroupes[groupeId] = state;
       } else {
         this.selectedGroupes = Object.fromEntries(
-          this.activeSapeurGroupe.map((g) => [g.id, state])
+          this.activeSapeurGroupe.map((g) => [g.id, state]),
         );
       }
     },
@@ -291,7 +295,7 @@ export default {
         this.selectedExercices[exerciceId] = state;
       } else {
         this.selectedExercices = Object.fromEntries(
-          this.activeSapeurExercice.map((g) => [g.id, state])
+          this.activeSapeurExercice.map((g) => [g.id, state]),
         );
       }
     },
@@ -300,7 +304,7 @@ export default {
         this.selectedFonctions[fonctionId] = state;
       } else {
         this.selectedFonctions = Object.fromEntries(
-          this.activeSapeurFonction.map((g) => [g.id, state])
+          this.activeSapeurFonction.map((g) => [g.id, state]),
         );
       }
     },

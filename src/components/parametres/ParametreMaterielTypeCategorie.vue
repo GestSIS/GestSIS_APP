@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
-import useModal from '../../hooks/useModal';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();
@@ -68,7 +68,9 @@ const computedData = computed(() => {
   return data;
 });
 
-const { showModal } = useModal();
+const modalStore = useModalStore();
+
+const { showModal } = useModalStore();
 
 const select = (item) => {
   selectedId.value = item?.globalId;

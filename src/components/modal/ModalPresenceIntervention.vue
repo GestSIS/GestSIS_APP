@@ -135,7 +135,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalPresenceIntervention',
@@ -194,7 +196,7 @@ export default {
     },
     nbSelectedSapeurs() {
       return Object.keys(this.selectedSapeurs).filter(
-        (s) => this.selectedSapeurs[s]
+        (s) => this.selectedSapeurs[s],
       ).length;
     },
   },
@@ -203,7 +205,7 @@ export default {
 
     if (this.editMode) {
       this.data.sapeurs.forEach(
-        (s) => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true })
+        (s) => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true }),
       );
       this.piquet = this.data.presence.piquet;
       this.date_debut = this.data.presence.debut.slice(0, 10);
@@ -216,7 +218,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     roundTime(time, minutesToRound) {
       let [hours, minutes] = time.split(':');
       hours = parseInt(hours);

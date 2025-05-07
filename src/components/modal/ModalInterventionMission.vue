@@ -100,7 +100,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 
 import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
@@ -145,14 +147,14 @@ export default {
     this.activeMission.fin2 = this.activeMission.fin?.replace(' ', 'T');
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       // Format back dates to SQL Format
       this.activeMission.debut = DateTime.fromISO(
-        this.activeMission.debut2
+        this.activeMission.debut2,
       )?.toFormat(this.format);
       this.activeMission.fin = DateTime.fromISO(
-        this.activeMission.fin2
+        this.activeMission.fin2,
       )?.toFormat(this.format);
 
       if (this.responsableMode == 'sapeur') {
@@ -185,7 +187,7 @@ export default {
                 sapeur_id: errors['missions.0.sapeur_id'],
                 sapeur: errors['missions.0.sapeur'],
                 titre: errors['missions.0.titre'],
-              })
+              }),
           );
       } else {
         this.$store
@@ -203,7 +205,7 @@ export default {
                 sapeur_id: errors['missions.0.sapeur_id'],
                 sapeur: errors['missions.0.sapeur'],
                 titre: errors['missions.0.titre'],
-              })
+              }),
           );
       }
     },

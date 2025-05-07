@@ -211,8 +211,8 @@
                         (e) =>
                           e.heure_exercice_type_id == h.id ||
                           (!e.heure_exercice_type_id &&
-                            e.designation == h.designation)
-                      )
+                            e.designation == h.designation),
+                      ),
                     )
                   "
                   @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
@@ -253,8 +253,8 @@
                 .map((s) =>
                   parseFloat(
                     s.heures.find((e) => e.heure_exercice_type_id == h.id)
-                      ?.quantite ?? 0
-                  )
+                      ?.quantite ?? 0,
+                  ),
                 )
                 .reduce((acc, a) => acc + a, 0)
             }}
@@ -267,7 +267,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 
@@ -305,7 +307,7 @@ export default {
       id: (state) => state.exercice.active.data?.exercice_categorie_id,
       amendable: (state) =>
         state.exerciceCategorie.liste.find(
-          (c) => c.id == state.exercice.active.data?.exercice_categorie_id
+          (c) => c.id == state.exercice.active.data?.exercice_categorie_id,
         )?.amendable,
     }),
     isImpute() {
@@ -357,14 +359,14 @@ export default {
     this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selectAllConvoque(status) {
       this.presences = this.presences.map((p) => ({
         ...p,
         convoque: status ? 1 : 0,
       }));
       Promise.all(this.presences.map((p) => this.savePresence(p, true))).then(
-        this.$awn.success('Modifications enregistrées')
+        this.$awn.success('Modifications enregistrées'),
       );
     },
     getHeureValue(sapeur) {
@@ -374,7 +376,7 @@ export default {
       const heure = sap.heures.find(
         (e) =>
           e.heure_exercice_type_id == h.id ||
-          (!e.heure_exercice_type_id && e.designation == h.designation)
+          (!e.heure_exercice_type_id && e.designation == h.designation),
       );
       if (!heure) {
         // Ajout de l'heure
@@ -389,7 +391,7 @@ export default {
           .dispatch('addHeure', newHeure)
           .then(() => this.$awn.success('Heure ajoutée'))
           .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
           );
       } else if (!(parseFloat(quantite) || null)) {
         // Suppression de l'heure
@@ -397,7 +399,7 @@ export default {
           .dispatch('removeHeure', heure)
           .then(() => this.$awn.success('Heure supprimée'))
           .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
           );
       } else {
         heure.quantite = parseFloat(quantite) || null;
@@ -406,7 +408,7 @@ export default {
           .dispatch('editHeure', heure)
           .then(() => this.$awn.success('Modifications enregistrées'))
           .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
           );
       }
     },
@@ -414,12 +416,12 @@ export default {
       this.$store
         .dispatch('validerExercice', this.activeExerciceId)
         .then((res) =>
-          this.$awn.success(res?.message || 'Exercice validé avec succès.')
+          this.$awn.success(res?.message || 'Exercice validé avec succès.'),
         )
         .catch((err) =>
           this.$awn.alert(
-            err?.message || "Erreur lors de la validation de l'exercice."
-          )
+            err?.message || "Erreur lors de la validation de l'exercice.",
+          ),
         );
     },
     formatUnite(type_unite_id) {
@@ -493,10 +495,10 @@ export default {
       if (!hideNotification) {
         return promise
           .then((res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées')
+            this.$awn.success(res?.message || 'Modifications enregistrées'),
           )
           .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
           );
       } else {
         return promise;
@@ -525,7 +527,7 @@ export default {
     detailExcuse(sapeur) {
       if (!this.hasPresencePermission) {
         this.$awn.warning(
-          "Permissions insuffisantes pour accéder au détails de l'excuse"
+          "Permissions insuffisantes pour accéder au détails de l'excuse",
         );
         return;
       }
@@ -539,7 +541,7 @@ export default {
             this.savePresence(presence);
             this.presences = [
               ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p
+                parseInt(p.id) == parseInt(presence.id) ? presence : p,
               ),
             ];
           }
@@ -558,7 +560,7 @@ export default {
             this.savePresence(presence);
             this.presences = [
               ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p
+                parseInt(p.id) == parseInt(presence.id) ? presence : p,
               ),
             ];
           }
@@ -583,18 +585,18 @@ export default {
     downloadJustificatif(sapeur) {
       if (!this.hasPresencePermission) {
         this.$awn.warning(
-          "Permissions insuffisantes pour accéder au détails de l'excuse"
+          "Permissions insuffisantes pour accéder au détails de l'excuse",
         );
         return;
       }
       ExerciceService.downloadExcuseJustificatif(
         sapeur.exercice_id,
         sapeur.sapeur_id,
-        'justificatif_' + sapeur.justificatif_filename
+        'justificatif_' + sapeur.justificatif_filename,
       ).catch((err) =>
         this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif'
-        )
+          err?.message ?? 'Erreur lors du chargement du justificatif',
+        ),
       );
     },
   },

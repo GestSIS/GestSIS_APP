@@ -196,7 +196,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import store from '/src/store/index';
 
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
@@ -244,7 +246,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.ORGANISATION.MODIFICATION
+          permissions.ORGANISATION.MODIFICATION,
         ),
     }),
     filteredGroupes() {
@@ -299,7 +301,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     contract() {
       this.$refs.groupeEdition.contract();
     },
@@ -328,7 +330,7 @@ export default {
         .catch((errors) => {
           this.errors = { ...errors };
           this.$awn.alert(
-            errors.message || 'Erreur lors de la modification du groupe'
+            errors.message || 'Erreur lors de la modification du groupe',
           );
         });
     },
@@ -361,7 +363,7 @@ export default {
         });
       } else {
         this.$awn.warning(
-          'Sélectionnez un groupe afin de pouvoir le supprimer.'
+          'Sélectionnez un groupe afin de pouvoir le supprimer.',
         );
       }
     },

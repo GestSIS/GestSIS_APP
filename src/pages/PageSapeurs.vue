@@ -222,7 +222,9 @@
 <script>
 import store from '../store/index';
 import permissions from '../store/permissions.js';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import SapeurService from '/src/services/SapeurService';
 
@@ -269,7 +271,7 @@ const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
     if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
       await store.dispatch(
         'selectSapeur',
-        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id
+        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
       );
       next({
         name: 'sapeur-details',
@@ -376,11 +378,14 @@ export default {
     this.$refs['liste-sapeurs'].addEventListener('keydown', this.eventListener);
     this.$refs['liste-sapeurs'].addEventListener(
       'keyup',
-      svm.navigationEventListener
+      svm.navigationEventListener,
     );
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     hasPermission(permission) {
       return (
         !permission || this.permissions.includes(permission) || this.isAdmin
@@ -390,7 +395,7 @@ export default {
       this.SHOW_MODAL({ component: 'ModalChargement' });
       SapeurService.downloadFicheSapeur(
         this.activeSapeurId,
-        'fiche-sapeur.pdf'
+        'fiche-sapeur.pdf',
       ).then(() => {
         this.HIDE_MODAL();
       });
@@ -460,7 +465,7 @@ export default {
               })
               .catch((err) => {
                 svm.$awn.alert(
-                  err?.message ?? 'Impossible de supprimer ce sapeur'
+                  err?.message ?? 'Impossible de supprimer ce sapeur',
                 );
               });
           }

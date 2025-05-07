@@ -2,7 +2,7 @@
 import { computed, inject, ref, warn } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
-import useModal from '../../hooks/useModal';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const couleurStore = useCouleurStore();
 
@@ -12,7 +12,7 @@ const couleurs = computed(() =>
 );
 
 const awn = inject('awn');
-const { showModal } = useModal();
+const { showModal } = useModalStore();
 
 const ajout = () => {
   showModal({ component: 'ModalCouleur', data: {} });

@@ -2,6 +2,7 @@
 import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import ArticleService from '../../services/materiel/ArticleService';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const awn = inject('awn');
 const { data, callback } = defineProps({
@@ -26,15 +27,14 @@ const activeAttribution = ref({
   id: data?.id,
 });
 
-const close = async () => store.commit('HIDE_MODAL');
-
+const { closeModal } = useModalStore();
 const save = async () => {
   ArticleService.attribuerArticles(activeAttribution.value.sapeur_id, {
     date: activeAttribution.value.date,
     articleIds: [activeAttribution.value.id],
   })
     .then(() => {
-      close();
+      closeModal();
       callback();
     })
     .catch((errors) => {
@@ -48,7 +48,7 @@ const save = async () => {
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Attribuer du matériel</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -71,7 +71,7 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save">

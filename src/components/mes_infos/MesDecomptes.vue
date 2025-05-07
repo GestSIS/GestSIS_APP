@@ -32,7 +32,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MesInfosService from '../../services/MesInfosService';
 import store from '/src/store/index';
 
@@ -81,7 +83,7 @@ export default {
           .sort((e1, e2) => e1.date.localeCompare(e2.date)),
       exerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId
+          (e) => e.id == state.exerciceComptable.activeId,
         ),
     }),
   },
@@ -91,7 +93,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     downloadDecompte(paiement) {
       const filename = `${paiement.date}_decompte.pdf`;
 
@@ -102,7 +107,7 @@ export default {
         })
         .catch((error) => {
           this.$awn.warning(
-            error?.message ?? 'Erreur lors de la génération de votre décompte'
+            error?.message ?? 'Erreur lors de la génération de votre décompte',
           );
           this.HIDE_MODAL();
         });
@@ -110,13 +115,13 @@ export default {
     resumeAnnuel() {
       if (this.paiements.length == 0) {
         this.$awn.alert(
-          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire'
+          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
         );
         return;
       }
       if (Date.now() < new Date(this.exerciceComptable.fin)) {
         this.$awn.warning(
-          "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !"
+          "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
         );
       }
       const filename = `${this.exerciceComptable?.annee}_resume.pdf`;
@@ -125,7 +130,7 @@ export default {
 
       MesInfosService.downloadMonResumeAnnuel(
         this.exerciceComptableId,
-        filename
+        filename,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -133,7 +138,7 @@ export default {
         .catch((error) => {
           this.$awn.warning(
             error?.message ??
-              'Erreur lors de la génération de votre résumé annuel'
+              'Erreur lors de la génération de votre résumé annuel',
           );
           this.HIDE_MODAL();
         });
@@ -141,13 +146,13 @@ export default {
     certificatSalaire() {
       if (this.paiements.length == 0) {
         this.$awn.alert(
-          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire'
+          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
         );
         return;
       }
       if (Date.now() < new Date(this.exerciceComptable.fin)) {
         this.$awn.warning(
-          "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !"
+          "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
         );
       }
       const filename = `${this.exerciceComptable?.annee}_certificat_salaire.pdf`;
@@ -156,7 +161,7 @@ export default {
 
       MesInfosService.downloadMonCertificatSalaire(
         this.exerciceComptableId,
-        filename
+        filename,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -164,7 +169,7 @@ export default {
         .catch((error) => {
           this.$awn.warning(
             error?.message ??
-              'Erreur lors de la génération de votre certificat de salaire'
+              'Erreur lors de la génération de votre certificat de salaire',
           );
           this.HIDE_MODAL();
         });

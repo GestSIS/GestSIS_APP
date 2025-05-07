@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -83,7 +85,7 @@ export default {
             fonction: state.fonction.liste.find((g) => g.id == c.fonction_id)
               ?.nom,
             cours_precedent: state.cours.liste.find(
-              (g) => g.id == c.precedent_id
+              (g) => g.id == c.precedent_id,
             )?.designation,
           }))
           .sort((a, b) => b.tri - a.tri),
@@ -93,7 +95,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutCours() {
       this.SHOW_MODAL({ component: 'ModalCours', data: {} });
     },
@@ -104,7 +106,7 @@ export default {
       this.$store
         .dispatch('removeCours', cours.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
     coursPrecedent(id) {

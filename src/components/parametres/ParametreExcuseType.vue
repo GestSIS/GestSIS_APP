@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -69,7 +71,7 @@ export default {
               0: 'Désactivé',
               1: "Exercice + S'excuser",
               2: 'Exercice',
-            }[statut]),
+            })[statut],
         },
         { title: 'Actions', slot: 'actions' },
       ],
@@ -82,7 +84,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutExcuse() {
       this.SHOW_MODAL({ component: 'ModalExcuseType', data: {} });
     },
@@ -93,7 +95,7 @@ export default {
       this.$store
         .dispatch('removeExcuseType', excuse.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

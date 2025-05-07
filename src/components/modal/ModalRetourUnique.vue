@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
 import ArticleService from '../../services/materiel/ArticleService';
 import SelectEmplacement from '../materiel/SelectEmplacement.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data, callback } = defineProps({
   data: {
@@ -19,9 +19,7 @@ const errors = ref({});
 const date = ref(new Date().toISOString().slice(0, 10));
 const emplacement_id = ref(null);
 
-const store = useStore();
-
-const close = () => store.commit('HIDE_MODAL');
+const { closeModal } = useModalStore();
 const save = async () =>
   ArticleService.retourArticles(emplacement_id.value, {
     date: date.value,
@@ -29,7 +27,7 @@ const save = async () =>
   })
     .then(() => {
       callback();
-      close();
+      closeModal();
     })
     .catch((err) => (errors.value = err));
 </script>
@@ -38,10 +36,10 @@ const save = async () =>
   <div class="overflow-visible">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Retour matériel</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body overflow-visible">
-      <div class="mb-3">
+      <div class="mb">
         <label for="date">Date du retour</label>
         <input
           id="date"
@@ -54,10 +52,10 @@ const save = async () =>
       <select-emplacement v-model="emplacement_id" />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="save">
         Valider
       </button>
     </div>

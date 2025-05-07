@@ -50,7 +50,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModAbsence',
@@ -80,7 +82,10 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     async save() {
       const action = this.activeAbsence?.id ? 'updateAbsence' : 'addAbsence';
       this.$store
@@ -92,7 +97,7 @@ export default {
         .catch((errors) => {
           this.errors = errors;
           this.$awn.alert(
-            errors?.message ?? "Impossible d'ajouter cette absence"
+            errors?.message ?? "Impossible d'ajouter cette absence",
           );
         });
     },

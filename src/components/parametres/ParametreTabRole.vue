@@ -32,7 +32,7 @@
             <th class="sticky" data-field="designation">Désignation</th>
             <template
               v-for="[key, permissions] in groupedPermissions.filter(
-                ([, permissions]) => permissions.length !== 1
+                ([, permissions]) => permissions.length !== 1,
               )"
               :key="key"
             >
@@ -90,7 +90,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -138,12 +140,12 @@ export default {
           }
           acc[key].push({ ...p, permission });
           return acc;
-        }, {})
+        }, {}),
       );
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selectRole(role) {
       this.selectedId = role.id;
     },

@@ -7,6 +7,7 @@ import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { id } = defineProps({
   id: {
@@ -72,15 +73,16 @@ const computedData = computed(() =>
   ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
 
+const { showModal } = useModalStore();
 const retourMateriel = (materiel) => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalRetourUnique',
     data: materiel,
   });
 };
 
 const attribuer = () => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalAttributionMultiple',
     data: ref({ sapeurId: id }),
     size: 2,

@@ -44,7 +44,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -65,7 +67,7 @@ export default {
         state.intervention.active.materiels.map((m) => ({
           ...m,
           designation: state.materiel.liste?.find(
-            (mat) => mat.id == m.materiel_id
+            (mat) => mat.id == m.materiel_id,
           )?.designation,
         })),
       activeInterventionId: (state) => state.intervention.active.id,
@@ -73,7 +75,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
   },
@@ -82,18 +84,18 @@ export default {
       this.$store.dispatch('fetchMateriels').then(() => {
         this.$store.dispatch(
           'fetchInterventionMateriels',
-          this.activeInterventionId
+          this.activeInterventionId,
         );
       });
     } else if (this.activeMateriels.length === 0) {
       this.$store.dispatch(
         'fetchInterventionMateriels',
-        this.activeInterventionId
+        this.activeInterventionId,
       );
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     newMateriel() {
       this.$store.dispatch('resetActiveMateriel');
       this.SHOW_MODAL('ModalInterventionMateriel');
@@ -103,8 +105,8 @@ export default {
         'updateActiveMateriel',
         Object.assign(
           {},
-          this.activeMateriels.find((m) => m.id == grade_id)
-        )
+          this.activeMateriels.find((m) => m.id == grade_id),
+        ),
       );
       this.SHOW_MODAL('ModalInterventionMateriel');
     },

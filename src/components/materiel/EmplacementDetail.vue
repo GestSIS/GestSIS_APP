@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 import { indexedData } from '../../tools';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useStore } from 'vuex';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { id } = defineProps({
   id: {
@@ -13,7 +13,6 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 
@@ -41,8 +40,9 @@ const etiquettage = computed(() => {
 });
 const formatEmptyString = (str) => (str === '' ? '-' : str);
 
+const { showModal } = useModalStore();
 const editEmplacement = () => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalEmplacement',
     data: emplacement,
   });

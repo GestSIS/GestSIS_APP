@@ -81,7 +81,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -121,13 +123,13 @@ export default {
     }),
     activeExercice() {
       return this.excuses.find(
-        (e) => e.exercice_id === this.activeExcuse.exercice_id
+        (e) => e.exercice_id === this.activeExcuse.exercice_id,
       );
     },
   },
   mounted() {
     const excuse = this.data.exercices.find(
-      (e) => e.exercice_id === this.data.exerciceId
+      (e) => e.exercice_id === this.data.exerciceId,
     );
     this.excuses = this.data.exercices;
     this.activeExcuse = {
@@ -140,7 +142,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     estDansLeDelai(date) {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
@@ -179,7 +181,7 @@ export default {
         .catch((err) => {
           this.errors = err;
           this.$awn.alert(
-            err?.message ?? "Erreur lors de la création de l'excuse"
+            err?.message ?? "Erreur lors de la création de l'excuse",
           );
         });
     },

@@ -89,7 +89,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalRegisterToken',
@@ -118,7 +120,7 @@ export default {
     this.$refs.desc.focus();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     copyToClipboard() {
       const copyText = this.$refs.displayedToken;
 

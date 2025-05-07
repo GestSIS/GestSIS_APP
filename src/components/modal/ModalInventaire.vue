@@ -137,7 +137,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import MaterielTypeCategorieSelect from '/src/components/MATERIEL/MaterielTypeCategorieSelect.vue';
 
 export default {
@@ -165,7 +167,7 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       types: (state) =>
         state.matPersoType.liste.sort((e1, e2) =>
-          e1?.designation.localeCompare(e2?.designation)
+          e1?.designation.localeCompare(e2?.designation),
         ),
       materiels: (state) =>
         state.matPersoMateriel.liste.filter(
@@ -173,24 +175,24 @@ export default {
             m.sapeur_id == null ||
             (m.retour != null &&
               m.sapeur_id != null &&
-              m.materiel?.quantite == null)
+              m.materiel?.quantite == null),
         ),
     }),
     filteredInventaire() {
       const ids = new Set(
         Object.entries(this.selectedTypes)
           .filter(([, selected]) => selected)
-          .map(([id]) => parseInt(id))
+          .map(([id]) => parseInt(id)),
       );
       return this.inventaire
         .filter(
-          (m) => ids.has(m.materiel_type_id) || m.materiel_type_id == null
+          (m) => ids.has(m.materiel_type_id) || m.materiel_type_id == null,
         )
         .filter(
           (m) =>
             (this.tab == 'generique' &&
               (m.materiel?.quantite ?? null) != null) ||
-            (this.tab == 'numerote' && (m.materiel?.quantite ?? null) == null)
+            (this.tab == 'numerote' && (m.materiel?.quantite ?? null) == null),
         );
     },
     indexedMateriel() {
@@ -205,7 +207,7 @@ export default {
     ];
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     selectTypes(selected) {
       this.selectedTypes = selected.type;
     },
@@ -214,7 +216,7 @@ export default {
         this.inventaire = this.inventaire.filter((m) => m.id !== materiel.id);
       } else {
         this.inventaire = this.inventaire.filter(
-          (m) => m.tempId !== materiel.tempId
+          (m) => m.tempId !== materiel.tempId,
         );
       }
       if (materiel.id) {

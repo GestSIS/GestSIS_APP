@@ -119,7 +119,7 @@
             display-key="nom"
             :options="
               activeSapeurFonctions.map((s) =>
-                fonctions.find((f) => f.id == s.fonction_id)
+                fonctions.find((f) => f.id == s.fonction_id),
               )
             "
           />
@@ -138,7 +138,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalSapeurCours',
@@ -174,7 +176,7 @@ export default {
         return this.cours.filter(
           (c) =>
             (c.validite_fin == null || new Date(c.validite_fin) >= date) &&
-            (c.validite_debut == null || new Date(c.validite_debut) <= date)
+            (c.validite_debut == null || new Date(c.validite_debut) <= date),
         );
       }
     },
@@ -193,12 +195,12 @@ export default {
 
       if (this.activeCours.fonction_id !== 0) {
         let fonction = this.fonctions.find(
-          (f) => f.id == this.activeCours.fonction_id
+          (f) => f.id == this.activeCours.fonction_id,
         );
         if (fonction.cumulable === 0) {
           let fonctions = this.activesFonctions.filter(
             (f) =>
-              this.fonctions.find((e) => e.id == f.fonction_id).cumulable === 0
+              this.fonctions.find((e) => e.id == f.fonction_id).cumulable === 0,
           );
           if (fonctions.length > 0) {
             this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;
@@ -223,7 +225,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       let saveData = Object.assign({}, this.activeCours);
       Object.keys(saveData).map((key) => {

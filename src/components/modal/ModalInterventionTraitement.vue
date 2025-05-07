@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalInterventionTraitement',
@@ -62,7 +63,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     localite(localite) {
       return localite?.designation;
     },
@@ -78,7 +79,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...errors,
-              })
+              }),
           );
       } else {
         this.$store

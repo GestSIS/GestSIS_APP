@@ -185,7 +185,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 import store from '/src/store/index';
 
@@ -200,7 +202,7 @@ async function loadData(routeTo, next) {
 
   const loadTravaux = store.dispatch('fetchTravaux');
   Promise.all([loadSapeurs, loadUnites, loadTravaux, loadTravailTypes]).then(
-    () => next()
+    () => next(),
   );
 }
 
@@ -253,7 +255,7 @@ export default {
         state.travail.liste.map((t) => ({
           ...t,
           travail_type: state.travailType.liste.find(
-            (e) => e.id == t.travail_type_id
+            (e) => e.id == t.travail_type_id,
           )?.designation,
           sapeur: state.sapeur.liste.find((s) => s.id == t.sapeur_id)
             ?.nom_prenom,
@@ -263,7 +265,7 @@ export default {
             (u) =>
               u.id ==
               state.travailType.liste.find((e) => e.id == t.travail_type_id)
-                ?.type_unite_id
+                ?.type_unite_id,
           )?.unite,
         })),
       sapeurs: (state) => state.sapeur.liste,
@@ -271,20 +273,20 @@ export default {
       hasSaisieCommunePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
         ),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_PERSO
+          permissions.FICHE_TRAVAIL.SAISIE_PERSO,
         ) ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
         ),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.VALIDATION
+          permissions.FICHE_TRAVAIL.VALIDATION,
         ),
     }),
     filteredSapeurs() {
@@ -318,7 +320,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     select(row) {
       this.selectedId = row?.id;
     },

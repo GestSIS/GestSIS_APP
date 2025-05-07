@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalUser',
@@ -85,7 +86,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
@@ -96,7 +97,7 @@ export default {
     async save() {
       if (!this.user?.id) {
         return this.$awn.alert(
-          "Impossible d'ajouter un utilisateur pour le moment"
+          "Impossible d'ajouter un utilisateur pour le moment",
         );
       }
       this.$store

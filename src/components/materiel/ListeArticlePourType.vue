@@ -7,6 +7,7 @@ import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 const { id } = defineProps({
   id: {
@@ -83,8 +84,9 @@ const computedData = computed(() =>
   })),
 );
 
+const { showModal } = useModalStore();
 const retourMateriel = (materiel) => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalRetourUnique',
     data: materiel,
     callback: loadArticles,
@@ -92,7 +94,7 @@ const retourMateriel = (materiel) => {
 };
 
 const attribuerMateriel = (materiel) => {
-  store.commit('SHOW_MODAL', {
+  showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
     callback: loadArticles,

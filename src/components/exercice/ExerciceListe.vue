@@ -235,7 +235,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
@@ -313,7 +315,7 @@ export default {
         state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId)?.nom,
       annee: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId
+          (e) => e.id == state.exerciceComptable.activeId,
         )?.annee,
       sapeurs: (state) => state.sapeur.liste,
       exercices: (state) =>
@@ -321,7 +323,7 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
@@ -346,7 +348,7 @@ export default {
     },
     filteredExercicesCategories() {
       const ids = new Set(
-        this.exercices.map((i) => parseInt(i.exercice_categorie_id))
+        this.exercices.map((i) => parseInt(i.exercice_categorie_id)),
       );
       return this.categories.filter((t) => ids.has(t.id));
     },
@@ -367,7 +369,10 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     convoquer() {
       this.$store
         .dispatch('fetchConvocationParams')
@@ -376,7 +381,7 @@ export default {
     sms({ id }) {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
         );
         return;
       }
@@ -436,7 +441,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
           );
         });
     },
@@ -450,7 +455,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
           );
         });
     },

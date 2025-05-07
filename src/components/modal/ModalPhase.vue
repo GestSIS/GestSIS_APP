@@ -95,7 +95,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 
 export default {
@@ -136,7 +138,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     roundTime(time, minutesToRound) {
       let [hours, minutes] = time.split(':');
       hours = parseInt(hours);

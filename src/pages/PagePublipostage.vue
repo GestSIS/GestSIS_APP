@@ -65,7 +65,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import PublipostageService from '/src/services/PublipostageService.js';
 import store from '/src/store/index';
@@ -95,7 +96,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     publipostage() {
       PublipostageService.downloadExcel(this.sapeurIds);
     },

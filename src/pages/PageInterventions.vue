@@ -204,7 +204,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 import store from '/src/store/index';
 
@@ -216,7 +218,7 @@ async function loadData(routeTo, next) {
   const loadStatFederal = store.dispatch('fetchStatFederals');
   const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
   const loadInterventionTraitement = store.dispatch(
-    'fetchInterventionTraitements'
+    'fetchInterventionTraitements',
   );
 
   await store.dispatch('fetchExercicesComptables');
@@ -296,56 +298,56 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       interventions: (state) =>
         state.intervention.liste.sort((a, b) =>
-          b.date_debut.localeCompare(a.date_debut)
+          b.date_debut.localeCompare(a.date_debut),
         ),
       types: (state) => state.typeIntervention.liste,
       stats: (state) => state.statFederal.liste,
       traitements: (state) => state.interventionTraitement.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       hasValidationPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.VALIDATION
+          permissions.INTERVENTION.VALIDATION,
         ),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
     computedData() {
       return this.interventions.map((e) => ({
         ...e,
         type_intervention: this.types.find(
-          (c) => c.id == e.type_intervention_id
+          (c) => c.id == e.type_intervention_id,
         )?.designation,
         localite: this.localites.find((l) => l.id == e.localite_id)
           ?.designation,
         stat_federal: this.stats.find((l) => l.id == e.stat_federal_id)
           ?.designation,
         traitement: this.traitements.find(
-          (l) => l.id == e.intervention_traitement_id
+          (l) => l.id == e.intervention_traitement_id,
         )?.designation,
       }));
     },
     filteredInterventionsTypes() {
       const ids = new Set(
-        this.interventions.map((i) => parseInt(i.type_intervention_id))
+        this.interventions.map((i) => parseInt(i.type_intervention_id)),
       );
       return this.types.filter((t) => ids.has(t.id));
     },
     filteredLocalites() {
       const ids = new Set(
-        this.interventions.map((i) => parseInt(i.localite_id))
+        this.interventions.map((i) => parseInt(i.localite_id)),
       );
       return this.localites.filter((t) => ids.has(t.id));
     },
     filteredStatFederal() {
       const ids = new Set(
-        this.interventions.map((i) => parseInt(i.stat_federal_id))
+        this.interventions.map((i) => parseInt(i.stat_federal_id)),
       );
       return this.stats.filter((t) => ids.has(t.id));
     },
@@ -353,7 +355,7 @@ export default {
       return (
         this.selectedId &&
         this.interventions.filter(
-          (i) => i.id == this.selectedId && i.statut < 3
+          (i) => i.id == this.selectedId && i.statut < 3,
         ).length > 0
       );
     },
@@ -370,7 +372,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     select(row) {
       this.selectedId = row?.id;
     },
@@ -394,7 +396,7 @@ export default {
     },
     rapportIntervention() {
       const intervention = this.interventions.find(
-        (i) => i.id == this.selectedId
+        (i) => i.id == this.selectedId,
       );
       this.SHOW_MODAL({
         component: 'ModalRapportIntervention',
