@@ -6,6 +6,21 @@ import VueSelect from 'vue3-select-component';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
+const { label, emplacementIdToIgnore } = defineProps({
+  label: {
+    type: String,
+    default: () => '',
+  },
+  emplacementIdToIgnore: {
+    type: Number,
+    default: () => -1,
+  },
+  defaultValue: {
+    type: String,
+    default: () => '',
+  },
+});
+
 const model = defineModel();
 
 const couleurStore = useCouleurStore();
@@ -39,35 +54,43 @@ const emplacements = computed(() => {
           .join(' '),
       };
     })
-    .sort((a, b) => a.tri - b.tri);
+    .sort((a, b) => a.tri - b.tri)
+    .filter(
+      (c) =>
+        c.id !== emplacementIdToIgnore &&
+        !c.emplacements.includes(emplacementIdToIgnore),
+    );
 });
 </script>
 
 <template>
-  <VueSelect
-    v-model="model"
-    :options="emplacements"
-    placeholder="Sélectionnez un emplacement"
-  >
-    <template #value="{ option }">
-      <tag-couleur
-        v-for="id in option.emplacements"
-        :key="id"
-        :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-      >
-        {{ indexedEmplacements[id].designation }}
-      </tag-couleur>
-    </template>
-    <template #option="{ option }">
-      <tag-couleur
-        v-for="id in option.emplacements"
-        :key="id"
-        :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-      >
-        {{ indexedEmplacements[id].designation }}
-      </tag-couleur>
-    </template>
-  </VueSelect>
+  <div>
+    <label v-if="label">{{ label }}</label>
+    <VueSelect
+      v-model="model"
+      :options="emplacements"
+      placeholder="Sélectionnez un emplacement"
+    >
+      <template #value="{ option }">
+        <tag-couleur
+          v-for="id in option.emplacements"
+          :key="id"
+          :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+        >
+          {{ indexedEmplacements[id].designation }}
+        </tag-couleur>
+      </template>
+      <template #option="{ option }">
+        <tag-couleur
+          v-for="id in option.emplacements"
+          :key="id"
+          :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+        >
+          {{ indexedEmplacements[id].designation }}
+        </tag-couleur>
+      </template>
+    </VueSelect>
+  </div>
 </template>
 
 <style scoped>

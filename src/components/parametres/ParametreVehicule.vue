@@ -59,9 +59,8 @@ export default {
   data() {
     return {
       fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Actif', key: 'actif' },
-        { title: 'Désignation', key: 'designation' },
+        { title: 'Actif', key: 'statut', type: Boolean },
+        { title: 'Désignation', key: 'remarque' },
         { title: 'Prix de forfait', key: 'forfait' },
         { title: "Prix de l'unité", key: 'unite' },
         { title: "Type d'unité", key: 'type_unite' },

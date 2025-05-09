@@ -57,8 +57,13 @@ const save = async () => {
         label="Catégorie parente"
         v-model="activeItem.parent_id"
         :categorie-id-to-ignore="activeItem.id"
+        class="mb-3"
       />
-      <select-couleur label="Couleur" v-model="activeItem.couleur_id" />
+      <select-couleur
+        label="Couleur"
+        v-model="activeItem.couleur_id"
+        class="mb-3"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">

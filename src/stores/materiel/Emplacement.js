@@ -12,18 +12,18 @@ export const useEmplacementStore = defineStore('emplacement', {
       );
     },
     addEmplacement(emplacement) {
-      return EmplacementService.create(emplacement).then((data) =>
+      return EmplacementService.addEmplacement(emplacement).then((data) =>
         this.liste.push(data)
       );
     },
     updateEmplacement(emplacement) {
-      return EmplacementService.update(emplacement).then(
+      return EmplacementService.updateEmplacement(emplacement).then(
         (data) =>
           (this.liste = this.liste.map((e) => (e.id === data.id ? data : e)))
       );
     },
     removeEmplacement(emplacementId) {
-      return EmplacementService.remove(emplacementId).then(() => {
+      return EmplacementService.removeEmplacement(emplacementId).then(() => {
         this.liste = this.liste.filter((e) => e.id !== emplacementId);
       });
     },

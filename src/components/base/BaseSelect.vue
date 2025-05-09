@@ -1,6 +1,4 @@
 <script setup>
-import { useModel } from 'vue';
-
 const {
   label,
   selectClass,
@@ -44,7 +42,7 @@ const {
     default: null,
   },
 });
-const model = useModel();
+const model = defineModel();
 
 const focus = () => {
   this.$refs.input.focus();

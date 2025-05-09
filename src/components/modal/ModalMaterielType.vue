@@ -1,9 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { groupedByData } from '../../tools';
+import { ref } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useModalStore } from '../../stores/common/Modal.js';
+import SelectCategorie from '../materiel/SelectCategorie.vue';
 
 const { data } = defineProps({
   data: {
@@ -16,37 +15,6 @@ const errors = ref({});
 const activeItem = ref({ ...data });
 
 const typeStore = useMaterielTypeStore();
-const categorieStore = useMaterielCategorieStore();
-const categories = computed(() =>
-  categorieStore.liste.sort((a, b) => a.designation - b.designation),
-);
-const indexedCategories = computed(() =>
-  groupedByData(categorieStore.liste, 'parent_id'),
-);
-
-const computedCategories = computed(() => {
-  let data = [];
-
-  const recursive = (categories, prefix) => {
-    categories.forEach((c) => {
-      data.push({
-        ...c,
-        fullDesignation: prefix + c.designation,
-      });
-      if (indexedCategories.value[c.id])
-        recursive(
-          indexedCategories.value[c.id],
-          prefix + c.designation + ' > ',
-        );
-    });
-  };
-
-  recursive(
-    categories.value.filter((c) => !c.parent_id),
-    '',
-  );
-  return data;
-});
 
 const { closeModal } = useModalStore();
 const save = async () => {
@@ -56,7 +24,7 @@ const save = async () => {
     .then(closeModal)
     .catch(
       (errors) =>
-        (this.errors = {
+        (errors.value = {
           ...errors,
         }),
     );
@@ -82,17 +50,80 @@ const save = async () => {
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <base-select
+      <select-categorie
         v-model="activeItem.materiel_categorie_id"
-        class="mb-3"
         :class="{ 'is-invalid': errors['materiel_categorie_id'] }"
         label="Catégorie"
-        display-key="fullDesignation"
-        :options="computedCategories"
+        class="mb-3"
       />
+      <base-checkbox
+        v-model="activeItem.est_attribuable"
+        class="mb-3"
+        label="Est attribuable"
+      />
+      <base-checkbox
+        v-model="activeItem.est_taillee"
+        class="mb-3"
+        label="Possède une taille"
+      />
+      <base-checkbox
+        v-model="activeItem.est_numerote"
+        class="mb-3"
+        label="Est numéroté"
+      />
+      <div v-if="activeItem.est_numerote" class="mb-3">
+        <label for="designation">Préfix (numérotation)</label>
+        <input
+          id="prefix"
+          v-model="activeItem.prefix"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['prefix'] }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="designation">Fournisseur</label>
+        <input
+          id="fournisseur"
+          v-model="activeItem.fournisseur"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['fournisseur'] }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="prix">Prix</label>
+        <input
+          id="prix"
+          v-model="activeItem.prix"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['prix'] }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="reparateur">Réparateur</label>
+        <input
+          id="reparateur"
+          v-model="activeItem.reparateur"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['reparateur'] }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="remarque">Remarque</label>
+        <input
+          id="remarque"
+          v-model="activeItem.remarque"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['remarque'] }"
+        />
+      </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save">

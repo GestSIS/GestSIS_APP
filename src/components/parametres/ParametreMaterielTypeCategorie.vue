@@ -1,11 +1,12 @@
 <script setup>
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
+import useConfirmation from '../../hooks/useConfirmation';
 
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();
@@ -30,8 +31,6 @@ const indexedTypes = computed(() =>
 const indexedCategories = computed(() =>
   groupedByData(categorieStore.liste, 'parent_id'),
 );
-
-const selectedId = ref(null);
 
 const computedData = computed(() => {
   let data = [];
@@ -68,50 +67,38 @@ const computedData = computed(() => {
   return data;
 });
 
-const modalStore = useModalStore();
-
 const { showModal } = useModalStore();
+const { confirm } = useConfirmation();
 
-const select = (item) => {
-  selectedId.value = item?.globalId;
-};
-const ajoutCategorie = () => {
+const ajoutCategorie = () =>
   showModal({ component: 'ModalMaterielCategorie', data: {} });
-};
-const ajoutType = () => {
-  showModal({ component: 'ModalMaterielType', data: {} });
-};
-const update = (elem) => {
+const ajoutType = () => showModal({ component: 'ModalMaterielType', data: {} });
+const update = (elem) =>
   showModal({
     component:
       elem.type == 'type' ? 'ModalMaterielType' : 'ModalMaterielCategorie',
     data: { ...elem },
   });
-};
+
 const remove = (elem) => {
   const designation = elem.type == 'type' ? 'ce type' : 'cette catégorie';
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: `Voulez-vous vraiment supprimer ${designation} ?`,
-      question: 'Attention, la suppression de cet élément est irréversible !',
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        (elem.type === 'type'
-          ? typeStore.removeMatPersoType
-          : categorieStore.removeMaterielCategorie)(elem.id).catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-        couleurStore
-          .removeCouleur(elem.id)
-          .catch((error) =>
-            awn.alert(error.message ?? 'Impossible de supprimer cette couleur'),
-          );
-      }
-    },
-  });
+  confirm(
+    `Voulez-vous vraiment supprimer ${designation} ?`,
+    'Attention, la suppression de cet élément est irréversible !',
+  ).then(() =>
+    (elem.type === 'type'
+      ? typeStore.removeMaterielType
+      : categorieStore.removeMaterielCategorie)(elem.id).catch((res) =>
+      this.$awn.alert(res.message || 'Erreur lors de la suppression'),
+    ),
+  );
 };
+
+const fields = [
+  { title: 'Designation', slot: 'type' },
+  { title: 'Couleur', slot: 'couleur' },
+  { title: 'Actions', slot: 'actions' },
+];
 </script>
 
 <template>
@@ -134,69 +121,57 @@ const remove = (elem) => {
         Ajouter un type de matériel
       </button>
     </div>
+
     <div class="card-body table-responsive p-0">
-      <table class="table table-sm table-hover">
-        <thead>
-          <tr>
-            <th>Designation</th>
-            <th>Couleur</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="computedData.length <= 0">
-            <td colspan="3">Aucune catégorie</td>
-          </tr>
-          <tr
-            v-for="item in computedData"
-            :key="item.globalId"
-            :class="{
-              'table-primary': item.globalId === selectedId,
-            }"
-            @click="select(item)"
+      <base-table
+        :selectable="true"
+        select-key="globalId"
+        :data="computedData"
+        :fields="fields"
+        no-data="Aucune catégorie"
+      >
+        <template #type="{ rowData }">
+          <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
+            <font-awesome-icon
+              v-if="rowData.type === 'type'"
+              class="me-2"
+              :icon="['fas', rowData.tag]"
+            />
+            <tag-couleur
+              class="ms-2"
+              v-if="rowData.type === 'categorie'"
+              :couleur="indexedCouleurs[rowData.couleur_id]"
+            >
+              {{ rowData.designation }}
+            </tag-couleur>
+            <template v-else>{{ rowData.designation }}</template>
+          </div>
+        </template>
+        <template #couleur="{ rowData }">
+          <template v-if="rowData.type === 'categorie'">
+            <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
+              A
+            </tag-couleur>
+            {{ indexedCouleurs[rowData.couleur_id]?.nom }}
+          </template>
+        </template>
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="update(rowData)"
           >
-            <td :style="{ 'padding-left': item.level * 25 + 'px' }">
-              <font-awesome-icon
-                v-if="item.type === 'type'"
-                class="me-2"
-                :icon="['fas', item.tag]"
-              />
-              <tag-couleur
-                class="ms-2"
-                v-if="item.type === 'categorie'"
-                :couleur="indexedCouleurs[item.couleur_id]"
-              >
-                {{ item.designation }}
-              </tag-couleur>
-              <template v-else>{{ item.designation }}</template>
-            </td>
-            <td>
-              <template v-if="item.type === 'categorie'">
-                <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
-                  A
-                </tag-couleur>
-                {{ indexedCouleurs[item.couleur_id]?.nom }}
-              </template>
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="update(item)"
-              >
-                <font-awesome-icon :icon="['far', 'edit']" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="remove(item)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="remove(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>

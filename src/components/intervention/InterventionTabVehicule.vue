@@ -58,8 +58,8 @@ export default {
           (v) =>
             v.statut === 1 ||
             state.intervention.active.vehicules.find(
-              (vi) => vi.vehicule_id === v.id
-            )
+              (vi) => vi.vehicule_id === v.id,
+            ),
         ),
       interventionVehicules: (state) => state.intervention.active.vehicules,
       activeInterventionId: (state) => state.intervention.active.id,
@@ -67,7 +67,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
   },
@@ -96,7 +96,7 @@ export default {
       const svm = this;
 
       value.forEach(
-        (v) => (svm.selected = { ...svm.selected, [v.vehicule_id]: true })
+        (v) => (svm.selected = { ...svm.selected, [v.vehicule_id]: true }),
       );
     },
   },

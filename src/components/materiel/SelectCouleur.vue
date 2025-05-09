@@ -24,7 +24,7 @@ const couleurs = computed(() =>
 </script>
 
 <template>
-  <div class="mb-3">
+  <div>
     <label v-if="label">{{ label }}</label>
     <VueSelect
       v-model="model"

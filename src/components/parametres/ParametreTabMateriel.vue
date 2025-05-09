@@ -1,3 +1,12 @@
+<script setup>
+import ParametreMaterielTypeCategorie from './ParametreMaterielTypeCategorie.vue';
+import ParametreMaterielCouleur from './ParametreMaterielCouleur.vue';
+import ParametreMaterielEmplacement from './ParametreMaterielEmplacement.vue';
+import { ref } from 'vue';
+
+const tab = ref('categorie');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -28,6 +37,15 @@
           >
             Couleurs
           </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'emplacement' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'emplacement'"
+          >
+            Emplacements
+          </a>
         </nav>
       </div>
     </div>
@@ -35,26 +53,11 @@
       <suspense>
         <parametre-materiel-type-categorie v-if="tab === 'categorie'" />
         <parametre-materiel-couleur v-else-if="tab === 'couleur'" />
+        <parametre-materiel-emplacement v-else-if="tab === 'emplacement'" />
         <template #fallback>Chargement...</template>
       </suspense>
     </div>
   </div>
 </template>
-
-<script>
-import ParametreMaterielTypeCategorie from './ParametreMaterielTypeCategorie.vue';
-import ParametreMaterielCouleur from './ParametreMaterielCouleur.vue';
-
-export default {
-  name: 'ParametreTabMaterielPersonnel',
-  components: {
-    ParametreMaterielTypeCategorie,
-    ParametreMaterielCouleur,
-  },
-  data() {
-    return { tab: 'categorie' };
-  },
-};
-</script>
 
 <style scoped></style>

@@ -60,7 +60,7 @@ export default {
     return {
       fields: [
         { title: 'Tri', key: 'tri' },
-        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Actif', key: 'statut', type: Boolean },
         { title: 'Désignation', key: 'designation' },
         { title: 'Prix de forfait', key: 'forfait' },
         { title: "Prix de l'unité", key: 'unite' },

@@ -15,13 +15,13 @@ const emplacements = computed(() => emplacementStore.liste);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const emplacementsGroupedByParent = computed(() =>
-  groupedByData(emplacements.value, 'parent_id')
+  groupedByData(emplacements.value, 'parent_id'),
 );
 
 const computedData = computed(() => {
   const recursive = (parent_id, level = 0) => {
     return [...(emplacementsGroupedByParent.value[parent_id] ?? [])].flatMap(
-      (elem) => [{ ...elem, level }, ...recursive(elem.id, level + 1)]
+      (elem) => [{ ...elem, level }, ...recursive(elem.id, level + 1)],
     );
   };
 
