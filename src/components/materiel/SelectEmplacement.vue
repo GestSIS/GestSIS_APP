@@ -6,7 +6,7 @@ import VueSelect from 'vue3-select-component';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
-const { label, emplacementIdToIgnore } = defineProps({
+const { label, emplacementIdToIgnore, emplacementRacine } = defineProps({
   label: {
     type: String,
     default: () => '',
@@ -15,9 +15,9 @@ const { label, emplacementIdToIgnore } = defineProps({
     type: Number,
     default: () => -1,
   },
-  defaultValue: {
-    type: String,
-    default: () => '',
+  emplacementRacine: {
+    type: Boolean,
+    default: () => false,
   },
 });
 
@@ -32,7 +32,10 @@ await Promise.all([
 ]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
-const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+const indexedCouleurs = computed(() => ({
+  ...indexedData(couleurStore.liste),
+  racine: { text: 'black', fond: 'white' },
+}));
 const emplacements = computed(() => {
   const recursive = (id) => {
     return [
@@ -42,24 +45,29 @@ const emplacements = computed(() => {
       id,
     ];
   };
-  return emplacementStore.liste
-    .map((e) => {
-      const ids = recursive(e.id);
-      return {
-        ...e,
-        value: e.id,
-        emplacements: ids,
-        label: ids
-          .map((id) => indexedEmplacements.value[id].designation)
-          .join(' '),
-      };
-    })
-    .sort((a, b) => a.tri - b.tri)
-    .filter(
-      (c) =>
-        c.id !== emplacementIdToIgnore &&
-        !c.emplacements.includes(emplacementIdToIgnore),
-    );
+  return [
+    ...(emplacementRacine
+      ? [{ value: null, label: 'Sans parent', color_id: 'racine' }]
+      : []),
+    ...emplacementStore.liste
+      .map((e) => {
+        const ids = recursive(e.id);
+        return {
+          ...e,
+          value: e.id,
+          emplacements: ids,
+          label: ids
+            .map((id) => indexedEmplacements.value[id].designation)
+            .join(' '),
+        };
+      })
+      .sort((a, b) => a.tri - b.tri)
+      .filter(
+        (c) =>
+          c.id !== emplacementIdToIgnore &&
+          !c.emplacements.includes(emplacementIdToIgnore),
+      ),
+  ];
 });
 </script>
 

@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement.js';
+import SelectEmplacement from '../materiel/SelectEmplacement.vue';
+import SelectCouleur from '../materiel/SelectCouleur.vue';
 
 const { data } = defineProps({
   data: {
     type: Object,
-    default: () => {},
+    default: () => ({}),
   },
 });
 
@@ -17,19 +18,17 @@ await emplacementStore.fetchEmplacements();
 const errors = ref({});
 const emplacement = ref({
   statut: 1,
+  est_etiquete: false,
   ...data,
   type_unite_id: data.type_unite_id ?? 0,
 });
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((emplacement.id || 0) === 0
+  ((emplacement.value.id || 0) === 0
     ? emplacementStore.addEmplacement
-    : emplacementStore.updateEmplacement)(emplacement)
-    .then(() => {
-      errors = {};
-      closeModal;
-    })
+    : emplacementStore.updateEmplacement)(emplacement.value)
+    .then(closeModal)
     .catch(
       (errors) =>
         (errors = {
@@ -58,10 +57,31 @@ const save = async () => {
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
+      <div class="mb-3">
+        <label for="remarque">Remarque</label>
+        <input
+          id="remarque"
+          v-model="emplacement.remarque"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['remarque'] }"
+        />
+      </div>
+      <base-checkbox
+        v-model="emplacement.est_etiquete"
+        label="Est etiqueté"
+        class="mb-3"
+      />
       <select-emplacement
         v-model="emplacement.parent_id"
         label="Emplacement parent"
-        :emplacementIdToIgnore="emplacement.id"
+        :emplacement-id-to-ignore="emplacement.id"
+        :emplacement-racine="true"
+        class="mb-3"
+      />
+      <select-couleur
+        v-model="emplacement.couleur_id"
+        label="Couleur"
         class="mb-3"
       />
     </div>
