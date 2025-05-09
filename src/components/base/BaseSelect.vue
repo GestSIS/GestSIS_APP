@@ -1,3 +1,56 @@
+<script setup>
+import { useModel } from 'vue';
+
+const {
+  label,
+  selectClass,
+  baseOption,
+  baseValue,
+  options,
+  formatter,
+  valueKey,
+  displayKey,
+} = defineProps({
+  label: {
+    type: String,
+    default: () => '',
+  },
+  selectClass: {
+    type: [String, Array, Object],
+    default: '',
+  },
+  baseOption: {
+    type: String,
+    default: '',
+  },
+  baseValue: {
+    type: [String, Number],
+    default: undefined,
+  },
+  options: {
+    type: Array,
+    required: true,
+  },
+  valueKey: {
+    type: String,
+    default: 'id',
+  },
+  displayKey: {
+    type: String,
+    default: 'designation',
+  },
+  formatter: {
+    type: Function,
+    default: null,
+  },
+});
+const model = useModel();
+
+const focus = () => {
+  this.$refs.input.focus();
+};
+</script>
+
 <template>
   <div>
     <label v-if="label" :for="label">{{ label }}</label>
@@ -15,72 +68,6 @@
     </select>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BaseSelect',
-  inheritsAttrs: false,
-  props: {
-    label: {
-      type: String,
-      default: () => '',
-    },
-    selectClass: {
-      type: [String, Array, Object],
-      default: '',
-    },
-    modelValue: {
-      type: [String, Number],
-      default: undefined,
-    },
-    baseOption: {
-      type: String,
-      default: '',
-    },
-    baseValue: {
-      type: [String, Number],
-      default: undefined,
-    },
-    options: {
-      type: Array,
-      required: true,
-    },
-    valueKey: {
-      type: String,
-      default: 'id',
-    },
-    displayKey: {
-      type: String,
-      default: 'designation',
-    },
-    formatter: {
-      type: Function,
-      default: null,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      model: this.modelValue,
-    };
-  },
-  watch: {
-    modelValue(newValue, oldValue) {
-      if (oldValue !== newValue) {
-        this.model = newValue;
-      }
-    },
-    model(currentValue) {
-      this.$emit('update:modelValue', currentValue);
-    },
-  },
-  methods: {
-    focus() {
-      this.$refs.input.focus();
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 select,
