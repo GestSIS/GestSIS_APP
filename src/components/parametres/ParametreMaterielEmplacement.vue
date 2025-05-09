@@ -61,6 +61,9 @@ const remove = (elem) => {
 
 const fields = [
   { title: 'Emplacement', slot: 'emplacement' },
+  { title: 'Remarque', key: 'remarque' },
+  { title: 'Est etiqueté', key: 'est_etiquete', type: Boolean },
+  { title: 'Couleur', slot: 'couleur' },
   { title: 'Actions', slot: 'actions' },
 ];
 </script>
@@ -81,6 +84,12 @@ const fields = [
               {{ rowData.designation }}
             </tag-couleur>
           </div>
+        </template>
+        <template #couleur="{ rowData }">
+          <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
+            A
+          </tag-couleur>
+          {{ indexedCouleurs[rowData.couleur_id]?.nom }}
         </template>
         <template #actions="{ rowData }">
           <button

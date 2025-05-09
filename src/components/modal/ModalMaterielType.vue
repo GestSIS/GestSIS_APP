@@ -12,7 +12,12 @@ const { data } = defineProps({
 });
 
 const errors = ref({});
-const activeItem = ref({ ...data });
+const activeItem = ref({
+  est_attribuable: false,
+  est_numerote: false,
+  est_taillee: false,
+  ...data,
+});
 
 const typeStore = useMaterielTypeStore();
 
