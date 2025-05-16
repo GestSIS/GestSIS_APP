@@ -30,7 +30,7 @@ export const useMesInfosStore = defineStore('mes-infos', {
     },
     fetchMonMateriel() {
       return MesInfosService.getMonMateriel().then((data) =>
-        this.materiel = data
+        this.materiels = data
       );
     },
     fetchMesCours() {
