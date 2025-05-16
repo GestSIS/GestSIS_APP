@@ -51,7 +51,7 @@ const piecesColonnes = [
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCategories = computed(() =>
-  indexedData(materielCategorieStore.liste),
+  indexedData(materielCategorieStore.liste)
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
@@ -68,9 +68,9 @@ const computedData = computed(() =>
           sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
         }))
         .sort((a1, a2) => a1.type.localeCompare(a2.type)),
-      'categorie_id',
-    ),
-  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
+      'categorie_id'
+    )
+  ).map(([key, values]) => ({ key, data: values, categorie_id: key }))
 );
 
 const { showModal } = useModalStore();
@@ -78,6 +78,7 @@ const retourMateriel = (materiel) => {
   showModal({
     component: 'ModalRetourUnique',
     data: materiel,
+    callback: loadArticles,
   });
 };
 

@@ -103,7 +103,7 @@ export default {
           ...m.materiel,
           ...m,
           materiel_type: state.matPersoType.liste.find(
-            (t) => t.id == m.materiel_type_id,
+            (t) => t.id == m.materiel_type_id
           )?.designation,
         })),
       hasEditPermission: (state) =>
@@ -161,7 +161,7 @@ export default {
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? 'Erreur impossible de supprimer ce matériel',
+                  err?.message ?? 'Erreur impossible de supprimer ce matériel'
                 );
               });
           }

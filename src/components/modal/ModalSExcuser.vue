@@ -1,3 +1,95 @@
+<script setup>
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { computed, inject, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal';
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+const awn = inject('awn');
+
+const errors = ref({});
+const excuses = ref(data.exercices);
+const excuse = data.exercices.find((e) => e.exercice_id === data.exerciceId);
+const activeExcuse = ref({
+  excuse_statut: 0,
+  justification: '',
+  justificatif_file: null,
+  remarque: excuse?.remarque ?? '',
+  exercice_id: excuse?.exercice_id ?? 0,
+  justification: excuse?.justification ?? 0,
+  excuse_type_id: excuse?.excuse_type_id ?? 0,
+});
+
+const excuseParams = computed(() => store.state.excuseParam.params);
+const excuseTypes = computed(() =>
+  store.state.excuseType.liste.filter((e) => e.statut == 1),
+);
+
+const activeExercice = computed(() =>
+  excuses.value.find((e) => e.exercice_id === activeExcuse.value.exercice_id),
+);
+
+const { closeModal } = useModalStore();
+const estDansLeDelai = (date) => {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  var delay = new Date(date);
+  delay.setDate(delay.getDate() + excuseParams.value.delai_excuse);
+  return now <= delay;
+};
+const estDejaExcuse = (exercice) => {
+  return !!exercice.excuse_type_id;
+};
+const estAnnule = (exercice) => {
+  return exercice.statut === 0;
+};
+const onFileChange = (event) => {
+  const files = event.target.files || event.dataTransfer.files;
+  if (!files.length) return;
+  activeExcuse.value.justificatif_file = files[0];
+};
+const validate = () => {
+  if (
+    !activeExcuse.value.exercice_id ||
+    estAnnule(activeExercice.value) ||
+    estDejaExcuse(activeExercice.value) ||
+    !estDansLeDelai(activeExercice.value?.date)
+  ) {
+    closeModal();
+    awn.warning('Excuse non-enregistrée');
+    return;
+  }
+
+  infosStore
+    .addMonExcuse(activeExcuse.value)
+    .then(() => {
+      awn.success('Excuse enregistrée');
+      closeModal();
+    })
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Erreur lors de la création de l'excuse");
+    });
+};
+const close = () => {
+  closeModal();
+  awn.warning('Excuse non enregistrée');
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -79,118 +171,4 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ModalSExcuser',
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      excuses: [],
-      activeExcuse: {
-        remarque: '',
-        exercice_id: 0,
-        excuse_type_id: null,
-        excuse_statut: 0,
-        justification: '',
-        justificatif_file: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      excuseParams: (state) => state.excuseParam.params,
-      excuseTypes: (state) =>
-        state.excuseType.liste.filter((e) => e.statut == 1),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
-    }),
-    activeExercice() {
-      return this.excuses.find(
-        (e) => e.exercice_id === this.activeExcuse.exercice_id,
-      );
-    },
-  },
-  mounted() {
-    const excuse = this.data.exercices.find(
-      (e) => e.exercice_id === this.data.exerciceId,
-    );
-    this.excuses = this.data.exercices;
-    this.activeExcuse = {
-      ...this.activeExcuse,
-      remarque: excuse?.remarque ?? '',
-      exercice_id: excuse?.exercice_id ?? 0,
-      justification: excuse?.justification ?? 0,
-      excuse_type_id: excuse?.excuse_type_id ?? 0,
-      justificatif_file: null,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    estDansLeDelai(date) {
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      var delay = new Date(date);
-      delay.setDate(delay.getDate() + this.excuseParams.delai_excuse);
-      return now <= delay;
-    },
-    estDejaExcuse(exercice) {
-      return !!exercice.excuse_type_id;
-    },
-    estAnnule(exercice) {
-      return exercice.statut === 0;
-    },
-    onFileChange(event) {
-      const files = event.target.files || event.dataTransfer.files;
-      if (!files.length) return;
-      this.activeExcuse.justificatif_file = files[0];
-    },
-    validate() {
-      if (
-        !this.activeExcuse.exercice_id ||
-        this.estAnnule(this.activeExercice) ||
-        this.estDejaExcuse(this.activeExercice) ||
-        !this.estDansLeDelai(this.activeExercice?.date)
-      ) {
-        this.HIDE_MODAL();
-        this.$awn.warning('Excuse non-enregistrée');
-        return;
-      }
-      this.$store
-        .dispatch('addMonExcuse', this.activeExcuse)
-        .then(() => {
-          this.$awn.success('Excuse enregistrée');
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.errors = err;
-          this.$awn.alert(
-            err?.message ?? "Erreur lors de la création de l'excuse",
-          );
-        });
-    },
-    close() {
-      this.HIDE_MODAL();
-      this.$awn.warning('Excuse non enregistrée');
-    },
-  },
-};
-</script>
-
 <style scoped></style>

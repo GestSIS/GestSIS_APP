@@ -77,11 +77,11 @@ export default {
           s.sapeur_id != payload.sapeur_id
             ? s
             : {
-                ...s,
-                heures: (s.heures ?? []).map((h) =>
-                  h.id == payload.id ? payload : h
-                ),
-              }
+              ...s,
+              heures: (s.heures ?? []).map((h) =>
+                h.id == payload.id ? payload : h
+              ),
+            }
         );
       }
     },
@@ -91,9 +91,9 @@ export default {
           s.sapeur_id != payload.sapeur_id
             ? s
             : {
-                ...s,
-                heures: (s.heures ?? []).filter((h) => h.id != payload.id),
-              }
+              ...s,
+              heures: (s.heures ?? []).filter((h) => h.id != payload.id),
+            }
         );
       }
     },
@@ -257,20 +257,6 @@ export default {
           return sapeur;
         }
       );
-    },
-    addMonExcuse({ commit }, excuse) {
-      return ExerciceService.createMonExcuse(excuse.exercice_id, excuse).then(
-        async (data) => {
-          await commit(types.UPDATE_EXERCICE_PRESENCE, data);
-          return data;
-        }
-      );
-    },
-    removeMonExcuse({ commit }, exercice) {
-      return ExerciceService.removeMonExcuse(exercice.id).then(async (data) => {
-        await commit(types.UPDATE_EXERCICE_PRESENCE, data);
-        return data;
-      });
     },
     removeExcuse({ commit }, presence) {
       return ExerciceService.removeExcuse(

@@ -213,10 +213,6 @@ export default {
       HIDE_MODAL: 'closeModal',
       UPDATE_MODAL_SIZE: 'resize',
     }),
-    ...mapActions(useModalStore, {
-      HIDE_MODAL: 'closeModal',
-      UPDATE_MODAL_SIZE: 'resize',
-    }),
     updateTarif(index, e) {
       this.activeIndemnite.fonctions[index].tarif = e.target.value;
     },

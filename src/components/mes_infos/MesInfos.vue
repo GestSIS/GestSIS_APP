@@ -1,3 +1,35 @@
+<script setup>
+import MesDonneesPerso from './MesDonneesPerso.vue';
+import MesDonneesBancaires from './MesDonneesBancaires.vue';
+import MesReferencesProfessionelles from './MesReferencesProfessionelles.vue';
+import MesTelephones from './MesTelephones.vue';
+
+import { computed, ref } from 'vue';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+
+await Promise.all([
+  infosStore.fetchMesInfos(),
+  store.dispatch('fetchLocalites'),
+  store.dispatch('fetchCivilites'),
+  store.dispatch('fetchTelephoneTypes'),
+  store.dispatch('fetchFonctions'),
+  store.dispatch('fetchGrades'),
+]);
+
+const hasEditPermission = ref(false);
+
+const sapeur = computed(() => infosStore.infos);
+const fonctions = computed(() => store.state.fonction.liste);
+const grades = computed(() => store.state.grade.liste);
+const estSapeur = computed(() => {
+  return sapeur.value.type == 0;
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
@@ -89,66 +121,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-import MesDonneesPerso from './MesDonneesPerso.vue';
-import MesDonneesBancaires from './MesDonneesBancaires.vue';
-import MesReferencesProfessionelles from './MesReferencesProfessionelles.vue';
-import MesTelephones from './MesTelephones.vue';
-
-async function loadData(routeTo, next) {
-  const loadMesInfos = store.dispatch('fetchMesInfos');
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadCivilites = store.dispatch('fetchCivilites');
-  const loadTelephoneTypes = store.dispatch('fetchTelephoneTypes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadGrades = store.dispatch('fetchGrades');
-
-  Promise.all([
-    loadMesInfos,
-    loadLocalites,
-    loadTelephoneTypes,
-    loadCivilites,
-    loadFonctions,
-    loadGrades,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesInfos',
-  components: {
-    MesDonneesPerso,
-    MesDonneesBancaires,
-    MesReferencesProfessionelles,
-    MesTelephones,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      hasEditPermission: false,
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeur: (state) => state.mesInfos.infos,
-      fonctions: (state) => state.fonction.liste,
-      grades: (state) => state.grade.liste,
-    }),
-    estSapeur() {
-      return this.sapeur.type == 0;
-    },
-  },
-};
-</script>
 
 <style scoped></style>

@@ -39,7 +39,7 @@ const save = async () =>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body overflow-visible">
-      <div class="mb">
+      <div class="mb-3">
         <label for="date">Date du retour</label>
         <input
           id="date"
@@ -49,7 +49,11 @@ const save = async () =>
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
-      <select-emplacement v-model="emplacement_id" />
+      <select-emplacement
+        label="Emplacement"
+        v-model="emplacement_id"
+        class="mb-3"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">

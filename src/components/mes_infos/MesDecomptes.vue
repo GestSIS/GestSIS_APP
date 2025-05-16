@@ -1,3 +1,124 @@
+<script setup>
+import { useModalStore } from '../../stores/common/Modal.js';
+import MesInfosService from '../../services/MesInfosService';
+import { useStore } from 'vuex';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import { computed, inject, watch } from 'vue';
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+
+const exerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+await store.dispatch('fetchExercicesComptables');
+await infosStore.fetchMesDecomptes(exerciceComptableId.value);
+
+const paiements = computed(() =>
+  infosStore.paiements
+    .map((e) => ({
+      ...e,
+    }))
+    .sort((e1, e2) => e1.date.localeCompare(e2.date)),
+);
+const exerciceComptable = computed(() =>
+  store.state.exerciceComptable.liste.find(
+    (e) => e.id == state.exerciceComptable.activeId,
+  ),
+);
+
+watch(exerciceComptableId, () =>
+  infosStore.fetchMesDecomptes(exerciceComptableId.value),
+);
+
+const { showModal, closeModal } = useModalStore();
+const awn = inject('awn');
+
+const downloadDecompte = (paiement) => {
+  const filename = `${paiement.date}_decompte.pdf`;
+
+  showModal({ component: 'ModalChargement' });
+  MesInfosService.printMonDecompte(paiement.decompte_id, filename)
+    .then(closeModal)
+    .catch((error) => {
+      awn.warning(
+        error?.message ?? 'Erreur lors de la génération de votre décompte',
+      );
+      closeModal();
+    });
+};
+
+const resumeAnnuel = () => {
+  if (paiements.value.length == 0) {
+    awn.alert(
+      'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
+    );
+    return;
+  }
+  if (Date.now() < new Date(exerciceComptable.value.fin)) {
+    awn.warning(
+      "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
+    );
+  }
+  const filename = `${exerciceComptable.value?.annee}_resume.pdf`;
+
+  showModal({ component: 'ModalChargement' });
+
+  MesInfosService.downloadMonResumeAnnuel(exerciceComptableId.value, filename)
+    .then(closeModal)
+    .catch((error) => {
+      awn.warning(
+        error?.message ?? 'Erreur lors de la génération de votre résumé annuel',
+      );
+      closeModal();
+    });
+};
+
+const certificatSalaire = () => {
+  if (paiements.value.length == 0) {
+    awn.alert(
+      'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
+    );
+    return;
+  }
+  if (Date.now() < new Date(exerciceComptable.value.fin)) {
+    awn.warning(
+      "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
+    );
+  }
+  const filename = `${exerciceComptable.value?.annee}_certificat_salaire.pdf`;
+
+  showModal({ component: 'ModalChargement' });
+
+  MesInfosService.downloadMonCertificatSalaire(
+    exerciceComptableId.value,
+    filename,
+  )
+    .then(closeModal)
+    .catch((error) => {
+      awn.warning(
+        error?.message ??
+          'Erreur lors de la génération de votre certificat de salaire',
+      );
+      closeModal();
+    });
+};
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Décompte', key: 'decompte' },
+  { title: 'Solde', key: 'solde' },
+  { title: 'Indemnité', key: 'indemnite' },
+  { title: 'Frais forfaitaires', key: 'frais_forfaitaire' },
+  { title: 'Frais effectifs', key: 'frais_effectif' },
+  { title: 'Retenue AVS/AC', key: 'avs_ac' },
+  { title: 'Autre', key: 'autre' },
+  { title: 'Total', key: 'total' },
+  { title: 'Actions', slot: 'actions', key: 'id' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -30,152 +151,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MesInfosService from '../../services/MesInfosService';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadMesDecomptes = store.dispatch('fetchMesDecomptes');
-
-  Promise.all([loadMesDecomptes]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesDecomptes',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Décompte', key: 'decompte' },
-        { title: 'Solde', key: 'solde' },
-        { title: 'Indemnité', key: 'indemnite' },
-        { title: 'Frais forfaitaires', key: 'frais_forfaitaire' },
-        { title: 'Frais effectifs', key: 'frais_effectif' },
-        { title: 'Retenue AVS/AC', key: 'avs_ac' },
-        { title: 'Autre', key: 'autre' },
-        { title: 'Total', key: 'total' },
-        { title: 'Actions', slot: 'actions', key: 'id' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      exerciceComptableId: (state) => state.exerciceComptable.activeId,
-      paiements: (state) =>
-        state.mesInfos.paiements
-          .map((e) => ({
-            ...e,
-          }))
-          .sort((e1, e2) => e1.date.localeCompare(e2.date)),
-      exerciceComptable: (state) =>
-        state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId,
-        ),
-    }),
-  },
-  watch: {
-    exerciceComptableId() {
-      this.$store.dispatch('fetchMesDecomptes');
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    downloadDecompte(paiement) {
-      const filename = `${paiement.date}_decompte.pdf`;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-      MesInfosService.printMonDecompte(paiement.decompte_id, filename)
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((error) => {
-          this.$awn.warning(
-            error?.message ?? 'Erreur lors de la génération de votre décompte',
-          );
-          this.HIDE_MODAL();
-        });
-    },
-    resumeAnnuel() {
-      if (this.paiements.length == 0) {
-        this.$awn.alert(
-          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
-        );
-        return;
-      }
-      if (Date.now() < new Date(this.exerciceComptable.fin)) {
-        this.$awn.warning(
-          "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
-        );
-      }
-      const filename = `${this.exerciceComptable?.annee}_resume.pdf`;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      MesInfosService.downloadMonResumeAnnuel(
-        this.exerciceComptableId,
-        filename,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((error) => {
-          this.$awn.warning(
-            error?.message ??
-              'Erreur lors de la génération de votre résumé annuel',
-          );
-          this.HIDE_MODAL();
-        });
-    },
-    certificatSalaire() {
-      if (this.paiements.length == 0) {
-        this.$awn.alert(
-          'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
-        );
-        return;
-      }
-      if (Date.now() < new Date(this.exerciceComptable.fin)) {
-        this.$awn.warning(
-          "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
-        );
-      }
-      const filename = `${this.exerciceComptable?.annee}_certificat_salaire.pdf`;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      MesInfosService.downloadMonCertificatSalaire(
-        this.exerciceComptableId,
-        filename,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((error) => {
-          this.$awn.warning(
-            error?.message ??
-              'Erreur lors de la génération de votre certificat de salaire',
-          );
-          this.HIDE_MODAL();
-        });
-    },
-  },
-};
-</script>
 
 <style scoped></style>

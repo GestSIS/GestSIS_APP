@@ -1,3 +1,63 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject, ref, watch } from 'vue';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import useConfirmation from '../../hooks/useConfirmation.js';
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+await store.dispatch('fetchExercicesComptables');
+
+await Promise.all([
+  infosStore.fetchMesAbsences(store.state.exerciceComptable.activeId),
+  store.dispatch('fetchAbsenceParams'),
+]);
+
+const activeItemId = ref(null);
+
+const absenceParams = computed(() => store.state.absenceParam.params);
+const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
+const absences = computed(() =>
+  infosStore.absences.sort((e1, e2) => e1.debut?.localeCompare(e2.debut)),
+);
+
+watch(anneeComptableId, () =>
+  infosStore.fetchMesAbsences(anneeComptableId.value),
+);
+
+const { showModal } = useModalStore();
+const { confirm } = useConfirmation();
+const awn = inject('awn');
+const addAbsence = () =>
+  showModal({
+    component: 'ModalSAbsenter',
+  });
+const modifierAbsence = (absence) =>
+  showModal({
+    component: 'ModalSAbsenter',
+    data: absence,
+  });
+const removeAbsence = (absence) =>
+  confirm(
+    'Voulez-vous vraiment supprimer votre absence ?',
+    "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+  ).then(() => {
+    infosStore
+      .removeMonAbsence(absence)
+      .then(() => awn.success('Absence supprimée avec succès'))
+      .catch((err) =>
+        awn.alert(err?.message ?? "Impossible de supprimer l'absence"),
+      );
+  });
+
+const fields = [
+  { title: 'Début', key: 'debut', type: Date },
+  { title: 'Fin', key: 'fin', type: Date },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -42,94 +102,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadMesAbsences = store.dispatch('fetchMesAbsences');
-  const loadAbsenceParams = store.dispatch('fetchAbsenceParams');
-
-  Promise.all([loadMesAbsences, loadAbsenceParams]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesAbsences',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      activeItemId: null,
-      fields: [
-        { title: 'Début', key: 'debut', type: Date },
-        { title: 'Fin', key: 'fin', type: Date },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      absenceParams: (state) => state.absenceParam.params,
-      anneeComptableId: (state) => state.exerciceComptable.activeId,
-      absences: (state) =>
-        state.mesInfos.absences.sort((e1, e2) =>
-          e1.debut?.localeCompare(e2.debut),
-        ),
-    }),
-  },
-  watch: {
-    anneeComptableId() {
-      this.$store.dispatch('fetchMesAbsences');
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    addAbsence() {
-      this.SHOW_MODAL({
-        component: 'ModalSAbsenter',
-      });
-    },
-    modifierAbsence(absence) {
-      this.SHOW_MODAL({
-        component: 'ModalSAbsenter',
-        data: absence,
-      });
-    },
-    removeAbsence(absence) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer votre absence ?',
-          question:
-            "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('removeMonAbsence', absence)
-              .then(() => this.$awn.success('Absence supprimée avec succès'))
-              .catch((err) =>
-                this.$awn.alert(
-                  err?.message ?? "Impossible de supprimer l'absence",
-                ),
-              );
-          }
-        },
-      });
-    },
-  },
-};
-</script>
 
 <style scoped></style>

@@ -8,7 +8,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
+        ref="table_types"
         :data="computedData"
         :fields="fields"
         no-data="Aucun travail type"
@@ -131,7 +131,7 @@ export default {
     },
   },
   mounted() {
-    this.$refs.table.showAllDetailRow();
+    // this.$refs.table_types.showAllDetailRow();
   },
   methods: {
     ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),

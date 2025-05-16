@@ -246,7 +246,9 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { mapGetters, mapState } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal';
 
 // TODO:
 // - Date anniversaire

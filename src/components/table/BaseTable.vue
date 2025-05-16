@@ -242,6 +242,15 @@ const toggleAllDetailRow = () => {
     ]),
   });
 };
+
+defineExpose({
+  toggleAllDetailRow,
+  toggleDetailRow,
+  hideAllDetailRow,
+  hideDetailRow,
+  showAllDetailRow,
+  showDetailRow,
+});
 </script>
 
 <template>
