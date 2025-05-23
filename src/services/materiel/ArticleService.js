@@ -4,6 +4,9 @@ export default {
   creerArticles(articles) {
     return Api.api().post(`articles`, { articles });
   },
+  supprimerArticles(articleIds) {
+    return Api.api().delete(`articles`, { data: { articleIds } });
+  },
   attribuerArticles(sapeurId, articles) {
     return Api.api().post(`sapeurs/${sapeurId}/articles`, articles);
   },

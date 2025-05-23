@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import VueSelect from 'vue3-select-component';

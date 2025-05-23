@@ -1,10 +1,3 @@
-<template>
-  <slot
-    name="default"
-    v-bind="{ setFilter, filters, filteredData, reset, canReset }"
-  ></slot>
-</template>
-
 <script setup>
 import { ref, computed, watch, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
@@ -42,8 +35,8 @@ const filteredData = computed(() => {
       })
       .reduce(
         (f, g) => (x) => f(x) && g(x),
-        () => true
-      )
+        () => true,
+      ),
   );
 });
 const canReset = computed(() => {
@@ -67,10 +60,10 @@ const setFilter = (key, value) => {
     JSON.stringify(
       Object.fromEntries(
         Object.entries(filters.value).filter(
-          ([, value]) => !types.has(typeof value) && value != null
-        )
-      )
-    )
+          ([, value]) => !types.has(typeof value) && value != null,
+        ),
+      ),
+    ),
   );
 };
 
@@ -81,5 +74,12 @@ const reset = () => {
 onBeforeMount(init);
 watch(sisKey, init);
 </script>
+
+<template>
+  <slot
+    name="default"
+    v-bind="{ setFilter, filters, filteredData, reset, canReset }"
+  ></slot>
+</template>
 
 <style lang="scss" scoped></style>

@@ -184,7 +184,7 @@ const selectMaterielTypeNumerote = (item, value) => {
             :options="
               articlesAttribuable
                 .filter((a) => a.materiel_type_id == item.materiel_type_id)
-                .map((a) => ({ ...v, value: a.id, label: a.designation }))
+                .map((a) => ({ ...a, value: a.id, label: a.designation }))
             "
             placeholder="Sélectionnez un emplacement"
           >

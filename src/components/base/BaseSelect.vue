@@ -1,4 +1,6 @@
 <script setup>
+import { useTemplateRef } from 'vue';
+
 const {
   label,
   selectClass,
@@ -43,10 +45,12 @@ const {
   },
 });
 const model = defineModel();
-
+const input = useTemplateRef('input');
 const focus = () => {
-  this.$refs.input.focus();
+  input.value.focus();
 };
+
+defineExpose({ focus });
 </script>
 
 <template>

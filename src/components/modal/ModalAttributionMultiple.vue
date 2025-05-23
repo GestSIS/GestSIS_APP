@@ -152,7 +152,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="close">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save">

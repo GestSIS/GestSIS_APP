@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useModalStore } from '../../stores/common/Modal';
 
 const { id } = defineProps({
   id: {
@@ -19,9 +20,12 @@ const materielType = computed(() =>
 
 const formatEmptyString = (str) => (str === '' ? '-' : str);
 
-const editMateriel = () => {
-  console.log('TODO: à implémenter');
-};
+const { showModal } = useModalStore();
+const editMateriel = () =>
+  showModal({
+    component: 'ModalMaterielType',
+    data: { ...materielType.value },
+  });
 </script>
 
 <template>
@@ -71,34 +75,28 @@ const editMateriel = () => {
             <input
               class="form-check-input"
               type="checkbox"
+              disabled
               :checked="materielType.est_taillee"
-              id="flexCheckDefault"
             />
-            <label class="form-check-label" for="flexCheckDefault">
-              Est taillé
-            </label>
+            <label class="form-check-label"> Est taillé </label>
           </div>
           <div class="form-check">
             <input
               class="form-check-input"
               type="checkbox"
+              disabled
               :checked="materielType.est_attribuable"
-              id="flexCheckDefault"
             />
-            <label class="form-check-label" for="flexCheckDefault">
-              Est attribuable
-            </label>
+            <label class="form-check-label"> Est attribuable </label>
           </div>
           <div class="form-check">
             <input
               class="form-check-input"
               type="checkbox"
+              disabled
               :checked="materielType.est_numerote"
-              id="flexCheckDefault"
             />
-            <label class="form-check-label" for="flexCheckDefault">
-              Est numéroté
-            </label>
+            <label class="form-check-label"> Est numéroté </label>
           </div>
           <div class="row">
             <div class="col-3">
@@ -126,4 +124,8 @@ const editMateriel = () => {
   </div>
 </template>
 
-<style></style>
+<style scoped>
+.form-check-input ~ .form-check-label {
+  opacity: 1;
+}
+</style>

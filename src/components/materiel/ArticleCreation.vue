@@ -45,15 +45,12 @@ const addEmptyLine = () => {
     achat: null,
     taille: null,
     remarque: null,
+    quantite: 1,
   });
 
   nextTick(() => {
     articleReference.value[articleReference.value.length - 1].focus();
   });
-};
-
-const save = () => {
-  console.log('Save is forwarded');
 };
 </script>
 
@@ -61,8 +58,9 @@ const save = () => {
   <table class="table table-sm">
     <thead>
       <tr>
-        <th class="col-4">Matériel type</th>
+        <th class="col-3">Matériel type</th>
         <th class="col-2">Numéro</th>
+        <th class="col-1">Quantité</th>
         <th class="col-1">Est etiqueté</th>
         <th class="col-1">Taille</th>
         <th class="col-1">Achat</th>
@@ -99,6 +97,20 @@ const save = () => {
             v-else
             class="ms-4"
             v-tooltip.bottom="'Matériel non numéroté'"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td>
+          <input
+            v-if="!indexedTypes[item.materiel_type_id]?.est_numerote"
+            v-model="item.quantite"
+            class="form-control form-control-sm"
+            type="text"
+          />
+          <font-awesome-icon
+            v-else
+            class="ms-4"
+            v-tooltip.bottom="'Matériel unique'"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -151,7 +163,7 @@ const save = () => {
         </td>
       </tr>
       <tr>
-        <td colspan="7">
+        <td colspan="8">
           <button class="btn btn-outline-primary" @click="addEmptyLine">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>

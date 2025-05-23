@@ -8,6 +8,7 @@ import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
+import useConfirmation from '../../hooks/useConfirmation';
 
 const { id } = defineProps({
   id: {
@@ -100,6 +101,15 @@ const attribuerMateriel = (materiel) => {
     callback: loadArticles,
   });
 };
+
+const { confirm } = useConfirmation();
+const supprimer = (article) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cert article ?',
+    "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+  )
+    .then(() => ArticleService.supprimerArticles([article.id]))
+    .then(loadArticles);
 </script>
 
 <template>
@@ -151,6 +161,13 @@ const attribuerMateriel = (materiel) => {
             @click="attribuerMateriel(rowData)"
           >
             <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+          </button>
+          <button
+            title="Supprimer"
+            class="btn btn-outline-danger border-0"
+            @click="supprimer(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>
       </base-table>
