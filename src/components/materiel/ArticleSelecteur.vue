@@ -101,7 +101,7 @@ const selectMaterielTypeNumerote = (item, value) => {
 </script>
 
 <template>
-  <table class="table table-sm">
+  <table class="table table-sm overflow-visible">
     <thead>
       <tr>
         <th class="col-4">Matériel type</th>
@@ -120,7 +120,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         </td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else class="overflow-visible">
       <tr v-for="(item, index) in selectedArticles" :key="index">
         <td>
           <base-select

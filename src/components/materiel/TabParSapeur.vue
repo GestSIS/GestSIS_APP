@@ -13,13 +13,10 @@ const { id } = defineProps({
 <template>
   <div class="row">
     <div class="col-3">
-      <div class="card">
-        <div class="card-header">TODO: Ajout filtre</div>
-        <suspense>
-          <navigation-par-sapeur />
-          <template #fallback>Chargement...</template>
-        </suspense>
-      </div>
+      <suspense>
+        <navigation-par-sapeur />
+        <template #fallback>Chargement...</template>
+      </suspense>
     </div>
     <div class="col-9">
       <suspense v-if="parseInt(id) > 0">

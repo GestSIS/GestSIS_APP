@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const { id } = defineProps({
@@ -12,36 +12,57 @@ const { id } = defineProps({
 const store = useStore();
 store.dispatch('fetchListeSapeur');
 
+const filtre = ref('');
+
 const sapeurs = computed(() =>
-  store.state['sapeur'].liste.filter((s) => s.actif)
+  store.state['sapeur'].liste
+    .filter((s) => s.actif)
+    .filter((s) =>
+      s.nom_prenom.toLowerCase().includes(filtre.value.toLowerCase().trim(' ')),
+    ),
 );
 </script>
 
 <template>
-  <ul class="list-group list-group-flush">
-    <li v-if="sapeurs.length === 0" class="list-group-item pt-1 pb-1">
-      <td class="border-bottom-0">Aucun sapeur</td>
-    </li>
-    <router-link
-      v-for="item in sapeurs"
-      :key="item.id"
-      v-slot="{ navigate, isExactActive }"
-      custom
-      :to="{
-        name: 'materiel-par-sapeur-details',
-        params: { id: item.id },
-      }"
-    >
-      <a
-        class="nav-link list-group-item list-group-item-action pt-1 pb-1"
-        href="#"
-        role="link"
-        :class="{ active: isExactActive }"
-        @click="navigate"
-        >{{ item.nom_prenom }}
-      </a>
-    </router-link>
-  </ul>
+  <div class="input-group mb-2">
+    <input
+      type="text"
+      v-model="filtre"
+      class="form-control form-control-sm"
+      placeholder="Chercher..."
+      aria-label="Chercher..."
+      aria-describedby="filtre emplacement"
+    />
+    <span class="input-group-text" id="basic-addon1">
+      <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+    </span>
+  </div>
+  <div class="card">
+    <ul class="list-group list-group-flush">
+      <li v-if="sapeurs.length === 0" class="list-group-item pt-1 pb-1">
+        <td class="border-bottom-0">Aucun sapeur</td>
+      </li>
+      <router-link
+        v-for="item in sapeurs"
+        :key="item.id"
+        v-slot="{ navigate, isExactActive }"
+        custom
+        :to="{
+          name: 'materiel-par-sapeur-details',
+          params: { id: item.id },
+        }"
+      >
+        <a
+          class="nav-link list-group-item list-group-item-action pt-1 pb-1"
+          href="#"
+          role="link"
+          :class="{ active: isExactActive }"
+          @click="navigate"
+          >{{ item.nom_prenom }}
+        </a>
+      </router-link>
+    </ul>
+  </div>
 </template>
 
 <style scoped></style>

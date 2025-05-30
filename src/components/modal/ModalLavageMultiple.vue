@@ -54,12 +54,12 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="overflow-visible">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Ajouter des lavages</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body overflow-visible">
       <div class="row">
         <div class="col-6 mb-3">
           <label for="date">Date attribution</label>

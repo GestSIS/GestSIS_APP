@@ -56,6 +56,7 @@ import {
   faCommentSms,
   faIdCardClip,
   faKey,
+  faMagnifyingGlass
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire } from '@fortawesome/free-brands-svg-icons';
@@ -78,6 +79,7 @@ import {
 
 library.add(
   faKey,
+  faMagnifyingGlass,
   faBuildingColumns,
   faIdCardClip,
   faCommentSms,
