@@ -31,12 +31,20 @@
               texte: 'Par sapeur',
               exact: false,
             },
+            {
+              to: { name: 'materiel-lavages' },
+              texte: 'Lavages',
+              exact: false,
+            },
             // { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
           ]"
         />
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
-            <router-view />
+            <Suspense>
+              <router-view />
+              <template #fallback>Chargement...</template>
+            </Suspense>
           </div>
         </div>
       </div>

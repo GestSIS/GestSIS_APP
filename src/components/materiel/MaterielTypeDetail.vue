@@ -78,7 +78,7 @@ const editMateriel = () =>
               disabled
               :checked="materielType.est_taillee"
             />
-            <label class="form-check-label"> Est taillé </label>
+            <label class="form-check-label">Est taillé</label>
           </div>
           <div class="form-check">
             <input
@@ -87,7 +87,16 @@ const editMateriel = () =>
               disabled
               :checked="materielType.est_attribuable"
             />
-            <label class="form-check-label"> Est attribuable </label>
+            <label class="form-check-label">Est attribuable</label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              disabled
+              :checked="materielType.est_lavable"
+            />
+            <label class="form-check-label">Suivi des lavages</label>
           </div>
           <div class="form-check">
             <input
@@ -96,7 +105,7 @@ const editMateriel = () =>
               disabled
               :checked="materielType.est_numerote"
             />
-            <label class="form-check-label"> Est numéroté </label>
+            <label class="form-check-label">Est numéroté</label>
           </div>
           <div class="row">
             <div class="col-3">

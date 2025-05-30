@@ -645,6 +645,13 @@ const router = createRouter({
             },
           ],
         },
+        {
+          path: 'lavages',
+          name: 'materiel-lavages',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          component: () =>
+            import('/src/components/materiel/TabLavages.vue'),
+        },
         //   {
         //     path: 'inventaire',
         //     name: 'mat-perso-inventaire',

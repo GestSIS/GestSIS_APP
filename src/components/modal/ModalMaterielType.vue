@@ -16,6 +16,7 @@ const activeItem = ref({
   est_attribuable: false,
   est_numerote: false,
   est_taillee: false,
+  est_lavable: false,
   ...data,
 });
 
@@ -70,6 +71,11 @@ const save = async () => {
         v-model="activeItem.est_taillee"
         class="mb-3"
         label="Possède une taille"
+      />
+      <base-checkbox
+        v-model="activeItem.est_lavable"
+        class="mb-3"
+        label="Suivi des lavages"
       />
       <base-checkbox
         v-model="activeItem.est_numerote"

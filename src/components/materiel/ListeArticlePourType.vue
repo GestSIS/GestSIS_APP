@@ -36,8 +36,8 @@ await Promise.all([
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
   store.dispatch('fetchListeSapeur'),
-  Promise.resolve(await loadArticles()),
 ]);
+loadArticles();
 
 watch(() => id, loadArticles);
 
@@ -46,7 +46,7 @@ const materielType = computed(() =>
 );
 
 // Partie pièces
-const piecesColonnes = [
+const piecesColonnes = computed(() => [
   ...(materielType.value.est_numerote
     ? [{ title: 'Numéro', key: 'numero' }]
     : []),
@@ -54,13 +54,16 @@ const piecesColonnes = [
   ...(materielType.value.est_taillee
     ? [{ title: 'Taille', key: 'taille' }]
     : []),
+  ...(materielType.value.est_lavable
+    ? [{ title: 'Lavages', slot: 'lavages' }]
+    : []),
   { title: 'Compartiment', key: 'compartiment' },
   // { title: 'Inventaire', key: 'inventaire' },
   // { title: 'Maintenance', key: 'maintenance' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Ajouté', key: 'created_at', type: 'date' },
   { title: 'Actions', key: 'id', slot: 'actions' },
-];
+]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
@@ -86,26 +89,31 @@ const computedData = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const retourMateriel = (materiel) => {
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalMateriel',
+    data: materiel,
+    callback: loadArticles,
+  });
+
+const retourMateriel = (materiel) =>
   showModal({
     component: 'ModalRetourUnique',
     data: materiel,
     callback: loadArticles,
   });
-};
 
-const attribuerMateriel = (materiel) => {
+const attribuerMateriel = (materiel) =>
   showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
     callback: loadArticles,
   });
-};
 
 const { confirm } = useConfirmation();
 const supprimer = (article) =>
   confirm(
-    'Voulez-vous vraiment supprimer cert article ?',
+    'Voulez-vous vraiment supprimer cet article ?',
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
@@ -119,6 +127,7 @@ const supprimer = (article) =>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
@@ -138,14 +147,26 @@ const supprimer = (article) =>
           </div>
         </template>
 
+        <template #lavages="{ rowData }">
+          <div
+            class="badge"
+            :class="{
+              'bg-danger': rowData.lavages.length >= 10,
+              'bg-secondary': rowData.lavages.length < 10,
+            }"
+          >
+            {{ rowData.lavages.length }}
+          </div>
+        </template>
+
         <template #actions="{ rowData }">
-          <!-- <button
+          <button
             title="Infos"
-            class="btn btn-outline-primary border-0"
+            class="btn btn-outline-secondary border-0"
             @click="infoMateriel(rowData)"
           >
-            <font-awesome-icon :icon="['fas', 'info']" />
-          </button> -->
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
           <button
             v-if="materielType.est_attribuable && rowData.sapeur_id !== null"
             title="Attribuer"

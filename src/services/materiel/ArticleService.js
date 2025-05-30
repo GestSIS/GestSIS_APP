@@ -25,4 +25,7 @@ export default {
   getAttribuable() {
     return Api.api().get(`articles?attribuable=true`);
   },
+  getLavable() {
+    return Api.api().get(`articles?lavable=true`);
+  },
 };

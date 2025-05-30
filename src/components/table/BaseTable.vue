@@ -34,11 +34,10 @@ const {
     type: Object,
     default: () => {},
   },
-  // loading: {
-  //   // TODO: à implémenter
-  //   type: Boolean,
-  //   default: () => {},
-  // },
+  loading: {
+    type: Boolean,
+    default: () => {},
+  },
 
   noData: {
     type: String,
@@ -305,7 +304,19 @@ defineExpose({
         </tr>
       </thead>
     </slot>
+    <tbody v-show="loading">
+      <tr>
+        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">
+          <div class="d-flex justify-content-center m-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
     <tbody
+      v-show="!loading"
       v-for="groupe in groupedData.length === 0
         ? [{ key: 'default', data: sortedData }]
         : groupedData"
@@ -448,7 +459,7 @@ defineExpose({
         </tr>
       </template>
     </tbody>
-    <tfoot>
+    <tfoot v-show="!loading">
       <slot name="foot" v-bind="{ data }"></slot>
       <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
         <button class="btn" title="Export CSV" @click="toCvs">

@@ -31,10 +31,13 @@ const errors = ref({});
 const depuisInventaire = ref(true);
 const activeAttribution = ref({
   date: new Date().toISOString().slice(0, 10),
+  quantite: 1,
   sapeur_id: data?.sapeurId ?? null,
   articlesDepuisInventaire: [],
   articlesHorsInventaire: [],
 });
+
+const articlesAttribuable = ref(await ArticleService.getAttribuable());
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
@@ -143,6 +146,7 @@ const save = async () => {
           <article-selecteur
             v-show="depuisInventaire"
             v-model="activeAttribution.articlesDepuisInventaire"
+            :articles="articlesAttribuable"
           />
           <article-creation
             v-show="!depuisInventaire"

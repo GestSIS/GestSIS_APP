@@ -19,6 +19,7 @@ articles.value.push({
   materiel_type_id: null,
   taille: null,
   remarque: null,
+  quantite: 1,
 });
 
 const materielTypeStore = useMaterielTypeStore();

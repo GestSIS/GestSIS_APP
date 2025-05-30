@@ -24,10 +24,8 @@ const loadArticles = async () => {
   loading.value = false;
 };
 
-await Promise.all([
-  materielTypeStore.fetchMaterielTypes(),
-  Promise.resolve(await loadArticles()),
-]);
+await materielTypeStore.fetchMaterielTypes();
+loadArticles();
 
 watch(() => id, loadArticles);
 
@@ -50,27 +48,32 @@ const piecesColonnes = [
 ];
 
 const { showModal } = useModalStore();
-const attribuerMateriel = (materiel) => {
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalMateriel',
+    data: materiel,
+    callback: loadArticles,
+  });
+
+const attribuerMateriel = (materiel) =>
   showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
     callback: loadArticles,
   });
-};
 
-const ajouter = () => {
+const ajouter = () =>
   showModal({
     component: 'ModalAjoutArticleMultiple',
     callback: loadArticles,
     data: { emplacementId: id },
     size: 2,
   });
-};
 
 const { confirm } = useConfirmation();
 const supprimer = (article) =>
   confirm(
-    'Voulez-vous vraiment supprimer cert article ?',
+    'Voulez-vous vraiment supprimer cet article ?',
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
@@ -87,6 +90,7 @@ const supprimer = (article) =>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
@@ -96,6 +100,13 @@ const supprimer = (article) =>
           {{ rowData.type.designation }}
         </template>
         <template #actions="{ rowData }">
+          <button
+            title="Infos"
+            class="btn btn-outline-secondary border-0"
+            @click="infoMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
           <button
             v-if="rowData.type.est_attribuable && rowData.sapeur_id !== null"
             title="Attribuer"

@@ -34,8 +34,8 @@ await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
   couleurStore.fetchCouleurs(),
-  Promise.resolve(await loadArticles()),
 ]);
+loadArticles();
 
 watch(() => id, loadArticles);
 
@@ -51,7 +51,7 @@ const piecesColonnes = [
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCategories = computed(() =>
-  indexedData(materielCategorieStore.liste)
+  indexedData(materielCategorieStore.liste),
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
@@ -68,28 +68,33 @@ const computedData = computed(() =>
           sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
         }))
         .sort((a1, a2) => a1.type.localeCompare(a2.type)),
-      'categorie_id'
-    )
-  ).map(([key, values]) => ({ key, data: values, categorie_id: key }))
+      'categorie_id',
+    ),
+  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
 
 const { showModal } = useModalStore();
-const retourMateriel = (materiel) => {
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalMateriel',
+    data: materiel,
+    callback: loadArticles,
+  });
+
+const retourMateriel = (materiel) =>
   showModal({
     component: 'ModalRetourUnique',
     data: materiel,
     callback: loadArticles,
   });
-};
 
-const attribuer = () => {
+const attribuer = () =>
   showModal({
     component: 'ModalAttributionMultiple',
     data: ref({ sapeurId: id }),
     size: 2,
     callback: loadArticles,
   });
-};
 
 const linearCategories = (categorieId) => {
   if (categorieId === null) {
@@ -113,6 +118,7 @@ const linearCategories = (categorieId) => {
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :grouped-data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
@@ -138,6 +144,13 @@ const linearCategories = (categorieId) => {
         </template>
 
         <template #actions="{ rowData }">
+          <button
+            title="Infos"
+            class="btn btn-outline-secondary border-0"
+            @click="infoMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
           <button
             title="Retour"
             class="btn btn-outline-primary border-0"

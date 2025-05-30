@@ -4,20 +4,19 @@ import { computed, inject, nextTick, ref, useTemplateRef } from 'vue';
 import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
 import { indexedData } from '../../tools';
-import SelectEmplacement from './SelectEmplacement.vue';
 import VueSelect from 'vue3-select-component';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
 
-const { data } = defineProps({
-  data: {
-    type: Object,
-    default: () => {},
+const props = defineProps({
+  articles: {
+    type: Array,
+    default: () => [],
   },
 });
 
+const articlesAttribuable = computed(() => props.articles);
 const selectedArticles = defineModel({ default: () => [] });
 selectedArticles.value.push({
   id: null,
@@ -44,6 +43,7 @@ const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
+const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
 const emplacements = computed(() => {
   const recursive = (id) => {
     return [
@@ -67,8 +67,6 @@ const emplacements = computed(() => {
     })
     .sort((a, b) => a.tri - b.tri);
 });
-
-const articlesAttribuable = ref(await ArticleService.getAttribuable());
 
 // types des articles disponible
 const typesDisponible = computed(() => {
@@ -181,21 +179,25 @@ const selectMaterielTypeNumerote = (item, value) => {
           <VueSelect
             v-model="item.id"
             :is-clearable="false"
-            :options="
-              articlesAttribuable
+            :options="[
+              ...articlesAttribuable
                 .filter((a) => a.materiel_type_id == item.materiel_type_id)
-                .map((a) => ({ ...a, value: a.id, label: a.designation }))
-            "
+                .map((a) => ({ ...a, value: a.id, label: a.designation })),
+            ]"
             placeholder="Sélectionnez un emplacement"
           >
             <template #value="{ option }">
+              <span v-if="option.sapeur_id" class="badge bg-primary">
+                {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
+              </span>
               <tag-couleur
+                v-if="option.emplacement_id"
                 v-for="id in emplacements.find(
                   (e) =>
                     e.id ===
                     articlesAttribuable.find((a) => a.id === option.value)
                       .emplacement_id,
-                ).emplacements ?? []"
+                )?.emplacements ?? []"
                 :key="id"
                 :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
               >
@@ -203,13 +205,17 @@ const selectMaterielTypeNumerote = (item, value) => {
               </tag-couleur>
             </template>
             <template #option="{ option }">
+              <span v-if="option.sapeur_id" class="badge bg-primary">
+                {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
+              </span>
               <tag-couleur
+                v-if="option.emplacement_id"
                 v-for="id in emplacements.find(
                   (e) =>
                     e.id ===
                     articlesAttribuable.find((a) => a.id === option.value)
                       .emplacement_id,
-                ).emplacements ?? []"
+                )?.emplacements ?? []"
                 :key="id"
                 :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
               >
