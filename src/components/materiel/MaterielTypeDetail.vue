@@ -41,94 +41,82 @@ const editMateriel = () =>
       </button>
     </div>
     <div class="card-body">
-      <div class="row">
-        <div class="col-6">
-          <div class="row">
-            <div class="col-3">Nom</div>
-            <div class="col-9">{{ materielType.designation }}</div>
-          </div>
-          <div class="row">
-            <div class="col-3">Prix</div>
-            <div class="col-9">{{ materielType.prix }}</div>
-          </div>
-          <div class="row">
-            <div class="col-3">Fournisseur</div>
-            <div class="col-9">
-              {{ formatEmptyString(materielType.fournisseur) }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-3">Réparateur</div>
-            <div class="col-9">
-              {{ formatEmptyString(materielType.reparateur) }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-3">Remarque</div>
-            <div class="col-9">
-              {{ formatEmptyString(materielType.remarque) }}
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              disabled
-              :checked="materielType.est_taillee"
+      <table class="table">
+        <tr>
+          <th>Nom</th>
+          <td>{{ materielType.designation }}</td>
+        </tr>
+        <tr>
+          <th>Fournisseur</th>
+          <td>{{ formatEmptyString(materielType.fournisseur) }}</td>
+        </tr>
+        <tr>
+          <th>Réparateur</th>
+          <td>{{ formatEmptyString(materielType.reparateur) }}</td>
+        </tr>
+        <tr>
+          <th>Prix</th>
+          <td>{{ materielType.prix || 'Inconnu' }}</td>
+        </tr>
+        <tr>
+          <th>Remarque</th>
+          <td>{{ formatEmptyString(materielType.remarque) }}</td>
+        </tr>
+        <tr>
+          <th>
+            Numérotation préfixe
+            <font-awesome-icon
+              v-tooltip.bottom="{
+                content: 'Préfixe pour l\'étiquettage individuel',
+              }"
+              class="ms-1 p-0"
+              :icon="['far', 'question-circle']"
             />
-            <label class="form-check-label">Est taillé</label>
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              disabled
-              :checked="materielType.est_attribuable"
-            />
-            <label class="form-check-label">Est attribuable</label>
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              disabled
-              :checked="materielType.est_lavable"
-            />
-            <label class="form-check-label">Suivi des lavages</label>
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              disabled
-              :checked="materielType.est_numerote"
-            />
-            <label class="form-check-label">Est numéroté</label>
-          </div>
-          <div class="row">
-            <div class="col-3">
-              Préfixe
-              <font-awesome-icon
-                v-tooltip.bottom="{
-                  content: 'Préfixe pour l\'étiquettage individuel',
-                }"
-                class="ms-1"
-                :icon="['far', 'question-circle']"
-              />
-            </div>
-            <div class="col-9">
-              <span v-if="materielType.est_numerote">{{
-                materielType.prefix === ''
-                  ? 'Aucun préfixe'
-                  : materielType.prefix
-              }}</span>
-              <span v-else>(Pas d'étiquettage individuel)</span>
-            </div>
-          </div>
-        </div>
+          </th>
+          <td>
+            <span v-if="materielType.est_numerote" class="p-0">{{
+              materielType.prefix === '' ? 'Aucun préfixe' : materielType.prefix
+            }}</span>
+            <span v-else class="p-0">(Pas d'étiquettage individuel)</span>
+          </td>
+        </tr>
+      </table>
+      <!-- <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          disabled
+          :checked="materielType.est_taillee"
+        />
+        <label class="form-check-label">Est taillé</label>
       </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          disabled
+          :checked="materielType.est_attribuable"
+        />
+        <label class="form-check-label">Est attribuable</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          disabled
+          :checked="materielType.est_lavable"
+        />
+        <label class="form-check-label">Suivi des lavages</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          disabled
+          :checked="materielType.est_numerote"
+        />
+        <label class="form-check-label">Est numéroté</label>
+      </div> -->
     </div>
   </div>
 </template>

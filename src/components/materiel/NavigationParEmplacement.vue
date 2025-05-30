@@ -61,11 +61,9 @@ const computedData = computed(() => {
     </span>
   </div>
   <div class="card">
-    <ul class="list-group list-group-flush">
+    <ul class="ps-2 mb-1">
       <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
-        <span class="border-bottom-0">{{
-          filtre === '' ? 'Rien à afficher' : 'Aucun emplacement'
-        }}</span>
+        <span class="border-bottom-0">Aucun emplacement</span>
       </li>
       <router-link
         v-for="item in computedData.slice(0)"
