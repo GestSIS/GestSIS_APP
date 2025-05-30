@@ -1,10 +1,13 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { groupedByData, indexedData } from '../../tools';
 import ArticleService from '../../services/materiel/ArticleService';
-import { indexedData } from '../../tools';
-import { useModalStore } from '../../stores/common/Modal.js';
 import useConfirmation from '../../hooks/useConfirmation';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -13,7 +16,9 @@ const { id } = defineProps({
   },
 });
 
+const materielCategorieStore = useMaterielCategorieStore();
 const materielTypeStore = useMaterielTypeStore();
+const couleurStore = useCouleurStore();
 
 const articles = ref([]);
 const loading = ref(true);
@@ -24,18 +29,33 @@ const loadArticles = async () => {
   loading.value = false;
 };
 
-await materielTypeStore.fetchMaterielTypes();
+await Promise.all([
+  materielTypeStore.fetchMaterielTypes(),
+  materielCategorieStore.fetchMaterielCategories(),
+  couleurStore.fetchCouleurs(),
+]);
 loadArticles();
 
 watch(() => id, loadArticles);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+const indexedCategories = computed(() =>
+  indexedData(materielCategorieStore.liste),
+);
 
 const computedData = computed(() =>
-  articles.value.map((a) => ({
-    ...a,
-    type: indexedTypes.value[a.materiel_type_id],
-  })),
+  Object.entries(
+    groupedByData(
+      articles.value.map((a) => ({
+        ...a,
+        type: indexedTypes.value[a.materiel_type_id],
+        categorie_id:
+          indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+      })),
+      'categorie_id',
+    ),
+  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
 
 const piecesColonnes = [
@@ -78,6 +98,17 @@ const supprimer = (article) =>
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
     .then(loadArticles);
+
+const linearCategories = (categorieId) => {
+  if (categorieId === null) {
+    return [];
+  }
+  const categorie = indexedCategories.value[categorieId] ?? null;
+  if (categorie === null) {
+    return [];
+  }
+  return [...linearCategories(categorie.parent_id), categorie];
+};
 </script>
 
 <template>
@@ -91,11 +122,21 @@ const supprimer = (article) =>
     <div class="card-body table-responsive p-0">
       <base-table
         :loading="loading"
-        :data="computedData"
+        :grouped-data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
         :selectable="true"
       >
+        <template #groupeHeader="{ categorie_id }">
+          <tag-couleur
+            v-for="categorie in linearCategories(categorie_id)"
+            :key="categorie.id"
+            :couleur="indexedCouleurs[categorie.couleur_id]"
+          >
+            {{ categorie.designation }}
+          </tag-couleur>
+        </template>
+
         <template #type="{ rowData }">
           {{ rowData.type.designation }}
         </template>
