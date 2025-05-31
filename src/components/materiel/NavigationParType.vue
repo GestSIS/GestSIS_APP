@@ -1,5 +1,4 @@
 <script setup>
-import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
@@ -7,17 +6,13 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission';
 
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
 const couleurStore = useCouleurStore();
-const store = useStore();
 
-const hasConfigPermission = computed(
-  () =>
-    store.state.auth.admin ||
-    store.state.auth.sis.permissions.includes(permissions.MATERIEL.CONFIG),
-);
+const hasConfigPermission = useHasPermission(permissions.MATERIEL.CONFIG);
 
 await Promise.all([
   typeStore.fetchMaterielTypes(),

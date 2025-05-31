@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission';
 
 const { id } = defineProps({
   id: {
@@ -13,11 +14,10 @@ const { id } = defineProps({
 const store = useStore();
 store.dispatch('fetchListeSapeur');
 
-const hasSapeurEditPermission = computed(
-  () =>
-    store.state.auth.admin ||
-    store.state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+const hasSapeurEditPermission = useHasPermission(
+  permissions.SAPEUR.MODIFICATION,
 );
+
 const filtre = ref('');
 
 const sapeurs = computed(() =>

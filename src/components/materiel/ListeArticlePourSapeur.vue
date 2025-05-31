@@ -8,6 +8,8 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
+import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../store/permissions';
 
 const { id } = defineProps({
   id: {
@@ -20,6 +22,8 @@ const store = useStore();
 const materielCategorieStore = useMaterielCategorieStore();
 const materielTypeStore = useMaterielTypeStore();
 const couleurStore = useCouleurStore();
+
+const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const articles = ref([]);
 const loading = ref(true);
@@ -109,14 +113,18 @@ const linearCategories = (categorieId) => {
 </script>
 
 <template>
-  <div class="card mb-2">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="card-title m-0">Matériel distribué ({{ articles.length }})</h5>
-      <button class="btn btn-primary" @click="attribuer">
+  <base-card>
+    <template #title>Matériel distribué ({{ articles.length }})</template>
+    <template #header>
+      <button
+        v-if="hasEditPermission"
+        class="btn btn-primary"
+        @click="attribuer"
+      >
         Attribuer du matériel
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body>
       <base-table
         :loading="loading"
         :grouped-data="computedData"
@@ -145,13 +153,15 @@ const linearCategories = (categorieId) => {
 
         <template #actions="{ rowData }">
           <button
-            title="Infos"
+            v-if="hasEditPermission"
+            title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
           >
-            <font-awesome-icon :icon="['fas', 'info-circle']" />
+            <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            v-if="hasEditPermission"
             title="Retour"
             class="btn btn-outline-primary border-0"
             @click="retourMateriel(rowData)"
@@ -160,8 +170,8 @@ const linearCategories = (categorieId) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
 
 <style></style>

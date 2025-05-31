@@ -9,6 +9,8 @@ const { id } = defineProps({
     required: false,
   },
 });
+
+// TODO: Redirect au premier élément si id=null et que des types existent ?
 </script>
 
 <template>

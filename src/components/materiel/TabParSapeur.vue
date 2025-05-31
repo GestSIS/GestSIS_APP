@@ -8,6 +8,8 @@ const { id } = defineProps({
     required: false,
   },
 });
+
+// TODO: Redirect au premier élément si id=null et que des sapeurs existent ?
 </script>
 
 <template>

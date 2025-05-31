@@ -9,11 +9,15 @@ import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useConfirmation from '../../hooks/useConfirmation';
 import LavageService from '../../services/materiel/LavageService';
+import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../store/permissions';
 
 const store = useStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
+
+const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const lavages = ref([]);
 const loading = ref(true);
@@ -93,7 +97,13 @@ const supprimer = (lavage) =>
   <div class="card mb-2">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="m-0">Lavages ({{ lavages.length }})</h5>
-      <button class="btn btn-primary" @click="ajouterLavages">Ajouter</button>
+      <button
+        v-if="hasEditPermission"
+        class="btn btn-primary"
+        @click="ajouterLavages"
+      >
+        Ajouter
+      </button>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
@@ -131,6 +141,7 @@ const supprimer = (lavage) =>
 
         <template #actions="{ rowData }">
           <button
+            v-if="hasEditPermission"
             title="Supprimer"
             class="btn btn-outline-danger border-0"
             @click="supprimer(rowData)"

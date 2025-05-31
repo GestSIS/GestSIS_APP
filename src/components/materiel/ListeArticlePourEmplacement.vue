@@ -8,6 +8,8 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission';
 
 const { id } = defineProps({
   id: {
@@ -19,6 +21,8 @@ const { id } = defineProps({
 const materielCategorieStore = useMaterielCategorieStore();
 const materielTypeStore = useMaterielTypeStore();
 const couleurStore = useCouleurStore();
+
+const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const articles = ref([]);
 const loading = ref(true);
@@ -112,14 +116,19 @@ const linearCategories = (categorieId) => {
 </script>
 
 <template>
-  <div class="card mb-2">
-    <div class="card-header d-flex justify-content-between">
-      <h5>Pièces ({{ articles.length }})</h5>
-      <button title="Ajouter" class="btn btn-primary" @click="ajouter">
+  <base-card>
+    <template #title>Pièces ({{ articles.length }})</template>
+    <template #header>
+      <button
+        v-if="hasEditPermission"
+        title="Ajouter"
+        class="btn btn-primary"
+        @click="ajouter"
+      >
         Ajouter
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body>
       <base-table
         :loading="loading"
         :grouped-data="computedData"
@@ -142,14 +151,19 @@ const linearCategories = (categorieId) => {
         </template>
         <template #actions="{ rowData }">
           <button
-            title="Infos"
+            v-if="hasEditPermission"
+            title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
           >
-            <font-awesome-icon :icon="['fas', 'info-circle']" />
+            <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
-            v-if="rowData.type.est_attribuable && rowData.sapeur_id !== null"
+            v-if="
+              hasEditPermission &&
+              rowData.type.est_attribuable &&
+              rowData.sapeur_id !== null
+            "
             title="Attribuer"
             class="btn btn-outline-primary border-0"
             @click="retourMateriel(rowData)"
@@ -157,7 +171,11 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
           </button>
           <button
-            v-if="rowData.type.est_attribuable && rowData.sapeur_id === null"
+            v-if="
+              hasEditPermission &&
+              rowData.type.est_attribuable &&
+              rowData.sapeur_id === null
+            "
             title="Attribuer"
             class="btn btn-outline-primary border-0"
             @click="attribuerMateriel(rowData)"
@@ -165,6 +183,7 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
           </button>
           <button
+            v-if="hasEditPermission"
             title="Supprimer"
             class="btn btn-outline-danger border-0"
             @click="supprimer(rowData)"
@@ -173,8 +192,8 @@ const linearCategories = (categorieId) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
 
 <style></style>

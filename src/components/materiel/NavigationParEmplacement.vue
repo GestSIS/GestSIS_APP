@@ -4,35 +4,28 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
-import { useStore } from 'vuex';
 import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission';
 
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
-const store = useStore();
 
 couleurStore.fetchCouleurs();
 emplacementStore.fetchEmplacements();
 
-const hasConfigPermission = computed(
-  () =>
-    store.state.auth.admin ||
-    store.state.auth.sis.permissions.includes(permissions.MATERIEL.CONFIG),
-);
-
-const emplacements = computed(() => emplacementStore.liste);
+const hasConfigPermission = useHasPermission(permissions.MATERIEL.CONFIG);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const emplacementsGroupedByParent = computed(() =>
-  groupedByData(emplacements.value, 'parent_id'),
+  groupedByData(emplacementStore.liste, 'parent_id'),
 );
 
 const filtre = ref('');
 
 const computedData = computed(() => {
   const lowerFilter = filtre.value.toLowerCase().trim(' ');
-  const filteredIds = emplacements.value
+  const filteredIds = emplacementStore.liste
     .filter((e) => e.designation.toLowerCase().includes(lowerFilter))
     .flatMap((e) => {
       const parentIds = (id) =>
@@ -59,7 +52,6 @@ const computedData = computed(() => {
   <div class="input-group mb-2">
     <router-link
       v-if="hasConfigPermission"
-      v-slot="{ navigate }"
       :to="{ name: 'param-materiel' }"
       class="btn btn-sm btn-outline-primary"
     >

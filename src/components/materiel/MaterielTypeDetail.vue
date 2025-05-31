@@ -41,7 +41,7 @@ const editMateriel = () =>
       </button>
     </div>
     <div class="card-body">
-      <table class="table">
+      <table class="table mb-0">
         <tr>
           <th>Nom</th>
           <td>{{ materielType.designation }}</td>

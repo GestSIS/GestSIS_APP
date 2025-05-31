@@ -121,11 +121,9 @@ const supprimer = (article) =>
 </script>
 
 <template>
-  <div class="card mb-2">
-    <div class="card-header">
-      <h5 class="m-0">Pièces ({{ articles.length }})</h5>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card>
+    <template #title>Pièces ({{ articles.length }})</template>
+    <template #body>
       <base-table
         :loading="loading"
         :data="computedData"
@@ -161,11 +159,11 @@ const supprimer = (article) =>
 
         <template #actions="{ rowData }">
           <button
-            title="Infos"
+            title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
           >
-            <font-awesome-icon :icon="['fas', 'info-circle']" />
+            <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
             v-if="materielType.est_attribuable && rowData.sapeur_id !== null"
@@ -192,8 +190,8 @@ const supprimer = (article) =>
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
 
 <style></style>
