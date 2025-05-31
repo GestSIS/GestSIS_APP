@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
+import permissions from '../../store/permissions';
 
 const { id } = defineProps({
   id: {
@@ -12,6 +13,11 @@ const { id } = defineProps({
 const store = useStore();
 store.dispatch('fetchListeSapeur');
 
+const hasSapeurEditPermission = computed(
+  () =>
+    store.state.auth.admin ||
+    store.state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
+);
 const filtre = ref('');
 
 const sapeurs = computed(() =>
@@ -25,6 +31,13 @@ const sapeurs = computed(() =>
 
 <template>
   <div class="input-group mb-2">
+    <router-link
+      v-if="hasSapeurEditPermission"
+      :to="{ name: 'sapeur-index', params: { id: 0 } }"
+      class="btn btn-sm btn-outline-primary"
+    >
+      <font-awesome-icon :icon="['far', 'edit']" />
+    </router-link>
     <input
       type="text"
       v-model="filtre"

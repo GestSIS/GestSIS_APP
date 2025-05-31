@@ -79,12 +79,10 @@ const computedData = computed(() => {
   <div class="input-group mb-2">
     <router-link
       v-if="hasConfigPermission"
-      v-slot="{ navigate }"
       :to="{ name: 'param-materiel' }"
+      class="btn btn-sm btn-outline-primary"
     >
-      <a class="btn btn-outline-primary" href="#" role="link" @click="navigate">
-        <font-awesome-icon :icon="['far', 'edit']" />
-      </a>
+      <font-awesome-icon :icon="['far', 'edit']" />
     </router-link>
     <input
       type="text"
