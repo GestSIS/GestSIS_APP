@@ -68,7 +68,7 @@ const piecesColonnes = [
 ];
 
 const { showModal } = useModalStore();
-const infoMateriel = (materiel) =>
+const editMateriel = (materiel) =>
   showModal({
     component: 'ModalMateriel',
     data: materiel,
@@ -144,7 +144,7 @@ const linearCategories = (categorieId) => {
           <button
             title="Infos"
             class="btn btn-outline-secondary border-0"
-            @click="infoMateriel(rowData)"
+            @click="editMateriel(rowData)"
           >
             <font-awesome-icon :icon="['fas', 'info-circle']" />
           </button>

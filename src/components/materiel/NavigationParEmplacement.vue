@@ -4,12 +4,21 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
+import { useStore } from 'vuex';
+import permissions from '../../store/permissions';
 
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
+const store = useStore();
 
 couleurStore.fetchCouleurs();
 emplacementStore.fetchEmplacements();
+
+const hasConfigPermission = computed(
+  () =>
+    store.state.auth.admin ||
+    store.state.auth.sis.permissions.includes(permissions.MATERIEL.CONFIG),
+);
 
 const emplacements = computed(() => emplacementStore.liste);
 
@@ -48,6 +57,15 @@ const computedData = computed(() => {
 
 <template>
   <div class="input-group mb-2">
+    <router-link
+      v-if="hasConfigPermission"
+      v-slot="{ navigate }"
+      :to="{ name: 'param-materiel' }"
+    >
+      <a class="btn btn-outline-primary" href="#" role="link" @click="navigate">
+        <font-awesome-icon :icon="['far', 'edit']" />
+      </a>
+    </router-link>
     <input
       type="text"
       v-model="filtre"

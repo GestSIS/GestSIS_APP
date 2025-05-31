@@ -1,14 +1,23 @@
 <script setup>
+import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
+import permissions from '../../store/permissions';
 
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
 const couleurStore = useCouleurStore();
+const store = useStore();
+
+const hasConfigPermission = computed(
+  () =>
+    store.state.auth.admin ||
+    store.state.auth.sis.permissions.includes(permissions.MATERIEL.CONFIG),
+);
 
 await Promise.all([
   typeStore.fetchMaterielTypes(),
@@ -68,6 +77,15 @@ const computedData = computed(() => {
 
 <template>
   <div class="input-group mb-2">
+    <router-link
+      v-if="hasConfigPermission"
+      v-slot="{ navigate }"
+      :to="{ name: 'param-materiel' }"
+    >
+      <a class="btn btn-outline-primary" href="#" role="link" @click="navigate">
+        <font-awesome-icon :icon="['far', 'edit']" />
+      </a>
+    </router-link>
     <input
       type="text"
       v-model="filtre"

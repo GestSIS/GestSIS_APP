@@ -89,9 +89,9 @@ const computedData = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const infoMateriel = (materiel) =>
+const editMateriel = (materiel) =>
   showModal({
-    component: 'ModalMateriel',
+    component: 'ModalArticle',
     data: materiel,
     callback: loadArticles,
   });
@@ -163,7 +163,7 @@ const supprimer = (article) =>
           <button
             title="Infos"
             class="btn btn-outline-secondary border-0"
-            @click="infoMateriel(rowData)"
+            @click="editMateriel(rowData)"
           >
             <font-awesome-icon :icon="['fas', 'info-circle']" />
           </button>

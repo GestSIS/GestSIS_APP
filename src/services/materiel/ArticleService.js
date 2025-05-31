@@ -4,6 +4,9 @@ export default {
   creerArticles(articles) {
     return Api.api().post(`articles`, { articles });
   },
+  updateArticles(articles) {
+    return Api.api().put(`articles`, { articles });
+  },
   supprimerArticles(articleIds) {
     return Api.api().delete(`articles`, { data: { articleIds } });
   },
