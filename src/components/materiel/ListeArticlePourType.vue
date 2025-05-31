@@ -123,7 +123,7 @@ const supprimer = (article) =>
 <template>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
-    <template #body>
+    <template #body-table>
       <base-table
         :loading="loading"
         :data="computedData"

@@ -124,7 +124,7 @@ const linearCategories = (categorieId) => {
         Attribuer du matériel
       </button>
     </template>
-    <template #body>
+    <template #body-table>
       <base-table
         :loading="loading"
         :grouped-data="computedData"

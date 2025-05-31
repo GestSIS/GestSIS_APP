@@ -9,8 +9,11 @@
       </h5>
       <slot v-if="$slots.header" name="header"></slot>
     </div>
-    <div v-if="$slots.body" class="card-body table-responsive p-0">
+    <div v-if="$slots.body" class="card-body">
       <slot name="body"></slot>
+    </div>
+    <div v-if="$slots['body-table']" class="card-body table-responsive p-0">
+      <slot name="body-table"></slot>
     </div>
     <div v-if="$slots.footer" class="card-footer">
       <slot name="footer"></slot>

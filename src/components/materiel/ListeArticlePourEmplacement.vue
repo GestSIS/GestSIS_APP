@@ -128,7 +128,7 @@ const linearCategories = (categorieId) => {
         Ajouter
       </button>
     </template>
-    <template #body>
+    <template #body-table>
       <base-table
         :loading="loading"
         :grouped-data="computedData"
