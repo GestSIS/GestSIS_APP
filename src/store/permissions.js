@@ -58,10 +58,9 @@ export default {
     CONFIG: 'controle_medical.config',
   },
   MATERIEL: {
-    // TODO: A migrer
-    LECTURE: 'mat_perso.lecture',
-    MODIFICATION: 'mat_perso.modification',
-    CONFIG: 'mat_perso.config',
+    LECTURE: 'materiel.lecture',
+    MODIFICATION: 'materiel.modification',
+    CONFIG: 'materiel.config',
   },
   SIS: {
     CONFIG: 'sis.config',
