@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useMaterielTypeStore } from '../../stores/materiel/Type.js';
+import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre.js';
+import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import SelectCategorie from '../materiel/SelectCategorie.vue';
 
@@ -18,9 +20,20 @@ const activeItem = ref({
   est_taillee: false,
   est_lavable: false,
   ...data,
+  tuyau: data?.tuyau ?? {
+    separement: true,
+  },
+  batterie: data.batterie ?? {},
 });
 
 const typeStore = useMaterielTypeStore();
+const diametreStore = useTuyauDiametreStore();
+const batterieStore = useBatterieTypeStore();
+
+await Promise.all([
+  diametreStore.fetchTuyauDiametres(),
+  batterieStore.fetchBatterieTypes(),
+]);
 
 const { closeModal } = useModalStore();
 const save = async () => {
@@ -132,6 +145,71 @@ const save = async () => {
           :class="{ 'is-invalid': errors['remarque'] }"
         />
       </div>
+      <base-select
+        v-model="activeItem.type"
+        class="mb-3"
+        label="Type"
+        :options="[
+          { id: 0, designation: 'Standard' },
+          { id: 1, designation: 'Tuyau' },
+          { id: 2, designation: 'Batterie' },
+          { id: 3, designation: 'Vehicule' },
+        ]"
+      />
+      <div v-if="activeItem.type === 1" class="mb-3">
+        <label for="longeur">Longeur (m)</label>
+        <input
+          id="longeur"
+          v-model="activeItem.tuyau.longeur"
+          type="number"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['longeur'] }"
+          placeholder="20"
+          required
+        />
+      </div>
+      <base-select
+        v-if="activeItem.type === 1"
+        label="Diamètre"
+        v-model="activeItem.tuyau.tuyau_diametre_id"
+        class="mb-3"
+        :options="diametreStore.liste"
+        display-key="diametre"
+        required
+      />
+      <base-select
+        v-if="activeItem.type === 1"
+        label="Roulé"
+        v-model="activeItem.tuyau.separement"
+        class="mb-3"
+        :options="[
+          { id: true, designation: 'Séparément' },
+          { id: false, designation: 'Dévidoire' },
+        ]"
+        required
+      />
+      <div v-if="activeItem.type === 2" class="mb-3">
+        <label for="longeur">Nombre</label>
+        <input
+          id="longeur"
+          v-model="activeItem.batterie.nombre"
+          type="number"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['longeur'] }"
+          placeholder="1"
+          min="1"
+          required
+        />
+      </div>
+      <base-select
+        v-if="activeItem.type === 2"
+        label="Modèle"
+        v-model="activeItem.batterie.batterie_type_id"
+        class="mb-3"
+        :options="batterieStore.liste"
+        display-key="nom"
+        required
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">

@@ -2,6 +2,8 @@
 import ParametreMaterielTypeCategorie from './ParametreMaterielTypeCategorie.vue';
 import ParametreMaterielCouleur from './ParametreMaterielCouleur.vue';
 import ParametreMaterielEmplacement from './ParametreMaterielEmplacement.vue';
+import ParametreBatterieType from './ParametreBatterieType.vue';
+import ParametreTuyauDiametre from './ParametreTuyauDiametre.vue';
 import { ref } from 'vue';
 
 const tab = ref('categorie');
@@ -46,6 +48,24 @@ const tab = ref('categorie');
           >
             Emplacements
           </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'batterie-type' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'batterie-type'"
+          >
+            Batteries types
+          </a>
+          <a
+            class="nav-link"
+            :class="{ active: tab === 'tuyau-diametre' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'tuyau-diametre'"
+          >
+            Tuyau diamètres
+          </a>
         </nav>
       </div>
     </div>
@@ -54,6 +74,8 @@ const tab = ref('categorie');
         <parametre-materiel-type-categorie v-if="tab === 'categorie'" />
         <parametre-materiel-couleur v-else-if="tab === 'couleur'" />
         <parametre-materiel-emplacement v-else-if="tab === 'emplacement'" />
+        <parametre-batterie-type v-else-if="tab === 'batterie-type'" />
+        <parametre-tuyau-diametre v-else-if="tab === 'tuyau-diametre'" />
         <template #fallback>Chargement...</template>
       </suspense>
     </div>

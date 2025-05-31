@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -22,27 +22,16 @@ const couleurStore = useCouleurStore();
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  if ((activeItem.value.id || 0) === 0) {
-    couleurStore
-      .addCouleur(activeItem.value)
-      .then(close)
-      .catch(
-        (errors) =>
-          (this.errors = {
-            ...errors,
-          }),
-      );
-  } else {
-    couleurStore
-      .updateCouleur(activeItem.value)
-      .then(close)
-      .catch(
-        (errors) =>
-          (this.errors = {
-            ...errors,
-          }),
-      );
-  }
+  ((activeItem.value.id || 0) === 0
+    ? couleurStore.addCouleur
+    : couleurStore.updateCouleur)(activeItem.value)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
 };
 </script>
 
