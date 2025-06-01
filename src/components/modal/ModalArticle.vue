@@ -63,6 +63,16 @@ const save = async () => {
         display-key="designation"
         :options="typeStore.liste"
       />
+      <div v-if="!activeItem.id && type && !type.est_numerote" class="mb-3">
+        <label for="quantite">Quantité</label>
+        <input
+          id="quantite"
+          v-model="activeItem.quantite"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['quantite'] }"
+        />
+      </div>
       <select-emplacement
         label="Emplacement"
         v-if="!activeItem.id || activeItem.emplacement_id"

@@ -128,6 +128,13 @@ const piecesColonnes = computed(() => [
 ]);
 
 const { showModal } = useModalStore();
+const ajouter = () =>
+  showModal({
+    component: 'ModalArticle',
+    data: {},
+    size: 1,
+  });
+
 const infoMateriel = (materiel) =>
   showModal({
     component: 'ModalArticleInfo',
@@ -201,7 +208,14 @@ const supprimer = (article) =>
           >Par emplacement</label
         >
       </div>
-      <span />
+      <button
+        v-if="hasEditPermission"
+        title="Ajouter"
+        class="btn btn-sm btn-primary"
+        @click="ajouter"
+      >
+        <font-awesome-icon :icon="['far', 'plus-square']" />
+      </button>
     </template>
     <template #body-table>
       <base-table

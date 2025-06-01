@@ -22,18 +22,12 @@ const type = computed(() =>
 );
 
 const piecesColonnes = computed(() => [
-  ...(materielType.value.est_numerote
-    ? [{ title: 'Numéro', key: 'numero' }]
-    : []),
+  ...(type.value.est_numerote ? [{ title: 'Numéro', key: 'numero' }] : []),
   { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
   { title: 'Compartiment', key: 'compartiment' },
   [
-    ...(materielType.value.est_taillee
-      ? [{ title: 'Taille', key: 'taille' }]
-      : []),
-    ...(materielType.value.est_lavable
-      ? [{ title: 'Lavages', slot: 'lavages' }]
-      : []),
+    ...(type.value.est_taillee ? [{ title: 'Taille', key: 'taille' }] : []),
+    ...(type.value.est_lavable ? [{ title: 'Lavages', slot: 'lavages' }] : []),
     { title: 'Remarque', key: 'remarque' },
     { title: 'Ajouté', key: 'created_at', type: 'date' },
     { title: 'Actions', key: 'id', slot: 'actions' },
