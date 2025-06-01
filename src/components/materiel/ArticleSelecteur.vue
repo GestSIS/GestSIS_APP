@@ -88,9 +88,6 @@ const addEmptyLine = () => {
   });
 };
 
-const selectEmplacement = (item, value) => {
-  // TODO: a implémenter
-};
 const selectMaterielTypeNumerote = (item, value) => {
   // Select première combinaison valable
   const materiel = articlesAttribuable.value.find(

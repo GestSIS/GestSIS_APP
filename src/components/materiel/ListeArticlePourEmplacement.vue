@@ -10,6 +10,7 @@ import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
+import { acceptHMRUpdate } from 'pinia';
 
 const { id } = defineProps({
   id: {
@@ -26,6 +27,7 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const articles = ref([]);
 const loading = ref(true);
+const affichageIndividuel = ref(true);
 
 const loadArticles = async () => {
   loading.value = true;
@@ -59,20 +61,60 @@ const computedData = computed(() =>
       })),
       'categorie_id',
     ),
-  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
+  )
+    .map(([key, values]) => ({ key, data: values, categorie_id: key }))
+    .map((data) =>
+      affichageIndividuel.value
+        ? data
+        : {
+            ...data,
+            data: Object.entries(groupedByData(data.data, 'materiel_type_id'))
+              .map(([key, values]) => ({
+                key,
+                id: key,
+                type: values[0].type,
+                data: values,
+                quantite: values.length,
+                compartiments: new Set(values.map((a) => a.compartiment)),
+              }))
+              .map((a) => ({
+                ...a,
+                compartiment:
+                  a.compartiments.size === 1
+                    ? [...a.compartiments][0]
+                    : `(${a.compartiments.size})`,
+              })),
+          },
+    ),
 );
 
-const piecesColonnes = [
+const linearCategories = (categorieId) => {
+  if (categorieId === null) {
+    return [];
+  }
+  const categorie = indexedCategories.value[categorieId] ?? null;
+  if (categorie === null) {
+    return [];
+  }
+  return [...linearCategories(categorie.parent_id), categorie];
+};
+
+const piecesColonnes = computed(() => [
   { title: 'Type', key: 'type', slot: 'type' },
   { title: 'Compartiment', key: 'compartiment' },
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Ajouté', key: 'created_at', type: 'date' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
-];
+  ...(affichageIndividuel.value
+    ? [
+        { title: 'Numéro', key: 'numero' },
+        { title: 'Remarque', key: 'remarque' },
+        { title: 'Ajouté', key: 'created_at', type: 'date' },
+        { title: 'Actions', key: 'id', slot: 'actions' },
+      ]
+    : [{ title: 'Quantité', key: 'quantite' }]),
+]);
 
 const { showModal } = useModalStore();
 const infoMateriel = (materiel) =>
+  //TODO: Gérer le cas affichageIndividuel
   showModal({
     component: 'ModalArticleInfo',
     data: materiel,
@@ -109,30 +151,50 @@ const supprimer = (article) =>
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
     .then(loadArticles);
-
-const linearCategories = (categorieId) => {
-  if (categorieId === null) {
-    return [];
-  }
-  const categorie = indexedCategories.value[categorieId] ?? null;
-  if (categorie === null) {
-    return [];
-  }
-  return [...linearCategories(categorie.parent_id), categorie];
-};
 </script>
 
 <template>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
     <template #header>
+      <div
+        class="btn-group"
+        role="group"
+        aria-label="Basic radio toggle button group"
+      >
+        <input
+          type="radio"
+          class="btn-sm btn-check"
+          name="groupingBy"
+          id="individuel"
+          autocomplete="off"
+          v-model="affichageIndividuel"
+          :value="true"
+          checked
+        />
+        <label class="btn btn-sm btn-outline-primary" for="individuel"
+          >Individuel</label
+        >
+        <input
+          type="radio"
+          class="btn-sm btn-check"
+          name="groupingBy"
+          id="par-type"
+          v-model="affichageIndividuel"
+          :value="false"
+          autocomplete="off"
+        />
+        <label class="btn btn-sm btn-outline-primary" for="par-type"
+          >Par type</label
+        >
+      </div>
       <button
         v-if="hasEditPermission"
         title="Ajouter"
-        class="btn btn-primary"
+        class="btn btn-sm btn-primary"
         @click="ajouter"
       >
-        Ajouter
+        <font-awesome-icon :icon="['far', 'plus-square']" />
       </button>
     </template>
     <template #body-table>
@@ -165,7 +227,7 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['fas', 'info-circle']" />
           </button>
           <button
-            v-if="hasEditPermission"
+            v-if="affichageIndividuel && hasEditPermission"
             title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
@@ -174,6 +236,7 @@ const linearCategories = (categorieId) => {
           </button>
           <button
             v-if="
+              affichageIndividuel &&
               hasEditPermission &&
               rowData.type.est_attribuable &&
               rowData.sapeur_id !== null
@@ -186,6 +249,7 @@ const linearCategories = (categorieId) => {
           </button>
           <button
             v-if="
+              affichageIndividuel &&
               hasEditPermission &&
               rowData.type.est_attribuable &&
               rowData.sapeur_id === null
@@ -197,7 +261,7 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
           </button>
           <button
-            v-if="hasEditPermission"
+            v-if="affichageIndividuel && hasEditPermission"
             title="Supprimer"
             class="btn btn-outline-danger border-0"
             @click="supprimer(rowData)"

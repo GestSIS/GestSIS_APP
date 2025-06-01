@@ -6,9 +6,11 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
-import { indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useConfirmation from '../../hooks/useConfirmation';
+import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../store/permissions';
 
 const { id } = defineProps({
   id: {
@@ -22,8 +24,11 @@ const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
 
+const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+
 const articles = ref([]);
 const loading = ref(true);
+const affichageIndividuel = ref(true);
 
 const loadArticles = async () => {
   loading.value = true;
@@ -45,26 +50,6 @@ const materielType = computed(() =>
   materielTypeStore.liste.find((m) => m.id === parseInt(id)),
 );
 
-// Partie pièces
-const piecesColonnes = computed(() => [
-  ...(materielType.value.est_numerote
-    ? [{ title: 'Numéro', key: 'numero' }]
-    : []),
-  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
-  ...(materielType.value.est_taillee
-    ? [{ title: 'Taille', key: 'taille' }]
-    : []),
-  ...(materielType.value.est_lavable
-    ? [{ title: 'Lavages', slot: 'lavages' }]
-    : []),
-  { title: 'Compartiment', key: 'compartiment' },
-  // { title: 'Inventaire', key: 'inventaire' },
-  // { title: 'Maintenance', key: 'maintenance' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Ajouté', key: 'created_at', type: 'date' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
-]);
-
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
@@ -80,13 +65,67 @@ const linearEmplacements = (emplacement_id) => {
   return [...linearEmplacements(emplacement.parent_id), emplacement];
 };
 
-const computedData = computed(() =>
-  articles.value.map((a) => ({
+const computedData = computed(() => {
+  const items = articles.value.map((a) => ({
     ...a,
     emplacements: linearEmplacements(a.emplacement_id),
     sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-  })),
-);
+    generic_emplacement_id:
+      (a.sapeur_id ?? '') + '_' + (a.emplacement_id ?? ''),
+  }));
+
+  return affichageIndividuel.value
+    ? items
+    : Object.entries(groupedByData(items, 'generic_emplacement_id'))
+        .map(([key, values]) => ({
+          key,
+          id: key,
+          emplacement_id: values[0].emplacement_id,
+          emplacements: values[0].emplacements,
+          sapeur_id: values[0].sapeur_id,
+          sapeur: values[0].sapeur,
+          data: values,
+          quantite: values.length,
+          compartiments: new Set(values.map((a) => a.compartiment)),
+        }))
+        .map((a) => ({
+          ...a,
+          compartiment:
+            a.compartiments.size === 1
+              ? [...a.compartiments][0]
+              : `(${a.compartiments.size})`,
+        }));
+});
+
+const piecesColonnes = computed(() => [
+  ...(affichageIndividuel.value && materielType.value.est_numerote
+    ? [{ title: 'Numéro', key: 'numero' }]
+    : []),
+  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
+  { title: 'Compartiment', key: 'compartiment' },
+  ...(affichageIndividuel.value
+    ? [
+        ...(materielType.value.type === 3
+          ? [
+              { title: 'Désignation', key: 'designation' },
+              { title: 'Immatriculation', key: 'immatriculation' },
+              { title: 'Chassis', key: 'chassis' },
+            ]
+          : []),
+        ...(materielType.value.est_taillee
+          ? [{ title: 'Taille', key: 'taille' }]
+          : []),
+        ...(materielType.value.est_lavable
+          ? [{ title: 'Lavages', slot: 'lavages' }]
+          : []),
+        { title: 'Remarque', key: 'remarque' },
+        { title: 'Ajouté', key: 'created_at', type: 'date' },
+        // { title: 'Inventaire', key: 'inventaire' },
+        // { title: 'Maintenance', key: 'maintenance' },
+        { title: 'Actions', key: 'id', slot: 'actions' },
+      ]
+    : [{ title: 'Quantité', key: 'quantite' }]),
+]);
 
 const { showModal } = useModalStore();
 const infoMateriel = (materiel) =>
@@ -130,6 +169,40 @@ const supprimer = (article) =>
 <template>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
+    <template #header>
+      <div
+        class="btn-group"
+        role="group"
+        aria-label="Basic radio toggle button group"
+      >
+        <input
+          type="radio"
+          class="btn-sm btn-check"
+          name="groupingBy"
+          id="individuel"
+          autocomplete="off"
+          v-model="affichageIndividuel"
+          :value="true"
+          checked
+        />
+        <label class="btn btn-sm btn-outline-primary" for="individuel"
+          >Individuel</label
+        >
+        <input
+          type="radio"
+          class="btn-sm btn-check"
+          name="groupingBy"
+          id="par-emplacement"
+          v-model="affichageIndividuel"
+          :value="false"
+          autocomplete="off"
+        />
+        <label class="btn btn-sm btn-outline-primary" for="par-emplacement"
+          >Par emplacement</label
+        >
+      </div>
+      <span />
+    </template>
     <template #body-table>
       <base-table
         :loading="loading"
@@ -173,6 +246,7 @@ const supprimer = (article) =>
             <font-awesome-icon :icon="['fas', 'info-circle']" />
           </button>
           <button
+            v-if="affichageIndividuel && hasEditPermission"
             title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
@@ -180,7 +254,12 @@ const supprimer = (article) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
-            v-if="materielType.est_attribuable && rowData.sapeur_id !== null"
+            v-if="
+              affichageIndividuel &&
+              hasEditPermission &&
+              materielType.est_attribuable &&
+              rowData.sapeur_id !== null
+            "
             title="Retour"
             class="btn btn-outline-primary border-0"
             @click="retourMateriel(rowData)"
@@ -188,7 +267,12 @@ const supprimer = (article) =>
             <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
           </button>
           <button
-            v-if="materielType.est_attribuable && rowData.sapeur_id === null"
+            v-if="
+              affichageIndividuel &&
+              hasEditPermission &&
+              materielType.est_attribuable &&
+              rowData.sapeur_id === null
+            "
             title="Attribuer"
             class="btn btn-outline-primary border-0"
             @click="attribuerMateriel(rowData)"
@@ -196,6 +280,7 @@ const supprimer = (article) =>
             <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
           </button>
           <button
+            v-if="affichageIndividuel && hasEditPermission"
             title="Supprimer"
             class="btn btn-outline-danger border-0"
             @click="supprimer(rowData)"

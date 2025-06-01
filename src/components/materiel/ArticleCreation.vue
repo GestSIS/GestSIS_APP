@@ -35,6 +35,27 @@ await Promise.all([
 const types = computed(() => materielTypeStore.liste);
 const indexedTypes = computed(() => indexedData(types.value));
 
+const afficherColoneTaille = computed(() =>
+  articles.value.some(
+    (a) => indexedTypes.value[a.materiel_type_id]?.est_taillee,
+  ),
+);
+const afficherColoneNumero = computed(() =>
+  articles.value.some(
+    (a) => indexedTypes.value[a.materiel_type_id]?.est_numerote,
+  ),
+);
+const afficherColoneQuantite = computed(() =>
+  articles.value.some(
+    (a) => !indexedTypes.value[a.materiel_type_id]?.est_numerote,
+  ),
+);
+const afficherColoneVehicule = computed(() =>
+  articles.value.some(
+    (a) => indexedTypes.value[a.materiel_type_id]?.type === 3,
+  ),
+);
+
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   articles.value.push({
@@ -60,10 +81,13 @@ const addEmptyLine = () => {
     <thead>
       <tr>
         <th class="col-3">Matériel type</th>
-        <th class="col-2">Numéro</th>
-        <th class="col-1">Quantité</th>
-        <th class="col-1">Est etiqueté</th>
-        <th class="col-1">Taille</th>
+        <th v-if="afficherColoneVehicule" class="col-1">Désignation</th>
+        <th v-if="afficherColoneVehicule" class="col-1">Immatriculation</th>
+        <th v-if="afficherColoneVehicule" class="col-1">Chassis</th>
+        <th v-if="afficherColoneNumero" class="col-2">Numéro</th>
+        <th v-if="afficherColoneQuantite" class="col-1">Quantité</th>
+        <th v-if="afficherColoneNumero" class="col-1">Est etiqueté</th>
+        <th v-if="afficherColoneTaille" class="col-1">Taille</th>
         <th class="col-1">Achat</th>
         <th>Remarque</th>
         <th class="col-1"></th>
@@ -87,7 +111,49 @@ const addEmptyLine = () => {
             :options="types"
           />
         </td>
-        <td>
+        <td v-if="afficherColoneVehicule">
+          <input
+            v-if="indexedTypes[item.materiel_type_id]?.type === 3"
+            v-model="item.designation"
+            class="form-control form-control-sm"
+            type="text"
+          />
+          <font-awesome-icon
+            v-else
+            class="ms-4"
+            v-tooltip.bottom="'Uniquement pour les véhicules'"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td v-if="afficherColoneVehicule">
+          <input
+            v-if="indexedTypes[item.materiel_type_id]?.type === 3"
+            v-model="item.immatriculation"
+            class="form-control form-control-sm"
+            type="text"
+          />
+          <font-awesome-icon
+            v-else
+            class="ms-4"
+            v-tooltip.bottom="'Uniquement pour les véhicules'"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td v-if="afficherColoneVehicule">
+          <input
+            v-if="indexedTypes[item.materiel_type_id]?.type === 3"
+            v-model="item.chassis"
+            class="form-control form-control-sm"
+            type="text"
+          />
+          <font-awesome-icon
+            v-else
+            class="ms-4"
+            v-tooltip.bottom="'Uniquement pour les véhicules'"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td v-if="afficherColoneNumero">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.numero"
@@ -101,7 +167,7 @@ const addEmptyLine = () => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <td>
+        <td v-if="afficherColoneQuantite">
           <input
             v-if="!indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.quantite"
@@ -115,9 +181,8 @@ const addEmptyLine = () => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <td>
+        <td v-if="afficherColoneNumero">
           <div class="form-check">
-            <!-- Checkbox est etiqueté correctement -->
             <input
               v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
               type="checkbox"
@@ -126,7 +191,7 @@ const addEmptyLine = () => {
             />
           </div>
         </td>
-        <td>
+        <td v-if="afficherColoneTaille">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
             v-model="item.taille"
@@ -164,7 +229,15 @@ const addEmptyLine = () => {
         </td>
       </tr>
       <tr>
-        <td colspan="8">
+        <td
+          :colspan="
+            12 -
+            (afficherColoneNumero ? 1 : 0) -
+            (afficherColoneTaille ? 1 : 0) -
+            (afficherColoneQuantite ? 1 : 0) -
+            (afficherColoneVehicule ? 3 : 0)
+          "
+        >
           <button class="btn btn-outline-primary" @click="addEmptyLine">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
