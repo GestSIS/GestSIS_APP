@@ -124,7 +124,6 @@ const save = async () => {
           :class="{ 'is-invalid': errors['remarque'] }"
         />
       </div>
-      <!-- TODO: Emplacement et compartiment si set -->
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">

@@ -1,11 +1,12 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import LavageService from '../../services/materiel/LavageService';
 import ArticleService from '../../services/materiel/ArticleService';
+
 import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import LavageService from '../../services/materiel/LavageService';
 
 const { data, callback } = defineProps({
   data: {
@@ -17,22 +18,6 @@ const { data, callback } = defineProps({
     default: () => {},
   },
 });
-
-const errors = ref({});
-const activeAttribution = ref({
-  date: new Date().toISOString().slice(0, 10),
-  articles: [],
-});
-
-const materielTypeStore = useMaterielTypeStore();
-const emplacementStore = useEmplacementStore();
-
-await Promise.all([
-  materielTypeStore.fetchMaterielTypes(),
-  emplacementStore.fetchEmplacements(),
-]);
-
-const articlesLavable = ref(await ArticleService.getLavable());
 
 const awn = inject('awn');
 const { closeModal } = useModalStore();
@@ -50,6 +35,8 @@ const save = async () => {
       awn.alert(error.message ?? 'Erreur lors de la création des lavages'),
     );
 };
+
+const fields = [{ title: 'Date', key: 'date' }];
 </script>
 
 <template>
@@ -61,7 +48,7 @@ const save = async () => {
     <div class="modal-body overflow-visible">
       <div class="row">
         <div class="col-6 mb-3">
-          <label for="date">Date du lavage</label>
+          <label for="date">Date attribution</label>
           <input
             id="date"
             v-model="activeAttribution.date"
@@ -71,10 +58,7 @@ const save = async () => {
           />
         </div>
         <div class="col-md-12">
-          <article-selecteur
-            v-model="activeAttribution.articles"
-            :articles="articlesLavable"
-          />
+          <base-table :fields="fields" />
         </div>
       </div>
     </div>

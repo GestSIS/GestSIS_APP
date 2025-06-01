@@ -78,6 +78,13 @@ const computedData = computed(() =>
 );
 
 const { showModal } = useModalStore();
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalArticleInfo',
+    data: materiel,
+    size: 1,
+  });
+
 const editMateriel = (materiel) =>
   showModal({
     component: 'ModalArticle',
@@ -152,6 +159,13 @@ const linearCategories = (categorieId) => {
         </template>
 
         <template #actions="{ rowData }">
+          <button
+            title="Info"
+            class="btn btn-outline-secondary border-0"
+            @click="infoMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
           <button
             v-if="hasEditPermission"
             title="Modifier"

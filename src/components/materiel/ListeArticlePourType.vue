@@ -89,6 +89,13 @@ const computedData = computed(() =>
 );
 
 const { showModal } = useModalStore();
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalArticleInfo',
+    data: materiel,
+    size: 1,
+  });
+
 const editMateriel = (materiel) =>
   showModal({
     component: 'ModalArticle',
@@ -159,6 +166,13 @@ const supprimer = (article) =>
 
         <template #actions="{ rowData }">
           <button
+            title="Info"
+            class="btn btn-outline-secondary border-0"
+            @click="infoMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
+          <button
             title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
@@ -167,7 +181,7 @@ const supprimer = (article) =>
           </button>
           <button
             v-if="materielType.est_attribuable && rowData.sapeur_id !== null"
-            title="Attribuer"
+            title="Retour"
             class="btn btn-outline-primary border-0"
             @click="retourMateriel(rowData)"
           >

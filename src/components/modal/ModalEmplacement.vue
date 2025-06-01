@@ -20,7 +20,6 @@ const emplacement = ref({
   statut: 1,
   est_etiquete: false,
   ...data,
-  type_unite_id: data.type_unite_id ?? 0,
 });
 
 const { closeModal } = useModalStore();
@@ -57,16 +56,6 @@ const save = async () => {
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="mb-3">
-        <label for="remarque">Remarque</label>
-        <input
-          id="remarque"
-          v-model="emplacement.remarque"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['remarque'] }"
-        />
-      </div>
       <base-checkbox
         v-model="emplacement.est_etiquete"
         label="Est etiqueté"
@@ -84,6 +73,16 @@ const save = async () => {
         label="Couleur"
         class="mb-3"
       />
+      <div class="mb-3">
+        <label for="remarque">Remarque</label>
+        <input
+          id="remarque"
+          v-model="emplacement.remarque"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['remarque'] }"
+        />
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">

@@ -109,7 +109,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         <th class="col-2">Taille</th>
         <th class="col-2">Emplacement</th>
         <th>Remarque</th>
-        <th class="col-1"></th>
+        <th class="col-1">Action</th>
       </tr>
     </thead>
     <tbody v-if="articlesAttribuable.length === 0">
@@ -142,12 +142,14 @@ const selectMaterielTypeNumerote = (item, value) => {
             :is-clearable="false"
             noResults="Aucun article correspondant"
             :options="
-              articlesAttribuable
-                .filter((a) => a.materiel_type_id == item.materiel_type_id)
-                .map((a) => ({
-                  value: a.id,
-                  label: a.numero?.length ? a.numero : '<sans numéro>',
-                }))
+              [
+                ...articlesAttribuable
+                  .filter((a) => a.materiel_type_id == item.materiel_type_id)
+                  .map((a) => ({
+                    value: a.id,
+                    label: a.numero?.length ? a.numero : '<sans numéro>',
+                  })),
+              ].sort((a, b) => a.label?.localeCompare(b.label))
             "
           />
           <font-awesome-icon
@@ -162,9 +164,11 @@ const selectMaterielTypeNumerote = (item, value) => {
             v-if="indexedTypes[item.materiel_type_id]?.est_taillee"
             v-model="item.id"
             :options="
-              articlesAttribuable.filter(
-                (a) => a.materiel_type_id == item.materiel_type_id,
-              )
+              [
+                ...articlesAttribuable.filter(
+                  (a) => a.materiel_type_id == item.materiel_type_id,
+                ),
+              ].sort((a, b) => a.taille?.localeCompare(b.taille))
             "
             display-key="taille"
           />

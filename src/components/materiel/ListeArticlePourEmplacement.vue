@@ -72,9 +72,16 @@ const piecesColonnes = [
 ];
 
 const { showModal } = useModalStore();
+const infoMateriel = (materiel) =>
+  showModal({
+    component: 'ModalArticleInfo',
+    data: materiel,
+    size: 1,
+  });
+
 const editMateriel = (materiel) =>
   showModal({
-    component: 'ModalMateriel',
+    component: 'ModalArticle',
     data: materiel,
     callback: loadArticles,
   });
@@ -151,6 +158,13 @@ const linearCategories = (categorieId) => {
         </template>
         <template #actions="{ rowData }">
           <button
+            title="Info"
+            class="btn btn-outline-secondary border-0"
+            @click="infoMateriel(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'info-circle']" />
+          </button>
+          <button
             v-if="hasEditPermission"
             title="Modifier"
             class="btn btn-outline-secondary border-0"
@@ -164,7 +178,7 @@ const linearCategories = (categorieId) => {
               rowData.type.est_attribuable &&
               rowData.sapeur_id !== null
             "
-            title="Attribuer"
+            title="Retour"
             class="btn btn-outline-primary border-0"
             @click="retourMateriel(rowData)"
           >

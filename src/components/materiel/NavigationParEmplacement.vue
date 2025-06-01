@@ -6,6 +6,7 @@ import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
+import { useModalStore } from '../../stores/common/Modal';
 
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
@@ -46,6 +47,13 @@ const computedData = computed(() => {
 
   return recursive(null).filter((e) => filteredIds.includes(e.id));
 });
+
+const { showModal } = useModalStore();
+const ajoutEmplacement = () =>
+  showModal({
+    component: 'ModalEmplacement',
+    data: {},
+  });
 </script>
 
 <template>
@@ -69,8 +77,8 @@ const computedData = computed(() => {
       <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
     </span>
   </div>
-  <div class="card">
-    <ul class="ps-2 mb-1">
+  <div class="card mb-2">
+    <ul class="ps-0 mb-1">
       <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
         <span class="border-bottom-0">Aucun emplacement</span>
       </li>
@@ -79,7 +87,7 @@ const computedData = computed(() => {
         :key="item.globalId"
         v-slot="{ navigate, isExactActive }"
         :style="{
-          'padding-left': item.level * 25 + 'px',
+          'padding-left': 10 + item.level * 25 + 'px',
         }"
         custom
         :to="{
@@ -101,6 +109,12 @@ const computedData = computed(() => {
       </router-link>
     </ul>
   </div>
+  <button
+    class="btn btn-sm btn-outline-primary w-100"
+    @click="ajoutEmplacement"
+  >
+    Ajouter
+  </button>
 </template>
 
 <style scoped></style>

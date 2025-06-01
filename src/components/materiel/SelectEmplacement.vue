@@ -1,25 +1,30 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import VueSelect from 'vue3-select-component';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
-const { label, emplacementIdToIgnore, emplacementRacine } = defineProps({
-  label: {
-    type: String,
-    default: () => '',
-  },
-  emplacementIdToIgnore: {
-    type: Number,
-    default: () => -1,
-  },
-  emplacementRacine: {
-    type: Boolean,
-    default: () => false,
-  },
-});
+const { label, emplacementIdToIgnore, emplacementRacine, disabled } =
+  defineProps({
+    label: {
+      type: String,
+      default: () => '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    emplacementIdToIgnore: {
+      type: Number,
+      default: () => -1,
+    },
+    emplacementRacine: {
+      type: Boolean,
+      default: () => false,
+    },
+  });
 
 const model = defineModel();
 
@@ -76,6 +81,7 @@ const emplacements = computed(() => {
     <label v-if="label">{{ label }}</label>
     <VueSelect
       v-model="model"
+      :is-disabled="disabled"
       :options="emplacements"
       placeholder="Sélectionnez un emplacement"
     >
