@@ -35,12 +35,12 @@ const loadArticles = async () => {
   loading.value = false;
 };
 
+loadArticles();
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
   couleurStore.fetchCouleurs(),
 ]);
-loadArticles();
 
 watch(() => id, loadArticles);
 

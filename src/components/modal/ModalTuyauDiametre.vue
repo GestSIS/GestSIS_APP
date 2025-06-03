@@ -38,7 +38,7 @@ const save = async () => {
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un diamètre de tuyau
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -53,7 +53,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">

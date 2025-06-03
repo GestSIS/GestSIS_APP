@@ -36,13 +36,13 @@ const loadArticles = async () => {
   loading.value = false;
 };
 
+loadArticles();
 await Promise.all([
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
   store.dispatch('fetchListeSapeur'),
 ]);
-loadArticles();
 
 watch(() => id, loadArticles);
 

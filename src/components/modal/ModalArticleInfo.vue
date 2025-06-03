@@ -44,7 +44,7 @@ const fields = [
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un article
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body overflow-visible">
       <div class="row">
@@ -133,7 +133,7 @@ const fields = [
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
+      <button type="button" class="btn btn-secondary" @click="ModalModal">
         Fermer
       </button>
     </div>
