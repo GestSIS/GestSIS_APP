@@ -40,7 +40,7 @@ const computedData = computed(() => {
       data.push({
         ...c,
         globalId: 'c' + c.id,
-        type: 'categorie',
+        estCategorie: true,
         level: level,
         tag: 'tag',
       });
@@ -52,7 +52,7 @@ const computedData = computed(() => {
         data.push({
           ...t,
           globalId: 't' + t.id,
-          type: 'type',
+          estCategorie: false,
           level: level + 1,
           tag: 'shirt',
         });
@@ -75,20 +75,21 @@ const ajoutCategorie = () =>
 const ajoutType = () => showModal({ component: 'ModalMaterielType', data: {} });
 const update = (elem) =>
   showModal({
-    component:
-      elem.type == 'type' ? 'ModalMaterielType' : 'ModalMaterielCategorie',
+    component: elem.estCategorie
+      ? 'ModalMaterielCategorie'
+      : 'ModalMaterielType',
     data: { ...elem },
   });
 
 const remove = (elem) => {
-  const designation = elem.type == 'type' ? 'ce type' : 'cette catégorie';
+  const designation = elem.estCategorie ? 'cette catégorie' : 'ce type';
   confirm(
     `Voulez-vous vraiment supprimer ${designation} ?`,
     'Attention, la suppression de cet élément est irréversible !',
   ).then(() =>
-    (elem.type === 'type'
-      ? typeStore.removeMaterielType
-      : categorieStore.removeMaterielCategorie)(elem.id).catch((res) =>
+    (elem.estCategorie
+      ? categorieStore.removeMaterielCategorie
+      : typeStore.removeMaterielType)(elem.id).catch((res) =>
       this.$awn.alert(res.message || 'Erreur lors de la suppression'),
     ),
   );
@@ -137,13 +138,13 @@ const fields = [
         <template #type="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
             <font-awesome-icon
-              v-if="rowData.type === 'type'"
+              v-if="!rowData.estCategorie"
               class="me-2"
               :icon="['fas', rowData.tag]"
             />
             <tag-couleur
               class="ms-2"
-              v-if="rowData.type === 'categorie'"
+              v-if="rowData.estCategorie"
               :couleur="indexedCouleurs[rowData.couleur_id]"
             >
               {{ rowData.designation }}
@@ -152,7 +153,7 @@ const fields = [
           </div>
         </template>
         <template #couleur="{ rowData }">
-          <template v-if="rowData.type === 'categorie'">
+          <template v-if="rowData.estCategorie">
             <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
               A
             </tag-couleur>
