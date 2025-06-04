@@ -10,7 +10,6 @@ import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
-import { acceptHMRUpdate } from 'pinia';
 
 const { id } = defineProps({
   id: {
@@ -105,6 +104,7 @@ const piecesColonnes = computed(() => [
   ...(affichageIndividuel.value
     ? [
         { title: 'Numéro', key: 'numero' },
+        { title: 'Taille', key: 'taille' },
         { title: 'Remarque', key: 'remarque' },
         { title: 'Ajouté', key: 'created_at', type: 'date' },
         { title: 'Actions', key: 'id', slot: 'actions' },

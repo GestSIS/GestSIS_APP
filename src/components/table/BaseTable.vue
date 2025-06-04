@@ -90,7 +90,7 @@ const emit = defineEmits(['selected']);
 
 const sorted = ref({
   key: null,
-  asc: false,
+  asc: true,
   func: (a) => a,
 });
 const selected = ref(null);
@@ -102,11 +102,11 @@ const detailsRowVisibility = ref(() =>
 const defaultFormatter = (e) => e;
 
 const sortedData = computed(() => {
-  const sorted = [...data];
-  const func = sorted.func;
-  const key = sorted.key;
+  const sortedData = [...data];
+  const func = sorted.value.func;
+  const key = sorted.value.key;
   if (key) {
-    sorted.sort((a, b) => {
+    sortedData.sort((a, b) => {
       let aVal = func(a[key]);
       let bVal = func(b[key]);
       if (parseInt(aVal) == aVal && parseInt(bVal) == bVal) {
@@ -114,12 +114,12 @@ const sortedData = computed(() => {
         bVal = parseInt(bVal);
       }
       const res =
-        typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal < bVal;
-      return sorted.asc ? -1 * res : res;
+        typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal > bVal;
+      return sorted.value.asc ? res : -1 * res;
     });
   }
 
-  return sorted;
+  return sortedData;
 });
 
 const actions = computed(() => {

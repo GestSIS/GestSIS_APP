@@ -66,13 +66,20 @@ const linearEmplacements = (emplacement_id) => {
 };
 
 const computedData = computed(() => {
-  const items = articles.value.map((a) => ({
-    ...a,
-    emplacements: linearEmplacements(a.emplacement_id),
-    sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-    generic_emplacement_id:
-      (a.sapeur_id ?? '') + '_' + (a.emplacement_id ?? ''),
-  }));
+  const items = articles.value
+    .map((a) => ({
+      ...a,
+      emplacements: linearEmplacements(a.emplacement_id),
+      sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
+      emplacement:
+        indexedEmplacements.value[a.emplacement_id]?.designation ?? '',
+      generic_emplacement_id:
+        (a.sapeur_id ?? '') + '_' + (a.emplacement_id ?? ''),
+    }))
+    .map((a) => ({
+      ...a,
+      emplacement_sort: a.sapeur + 'ZZZZ' + a.emplacement,
+    }));
 
   return affichageIndividuel.value
     ? items
@@ -101,7 +108,7 @@ const piecesColonnes = computed(() => [
   ...(affichageIndividuel.value && materielType.value.est_numerote
     ? [{ title: 'Numéro', key: 'numero' }]
     : []),
-  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
+  { title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' },
   { title: 'Compartiment', key: 'compartiment' },
   ...(affichageIndividuel.value
     ? [
