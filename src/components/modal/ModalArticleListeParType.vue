@@ -41,7 +41,7 @@ const { closeModal } = useModalStore();
   <div class="overflow-visible">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Articles</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body overflow-visible">
       <base-table

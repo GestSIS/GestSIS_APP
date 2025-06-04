@@ -128,12 +128,16 @@ const fields = [
           </div>
         </div>
         <div class="col-4">
-          <base-table :fields="fields" :data="events"></base-table>
+          <base-table
+            :fields="fields"
+            :data="events"
+            :selectable="true"
+          ></base-table>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="ModalModal">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
     </div>

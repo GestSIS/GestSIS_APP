@@ -114,7 +114,7 @@ const sortedData = computed(() => {
         bVal = parseInt(bVal);
       }
       const res =
-        typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal > bVal;
+        typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
       return sorted.value.asc ? res : -1 * res;
     });
   }

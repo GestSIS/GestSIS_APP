@@ -51,7 +51,7 @@ const save = async () => {
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un article
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body overflow-visible">
       <base-select

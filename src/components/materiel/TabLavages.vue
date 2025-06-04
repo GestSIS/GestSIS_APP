@@ -42,7 +42,7 @@ const piecesColonnes = [
   { title: 'Matériel', key: 'designation' },
   { title: 'Numéro', key: 'numero' },
   { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
-  { title: 'Lavages', slot: 'lavages' },
+  { title: 'Lavages', key: 'nbLavages', slot: 'lavages' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Actions', key: 'id', slot: 'actions' },
 ];
@@ -68,6 +68,7 @@ const computedData = computed(() =>
     ...a,
     ...a.article,
     id: a.id,
+    nbLavages: a.article.lavages.length,
     designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
     emplacements: linearEmplacements(a.article.emplacement_id),
     sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? '',

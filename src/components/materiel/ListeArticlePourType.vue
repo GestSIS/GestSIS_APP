@@ -71,6 +71,7 @@ const computedData = computed(() => {
       ...a,
       emplacements: linearEmplacements(a.emplacement_id),
       sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
+      nbLavages: (a.lavages ?? []).length,
       emplacement:
         indexedEmplacements.value[a.emplacement_id]?.designation ?? '',
       generic_emplacement_id:
@@ -123,7 +124,7 @@ const piecesColonnes = computed(() => [
           ? [{ title: 'Taille', key: 'taille' }]
           : []),
         ...(materielType.value.est_lavable
-          ? [{ title: 'Lavages', slot: 'lavages' }]
+          ? [{ title: 'Lavages', key: 'nbLavages', slot: 'lavages' }]
           : []),
         { title: 'Remarque', key: 'remarque' },
         { title: 'Ajouté', key: 'created_at', type: 'date' },
