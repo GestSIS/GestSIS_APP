@@ -189,14 +189,13 @@ const save = async () => {
         required
       />
       <div v-if="activeItem.type === 2" class="mb-3">
-        <label for="longeur">Nombre</label>
+        <label for="nombre">Nombre</label>
         <input
-          id="longeur"
+          id="nombre"
           v-model="activeItem.batterie.nombre"
           type="number"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['longeur'] }"
-          placeholder="1"
+          :class="{ 'is-invalid': errors['nombre'] }"
           min="1"
           required
         />

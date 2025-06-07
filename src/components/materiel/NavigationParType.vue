@@ -116,7 +116,7 @@ const computedData = computed(() => {
         >
           {{ item.data.designation }}
         </a>
-        <div v-else class="list-group-item p-1">
+        <div v-else class="list-group-item p-1 bg-body-secondary">
           <tag-couleur
             v-for="categorie in linearCategories(item.data.id)"
             :key="categorie.id"
