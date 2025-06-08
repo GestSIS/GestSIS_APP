@@ -44,7 +44,7 @@ const { showModal } = useModalStore();
 const editEmplacement = () => {
   showModal({
     component: 'ModalEmplacement',
-    data: emplacement,
+    data: emplacement.value,
   });
 };
 </script>

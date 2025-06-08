@@ -8,7 +8,7 @@ import SelectCouleur from '../materiel/SelectCouleur.vue';
 const { data } = defineProps({
   data: {
     type: Object,
-    default: () => ({}),
+    default: () => {},
   },
 });
 
