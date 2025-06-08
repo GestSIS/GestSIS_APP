@@ -55,14 +55,19 @@ const routes = [
     permission: permissions.INTERVENTION.CONFIG,
   },
   {
-    to: { name: 'param-fiche-travail' },
-    texte: 'Fiche de travail',
-    permission: permissions.FICHE_TRAVAIL.CONFIG,
+    to: { name: 'param-materiel' },
+    texte: 'Matériel',
+    permission: permissions.MATERIEL.CONFIG,
   },
   {
     to: { name: 'param-sms' },
     texte: 'Sms',
     permission: permissions.SMS.CONFIG,
+  },
+  {
+    to: { name: 'param-fiche-travail' },
+    texte: 'Fiche de travail',
+    permission: permissions.FICHE_TRAVAIL.CONFIG,
   },
   {
     to: { name: 'param-absence' },
@@ -78,11 +83,6 @@ const routes = [
     to: { name: 'param-controle-medical' },
     texte: 'Contrôles médicaux',
     permission: permissions.CONTROLE_MEDICAL.CONFIG,
-  },
-  {
-    to: { name: 'param-materiel-personnel' },
-    texte: 'Matériel personnel',
-    permission: permissions.MATERIEL_PERSONNEL.CONFIG,
   },
   {
     to: { name: 'param-roles' },

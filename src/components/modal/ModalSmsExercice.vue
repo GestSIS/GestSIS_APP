@@ -62,7 +62,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 
 import SapeurService from '../../services/SapeurService';
@@ -141,7 +143,7 @@ export default {
               .filter((a) => a.telephone_type_id === 3)
               .sort((a, b) => a.priorite - b.priorite)
               .find(() => true)?.numero,
-          })
+          }),
       );
       return this.presences.map((s) => ({
         ...s,
@@ -176,7 +178,7 @@ export default {
 
     const localite = this.localites.find((l) => l.id == this.data.localite_id);
     const categorie = this.categories.find(
-      (l) => l.id == this.data.exercice_categorie_id
+      (l) => l.id == this.data.exercice_categorie_id,
     );
     this.params.date = this.data.date + ' ' + this.data.heure;
     this.params.exerciceId = this.data.id;
@@ -184,14 +186,14 @@ export default {
     this.params.message =
       `Rappel\n` +
       `${DateTime.fromSQL(this.data.date).toLocaleString(
-        DateTime.DATE_MED_WITH_WEEKDAY
+        DateTime.DATE_MED_WITH_WEEKDAY,
       )} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${
         localite?.designation ?? ''
       } \n` +
       `${categorie?.designation} : ${this.data.communications}`;
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async send() {
       const params = {
         ...this.params,
@@ -225,7 +227,7 @@ export default {
           this.errors = { ...errors };
           this.sending = false;
           return this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'envoie des SMS"
+            errors?.message ?? "Erreur lors de l'envoie des SMS",
           );
         });
     },

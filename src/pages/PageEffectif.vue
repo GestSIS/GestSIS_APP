@@ -107,7 +107,7 @@
                           ? (fonctions) =>
                               fonctions.find((f) => f.fonction_id == value) !=
                               undefined
-                          : null
+                          : null,
                       )
                   "
                 />
@@ -140,7 +140,7 @@
                           ? (groupes) =>
                               groupes.find((f) => f.groupe_id == value) !=
                               undefined
-                          : undefined
+                          : undefined,
                       )
                   "
                 />
@@ -216,7 +216,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import store from '/src/store/index';
 import permissions from '../store/permissions.js';
 
@@ -303,7 +305,7 @@ export default {
     ...mapState({
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       civilites: (state) => state.baseData.civilites,
       groupes: (state) => state.groupe.liste,
@@ -333,7 +335,7 @@ export default {
       const porteurIds = new Set(
         this.fonctions
           .filter((f) => f.nom.toLowerCase().includes('porteur'))
-          .map((f) => f.id)
+          .map((f) => f.id),
       );
       const b_id = 3;
       const c1_id = 6;
@@ -351,7 +353,8 @@ export default {
             s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
           fonctions: s.fonctions.filter(
             (f) =>
-              f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0
+              f.fin == null ||
+              DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
           ),
           fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
           localite: indexedLocalite.get(s.localite_id)?.designation || '',
@@ -387,7 +390,7 @@ export default {
       const ids = new Set(
         this.sapeurs
           .map((s) => s.fonctions.map((f) => parseInt(f.fonction_id)))
-          .reduce((acc, e) => [...acc, ...e], [])
+          .reduce((acc, e) => [...acc, ...e], []),
       );
       return this.fonctions.filter((e) => ids.has(e.id));
     },
@@ -399,7 +402,7 @@ export default {
       const ids = new Set(
         this.sapeurs
           .map((s) => s.groupes.map((f) => f.groupe_id))
-          .reduce((acc, e) => [...acc, ...e], [])
+          .reduce((acc, e) => [...acc, ...e], []),
       );
       return this.groupes
         .filter((t) => ids.has(t.id))
@@ -419,7 +422,10 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     selectSapeur(id) {
       this.selectedId = id;
     },
@@ -434,7 +440,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération du trombinoscope'
+              'Une erreur a eu lieu durant la génération du trombinoscope',
           );
         });
     },
@@ -451,7 +457,7 @@ export default {
     sms(sapeurs) {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
         );
         return;
       }

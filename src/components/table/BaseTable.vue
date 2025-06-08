@@ -1,3 +1,257 @@
+<script setup>
+import { computed, ref, watch } from 'vue';
+
+const {
+  data,
+  groupedData,
+  fields,
+  filter,
+  noData,
+  selectable,
+  selectKey,
+  rowClass,
+  rowSelectedClass,
+  detailRowColumn,
+  detailRowColumnHideButton,
+  detailRowComponent,
+  detailRowOptions,
+  detailRowClass,
+  hideDownload,
+} = defineProps({
+  data: {
+    type: Array,
+    default: () => [],
+  },
+  groupedData: {
+    type: Array,
+    default: () => [],
+  },
+  fields: {
+    type: Array,
+    default: () => [],
+  },
+  filter: {
+    type: Object,
+    default: () => {},
+  },
+  loading: {
+    type: Boolean,
+    default: () => {},
+  },
+
+  noData: {
+    type: String,
+    default: () => 'Aucune donné à afficher',
+  },
+  selectable: {
+    type: Boolean,
+    default: () => false,
+  },
+  selectKey: {
+    type: String,
+    default: 'id',
+  },
+  rowClass: {
+    type: [String, Function],
+    default: () => '',
+  },
+  rowSelectedClass: {
+    type: String,
+    default: 'table-primary',
+  },
+  detailRowColumn: {
+    // Pour afficher la colonne détail-row
+    type: Boolean,
+    default: () => false,
+  },
+  detailRowColumnHideButton: {
+    // Fonction pour cacher la bouton toggle detail-row de certaines lignes
+    type: Function,
+    default: () => false,
+  },
+  detailRowComponent: {
+    type: Object,
+    default: () => {},
+  },
+  detailRowOptions: {
+    type: Object,
+    default: () => {},
+  },
+  detailRowClass: {
+    type: String,
+    default: () => '',
+  },
+  hideDownload: {
+    type: Boolean,
+    default: () => false,
+  },
+});
+const emit = defineEmits(['selected']);
+
+const sorted = ref({
+  key: null,
+  asc: true,
+  func: (a) => a,
+});
+const selected = ref(null);
+const detailsRowVisibility = ref(() =>
+  detailRowComponent.value
+    ? Object.fromEntries(data.map((d) => [d[selectKey], false]))
+    : {},
+);
+const defaultFormatter = (e) => e;
+
+const sortedData = computed(() => {
+  const sortedData = [...data];
+  const func = sorted.value.func;
+  const key = sorted.value.key;
+  if (key) {
+    sortedData.sort((a, b) => {
+      let aVal = func(a[key]);
+      let bVal = func(b[key]);
+      if (parseInt(aVal) == aVal && parseInt(bVal) == bVal) {
+        aVal = parseInt(aVal);
+        bVal = parseInt(bVal);
+      }
+      const res =
+        typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
+      return sorted.value.asc ? res : -1 * res;
+    });
+  }
+
+  return sortedData;
+});
+
+const actions = computed(() => {
+  return {
+    select: select,
+    showDetailRow: showDetailRow,
+    hideDetailRow: hideDetailRow,
+    toggleDetailRow: toggleDetailRow,
+  };
+});
+
+watch(
+  () => data,
+  (val) => {
+    if (selected) {
+      // Watcher pour déselectionner l'élément actif en cas de suppression
+      const selectedKey = selected; //[selectKey];
+      if (val.filter((e) => e[selectKey] === selectedKey).length <= 0) {
+        emit('selected', null);
+      }
+    }
+  },
+);
+
+const toCvs = () => {
+  const data =
+    'data:text/csv;charset=utf-8,﻿' +
+    fields
+      .filter((f) => !f.slot)
+      .map((f) => f.title)
+      .join(';') +
+    '\n' +
+    sortedData.value
+      .map((e) =>
+        fields
+          .filter((f) => !f.slot)
+          .map((f) => {
+            switch (f.type) {
+              case 'boolean':
+              case Boolean:
+                return e[f.key] ? 'vrai' : 'faux';
+              case 'date':
+              case Date:
+                return e[f.key]
+                  ? new Date(e[f.key]).toLocaleDateString('fr-CH')
+                  : '';
+              default:
+                return (f.formatter || defaultFormatter)(e[f.key], e);
+            }
+          })
+          .join(';'),
+      )
+      .join('\n');
+  // V1
+  // const encodedUri = encodeURI(data);
+  // window.open(encodedUri);
+  // V2
+  var encodedUri = encodeURI(data);
+  var link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'export_gestsis.csv');
+  document.body.appendChild(link); // Required for FF
+  link.click();
+};
+
+const sort = (field) => {
+  const sortKey = field.sortKey ?? field.key;
+  if (sortKey) {
+    if (sorted.value.key === sortKey) {
+      sorted.value.asc = !sorted.value.asc;
+    } else {
+      sorted.value = { ...sorted.value, key: sortKey, asc: true };
+      //TODO: Ajout support pour custom function of sort
+    }
+  }
+};
+const select = (row) => {
+  if (selectable) {
+    selected.value = row[selectKey];
+    emit('selected', row);
+  }
+};
+const showDetailRow = (id) => {
+  detailsRowVisibility.value = {
+    ...detailsRowVisibility.value,
+    [id]: true,
+  };
+};
+const showAllDetailRow = () => {
+  detailsRowVisibility.value = Object.fromEntries([
+    ...Object.keys(detailsRowVisibility.value).map((key) => [key, true]),
+    ...data.map((d) => [d[selectKey], true]),
+  ]);
+};
+const hideDetailRow = (id) => {
+  detailsRowVisibility.value = {
+    ...detailsRowVisibility.value,
+    [id]: false,
+  };
+};
+const hideAllDetailRow = () => {
+  detailsRowVisibility.value = Object.fromEntries([
+    ...Object.keys(detailsRowVisibility.value).map((key) => [key, false]),
+    ...data.map((d) => [d[selectKey], false]),
+  ]);
+};
+const toggleDetailRow = (id) => {
+  detailsRowVisibility.value = {
+    ...detailsRowVisibility.value,
+    [id]: !detailsRowVisibility.value[id],
+  };
+};
+const toggleAllDetailRow = () => {
+  detailsRowVisibility.value = Object.fromEntries({
+    ...data.map((d) => [d[selectKey], true]),
+    ...Object.entries(detailsRowVisibility.value).map(([key, value]) => [
+      key,
+      !value,
+    ]),
+  });
+};
+
+defineExpose({
+  toggleAllDetailRow,
+  toggleDetailRow,
+  hideAllDetailRow,
+  hideDetailRow,
+  showAllDetailRow,
+  showDetailRow,
+});
+</script>
+
 <template>
   <table class="table table-sm table-hover mb-0">
     <slot name="head">
@@ -50,12 +304,35 @@
         </tr>
       </thead>
     </slot>
-    <tbody>
-      <tr v-if="!data.length">
+    <tbody v-show="loading">
+      <tr>
+        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">
+          <div class="d-flex justify-content-center m-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tbody
+      v-show="!loading"
+      v-for="groupe in groupedData.length === 0
+        ? [{ key: 'default', data: sortedData }]
+        : groupedData"
+      :key="groupe.key"
+    >
+      <tr v-if="!groupe.data.length">
         <td :colspan="fields.length">{{ noData }}</td>
       </tr>
 
-      <template v-for="r in computedData" :key="'main-' + r[selectKey]">
+      <tr v-if="groupedData.length > 0" class="table-secondary">
+        <th :colspan="fields.length">
+          <slot name="groupeHeader" v-bind="groupe">{{ groupe.label }}</slot>
+        </th>
+      </tr>
+
+      <template v-for="r in groupe.data" :key="'main-' + r[selectKey]">
         <tr
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',
@@ -182,7 +459,7 @@
         </tr>
       </template>
     </tbody>
-    <tfoot>
+    <tfoot v-show="!loading">
       <slot name="foot" v-bind="{ data }"></slot>
       <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
         <button class="btn" title="Export CSV" @click="toCvs">
@@ -192,230 +469,6 @@
     </tfoot>
   </table>
 </template>
-
-<script>
-export default {
-  name: 'BaseTable',
-  props: {
-    data: {
-      type: Array,
-      default: () => [],
-    },
-    fields: {
-      type: Array,
-      default: () => [],
-    },
-    filter: {
-      type: Object,
-      default: () => {},
-    },
-    // loading: {
-    //   // TODO: à implémenter
-    //   type: Boolean,
-    //   default: () => {},
-    // },
-    noData: {
-      type: String,
-      default: () => 'Aucune donné à afficher',
-    },
-    selectable: {
-      type: Boolean,
-      default: () => false,
-    },
-    selectKey: {
-      type: String,
-      default: 'id',
-    },
-    rowClass: {
-      type: [String, Function],
-      default: () => '',
-    },
-    rowSelectedClass: {
-      type: String,
-      default: 'table-primary',
-    },
-    detailRowColumn: {
-      // Pour afficher la colonne détail-row
-      type: Boolean,
-      default: () => false,
-    },
-    detailRowColumnHideButton: {
-      // Fonction pour cacher la bouton toggle detail-row de certaines lignes
-      type: Function,
-      default: () => false,
-    },
-    detailRowComponent: {
-      type: Object,
-      default: () => {},
-    },
-    detailRowOptions: {
-      type: Object,
-      default: () => {},
-    },
-    detailRowClass: {
-      type: String,
-      default: () => '',
-    },
-    hideDownload: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
-  emits: ['selected'],
-  data() {
-    return {
-      sorted: {
-        key: null,
-        asc: false,
-        func: (a) => a,
-      },
-      selected: null,
-      detailsRowVisibility: this.detailRowComponent
-        ? Object.fromEntries(this.data.map((d) => [d[this.selectKey], false]))
-        : {},
-      defaultFormatter: (e) => e,
-    };
-  },
-  computed: {
-    computedData() {
-      const sorted = [...this.data];
-      const func = this.sorted.func;
-      const key = this.sorted.key;
-      if (key) {
-        sorted.sort((a, b) => {
-          let aVal = func(a[key]);
-          let bVal = func(b[key]);
-          if (parseInt(aVal) == aVal && parseInt(bVal) == bVal) {
-            aVal = parseInt(aVal);
-            bVal = parseInt(bVal);
-          }
-          const res =
-            typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal < bVal;
-          return this.sorted.asc ? -1 * res : res;
-        });
-      }
-      return sorted;
-    },
-    actions() {
-      return {
-        select: this.select,
-        showDetailRow: this.showDetailRow,
-        hideDetailRow: this.hideDetailRow,
-        toggleDetailRow: this.toggleDetailRow,
-      };
-    },
-  },
-  watch: {
-    data(val) {
-      if (this.selected) {
-        // Watcher pour déselectionner l'élément actif en cas de suppression
-        const selectedKey = this.selected; //[this.selectKey];
-        if (val.filter((e) => e[this.selectKey] === selectedKey).length <= 0) {
-          this.$emit('selected', null);
-        }
-      }
-    },
-  },
-  methods: {
-    toCvs() {
-      const data =
-        'data:text/csv;charset=utf-8,﻿' +
-        this.fields
-          .filter((f) => !f.slot)
-          .map((f) => f.title)
-          .join(';') +
-        '\n' +
-        this.computedData
-          .map((e) =>
-            this.fields
-              .filter((f) => !f.slot)
-              .map((f) => {
-                switch (f.type) {
-                  case 'boolean':
-                  case Boolean:
-                    return e[f.key] ? 'vrai' : 'faux';
-                  case 'date':
-                  case Date:
-                    return e[f.key]
-                      ? new Date(e[f.key]).toLocaleDateString('fr-CH')
-                      : '';
-                  default:
-                    return (f.formatter || this.defaultFormatter)(e[f.key], e);
-                }
-              })
-              .join(';')
-          )
-          .join('\n');
-      // V1
-      // const encodedUri = encodeURI(data);
-      // window.open(encodedUri);
-      // V2
-      var encodedUri = encodeURI(data);
-      var link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'export_gestsis.csv');
-      document.body.appendChild(link); // Required for FF
-      link.click();
-    },
-    sort(field) {
-      const sortKey = field.sortKey ?? field.key;
-      if (sortKey) {
-        if (this.sorted.key === sortKey) {
-          this.sorted.asc = !this.sorted.asc;
-        } else {
-          this.sorted = { ...this.sorted, key: sortKey, asc: true };
-          //TODO: Ajout support pour custom function of sort
-        }
-      }
-    },
-    select(row) {
-      if (this.selectable) {
-        this.selected = row[this.selectKey];
-        this.$emit('selected', row);
-      }
-    },
-    showDetailRow(id) {
-      this.detailsRowVisibility = {
-        ...this.detailsRowVisibility,
-        [id]: true,
-      };
-    },
-    showAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries([
-        ...Object.keys(this.detailsRowVisibility).map((key) => [key, true]),
-        ...this.data.map((d) => [d[this.selectKey], true]),
-      ]);
-    },
-    hideDetailRow(id) {
-      this.detailsRowVisibility = {
-        ...this.detailsRowVisibility,
-        [id]: false,
-      };
-    },
-    hideAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries([
-        ...Object.keys(this.detailsRowVisibility).map((key) => [key, false]),
-        ...this.data.map((d) => [d[this.selectKey], false]),
-      ]);
-    },
-    toggleDetailRow(id) {
-      this.detailsRowVisibility = {
-        ...this.detailsRowVisibility,
-        [id]: !this.detailsRowVisibility[id],
-      };
-    },
-    toggleAllDetailRow() {
-      this.detailsRowVisibility = Object.fromEntries({
-        ...this.data.map((d) => [d[this.selectKey], true]),
-        ...Object.entries(this.detailsRowVisibility).map(([key, value]) => [
-          key,
-          !value,
-        ]),
-      });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 th,

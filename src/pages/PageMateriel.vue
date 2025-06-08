@@ -1,0 +1,57 @@
+<template>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-3">
+            <li class="breadcrumb-item">
+              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Matériel</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <base-navigation-tab
+          :routes="[
+            {
+              to: { name: 'materiel-par-type' },
+              texte: 'Par type',
+              exact: false,
+            },
+            {
+              to: { name: 'materiel-par-emplacement' },
+              texte: 'Par emplacement',
+              exact: false,
+            },
+            {
+              to: { name: 'materiel-par-sapeur' },
+              texte: 'Par sapeur',
+              exact: false,
+            },
+            {
+              to: { name: 'materiel-lavages' },
+              texte: 'Lavages',
+              exact: false,
+            },
+            // { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
+          ]"
+        />
+        <div id="nav-tabContent" class="tab-content">
+          <div class="tab-pane fade show active" role="tabpanel">
+            <Suspense>
+              <router-view />
+              <template #fallback>Chargement...</template>
+            </Suspense>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script></script>
+
+<style></style>

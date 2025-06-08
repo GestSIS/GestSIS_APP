@@ -40,7 +40,9 @@
             />
           </div>
           <div class="mb-3">
-            <a href="https://www.aspsms.com/en/login/" target="_blank">Recharger des crédits</a>
+            <a href="https://www.aspsms.com/en/login/" target="_blank"
+              >Recharger des crédits</a
+            >
           </div>
         </div>
       </div>
@@ -49,7 +51,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ParametreAspsms',
@@ -79,7 +83,7 @@ export default {
     this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     async save() {
       if (this.password === '********') {
         this.$awn.success('Modifications enregistrées');
@@ -94,7 +98,7 @@ export default {
         .catch((e) => {
           this.errors = { ...e };
           this.$awn.alert(
-            this.errors?.message || "Erreur lors de l'enregistrement"
+            this.errors?.message || "Erreur lors de l'enregistrement",
           );
         });
     },

@@ -38,7 +38,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -52,7 +54,7 @@ async function loadData(_, next) {
   Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -103,7 +105,7 @@ export default {
     ...mapState({
       indemnitesExercice: (state) =>
         state.imputation.fraisIndemnites.exercices.sort(
-          (a, b) => a.tri - b.tri
+          (a, b) => a.tri - b.tri,
         ),
       fonctions: (state) => state.fonction.liste,
       comptes: (state) => state.compte.liste,
@@ -125,7 +127,7 @@ export default {
                 fonction_tri:
                   this.fonctions.find((c) => c.id == e.fonction_id)?.tri ?? -10,
               }))
-              .sort((e1, e2) => e1.fonction_tri < e2.fonction_tri)
+              .sort((e1, e2) => e1.fonction_tri < e2.fonction_tri),
           ),
         categorie: this.categories.find((c) => c.id == e.ecriture_categorie_id)
           ?.designation,
@@ -134,7 +136,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutIndemnite() {
       this.SHOW_MODAL({
         component: 'ModalIndemniteExercice',

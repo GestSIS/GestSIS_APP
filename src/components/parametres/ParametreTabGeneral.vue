@@ -264,7 +264,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import SisParamService from '../../services/SisParamService';
 import permissions from '../../store/permissions';
 import store from '/src/store/index';
@@ -279,7 +281,7 @@ async function loadData(_, next) {
   Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -333,7 +335,7 @@ export default {
     this.loadSisLogo();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     formatLocalite(localite) {
       return localite?.designation;
     },

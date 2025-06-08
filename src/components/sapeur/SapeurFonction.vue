@@ -41,7 +41,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import store from '/src/store/index';
@@ -82,7 +84,7 @@ export default {
           .map((f) => ({
             ...f,
             fonction: state.fonction.liste.find(
-              (fonction) => fonction.id == f.fonction_id
+              (fonction) => fonction.id == f.fonction_id,
             )?.nom,
           })),
       hasEditPermission: (state) =>
@@ -100,7 +102,7 @@ export default {
     this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     newFonction() {
       this.$store.dispatch('resetActiveFonction');
       this.SHOW_MODAL('ModalSapeurFonction');

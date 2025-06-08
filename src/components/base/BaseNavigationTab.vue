@@ -1,18 +1,3 @@
-<template>
-  <nav class="nav nav-tabs mb-3" role="tablist">
-    <router-link
-      v-for="{ to, texte } in filteredRoutes"
-      :key="to"
-      :to="to"
-      role="tab"
-      class="nav-link"
-      exact-active-class="active"
-    >
-      {{ texte }}
-    </router-link>
-  </nav>
-</template>
-
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -33,9 +18,25 @@ const filteredRoutes = computed(() =>
     (r) =>
       isAdmin.value ||
       r.permission === undefined ||
-      permissions.value.includes(r.permission)
-  )
+      permissions.value.includes(r.permission),
+  ),
 );
 </script>
+
+<template>
+  <nav class="nav nav-tabs mb-3" role="tablist">
+    <router-link
+      v-for="{ to, texte, exact = true } in filteredRoutes"
+      :key="to"
+      :to="to"
+      role="tab"
+      class="nav-link"
+      :active-class="exact ? '' : 'active'"
+      :exact-active-class="exact ? 'active' : ''"
+    >
+      {{ texte }}
+    </router-link>
+  </nav>
+</template>
 
 <style lang="scss" scoped></style>

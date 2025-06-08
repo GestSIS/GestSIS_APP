@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -75,7 +77,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     async save() {
       this.$store
         .dispatch('updateAbsenceParams', this.params)

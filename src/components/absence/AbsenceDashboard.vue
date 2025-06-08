@@ -253,9 +253,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
@@ -263,7 +265,7 @@ async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadAbsences = store.dispatch(
     'fetchAbsences',
-    store.state.exerciceComptable.activeId
+    store.state.exerciceComptable.activeId,
   );
   const loadFonctions = store.dispatch('fetchFonctions');
   const loadPermis = store.dispatch('fetchPermisType');
@@ -325,7 +327,7 @@ export default {
         state.absence.liste.sort((a, b) => a.debut?.localeCompare(b.debut)),
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       localitesSis: (state) =>
         state.localite.listeSis.map((l) => ({
@@ -344,7 +346,7 @@ export default {
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeExerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => state.exerciceComptable.activeId === e.id
+          (e) => state.exerciceComptable.activeId === e.id,
         ),
       hasEditPermission: (state) =>
         state.auth.admin ||
@@ -358,7 +360,7 @@ export default {
           mainFonctionId: this.fonctions.find((f) => fonctionsIds.has(f.id))
             ?.id,
           groupeIds: this.groupes.map(
-            (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id
+            (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id,
           ),
         };
       });
@@ -386,11 +388,11 @@ export default {
 
         s.groupeIds?.forEach(
           (groupeId) =>
-            (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1)
+            (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1),
         );
         s.permis.forEach(
           (permisId) =>
-            (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
+            (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1),
         );
       });
       return data;
@@ -420,7 +422,7 @@ export default {
 
       this.absences
         .filter(
-          (a) => new Date(a.debut) <= moisFin && new Date(a.fin) >= moisDebut
+          (a) => new Date(a.debut) <= moisFin && new Date(a.fin) >= moisDebut,
         )
         .forEach((a) => {
           let date = new Date(a.debut);
@@ -438,13 +440,13 @@ export default {
                 (permisId) =>
                   (record.permis[permisId] = (
                     record.permis[permisId] ?? new Set()
-                  ).add(sapeur.id))
+                  ).add(sapeur.id)),
               );
               sapeur.groupeIds?.forEach(
                 (groupeId) =>
                   (record.groupes[groupeId] = (
                     record.groupes[groupeId] ?? new Set()
-                  ).add(sapeur.id))
+                  ).add(sapeur.id)),
               );
               record.fonctions[sapeur.mainFonctionId] = (
                 record.fonctions[sapeur.mainFonctionId] ?? new Set()
@@ -470,7 +472,7 @@ export default {
     },
     filteredPermis() {
       const ids = new Set(
-        Object.keys(this.referenceData.permis).map((id) => parseInt(id))
+        Object.keys(this.referenceData.permis).map((id) => parseInt(id)),
       );
       return this.permisTypes.filter((p) => ids.has(p.id));
     },
@@ -487,7 +489,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     addAbsence() {
       this.SHOW_MODAL({ component: 'ModalAbsence' });
     },

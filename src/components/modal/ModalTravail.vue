@@ -65,7 +65,7 @@
               (u) =>
                 u.id ==
                 travailTypes.find((t) => t.id == activeTravail.travail_type_id)
-                  ?.type_unite_id
+                  ?.type_unite_id,
             )?.unite
           }}</span
         >
@@ -153,7 +153,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import permissions from '../../store/permissions.js';
 
@@ -188,7 +190,7 @@ export default {
       hasSaisieCommunePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
         ),
     }),
     activeUnite() {
@@ -196,8 +198,8 @@ export default {
         (u) =>
           u.id ===
           this.travailTypes.find(
-            (t) => t.id === this.activeTravail.travail_type_id
-          )?.type_unite_id
+            (t) => t.id === this.activeTravail.travail_type_id,
+          )?.type_unite_id,
       );
     },
   },
@@ -217,7 +219,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    ...mapActions(useModalStore, {
+      HIDE_MODAL: 'closeModal',
+      UPDATE_MODAL_SIZE: 'resize',
+    }),
     ajoutType() {
       this.activeTravail.sapeurs.push({
         sapeur_id: null,
@@ -237,7 +242,7 @@ export default {
 
       // Contrôle qu'aucune colonne n'est dupliquée
       const sapeurIds = new Set(
-        this.activeTravail.sapeurs.map((e) => e.sapeur_id)
+        this.activeTravail.sapeurs.map((e) => e.sapeur_id),
       );
       if (sapeurIds.size != this.activeTravail.sapeurs.length) {
         this.$awn.alert('Erreur, un sapeur a été saisie à double.');

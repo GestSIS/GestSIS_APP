@@ -56,7 +56,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import store from '/src/store/index';
@@ -112,7 +114,10 @@ export default {
     this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     removeMutation(mutation) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
@@ -137,8 +142,8 @@ export default {
         'updateActiveMutation',
         Object.assign(
           { action: 'finService' },
-          this.mutations.find((m) => !m.sortie)
-        )
+          this.mutations.find((m) => !m.sortie),
+        ),
       );
       this.SHOW_MODAL('ModalMutation');
     },

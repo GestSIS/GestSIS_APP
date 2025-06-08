@@ -235,7 +235,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
@@ -367,7 +369,10 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     convoquer() {
       this.$store
         .dispatch('fetchConvocationParams')

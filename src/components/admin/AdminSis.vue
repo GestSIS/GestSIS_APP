@@ -36,7 +36,7 @@
               'mailto:?bcc=' +
               Object.entries(contacts)
                 .filter(
-                  ([key, _]) => sis.find((s) => s.api_key === key)?.mobile
+                  ([key, _]) => sis.find((s) => s.api_key === key)?.mobile,
                 )
                 .map(([_, value]) => value)
                 .flat()
@@ -105,7 +105,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(routeTo, next) {
@@ -158,14 +160,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     jsonExport() {
       const data = JSON.stringify(
         this.sis.map((sis) => ({
           ...sis,
           contacts: this.contacts[sis.api_key],
           params: this.params[sis.api_key],
-        }))
+        })),
       );
 
       navigator.clipboard.writeText(data);
@@ -173,16 +175,16 @@ export default {
       this.$awn.success('Données copiées dans le press papier');
     },
     editSis(sis) {
-      this.SHOW_MODAL({ component: 'ModalSis', data: sis })
-        .then((res) => this.$awn.success(res?.message || 'Sis modifié'))
-        .catch((e) =>
-          this.$awn.alert(e?.message || 'Erreur lors de la modification')
-        );
+      this.SHOW_MODAL({ component: 'ModalSis', data: sis });
+      // .then((res) => this.$awn.success(res?.message || 'Sis modifié'))
+      // .catch((e) =>
+      //   this.$awn.alert(e?.message || 'Erreur lors de la modification'),
+      // );
     },
     ajoutSis() {
-      this.SHOW_MODAL({ component: 'ModalSis' })
-        .then((res) => this.$awn.success(res?.message || 'Sis ajouté'))
-        .catch((e) => this.$awn.alert(e?.message || "Erreur lors de l'ajout"));
+      this.SHOW_MODAL({ component: 'ModalSis' });
+      // .then((res) => this.$awn.success(res?.message || 'Sis ajouté'))
+      // .catch((e) => this.$awn.alert(e?.message || "Erreur lors de l'ajout"));
     },
   },
 };

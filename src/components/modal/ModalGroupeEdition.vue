@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import EditableTree from '/src/components/editable_tree/EditableTree.vue';
 
@@ -81,7 +83,7 @@ export default {
       groupes: (state) => state.groupe.liste,
     }),
     groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
+      const groupFilter = (parentId) => (g) => g.parent_id == parentId;
       const groupeMapping = (g) => ({
         label: g.no ? `${g.no} ${g.designation}` : g.designation,
         type: g.type == 0 ? 'groupe' : 'groupeInter',
@@ -99,7 +101,7 @@ export default {
     this.tree.children = this.groupeTree;
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     selected(elem) {
       this.active = elem;
     },

@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalSis',
@@ -61,7 +62,7 @@ export default {
     this.$refs.input.focus();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
@@ -86,7 +87,7 @@ export default {
         .catch((errors) => {
           this.errors = errors;
           this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'ajout du contact"
+            errors?.message ?? "Erreur lors de l'ajout du contact",
           );
         });
     },

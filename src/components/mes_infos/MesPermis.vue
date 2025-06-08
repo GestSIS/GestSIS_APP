@@ -1,3 +1,58 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { computed } from 'vue';
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+
+await Promise.all([
+  store.dispatch('fetchPermisType'),
+  infosStore.fetchMesPermis(),
+]);
+
+const listPermisType = computed(() => store.state.baseData.permisTypes);
+const activeSapeurPermis = computed(() => infosStore.permis);
+const permisData = computed(() => {
+  let permisData = Object.fromEntries(
+    listPermisType.value.map((p) => [
+      p.id,
+      {
+        id: p.id,
+        type: p.type,
+        date: null,
+      },
+    ]),
+  );
+  activeSapeurPermis.value.forEach((p) => {
+    permisData[p.permis_type_id] = {
+      ...permisData[p.permis_type_id],
+      date: p.date,
+    };
+  });
+  return Object.values(permisData);
+});
+
+const publicPath = import.meta.env.BASE_URL;
+const fields = [
+  {
+    title: 'Permis',
+    slot: 'logo',
+    key: 'type',
+    columnClass: 'col-1 text-end',
+  },
+  {
+    key: 'type',
+    columnClass: 'col-1 ',
+  },
+  {
+    title: 'date',
+    key: 'date',
+    type: Date,
+  },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -33,77 +88,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadPermisTypes = store.dispatch('fetchPermisType');
-  const loadMesPermis = store.dispatch('fetchMesPermis');
-
-  Promise.all([loadMesPermis, loadPermisTypes]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesPermis',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      publicPath: import.meta.env.BASE_URL,
-      fields: [
-        {
-          title: 'Permis',
-          slot: 'logo',
-          key: 'type',
-          columnClass: 'col-1 text-end',
-        },
-        {
-          key: 'type',
-          columnClass: 'col-1 ',
-        },
-        {
-          title: 'date',
-          key: 'date',
-          type: Date,
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listPermisType: (state) => state.baseData.permisTypes,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurPermis: (state) => state.mesInfos.permis,
-    }),
-    permisData() {
-      let permisData = Object.fromEntries(
-        this.listPermisType.map((p) => [
-          p.id,
-          {
-            id: p.id,
-            type: p.type,
-            date: null,
-          },
-        ])
-      );
-      this.activeSapeurPermis.forEach((p) => {
-        permisData[p.permis_type_id] = {
-          ...permisData[p.permis_type_id],
-          date: p.date,
-        };
-      });
-      return Object.values(permisData);
-    },
-  },
-};
-</script>
 
 <style scoped></style>

@@ -8,7 +8,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
+        ref="table_types"
         :data="computedData"
         :fields="fields"
         no-data="Aucun travail type"
@@ -42,7 +42,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -121,7 +123,7 @@ export default {
               unite: this.unites.find((u) => u.id == c.type_unite_id)?.unite,
               compte: this.comptes.find((c) => c.id == e.compte_id)
                 ?.designation,
-            }))
+            })),
           ),
         categorie: this.categories.find((e) => e.id == c.ecriture_categorie_id)
           ?.designation,
@@ -129,10 +131,10 @@ export default {
     },
   },
   mounted() {
-    this.$refs.table.showAllDetailRow();
+    // this.$refs.table_types.showAllDetailRow();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutTravailType() {
       this.SHOW_MODAL({
         component: 'ModalTravailType',
@@ -151,7 +153,7 @@ export default {
       this.$store
         .dispatch('removeTravailType', travailType.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

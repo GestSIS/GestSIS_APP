@@ -114,7 +114,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -155,7 +157,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
     sortedAppels() {
@@ -246,7 +248,7 @@ export default {
       return [
         startEvent,
         ...[...events, ...eventsAppels].sort(
-          (e1, e2) => new Date(e1.date) - new Date(e2.date)
+          (e1, e2) => new Date(e1.date) - new Date(e2.date),
         ),
         endEvent,
       ];
@@ -257,7 +259,7 @@ export default {
     this.$store.dispatch('fetchInterventionAppels', this.id);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     supprimerAppel(id) {
       this.SHOW_MODAL({
         component: 'ModalConfirmation',
@@ -294,7 +296,7 @@ export default {
       const cloneAppel = {};
       Object.assign(
         cloneAppel,
-        this.appels.find((a) => a.id == id)
+        this.appels.find((a) => a.id == id),
       );
 
       const min = this.data.date_debut + ' ' + this.data.heure_debut;
@@ -342,7 +344,7 @@ export default {
       const cloneMission = {};
       Object.assign(
         cloneMission,
-        this.missions.find((m) => m.id == id)
+        this.missions.find((m) => m.id == id),
       );
 
       const min = this.data.date_debut + ' ' + this.data.heure_debut;

@@ -26,9 +26,9 @@
         />
       </div>
       <base-select
-        v-model="groupe.pere_id"
+        v-model="groupe.parent_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['pere_id'] }"
+        :class="{ 'is-invalid': errors['parent_id'] }"
         label="Groupe parent"
         base-option="-"
         :base-value="null"
@@ -63,7 +63,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalGroupe',
@@ -71,7 +73,7 @@ export default {
     return {
       errors: {},
       groupe: {
-        pere_id: null,
+        parent_id: null,
       },
     };
   },
@@ -85,7 +87,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       this.$store
         .dispatch('createGroupe', this.groupe)
@@ -97,7 +99,7 @@ export default {
           (errors) =>
             (this.errors = {
               ...errors,
-            })
+            }),
         );
     },
   },

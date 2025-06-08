@@ -1,3 +1,36 @@
+<script setup>
+import { inject, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const infosStore = useMesInfosStore();
+const errors = ref({});
+const activeAbsence = ref({ ...data });
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const save = async () => {
+  const action = activeAbsence.value?.id
+    ? infosStore.editMonAbsence
+    : infosStore.addMonAbsence;
+
+  action(activeAbsence.value)
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
+    });
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -40,48 +73,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState, mapMutations } from 'vuex';
-
-export default {
-  name: 'ModAbsence',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeAbsence: {},
-    };
-  },
-  mounted() {
-    this.activeAbsence = {
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
-    async save() {
-      const action = this.activeAbsence?.id
-        ? 'editMonAbsence'
-        : 'addMonAbsence';
-      this.$store
-        .dispatch(action, this.activeAbsence)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = errors
-          this.$awn.alert(errors?.message ?? "Impossible d'ajouter cette absence")
-        });
-    },
-  },
-};
-</script>
 
 <style scoped></style>

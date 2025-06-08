@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalInterventionMateriel',
@@ -53,7 +55,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       if ((this.activeMateriel.id || 0) === 0) {
         this.$store
@@ -68,7 +70,7 @@ export default {
                 ...errors,
                 materiel_id: errors['materiels.0.materiel_id'],
                 quantite: errors['materiels.0.quantite'],
-              })
+              }),
           );
       } else {
         this.$store
@@ -83,7 +85,7 @@ export default {
                 ...errors,
                 materiel_id: errors['materiels.0.materiel_id'],
                 quantite: errors['materiels.0.quantite'],
-              })
+              }),
           );
       }
     },

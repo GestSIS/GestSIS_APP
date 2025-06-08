@@ -66,7 +66,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalRole',
@@ -101,7 +103,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       this.errors = {};
       if (!this.role.nom) {
@@ -125,7 +127,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...(errors?.errors ?? errors),
-              })
+              }),
           );
       } else {
         this.$store

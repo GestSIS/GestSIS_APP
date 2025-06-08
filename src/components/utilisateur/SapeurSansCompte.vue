@@ -76,7 +76,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 function loadData(routeTo, next) {
@@ -119,8 +121,10 @@ export default {
     computedData() {
       const sapeurIds = new Set(
         this.users.flatMap((u) =>
-          u.sapeur.filter((s) => s.sis_id == this.sisId).map((s) => s.sapeur_id)
-        )
+          u.sapeur
+            .filter((s) => s.sis_id == this.sisId)
+            .map((s) => s.sapeur_id),
+        ),
       );
       return this.sapeurs
         .filter((s) => s.actif)
@@ -135,8 +139,8 @@ export default {
               this.filters.sapeur
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
+                .toLowerCase(),
+            ),
         )
         .filter((s) =>
           s.email
@@ -147,8 +151,8 @@ export default {
               this.filters.email
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase()
-            )
+                .toLowerCase(),
+            ),
         );
     },
   },
@@ -156,7 +160,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     onRowClass(dataItem) {
       if (!dataItem?.sapeur?.length > 0) {
         return '';

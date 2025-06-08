@@ -38,7 +38,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -49,7 +51,7 @@ export default {
         state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
       activeExerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId
+          (e) => e.id == state.exerciceComptable.activeId,
         ),
       hasConfigPermission: (state) =>
         state.auth.admin ||
@@ -62,7 +64,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selectExercice(id) {
       this.$refs.dropdown.close();
       this.dropdown = false;

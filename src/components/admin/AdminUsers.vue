@@ -51,7 +51,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import AdminService from '../../services/AdminService';
 
@@ -93,7 +95,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     tokenForUser(user) {
       AdminService.getUserToken(user.id).then((data) => {
         navigator.clipboard.writeText(data.accessToken);
@@ -116,10 +118,10 @@ export default {
             this.$store
               .dispatch('deleteUser', user?.id)
               .then((res) =>
-                this.$awn.success(res?.message || 'Utilisateur supprimé')
+                this.$awn.success(res?.message || 'Utilisateur supprimé'),
               )
               .catch((e) =>
-                this.$awn.alert(e?.message || 'Erreur lors de la suppression')
+                this.$awn.alert(e?.message || 'Erreur lors de la suppression'),
               );
           }
         },

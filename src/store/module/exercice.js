@@ -258,20 +258,6 @@ export default {
         }
       );
     },
-    addMonExcuse({ commit }, excuse) {
-      return ExerciceService.createMonExcuse(excuse.exercice_id, excuse).then(
-        async (data) => {
-          await commit(types.UPDATE_EXERCICE_PRESENCE, data);
-          return data;
-        }
-      );
-    },
-    removeMonExcuse({ commit }, exercice) {
-      return ExerciceService.removeMonExcuse(exercice.id).then(async (data) => {
-        await commit(types.UPDATE_EXERCICE_PRESENCE, data);
-        return data;
-      });
-    },
     removeExcuse({ commit }, presence) {
       return ExerciceService.removeExcuse(
         presence.exercice_id,

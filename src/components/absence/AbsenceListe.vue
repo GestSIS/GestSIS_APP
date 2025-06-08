@@ -77,7 +77,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
@@ -87,7 +89,7 @@ async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadAbsences = store.dispatch(
     'fetchAbsences',
-    store.state.exerciceComptable.activeId
+    store.state.exerciceComptable.activeId,
   );
   const loadLocalites = store.dispatch('fetchLocalites');
   Promise.all([loadAbsences, loadSapeurs, loadLocalites]).then(() => {
@@ -153,7 +155,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     addAbsence() {
       this.SHOW_MODAL({ component: 'ModalAbsence' });
     },

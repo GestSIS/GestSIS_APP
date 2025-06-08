@@ -32,7 +32,7 @@
               @click="
                 genererDecompteExercice(
                   selectedItem.id,
-                  selectedItem.designation
+                  selectedItem.designation,
                 )
               "
             >
@@ -138,7 +138,9 @@
 
 <script>
 import store from '/src/store/index';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -306,7 +308,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     selectedItem() {
@@ -321,7 +323,7 @@ export default {
         return {
           ...e,
           categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id
+            (c) => c.id == e.exercice_categorie_id,
           )?.designation,
           localite: this.localites.find((l) => l.id == e.localite_id)
             ?.designation,
@@ -350,10 +352,10 @@ export default {
     this.init();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     init() {
       ImputationService.getExerciceEcriturePourExerciceComptable(
-        this.activeExerciceComptableId
+        this.activeExerciceComptableId,
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
         this.loading = false;
@@ -403,7 +405,7 @@ export default {
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation"
+                  err?.message ?? "Erreur impossible d'annuler l'imputation",
                 );
               });
           }

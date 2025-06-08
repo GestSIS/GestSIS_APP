@@ -11,9 +11,6 @@
           </ol>
         </nav>
       </div>
-      <!-- <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
-      </div> -->
     </div>
 
     <div class="row">

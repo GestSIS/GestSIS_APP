@@ -166,7 +166,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalDecompte',
@@ -226,12 +228,15 @@ export default {
       this.config.mode = this.params.sapeur_id
         ? 'genererDecompteSapeur'
         : this.params.exercice_id
-        ? 'genererDecompteExercice'
-        : 'genererDecompteAnnuel';
+          ? 'genererDecompteExercice'
+          : 'genererDecompteAnnuel';
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     close() {
       this.HIDE_MODAL();
     },
@@ -248,7 +253,7 @@ export default {
         .catch((errors) => {
           this.errors = errors;
           this.$awn.alert(
-            errors?.message ?? 'Erreur lors de la création du décompte'
+            errors?.message ?? 'Erreur lors de la création du décompte',
           );
         });
     },

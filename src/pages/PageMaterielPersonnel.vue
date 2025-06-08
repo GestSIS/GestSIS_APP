@@ -94,15 +94,17 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import store from '/src/store/index';
 
-import MaterielTypeCategorieSelect from '/src/components/materiel_personnel/MaterielTypeCategorieSelect.vue';
+import MaterielTypeCategorieSelect from '/src/components/MATERIEL/MaterielTypeCategorieSelect.vue';
 
 async function loadData(routeTo, next) {
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadMaterielEventTypes = store.dispatch('fetchMatPersoEventTypes');
-  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielTypes = store.dispatch('fetchMaterielTypes');
   const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
 
   Promise.all([
@@ -138,7 +140,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selectedTypes(types) {
       this.selectedIds = types;
     },

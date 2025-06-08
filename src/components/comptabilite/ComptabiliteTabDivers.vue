@@ -147,7 +147,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import store from '/src/store/index';
 import permissions from '../../store/permissions';
@@ -216,7 +218,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -228,7 +230,7 @@ export default {
         sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
         unite: svm.unites.find((u) => u.id == e.type_unite_id)?.unite,
         ecriture_categorie: svm.categories.find(
-          (c) => c.id == e.ecriture_categorie_id
+          (c) => c.id == e.ecriture_categorie_id,
         )?.designation,
         compte: formatCompte(svm.comptes.find((c) => c.id == e.compte_id)),
         ecritureType: svm.formatType(e.type),
@@ -259,7 +261,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     newEcriture() {
       this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: {} });
     },
@@ -268,7 +270,7 @@ export default {
         this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
       } else {
         this.$awn.alert(
-          'Impossible de modifier une écriture déjà présente dans un décompte'
+          'Impossible de modifier une écriture déjà présente dans un décompte',
         );
       }
     },
@@ -284,7 +286,8 @@ export default {
           if (confirmed) {
             this.$store.dispatch('removeEcriture', ecritureId).catch((err) => {
               this.$awn.alert(
-                err?.message ?? 'Erreur, impossible de supprimer cette écriture'
+                err?.message ??
+                  'Erreur, impossible de supprimer cette écriture',
               );
             });
           }

@@ -8,7 +8,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import TreeRoot from '/src/components/tree/TreeRoot.vue';
 
@@ -48,7 +50,7 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
     }),
     groupeTree() {
-      const groupFilter = (pereId) => (g) => g.pere_id == pereId;
+      const groupFilter = (parentId) => (g) => g.parent_id == parentId;
       const sapeurMapping = (s) => {
         const sapeur = this.sapeurs.find((sap) => sap.id === s.sapeur_id) || {
           nom: 'Ancien',
@@ -78,7 +80,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selected(elem) {
       this.$emit('selected', elem);
     },

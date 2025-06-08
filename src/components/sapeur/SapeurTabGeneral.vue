@@ -342,7 +342,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
@@ -426,7 +428,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     async saveSapeur() {
       let fields = [
         'civilite_id',
@@ -455,7 +460,7 @@ export default {
         })
         .catch((err) => {
           this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données"
+            err.message || "Erreur lors de l'enregistrement des données",
           );
           this.errors = err;
         });
@@ -473,7 +478,7 @@ export default {
         })
         .catch((err) => {
           this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données"
+            err.message || "Erreur lors de l'enregistrement des données",
           );
           this.errors = err;
         });
@@ -490,7 +495,7 @@ export default {
         })
         .catch((err) => {
           this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données"
+            err.message || "Erreur lors de l'enregistrement des données",
           );
         });
     },
@@ -522,7 +527,7 @@ export default {
           }
           return SapeurService.updatePhoto(
             this.activeSapeurId,
-            data?.blob
+            data?.blob,
           ).then(() => {
             this.photo = data?.image;
           });

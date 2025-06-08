@@ -4,7 +4,7 @@ import router from './router/index';
 import types from './store/mutationTypes';
 import store from './store/index';
 import { TokenService } from './services/StorageService.js';
-
+import { createPinia } from 'pinia';
 // Page layouts
 import Default from './layouts/DefaultLayout.vue';
 import Empty from './layouts/EmptyLayout.vue';
@@ -33,6 +33,7 @@ import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
 import StatefulFilter from '/src/components/base/StatefulFilter.vue';
 import BaseTable from '/src/components/table/BaseTable.vue';
 import BaseNavigationTab from '/src/components/base/BaseNavigationTab.vue';
+import BaseCard from './components/table/BaseCard.vue';
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {
@@ -54,30 +55,12 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// {
-//   created() {
-//     // console.log('Created !')
-//     // TODO might be improved by checking that token is still valid when launching app
-//     // const user = TokenService.getUser();
-//     // const accessToken = TokenService.getAccessToken();
-//     // const refreshToken = TokenService.getRefreshToken();
-//     // await this.$store.dispatch('loadSisListe').then(() => {
-//     //   if (accessToken !== null && refreshToken !== null) {
-//     //     return this.$store.commit(types.AUTH_SUCCESSFULL, {
-//     //       user,
-//     //       accessToken,
-//     //       refreshToken,
-//     //     });
-//     //   }
-//     // })
-//   },
-
-//   render: () => h(App),
-// }
+const pinia = createPinia();
 const app = createApp(App);
 app
   .use(router)
   .use(store)
+  .use(pinia)
   .use(VueAWN, {
     labels: {
       success: 'Succès',
@@ -95,6 +78,7 @@ app
   .component('BaseMultiUnselect', BaseMultiUnselect)
   .component('StatefulFilter', StatefulFilter)
   .component('BaseTable', BaseTable)
+  .component('BaseCard', BaseCard)
   .component('BaseNavigationTab', BaseNavigationTab)
   .component('DefaultLayout', Default)
   .component('EmptyLayout', Empty)

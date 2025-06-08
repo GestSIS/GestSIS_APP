@@ -173,7 +173,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
 import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
@@ -203,7 +205,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
     listSapeurs() {
@@ -211,7 +213,7 @@ export default {
         new Set([
           ...this.presences.map((s) => s.sapeur_id),
           ...this.quittances.map((s) => s.sapeur_id),
-        ])
+        ]),
       ).map((id) => this.sapeurs.find((s) => s.id == id));
     },
     sortedSapeurs() {
@@ -228,7 +230,7 @@ export default {
           (temp = {
             ...temp,
             [s.id]: this.computeSapeur(s.id),
-          })
+          }),
       );
       return temp;
     },
@@ -240,7 +242,7 @@ export default {
     this.$store.dispatch('fetchInterventionSapeurs', this.id);
 
     const startFloored = new Date(
-      this.data.date_debut + ' ' + this.data.heure_debut
+      this.data.date_debut + ' ' + this.data.heure_debut,
     );
     const end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
 
@@ -258,13 +260,13 @@ export default {
       this.$refs.wrapper.addEventListener(
         'mousewheel',
         this.scrollHorizontally,
-        false
+        false,
       );
       // Firefox
       this.$refs.wrapper.addEventListener(
         'DOMMouseScroll',
         this.scrollHorizontally,
-        false
+        false,
       );
     } else {
       // IE 6/7/8
@@ -272,7 +274,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     formatDatePresence(d) {
       return d.slice(-8, -3);
     },
@@ -326,7 +328,7 @@ export default {
     },
     editQuittance(e, id) {
       const quittances = this.quittances.filter(
-        (q) => q.sapeur_id === parseInt(id)
+        (q) => q.sapeur_id === parseInt(id),
       );
       if (quittances.length === 1) {
         //remove quittance
@@ -339,7 +341,7 @@ export default {
     computeSapeur(id) {
       let res = {};
       const start = new Date(
-        this.data.date_debut + ' ' + this.data.heure_debut
+        this.data.date_debut + ' ' + this.data.heure_debut,
       );
       start.setMinutes(0);
 
@@ -378,8 +380,8 @@ export default {
           d1.debut == null
             ? 1
             : d2.debut == null
-            ? -1
-            : new Date(d1.debut) < new Date(d2.debut)
+              ? -1
+              : new Date(d1.debut) < new Date(d2.debut),
         );
       if (res.length > 0) {
         return res[0].phase_type_id;

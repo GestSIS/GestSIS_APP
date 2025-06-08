@@ -127,7 +127,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -181,7 +183,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     formatType(type) {
       const mapping = {
         0: 'Autre',
@@ -209,7 +211,7 @@ export default {
           : numericalValue;
       };
       return `${_(elem?.quantite)} x ${_(elem?.montant)} ${this.unite(
-        elem?.type_unite_id
+        elem?.type_unite_id,
       )}`;
     },
     ajoutType() {
@@ -240,7 +242,7 @@ export default {
     },
     addFonction(type, fonction) {
       const elem = type?.frais_indemnite_annuels.find(
-        (e) => e.fonction_id == fonction.id
+        (e) => e.fonction_id == fonction.id,
       );
       this.SHOW_MODAL({
         component: 'ModalIndemniteFraisAnnuel',
@@ -254,7 +256,7 @@ export default {
     },
     updateFonction(type, fonction) {
       const elem = type.frais_indemnite_annuels.find(
-        (e) => e.fonction_id == fonction.id
+        (e) => e.fonction_id == fonction.id,
       );
       this.SHOW_MODAL({
         component: 'ModalIndemniteFraisAnnuel',

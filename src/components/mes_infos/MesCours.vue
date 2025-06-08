@@ -1,3 +1,37 @@
+<script setup>
+import { computed } from 'vue';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import store from '/src/store/index';
+
+const infosStore = useMesInfosStore();
+
+await Promise.all([
+  infosStore.fetchMesCours(),
+  store.dispatch('fetchLocalites'),
+  store.dispatch('fetchCours'),
+]);
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Lieu', key: 'localite' },
+  { title: 'Durée [jours]', key: 'duree' },
+];
+
+const cours = computed(() =>
+  infosStore.cours
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((c) => ({
+      ...c,
+      designation: store.state.cours.liste.find(
+        (cours) => cours.id == c.cours_id,
+      )?.designation,
+      localite: store.state.localite.liste.find((l) => l.id == c.localite_id)
+        ?.designation,
+    })),
+);
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -15,55 +49,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  const loadMesCours = store.dispatch('fetchMesCours');
-  const loadlocalites = store.dispatch('fetchLocalites');
-  const loadCours = store.dispatch('fetchCours');
-
-  Promise.all([loadMesCours, loadlocalites, loadCours]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesCours',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Lieu', key: 'localite' },
-        { title: 'Durée [jours]', key: 'duree' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      cours: (state) =>
-        state.mesInfos.cours
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map((c) => ({
-            ...c,
-            designation: state.cours.liste.find(
-              (cours) => cours.id == c.cours_id
-            )?.designation,
-            localite: state.localite.liste.find((l) => l.id == c.localite_id)
-              ?.designation,
-          })),
-    }),
-  },
-};
-</script>
 
 <style scoped></style>

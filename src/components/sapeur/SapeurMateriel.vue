@@ -52,12 +52,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 import store from '/src/store/index';
 async function loadData(routeTo, next) {
-  const loadMaterielTypes = store.dispatch('fetchMatPersoTypes');
+  const loadMaterielTypes = store.dispatch('fetchMaterielTypes');
   const loadMaterielCategories = store.dispatch('fetchMatPersoCategories');
   const loadSapeurMateriel = store.dispatch('fetchSapeurMateriels');
 
@@ -106,9 +108,7 @@ export default {
         })),
       hasEditPermission: (state) =>
         state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.MATERIEL_PERSONNEL.MODIFICATION
-        ),
+        state.auth.sis.permissions.includes(permissions.MATERIEL.MODIFICATION),
     }),
   },
   watch: {
@@ -120,11 +120,14 @@ export default {
     this.$store.dispatch('fetchSapeurMateriels', this.activeSapeurId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     attribuer() {
       this.SHOW_MODAL({
         component: 'ModalAttributionMultiple',
-        size: 1,
+        size: 2,
         data: { sapeurId: this.activeSapeurId },
       });
     },

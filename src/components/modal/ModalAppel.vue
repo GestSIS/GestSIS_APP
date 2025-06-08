@@ -59,7 +59,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 
 import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
@@ -96,7 +98,7 @@ export default {
   watch: {
     responsable(value) {
       let result = this.listTelephones.filter(
-        (t) => value.localeCompare(t.nom) === 0
+        (t) => value.localeCompare(t.nom) === 0,
       );
       if (result.length > 0) {
         this.activeAppel.numero = result[0].numero;
@@ -117,11 +119,11 @@ export default {
       ?.slice(0, 16);
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       // Format back dates to SQL Format
       this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
-        this.format
+        this.format,
       );
 
       if ((this.activeAppel.id || 0) === 0) {
@@ -139,7 +141,7 @@ export default {
                 nom: errors['appels.0.nom'],
                 numero: errors['appels.0.numero'],
                 commentaire: errors['appels.0.commentaire'],
-              })
+              }),
           );
       } else {
         this.$store
@@ -159,7 +161,7 @@ export default {
                 nom: errors['appels.0.nom'],
                 numero: errors['appels.0.numero'],
                 commentaire: errors['appels.0.commentaire'],
-              })
+              }),
           );
       }
     },

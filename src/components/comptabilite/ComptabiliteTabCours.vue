@@ -120,9 +120,10 @@
 
 <script>
 import store from '/src/store/index';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
-
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
 
@@ -244,7 +245,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -285,7 +286,7 @@ export default {
     this.init();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     init() {
       store.dispatch('fetchCoursSapeurs').then(() => {
         this.loading = false;
@@ -323,12 +324,12 @@ export default {
                   },
                 ].sort((a, b) => a.date.localeCompare(b.date));
                 this.selectedItem = this.coursSapeurs.find(
-                  (e) => e.id == courSapeur?.id
+                  (e) => e.id == courSapeur?.id,
                 );
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation"
+                  err?.message ?? "Erreur impossible d'annuler l'imputation",
                 );
               });
           }

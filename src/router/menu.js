@@ -92,10 +92,10 @@ const links = [
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
   {
-    to: { name: 'mat-perso-dashboard' },
+    to: { name: 'materiel-par-type' },
     icon: 'shirt',
-    nom: 'Matériel personnel',
-    permission: permissions.MATERIEL_PERSONNEL.LECTURE,
+    nom: 'Matériel',
+    permission: permissions.MATERIEL.LECTURE,
   },
   // {
   //   to: '/impressions',
@@ -119,7 +119,7 @@ const links = [
       permissions.EXERCICE.CONFIG,
       permissions.FICHE_TRAVAIL.CONFIG,
       permissions.INTERVENTION.CONFIG,
-      permissions.MATERIEL_PERSONNEL.CONFIG,
+      permissions.MATERIEL.CONFIG,
       permissions.SAPEUR.CONFIG,
       permissions.SIS.CONFIG,
       permissions.SMS.CONFIG,

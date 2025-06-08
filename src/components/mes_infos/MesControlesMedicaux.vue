@@ -1,3 +1,65 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import MesInfosService from '../../services/MesInfosService';
+import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+
+const store = useStore();
+const infosStore = useMesInfosStore();
+
+Promise.all([
+  infosStore.fetchMesControlesMedicaux(),
+  store.dispatch('fetchMedecins'),
+  store.dispatch('fetchControlesMedicauxTypes'),
+]);
+
+const controlesMedicaux = computed(() =>
+  infosStore.controlesMedicaux
+    .sort((a, b) => b.validite?.localeCompare(a.validite))
+    .map((c) => ({
+      ...c,
+      type: store.state.controlesMedicauxType.liste.find(
+        (t) => t.id == c.controle_medical_type_id,
+      )?.designation,
+      medecin: store.state.medecin.liste.find((m) => m.id == c.medecin_id)
+        ?.designation,
+    })),
+);
+
+const downloadJustificatif = ({ id, filename }) => {
+  MesInfosService.downloadMonJustificatif(id, filename);
+};
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+
+  if (
+    (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
+    !dataItem.accepter
+  ) {
+    return 'table-danger';
+  }
+};
+
+const fields = [
+  { title: 'Type', key: 'type' },
+  { title: 'Medecin', key: 'medecin' },
+  { title: 'Consultation', key: 'consultation', type: Date },
+  { title: 'Validité', key: 'validite', type: Date },
+  { title: 'Designation', key: 'designation' },
+  { title: 'Accepté', key: 'accepter', type: Boolean },
+  // { title: 'En cours', key: 'en_cours', type: Boolean },
+  {
+    title: 'Doc',
+    key: 'doc',
+    slot: 'doc',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -26,89 +88,4 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-import MesInfosService from '../../services/MesInfosService';
-
-async function loadData(routeTo, next) {
-  const loadMesControlesMedicaux = store.dispatch('fetchMesControlesMedicaux');
-  const loadMedecins = store.dispatch('fetchMedecins');
-  const loadControlesMedicauxTypes = store.dispatch(
-    'fetchControlesMedicauxTypes'
-  );
-
-  Promise.all([
-    loadMesControlesMedicaux,
-    loadMedecins,
-    loadControlesMedicauxTypes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'MesControlesMedicaux',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Type', key: 'type' },
-        { title: 'Medecin', key: 'medecin' },
-        { title: 'Consultation', key: 'consultation', type: Date },
-        { title: 'Validité', key: 'validite', type: Date },
-        { title: 'Designation', key: 'designation' },
-        { title: 'Accepté', key: 'accepter', type: Boolean },
-        // { title: 'En cours', key: 'en_cours', type: Boolean },
-        {
-          title: 'Doc',
-          key: 'doc',
-          slot: 'doc',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      controlesMedicaux: (state) =>
-        state.mesInfos.controlesMedicaux
-          .sort((a, b) => b.validite?.localeCompare(a.validite))
-          .map((c) => ({
-            ...c,
-            type: state.controlesMedicauxType.liste.find(
-              (t) => t.id == c.controle_medical_type_id
-            )?.designation,
-            medecin: state.medecin.liste.find((m) => m.id == c.medecin_id)
-              ?.designation,
-          })),
-    }),
-  },
-  methods: {
-    downloadJustificatif({ id, filename }) {
-      MesInfosService.downloadMonJustificatif(id, filename);
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-
-      if (
-        (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
-        !dataItem.accepter
-      ) {
-        return 'table-danger';
-      }
-    },
-  },
-};
-</script>
-
 <style scoped></style>

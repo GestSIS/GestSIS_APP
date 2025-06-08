@@ -75,7 +75,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalRetourMultiple',
@@ -105,7 +107,7 @@ export default {
     this.data.forEach((m) => (this.selected[m.id] = true));
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     toggleAll(value) {
       this.selected = Object.fromEntries(this.data.map((e) => [e.id, value]));
     },

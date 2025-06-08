@@ -44,7 +44,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -70,7 +72,7 @@ export default {
               ? `${state.intervention.active.data?.date_debut} ${state.intervention.active.data?.heure_debut}`
               : p?.debut.slice(0, 16),
           designation: state.phaseType.liste.find(
-            (phase) => phase.id == p.phase_type_id
+            (phase) => phase.id == p.phase_type_id,
           )?.designation,
         })),
       sapeurs: (state) => state.sapeur.liste,
@@ -79,7 +81,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
       activeInterventionId: (state) => state.intervention.active.id,
     }),
@@ -90,7 +92,7 @@ export default {
     this.$store.dispatch('fetchInterventionPhases', this.activeInterventionId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     newPhase() {
       this.$store.dispatch('resetActivePhase');
       this.SHOW_MODAL({

@@ -62,7 +62,7 @@
               (u) =>
                 u.id ==
                 travailTypes.find((t) => t.id == activeTravail.travail_type_id)
-                  ?.type_unite_id
+                  ?.type_unite_id,
             )?.unite
           }}</span
         >
@@ -137,7 +137,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 import permissions from '../../store/permissions.js';
 
@@ -172,7 +174,7 @@ export default {
       hasSaisieCommunePermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE
+          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
         ),
     }),
   },
@@ -187,7 +189,10 @@ export default {
     this.$refs.justification.focus();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    ...mapActions(useModalStore, {
+      HIDE_MODAL: 'closeModal',
+      UPDATE_MODAL_SIZE: 'resize',
+    }),
     async review(accepte) {
       this.$store
         .dispatch('reviewTravail', { ...this.activeTravail, accepte })
@@ -199,7 +204,7 @@ export default {
           (errors) =>
             (this.errors = {
               ...errors,
-            })
+            }),
         );
     },
   },

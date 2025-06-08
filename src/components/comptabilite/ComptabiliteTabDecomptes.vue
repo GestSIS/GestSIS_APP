@@ -138,7 +138,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 import store from '/src/store/index';
 import DecompteService from '/src/services/DecompteService.js';
@@ -232,7 +234,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -252,7 +254,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     selected(row) {
       this.selectedId = row?.id || null;
     },
@@ -270,8 +275,8 @@ export default {
               .dispatch('removeDecompte', decompteId)
               .catch((err) =>
                 this.$awn.alert(
-                  err?.message ?? "Impossible d'effectuer cette action"
-                )
+                  err?.message ?? "Impossible d'effectuer cette action",
+                ),
               );
           }
         },
@@ -282,7 +287,7 @@ export default {
 
       DecompteService.downloadResumeParSapeur(
         this.activeExerciceComptableId,
-        `resume_par_sapeur.pdf`
+        `resume_par_sapeur.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -290,7 +295,7 @@ export default {
         .catch((err) => {
           this.HIDE_MODAL();
           this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé par sapeur'
+            err?.message || 'Erreur lors de la génération du résumé par sapeur',
           );
         });
     },
@@ -301,7 +306,7 @@ export default {
 
       DecompteService.downloadDecompte(
         decompteId,
-        `decompte_${decompte.date}.pdf`
+        `decompte_${decompte.date}.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -310,7 +315,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
           );
         });
     },
@@ -321,7 +326,7 @@ export default {
 
       DecompteService.downloadDecompteParSapeur(
         decompteId,
-        `decompte_${decompte.date}.pdf`
+        `decompte_${decompte.date}.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -330,7 +335,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
           );
         });
     },
@@ -341,7 +346,7 @@ export default {
 
       DecompteService.downloadDecompteParCompte(
         decompteId,
-        `decompte_${decompte.date}.pdf`
+        `decompte_${decompte.date}.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -350,7 +355,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
           );
         });
     },
@@ -361,7 +366,7 @@ export default {
 
       DecompteService.downloadIso20022PourDecompte(
         decompteId,
-        `decompte_${decompte.date}.xml`
+        `decompte_${decompte.date}.xml`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -370,7 +375,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
           );
         });
     },
@@ -381,7 +386,7 @@ export default {
 
       DecompteService.downloadExcelAFacturer(
         decompteId,
-        `decompte_${decompte.date}_a_facturer.xlsx`
+        `decompte_${decompte.date}_a_facturer.xlsx`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -390,7 +395,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
           );
         });
     },
@@ -401,7 +406,7 @@ export default {
 
       DecompteService.downloadExcelEcritures(
         decompteId,
-        `decompte_${decompte.date}_ecritures.xlsx`
+        `decompte_${decompte.date}_ecritures.xlsx`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -410,26 +415,26 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système"
+              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
           );
         });
     },
     certificatsDeSalaire() {
       if (this.decomptes.length === 0) {
         return this.$awn.warning(
-          'Impossible de générer les certificats de salaire sans décompte !'
+          'Impossible de générer les certificats de salaire sans décompte !',
         );
       }
 
       const annee = this.exercicesComptables.find(
-        (e) => e.id == this.activeExerciceComptableId
+        (e) => e.id == this.activeExerciceComptableId,
       )?.annee;
 
       this.SHOW_MODAL({ component: 'ModalChargement' });
 
       DecompteService.downloadCertificatSalaires(
         this.activeExerciceComptableId,
-        `certificats_salaire_${annee}.pdf`
+        `certificats_salaire_${annee}.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -438,7 +443,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système"
+              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
           );
         });
     },

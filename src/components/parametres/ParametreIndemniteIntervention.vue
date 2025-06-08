@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -97,7 +99,7 @@ export default {
               ?.unite,
             compte: state.compte.liste.find((c) => c.id == e.compte_id)?.label,
             categorie: state.ecritureCategorie.liste.find(
-              (c) => c.id == e.ecriture_categorie_id
+              (c) => c.id == e.ecriture_categorie_id,
             )?.designation,
             phase: state.phaseType.liste.find((p) => p.id == e.phase_id)
               ?.designation,
@@ -114,7 +116,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutIndemnite() {
       this.SHOW_MODAL({
         component: 'ModalIndemniteIntervention',

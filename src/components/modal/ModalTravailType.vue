@@ -126,7 +126,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalTravailType',
@@ -176,7 +178,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    ...mapActions(useModalStore, {
+      HIDE_MODAL: 'closeModal',
+      UPDATE_MODAL_SIZE: 'resize',
+    }),
     updateTarif(index, e) {
       this.activeTravailType.fonctions[index].tarif = e.target.value;
     },
@@ -203,7 +208,7 @@ export default {
       const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
       if (baseSet.size != this.base.length) {
         this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises."
+          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
         );
         return;
       }
@@ -244,7 +249,7 @@ export default {
           (errors) =>
             (this.errors = {
               ...errors,
-            })
+            }),
         );
     },
   },

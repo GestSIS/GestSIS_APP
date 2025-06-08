@@ -133,7 +133,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 import CompteService from '/src/services/CompteService.js';
@@ -221,7 +223,10 @@ export default {
     this.init();
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     formatCompte(compte) {
       if (!compte) return '';
       return compte?.numero + ' - ' + compte?.designation;
@@ -246,7 +251,7 @@ export default {
       CompteService.downloadJustificatifIndividuel(
         filename,
         this.activeExerciceComptableId,
-        compteId
+        compteId,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -255,7 +260,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier'
+              'Une erreur a eu lieu durant la génération de votre fichier',
           );
         });
     },
@@ -266,7 +271,7 @@ export default {
 
       CompteService.downloadJustificatifComplet(
         filename,
-        this.activeExerciceComptableId
+        this.activeExerciceComptableId,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -275,7 +280,7 @@ export default {
           this.HIDE_MODAL();
           this.$awn.alert(
             err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier'
+              'Une erreur a eu lieu durant la génération de votre fichier',
           );
         });
     },

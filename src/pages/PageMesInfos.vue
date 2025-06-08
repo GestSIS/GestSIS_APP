@@ -24,7 +24,10 @@
         <div id="nav-tabContent" class="tab-content">
           <div class="tab-pane fade show active" role="tabpanel">
             <div class="col-12">
-              <router-view />
+              <suspense>
+                <router-view />
+                <template #fallback>Chargement...</template>
+              </suspense>
             </div>
           </div>
         </div>

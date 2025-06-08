@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -47,7 +49,7 @@ async function loadData(_, next) {
   Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -78,7 +80,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutCompte() {
       this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
     },
@@ -89,7 +91,7 @@ export default {
       this.$store
         .dispatch('removeCompte', compteId)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

@@ -73,7 +73,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -115,7 +117,7 @@ export default {
           .map((t) => ({
             ...t,
             statistique: state.statIntervention.liste.find(
-              (s) => s.id == t.stat_intervention_id
+              (s) => s.id == t.stat_intervention_id,
             )?.designation,
           }))
           .sort((a, b) => a.tri - b.tri),
@@ -124,7 +126,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutType() {
       this.SHOW_MODAL({ component: 'ModalTypeIntervention', data: {} });
     },
@@ -138,10 +140,9 @@ export default {
       this.$store
         .dispatch('removeTypeIntervention', type.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
-    ...mapMutations(['SHOW_MODAL']),
     ajoutStat() {
       this.SHOW_MODAL({ component: 'ModalStatIntervention', data: {} });
     },
@@ -155,7 +156,7 @@ export default {
       this.$store
         .dispatch('removeStatIntervention', stat.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },

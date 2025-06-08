@@ -5,6 +5,14 @@ import AuthService from '../../services/AuthService.js';
 import Api from '../../http/Request';
 import { jwtDecode } from 'jwt-decode';
 import router from '../../router/index';
+import { useArticleStore } from '../../stores/materiel/Article';
+import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { useBatterieTypeStore } from '../../stores/materiel/BatterieType';
+import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre';
+import { useUniteStore } from '../../stores/common/Unite';
 
 export default {
   state: {
@@ -202,6 +210,17 @@ export default {
     selectSis({ commit, dispatch }, sis) {
       commit(types.AUTH_SELECT_SIS, sis);
       dispatch('fetchLocalitesSis');
+
+      // Reset materiel stores
+      useArticleStore().$reset();
+      useMaterielCategorieStore().$reset();
+      useMaterielTypeStore().$reset();
+      useCouleurStore().$reset();
+      useBatterieTypeStore().$reset();
+      useEmplacementStore().$reset();
+      useTuyauDiametreStore().$reset();
+      useUniteStore().$reset();
+
       return Promise.resolve(commit(types.CLEAR_CACHE));
     },
     loadSisListe({ commit, state }) {

@@ -133,7 +133,9 @@
 
 <script>
 import store from '/src/store/index';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -352,7 +354,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     selectedItem() {
@@ -362,7 +364,7 @@ export default {
       return this.interventions.map((i) => ({
         ...i,
         type_intervention: this.typesIntervention.find(
-          (t) => t.id == i.type_intervention_id
+          (t) => t.id == i.type_intervention_id,
         )?.designation,
         localite: this.localites.find((l) => l.id == i.localite_id)
           ?.designation,
@@ -371,7 +373,7 @@ export default {
     },
     filteredTypesIntervention() {
       const ids = new Set(
-        this.interventions.map((i) => i.type_intervention_id)
+        this.interventions.map((i) => i.type_intervention_id),
       );
       return this.typesIntervention.filter((t) => ids.has(t.id));
     },
@@ -390,7 +392,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selected(item) {
       this.selectedItemId = item?.id;
     },
@@ -415,7 +417,7 @@ export default {
               .dispatch('annulerImputationIntervention', interventionId)
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation"
+                  err?.message ?? "Erreur impossible d'annuler l'imputation",
                 );
               });
           }

@@ -219,7 +219,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalSapeur',
@@ -256,7 +258,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {

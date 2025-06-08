@@ -108,29 +108,13 @@
       </div>
     </div>
   </div>
-  <!-- <div class="row">
-    <div class="col-md-12">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header d-flex justify-content-between">
-          <h3>TODO: Fonctionalitées</h3>
-          <ul>
-            <li>
-              Demander un renvoi de la confirmation de l'email si pas validé
-            </li>
-            <li>Changement de mot de passe</li>
-          </ul>
-        </div>
-        <div class="card-body">
-          <h4>Dans le future</h4>
-          <ul>
-            <li>Supprimer ses accès pour un SIS</li>
-            <li>Changer son email</li>
-            <li>Contrôler ses données et signaler des changements</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>-->
+  <!--
+  TODO: Fonctionalitées pour le future
+  - Demander un renvoi de la confirmation de l'email si pas validé
+  - Supprimer ses accès pour un SIS
+  - Changer son email
+  - Contrôler ses données et signaler des changements
+  -->
 </template>
 
 <script>
@@ -156,7 +140,9 @@ export default {
         .dispatch('refreshToken')
         .then(() => this.$awn.success('Permissions rechargées'))
         .catch(() =>
-          this.$awn.alert('Vous avez été déconnecté, veuillez-vous reconnecter')
+          this.$awn.alert(
+            'Vous avez été déconnecté, veuillez-vous reconnecter',
+          ),
         );
     },
     async utiliserJeton() {
@@ -170,7 +156,7 @@ export default {
             this.token = '';
           })
           .catch((e) =>
-            this.$awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.')
+            this.$awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.'),
           );
       }
     },

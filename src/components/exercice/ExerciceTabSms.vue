@@ -19,7 +19,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
 export default {
@@ -72,11 +74,11 @@ export default {
     this.$store.dispatch('fetchExerciceSms', this.activeExerciceId);
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     sendSms() {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS"
+          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
         );
         return;
       }

@@ -117,7 +117,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
@@ -189,12 +191,12 @@ export default {
             const d = new Date(
               dateParts[0],
               dateParts[1] - 1,
-              dateParts[2].substr(0, 2)
+              dateParts[2].substr(0, 2),
             );
 
             d.setDate(d.getDate() + (svm.excuseParam?.delai_excuse ?? 0));
             const diffDays = Math.ceil(
-              Math.abs(new Date() - d) / (1000 * 60 * 60 * 24)
+              Math.abs(new Date() - d) / (1000 * 60 * 60 * 24),
             );
 
             if (d < new Date()) {
@@ -218,7 +220,7 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
@@ -237,7 +239,7 @@ export default {
         .map((e) => ({
           ...e,
           categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id
+            (c) => c.id == e.exercice_categorie_id,
           )?.designation,
           localite: this.localites.find((l) => l.id == e.localite_id)
             ?.designation,
@@ -245,7 +247,7 @@ export default {
     },
     filteredExercicesCategories() {
       const ids = new Set(
-        this.exercices.map((i) => parseInt(i.exercice_categorie_id))
+        this.exercices.map((i) => parseInt(i.exercice_categorie_id)),
       );
       return this.categories.filter((t) => ids.has(t.id));
     },
@@ -269,7 +271,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     selectExercice(row) {
       this.selectedId = row?.id;
     },

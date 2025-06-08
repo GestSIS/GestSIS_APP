@@ -1,14 +1,36 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const model = defineModel();
+defineProps({
+  sapeurType: {
+    type: Number,
+    required: true,
+  },
+});
+
+const store = useStore();
+
+const telephones = computed(() =>
+  [...(model.value?.filter((t) => t)?.map((t) => ({ ...t })) ?? [])]?.sort(
+    (t1, t2) => t1.priorite?.toString()?.localeCompare(t2.priorite),
+  ),
+);
+
+const fields = [
+  { title: 'Priorité', key: 'priorite' },
+  { title: 'Numéro', key: 'numero' },
+  { title: 'Type', key: 'type' },
+  { title: 'RTA', key: 'rta', type: Boolean },
+];
+const telephoneTypes = computed(() => store.state.baseData.telephoneTypes);
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button
-        v-if="hasEditPermission"
-        class="btn btn-primary"
-        @click.prevent="saveTelephones"
-      >
-        Enregistrer
-      </button>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-sm table-striped">
@@ -27,11 +49,10 @@
                 :icon="['far', 'question-circle']"
               />
             </th>
-            <th v-if="hasEditPermission" class="text-center">Actions</th>
           </tr>
         </thead>
         <tr v-if="telephones.length <= 0">
-          <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
+          <td colspan="4">Aucun numéro enregistré</td>
         </tr>
         <tr
           v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)"
@@ -45,7 +66,7 @@
               v-model="t.numero"
               class="form-control form-control-sm"
               type="text"
-              :disabled="!hasEditPermission"
+              disabled
               placeholder="..."
             />
           </td>
@@ -53,7 +74,7 @@
             <select
               v-model="t.telephone_type_id"
               class="form-select form-select-sm"
-              :disabled="!hasEditPermission"
+              disabled
             >
               <option
                 v-for="type in telephoneTypes"
@@ -69,70 +90,13 @@
               v-model="t.rta"
               type="checkbox"
               class="form-check-input"
-              :disabled="!hasEditPermission"
+              disabled
             />
-          </td>
-          <td v-if="hasEditPermission" class="align-middle text-center">
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              required
-              @click="removeTelephone(t.priorite)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
           </td>
         </tr>
       </table>
-      <button
-        v-if="hasEditPermission"
-        type="button"
-        class="btn btn-outline-primary"
-        :disabled="telephonesData.length >= 3"
-        @click="addTelephone()"
-      >
-        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un
-        numéro
-      </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'MesTelephones',
-  props: {
-    modelValue: {
-      type: Array,
-      required: true,
-    },
-    sapeurType: {
-      type: Number,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      telephones: [
-        ...(this.modelValue?.filter((t) => t)?.map((t) => ({ ...t })) ?? []),
-      ]?.sort((t1, t2) => t1.priorite?.toString()?.localeCompare(t2.priorite)),
-      hasEditPermission: false,
-      fields: [
-        { title: 'Priorité', key: 'priorite' },
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Type', key: 'type' },
-        { title: 'RTA', key: 'rta', type: Boolean },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      telephoneTypes: (state) => state.baseData.telephoneTypes,
-    }),
-  },
-};
-</script>
 
 <style scoped></style>

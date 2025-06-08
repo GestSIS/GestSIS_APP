@@ -194,7 +194,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 
@@ -241,12 +243,12 @@ export default {
           date: new Date(exercice.date),
           heure: exercice.heure.substr(0, 5),
           categorie: this.categories.find(
-            (e) => e.id == exercice.exercice_categorie_id
+            (e) => e.id == exercice.exercice_categorie_id,
           )?.designation,
           localite: this.localites.find((l) => l.id == exercice.localite_id)
             ?.designation,
           amendable: this.categories.find(
-            (c) => c.id == exercice.exercice_categorie_id
+            (c) => c.id == exercice.exercice_categorie_id,
           )?.amendable,
         }))
         .sort((a, b) => a.date - b.date);
@@ -258,7 +260,10 @@ export default {
     ];
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'SHOW_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     canEditAbsence(exercice) {
       // Possible de l'éditer si permission de validation ou si pas encore validé
       return (
@@ -281,10 +286,10 @@ export default {
           presence: sapeur,
         })
         .then((res) =>
-          this.$awn.success(res?.message || 'Modifications enregistrées')
+          this.$awn.success(res?.message || 'Modifications enregistrées'),
         )
         .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
         );
     },
     selectPresent(sapeur) {
@@ -313,7 +318,7 @@ export default {
             this.savePresence(presence);
             this.presences = [
               ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p
+                parseInt(p.id) == parseInt(presence.id) ? presence : p,
               ),
             ];
           }
@@ -337,7 +342,7 @@ export default {
             await this.savePresence(presence);
             this.presences = [
               ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p
+                parseInt(p.id) == parseInt(presence.id) ? presence : p,
               ),
             ];
           }
@@ -374,11 +379,11 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         sapeur.exercice_id,
         sapeur.sapeur_id,
-        'justificatif.pdf'
+        'justificatif.pdf',
       ).catch((err) =>
         this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif'
-        )
+          err?.message ?? 'Erreur lors du chargement du justificatif',
+        ),
       );
     },
   },

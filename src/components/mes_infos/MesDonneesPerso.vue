@@ -1,33 +1,36 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const model = defineModel();
+
+const store = useStore();
+const localites = computed(() => store.state.localite.liste);
+const civilites = computed(() => store.state.baseData.civilites);
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Données personnelles</h3>
-      <button
-        v-if="hasEditPermission"
-        class="btn btn-primary"
-        @click.prevent="saveSapeur"
-      >
-        Enregistrer
-      </button>
     </div>
     <div class="card-body">
       <base-select
-        v-model="activeSapeur.civilite_id"
+        v-model="model.civilite_id"
         class="mb-3"
         label="Civilité"
-        :disabled="!hasEditPermission"
+        disabled
         :options="civilites"
       />
       <div class="mb-3">
         <label for="m-sap-nom">Nom</label>
         <input
           id="m-sap-nom"
-          v-model="activeSapeur.nom"
+          v-model="model.nom"
           type="text"
-          :readonly="!hasEditPermission"
-          :disabled="!hasEditPermission"
+          readonly
+          disabled
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['nom'] }"
           name="nom"
         />
       </div>
@@ -35,12 +38,11 @@
         <label for="m-sap-prenom">Prénom</label>
         <input
           id="m-sap-prenom"
-          v-model="activeSapeur.prenom"
+          v-model="model.prenom"
           type="text"
-          :readonly="!hasEditPermission"
-          :disabled="!hasEditPermission"
+          readonly
+          disabled
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['prenom'] }"
           name="prenom"
         />
       </div>
@@ -49,11 +51,10 @@
           <label for="m-sap-rue">Rue</label>
           <input
             id="m-sap-rue"
-            v-model="activeSapeur.rue"
+            v-model="model.rue"
             type="text"
-            :disabled="!hasEditPermission"
+            disabled
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['rue'] }"
             name="rue"
           />
         </div>
@@ -61,21 +62,20 @@
           <label for="m-sap-no-rue">N°</label>
           <input
             id="m-sap-no-rue"
-            v-model="activeSapeur.no_rue"
+            v-model="model.no_rue"
             type="text"
-            :disabled="!hasEditPermission"
+            disabled
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['no_rue'] }"
             name="no_rue"
           />
         </div>
       </div>
       <base-select
-        v-model="activeSapeur.localite_id"
+        v-model="model.localite_id"
         class="mb-3"
         label="Localité"
         required
-        :disabled="!hasEditPermission"
+        disabled
         :options="localites"
       />
       <div class="row">
@@ -83,11 +83,10 @@
           <label for="m-sap-avs">N° AVS</label>
           <input
             id="m-sap-avs"
-            v-model="activeSapeur.no_avs"
+            v-model="model.no_avs"
             type="text"
-            :disabled="!hasEditPermission"
+            disabled
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['no_avs'] }"
             name="no_avs"
           />
         </div>
@@ -103,9 +102,9 @@
           <div class="form-check text-center col-6">
             <input
               id="m-sap-cotisation_avs"
-              v-model="activeSapeur.cotisation_avs"
+              v-model="model.cotisation_avs"
               type="checkbox"
-              :disabled="!hasEditPermission"
+              disabled
               class="form-check-input"
             />
             <label class="form-check-label" for="m-sap-cotisation_avs"></label>
@@ -120,16 +119,15 @@
           </div>
           <input
             id="m-sap-email"
-            v-model="activeSapeur.email"
+            v-model="model.email"
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['email'] }"
             type="email"
-            :disabled="!hasEditPermission"
+            disabled
             name="email"
           />
         </div>
       </div>
-      <div v-if="activeSapeur.type === 0" class="row mb-3">
+      <div v-if="model.type === 0" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
           <div class="input-group input-group-sm">
@@ -138,12 +136,11 @@
             </div>
             <input
               id="m-sap-date-naissance"
-              v-model="activeSapeur.date_naissance"
+              v-model="model.date_naissance"
               class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['date_naissance'] }"
               type="date"
-              :readonly="!hasEditPermission"
-              :disabled="!hasEditPermission"
+              readonly
+              disabled
               name="date_naissance"
             />
           </div>
@@ -159,11 +156,10 @@
           />
           <input
             id="m-sap-suffixe"
-            v-model="activeSapeur.suffixe"
+            v-model="model.suffixe"
             type="text"
-            :disabled="!hasEditPermission"
+            disabled
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['suffixe'] }"
             name="suffixe"
           />
         </div>
@@ -172,11 +168,10 @@
         <label for="m-sap-remarques">Remarques</label>
         <textarea
           id="m-sap-remarques"
-          v-model="activeSapeur.remarque"
-          :readonly="!hasEditPermission"
-          :disabled="!hasEditPermission"
+          v-model="model.remarque"
+          readonly
+          disabled
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['remarque'] }"
           rows="3"
           name="remarques"
         ></textarea>
@@ -184,32 +179,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'MesDonneesPerso',
-  props: {
-    modelValue: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      activeSapeur: { ...this.modelValue },
-      hasEditPermission: false,
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      localites: (state) => state.localite.liste,
-      civilites: (state) => state.baseData.civilites,
-    }),
-  },
-};
-</script>
 
 <style scoped></style>

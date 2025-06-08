@@ -118,7 +118,9 @@
 
 <script>
 import store from '/src/store/index';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -258,7 +260,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -283,7 +285,7 @@ export default {
                 .findIndex(
                   (e) =>
                     e.decompte_id == null &&
-                    !this.comptes.find((c) => c.id === e.compte_id)?.produit
+                    !this.comptes.find((c) => c.id === e.compte_id)?.produit,
                 ) >= 0,
             total: ecrituresBySapeur
               .get(s.id)
@@ -293,7 +295,7 @@ export default {
                   (this.comptes.find((c) => c.id === b.compte_id)?.produit
                     ? -b.total
                     : +b.total),
-                0
+                0,
               ),
             getData: () =>
               Promise.resolve(
@@ -302,8 +304,8 @@ export default {
                   .map((e) =>
                     this.comptes.find((c) => c.id === e.compte_id)?.produit
                       ? { ...e, total: -e.total, tarif: -e.tarif }
-                      : e
-                  )
+                      : e,
+                  ),
               ),
           };
         });
@@ -317,7 +319,7 @@ export default {
     activeExerciceComptableId() {
       this.loading = true;
       ImputationService.getEcrituresForExerciceComptable(
-        this.activeExerciceComptableId
+        this.activeExerciceComptableId,
       ).then((data) => {
         this.ecritures = data;
         this.loading = false;
@@ -327,21 +329,24 @@ export default {
   mounted() {
     this.loading = true;
     ImputationService.getEcrituresForExerciceComptable(
-      this.activeExerciceComptableId
+      this.activeExerciceComptableId,
     ).then((data) => {
       this.ecritures = data;
       this.loading = false;
     });
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL', 'HIDE_MODAL']),
+    ...mapActions(useModalStore, {
+      SHOW_MODAL: 'showModal',
+      HIDE_MODAL: 'closeModal',
+    }),
     printPourSapeur(sapeurId) {
       this.SHOW_MODAL({ component: 'ModalChargement' });
 
       DecompteService.downloadResumePourSapeur(
         this.activeExerciceComptableId,
         sapeurId,
-        `resume_pour_sapeur.pdf`
+        `resume_pour_sapeur.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -349,7 +354,8 @@ export default {
         .catch((err) => {
           this.HIDE_MODAL();
           this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé pour sapeur'
+            err?.message ||
+              'Erreur lors de la génération du résumé pour sapeur',
           );
         });
     },
@@ -358,7 +364,7 @@ export default {
 
       DecompteService.downloadResumeParSapeur(
         this.activeExerciceComptableId,
-        `resume_par_sapeur.pdf`
+        `resume_par_sapeur.pdf`,
       )
         .then(() => {
           this.HIDE_MODAL();
@@ -366,7 +372,7 @@ export default {
         .catch((err) => {
           this.HIDE_MODAL();
           this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé par sapeur'
+            err?.message || 'Erreur lors de la génération du résumé par sapeur',
           );
         });
     },

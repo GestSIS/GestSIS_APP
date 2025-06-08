@@ -164,7 +164,7 @@
               />
             </div>
             <base-select
-              v-model="groupeEdit.pere_id"
+              v-model="groupeEdit.parent_id"
               class="mb-3"
               label="Groupe parent"
               base-option="-"
@@ -196,7 +196,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
 import store from '/src/store/index';
 
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
@@ -244,7 +246,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.ORGANISATION.MODIFICATION
+          permissions.ORGANISATION.MODIFICATION,
         ),
     }),
     filteredGroupes() {
@@ -252,7 +254,7 @@ export default {
       if (activeId) {
         const rec = (groupeId) => {
           // Retourne la liste des ids des groupes enfants
-          const children = this.groupes.filter((g) => g.pere_id == groupeId);
+          const children = this.groupes.filter((g) => g.parent_id == groupeId);
           return children.flatMap((g) => [g.id, ...rec(g.id)]);
         };
         const filteredIds = new Set([activeId, ...rec(activeId)]);
@@ -299,7 +301,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     contract() {
       this.$refs.groupeEdition.contract();
     },
@@ -328,7 +330,7 @@ export default {
         .catch((errors) => {
           this.errors = { ...errors };
           this.$awn.alert(
-            errors.message || 'Erreur lors de la modification du groupe'
+            errors.message || 'Erreur lors de la modification du groupe',
           );
         });
     },
@@ -361,7 +363,7 @@ export default {
         });
       } else {
         this.$awn.warning(
-          'Sélectionnez un groupe afin de pouvoir le supprimer.'
+          'Sélectionnez un groupe afin de pouvoir le supprimer.',
         );
       }
     },

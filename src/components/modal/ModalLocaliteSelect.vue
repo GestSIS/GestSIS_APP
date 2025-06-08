@@ -136,7 +136,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 //TODO:
 // - Par fonction -> effectif et non principale
@@ -187,7 +189,7 @@ export default {
       }, {});
       return (
         Object.entries(this.selected).find(
-          ([l, selected]) => selected && !indexedChosen[l]
+          ([l, selected]) => selected && !indexedChosen[l],
         ) != null
       );
     },
@@ -200,7 +202,7 @@ export default {
     this.$store.dispatch('fetchLocalites');
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
@@ -243,7 +245,7 @@ export default {
           ...Object.entries(this.selected)
             .filter(([, selected]) => selected)
             .map(([id]) => parseInt(id)),
-        ])
+        ]),
       );
     },
     removeSelected() {

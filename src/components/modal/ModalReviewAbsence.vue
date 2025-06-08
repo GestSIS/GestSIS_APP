@@ -133,7 +133,7 @@
               "
               :disabled="
                 !categories.find(
-                  (c) => c.id == activeExercice?.exercice_categorie_id
+                  (c) => c.id == activeExercice?.exercice_categorie_id,
                 )?.amendable
               "
               @click="review(-2)"
@@ -248,7 +248,7 @@
                   {{
                     computedData.reduce(
                       (acc, e) => acc + (e.convoque ? 1 : 0),
-                      0
+                      0,
                     )
                   }}
                 </th>
@@ -256,7 +256,7 @@
                   {{
                     computedData.reduce(
                       (acc, e) => acc + (e.present ? 1 : 0),
-                      0
+                      0,
                     )
                   }}
                 </th>
@@ -269,7 +269,7 @@
                   {{
                     computedData.reduce(
                       (acc, e) => acc + (e.remplace ? 1 : 0),
-                      0
+                      0,
                     )
                   }}
                 </th>
@@ -277,7 +277,7 @@
                   {{
                     computedData.reduce(
                       (acc, e) => acc + (e.excuse_type_id ? 1 : 0),
-                      0
+                      0,
                     )
                   }}
                 </th>
@@ -285,7 +285,7 @@
                   {{
                     computedData.reduce(
                       (acc, e) => acc + (e.excuse_statut == -2 ? 1 : 0),
-                      0
+                      0,
                     )
                   }}
                 </th>
@@ -330,7 +330,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import SapeurService from '../../services/SapeurService';
 
@@ -390,14 +392,14 @@ export default {
           localite: this.localites.find((l) => l.id == e.localite_id)
             ?.designation,
           categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id
+            (c) => c.id == e.exercice_categorie_id,
           )?.designation,
         }))
         ?.sort((e1, e2) => e1.date?.localeCompare(e2.date));
     },
     activeExercice() {
       return this.exercices.find(
-        (e) => e.id == this.activeAbsence?.exercice_id
+        (e) => e.id == this.activeAbsence?.exercice_id,
       );
     },
     computedAbsences() {
@@ -411,7 +413,7 @@ export default {
         .sort(
           (a, b) =>
             a?.nom_prenom?.localeCompare(b?.nom_prenom) ||
-            a?.exercice_date?.localeCompare(b?.exercice_date)
+            a?.exercice_date?.localeCompare(b?.exercice_date),
         );
     },
     activeSapeurExcuses() {
@@ -421,7 +423,7 @@ export default {
   mounted() {
     if (this.data?.id) {
       this.activeAbsence = this.computedAbsences.find(
-        (a) => a.id == this.data.id
+        (a) => a.id == this.data.id,
       );
     } else if (!this.computedAbsences.length) {
       this.HIDE_MODAL();
@@ -432,7 +434,10 @@ export default {
     this.loadSapeurExercices();
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL', 'UPDATE_MODAL_SIZE']),
+    ...mapActions(useModalStore, {
+      HIDE_MODAL: 'closeModal',
+      UPDATE_MODAL_SIZE: 'resize',
+    }),
     async review(state) {
       this.activeAbsence.excuse_statut = state;
       return this.$store
@@ -442,17 +447,17 @@ export default {
         })
         .then(
           (res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées')
+            this.$awn.success(res?.message || 'Modifications enregistrées'),
           // TODO: Update locale stored presences
         )
         .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
+          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
         );
     },
     nextAbsence() {
       // Switch to next absence
       const activeIndex = this.computedAbsences.findIndex(
-        (a) => a.id == this.activeAbsence?.id
+        (a) => a.id == this.activeAbsence?.id,
       );
       const previousSapeurId = this.activeAbsence.sapeur_id;
       if (this.computedAbsences.length - 1 > activeIndex) {
@@ -468,7 +473,7 @@ export default {
     previousAbsence() {
       // Switch to next absence
       const activeIndex = this.computedAbsences.findIndex(
-        (a) => a.id == this.activeAbsence?.id
+        (a) => a.id == this.activeAbsence?.id,
       );
       const previousSapeurId = this.activeAbsence.sapeur_id;
       if (activeIndex > 0) {
@@ -487,7 +492,7 @@ export default {
       this.loading = true;
       return SapeurService.getExercices(
         this.activeAbsence.sapeur_id,
-        this.activeExerciceComptableId
+        this.activeExerciceComptableId,
       )
         .then((data) => {
           this.activeSapeurExercices = data;
@@ -495,7 +500,7 @@ export default {
         })
         .catch(() => {
           this.$awn.alert(
-            'Une erreur a eu lieu durant la récupération des exercices du sapeur'
+            'Une erreur a eu lieu durant la récupération des exercices du sapeur',
           );
         });
     },
@@ -503,11 +508,11 @@ export default {
       ExerciceService.downloadExcuseJustificatif(
         exercice.exercice_id,
         exercice.sapeur_id,
-        'justificatif.pdf'
+        'justificatif.pdf',
       ).catch((err) =>
         this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif'
-        )
+          err?.message ?? 'Erreur lors du chargement du justificatif',
+        ),
       );
     },
     rowClass(rowData) {

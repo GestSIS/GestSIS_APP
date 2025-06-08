@@ -584,38 +584,81 @@ const router = createRouter({
       component: () => import('/src/pages/PageControleMedical.vue'),
     },
     {
-      path: '/materiel-personnel',
-      name: 'materiel-personnel',
-      beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-      component: () => import('/src/pages/PageMaterielPersonnel.vue'),
+      path: '/materiel',
+      beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      component: () => import('/src/pages/PageMateriel.vue'),
       children: [
         {
-          path: '',
-          name: 'mat-perso-dashboard',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabDashboard.vue'
-            ),
+          path: 'par-type',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: '',
+              name: 'materiel-par-type',
+              component: () =>
+                import('/src/components/materiel/TabParType.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-type-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParType.vue'),
+            },
+          ],
         },
         {
-          path: 'attribution',
-          name: 'mat-perso-materiel',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabAttribution.vue'
-            ),
+          path: 'par-emplacement',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: '',
+              name: 'materiel-par-emplacement',
+              component: () =>
+                import('/src/components/materiel/TabParEmplacement.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-emplacement-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParEmplacement.vue'),
+            },
+          ],
         },
         {
-          path: 'inventaire',
-          name: 'mat-perso-inventaire',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.LECTURE),
-          component: () =>
-            import(
-              '/src/components/materiel_personnel/MaterielTabInventaire.vue'
-            ),
+          path: 'par-sapeur',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: '',
+              name: 'materiel-par-sapeur',
+              component: () =>
+                import('/src/components/materiel/TabParSapeur.vue'),
+            },
+            {
+              path: ':id',
+              name: 'materiel-par-sapeur-details',
+              props: true,
+              component: () =>
+                import('/src/components/materiel/TabParSapeur.vue'),
+            },
+          ],
         },
+        {
+          path: 'lavages',
+          name: 'materiel-lavages',
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          component: () =>
+            import('/src/components/materiel/TabLavages.vue'),
+        },
+        //   {
+        //     path: 'inventaire',
+        //     name: 'mat-perso-inventaire',
+        //     beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+        //     component: () =>
+        //       import('/src/components/materiel/MaterielTabInventaire.vue'),
+        //   },
       ],
     },
     {
@@ -648,7 +691,7 @@ const router = createRouter({
         permissions.EXERCICE.CONFIG,
         permissions.FICHE_TRAVAIL.CONFIG,
         permissions.INTERVENTION.CONFIG,
-        permissions.MATERIEL_PERSONNEL.CONFIG,
+        permissions.MATERIEL.CONFIG,
         permissions.SAPEUR.CONFIG,
         permissions.SIS.CONFIG,
         permissions.SMS.CONFIG,
@@ -666,7 +709,7 @@ const router = createRouter({
             permissions.EXERCICE.CONFIG,
             permissions.FICHE_TRAVAIL.CONFIG,
             permissions.INTERVENTION.CONFIG,
-            permissions.MATERIEL_PERSONNEL.CONFIG,
+            permissions.MATERIEL.CONFIG,
             permissions.SAPEUR.CONFIG,
             permissions.SIS.CONFIG,
             permissions.SMS.CONFIG,
@@ -743,12 +786,12 @@ const router = createRouter({
             ),
         },
         {
-          path: 'materiel-personnel',
-          name: 'param-materiel-personnel',
-          beforeEnter: permissionGuard(permissions.MATERIEL_PERSONNEL.CONFIG),
+          path: 'materiel',
+          name: 'param-materiel',
+          beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
           component: () =>
             import(
-              '/src/components/parametres/ParametreTabMaterielPersonnel.vue'
+              '/src/components/parametres/ParametreTabMateriel.vue'
             ),
         },
         {

@@ -38,7 +38,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalUserRole',
@@ -66,7 +68,7 @@ export default {
     this.user = { ...this.$props.data };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     async save() {
       this.$store
         .dispatch('updateUserRoles', this.user)

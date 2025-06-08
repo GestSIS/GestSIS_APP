@@ -76,7 +76,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 
 export default {
   name: 'ModalExercice',
@@ -98,7 +99,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['HIDE_MODAL']),
+    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
     presetDebutFin() {
       const annee = parseInt(this.activeExercice.annee);
       if (!this.activeExercice.designation) {
@@ -121,7 +122,7 @@ export default {
             (errors) =>
               (this.errors = {
                 ...errors,
-              })
+              }),
           );
       } else {
         this.$store

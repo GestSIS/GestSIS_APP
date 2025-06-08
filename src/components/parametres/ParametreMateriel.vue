@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
 
 async function loadData(_, next) {
@@ -58,7 +60,7 @@ export default {
     return {
       fields: [
         { title: 'Tri', key: 'tri' },
-        { title: 'Actif', key: 'actif', type: Boolean },
+        { title: 'Actif', key: 'statut', type: Boolean },
         { title: 'Désignation', key: 'designation' },
         { title: 'Prix de forfait', key: 'forfait' },
         { title: "Prix de l'unité", key: 'unite' },
@@ -81,18 +83,21 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(['SHOW_MODAL']),
+    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     ajoutMateriel() {
-      this.SHOW_MODAL({ component: 'ModalMateriel', data: {} });
+      this.SHOW_MODAL({ component: 'ModalMaterielIntervention', data: {} });
     },
     updateMateriel(materiel) {
-      this.SHOW_MODAL({ component: 'ModalMateriel', data: { ...materiel } });
+      this.SHOW_MODAL({
+        component: 'ModalMaterielIntervention',
+        data: { ...materiel },
+      });
     },
     deleteMateriel(materiel) {
       this.$store
         .dispatch('removeMateriel', materiel.id)
         .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression')
+          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
         );
     },
   },
