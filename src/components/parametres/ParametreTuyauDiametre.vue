@@ -1,6 +1,5 @@
 <script setup>
 import { computed, inject } from 'vue';
-import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre';
 
@@ -50,7 +49,7 @@ const fields = [
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title me-auto">Couleurs</h3>
+      <h3 class="card-title me-auto">Diamètres</h3>
       <button type="button" class="btn btn-primary" @click="ajout">
         Ajouter
       </button>
@@ -60,7 +59,7 @@ const fields = [
         :data="diametres"
         :fields="fields"
         :selectable="true"
-        no-data="Aucune couleur"
+        no-data="Aucun diamètre"
       >
         <template #actions="{ rowData }">
           <button

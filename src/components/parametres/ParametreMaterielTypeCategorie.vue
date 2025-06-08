@@ -102,7 +102,6 @@ const fields = [
   { title: 'Taille', type: Boolean, key: 'est_taillee' },
   { title: 'Numéroté', type: Boolean, key: 'est_numerote' },
   { title: 'Lavable', type: Boolean, key: 'est_lavable' },
-  { title: 'Etiqueté', type: Boolean, key: 'est_etiquete' },
   { title: 'Actions', slot: 'actions' },
 ];
 </script>
