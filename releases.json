@@ -1,7 +1,19 @@
 {
   "releases": [
     {
-      "date": "20.04.2024",
+      "date": "08.06.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Refonte complète du module `Matériel` avec :",
+        "Amélioration, simplification et refonte complète de 'interface",
+        "Ajout de la notion d'emplacements",
+        "Ajout des couleurs pour le matériel",
+        "Simplification de l'interface de saisie des lavages"
+      ]
+    },
+    {
+      "date": "20.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -9,7 +21,7 @@
       ]
     },
     {
-      "date": "18.04.2024",
+      "date": "18.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -17,7 +29,7 @@
       ]
     },
     {
-      "date": "14.04.2024",
+      "date": "14.04.2025",
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
@@ -26,7 +38,7 @@
       ]
     },
     {
-      "date": "12.04.2024",
+      "date": "12.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -35,7 +47,7 @@
       ]
     },
     {
-      "date": "11.04.2024",
+      "date": "11.04.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.0",
       "changes": [
