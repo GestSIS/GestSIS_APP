@@ -6,6 +6,15 @@ import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import SelectCategorie from '../materiel/SelectCategorie.vue';
 
+const typeStore = useMaterielTypeStore();
+const diametreStore = useTuyauDiametreStore();
+const batterieStore = useBatterieTypeStore();
+
+await Promise.all([
+  diametreStore.fetchTuyauDiametres(),
+  batterieStore.fetchBatterieTypes(),
+]);
+
 const { data } = defineProps({
   data: {
     type: Object,
@@ -25,15 +34,6 @@ const activeItem = ref({
   },
   batterie: data.batterie ?? {},
 });
-
-const typeStore = useMaterielTypeStore();
-const diametreStore = useTuyauDiametreStore();
-const batterieStore = useBatterieTypeStore();
-
-await Promise.all([
-  diametreStore.fetchTuyauDiametres(),
-  batterieStore.fetchBatterieTypes(),
-]);
 
 const { closeModal } = useModalStore();
 const save = async () => {
