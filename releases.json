@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "20.04.2024",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'affiche des configuration d'imputation"
+      ]
+    },
+    {
       "date": "18.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",

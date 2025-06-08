@@ -22,7 +22,6 @@ const civilites = computed(() => store.state.baseData.civilites);
         disabled
         :options="civilites"
       />
-      <!-- NOM -->
       <div class="mb-3">
         <label for="m-sap-nom">Nom</label>
         <input
@@ -35,7 +34,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           name="nom"
         />
       </div>
-      <!-- PRENOM -->
       <div class="mb-3">
         <label for="m-sap-prenom">Prénom</label>
         <input
@@ -48,7 +46,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           name="prenom"
         />
       </div>
-      <!-- RUE -->
       <div class="row mb-3">
         <div class="col-8">
           <label for="m-sap-rue">Rue</label>
@@ -73,7 +70,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           />
         </div>
       </div>
-      <!-- NPA + LOCALITE -->
       <base-select
         v-model="model.localite_id"
         class="mb-3"
@@ -82,7 +78,6 @@ const civilites = computed(() => store.state.baseData.civilites);
         disabled
         :options="localites"
       />
-      <!-- N° AVS -->
       <div class="row">
         <div class="mb-3 col-6">
           <label for="m-sap-avs">N° AVS</label>
@@ -116,7 +111,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           </div>
         </div>
       </div>
-      <!-- Email -->
       <div class="mb-3">
         <label for="m-sap-email">Email</label>
         <div class="input-group input-group-sm mb-3">
@@ -133,7 +127,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           />
         </div>
       </div>
-      <!-- DATE NAISSANCE + SUFFIXE -->
       <div v-if="model.type === 0" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
@@ -171,7 +164,6 @@ const civilites = computed(() => store.state.baseData.civilites);
           />
         </div>
       </div>
-      <!-- REMARQUE -->
       <div class="mb-3">
         <label for="m-sap-remarques">Remarques</label>
         <textarea

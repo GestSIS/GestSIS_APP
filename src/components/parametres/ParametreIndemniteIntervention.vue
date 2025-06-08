@@ -1,7 +1,7 @@
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Indemnités intervention</h3>
+      <h3 class="card-title">Imputation intervention</h3>
       <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
         Ajouter une indemnité
       </button>

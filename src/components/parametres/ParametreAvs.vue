@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">AVS</h3>
+          <h3 class="card-title">Côtisations sociales</h3>
           <button type="button" class="btn btn-primary" @click="save">
             Enregistrer
           </button>
