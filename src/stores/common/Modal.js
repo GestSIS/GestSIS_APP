@@ -10,7 +10,6 @@ export const useModalStore = defineStore('Modal', {
   }),
   actions: {
     showModal(payload) {
-      this.visible = true;
       if (typeof payload === 'string') {
         this.callback = () => Promise.resolve();
         this.size = 0;
@@ -22,6 +21,7 @@ export const useModalStore = defineStore('Modal', {
         this.data = payload?.data ?? {};
         this.component = payload.component;
       }
+      this.visible = true;
     },
     closeModal() {
       this.visible = false;
