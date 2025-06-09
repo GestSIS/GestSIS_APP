@@ -5,7 +5,9 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Masquage des emplacements désactivé"
+        "Masquage des emplacements et articles désactivé",
+        "Ajout `statut` pour emplacement",
+        "Tri des articles pour liste par emplacement"
       ]
     },
     {

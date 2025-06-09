@@ -63,7 +63,11 @@ const computedData = computed(() =>
       'categorie_id',
     ),
   )
-    .map(([key, values]) => ({ key, data: values, categorie_id: key }))
+    .map(([key, values]) => ({
+      key,
+      data: values.sort((a1, a2) => a1.materiel_type_id - a2.materiel_type_id),
+      categorie_id: key,
+    }))
     .map((data) =>
       affichageIndividuel.value
         ? data
