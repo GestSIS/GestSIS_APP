@@ -24,7 +24,7 @@ const paiements = computed(() =>
 );
 const exerciceComptable = computed(() =>
   store.state.exerciceComptable.liste.find(
-    (e) => e.id == state.exerciceComptable.activeId,
+    (e) => e.id == store.state.exerciceComptable.activeId,
   ),
 );
 
