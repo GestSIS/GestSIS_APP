@@ -4,6 +4,7 @@ import { useStore } from 'vuex';
 import permissions from '../../store/permissions';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import useHasPermission from '../../hooks/usePermission';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
@@ -37,14 +38,10 @@ const travaux = computed(() =>
   })),
 );
 
-const hasSaisiePermission = computed(
-  () =>
-    store.state.auth.admin ||
-    [
-      permissions.FICHE_TRAVAIL.SAISIE_PERSO,
-      permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-    ].some((p) => state.auth.sis.permissions.includes(p)),
-);
+const hasSaisiePermission = useHasPermission([
+  permissions.FICHE_TRAVAIL.SAISIE_PERSO,
+  permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
+]);
 
 const { showModal } = useModalStore();
 const addTravail = () =>
