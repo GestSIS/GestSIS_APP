@@ -61,6 +61,7 @@ const save = async () => {
         label="Est etiqueté"
         class="mb-3"
       />
+      <base-checkbox v-model="emplacement.statut" label="Actif" class="mb-3" />
       <select-emplacement
         v-model="emplacement.parent_id"
         label="Emplacement parent"
