@@ -27,6 +27,7 @@ const filtre = ref('');
 const computedData = computed(() => {
   const lowerFilter = filtre.value.toLowerCase().trim(' ');
   const filteredIds = emplacementStore.liste
+    .filter((e) => e.statut)
     .filter((e) => e.designation.toLowerCase().includes(lowerFilter))
     .flatMap((e) => {
       const parentIds = (id) =>

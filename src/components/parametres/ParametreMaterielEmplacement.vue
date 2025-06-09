@@ -61,6 +61,7 @@ const remove = (elem) => {
 
 const fields = [
   { title: 'Emplacement', slot: 'emplacement' },
+  { title: 'Actif', key: 'statut', type: Boolean },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Est etiqueté', key: 'est_etiquete', type: Boolean },
   { title: 'Couleur', slot: 'couleur' },

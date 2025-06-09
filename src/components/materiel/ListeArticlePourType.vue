@@ -77,6 +77,7 @@ const computedData = computed(() => {
       generic_emplacement_id:
         (a.sapeur_id ?? '') + '_' + (a.emplacement_id ?? ''),
     }))
+    .filter((a) => a.statut)
     .map((a) => ({
       ...a,
       emplacement_sort: a.sapeur + 'ZZZZ' + a.emplacement,

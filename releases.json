@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "09.06.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Masquage des emplacements désactivé"
+      ]
+    },
+    {
       "date": "08.06.2025",
       "version": "1.0",
       "app": "GestSIS APP",

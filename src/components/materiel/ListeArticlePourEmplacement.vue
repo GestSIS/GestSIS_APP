@@ -52,12 +52,14 @@ const indexedCategories = computed(() =>
 const computedData = computed(() =>
   Object.entries(
     groupedByData(
-      articles.value.map((a) => ({
-        ...a,
-        type: indexedTypes.value[a.materiel_type_id],
-        categorie_id:
-          indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
-      })),
+      articles.value
+        .map((a) => ({
+          ...a,
+          type: indexedTypes.value[a.materiel_type_id],
+          categorie_id:
+            indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+        }))
+        .filter((a) => a.statut),
       'categorie_id',
     ),
   )
