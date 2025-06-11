@@ -91,6 +91,7 @@ const computedData = computed(() => {
           id: key,
           emplacement_id: values[0].emplacement_id,
           emplacements: values[0].emplacements,
+          emplacement_sort: values[0].emplacement_sort,
           sapeur_id: values[0].sapeur_id,
           sapeur: values[0].sapeur,
           data: values,
