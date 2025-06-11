@@ -20,7 +20,7 @@ const { loading, articles, materielType, avecEmplacement } = defineProps({
   },
   avecEmplacement: {
     type: Boolean,
-    default: () => false,
+    default: () => true,
   },
   articles: {
     type: Array,
