@@ -90,18 +90,13 @@
         <div class="card card-primary card-outline mb-3">
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Interventions</h3>
-            <!--          <button @click.prevent="save" class="btn btn-primary">-->
-            <!--            Enregistrer-->
-            <!--          </button>-->
-          </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
+            <!--<button @click.prevent="save" class="btn btn-primary">-->
+            <!--  Enregistrer-->
+            <!--</button>-->
           </div>
           <div class="card-body table-responsive p-0">
             <base-table
-              v-show="!loading"
+              :loading="loading"
               :fields="fields"
               :row-class="onRowClass"
               no-data="Aucune écriture à afficher"

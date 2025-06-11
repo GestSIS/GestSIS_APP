@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "11.06.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'affichage de matériel groupé par type"
+      ]
+    },
+    {
       "date": "09.06.2025",
       "version": "1.0",
       "app": "GestSIS APP",

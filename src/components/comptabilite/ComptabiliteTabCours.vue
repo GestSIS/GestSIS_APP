@@ -72,14 +72,9 @@
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Cours</h3>
           </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
           <div class="card-body table-responsive p-0">
             <base-table
-              v-show="!loading"
+              :loading="loading"
               :fields="fields"
               :row-class="onRowClass"
               detail-row-class="m-td-0"

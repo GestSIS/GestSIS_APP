@@ -1,13 +1,10 @@
 <template>
-  <div class="detail-row">
-    <table v-if="!presences.length" class="table mb-0">
-      <tr>
-        <th>Aucune présence</th>
-      </tr>
-    </table>
-
-    <base-table :fields="fields" :data="presences" :hide-download="true" />
-  </div>
+  <base-table
+    :fields="fields"
+    :data="presences"
+    :hide-download="true"
+    no-data="Aucune présence"
+  />
 </template>
 
 <script>
@@ -44,11 +41,6 @@ export default {
 </script>
 
 <style scoped>
-.detail-row {
-  margin-left: 33px;
-  border-left: 1px solid lightgrey;
-}
-
 th {
   border-top: none;
 }

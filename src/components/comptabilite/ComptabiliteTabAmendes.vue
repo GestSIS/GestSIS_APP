@@ -43,14 +43,9 @@
           <div class="card-header d-flex justify-content-between">
             <h3>Amendes</h3>
           </div>
-          <div v-if="loading" class="card-body d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
           <div class="card-body table-responsive p-0">
             <base-table
-              v-show="!loading"
+              :loading="loading"
               :fields="fields"
               :row-class="onRowClass"
               no-data="Aucune amende à afficher"
@@ -133,14 +128,14 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       amendes: (state) => state.imputation.ecritures.amendes,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
+          permissions.COMPTABILITE.MODIFICATION,
         ),
     }),
     computedData() {
@@ -185,7 +180,7 @@ export default {
         .then((amendes) => {
           if (amendes?.length == 0) {
             this.$awn.success(
-              'Aucune amende requise pour cet exercice comptable'
+              'Aucune amende requise pour cet exercice comptable',
             );
           } else {
             this.$awn.success('Amendes générées avec succes');
@@ -194,8 +189,8 @@ export default {
         .catch((err) =>
           this.$awn.alert(
             err?.message ??
-              'Une erreur est survenue durant le génération des indemnités/frais annuelles'
-          )
+              'Une erreur est survenue durant le génération des indemnités/frais annuelles',
+          ),
         );
     },
     onRowClass(dataItem, isSelected) {

@@ -179,13 +179,8 @@
           </div>
         </div>
         <div class="col-9">
-          <div v-if="loading" class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
           <base-table
-            v-show="!loading"
+            :loading="loading"
             ref="table"
             :fields="fields"
             :data="computedData"

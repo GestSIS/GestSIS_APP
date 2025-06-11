@@ -4,13 +4,13 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
-import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
 import { groupedByData, indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
+import TableArticlePourType from './TableArticlePourType.vue';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -50,9 +50,9 @@ const materielType = computed(() =>
   materielTypeStore.liste.find((m) => m.id === parseInt(id)),
 );
 
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
-const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const linearEmplacements = (emplacement_id) => {
   if (emplacement_id === null) {
@@ -106,35 +106,11 @@ const computedData = computed(() => {
         }));
 });
 
-const piecesColonnes = computed(() => [
-  ...(affichageIndividuel.value && materielType.value.est_numerote
-    ? [{ title: 'Numéro', key: 'numero' }]
-    : []),
+const piecesColonnes = [
   { title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' },
-  { title: 'Compartiment', key: 'compartiment' },
-  ...(affichageIndividuel.value
-    ? [
-        ...(materielType.value.type === 3
-          ? [
-              { title: 'Désignation', key: 'designation' },
-              { title: 'Immatriculation', key: 'immatriculation' },
-              { title: 'Chassis', key: 'chassis' },
-            ]
-          : []),
-        ...(materielType.value.est_taillee
-          ? [{ title: 'Taille', key: 'taille' }]
-          : []),
-        ...(materielType.value.est_lavable
-          ? [{ title: 'Lavages', key: 'nbLavages', slot: 'lavages' }]
-          : []),
-        { title: 'Remarque', key: 'remarque' },
-        { title: 'Ajouté', key: 'created_at', type: 'date' },
-        // { title: 'Inventaire', key: 'inventaire' },
-        // { title: 'Maintenance', key: 'maintenance' },
-        { title: 'Actions', key: 'id', slot: 'actions' },
-      ]
-    : [{ title: 'Quantité', key: 'quantite' }]),
-]);
+  // { title: 'Compartiment', key: 'compartiment' },
+  { title: 'Quantité', key: 'quantite' },
+];
 
 const { showModal } = useModalStore();
 const ajouter = () =>
@@ -143,43 +119,6 @@ const ajouter = () =>
     data: {},
     size: 1,
   });
-
-const infoMateriel = (materiel) =>
-  showModal({
-    component: 'ModalArticleInfo',
-    data: materiel,
-    size: 1,
-  });
-
-const editMateriel = (materiel) =>
-  showModal({
-    component: 'ModalArticle',
-    data: materiel,
-    callback: loadArticles,
-  });
-
-const retourMateriel = (materiel) =>
-  showModal({
-    component: 'ModalRetourUnique',
-    data: materiel,
-    callback: loadArticles,
-  });
-
-const attribuerMateriel = (materiel) =>
-  showModal({
-    component: 'ModalAttributionUnique',
-    data: materiel,
-    callback: loadArticles,
-  });
-
-const { confirm } = useConfirmation();
-const supprimer = (article) =>
-  confirm(
-    'Voulez-vous vraiment supprimer cet article ?',
-    "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  )
-    .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(loadArticles);
 </script>
 
 <template>
@@ -226,13 +165,23 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['far', 'plus-square']" />
       </button>
     </template>
+
     <template #body-table>
+      <table-article-pour-type
+        v-if="affichageIndividuel"
+        :loading="loading"
+        :articles="computedData"
+        :materiel-type="materielType"
+      />
       <base-table
+        v-else
         :loading="loading"
         :data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
         :selectable="true"
+        :detailRowColumn="true"
+        :hideDownload="true"
       >
         <template #emplacement="{ rowData }">
           <div v-if="rowData.sapeur_id" class="badge bg-primary">
@@ -248,68 +197,13 @@ const supprimer = (article) =>
           </div>
         </template>
 
-        <template #lavages="{ rowData }">
-          <div
-            class="badge"
-            :class="{
-              'bg-danger': rowData.lavages.length >= 10,
-              'bg-secondary': rowData.lavages.length < 10,
-            }"
-          >
-            {{ rowData.lavages.length }}
-          </div>
-        </template>
-
-        <template #actions="{ rowData }">
-          <button
-            title="Info"
-            class="btn btn-outline-secondary border-0"
-            @click="infoMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'info-circle']" />
-          </button>
-          <button
-            v-if="affichageIndividuel && hasEditPermission"
-            title="Modifier"
-            class="btn btn-outline-secondary border-0"
-            @click="editMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'edit']" />
-          </button>
-          <button
-            v-if="
-              affichageIndividuel &&
-              hasEditPermission &&
-              materielType.est_attribuable &&
-              rowData.sapeur_id !== null
-            "
-            title="Retour"
-            class="btn btn-outline-primary border-0"
-            @click="retourMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-          </button>
-          <button
-            v-if="
-              affichageIndividuel &&
-              hasEditPermission &&
-              materielType.est_attribuable &&
-              rowData.sapeur_id === null
-            "
-            title="Attribuer"
-            class="btn btn-outline-primary border-0"
-            @click="attribuerMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
-          </button>
-          <button
-            v-if="affichageIndividuel && hasEditPermission"
-            title="Supprimer"
-            class="btn btn-outline-danger border-0"
-            @click="supprimer(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button>
+        <template #detail-row="{ rowData }">
+          <table-article-pour-type
+            :loading="loading"
+            :articles="rowData.data"
+            :materiel-type="materielType"
+            :avec-emplacement="false"
+          />
         </template>
       </base-table>
     </template>

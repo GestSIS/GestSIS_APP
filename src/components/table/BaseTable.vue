@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, useSlots, watch } from 'vue';
 
 const {
   data,
@@ -87,6 +87,7 @@ const {
   },
 });
 const emit = defineEmits(['selected']);
+const slots = useSlots();
 
 const sorted = ref({
   key: null,
@@ -94,8 +95,8 @@ const sorted = ref({
   func: (a) => a,
 });
 const selected = ref(null);
-const detailsRowVisibility = ref(() =>
-  detailRowComponent.value
+const detailsRowVisibility = ref(
+  !!slots['detail-row'] || detailRowComponent
     ? Object.fromEntries(data.map((d) => [d[selectKey], false]))
     : {},
 );
@@ -253,7 +254,12 @@ defineExpose({
 </script>
 
 <template>
-  <table class="table table-sm table-hover mb-0">
+  <div v-if="loading" class="p-3 d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+  <table v-show="!loading" class="table table-sm table-hover mb-0">
     <slot name="head">
       <thead>
         <tr>
@@ -444,17 +450,22 @@ defineExpose({
           :key="'detail-' + r[selectKey]"
           :class="r.rowClass"
         >
-          <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0">
-            <component
-              :is="detailRowComponent"
-              :options="detailRowOptions"
-              :class="detailRowClass"
-              v-bind="{
-                visible: detailsRowVisibility[r[selectKey]],
-                rowData: r,
-              }"
-            >
-            </component>
+          <td
+            :colspan="fields.length + (detailRowColumn ? 1 : 0)"
+            class="p-0 detail-row"
+          >
+            <slot name="detail-row" v-bind="{ rowData: r }">
+              <component
+                :is="detailRowComponent"
+                :options="detailRowOptions"
+                :class="detailRowClass"
+                v-bind="{
+                  visible: detailsRowVisibility[r[selectKey]],
+                  rowData: r,
+                }"
+              >
+              </component>
+            </slot>
           </td>
         </tr>
       </template>
@@ -478,5 +489,10 @@ tr {
 
 .details-width {
   width: 8px;
+}
+
+.detail-row > * {
+  margin-left: 33px;
+  border-left: 1px solid lightgrey;
 }
 </style>

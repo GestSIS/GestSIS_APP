@@ -1,11 +1,9 @@
 <template>
-  <div class="detail-row">
-    <base-table
-      :fields="computedFields"
-      :data="computedData"
-      :hide-download="true"
-    />
-  </div>
+  <base-table
+    :fields="computedFields"
+    :data="computedData"
+    :hide-download="true"
+  />
 </template>
 
 <script>
@@ -40,7 +38,7 @@ export default {
             }`;
             return acc;
           },
-          { id: 1 }
+          { id: 1 },
         ),
       ];
     },
@@ -56,11 +54,6 @@ export default {
 </script>
 
 <style scoped>
-.detail-row {
-  margin-left: 33px;
-  border-left: 1px solid lightgrey;
-}
-
 th {
   border-top: none;
 }

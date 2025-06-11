@@ -1,17 +1,11 @@
 <template>
-  <div class="detail-row">
-    <div v-if="loading" class="spinner-border" role="status">
-      <span class="visually-hidden">Chargement...</span>
-    </div>
-
-    <base-table
-      :loading="loading"
-      :fields="options.fields"
-      :no-data="options.noData ?? ''"
-      :data="data"
-      :hide-download="true"
-    ></base-table>
-  </div>
+  <base-table
+    :loading="loading"
+    :fields="options.fields"
+    :no-data="options.noData ?? ''"
+    :data="data"
+    :hide-download="true"
+  />
 </template>
 
 <script>
@@ -48,11 +42,6 @@ export default {
 </script>
 
 <style scoped>
-.detail-row {
-  margin-left: 33px;
-  border-left: 1px solid lightgrey;
-}
-
 th {
   border-top: none;
 }

@@ -130,7 +130,7 @@ export default {
         .then(() => {
           this.error = {};
           this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
+            this.$route.query.redirect ? this.$route.query.redirect : 'accueil',
           );
         })
         .catch((data) => {

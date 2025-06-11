@@ -101,7 +101,7 @@
           </div>
           <div class="card-body table-responsive p-0">
             <base-table
-              v-show="!loading"
+              :loading="loading"
               :fields="fields"
               no-data="Aucune écriture à afficher"
               :selectable="true"

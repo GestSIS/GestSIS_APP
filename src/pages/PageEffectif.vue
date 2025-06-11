@@ -157,14 +157,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="card card-primary card-outline mb-3">
-            <div v-if="loading" class="card-body d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
             <div class="card-body table-responsive p-0">
               <base-table
-                v-show="!loading"
+                :loading="loading"
                 :selectable="true"
                 :fields="fieldsBase"
                 no-data="Aucun sapeur à afficher"

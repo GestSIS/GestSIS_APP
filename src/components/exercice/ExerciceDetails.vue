@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-row d-flex">
+  <div class="detail-row-padding d-flex">
     <div class="me-3">
       Convoqué
       <span
@@ -95,9 +95,7 @@ export default {
 </script>
 
 <style scoped>
-.detail-row {
-  margin-left: 33px;
-  border-left: 1px solid lightgray;
+.detail-row-padding {
   padding: 0.8em;
 }
 </style>

@@ -65,14 +65,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="card card-primary card-outline mb-3">
-            <div v-if="loading" class="card-body d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
             <div class="card-body table-responsive p-0">
               <base-table
-                v-show="!loading"
+                :loading="loading"
                 :selectable="true"
                 :fields="fields"
                 no-data="Aucun cours à afficher"
@@ -106,7 +101,7 @@ async function loadData(routeTo, next) {
   Promise.all([loadLocalities, loadCours, loadSapeurs, loadCoursSapeurs]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -139,17 +134,17 @@ export default {
     ...mapState({
       sapeurs: (state) =>
         state.sapeur.liste.sort((a, b) =>
-          a.nom_prenom.localeCompare(b.nom_prenom)
+          a.nom_prenom.localeCompare(b.nom_prenom),
         ),
       coursTypes: (state) =>
         state.cours.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       coursSapeurs: (state) =>
         state.coursSapeur.liste.sort((a, b) => a.date.localeCompare(b.date)),
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -173,7 +168,7 @@ export default {
     },
     filteredLocalites() {
       const ids = new Set(
-        this.coursSapeurs.map((i) => parseInt(i.localite_id))
+        this.coursSapeurs.map((i) => parseInt(i.localite_id)),
       );
       return this.localites.filter((t) => ids.has(t.id));
     },
