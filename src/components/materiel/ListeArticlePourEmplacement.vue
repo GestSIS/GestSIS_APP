@@ -27,7 +27,7 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const articles = ref([]);
 const loading = ref(true);
-const affichageIndividuel = ref(true);
+const affichageIndividuel = ref(false);
 
 const loadArticles = async () => {
   loading.value = true;
