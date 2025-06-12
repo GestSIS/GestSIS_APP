@@ -202,10 +202,6 @@ const ajouter = () =>
             {{ categorie.designation }}
           </tag-couleur>
         </template>
-
-        <template #type="{ rowData }">
-          {{ rowData.type.designation }}
-        </template>
       </base-table>
     </template>
   </base-card>

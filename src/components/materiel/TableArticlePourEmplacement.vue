@@ -10,7 +10,7 @@ import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 
-const { loading, articles, avecType } = defineProps({
+const { loading, articles, hideDownload } = defineProps({
   loading: {
     type: Boolean,
     required: true,
@@ -46,7 +46,7 @@ const linearCategories = (categorieId) => {
 };
 
 const piecesColonnes = computed(() => [
-  ...(avecType ? [{ title: 'Type', key: 'typeDesignation' }] : []),
+  { title: 'Type', key: 'typeDesignation' },
   { title: 'Compartiment', key: 'compartiment' },
   { title: 'Numéro', key: 'numero' },
   { title: 'Taille', key: 'taille' },
@@ -91,13 +91,12 @@ const supprimer = (article) =>
 <template>
   <base-table
     :loading="loading"
-    :data="!avecType ? articles : []"
-    :grouped-data="avecType ? articles : []"
+    :grouped-data="articles"
     no-data="Aucune pièce"
     :fields="piecesColonnes"
     :selectable="true"
   >
-    <template v-if="avecType" #groupeHeader="{ categorie_id }">
+    <template #groupeHeader="{ categorie_id }">
       <tag-couleur
         v-for="categorie in linearCategories(categorie_id)"
         :key="categorie.id"
@@ -105,10 +104,6 @@ const supprimer = (article) =>
       >
         {{ categorie.designation }}
       </tag-couleur>
-    </template>
-
-    <template #type="{ rowData }">
-      {{ rowData.type.designation }}
     </template>
 
     <template #actions="{ rowData }">
