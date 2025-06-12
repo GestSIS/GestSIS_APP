@@ -263,7 +263,7 @@ defineExpose({
     <slot name="head">
       <thead>
         <tr>
-          <th v-if="detailRowColumn && data.length">
+          <th v-if="detailRowColumn && (data.length || groupedData.length)">
             <button
               v-if="Object.values(detailsRowVisibility).find((e) => e)"
               class="btn btn-link border-0"
@@ -333,7 +333,7 @@ defineExpose({
       </tr>
 
       <tr v-if="groupedData.length > 0" class="table-secondary">
-        <th :colspan="fields.length">
+        <th :colspan="fields.length + (detailRowColumn ? 1 : 0)">
           <slot name="groupeHeader" v-bind="groupe">{{ groupe.label }}</slot>
         </th>
       </tr>
@@ -454,18 +454,20 @@ defineExpose({
             :colspan="fields.length + (detailRowColumn ? 1 : 0)"
             class="p-0 detail-row"
           >
-            <slot name="detail-row" v-bind="{ rowData: r }">
-              <component
-                :is="detailRowComponent"
-                :options="detailRowOptions"
-                :class="detailRowClass"
-                v-bind="{
-                  visible: detailsRowVisibility[r[selectKey]],
-                  rowData: r,
-                }"
-              >
-              </component>
-            </slot>
+            <div>
+              <slot name="detail-row" v-bind="{ rowData: r }">
+                <component
+                  :is="detailRowComponent"
+                  :options="detailRowOptions"
+                  :class="detailRowClass"
+                  v-bind="{
+                    visible: detailsRowVisibility[r[selectKey]],
+                    rowData: r,
+                  }"
+                >
+                </component>
+              </slot>
+            </div>
           </td>
         </tr>
       </template>

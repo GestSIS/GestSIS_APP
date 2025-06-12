@@ -41,7 +41,7 @@ const piecesColonnes = [
   { title: 'Date', key: 'date', type: Date },
   { title: 'Matériel', key: 'designation' },
   { title: 'Numéro', key: 'numero' },
-  { title: 'Emplacement', key: 'emplacement', slot: 'emplacement' },
+  { title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' },
   { title: 'Lavages', key: 'nbLavages', slot: 'lavages' },
   { title: 'Remarque', key: 'remarque' },
   { title: 'Actions', key: 'id', slot: 'actions' },
@@ -64,15 +64,22 @@ const linearEmplacements = (emplacement_id) => {
 };
 
 const computedData = computed(() =>
-  lavages.value.map((a) => ({
-    ...a,
-    ...a.article,
-    id: a.id,
-    nbLavages: a.article.lavages.length,
-    designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
-    emplacements: linearEmplacements(a.article.emplacement_id),
-    sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? '',
-  })),
+  lavages.value
+    .map((a) => ({
+      ...a,
+      ...a.article,
+      id: a.id,
+      nbLavages: a.article.lavages.length,
+      designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
+      emplacements: linearEmplacements(a.article.emplacement_id),
+      emplacement:
+        indexedEmplacements.value[a.emplacement_id]?.designation ?? '',
+      sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? '',
+    }))
+    .map((a) => ({
+      ...a,
+      emplacement_sort: a.sapeur + 'ZZZZ' + a.emplacement,
+    })),
 );
 
 const { showModal } = useModalStore();

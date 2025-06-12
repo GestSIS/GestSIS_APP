@@ -2,14 +2,15 @@
 import { computed, ref, watch } from 'vue';
 import { groupedByData, indexedData } from '../../tools';
 import ArticleService from '../../services/materiel/ArticleService';
-import useConfirmation from '../../hooks/useConfirmation';
-import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
+import TableArticlePourEmplacement from './TableArticlePourEmplacement.vue';
+import TableArticlePourType from './TableArticlePourType.vue';
+import { useModalStore } from '../../stores/common/Modal';
 
 const { id } = defineProps({
   id: {
@@ -56,6 +57,8 @@ const computedData = computed(() =>
         .map((a) => ({
           ...a,
           type: indexedTypes.value[a.materiel_type_id],
+          nbLavages: (a.lavages ?? []).length,
+          typeDesignation: indexedTypes.value[a.materiel_type_id]?.designation,
           categorie_id:
             indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
         }))
@@ -78,6 +81,7 @@ const computedData = computed(() =>
                 key,
                 id: key,
                 type: values[0].type,
+                typeDesignation: values[0].typeDesignation,
                 data: values,
                 quantite: values.length,
                 compartiments: new Set(values.map((a) => a.compartiment)),
@@ -104,43 +108,13 @@ const linearCategories = (categorieId) => {
   return [...linearCategories(categorie.parent_id), categorie];
 };
 
-const piecesColonnes = computed(() => [
-  { title: 'Type', key: 'type', slot: 'type' },
+const colonnes = computed(() => [
+  { title: 'Type', key: 'typeDesignation' },
   { title: 'Compartiment', key: 'compartiment' },
-  ...(affichageIndividuel.value
-    ? [
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Taille', key: 'taille' },
-        { title: 'Remarque', key: 'remarque' },
-        { title: 'Ajouté', key: 'created_at', type: 'date' },
-        { title: 'Actions', key: 'id', slot: 'actions' },
-      ]
-    : [{ title: 'Quantité', key: 'quantite' }]),
+  { title: 'Quantité', key: 'quantite' },
 ]);
 
 const { showModal } = useModalStore();
-const infoMateriel = (materiel) =>
-  //TODO: Gérer le cas affichageIndividuel
-  showModal({
-    component: 'ModalArticleInfo',
-    data: materiel,
-    size: 1,
-  });
-
-const editMateriel = (materiel) =>
-  showModal({
-    component: 'ModalArticle',
-    data: materiel,
-    callback: loadArticles,
-  });
-
-const attribuerMateriel = (materiel) =>
-  showModal({
-    component: 'ModalAttributionUnique',
-    data: materiel,
-    callback: loadArticles,
-  });
-
 const ajouter = () =>
   showModal({
     component: 'ModalAjoutArticleMultiple',
@@ -148,15 +122,6 @@ const ajouter = () =>
     data: { emplacementId: id },
     size: 2,
   });
-
-const { confirm } = useConfirmation();
-const supprimer = (article) =>
-  confirm(
-    'Voulez-vous vraiment supprimer cet article ?',
-    "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  )
-    .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(loadArticles);
 </script>
 
 <template>
@@ -204,13 +169,30 @@ const supprimer = (article) =>
       </button>
     </template>
     <template #body-table>
+      <table-article-pour-emplacement
+        v-if="affichageIndividuel"
+        :loading="loading"
+        :articles="computedData"
+      />
       <base-table
+        v-else
         :loading="loading"
         :grouped-data="computedData"
         no-data="Aucune pièce"
-        :fields="piecesColonnes"
+        :fields="colonnes"
         :selectable="true"
+        :detailRowColumn="true"
+        :hideDownload="true"
       >
+        <template #detail-row="{ rowData }">
+          <table-article-pour-type
+            :loading="loading"
+            :articles="rowData.data"
+            :avec-emplacement="false"
+            :materielType="rowData.type"
+          />
+        </template>
+
         <template #groupeHeader="{ categorie_id }">
           <tag-couleur
             v-for="categorie in linearCategories(categorie_id)"
@@ -223,57 +205,6 @@ const supprimer = (article) =>
 
         <template #type="{ rowData }">
           {{ rowData.type.designation }}
-        </template>
-        <template #actions="{ rowData }">
-          <button
-            title="Info"
-            class="btn btn-outline-secondary border-0"
-            @click="infoMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'info-circle']" />
-          </button>
-          <button
-            v-if="affichageIndividuel && hasEditPermission"
-            title="Modifier"
-            class="btn btn-outline-secondary border-0"
-            @click="editMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'edit']" />
-          </button>
-          <button
-            v-if="
-              affichageIndividuel &&
-              hasEditPermission &&
-              rowData.type.est_attribuable &&
-              rowData.sapeur_id !== null
-            "
-            title="Retour"
-            class="btn btn-outline-primary border-0"
-            @click="retourMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-          </button>
-          <button
-            v-if="
-              affichageIndividuel &&
-              hasEditPermission &&
-              rowData.type.est_attribuable &&
-              rowData.sapeur_id === null
-            "
-            title="Attribuer"
-            class="btn btn-outline-primary border-0"
-            @click="attribuerMateriel(rowData)"
-          >
-            <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
-          </button>
-          <button
-            v-if="affichageIndividuel && hasEditPermission"
-            title="Supprimer"
-            class="btn btn-outline-danger border-0"
-            @click="supprimer(rowData)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button>
         </template>
       </base-table>
     </template>
