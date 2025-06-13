@@ -10,7 +10,7 @@ import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 
-const { loading, articles, hideDownload } = defineProps({
+const { loading, articles, hideDownload, refresh } = defineProps({
   loading: {
     type: Boolean,
     required: true,
@@ -21,6 +21,10 @@ const { loading, articles, hideDownload } = defineProps({
   },
   articles: {
     type: Array,
+    required: true,
+  },
+  refresh: {
+    type: Function,
     required: true,
   },
 });
@@ -68,14 +72,14 @@ const editMateriel = (materiel) =>
   showModal({
     component: 'ModalArticle',
     data: materiel,
-    callback: loadArticles,
+    callback: refresh,
   });
 
 const attribuerMateriel = (materiel) =>
   showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
-    callback: loadArticles,
+    callback: refresh,
   });
 
 const { confirm } = useConfirmation();
@@ -85,7 +89,7 @@ const supprimer = (article) =>
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(loadArticles);
+    .then(refresh);
 </script>
 
 <template>

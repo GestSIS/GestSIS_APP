@@ -173,6 +173,7 @@ const ajouter = () =>
         :loading="loading"
         :articles="computedData"
         :materiel-type="materielType"
+        :refresh="loadArticles"
       />
       <base-table
         v-else
@@ -204,6 +205,7 @@ const ajouter = () =>
             :articles="rowData.data"
             :materiel-type="materielType"
             :avec-emplacement="false"
+            :refresh="loadArticles"
           />
         </template>
       </base-table>

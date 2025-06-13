@@ -9,28 +9,33 @@ import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 
-const { loading, articles, materielType, avecEmplacement } = defineProps({
-  loading: {
-    type: Boolean,
-    required: true,
-  },
-  hideDownload: {
-    type: Boolean,
-    default: () => false,
-  },
-  avecEmplacement: {
-    type: Boolean,
-    default: () => true,
-  },
-  articles: {
-    type: Array,
-    required: true,
-  },
-  materielType: {
-    type: Object,
-    required: true,
-  },
-});
+const { loading, articles, materielType, avecEmplacement, refresh } =
+  defineProps({
+    loading: {
+      type: Boolean,
+      required: true,
+    },
+    hideDownload: {
+      type: Boolean,
+      default: () => false,
+    },
+    avecEmplacement: {
+      type: Boolean,
+      default: () => true,
+    },
+    articles: {
+      type: Array,
+      required: true,
+    },
+    materielType: {
+      type: Object,
+      required: true,
+    },
+    refresh: {
+      type: Function,
+      required: true,
+    },
+  });
 
 const couleurStore = useCouleurStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
@@ -74,21 +79,21 @@ const editMateriel = (materiel) =>
   showModal({
     component: 'ModalArticle',
     data: materiel,
-    callback: loadArticles,
+    callback: refresh,
   });
 
 const retourMateriel = (materiel) =>
   showModal({
     component: 'ModalRetourUnique',
     data: materiel,
-    callback: loadArticles,
+    callback: refresh,
   });
 
 const attribuerMateriel = (materiel) =>
   showModal({
     component: 'ModalAttributionUnique',
     data: materiel,
-    callback: loadArticles,
+    callback: refresh,
   });
 
 const { confirm } = useConfirmation();
@@ -98,7 +103,7 @@ const supprimer = (article) =>
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(loadArticles);
+    .then(refresh);
 </script>
 
 <template>

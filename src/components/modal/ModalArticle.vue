@@ -79,6 +79,16 @@ const save = async () => {
         class="mb-3"
         v-model="activeItem.emplacement_id"
       />
+      <div v-if="!activeItem.id || activeItem.emplacement_id" class="mb-3">
+        <label for="compartiment">Compartiment</label>
+        <input
+          id="compartiment"
+          v-model="activeItem.compartiment"
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['compartiment'] }"
+        />
+      </div>
       <div v-if="type && type.type === 3" class="mb-3">
         <label for="designation">Désignation</label>
         <input
