@@ -1,3 +1,42 @@
+<script setup>
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const email = ref(null);
+const password = ref(null);
+const error = ref(null);
+
+const router = useRouter();
+const store = useStore();
+const route = useRoute();
+
+const login = async () => {
+  if (
+    email.value?.trim()?.toLowerCase()?.endsWith('@gestsis.ch') &&
+    !email.value?.trim()?.toLowerCase()?.endsWith('demo@gestsis.ch')
+  ) {
+    error.value = {
+      email: 'Email invalid',
+    };
+    return;
+  }
+
+  store
+    .dispatch('login', {
+      email: email.value?.trim(),
+      password: password.value,
+    })
+    .then(() => {
+      error.value = null;
+      router.push(route.query.redirect ? route.query.redirect : 'accueil');
+    })
+    .catch((error) => {
+      error.value = error;
+    });
+};
+</script>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin" @submit.prevent="login">
@@ -48,47 +87,6 @@
     </form>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PageLogin',
-  data() {
-    return {
-      email: null,
-      password: null,
-      error: null,
-    };
-  },
-  methods: {
-    async login() {
-      if (
-        this.email?.trim()?.toLowerCase()?.endsWith('@gestsis.ch') &&
-        !this.email?.trim()?.toLowerCase()?.endsWith('demo@gestsis.ch')
-      ) {
-        this.error = {
-          email: 'Email invalid',
-        };
-        return;
-      }
-
-      this.$store
-        .dispatch('login', {
-          email: this.email?.trim(),
-          password: this.password,
-        })
-        .then(() => {
-          this.error = null;
-          this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'accueil'
-          );
-        })
-        .catch((error) => {
-          this.error = error;
-        });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .centered {

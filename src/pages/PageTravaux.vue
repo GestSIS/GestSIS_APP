@@ -1,3 +1,157 @@
+<script setup>
+import { useModalStore } from '../stores/common/Modal';
+import permissions from '../store/permissions.js';
+
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { computed, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import useHasPermission from '../hooks/usePermission';
+
+const store = useStore();
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadUnites = store.dispatch('fetchUnites');
+const loadTravailTypes = store.dispatch('fetchTravailTypes');
+
+const loading = ref(false);
+const selectedId = ref(null);
+
+await store.dispatch('fetchExercicesComptables');
+store.dispatch('fetchTravaux').then(() => (loading.value = false));
+
+await Promise.all([loadSapeurs, loadUnites, loadTravailTypes]);
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+const activeSapeurId = computed(() => store.state.auth.sapeurId);
+const travaux = computed(() =>
+  store.state.travail.liste.map((t) => ({
+    ...t,
+    travail_type: store.state.travailType.liste.find(
+      (e) => e.id == t.travail_type_id,
+    )?.designation,
+    sapeur: store.state.sapeur.liste.find((s) => s.id == t.sapeur_id)
+      ?.nom_prenom,
+    auteur: store.state.sapeur.liste.find((s) => s.id == t.auteur_id)
+      ?.nom_prenom,
+    unite: store.state.unite.liste.find(
+      (u) =>
+        u.id ==
+        store.state.travailType.liste.find((e) => e.id == t.travail_type_id)
+          ?.type_unite_id,
+    )?.unite,
+  })),
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const travailTypes = computed(() => store.state.travailType.liste);
+
+const hasEditPermission = useHasPermission([
+  permissions.FICHE_TRAVAIL.SAISIE_PERSO,
+  permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
+]);
+const hasValidationPermission = useHasPermission(
+  permissions.FICHE_TRAVAIL.VALIDATION,
+);
+const filteredSapeurs = computed(() => {
+  const ids = new Set(travaux.value.map((i) => parseInt(i.sapeur_id)));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+const filteredTravailTypes = computed(() => {
+  const ids = new Set(travaux.value.map((i) => parseInt(i.travail_type_id)));
+  return travailTypes.value.filter((t) => ids.has(t.id));
+});
+const selectedItem = computed(() => {
+  return travaux.value.find((t) => t.id == selectedId.value);
+});
+
+watch(activeExerciceComptableId, () => {
+  loading.value = true;
+  store.dispatch('fetchTravaux').then(() => {
+    loading.value = false;
+  });
+});
+
+const { showModal } = useModalStore();
+const select = (row) => (selectedId.value = row?.id);
+
+const createTravail = () => showModal({ component: 'ModalTravail' });
+
+const updateTravail = (travail) =>
+  showModal({ component: 'ModalTravail', data: travail });
+
+const reviewTravail = (travail) =>
+  showModal({ component: 'ModalReviewTravail', data: travail });
+
+const cancelReviewTravail = (travail) => {
+  showModal({
+    component: 'ModalConfirmation',
+    data: {
+      title: "Voulez-vous vraiment annuler l'examen de ce travail ?",
+      question:
+        "Attention, la justification fournie lors de l'examen sera perdue.",
+    },
+    callback: (confirmed) => {
+      if (confirmed) {
+        store.dispatch('cancelReviewTravail', travail?.id);
+      }
+    },
+  });
+};
+const supprimerTravail = (travail) => {
+  showModal({
+    component: 'ModalConfirmation',
+    data: {
+      title: 'Voulez-vous vraiment supprimer ce travail ?',
+      question:
+        "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+    },
+    callback: (confirmed) => {
+      if (confirmed) {
+        store.dispatch('removeTravail', travail?.id);
+      }
+    },
+  });
+};
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+  const statutsClass = {
+    [-1]: 'table-warning', // 'Refusé',
+    0: '', // 'En attente',
+    1: 'table-success', // 'Accepté'
+    2: 'table-success', // 'Imputé'
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Travail', key: 'travail_type' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Quantité', key: 'quantite' },
+  { title: 'Unité', key: 'unite' },
+  { title: 'Auteur', key: 'auteur' },
+  { title: 'Date demande', key: 'date_demande', type: Date },
+  {
+    title: 'Statut',
+    key: 'statut',
+    formatter(statut) {
+      return {
+        [-1]: 'Refusé',
+        0: 'En attente',
+        1: 'Accepté',
+        2: 'Imputé',
+      }[statut];
+    },
+  },
+  { title: 'Justification', key: 'justification' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="travaux"
@@ -46,7 +200,7 @@
               </button>
               <button
                 v-if="hasValidationPermission && !selectedItem?.statut < 1"
-                class="btn btn-outline-success"
+                class="btn btn-outline-warning"
                 :disabled="
                   selectedItem?.statut == 0 || selectedItem?.statut == 2
                 "
@@ -178,200 +332,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import permissions from '../store/permissions.js';
-import store from '/src/store/index';
-
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadTravailTypes = store.dispatch('fetchTravailTypes');
-
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadTravaux = store.dispatch('fetchTravaux');
-  Promise.all([loadSapeurs, loadUnites, loadTravaux, loadTravailTypes]).then(
-    () => next(),
-  );
-}
-
-export default {
-  name: 'PageTravaux',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Travail', key: 'travail_type' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Quantité', key: 'quantite' },
-        { title: 'Unité', key: 'unite' },
-        { title: 'Auteur', key: 'auteur' },
-        { title: 'Date demande', key: 'date_demande', type: Date },
-        {
-          title: 'Statut',
-          key: 'statut',
-          formatter(statut) {
-            return {
-              [-1]: 'Refusé',
-              0: 'En attente',
-              1: 'Accepté',
-              2: 'Imputé',
-            }[statut];
-          },
-        },
-        { title: 'Justification', key: 'justification' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeSapeurId: (state) => state.auth.sapeurId,
-      travaux: (state) =>
-        state.travail.liste.map((t) => ({
-          ...t,
-          travail_type: state.travailType.liste.find(
-            (e) => e.id == t.travail_type_id,
-          )?.designation,
-          sapeur: state.sapeur.liste.find((s) => s.id == t.sapeur_id)
-            ?.nom_prenom,
-          auteur: state.sapeur.liste.find((s) => s.id == t.auteur_id)
-            ?.nom_prenom,
-          unite: state.unite.liste.find(
-            (u) =>
-              u.id ==
-              state.travailType.liste.find((e) => e.id == t.travail_type_id)
-                ?.type_unite_id,
-          )?.unite,
-        })),
-      sapeurs: (state) => state.sapeur.liste,
-      travailTypes: (state) => state.travailType.liste,
-      hasSaisieCommunePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-        ),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_PERSO,
-        ) ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-        ),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.VALIDATION,
-        ),
-    }),
-    filteredSapeurs() {
-      const ids = new Set(this.travaux.map((i) => parseInt(i.sapeur_id)));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-    filteredTravailTypes() {
-      const ids = new Set(this.travaux.map((i) => parseInt(i.travail_type_id)));
-      return this.travailTypes.filter((t) => ids.has(t.id));
-    },
-    canDelete() {
-      return (
-        this.selectedId &&
-        this.travaux.filter((i) => i.id == this.selectedId && i.statut < 3)
-          .length > 0
-      );
-    },
-    selectedItem() {
-      return this.travaux.find((t) => t.id == this.selectedId);
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchTravaux').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    select(row) {
-      this.selectedId = row?.id;
-    },
-    createTravail() {
-      this.SHOW_MODAL({ component: 'ModalTravail' });
-    },
-    updateTravail(travail) {
-      this.SHOW_MODAL({ component: 'ModalTravail', data: travail });
-    },
-    reviewTravail(travail) {
-      this.SHOW_MODAL({ component: 'ModalReviewTravail', data: travail });
-    },
-    cancelReviewTravail(travail) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: "Voulez-vous vraiment annuler l'examen de ce travail ?",
-          question:
-            "Attention, la justification fournie lors de l'examen sera perdue.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('cancelReviewTravail', travail?.id);
-          }
-        },
-      });
-    },
-    supprimerTravail(travail) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce travail ?',
-          question:
-            "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeTravail', travail?.id);
-          }
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-      const statutsClass = {
-        [-1]: 'table-warning', // 'Refusé',
-        0: '', // 'En attente',
-        1: 'table-success', // 'Accepté'
-        2: 'table-success', // 'Imputé'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

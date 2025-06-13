@@ -1,3 +1,24 @@
+<script setup>
+import { useStore } from 'vuex';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+
+const store = useStore();
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalities = store.dispatch('fetchLocalites');
+const loadGroupes = store.dispatch('fetchGroupes');
+const loadFonctions = store.dispatch('fetchFonctions');
+const loadPermisType = store.dispatch('fetchPermisType');
+
+await Promise.all([
+  loadSapeurs,
+  loadLocalities,
+  loadGroupes,
+  loadFonctions,
+  loadPermisType,
+]);
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -28,28 +49,3 @@
     <router-view />
   </div>
 </template>
-
-<script setup>
-import store from '/src/store/index';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
-
-async function loadData() {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadGroupes = store.dispatch('fetchGroupes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadPermisType = store.dispatch('fetchPermisType');
-
-  await Promise.all([
-    loadSapeurs,
-    loadLocalities,
-    loadGroupes,
-    loadFonctions,
-    loadPermisType,
-  ]);
-}
-onBeforeRouteUpdate(loadData);
-</script>
-
-<style></style>

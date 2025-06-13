@@ -1,3 +1,208 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../stores/common/Modal';
+import permissions from '../store/permissions.js';
+
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
+import SapeurService from '/src/services/SapeurService.js';
+import useHasPermission from '../hooks/usePermission';
+import useConfirmation from '../hooks/useConfirmation';
+
+const store = useStore();
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadMedecins = store.dispatch('fetchMedecins');
+const loadControlesMedicauxTypes = store.dispatch(
+  'fetchControlesMedicauxTypes',
+);
+const loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
+
+await Promise.all([
+  loadSapeurs,
+  loadMedecins,
+  loadControlesMedicauxTypes,
+  loadControlesMedicaux,
+]);
+
+const latest = ref(true);
+const loading = ref(false);
+const selectedItem = ref(null);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const types = computed(() => store.state.controlesMedicauxType.liste);
+const medecins = computed(() => store.state.medecin.liste);
+const controlesMedicaux = computed(() => store.state.controleMedical.liste);
+
+const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
+
+const computedData = computed(() => {
+  const now = Date.now();
+  const data = controlesMedicaux.value
+    .map((s) => {
+      const sapeur = sapeurs.value.find((sap) => sap.id == s.sapeur_id);
+      const age = Math.floor(
+        (now - new Date(sapeur?.date_naissance || 0).getTime()) /
+          1000 /
+          (60 * 60 * 24) /
+          365.25,
+      );
+      return {
+        ...s,
+        sapeur: sapeur?.nom_prenom,
+        sapeurActif: sapeur?.actif,
+        age,
+        type: types.value.find((t) => t.id == s.controle_medical_type_id)
+          ?.designation,
+        medecin: medecins.value.find((m) => m.id == s.medecin_id)?.designation,
+      };
+    })
+    .filter((c) => c.sapeurActif)
+    .sort(
+      (a, b) =>
+        a.sapeur.localeCompare(b.sapeur) ||
+        b.consultation.localeCompare(a.consultation),
+    );
+
+  // Additional filter check
+  if (!latest.value) {
+    return data;
+  }
+
+  const index = new Set();
+  return data.reduce((acc, e) => {
+    if (!index.has(e.sapeur + '_' + e.controle_medical_type_id)) {
+      index.add(e.sapeur + '_' + e.controle_medical_type_id);
+      acc.push(e);
+    }
+    return acc;
+  }, []);
+});
+const filteredTypes = computed(() => {
+  const ids = new Set(
+    controlesMedicaux.value.map((e) => e.controle_medical_type_id),
+  );
+  return types.value.filter((t) => ids.has(t.id));
+});
+const filteredMedecins = computed(() => {
+  const ids = new Set(controlesMedicaux.value.map((e) => e.medecin_id));
+  return medecins.value.filter((t) => ids.has(t.id));
+});
+const filteredAnneesConsultation = computed(() => {
+  return new Set(
+    controlesMedicaux.value
+      .map((e) => e.consultation)
+      .filter((e) => e)
+      .map((d) => new Date(d).getFullYear())
+      .sort()
+      .reverse(),
+  );
+});
+const filteredAnneesExpiration = computed(() => {
+  return new Set(
+    controlesMedicaux.value
+      .map((e) => e.validite)
+      .filter((e) => e)
+      .map((d) => new Date(d).getFullYear())
+      .sort()
+      .reverse(),
+  );
+});
+
+const { showModal } = useModalStore();
+const selected = (item) => (selectedItem.value = item);
+const downloadJustificatif = ({ id, filename }) =>
+  ControlesMedicauxService.downloadJustificatif(id, filename);
+
+const awn = inject('awn');
+const sms = (controleMedicaux) => {
+  if (!hasSmsEnvoiePermission.value) {
+    awn.value.alert(
+      "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
+    );
+    return;
+  }
+
+  SapeurService.getSapeursTelephones().then((telephones) => {
+    const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+    const sap = sapeurs.value
+      .filter((e) => ids.has(e.id))
+      .map((s) => ({
+        ...s,
+        telephones: telephones.find((t) => t.id == s.id)?.telephones,
+      }));
+    showModal({
+      component: 'ModalSms',
+      size: 1,
+      data: sap,
+    });
+  });
+};
+const email = (controleMedicaux) => {
+  const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+  const sap = sapeurs.value.filter((e) => ids.has(e.id));
+
+  const link = document.createElement('a');
+  link.href =
+    'mailto:?bcc=' +
+    sap
+      .map((s) => s?.email)
+      .filter((s) => s)
+      .join(', ');
+  link.click();
+};
+const supprimer = async (controle) =>
+  useConfirmation(
+    'Voulez-vous vraiment supprimer ce contrôle médical ?',
+    "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
+  ).then(() => store.dispatch('removeControleMedical', controle.id));
+
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+
+  if (
+    (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
+    !dataItem.accepter
+  ) {
+    return 'table-danger';
+  }
+};
+const onAnneeFilter = (setFilter, key, value) => {
+  if (parseInt(value)) {
+    setFilter(key, (e) => e && new Date(e).getFullYear() == value);
+  } else {
+    setFilter(key, undefined);
+  }
+};
+
+const fields = [
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Age', key: 'age' },
+  { title: 'Type', key: 'type' },
+  { title: 'Medecin', key: 'medecin' },
+  { title: 'Consultation', key: 'consultation', type: Date },
+  { title: 'Validité', key: 'validite', type: Date },
+  { title: 'Designation', key: 'designation' },
+  { title: 'Accepté', key: 'accepter', type: Boolean },
+  // { title: 'En cours', key: 'en_cours', type: Boolean },
+  {
+    title: 'Doc',
+    key: 'doc',
+    slot: 'doc',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="controles-medicaux"
@@ -130,6 +335,7 @@
                       designation: annee,
                     }))
                   "
+                  :model-value="filters.consultation"
                   @update:model-value="
                     (v) => onAnneeFilter(setFilter, 'consultation', v)
                   "
@@ -143,11 +349,12 @@
                       designation: annee,
                     }))
                   "
+                  :model-value="filters.validite"
                   @update:model-value="
                     (v) => onAnneeFilter(setFilter, 'validite', v)
                   "
                 />
-                <div v-if="canReset" class="col-md-6">
+                <div v-if="canReset" class="col-md-6 mt-2">
                   <button class="btn btn-sm btn-warning w-100" @click="reset">
                     Réinitialiser
                   </button>
@@ -214,242 +421,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import store from '/src/store/index';
-import permissions from '../store/permissions.js';
-
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-import SapeurService from '/src/services/SapeurService.js';
-
-function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadMedecins = store.dispatch('fetchMedecins');
-  const loadControlesMedicauxTypes = store.dispatch(
-    'fetchControlesMedicauxTypes',
-  );
-  const loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
-
-  Promise.all([
-    loadSapeurs,
-    loadMedecins,
-    loadControlesMedicauxTypes,
-    loadControlesMedicaux,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageControlesMedicaux',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      latest: true,
-      loading: true,
-      selectedItem: null,
-      fields: [
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Age', key: 'age' },
-        { title: 'Type', key: 'type' },
-        { title: 'Medecin', key: 'medecin' },
-        { title: 'Consultation', key: 'consultation', type: Date },
-        { title: 'Validité', key: 'validite', type: Date },
-        { title: 'Designation', key: 'designation' },
-        { title: 'Accepté', key: 'accepter', type: Boolean },
-        // { title: 'En cours', key: 'en_cours', type: Boolean },
-        {
-          title: 'Doc',
-          key: 'doc',
-          slot: 'doc',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      types: (state) => state.controlesMedicauxType.liste,
-      medecins: (state) => state.medecin.liste,
-      controlesMedicaux: (state) => state.controleMedical.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasSmsEnvoiePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
-    }),
-    computedData() {
-      const now = Date.now();
-      const data = this.controlesMedicaux
-        .map((s) => {
-          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
-          const age = Math.floor(
-            (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-              1000 /
-              (60 * 60 * 24) /
-              365.25,
-          );
-          return {
-            ...s,
-            sapeur: sapeur?.nom_prenom,
-            sapeurActif: sapeur?.actif,
-            age,
-            type: this.types.find((t) => t.id == s.controle_medical_type_id)
-              ?.designation,
-            medecin: this.medecins.find((m) => m.id == s.medecin_id)
-              ?.designation,
-          };
-        })
-        .filter((c) => c.sapeurActif)
-        .sort(
-          (a, b) =>
-            a.sapeur.localeCompare(b.sapeur) ||
-            b.consultation.localeCompare(a.consultation),
-        );
-
-      // Additional filter check
-      if (!this.latest) {
-        return data;
-      }
-
-      const index = new Set();
-      return data.reduce((acc, e) => {
-        if (!index.has(e.sapeur + '_' + e.controle_medical_type_id)) {
-          index.add(e.sapeur + '_' + e.controle_medical_type_id);
-          acc.push(e);
-        }
-        return acc;
-      }, []);
-    },
-    filteredTypes() {
-      const ids = new Set(
-        this.controlesMedicaux.map((e) => e.controle_medical_type_id),
-      );
-      return this.types.filter((t) => ids.has(t.id));
-    },
-    filteredMedecins() {
-      const ids = new Set(this.controlesMedicaux.map((e) => e.medecin_id));
-      return this.medecins.filter((t) => ids.has(t.id));
-    },
-    filteredAnneesConsultation() {
-      return new Set(
-        this.controlesMedicaux
-          .map((e) => e.consultation)
-          .filter((e) => e)
-          .map((d) => new Date(d).getFullYear())
-          .sort()
-          .reverse(),
-      );
-    },
-    filteredAnneesExpiration() {
-      return new Set(
-        this.controlesMedicaux
-          .map((e) => e.validite)
-          .filter((e) => e)
-          .map((d) => new Date(d).getFullYear())
-          .sort()
-          .reverse(),
-      );
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    selected(item) {
-      this.selectedItem = item;
-    },
-    downloadJustificatif({ id, filename }) {
-      ControlesMedicauxService.downloadJustificatif(id, filename);
-    },
-    sms(controleMedicaux) {
-      if (!this.hasSmsEnvoiePermission) {
-        this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
-        );
-        return;
-      }
-
-      SapeurService.getSapeursTelephones().then((telephones) => {
-        const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
-        const sapeurs = this.sapeurs
-          .filter((e) => ids.has(e.id))
-          .map((s) => ({
-            ...s,
-            telephones: telephones.find((t) => t.id == s.id)?.telephones,
-          }));
-        this.SHOW_MODAL({
-          component: 'ModalSms',
-          size: 1,
-          data: sapeurs,
-        });
-      });
-    },
-    email(controleMedicaux) {
-      const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
-      const sapeurs = this.sapeurs.filter((e) => ids.has(e.id));
-
-      const link = document.createElement('a');
-      link.href =
-        'mailto:?bcc=' +
-        sapeurs
-          .map((s) => s?.email)
-          .filter((s) => s)
-          .join(', ');
-      link.click();
-    },
-    async supprimer(controle) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce contrôle médical ?',
-          question:
-            "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeControleMedical', controle.id);
-          }
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-
-      if (
-        (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
-        !dataItem.accepter
-      ) {
-        return 'table-danger';
-      }
-    },
-    onAnneeFilter(setFilter, key, value) {
-      if (parseInt(value)) {
-        setFilter(key, (e) => e && new Date(e).getFullYear() == value);
-      } else {
-        setFilter(key, undefined);
-      }
-    },
-  },
-};
-</script>
-
-<style></style>

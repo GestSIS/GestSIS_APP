@@ -1,3 +1,76 @@
+<script setup>
+import { useStore } from 'vuex';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { ref, watch } from 'vue';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalities = store.dispatch('fetchLocalites');
+const loadStatFederal = store.dispatch('fetchStatFederals');
+const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+const loadInterventionTraitement = store.dispatch(
+  'fetchInterventionTraitements',
+);
+
+await store.dispatch('fetchExercicesComptables');
+const loading = ref(true);
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    default: 'new',
+  },
+});
+
+const newMode = computed(() => id === 'new');
+if (newMode.value) {
+  store.dispatch('resetActiveIntervention').then(() => (loading.value = false));
+} else {
+  store.dispatch('selectIntervention', id);
+  store.dispatch('fetchIntervention', id).then(() => (loading.value = false));
+}
+
+await Promise.all([
+  loadSapeurs,
+  loadLocalities,
+  loadStatFederal,
+  loadTypeInterventions,
+  loadInterventionTraitement,
+]);
+
+const activeInterventionData = computed(
+  () => store.state.intervention.active.data,
+);
+
+const breadcrumbFinal = computed(() =>
+  newMode.value
+    ? 'Nouveau'
+    : new Date(activeInterventionData.value.date_debut).toLocaleDateString(
+        'fr-CH',
+      ) +
+      ' - ' +
+      activeInterventionData.value.objet,
+);
+
+watch(
+  () => id,
+  () => {
+    if (newMode.value) {
+      store
+        .dispatch('resetActiveIntervention')
+        .then(() => (loading.value = false));
+    } else {
+      store.dispatch('selectIntervention', parseInt(id));
+      store
+        .dispatch('fetchIntervention', parseInt(id))
+        .then(() => (loading.value = false));
+    }
+  },
+);
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -53,116 +126,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadStatFederal = store.dispatch('fetchStatFederals');
-  const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-  const loadInterventionTraitement = store.dispatch(
-    'fetchInterventionTraitements'
-  );
-
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadInterventions = store.dispatch('fetchListeIntervention');
-  Promise.all([
-    loadSapeurs,
-    loadLocalities,
-    loadStatFederal,
-    loadInterventions,
-    loadTypeInterventions,
-    loadInterventionTraitement,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageIntervention',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: String,
-      default: 'new',
-    },
-  },
-  data() {
-    return {
-      loading: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      activeInterventionId: (state) => state.intervention.active.id,
-      activeInterventionData: (state) => state.intervention.active.data,
-    }),
-    newMode() {
-      return this.id === 'new';
-    },
-    breadcrumbFinal() {
-      return this.newMode
-        ? 'Nouveau'
-        : new Date(this.activeInterventionData.date_debut).toLocaleDateString(
-            'fr-CH'
-          ) +
-            ' - ' +
-            this.activeInterventionData.objet;
-    },
-  },
-  watch: {
-    id() {
-      const svm = this;
-      if (this.newMode) {
-        this.$store
-          .dispatch('resetActiveIntervention')
-          .then(() => (svm.loading = false));
-      } else {
-        let id = parseInt(this.id);
-
-        this.$store.dispatch('selectIntervention', id);
-        this.$store
-          .dispatch('fetchIntervention', id)
-          .then(() => (svm.loading = false));
-      }
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchListeSapeur');
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchInterventionTraitements');
-    this.$store.dispatch('fetchExercicesComptables');
-    this.$store.dispatch('fetchTypeInterventions');
-    this.$store.dispatch('fetchStatFederals');
-
-    let id = parseInt(this.id);
-    const svm = this;
-    if (this.newMode) {
-      this.$store
-        .dispatch('resetActiveIntervention')
-        .then(() => (svm.loading = false));
-    } else {
-      this.$store.dispatch('selectIntervention', id);
-      this.$store
-        .dispatch('fetchIntervention', id)
-        .then(() => (svm.loading = false));
-    }
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

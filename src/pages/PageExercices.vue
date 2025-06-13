@@ -1,3 +1,27 @@
+<script setup>
+import store from '/src/store/index';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { onBeforeRouteUpdate } from 'vue-router';
+
+async function loadData(routeTo, next) {
+  const loadLocalities = store.dispatch('fetchLocalites');
+  const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+  const loadSapeurs = store.dispatch('fetchListeSapeur');
+  const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
+
+  Promise.all([
+    loadSapeurs,
+    loadLocalities,
+    loadExerciceCategories,
+    loadExerciceComptables,
+  ]).then(() => {
+    next();
+  });
+}
+
+onBeforeRouteUpdate(loadData);
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -30,39 +54,3 @@
     <router-view />
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-async function loadData(routeTo, next) {
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([
-    loadSapeurs,
-    loadLocalities,
-    loadExerciceCategories,
-    loadExerciceComptables,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageExercices',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-};
-</script>
-
-<style></style>

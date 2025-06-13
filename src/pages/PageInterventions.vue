@@ -1,3 +1,191 @@
+<script setup>
+import { useModalStore } from '../stores/common/Modal';
+import permissions from '../store/permissions.js';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { useStore } from 'vuex';
+import { computed, ref, watch } from 'vue';
+import useConfirmation from '../hooks/useConfirmation';
+import useHasPermission from '../hooks/usePermission';
+
+const store = useStore();
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalities = store.dispatch('fetchLocalites');
+const loadStatFederal = store.dispatch('fetchStatFederals');
+const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
+const loadInterventionTraitement = store.dispatch(
+  'fetchInterventionTraitements',
+);
+
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref();
+const loadInterventions = store
+  .dispatch('fetchListeIntervention')
+  .then(() => (loading.value = false));
+
+await Promise.all([
+  loadSapeurs,
+  loadLocalities,
+  loadStatFederal,
+  loadInterventions,
+  loadTypeInterventions,
+  loadInterventionTraitement,
+]);
+
+const selectedId = ref(null);
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+const interventions = computed(() =>
+  store.state.intervention.liste.sort((a, b) =>
+    b.date_debut.localeCompare(a.date_debut),
+  ),
+);
+const types = computed(() => store.state.typeIntervention.liste);
+const stats = computed(() => store.state.statFederal.liste);
+const traitements = computed(() => store.state.interventionTraitement.liste);
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+const hasValidationPermission = useHasPermission(
+  permissions.INTERVENTION.VALIDATION,
+);
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  return interventions.value.map((e) => ({
+    ...e,
+    type_intervention: types.value.find((c) => c.id == e.type_intervention_id)
+      ?.designation,
+    localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
+    stat_federal: stats.value.find((l) => l.id == e.stat_federal_id)
+      ?.designation,
+    traitement: traitements.value.find(
+      (l) => l.id == e.intervention_traitement_id,
+    )?.designation,
+  }));
+});
+const filteredInterventionsTypes = computed(() => {
+  const ids = new Set(
+    interventions.value.map((i) => parseInt(i.type_intervention_id)),
+  );
+  return types.value.filter((t) => ids.has(t.id));
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(interventions.value.map((i) => parseInt(i.localite_id)));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+const filteredStatFederal = computed(() => {
+  const ids = new Set(
+    interventions.value.map((i) => parseInt(i.stat_federal_id)),
+  );
+  return stats.value.filter((t) => ids.has(t.id));
+});
+const canDelete = computed(() => {
+  return (
+    selectedId.value &&
+    interventions.value.filter((i) => i.id == selectedId.value && i.statut < 3)
+      .length > 0
+  );
+});
+
+watch(
+  () => activeExerciceComptableId.value,
+  () => {
+    loading.value = true;
+    store.dispatch('fetchListeIntervention').then(() => {
+      loading.value = false;
+    });
+  },
+);
+
+const { showModal } = useModalStore();
+const select = (row) => (selectedId.value = row?.id);
+
+const { confirm } = useConfirmation();
+const supprimerIntervention = (id) =>
+  confirm(
+    "Voulez-vous vraiment supprimer l'intervention ?",
+    "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    () => store.dispatch('removeIntervention', id),
+  );
+const validerIntervention = (id) => store.dispatch('validerIntervention', id);
+
+const rapportIntervention = () => {
+  const intervention = interventions.value.find(
+    (i) => i.id == selectedId.value,
+  );
+  showModal({
+    component: 'ModalRapportIntervention',
+    size: 1,
+    data: {
+      interventionId: selectedId.value,
+      statut: intervention.statut,
+      date: intervention.date_debut,
+    },
+  });
+};
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+  const statutsClass = {
+    0: '', // 'A saisir',
+    1: '', // 'En attente de validation',
+    2: '', // 'Validée',
+    3: 'table-success', //'Imputée'
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const fields = [
+  { title: 'Date', key: 'date_debut', type: Date },
+  {
+    title: 'Heure',
+    key: 'heure_debut',
+    formatter: (value) => value.slice(0, 5),
+  },
+  { title: "Type d'intervention", key: 'type_intervention' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
+  { title: 'Stat fédérale', key: 'stat_federal' },
+  { title: 'Traitement', key: 'traitement' },
+  {
+    title: 'Étendue',
+    key: 'degre',
+    formatter: (value) => {
+      const degre = {
+        1: 'Fausse-alarme',
+        2: 'Petite',
+        3: 'Moyenne',
+        4: 'Grande',
+      };
+      return degre[value];
+    },
+  },
+  {
+    title: 'Statut',
+    key: 'statut',
+    formatter: (value) => {
+      const statuts = {
+        0: 'A saisir',
+        1: 'A valider',
+        2: 'Validée',
+        3: 'Imputée',
+      };
+      return statuts[value];
+    },
+  },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="interventions"
@@ -197,226 +385,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import permissions from '../store/permissions.js';
-import store from '/src/store/index';
-
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadStatFederal = store.dispatch('fetchStatFederals');
-  const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-  const loadInterventionTraitement = store.dispatch(
-    'fetchInterventionTraitements',
-  );
-
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadInterventions = store.dispatch('fetchListeIntervention');
-  Promise.all([
-    loadSapeurs,
-    loadLocalities,
-    loadStatFederal,
-    loadInterventions,
-    loadTypeInterventions,
-    loadInterventionTraitement,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageInterventions',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      fields: [
-        { title: 'Date', key: 'date_debut', type: Date },
-        {
-          title: 'Heure',
-          key: 'heure_debut',
-          formatter: (value) => value.slice(0, 5),
-        },
-        { title: "Type d'intervention", key: 'type_intervention' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
-        { title: 'Stat fédérale', key: 'stat_federal' },
-        { title: 'Traitement', key: 'traitement' },
-        {
-          title: 'Étendue',
-          key: 'degre',
-          formatter: (value) => {
-            const degre = {
-              1: 'Fausse-alarme',
-              2: 'Petite',
-              3: 'Moyenne',
-              4: 'Grande',
-            };
-            return degre[value];
-          },
-        },
-        {
-          title: 'Statut',
-          key: 'statut',
-          formatter: (value) => {
-            const statuts = {
-              0: 'A saisir',
-              1: 'A valider',
-              2: 'Validée',
-              3: 'Imputée',
-            };
-            return statuts[value];
-          },
-        },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      interventions: (state) =>
-        state.intervention.liste.sort((a, b) =>
-          b.date_debut.localeCompare(a.date_debut),
-        ),
-      types: (state) => state.typeIntervention.liste,
-      stats: (state) => state.statFederal.liste,
-      traitements: (state) => state.interventionTraitement.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.VALIDATION,
-        ),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      return this.interventions.map((e) => ({
-        ...e,
-        type_intervention: this.types.find(
-          (c) => c.id == e.type_intervention_id,
-        )?.designation,
-        localite: this.localites.find((l) => l.id == e.localite_id)
-          ?.designation,
-        stat_federal: this.stats.find((l) => l.id == e.stat_federal_id)
-          ?.designation,
-        traitement: this.traitements.find(
-          (l) => l.id == e.intervention_traitement_id,
-        )?.designation,
-      }));
-    },
-    filteredInterventionsTypes() {
-      const ids = new Set(
-        this.interventions.map((i) => parseInt(i.type_intervention_id)),
-      );
-      return this.types.filter((t) => ids.has(t.id));
-    },
-    filteredLocalites() {
-      const ids = new Set(
-        this.interventions.map((i) => parseInt(i.localite_id)),
-      );
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-    filteredStatFederal() {
-      const ids = new Set(
-        this.interventions.map((i) => parseInt(i.stat_federal_id)),
-      );
-      return this.stats.filter((t) => ids.has(t.id));
-    },
-    canDelete() {
-      return (
-        this.selectedId &&
-        this.interventions.filter(
-          (i) => i.id == this.selectedId && i.statut < 3,
-        ).length > 0
-      );
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchListeIntervention').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    select(row) {
-      this.selectedId = row?.id;
-    },
-    supprimerIntervention(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: "Voulez-vous vraiment supprimer l'intervention ?",
-          question:
-            "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeIntervention', id);
-          }
-        },
-      });
-    },
-    validerIntervention(id) {
-      this.$store.dispatch('validerIntervention', id);
-    },
-    rapportIntervention() {
-      const intervention = this.interventions.find(
-        (i) => i.id == this.selectedId,
-      );
-      this.SHOW_MODAL({
-        component: 'ModalRapportIntervention',
-        size: 1,
-        data: {
-          interventionId: this.selectedId,
-          statut: intervention.statut,
-          date: intervention.date_debut,
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-      const statutsClass = {
-        0: '', // 'A saisir',
-        1: '', // 'En attente de validation',
-        2: '', // 'Validée',
-        3: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

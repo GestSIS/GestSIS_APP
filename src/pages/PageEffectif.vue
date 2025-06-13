@@ -1,3 +1,231 @@
+<script setup>
+import { useModalStore } from '../stores/common/Modal';
+import permissions from '../store/permissions.js';
+
+import SapeurService from '../services/SapeurService.js';
+import { DateTime } from 'luxon';
+import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
+import { useStore } from 'vuex';
+import { computed, inject, ref } from 'vue';
+import useHasPermission from '../hooks/usePermission';
+
+const store = useStore();
+
+const loadLocalites = store.dispatch('fetchLocalites');
+const loadCivilites = store.dispatch('fetchCivilites');
+const loadGrades = store.dispatch('fetchGrades');
+const loadFonctions = store.dispatch('fetchFonctions');
+const loadGroupes = store.dispatch('fetchGroupes');
+
+await Promise.all([
+  loadLocalites,
+  loadCivilites,
+  loadFonctions,
+  loadGrades,
+  loadGroupes,
+]);
+
+const loading = ref(true);
+const selectedId = ref(null);
+const sapeurs = ref([]);
+
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+const civilites = computed(() => store.state.baseData.civilites);
+const groupes = computed(() => store.state.groupe.liste);
+const fonctions = computed(() =>
+  store.state.fonction.liste.filter((f) => f.actif),
+);
+const grades = computed(() => store.state.grade.liste);
+const hasSapeurModificationPermission = useHasPermission(
+  permissions.SAPEUR.MODIFICATION,
+);
+const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
+const hasExerciceModificationPermission = useHasPermission(
+  permissions.EXERCICE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  const idReducer = (map, e) => {
+    map.set(e.id, e);
+    return map;
+  };
+
+  const indexedLocalite = localites.value.reduce(idReducer, new Map());
+  const indexedGrades = grades.value.reduce(idReducer, new Map());
+  const indexedFonctions = fonctions.value.reduce(idReducer, new Map());
+  const indexedGroupes = groupes.value.reduce(idReducer, new Map());
+
+  const porteurIds = new Set(
+    fonctions.value
+      .filter((f) => f.nom.toLowerCase().includes('porteur'))
+      .map((f) => f.id),
+  );
+  const b_id = 3;
+  const c1_id = 6;
+  const c1_118_id = 7;
+
+  return sapeurs.value
+    .map((s) => ({
+      ...s,
+      porteur: s.fonctions
+        .map((f) => porteurIds.has(f.fonction_id))
+        .reduce((acc, e) => acc || e, false),
+      b: s.permis.find((p) => p.permis_type_id == b_id) != undefined,
+      c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
+      c1_118: s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
+      fonctions: s.fonctions.filter(
+        (f) =>
+          f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
+      ),
+      fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
+      localite: indexedLocalite.get(s.localite_id)?.designation || '',
+      fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
+      grade: indexedGrades.get(s.grade_id)?.designation || '',
+      grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
+      tel_1: s.telephones.length > 0 ? s.telephones[0].numero : '',
+      tel_2: s.telephones.length > 1 ? s.telephones[1].numero : '',
+      tel_3: s.telephones.length > 2 ? s.telephones[2].numero : '',
+      rta_1: s.telephones.length > 0 ? s.telephones[0].rta : false,
+      rta_2: s.telephones.length > 1 ? s.telephones[1].rta : false,
+      rta_3: s.telephones.length > 2 ? s.telephones[2].rta : false,
+      groupes: s.groupes,
+      formatedGroupes: s.groupes
+        .map((g) => indexedGroupes.get(g.groupe_id))
+        .sort((a, b) => a.no - b.no)
+        .filter((g) => g.type)
+        .map((g) => g.no)
+        .filter((g) => g)
+        .join(', '),
+    }))
+    .sort((a, b) => b.fonction_tri - a.fonction_tri);
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(sapeurs.value.map((s) => parseInt(s.localite_id)));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+const filteredFonctions = computed(() => {
+  const ids = new Set(
+    sapeurs.value
+      .map((s) => s.fonctions.map((f) => parseInt(f.fonction_id)))
+      .reduce((acc, e) => [...acc, ...e], []),
+  );
+  return fonctions.value.filter((e) => ids.has(e.id));
+});
+const filteredGrades = computed(() => {
+  const ids = new Set(sapeurs.value.map((s) => parseInt(s.grade_id)));
+  return grades.value.filter((t) => ids.has(t.id));
+});
+const filteredGroupes = computed(() => {
+  const ids = new Set(
+    sapeurs.value
+      .map((s) => s.groupes.map((f) => f.groupe_id))
+      .reduce((acc, e) => [...acc, ...e], []),
+  );
+  return groupes.value
+    .filter((t) => ids.has(t.id))
+    .map((e) => ({
+      ...e,
+      label: (e.no ? e.no + ' ' : '') + e.designation,
+    }));
+});
+
+SapeurService.getEffectif().then((effectif) => {
+  sapeurs.value = effectif.map((s) => ({
+    ...s,
+    nom_prenom: `${s.nom} ${s.prenom}`,
+  }));
+  loading.value = false;
+});
+
+const { showModal, closeModal } = useModalStore();
+const awn = inject('awn');
+
+const selectSapeur = (id) => (selectedId.value = id);
+
+const trombinoscope = () => {
+  showModal({ component: 'ModalChargement' });
+
+  SapeurService.downloadTrombinoscope('trombinoscope.pdf')
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          'Une erreur a eu lieu durant la génération du trombinoscope',
+      );
+    });
+};
+const listeFssp = () =>
+  showModal({
+    component: 'ModalListeFssp',
+  });
+const listeFoad = () =>
+  showModal({
+    component: 'ModalListeFoad',
+  });
+const sms = (sapeurs) => {
+  if (!hasSmsEnvoiePermission.value) {
+    awn.alert(
+      "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
+    );
+    return;
+  }
+  showModal({
+    component: 'ModalSms',
+    size: 1,
+    data: sapeurs,
+  });
+};
+const vcard = (sapeurs) => downloadVcard(sapeurs, localites.value);
+const outlookCsv = (sapeurs) => downloadOutlookCsv(sapeurs, localites.value);
+
+const fieldsBase = [
+  { title: 'Nom Prénom', key: 'nom_prenom' },
+  {
+    title: 'Fonction principale',
+    key: 'fonction',
+    sortKey: 'fonction_tri',
+  },
+  { title: 'Localité', key: 'localite' },
+  { title: "Année d'incorporation", key: 'annee_incorporation' },
+  { title: 'PAR', key: 'porteur', type: Boolean },
+  { title: 'B', key: 'b', type: Boolean },
+  { title: 'C1', key: 'c1', type: Boolean },
+  { title: 'C1 118', key: 'c1_118', type: Boolean },
+  { title: 'Grade', key: 'grade', sortKey: 'grade_tri' },
+  { title: 'Groupes', key: 'formatedGroupes' },
+  {
+    title: 'Tel n°1',
+    key: 'rta_1',
+    labelKey: 'tel_1',
+    type: Boolean,
+  },
+  {
+    title: 'Tel n°2',
+    key: 'rta_2',
+    labelKey: 'tel_2',
+    type: Boolean,
+  },
+  {
+    title: 'Tel n°3',
+    key: 'rta_3',
+    labelKey: 'tel_3',
+    type: Boolean,
+  },
+  { title: 'Naissance', key: 'date_naissance', type: Date },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="effectif"
@@ -99,6 +327,7 @@
                   :options="filteredFonctions"
                   display-key="nom"
                   base-option="<Fonction>"
+                  :model-value="filters.fonctions"
                   @update:model-value="
                     (value) =>
                       setFilter(
@@ -132,6 +361,7 @@
                   :options="filteredGroupes"
                   display-key="label"
                   base-option="<Groupe>"
+                  :model-value="filters.groupes"
                   @update:model-value="
                     (value) =>
                       setFilter(
@@ -209,268 +439,6 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import store from '/src/store/index';
-import permissions from '../store/permissions.js';
-
-import SapeurService from '../services/SapeurService.js';
-import { DateTime } from 'luxon';
-
-import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
-
-async function loadData(routeTo, next) {
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadCivilites = store.dispatch('fetchCivilites');
-  const loadGrades = store.dispatch('fetchGrades');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadGroupes = store.dispatch('fetchGroupes');
-
-  Promise.all([
-    loadLocalites,
-    loadCivilites,
-    loadFonctions,
-    loadGrades,
-    loadGroupes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageEffectif',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      sapeurs: [],
-      fieldsBase: [
-        { title: 'Nom Prénom', key: 'nom_prenom' },
-        {
-          title: 'Fonction principale',
-          key: 'fonction',
-          sortKey: 'fonction_tri',
-        },
-        { title: 'Localité', key: 'localite' },
-        { title: "Année d'incorporation", key: 'annee_incorporation' },
-        { title: 'PAR', key: 'porteur', type: Boolean },
-        { title: 'B', key: 'b', type: Boolean },
-        { title: 'C1', key: 'c1', type: Boolean },
-        { title: 'C1 118', key: 'c1_118', type: Boolean },
-        { title: 'Grade', key: 'grade', sortKey: 'grade_tri' },
-        { title: 'Groupes', key: 'formatedGroupes' },
-        {
-          title: 'Tel n°1',
-          key: 'rta_1',
-          labelKey: 'tel_1',
-          type: Boolean,
-        },
-        {
-          title: 'Tel n°2',
-          key: 'rta_2',
-          labelKey: 'tel_2',
-          type: Boolean,
-        },
-        {
-          title: 'Tel n°3',
-          key: 'rta_3',
-          labelKey: 'tel_3',
-          type: Boolean,
-        },
-        { title: 'Naissance', key: 'date_naissance', type: Date },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      civilites: (state) => state.baseData.civilites,
-      groupes: (state) => state.groupe.liste,
-      fonctions: (state) => state.fonction.liste.filter((f) => f.actif),
-      grades: (state) => state.grade.liste,
-      hasSapeurModificationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-      hasSmsEnvoiePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SMS.ENVOIE),
-      hasExerciceModificationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
-    }),
-    computedData() {
-      const idReducer = (map, e) => {
-        map.set(e.id, e);
-        return map;
-      };
-
-      const indexedLocalite = this.localites.reduce(idReducer, new Map());
-      const indexedGrades = this.grades.reduce(idReducer, new Map());
-      const indexedFonctions = this.fonctions.reduce(idReducer, new Map());
-      const indexedGroupes = this.groupes.reduce(idReducer, new Map());
-
-      const porteurIds = new Set(
-        this.fonctions
-          .filter((f) => f.nom.toLowerCase().includes('porteur'))
-          .map((f) => f.id),
-      );
-      const b_id = 3;
-      const c1_id = 6;
-      const c1_118_id = 7;
-
-      return this.sapeurs
-        .map((s) => ({
-          ...s,
-          porteur: s.fonctions
-            .map((f) => porteurIds.has(f.fonction_id))
-            .reduce((acc, e) => acc || e, false),
-          b: s.permis.find((p) => p.permis_type_id == b_id) != undefined,
-          c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
-          c1_118:
-            s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
-          fonctions: s.fonctions.filter(
-            (f) =>
-              f.fin == null ||
-              DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
-          ),
-          fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
-          localite: indexedLocalite.get(s.localite_id)?.designation || '',
-          fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
-          grade: indexedGrades.get(s.grade_id)?.designation || '',
-          grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
-          tel_1: s.telephones.length > 0 ? s.telephones[0].numero : '',
-          tel_2: s.telephones.length > 1 ? s.telephones[1].numero : '',
-          tel_3: s.telephones.length > 2 ? s.telephones[2].numero : '',
-          rta_1: s.telephones.length > 0 ? s.telephones[0].rta : false,
-          rta_2: s.telephones.length > 1 ? s.telephones[1].rta : false,
-          rta_3: s.telephones.length > 2 ? s.telephones[2].rta : false,
-          groupes: s.groupes,
-          formatedGroupes: s.groupes
-            .map((g) => indexedGroupes.get(g.groupe_id))
-            .sort((a, b) => a.no - b.no)
-            .filter((g) => g.type)
-            .map((g) => g.no)
-            .filter((g) => g)
-            .join(', '),
-        }))
-        .sort((a, b) => b.fonction_tri - a.fonction_tri);
-    },
-    filteredLocalites() {
-      const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-    // filteredCours() {
-    //   const ids = new Set(this.sapeurs.map((s) => parseInt(s.localite_id)));
-    //   return this.localites.filter((t) => ids.has(t.id));
-    // },
-    filteredFonctions() {
-      const ids = new Set(
-        this.sapeurs
-          .map((s) => s.fonctions.map((f) => parseInt(f.fonction_id)))
-          .reduce((acc, e) => [...acc, ...e], []),
-      );
-      return this.fonctions.filter((e) => ids.has(e.id));
-    },
-    filteredGrades() {
-      const ids = new Set(this.sapeurs.map((s) => parseInt(s.grade_id)));
-      return this.grades.filter((t) => ids.has(t.id));
-    },
-    filteredGroupes() {
-      const ids = new Set(
-        this.sapeurs
-          .map((s) => s.groupes.map((f) => f.groupe_id))
-          .reduce((acc, e) => [...acc, ...e], []),
-      );
-      return this.groupes
-        .filter((t) => ids.has(t.id))
-        .map((e) => ({
-          ...e,
-          label: (e.no ? e.no + ' ' : '') + e.designation,
-        }));
-    },
-  },
-  beforeMount() {
-    SapeurService.getEffectif().then((effectif) => {
-      this.sapeurs = effectif.map((s) => ({
-        ...s,
-        nom_prenom: `${s.nom} ${s.prenom}`,
-      }));
-      this.loading = false;
-    });
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    selectSapeur(id) {
-      this.selectedId = id;
-    },
-    trombinoscope() {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      SapeurService.downloadTrombinoscope('trombinoscope.pdf')
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              'Une erreur a eu lieu durant la génération du trombinoscope',
-          );
-        });
-    },
-    listeFssp() {
-      this.SHOW_MODAL({
-        component: 'ModalListeFssp',
-      });
-    },
-    listeFoad() {
-      this.SHOW_MODAL({
-        component: 'ModalListeFoad',
-      });
-    },
-    sms(sapeurs) {
-      if (!this.hasSmsEnvoiePermission) {
-        this.$awn.alert(
-          "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
-        );
-        return;
-      }
-      this.SHOW_MODAL({
-        component: 'ModalSms',
-        size: 1,
-        data: sapeurs,
-      });
-    },
-    vcard(sapeurs) {
-      downloadVcard(sapeurs, this.localites);
-    },
-    outlookCsv(sapeurs) {
-      downloadOutlookCsv(sapeurs, this.localites);
-    },
-  },
-};
-</script>
 
 <style>
 table button.btn {

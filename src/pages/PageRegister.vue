@@ -1,3 +1,39 @@
+<script setup>
+import { ref } from 'vue';
+import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
+
+const avance = ref(false);
+const name = ref(null);
+const email = ref(null);
+const password = ref(null);
+const password_confirmation = ref(null);
+const token = ref('');
+const error = ref({});
+
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
+const register = async () =>
+  store
+    .dispatch('register', {
+      name: name.value?.trim(),
+      email: email.value?.trim(),
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+      token: token.value?.trim() || null,
+    })
+    .then(() => {
+      error.value = {};
+      router.push(route.query.redirect ? route.query.redirect : 'accueil');
+    })
+    .catch((data) => {
+      error.value = data.error;
+    });
+</script>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin d-grid" @submit.prevent="register">
@@ -97,49 +133,6 @@
     </form>
   </div>
 </template>
-
-<script>
-import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
-
-export default {
-  name: 'PageRegister',
-  components: {
-    TransitionExpand,
-  },
-  data() {
-    return {
-      avance: false,
-      name: null,
-      email: null,
-      password: null,
-      password_confirmation: null,
-      token: '',
-      error: {},
-    };
-  },
-  methods: {
-    async register() {
-      this.$store
-        .dispatch('register', {
-          name: this.name?.trim(),
-          email: this.email?.trim(),
-          password: this.password,
-          password_confirmation: this.password_confirmation,
-          token: this.token?.trim() || null,
-        })
-        .then(() => {
-          this.error = {};
-          this.$router.push(
-            this.$route.query.redirect ? this.$route.query.redirect : 'accueil',
-          );
-        })
-        .catch((data) => {
-          this.error = data.error;
-        });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .centered {

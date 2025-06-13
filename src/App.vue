@@ -1,25 +1,25 @@
-<template>
-  <component :is="layout">
-    <router-view />
-  </component>
-</template>
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-<script>
 const default_layout = 'default';
 const loading = 'empty';
+const route = useRoute();
 
-export default {
-  computed: {
-    layout() {
-      return (
-        (!this.$route.name
-          ? loading
-          : this.$route.meta.layout || default_layout) + '-layout'
-      );
-    },
-  },
-};
+const layout = computed(
+  () =>
+    (!route.name ? loading : route.meta.layout || default_layout) + '-layout',
+);
 </script>
+
+<template>
+  <component :is="layout">
+    <suspense>
+      <router-view />
+      <template #fallback></template>
+    </suspense>
+  </component>
+</template>
 
 <style lang="scss">
 @use './assets/sass/main.scss' as *;

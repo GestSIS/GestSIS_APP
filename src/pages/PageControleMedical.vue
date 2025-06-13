@@ -1,3 +1,175 @@
+<script setup>
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
+
+import PdfViewer from '/src/components/pdf/PdfViewer.vue';
+import { useStore } from 'vuex';
+import { computed, inject, ref, useTemplateRef, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import useConfirmation from '../hooks/useConfirmation';
+
+const store = useStore();
+const router = useRouter();
+const awn = inject('awn');
+
+const { id } = defineProps({
+  id: {
+    type: [String, Number],
+    default: 'ajout',
+  },
+});
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadMedecins = store.dispatch('fetchMedecins');
+const loadControlesMedicauxTypes = store.dispatch(
+  'fetchControlesMedicauxTypes',
+);
+
+const loadControleMedicale =
+  id > 0
+    ? store.dispatch('fetchControleMedical', id)
+    : store.dispatch('resetControleMedical');
+
+await Promise.all([
+  loadSapeurs,
+  loadMedecins,
+  loadControlesMedicauxTypes,
+  loadControleMedicale,
+]);
+
+const errors = ref({});
+const loading = ref(true);
+const pdfData = ref(null);
+const file = ref(null);
+
+const controleMedical = computed(() => store.state.controleMedical.active.data);
+const medecins = computed(() => store.state.medecin.liste);
+const sapeurs = computed(() =>
+  store.state.sapeur.liste
+    .filter((s) => s.type === 0 && parseInt(s.actif))
+    .map((s) => {
+      const age = Math.floor(
+        (new Date() - new Date(s?.date_naissance || 0).getTime()) /
+          1000 /
+          (60 * 60 * 24) /
+          365.25,
+      );
+      return { ...s, age };
+    }),
+);
+const controleTypes = computed(() => store.state.controlesMedicauxType.liste);
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const breadcrumbFinal = computed(() => controleMedical.value.designation);
+const sapeurName = computed(() => {
+  const sapeur = sapeurs.value.find(
+    (s) => s.id == controleMedical.value.sapeur_id,
+  );
+  return `${sapeur?.nom_prenom} (${sapeur?.age} ans)`;
+});
+const modeAjout = computed(() => {
+  return !parseInt(id) > 0;
+});
+const expirable = computed(() => {
+  const types = controleTypes.value.filter(
+    (t) => t.id === controleMedical.value.controle_medical_type_id,
+  );
+  return types.length > 0 && types[0].expirable;
+});
+
+watch(
+  () => controleMedical.value,
+  (next, prev) => {
+    if (
+      (pdfData.value === null && next.filename) ||
+      (prev.filename !== next.filename && next.filename)
+    ) {
+      displayJustificatif();
+    } else if (!next.filename) {
+      pdfData.value = null;
+    }
+  },
+);
+watch(
+  () => expirable.value,
+  (next) => {
+    if (!next) {
+      controleMedical.value.validite = null;
+    }
+  },
+);
+
+const displayJustificatif = () => {
+  ControlesMedicauxService.downloadJustificatif(controleMedical.value.id).then(
+    (response) => {
+      pdfData.value = response.data;
+    },
+  );
+};
+
+if (controleMedical.value.filename) {
+  displayJustificatif();
+}
+
+const onFileChange = (event) => {
+  const files = event.target.files || event.dataTransfer.files;
+  if (!files.length) return;
+  file.value = files[0];
+};
+const downloadJustificatif = () => {
+  ControlesMedicauxService.downloadJustificatif(
+    controleMedical.value.id,
+    controleMedical.value.filename,
+  );
+};
+const save = async () => {
+  if (modeAjout.value) {
+    // Ajout d'un nouveau controle-médical
+    store
+      .dispatch('createControleMedical')
+      .then((res) => {
+        router.push({ name: 'controle-medical', params: { id: res.id } });
+      })
+      .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
+      );
+  } else {
+    // Sauvegarder les changements
+    store
+      .dispatch('updateControleMedical')
+      .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
+      );
+  }
+};
+const fileComponent = useTemplateRef('file-justificatif');
+const ajoutJustificatif = () => {
+  if (fileComponent.value.files.length > 0) {
+    const file = fileComponent.value.files[0];
+    store.dispatch('addJustificatif', file);
+  }
+};
+const { confirm } = useConfirmation();
+const removeJustificatif = () =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce justificatif ?',
+    "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
+  ).then(() => store.dispatch('removeJustificatif'));
+
+const validite = (duree) => {
+  var d = new Date(controleMedical.value.consultation || Date.now());
+  var year = d.getFullYear();
+  var month = d.getMonth() + 1;
+  var day = d.getDate();
+  controleMedical.value.validite = `${year + duree}-${('0' + month).slice(
+    -2,
+  )}-${('0' + day).slice(-2)}`;
+};
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -177,7 +349,7 @@
           <template
             v-if="
               !controleTypes?.find(
-                (t) => t.id == controleMedical.controle_medical_type_id
+                (t) => t.id == controleMedical.controle_medical_type_id,
               )?.remarque
             "
           >
@@ -186,7 +358,7 @@
           <template
             v-for="(elem, i) in (
               controleTypes?.find(
-                (t) => t.id == controleMedical.controle_medical_type_id
+                (t) => t.id == controleMedical.controle_medical_type_id,
               )?.remarque ?? ''
             ).split('\n')"
             :key="i"
@@ -197,8 +369,8 @@
         </div>
       </div>
       <div v-if="controleMedical.id" class="col-lg-8 col-12">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header">
             <h5>Document</h5>
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
@@ -242,201 +414,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-
-import PdfViewer from '/src/components/pdf/PdfViewer.vue';
-
-function loadData(routeTo, next) {
-  const idControle = parseInt(routeTo.params.id);
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadMedecins = store.dispatch('fetchMedecins');
-  const loadControlesMedicauxTypes = store.dispatch(
-    'fetchControlesMedicauxTypes'
-  );
-
-  const loadControleMedicale =
-    idControle > 0
-      ? store.dispatch('fetchControleMedical', idControle)
-      : store.dispatch('resetControleMedical');
-
-  Promise.all([
-    loadSapeurs,
-    loadMedecins,
-    loadControlesMedicauxTypes,
-    loadControleMedicale,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageControleMedical',
-  components: {
-    PdfViewer,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: [String, Number],
-      default: '0',
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      loading: true,
-      pdfData: null,
-      file: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      controleMedical: (state) => state.controleMedical.active.data,
-      medecins: (state) => state.medecin.liste,
-      sapeurs: (state) =>
-        state.sapeur.liste
-          .filter((s) => s.type === 0 && parseInt(s.actif))
-          .map((s) => {
-            const age = Math.floor(
-              (new Date() - new Date(s?.date_naissance || 0).getTime()) /
-                1000 /
-                (60 * 60 * 24) /
-                365.25
-            );
-            return { ...s, age };
-          }),
-      controleTypes: (state) => state.controlesMedicauxType.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    breadcrumbFinal() {
-      return this.controleMedical.designation;
-    },
-    sapeurName() {
-      const sapeur = this.sapeurs.find(
-        (s) => s.id == this.controleMedical.sapeur_id
-      );
-      return `${sapeur?.nom_prenom} (${sapeur?.age} ans)`;
-    },
-    modeAjout() {
-      return !parseInt(this.id) > 0;
-    },
-    expirable() {
-      const types = this.controleTypes.filter(
-        (t) => t.id === this.controleMedical.controle_medical_type_id
-      );
-      return types.length > 0 && types[0].expirable;
-    },
-  },
-  watch: {
-    controleMedical(next, prev) {
-      if (
-        (this.pdfData === null && next.filename) ||
-        (prev.filename !== next.filename && next.filename)
-      ) {
-        this.displayJustificatif();
-      } else if (!next.filename) {
-        this.pdfData = null;
-      }
-    },
-    expirable(next) {
-      if (!next) {
-        this.controleMedical.validite = null;
-      }
-    },
-  },
-  mounted() {
-    if (this.controleMedical.filename) {
-      this.displayJustificatif();
-    }
-  },
-  methods: {
-    onFileChange(event) {
-      const files = event.target.files || event.dataTransfer.files;
-      if (!files.length) return;
-      this.file = files[0];
-    },
-    downloadJustificatif() {
-      ControlesMedicauxService.downloadJustificatif(
-        this.controleMedical.id,
-        this.controleMedical.filename
-      );
-    },
-    displayJustificatif() {
-      ControlesMedicauxService.downloadJustificatif(
-        this.controleMedical.id
-      ).then((response) => {
-        this.pdfData = response.data;
-      });
-    },
-    async save() {
-      if (this.modeAjout) {
-        // Ajout d'un nouveau controle-médical
-        const router = this.$router;
-        this.$store
-          .dispatch('createControleMedical')
-          .then((res) => {
-            router.push({ name: 'controle-medical', params: { id: res.id } });
-          })
-          .then((res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées')
-          )
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
-          );
-      } else {
-        // Sauvegarder les changements
-        this.$store
-          .dispatch('updateControleMedical')
-          .then((res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées')
-          )
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement")
-          );
-      }
-    },
-    ajoutJustificatif() {
-      if (this.$refs['file-justificatif'].files.length > 0) {
-        const file = this.$refs['file-justificatif'].files[0];
-        this.$store.dispatch('addJustificatif', file);
-      }
-    },
-    removeJustificatif() {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce justificatif ?',
-          question:
-            "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeJustificatif');
-          }
-        },
-      });
-    },
-    validite(duree) {
-      var d = new Date(this.controleMedical.consultation || Date.now());
-      var year = d.getFullYear();
-      var month = d.getMonth() + 1;
-      var day = d.getDate();
-      this.controleMedical.validite = `${year + duree}-${('0' + month).slice(
-        -2
-      )}-${('0' + day).slice(-2)}`;
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped></style>

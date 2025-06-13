@@ -1,3 +1,62 @@
+<script setup>
+import { useStore } from 'vuex';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { computed, ref, watch } from 'vue';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    default: 'new',
+  },
+});
+
+const loading = ref(true);
+const store = useStore();
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchExerciceCategories');
+store.dispatch('fetchExercicesComptables');
+store.dispatch('fetchExcuseTypes');
+store.dispatch('fetchHeuresExercice');
+store.dispatch('fetchUnites');
+
+const newMode = computed(() => id === 'new');
+
+if (newMode.value) {
+  store.dispatch('resetActiveExercice');
+} else {
+  store.dispatch('selectExercice', parseInt(id));
+  store.dispatch('fetchExercice', parseInt(id)).then(() => {
+    loading.value = false;
+  });
+  store.dispatch('fetchExerciceSapeurs', parseInt(id));
+}
+watch(
+  () => id,
+  () => {
+    if (newMode.value) {
+      store.dispatch('resetActiveExercice');
+    } else {
+      store.dispatch('selectExercice', parseInt(id));
+      store.dispatch('fetchExercice', parseInt(id));
+      store.dispatch('fetchExerciceSapeurs', parseInt(id));
+      store.dispatch('fetchExerciceSms', parseInt(id));
+    }
+  },
+);
+
+const activeExerciceId = computed(() => store.state.exercice.active.id);
+const activeExerciceData = computed(() => store.state.exercice.active.data);
+const breadcrumbFinal = computed(() =>
+  newMode.value
+    ? 'Nouveau'
+    : new Date(activeExerciceData.value.date)?.toLocaleDateString('fr-CH') +
+      ' - ' +
+      activeExerciceData.value?.designation,
+);
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -55,80 +114,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-export default {
-  name: 'PageExercice',
-  components: {
-    ExerciceComptable,
-  },
-  props: {
-    id: {
-      type: String,
-      default: 'new',
-    },
-  },
-  data() {
-    return {
-      loading: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      activeExerciceData: (state) => state.exercice.active.data,
-      activeExerciceId: (state) => state.exercice.active.id,
-    }),
-    newMode() {
-      return this.id === 'new';
-    },
-    breadcrumbFinal() {
-      return this.newMode
-        ? 'Nouveau'
-        : new Date(this.activeExerciceData.date).toLocaleDateString('fr-CH') +
-            ' - ' +
-            this.activeExerciceData?.designation;
-    },
-  },
-  watch: {
-    id() {
-      if (this.newMode) {
-        this.$store.dispatch('resetActiveExercice');
-      } else {
-        const id = parseInt(this.id);
-
-        this.$store.dispatch('selectExercice', id);
-        this.$store.dispatch('fetchExercice', id);
-        this.$store.dispatch('fetchExerciceSapeurs', id);
-        this.$store.dispatch('fetchExerciceSms', id);
-      }
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchListeSapeur');
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchExerciceCategories');
-    this.$store.dispatch('fetchExercicesComptables');
-    this.$store.dispatch('fetchExcuseTypes');
-    this.$store.dispatch('fetchHeuresExercice');
-    this.$store.dispatch('fetchUnites');
-
-    const id = parseInt(this.id);
-
-    if (this.newMode) {
-      this.$store.dispatch('resetActiveExercice');
-    } else {
-      this.$store.dispatch('selectExercice', id);
-      this.$store.dispatch('fetchExercice', id).then(() => {
-        this.loading = false;
-      });
-      this.$store.dispatch('fetchExerciceSapeurs', id);
-    }
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

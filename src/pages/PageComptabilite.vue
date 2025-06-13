@@ -1,3 +1,10 @@
+<script setup>
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import store from '/src/store/index';
+
+await store.dispatch('fetchExercicesComptables');
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -54,29 +61,5 @@
     </div>
   </div>
 </template>
-
-<script>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadExerciceComptable = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([loadExerciceComptable]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageComptabilite',
-  components: { ExerciceComptable },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-};
-</script>
 
 <style lang="scss" scoped></style>

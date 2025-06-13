@@ -1,3 +1,233 @@
+<script setup>
+import permissions from '../store/permissions.js';
+import { mapActions } from 'pinia';
+import { useModalStore } from '../stores/common/Modal';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import SapeurService from '/src/services/SapeurService';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
+import useHasPermission from '../hooks/usePermission.js';
+import { computed, inject, onMounted, ref, useTemplateRef } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const routes = [
+  { texte: 'General', to: { name: 'sapeur-details' }, civil: true },
+  { texte: 'Mutations', to: { name: 'sapeur-mutations' } },
+  {
+    texte: 'Contrôles médicaux',
+    to: { name: 'sapeur-controles-medicaux' },
+    permission: permissions.CONTROLE_MEDICAL.TOUT,
+  },
+  { texte: 'Fonctions', to: { name: 'sapeur-fonctions' }, civil: true },
+  { texte: 'Cours', to: { name: 'sapeur-cours' } },
+  { texte: 'Promotion', to: { name: 'sapeur-promotions' } },
+  { texte: 'Materiel', to: { name: 'sapeur-materiels' }, civil: true },
+  { texte: 'Organisation', to: { name: 'sapeur-organisation' }, civil: true },
+  { texte: 'Permis', to: { name: 'sapeur-permis' } },
+  { texte: 'Banque', to: { name: 'sapeur-banque' }, civil: true },
+  { texte: 'Exercice', to: { name: 'sapeur-exercices' }, civil: true },
+];
+
+store.dispatch('fetchCivilites');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchGrades');
+store.dispatch('fetchFonctions');
+
+await store.dispatch('fetchListeSapeur');
+
+const redirectToLatestOpennedSapeur = async (routeTo, routeFrom, next) => {
+  if (store.state.sapeur.liste.length <= 0) {
+    // Load sapeurs liste
+    await store.dispatch('fetchListeSapeur');
+  }
+
+  if (routeTo.params.id == 0 || !routeTo.params.id) {
+    // Ancien sapeur sélectionné
+    if (store.state.sapeur.active.id > 0) {
+      // Rediction vers le sapeur précédemment sélectionné
+      next({
+        name: 'sapeur-details',
+        params: { id: store.state.sapeur.active.id },
+      });
+      return;
+    }
+    // Sapeurs disponible
+    if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
+      await store.dispatch(
+        'selectSapeur',
+        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
+      );
+      next({
+        name: 'sapeur-details',
+        params: { id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id },
+      });
+      return;
+    }
+
+    // Aucun sapeur de disponible
+    next();
+    return;
+  } else {
+    // Sélection du sapeur
+    await store.dispatch('selectSapeur', routeTo.params.id);
+  }
+
+  if (!store.state.sapeur.active.id) {
+    // Aucun sapeur
+    next();
+    return;
+  }
+
+  // Load sapeur data
+  if (store.state.sapeur.active.id) {
+    // Check civil status
+    await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
+    const isCivil = store.state.sapeur.active.data.type != 0;
+
+    if (isCivil) {
+      // Civil détecté
+      if (routes.find((r) => r.to.name == routeTo.name && r.civil == true)) {
+        next();
+      } else {
+        // Redirection pour onglet valable
+        next({
+          name: 'sapeur-details',
+          params: { id: store.state.sapeur.active.id },
+        });
+      }
+    } else {
+      if (routeTo.name == 'sapeur-index') {
+        next({
+          name: 'sapeur-details',
+          params: { id: store.state.sapeur.active.id },
+        });
+      } else {
+        next();
+      }
+    }
+    return;
+  }
+
+  next();
+};
+
+onBeforeRouteUpdate(redirectToLatestOpennedSapeur);
+
+const filter = ref('actif');
+const filters = ref({
+  actif: (s) => parseInt(s.actif) === 1,
+  inactif: (s) => parseInt(s.actif) === 0,
+  all: () => true,
+});
+const eventListener = ref(null);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const activeSapeurId = computed(() => store.state.sapeur.active.id);
+const activeSapeur = computed(() => store.state.sapeur.active.data);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const filteredSapeurs = computed(() =>
+  sapeurs.value.filter(filters.value[filter.value]),
+);
+const route = useRoute();
+const currentRouteName = computed(() => route.name);
+
+const listeSapeurComponent = useTemplateRef('liste-sapeurs');
+eventListener.value = (e) => {
+  if (e.key == 'ArrowDown' || e.key == 'ArrowUp') {
+    e.preventDefault();
+  }
+};
+
+onMounted(() => {
+  listeSapeurComponent.value.addEventListener('keydown', eventListener.value);
+  listeSapeurComponent.value.addEventListener(
+    'keyup',
+    navigationEventListener.value,
+  );
+});
+
+const { showModal, closeModal } = useModalStore();
+const awn = inject('awn');
+const router = useRouter();
+
+const ficheSapeur = () => {
+  showModal({ component: 'ModalChargement' });
+  SapeurService.downloadFicheSapeur(
+    activeSapeurId.value,
+    'fiche-sapeur.pdf',
+  ).then(closeModal);
+};
+const navigationEventListener = async (e) => {
+  const ids = filteredSapeurs.value.map((s) => s.id);
+  const i = ids.indexOf(parseInt(route.params?.id));
+  let nextId = null;
+  if (e.key == 'ArrowDown' && i < ids.length - 1) {
+    nextId = i + 1;
+  } else if (e.key == 'ArrowUp' && i > 0) {
+    nextId = i - 1;
+  }
+  if (nextId != null) {
+    router.push({
+      name: route.name,
+      params: { id: ids[nextId] },
+    });
+  }
+};
+const selectSapeur = (sapeurId) => {
+  if (sapeurId != null && sapeurId != activeSapeurId.value) {
+    router.push({
+      name: route.name,
+      params: { id: sapeurId },
+    });
+  }
+};
+const addSapeur = () => {
+  showModal({
+    component: 'ModalSapeur',
+    size: 2,
+    callback: (sapeurId) => {
+      store.dispatch('selectSapeur', sapeurId).then(() => {
+        router.push({
+          name: 'sapeur-details',
+          params: { id: sapeurId },
+        });
+      });
+    },
+  });
+};
+const deleteSapeur = () => {
+  showModal({
+    component: 'ModalConfirmation',
+    data: {
+      title: 'Voulez-vous vraiment supprimer ce sapeur ?',
+      question:
+        "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
+    },
+    callback: (confirmed) => {
+      if (confirmed) {
+        store
+          .dispatch('deleteSapeur', activeSapeur.value.id)
+          .then(() => {
+            const newSelectedSapeurId = svm.sapeurs[0].id;
+            store.dispatch('selectSapeur', newSelectedSapeurId).then(() => {
+              router.push({
+                name: 'sapeur-details',
+                params: { id: newSelectedSapeurId },
+              });
+            });
+            awn.success('Sapeur supprimé avec succès');
+          })
+          .catch((err) => {
+            awn.alert(err?.message ?? 'Impossible de supprimer ce sapeur');
+          });
+      }
+    },
+  });
+};
+</script>
+
 <template>
   <div class="container-fluid custom-container">
     <div class="row">
@@ -225,263 +455,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '../store/index';
-import permissions from '../store/permissions.js';
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import SapeurService from '/src/services/SapeurService';
-
-const routes = [
-  { texte: 'General', to: { name: 'sapeur-details' }, civil: true },
-  { texte: 'Mutations', to: { name: 'sapeur-mutations' } },
-  {
-    texte: 'Contrôles médicaux',
-    to: { name: 'sapeur-controles-medicaux' },
-    permission: permissions.CONTROLE_MEDICAL.TOUT,
-  },
-  { texte: 'Fonctions', to: { name: 'sapeur-fonctions' }, civil: true },
-  { texte: 'Cours', to: { name: 'sapeur-cours' } },
-  { texte: 'Promotion', to: { name: 'sapeur-promotions' } },
-  { texte: 'Materiel', to: { name: 'sapeur-materiels' }, civil: true },
-  { texte: 'Organisation', to: { name: 'sapeur-organisation' }, civil: true },
-  { texte: 'Permis', to: { name: 'sapeur-permis' } },
-  { texte: 'Banque', to: { name: 'sapeur-banque' }, civil: true },
-  { texte: 'Exercice', to: { name: 'sapeur-exercices' }, civil: true },
-];
-
-const redirectToLastestOpennedSapeur = async (routeTo, routeFrom, next) => {
-  store.dispatch('fetchCivilites');
-  store.dispatch('fetchLocalites');
-  store.dispatch('fetchGrades');
-  store.dispatch('fetchFonctions');
-
-  if (store.state.sapeur.liste.length <= 0) {
-    // Load sapeurs liste
-    await store.dispatch('fetchListeSapeur');
-  }
-
-  if (routeTo.params.id == 0 || !routeTo.params.id) {
-    // Ancien sapeur sélectionné
-    if (store.state.sapeur.active.id > 0) {
-      // Rediction vers le sapeur précédemment sélectionné
-      next({
-        name: 'sapeur-details',
-        params: { id: store.state.sapeur.active.id },
-      });
-      return;
-    }
-    // Sapeurs disponible
-    if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
-      await store.dispatch(
-        'selectSapeur',
-        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
-      );
-      next({
-        name: 'sapeur-details',
-        params: { id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id },
-      });
-      return;
-    }
-
-    // Aucun sapeur de disponible
-    next();
-    return;
-  } else {
-    // Sélection du sapeur
-    await store.dispatch('selectSapeur', routeTo.params.id);
-  }
-
-  if (!store.state.sapeur.active.id) {
-    // Aucun sapeur
-    next();
-    return;
-  }
-
-  // Load sapeur data
-  if (store.state.sapeur.active.id) {
-    // Check civil status
-    await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
-    const isCivil = store.state.sapeur.active.data.type != 0;
-
-    if (isCivil) {
-      // Civil détecté
-      if (routes.find((r) => r.to.name == routeTo.name && r.civil == true)) {
-        next();
-      } else {
-        // Redirection pour onglet valable
-        next({
-          name: 'sapeur-details',
-          params: { id: store.state.sapeur.active.id },
-        });
-      }
-    } else {
-      if (routeTo.name == 'sapeur-index') {
-        next({
-          name: 'sapeur-details',
-          params: { id: store.state.sapeur.active.id },
-        });
-      } else {
-        next();
-      }
-    }
-    return;
-  }
-
-  next();
-};
-
-export default {
-  name: 'PageSapeurs',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    redirectToLastestOpennedSapeur(routeTo, routeFrom, next);
-  },
-  data() {
-    return {
-      filter: 'actif',
-      filters: {
-        actif: (s) => parseInt(s.actif) === 1,
-        inactif: (s) => parseInt(s.actif) === 0,
-        all: () => true,
-      },
-      eventListener: null,
-      routes: routes,
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeur: (state) => state.sapeur.active.data,
-      permissions: (state) => state.auth.sis.permissions,
-      isAdmin: (state) => state.auth.admin,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-    filteredSapeurs() {
-      return this.sapeurs.filter(this.filters[this.filter]);
-    },
-    currentRouteName() {
-      return this.$route.name;
-    },
-  },
-  mounted() {
-    const svm = this;
-    this.eventListener = (e) => {
-      if (e.key == 'ArrowDown' || e.key == 'ArrowUp') {
-        e.preventDefault();
-      }
-    };
-    this.$refs['liste-sapeurs'].addEventListener('keydown', this.eventListener);
-    this.$refs['liste-sapeurs'].addEventListener(
-      'keyup',
-      svm.navigationEventListener,
-    );
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    hasPermission(permission) {
-      return (
-        !permission || this.permissions.includes(permission) || this.isAdmin
-      );
-    },
-    ficheSapeur() {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-      SapeurService.downloadFicheSapeur(
-        this.activeSapeurId,
-        'fiche-sapeur.pdf',
-      ).then(() => {
-        this.HIDE_MODAL();
-      });
-    },
-    async navigationEventListener(e) {
-      const ids = this.filteredSapeurs.map((s) => s.id);
-      const i = ids.indexOf(parseInt(this.$route.params?.id));
-      let nextId = null;
-      if (e.key == 'ArrowDown' && i < ids.length - 1) {
-        nextId = i + 1;
-      } else if (e.key == 'ArrowUp' && i > 0) {
-        nextId = i - 1;
-      }
-      if (nextId != null) {
-        this.$router.push({
-          name: this.$route.name,
-          params: { id: ids[nextId] },
-        });
-      }
-    },
-    selectSapeur(sapeurId) {
-      if (sapeurId != null && sapeurId != this.activeSapeurId) {
-        this.$router.push({
-          name: this.$route.name,
-          params: { id: sapeurId },
-        });
-      }
-    },
-    addSapeur() {
-      this.SHOW_MODAL({
-        component: 'ModalSapeur',
-        size: 2,
-        callback: (sapeurId) => {
-          this.$store.dispatch('selectSapeur', sapeurId).then(() => {
-            this.$router.push({
-              name: 'sapeur-details',
-              params: { id: sapeurId },
-            });
-          });
-        },
-      });
-    },
-    deleteSapeur() {
-      const svm = this;
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce sapeur ?',
-          question:
-            "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            svm.$store
-              .dispatch('deleteSapeur', this.activeSapeur.id)
-              .then(() => {
-                const newSelectedSapeurId = svm.sapeurs[0].id;
-                svm.$store
-                  .dispatch('selectSapeur', newSelectedSapeurId)
-                  .then(() => {
-                    svm.$router.push({
-                      name: 'sapeur-details',
-                      params: { id: newSelectedSapeurId },
-                    });
-                  });
-                svm.$awn.success('Sapeur supprimé avec succès');
-              })
-              .catch((err) => {
-                svm.$awn.alert(
-                  err?.message ?? 'Impossible de supprimer ce sapeur',
-                );
-              });
-          }
-        },
-      });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 @import 'bootstrap/scss/functions';

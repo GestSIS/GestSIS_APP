@@ -1,3 +1,19 @@
+<script setup>
+import { computed, ref } from 'vue';
+
+import AppNavbar from '/src/components/AppNavbar.vue';
+import AppModal from '/src/components/AppModal.vue';
+import MainSidebar from '/src/components/MainSidebar.vue';
+
+const hideSidebar = ref(false);
+
+const isMobile = computed(() => {
+  const isAndroid = () => navigator.userAgent.match(/Android/i);
+  const isIOS = () => navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  return isAndroid() || isIOS();
+});
+</script>
+
 <template>
   <div class="wrapper">
     <div class="wrapper">
@@ -20,33 +36,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import AppNavbar from '/src/components/AppNavbar.vue';
-import AppModal from '/src/components/AppModal.vue';
-import MainSidebar from '/src/components/MainSidebar.vue';
-
-export default {
-  name: 'DefaultLayout',
-  components: {
-    MainSidebar,
-    AppNavbar,
-    AppModal,
-  },
-  data() {
-    return {
-      hideSidebar: false,
-    };
-  },
-  computed: {
-    isMobile() {
-      const isAndroid = () => navigator.userAgent.match(/Android/i);
-      const isIOS = () => navigator.userAgent.match(/iPhone|iPad|iPod/i);
-      return isAndroid() || isIOS();
-    },
-  },
-};
-</script>
 
 <style lang="scss">
 .wrapper {

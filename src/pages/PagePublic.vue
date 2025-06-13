@@ -1,3 +1,17 @@
+<script setup>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const decoded = atob('c3VwcG9ydEBnZXN0c2lzLmNo');
+const prefix = atob('bWFpbHRvOg==');
+
+const store = useStore();
+const router = useRouter();
+
+const login = () =>
+  router.push({ path: store.getters.isLoggedIn ? 'accueil' : 'login' });
+</script>
+
 <template>
   <div>
     <header>
@@ -57,34 +71,6 @@
     </footer>
   </div>
 </template>
-
-<script>
-import { mapGetters } from 'vuex';
-
-export default {
-  name: 'PagePublic',
-  data() {
-    return {
-      decoded: atob('c3VwcG9ydEBnZXN0c2lzLmNo'),
-      prefix: atob('bWFpbHRvOg=='),
-    };
-  },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
-  },
-  methods: {
-    login() {
-      if (this.isLoggedIn) {
-        // Go to home
-        this.$router.push({ path: 'accueil' });
-      } else {
-        // Go to login
-        this.$router.push({ path: 'login' });
-      }
-    },
-  },
-};
-</script>
 
 <style scoped>
 .jumbotron {

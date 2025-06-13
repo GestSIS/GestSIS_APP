@@ -1,3 +1,8 @@
+<script setup>
+import AppNavbar from '/src/components/AppNavbar.vue';
+import AppModal from '/src/components/AppModal.vue';
+</script>
+
 <template>
   <div class="wrapper">
     <div class="content">
@@ -7,19 +12,6 @@
     <app-modal />
   </div>
 </template>
-
-<script>
-import AppNavbar from '/src/components/AppNavbar.vue';
-import AppModal from '/src/components/AppModal.vue';
-
-export default {
-  name: 'NoSidebarLayout',
-  components: {
-    AppNavbar,
-    AppModal,
-  },
-};
-</script>
 
 <style scoped>
 .content {

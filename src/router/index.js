@@ -1,14 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { useStore } from 'vuex';
 import Public from '../pages/PagePublic.vue';
 import Home from '../pages/PageHome.vue';
-import store from '../store/index';
 import permissions from '../store/permissions.js';
 
 import { TokenService } from '../services/StorageService.js';
 
 import NProgress from 'nprogress';
+import useHasPermission from '../hooks/usePermission';
+
 
 const redirect = (to, from, next) => {
+  const store = useStore();
   const isLoggedIn = !!store.state.auth.user;
   if (isLoggedIn) {
     next({
@@ -25,6 +28,7 @@ const redirect = (to, from, next) => {
 
 const adminGuard = () => {
   return function (to, from, next) {
+    const store = useStore();
     const isAdmin = store.state.auth.admin;
     if (isAdmin) {
       next();
@@ -36,14 +40,7 @@ const adminGuard = () => {
 
 const permissionGuard = (...perms) => {
   return function (to, from, next) {
-    const isAdmin = store.state.auth.admin;
-    const permissions = store.state.auth.sis.permissions;
-    const requiredPermissions = new Set(perms);
-
-    if (
-      permissions.filter((p) => requiredPermissions.has(p)).length ||
-      isAdmin
-    ) {
+    if (useHasPermission(perms).value) {
       next();
     } else {
       redirect(to, from, next);
@@ -53,6 +50,7 @@ const permissionGuard = (...perms) => {
 
 const sapeurGuard = () => {
   return function (to, from, next) {
+    const store = useStore();
     const isSapeur = store.state.auth.sapeurId != null;
     if (isSapeur) {
       next();

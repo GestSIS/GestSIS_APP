@@ -5,7 +5,8 @@
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Ajout option `est_compartimenté` pour les emplacements"
+        "Ajout option `est_compartimenté` pour les emplacements",
+        "Nombreux petits changements de l'interface dans les différentes pages"
       ]
     },
     {

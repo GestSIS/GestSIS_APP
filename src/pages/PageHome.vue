@@ -1,3 +1,95 @@
+<script setup>
+import { computed, inject, onUnmounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import Api from '/src/http/Request';
+import { useRouter } from 'vue-router';
+
+const loading = ref(false);
+const disableCounter = ref(0);
+const disableInterval = ref(null);
+const resendCounter = ref(0);
+const resendInterval = ref(null);
+
+const store = useStore();
+const router = useRouter();
+
+const listeSis = computed(() => store.state.auth.sis.liste);
+const validated = computed(() => store.state.auth.validated);
+const availableSisListe = computed(() => store.getters.availableSisListe);
+
+const awn = inject('awn');
+
+if (listeSis.value.length <= 0) {
+  loading.value = true;
+  store.dispatch('loadSisListe').then(() => {
+    loading.value = false;
+  });
+}
+
+onUnmounted(() => {
+  if (disableInterval.value != null) {
+    clearInterval(disableInterval.value);
+    disableInterval.value = null;
+  }
+  if (resendInterval.value != null) {
+    clearInterval(resendInterval.value);
+    resendInterval.value = null;
+  }
+});
+
+const getImageUrl = (sis) => {
+  return Api.API_URL + `/sis-logo/${sis.api_key}`;
+};
+const connectToSis = (sis) => {
+  store.dispatch('selectSis', sis).then(() => {
+    router.push({ name: 'dashboard' });
+  });
+};
+const refresh = () => {
+  store.dispatch('refreshToken').then(() => {
+    if (!validated.value) {
+      awn.warning("Votre compte n'est toujours pas validé !");
+      disableCounter.value = 5;
+      disableInterval.value = setInterval(() => {
+        disableCounter.value--;
+        if (disableCounter.value <= 0) {
+          clearInterval(disableInterval.value);
+          disableInterval.value = null;
+        }
+      }, 1000);
+    }
+  });
+};
+const resend = () => {
+  const callback = () => {
+    resendCounter.value = 30;
+    resendInterval.value = setInterval(() => {
+      resendCounter.value--;
+      if (resendCounter.value <= 0) {
+        clearInterval(resendInterval.value);
+        resendInterval.value = null;
+      }
+    }, 1000);
+  };
+  store
+    .dispatch('resendValidationEmail')
+    .then((res) => {
+      awn.success(
+        res?.message ??
+          'Un nouvel email vous a été envoyé, controllez votre boîte mail',
+      );
+      callback();
+    })
+    .catch((err) => {
+      awn.alert(
+        err?.error ??
+          "Une erreur a eu lieu durant le renvoie de l'email de confirmation",
+      );
+      callback();
+    });
+};
+</script>
+
 <template>
   <div class="columns">
     <div class="album text-muted">
@@ -66,106 +158,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState, mapGetters } from 'vuex';
-import Api from '/src/http/Request';
-
-export default {
-  name: 'PageHome',
-  data() {
-    return {
-      loading: false,
-      disableCounter: 0,
-      disableInterval: null,
-      resendCounter: 0,
-      resendInterval: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      listeSis: (state) => state.auth.sis.liste,
-      available: (state) => state.auth.sis.available,
-      sisId: (state) => state.auth.sis.activeId,
-      sisKey: (state) => state.auth.sis.activeKey,
-      validated: (state) => state.auth.validated,
-    }),
-    ...mapGetters(['availableSisListe']),
-  },
-  created() {
-    if (this.listeSis.length <= 0) {
-      const self = this;
-      this.loading = true;
-      this.$store.dispatch('loadSisListe').then(() => {
-        self.loading = false;
-      });
-    }
-  },
-  unmounted() {
-    if (this.disableInterval != null) {
-      clearInterval(this.disableInterval);
-      this.disableInterval = null;
-    }
-    if (this.resendInterval != null) {
-      clearInterval(this.resendInterval);
-      this.resendInterval = null;
-    }
-  },
-  methods: {
-    getImageUrl(sis) {
-      return Api.API_URL + `/sis-logo/${sis.api_key}`;
-    },
-    connectToSis(sis) {
-      this.$store.dispatch('selectSis', sis).then(() => {
-        this.$router.push({ name: 'dashboard' });
-      });
-    },
-    refresh() {
-      this.$store.dispatch('refreshToken').then(() => {
-        if (!this.validated) {
-          this.$awn.warning("Votre compte n'est toujours pas validé !");
-          this.disableCounter = 5;
-          this.disableInterval = setInterval(() => {
-            this.disableCounter--;
-            if (this.disableCounter <= 0) {
-              clearInterval(this.disableInterval);
-              this.disableInterval = null;
-            }
-          }, 1000);
-        }
-      });
-    },
-    resend() {
-      const callback = () => {
-        this.resendCounter = 30;
-        this.resendInterval = setInterval(() => {
-          this.resendCounter--;
-          if (this.resendCounter <= 0) {
-            clearInterval(this.resendInterval);
-            this.resendInterval = null;
-          }
-        }, 1000);
-      };
-      this.$store
-        .dispatch('resendValidationEmail')
-        .then((res) => {
-          this.$awn.success(
-            res?.message ??
-              'Un nouvel email vous a été envoyé, controllez votre boîte mail'
-          );
-          callback();
-        })
-        .catch((err) => {
-          this.$awn.alert(
-            err?.error ??
-              "Une erreur a eu lieu durant le renvoie de l'email de confirmation"
-          );
-          callback();
-        });
-    },
-  },
-};
-</script>
 
 <style scoped>
 .columns {

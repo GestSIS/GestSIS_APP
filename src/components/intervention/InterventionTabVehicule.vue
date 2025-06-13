@@ -70,6 +70,7 @@ export default {
           permissions.INTERVENTION.MODIFICATION,
         ),
     }),
+    // TODO: Fix reload data if id change
   },
   mounted() {
     if (this.vehicules.length === 0) {

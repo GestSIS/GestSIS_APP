@@ -1,3 +1,63 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const jeton = ref('');
+const oldPassword = ref('');
+const newPassword = ref('');
+const newPasswordRepeated = ref('');
+const errors = ref({});
+
+const isPasswordIdentical = computed(
+  () => newPassword.value === newPasswordRepeated.value,
+);
+const awn = inject('awn');
+
+const refreshTokens = async () => {
+  store
+    .dispatch('refreshToken')
+    .then(() => awn.success('Permissions rechargées'))
+    .catch(() =>
+      awn.alert('Vous avez été déconnecté, veuillez-vous reconnecter'),
+    );
+};
+const utiliserJeton = async () => {
+  if (!jeton.value) {
+    awn.alert('Jeton invalide');
+  } else {
+    store
+      .dispatch('useToken', jeton.value)
+      .then((message) => {
+        awn.success(message || 'Jeton enregistré avec succès');
+        token.value = '';
+      })
+      .catch((e) => awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.'));
+  }
+};
+
+const changerMotDePasse = async () => {
+  errors.value.password = newPassword.value.length < 7;
+  if (!isPasswordIdentical.value || errors.value.password) {
+    return;
+  }
+
+  store
+    .dispatch('changePassword', {
+      password: oldPassword.value,
+      newPassword: newPassword.value,
+    })
+    .then((response) => {
+      awn.success(response?.message || 'Mot de passe mis à jour');
+      oldPassword.value = '';
+      newPassword.value = '';
+      newPasswordRepeated.value = '';
+    })
+    .catch((e) => awn.alert(e?.message || 'Mot de passe incorrect'));
+};
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -116,72 +176,6 @@
   - Contrôler ses données et signaler des changements
   -->
 </template>
-
-<script>
-export default {
-  name: 'PageUser',
-  data() {
-    return {
-      jeton: '',
-      oldPassword: '',
-      newPassword: '',
-      newPasswordRepeated: '',
-      errors: {},
-    };
-  },
-  computed: {
-    isPasswordIdentical() {
-      return this.newPassword === this.newPasswordRepeated;
-    },
-  },
-  methods: {
-    async refreshTokens() {
-      this.$store
-        .dispatch('refreshToken')
-        .then(() => this.$awn.success('Permissions rechargées'))
-        .catch(() =>
-          this.$awn.alert(
-            'Vous avez été déconnecté, veuillez-vous reconnecter',
-          ),
-        );
-    },
-    async utiliserJeton() {
-      if (!this.jeton) {
-        this.$awn.alert('Jeton invalide');
-      } else {
-        this.$store
-          .dispatch('useToken', this.jeton)
-          .then((message) => {
-            this.$awn.success(message || 'Jeton enregistré avec succès');
-            this.token = '';
-          })
-          .catch((e) =>
-            this.$awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.'),
-          );
-      }
-    },
-    async changerMotDePasse() {
-      this.errors.password = this.newPassword.length < 7;
-      if (!this.isPasswordIdentical || this.errors.password) {
-        return;
-      }
-
-      this.$store
-        .dispatch('changePassword', {
-          password: this.oldPassword,
-          newPassword: this.newPassword,
-        })
-        .then((response) => {
-          this.$awn.success(response?.message || 'Mot de passe mis à jour');
-          this.oldPassword = '';
-          this.newPassword = '';
-          this.newPasswordRepeated = '';
-        })
-        .catch((e) => this.$awn.alert(e?.message || 'Mot de passe incorrect'));
-    },
-  },
-};
-</script>
 
 <style>
 .m-td-0 > td {

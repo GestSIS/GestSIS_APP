@@ -1,3 +1,178 @@
+<script setup>
+import { computed, inject, ref, useTemplateRef } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../stores/common/Modal';
+import GroupeEdition from '../components/groupe/GroupeEdition.vue';
+import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
+import permissions from '../store/permissions';
+import useHasPermission from '../hooks/usePermission';
+
+const active = ref(null);
+const groupeEdit = ref({});
+const editMode = ref(false);
+const groupesTypes = ref(['groupe', 'groupeInter']);
+const errors = ref({});
+
+const store = useStore();
+const awn = inject('awn');
+
+await store.dispatch('fetchGroupes');
+await store.dispatch('fetchListeSapeur');
+
+const groupeEdition = useTemplateRef('groupe-edition-component');
+
+const groupes = computed(() =>
+  store.state.groupe.liste.map((g) => ({
+    ...g,
+    label: (g.no ? g.no + ' ' : '') + g.designation,
+  })),
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const hasEditPermission = useHasPermission(
+  permissions.ORGANISATION.MODIFICATION,
+);
+
+const filteredGroupes = computed(() => {
+  const activeId = active.value?.data?.id || 0;
+  if (activeId) {
+    const rec = (groupeId) => {
+      // Retourne la liste des ids des groupes enfants
+      const children = groupes.value.filter((g) => g.parent_id == groupeId);
+      return children.flatMap((g) => [g.id, ...rec(g.id)]);
+    };
+    const filteredIds = new Set([activeId, ...rec(activeId)]);
+    return groupes.value.filter((g) => !filteredIds.has(g.id));
+  } else {
+    return [];
+  }
+});
+const activeIsGroupe = computed(() => {
+  return (
+    (!!active.value &&
+      (active.value.data.type == 'groupe' ||
+        active.value.data.type == 'groupeInter')) ||
+    false
+  );
+});
+const canMoveDown = computed(() => {
+  return (
+    (groupesTypes.value.includes(active.value?.data?.type) &&
+      !active.value?.isLast) ||
+    false
+  );
+});
+const canMoveUp = computed(() => {
+  return (
+    (groupesTypes.value.includes(active.value?.data?.type) &&
+      !active.value?.isFirst) ||
+    false
+  );
+});
+const canMoveLeft = computed(() => {
+  return (
+    (groupesTypes.value.includes(active.value?.data?.type) &&
+      !active.value?.isRoot) ||
+    false
+  );
+});
+const canMoveRight = computed(() => {
+  return (
+    (groupesTypes.value.includes(active.value?.data?.type) &&
+      !active.value?.isFirstOfLevel) ||
+    false
+  );
+});
+
+const { showModal } = useModalStore();
+
+const contract = () => {
+  groupeEdition.value.contract();
+};
+const expand = () => {
+  groupeEdition.value.expand();
+};
+const selected = (elem) => {
+  active.value = elem;
+  if (groupesTypes.value.includes(elem.data.type)) {
+    groupeEdit.value = { ...groupes.value.find((g) => g.id == elem.data.id) };
+  } else {
+    groupeEdit.value = {};
+  }
+};
+const save = async () => {
+  store
+    .dispatch('updateGroupe', {
+      groupeId: groupeEdit.value.id,
+      data: {
+        ...groupeEdit.value,
+      },
+    })
+    .then(() => {
+      awn.success('Groupe modifié avec succès');
+    })
+    .catch((err) => {
+      errors.value = { ...err };
+      awn.alert(err.message || 'Erreur lors de la modification du groupe');
+    });
+};
+const up = () => groupeEdition.value.up(active.value);
+const down = () => groupeEdition.value.down(active.value);
+const right = () => groupeEdition.value.right(active.value);
+const left = () => groupeEdition.value.left(active.value);
+const deleteGroupe = () => {
+  if (active.valueIsGroupe) {
+    showModal({
+      component: 'ModalConfirmation',
+      data: {
+        title: 'Voulez-vous vraiment supprimer ce groupe ?',
+        question:
+          "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+      },
+      callback: (confirmed) => {
+        if (confirmed) {
+          store.dispatch('deleteGroupe', active.value.data.id);
+        }
+      },
+    });
+  } else {
+    awn.warning('Sélectionnez un groupe afin de pouvoir le supprimer.');
+  }
+};
+const addGroupe = () => {
+  showModal({
+    component: 'ModalGroupe',
+  });
+};
+const addSapeurs = (node) => {
+  if (!groupesTypes.value.includes(node.data.type)) {
+    return;
+  }
+  const id = node.data.id;
+  const groupe = groupes.value.find((g) => g.id == id);
+  const data = {
+    ids: groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0),
+  };
+
+  const callback = (res) => {
+    if (!res) {
+      return;
+    }
+    const { tous } = res;
+    return store.dispatch('updateGroupeSapeurs', {
+      groupeId: id,
+      sapeurIds: tous,
+    });
+  };
+
+  showModal({
+    component: 'ModalSapeurSelect',
+    size: 2,
+    callback,
+    data,
+  });
+};
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -24,7 +199,7 @@
           </div>
           <div class="card-body">
             <groupe-edition
-              ref="groupeEdition"
+              ref="groupe-edition-component"
               :edit-mode="editMode"
               @selected="selected"
             />
@@ -194,215 +369,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import store from '/src/store/index';
-
-import GroupeEdition from '../components/groupe/GroupeEdition.vue';
-import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
-import permissions from '../store/permissions';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadGroupes = store.dispatch('fetchGroupes');
-
-  Promise.all([loadSapeurs, loadGroupes]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageOrganisation',
-  components: {
-    GroupeEdition,
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      active: null,
-      groupeEdit: {},
-      editMode: false,
-      groupesTypes: ['groupe', 'groupeInter'],
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) =>
-        state.groupe.liste.map((g) => ({
-          ...g,
-          label: (g.no ? g.no + ' ' : '') + g.designation,
-        })),
-      sapeurs: (state) => state.sapeur.liste,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.ORGANISATION.MODIFICATION,
-        ),
-    }),
-    filteredGroupes() {
-      const activeId = this.active?.data?.id || 0;
-      if (activeId) {
-        const rec = (groupeId) => {
-          // Retourne la liste des ids des groupes enfants
-          const children = this.groupes.filter((g) => g.parent_id == groupeId);
-          return children.flatMap((g) => [g.id, ...rec(g.id)]);
-        };
-        const filteredIds = new Set([activeId, ...rec(activeId)]);
-        return this.groupes.filter((g) => !filteredIds.has(g.id));
-      } else {
-        return [];
-      }
-    },
-    activeIsGroupe() {
-      return (
-        (!!this.active &&
-          (this.active.data.type == 'groupe' ||
-            this.active.data.type == 'groupeInter')) ||
-        false
-      );
-    },
-    canMoveDown() {
-      return (
-        (this.groupesTypes.includes(this.active?.data?.type) &&
-          !this.active?.isLast) ||
-        false
-      );
-    },
-    canMoveUp() {
-      return (
-        (this.groupesTypes.includes(this.active?.data?.type) &&
-          !this.active?.isFirst) ||
-        false
-      );
-    },
-    canMoveLeft() {
-      return (
-        (this.groupesTypes.includes(this.active?.data?.type) &&
-          !this.active?.isRoot) ||
-        false
-      );
-    },
-    canMoveRight() {
-      return (
-        (this.groupesTypes.includes(this.active?.data?.type) &&
-          !this.active?.isFirstOfLevel) ||
-        false
-      );
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    contract() {
-      this.$refs.groupeEdition.contract();
-    },
-    expand() {
-      this.$refs.groupeEdition.expand();
-    },
-    selected(elem) {
-      this.active = elem;
-      if (this.groupesTypes.includes(elem.data.type)) {
-        this.groupeEdit = { ...this.groupes.find((g) => g.id == elem.data.id) };
-      } else {
-        this.groupeEdit = {};
-      }
-    },
-    async save() {
-      this.$store
-        .dispatch('updateGroupe', {
-          groupeId: this.groupeEdit.id,
-          data: {
-            ...this.groupeEdit,
-          },
-        })
-        .then(() => {
-          this.$awn.success('Groupe modifié avec succès');
-        })
-        .catch((errors) => {
-          this.errors = { ...errors };
-          this.$awn.alert(
-            errors.message || 'Erreur lors de la modification du groupe',
-          );
-        });
-    },
-    up() {
-      this.$refs.groupeEdition.up(this.active);
-    },
-    down() {
-      this.$refs.groupeEdition.down(this.active);
-    },
-    right() {
-      this.$refs.groupeEdition.right(this.active);
-    },
-    left() {
-      this.$refs.groupeEdition.left(this.active);
-    },
-    deleteGroupe() {
-      if (this.activeIsGroupe) {
-        this.SHOW_MODAL({
-          component: 'ModalConfirmation',
-          data: {
-            title: 'Voulez-vous vraiment supprimer ce groupe ?',
-            question:
-              "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-          },
-          callback: (confirmed) => {
-            if (confirmed) {
-              this.$store.dispatch('deleteGroupe', this.active.data.id);
-            }
-          },
-        });
-      } else {
-        this.$awn.warning(
-          'Sélectionnez un groupe afin de pouvoir le supprimer.',
-        );
-      }
-    },
-    addGroupe() {
-      this.SHOW_MODAL({
-        component: 'ModalGroupe',
-      });
-    },
-    addSapeurs(node) {
-      if (!this.groupesTypes.includes(node.data.type)) {
-        return;
-      }
-      const id = node.data.id;
-      const groupe = this.groupes.find((g) => g.id == id);
-      const data = {
-        ids: groupe.sapeur_ids.map((s) => s.sapeur_id).slice(0),
-      };
-
-      const svm = this;
-      const callback = (res) => {
-        if (!res) {
-          return;
-        }
-        const { tous } = res;
-        return svm.$store.dispatch('updateGroupeSapeurs', {
-          groupeId: id,
-          sapeurIds: tous,
-        });
-      };
-
-      this.SHOW_MODAL({
-        component: 'ModalSapeurSelect',
-        size: 2,
-        callback,
-        data,
-      });
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

@@ -31,11 +31,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PageRta',
-};
-</script>
-
-<style lang="scss" scoped></style>

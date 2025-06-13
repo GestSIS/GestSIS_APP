@@ -1,3 +1,33 @@
+<script>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const email = ref(null);
+const error = ref({});
+const sent = ref(false);
+
+const store = useStore();
+
+const request = async () => {
+  if (email.value?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
+    error.value = {
+      email: 'Email invalid',
+    };
+    return;
+  }
+
+  store
+    .dispatch('forgottenPassword', email.value)
+    .then(() => {
+      error.value = {};
+      sent.value = true;
+    })
+    .catch((err) => {
+      error.value = err;
+    });
+};
+</script>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin" @submit.prevent="request">
@@ -46,40 +76,6 @@
     </form>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PageForgottenPassword',
-  data() {
-    return {
-      email: null,
-      password: null,
-      error: {},
-      sent: false,
-    };
-  },
-  methods: {
-    async request() {
-      if (this.email?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
-        this.error = {
-          email: 'Email invalid',
-        };
-        return;
-      }
-
-      this.$store
-        .dispatch('forgottenPassword', this.email)
-        .then(() => {
-          this.error = {};
-          this.sent = true;
-        })
-        .catch((error) => {
-          this.error = error;
-        });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .centered {

@@ -1,3 +1,27 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import SisSelection from '/src/components/sis/SisSelection.vue';
+import links from '/src/router/menu.js';
+
+const store = useStore();
+
+const isAdmin = computed(() => store.state.auth.admin);
+const isSapeur = computed(() => store.state.auth.sapeurId);
+const perms = computed(() => store.state.auth.sis.permissions);
+
+const filteredLinks = computed(() =>
+  links.filter(
+    (l) =>
+      (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
+      perms.value?.includes(l.permission) ||
+      perms.value?.filter((p) => new Set(l.permissions).has(p)).length ||
+      (isAdmin.value && !l.sapeur) ||
+      (l.sapeur && isSapeur.value),
+  ),
+);
+</script>
+
 <template>
   <aside id="sidebar" class="bg-dark text-white p-3">
     <div class="sidebar-header ps-3 pe-3">
@@ -31,42 +55,6 @@
     </nav>
   </aside>
 </template>
-
-<script>
-import SisSelection from '/src/components/sis/SisSelection.vue';
-import links from '/src/router/menu.js';
-
-import { mapState } from 'vuex';
-
-export default {
-  name: 'MainSidebar',
-  components: {
-    SisSelection,
-  },
-  data() {
-    return {
-      links,
-    };
-  },
-  computed: {
-    ...mapState({
-      isAdmin: (state) => state.auth.admin,
-      isSapeur: (state) => state.auth.sapeurId,
-      perms: (state) => state.auth.sis.permissions,
-    }),
-    filteredLinks() {
-      return this.links.filter(
-        (l) =>
-          (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
-          this.perms?.includes(l.permission) ||
-          this.perms?.filter((p) => new Set(l.permissions).has(p)).length ||
-          (this.isAdmin && !l.sapeur) ||
-          (l.sapeur && this.isSapeur)
-      );
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .sidebar-icon {

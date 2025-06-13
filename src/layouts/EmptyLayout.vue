@@ -6,12 +6,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'EmptyLayout',
-};
-</script>
-
 <style scoped>
 .content {
   flex-grow: 1;

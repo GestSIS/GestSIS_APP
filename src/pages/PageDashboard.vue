@@ -1,3 +1,31 @@
+<script setup>
+import { computed } from 'vue';
+import links from '/src/router/menu.js';
+import { useStore } from 'vuex';
+import useHasPermission from '../hooks/usePermission';
+
+const store = useStore();
+store.dispatch('loadSisListe');
+
+const sis = computed(() =>
+  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId),
+);
+const isAdmin = computed(() => store.state.auth.admin);
+const isSapeur = computed(() => store.state.auth.sapeurId);
+const perms = computed(() => store.state.auth.sis.permissions);
+
+const filteredLinks = computed(() => {
+  return links.filter(
+    (l) =>
+      (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
+      perms.value?.includes(l.permission) ||
+      perms.value?.filter((p) => new Set(l.permissions).has(p)).length ||
+      (isAdmin.value && !l.sapeur) ||
+      (l.sapeur && isSapeur.value),
+  );
+});
+</script>
+
 <template>
   <div class="columns">
     <div class="album text-muted">
@@ -5,7 +33,6 @@
         <div class="row mt-5">
           <h2>Tableau de bord {{ sis?.nom }}</h2>
         </div>
-        <!-- <div>Loading {{ loading }}</div> -->
         <div class="row">
           <div
             v-for="m in filteredLinks"
@@ -33,52 +60,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState, mapGetters } from 'vuex';
-import links from '/src/router/menu.js';
-
-export default {
-  name: 'PageDashboard',
-  data() {
-    return {
-      links,
-    };
-  },
-  computed: {
-    ...mapState({
-      listeSis: (state) => state.auth.sis.liste,
-      sisId: (state) => state.auth.sis.activeId,
-      sisKey: (state) => state.auth.sis.activeKey,
-      sis: (state) =>
-        state.auth.sis.liste.find((s) => s.id == state.auth.sis.activeId),
-      isAdmin: (state) => state.auth.admin,
-      isSapeur: (state) => state.auth.sapeurId,
-      perms: (state) => state.auth.sis.permissions,
-    }),
-    ...mapGetters(['availableSisListe']),
-    filteredLinks() {
-      return this.links.filter(
-        (l) =>
-          (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
-          this.perms?.includes(l.permission) ||
-          this.perms?.filter((p) => new Set(l.permissions).has(p)).length ||
-          (this.isAdmin && !l.sapeur) ||
-          (l.sapeur && this.isSapeur)
-      );
-    },
-  },
-  created() {
-    if (this.listeSis.length <= 0) {
-      const self = this;
-      this.loading = true;
-      this.$store.dispatch('loadSisListe').then(() => {
-        self.loading = false;
-      });
-    }
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .img-fetch {

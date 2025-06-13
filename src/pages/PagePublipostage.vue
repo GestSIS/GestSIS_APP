@@ -1,3 +1,35 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../stores/common/Modal';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import PublipostageService from '/src/services/PublipostageService.js';
+
+const store = useStore();
+store.dispatch('fetchListeSapeur');
+
+const sapeurIds = ref([]);
+
+const publipostage = () => PublipostageService.downloadExcel(sapeurIds.value);
+
+const { showModal } = useModalStore();
+
+const resetSelection = () => (sapeurIds.value = []);
+const select = () => {
+  showModal({
+    component: 'ModalSapeurSelect',
+    size: 1,
+    callback: (res) => {
+      if (res) {
+        sapeurIds.value = res.tous;
+      }
+      return Promise.resolve();
+    },
+    data: { ids: sapeurIds.value.slice(0) },
+  });
+};
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -63,67 +95,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../stores/common/Modal';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import PublipostageService from '/src/services/PublipostageService.js';
-import store from '/src/store/index';
-
-function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-
-  Promise.all([loadSapeurs]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PagePublipostage',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      sapeurIds: [],
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    publipostage() {
-      PublipostageService.downloadExcel(this.sapeurIds);
-    },
-    select() {
-      const svm = this;
-      const data = {
-        ids: this.sapeurIds.slice(0),
-      };
-      const callback = (res) => {
-        if (res) {
-          svm.sapeurIds = res.tous;
-        }
-        return Promise.resolve();
-      };
-      this.SHOW_MODAL({
-        component: 'ModalSapeurSelect',
-        size: 1,
-        callback,
-        data,
-      });
-    },
-    resetSelection() {
-      this.sapeurIds = [];
-    },
-  },
-};
-</script>
 
 <style>
 .m-td-0 > td {

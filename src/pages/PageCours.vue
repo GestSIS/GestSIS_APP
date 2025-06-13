@@ -1,3 +1,81 @@
+<script setup>
+import { useStore } from 'vuex';
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { computed, ref, watch } from 'vue';
+
+const store = useStore();
+
+const loadLocalities = store.dispatch('fetchLocalites');
+const loadCours = store.dispatch('fetchCours');
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+const loadCoursSapeurs = store
+  .dispatch('fetchCoursSapeurs')
+  .then(() => (loading.value = false));
+
+await Promise.all([loadLocalities, loadCours, loadSapeurs, loadCoursSapeurs]);
+
+const sapeurs = computed(() =>
+  store.state.sapeur.liste.sort((a, b) =>
+    a.nom_prenom.localeCompare(b.nom_prenom),
+  ),
+);
+const coursTypes = computed(() =>
+  store.state.cours.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+const coursSapeurs = computed(() =>
+  store.state.coursSapeur.liste.sort((a, b) => a.date.localeCompare(b.date)),
+);
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+watch(
+  () => store.state.exerciceComptable.activeId,
+  () => {
+    loading.value = true;
+    store.dispatch('fetchCoursSapeurs').then(() => {
+      loading.value = false;
+    });
+  },
+);
+
+const computedData = computed(() =>
+  coursSapeurs.value.map((s) => ({
+    ...s,
+    localite: localites.value.find((l) => l.id == s.localite_id)?.designation,
+    designation: coursTypes.value.find((l) => l.id == s.cours_id)?.designation,
+    nom_prenom: sapeurs.value.find((l) => l.id == s.sapeur_id)?.nom_prenom,
+  })),
+);
+const filteredSapeurs = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => parseInt(i.sapeur_id)));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+const filteredCoursTypes = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => parseInt(i.cours_id)));
+  return coursTypes.value.filter((t) => ids.has(t.id));
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => parseInt(i.localite_id)));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Cours', key: 'designation' },
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Durée [jour]', key: 'duree' },
+  { title: 'Localité', key: 'localite' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="cours"
@@ -29,14 +107,14 @@
             <div class="card-body">
               <div class="row">
                 <base-select
-                  class="col-md-4"
+                  class="col-md-4 mb-1"
                   base-option="<Cours>"
                   :options="filteredCoursTypes"
                   :model-value="filters.cours_id"
                   @update:model-value="(value) => setFilter('cours_id', value)"
                 />
                 <base-select
-                  class="col-md-4"
+                  class="col-md-4 mb-1"
                   display-key="nom_prenom"
                   base-option="<Sapeur>"
                   :options="filteredSapeurs"
@@ -44,7 +122,7 @@
                   @update:model-value="(value) => setFilter('sapeur_id', value)"
                 />
                 <base-select
-                  class="col-md-4"
+                  class="col-md-4 mb-1"
                   base-option="<Localité>"
                   :options="filteredLocalites"
                   :model-value="filters.localite_id"
@@ -52,7 +130,7 @@
                     (value) => setFilter('localite_id', value)
                   "
                 />
-                <div v-if="canReset" class="col-md-4">
+                <div v-if="canReset" class="col-md-4 mb-1">
                   <button class="btn btn-sm btn-warning w-100" @click="reset">
                     Réinitialiser
                   </button>
@@ -80,108 +158,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-
-async function loadData(routeTo, next) {
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadCours = store.dispatch('fetchCours');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadCoursSapeurs = store.dispatch('fetchCoursSapeurs');
-
-  Promise.all([loadLocalities, loadCours, loadSapeurs, loadCoursSapeurs]).then(
-    () => {
-      next();
-    },
-  );
-}
-
-export default {
-  name: 'PageCours',
-  components: {
-    ExerciceComptable,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Cours', key: 'designation' },
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Durée [jour]', key: 'duree' },
-        { title: 'Localité', key: 'localite' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) =>
-        state.sapeur.liste.sort((a, b) =>
-          a.nom_prenom.localeCompare(b.nom_prenom),
-        ),
-      coursTypes: (state) =>
-        state.cours.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      coursSapeurs: (state) =>
-        state.coursSapeur.liste.sort((a, b) => a.date.localeCompare(b.date)),
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    computedData() {
-      return this.coursSapeurs.map((s) => ({
-        ...s,
-        localite: this.localites.find((l) => l.id == s.localite_id)
-          ?.designation,
-        designation: this.coursTypes.find((l) => l.id == s.cours_id)
-          ?.designation,
-        nom_prenom: this.sapeurs.find((l) => l.id == s.sapeur_id)?.nom_prenom,
-      }));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.coursSapeurs.map((i) => parseInt(i.sapeur_id)));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-    filteredCoursTypes() {
-      const ids = new Set(this.coursSapeurs.map((i) => parseInt(i.cours_id)));
-      return this.coursTypes.filter((t) => ids.has(t.id));
-    },
-    filteredLocalites() {
-      const ids = new Set(
-        this.coursSapeurs.map((i) => parseInt(i.localite_id)),
-      );
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchCoursSapeurs').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-};
-</script>
-
-<style></style>

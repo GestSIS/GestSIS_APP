@@ -1,3 +1,52 @@
+<script setup>
+import { onUnmounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const error = ref(null);
+const success = ref(null);
+const sec = ref(10);
+const interval = ref(null);
+
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
+const token = route.query.token;
+if (!token) {
+  router.push({ name: 'accueil' });
+} else {
+  store
+    .dispatch('confirmation', token)
+    .then(() => {
+      error.value = null;
+      success.value = true;
+      interval.value = setInterval(() => {
+        sec.value -= 1;
+        if (sec.value <= 0) {
+          clearInterval(interval.value);
+          router.push(
+            route.query.redirect ? route.query.redirect : { name: 'accueil' },
+          );
+        }
+      }, 1000);
+    })
+    .catch(({ error }) => {
+      error.value = error;
+    });
+}
+
+onUnmounted(() => {
+  clearInterval(interval.value);
+});
+
+const redirect = () => {
+  router.push(
+    route.query.redirect ? route.query.redirect : { name: 'accueil' },
+  );
+};
+</script>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin" _lpchecked="1">
@@ -22,59 +71,6 @@
     </form>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PageConfirmation',
-  data() {
-    return {
-      error: null,
-      success: null,
-      sec: 10,
-      interval: null,
-    };
-  },
-  mounted() {
-    const token = this.$route.query.token;
-    if (!token) {
-      this.$router.push({ name: 'accueil' });
-    } else {
-      this.$store
-        .dispatch('confirmation', token)
-        .then(() => {
-          this.error = null;
-          this.success = true;
-          this.interval = setInterval(() => {
-            this.sec -= 1;
-            if (this.sec <= 0) {
-              clearInterval(this.interval);
-              this.$router.push(
-                this.$route.query.redirect
-                  ? this.$route.query.redirect
-                  : { name: 'accueil' }
-              );
-            }
-          }, 1000);
-        })
-        .catch(({ error }) => {
-          this.error = error;
-        });
-    }
-  },
-  unmounted() {
-    clearInterval(this.interval);
-  },
-  methods: {
-    redirect() {
-      this.$router.push(
-        this.$route.query.redirect
-          ? this.$route.query.redirect
-          : { name: 'accueil' }
-      );
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .centered {

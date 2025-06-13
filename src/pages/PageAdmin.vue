@@ -32,27 +32,3 @@
     </div>
   </div>
 </template>
-
-<script>
-// import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([loadExercicesComptables]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'PageAdmin',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  // components: { ExerciceComptable },
-};
-</script>

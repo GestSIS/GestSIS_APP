@@ -1,3 +1,46 @@
+<script setup>
+import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { TokenService } from '../services/StorageService.js';
+import { useStore } from 'vuex';
+import * as data from '../../releases.json';
+import { computed, ref } from 'vue';
+
+const releases = ref(data.releases);
+const all = ref(false);
+const nbNew = ref(0);
+const accessToken = ref(TokenService.getAccessToken());
+const refreshToken = ref(TokenService.getRefreshToken());
+
+const store = useStore();
+const isAdmin = computed(() => store.state.auth.admin);
+
+const date = localStorage.getItem('latestReleaseDate', releases.value[0].date);
+const version = localStorage.getItem(
+  'latestSeenVersion',
+  releases.value[0].version,
+);
+localStorage.setItem('latestReleaseDate', releases.value[0].date);
+localStorage.setItem('latestSeenVersion', releases.value[0].version);
+
+const latestReadIndex = releases.value.findIndex((r) => r.date == date);
+if (latestReadIndex < 0) {
+  nbNew.value = releases.value.length;
+} else {
+  nbNew.value = latestReadIndex;
+  if (releases.value[latestReadIndex].version != version) {
+    nbNew.value++;
+  }
+}
+
+const refreshTokens = () =>
+  store.dispatch('refreshToken').then(() => {
+    accessToken.value = TokenService.getAccessToken();
+    refreshToken.value = TokenService.getRefreshToken();
+  });
+
+const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -145,69 +188,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { TokenService } from '../services/StorageService.js';
-import { mapState } from 'vuex';
-import * as data from '../../releases.json';
-
-export default {
-  name: 'PageAbout',
-  components: {
-    ExerciceComptable,
-  },
-  data: () => {
-    return {
-      releases: data.releases,
-      all: false,
-      nbNew: 0,
-      accessToken: '',
-      refreshToken: '',
-    };
-  },
-  computed: {
-    ...mapState({
-      isAdmin: (state) => state.auth.admin,
-    }),
-  },
-  mounted() {
-    this.accessToken = TokenService.getAccessToken();
-    this.refreshToken = TokenService.getRefreshToken();
-
-    const date = localStorage.getItem(
-      'latestReleaseDate',
-      this.releases[0].date
-    );
-    const version = localStorage.getItem(
-      'latestSeenVersion',
-      this.releases[0].version
-    );
-    const latestReadIndex = this.releases.findIndex((r) => r.date == date);
-    if (latestReadIndex < 0) {
-      this.nbNew = this.releases.length;
-    } else {
-      this.nbNew = latestReadIndex;
-      if (this.releases[latestReadIndex].version != version) {
-        this.nbNew++;
-      }
-    }
-
-    localStorage.setItem('latestReleaseDate', this.releases[0].date);
-    localStorage.setItem('latestSeenVersion', this.releases[0].version);
-  },
-  methods: {
-    refreshTokens() {
-      this.$store.dispatch('refreshToken').then(() => {
-        this.accessToken = TokenService.getAccessToken();
-        this.refreshToken = TokenService.getRefreshToken();
-      });
-    },
-    copyToClipboard(text) {
-      navigator.clipboard.writeText(text);
-    },
-  },
-};
-</script>
-
-<style></style>

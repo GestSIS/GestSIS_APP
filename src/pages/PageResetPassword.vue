@@ -1,3 +1,64 @@
+<script setup>
+import { onUnmounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const route = useRoute();
+const router = useRouter();
+const store = useStore();
+
+const password = ref(null);
+const password_confirmation = ref(null);
+const token = ref(route.query.token);
+const error = ref({});
+const reseted = ref(false);
+const time = ref(10);
+const timeInterval = ref(null);
+
+if (!token.value) {
+  router.push({ name: 'public' });
+}
+
+onUnmounted(() => {
+  if (timeInterval.value) {
+    clearInterval(timeInterval.value);
+  }
+});
+
+const reset = async () => {
+  if (password.value.length < 8) {
+    error.value['password'] = 'Mot de passe trop court (min 8 charactères)';
+    return;
+  }
+  error.value = {};
+  store
+    .dispatch('resetPassword', {
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+      token: token.value || null,
+    })
+    .then(() => {
+      error.value = {};
+      reseted.value = true;
+      if (!timeInterval.value) {
+        timeInterval.value = setInterval(() => {
+          if (time.value <= 0) {
+            clearInterval(timeInterval.value);
+            router.push(
+              route.query.redirect ? route.query.redirect : 'accueil',
+            );
+          } else {
+            time.value--;
+          }
+        }, 1000);
+      }
+    })
+    .catch((data) => {
+      error.value = { ...(data?.error ?? {}) };
+    });
+};
+</script>
+
 <template>
   <div class="centered">
     <form class="text-center form-signin d-grid" @submit.prevent="reset">
@@ -63,70 +124,6 @@
     </form>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PageReset',
-  data() {
-    return {
-      password: null,
-      password_confirmation: null,
-      token: '',
-      error: {},
-      reseted: false,
-      time: 10,
-      timeInterval: null,
-    };
-  },
-  mounted() {
-    this.token = this.$route.query.token;
-    if (!this.token) {
-      this.$router.push({ name: 'public' });
-    }
-  },
-  unmounted() {
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval);
-    }
-  },
-  methods: {
-    async reset() {
-      if (this.password.length < 8) {
-        this.error['password'] = 'Mot de passe trop court (min 8 charactères)';
-        return;
-      }
-      this.error = {};
-      this.$store
-        .dispatch('resetPassword', {
-          password: this.password,
-          password_confirmation: this.password_confirmation,
-          token: this.token || null,
-        })
-        .then(() => {
-          this.error = {};
-          this.reseted = true;
-          if (!this.timeInterval) {
-            this.timeInterval = setInterval(() => {
-              if (this.time <= 0) {
-                clearInterval(this.timeInterval);
-                this.$router.push(
-                  this.$route.query.redirect
-                    ? this.$route.query.redirect
-                    : 'accueil'
-                );
-              } else {
-                this.time--;
-              }
-            }, 1000);
-          }
-        })
-        .catch((data) => {
-          this.error = { ...(data?.error ?? {}) };
-        });
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .centered {
