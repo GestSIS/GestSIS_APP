@@ -68,13 +68,16 @@
               :selectable="true"
               :fields="fields"
               :detail-row-column="true"
-              :detail-row-component="detailRowComponent"
-              :detail-row-options="detailRowOptions"
-              detail-row-class="m-td-0"
               no-data="Aucun sapeur à afficher"
               :data="filteredData"
               @selected="select"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission"
@@ -116,7 +119,6 @@ import store from '/src/store/index';
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import DecompteService from '../../services/DecompteService';
@@ -147,6 +149,9 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  components: {
+    GenericDetailsRow,
+  },
   props: {
     id: {
       type: String,
@@ -155,7 +160,6 @@ export default {
   },
   data() {
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       ecritures: [],
       selectedId: null,

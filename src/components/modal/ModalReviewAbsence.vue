@@ -287,7 +287,6 @@
               </tr>
             </template>
           </base-table>
-          <!-- :detail-row-component="detailRowComponent" -->
         </div>
       </div>
     </div>

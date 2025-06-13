@@ -96,13 +96,16 @@
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
               :detail-row-column-hide-button="(r) => r.statut !== 4"
-              :detail-row-component="detailRowComponent"
-              :detail-row-options="detailRowOptions"
-              detail-row-class="m-td-0"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission && rowData.statut === 3"
@@ -136,7 +139,6 @@ import store from '/src/store/index';
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
@@ -170,6 +172,7 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  components: { GenericDetailsRow },
   props: {
     id: {
       type: String,
@@ -179,7 +182,6 @@ export default {
   data() {
     const svm = this;
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       exercices: [],
       selectedItemId: null,

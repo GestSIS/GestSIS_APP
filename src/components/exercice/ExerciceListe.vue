@@ -156,13 +156,14 @@
               :selectable="true"
               :fields="fieldsBase"
               :detail-row-column="true"
-              :detail-row-component="detailRowComponent"
-              detail-row-class="m-td-0"
               no-data="Aucun exercice/séance à afficher"
               :data="filteredData"
               :row-class="onRowClass"
               @selected="selectExercice"
             >
+              <template #detail-row="{ rowData }">
+                <exercice-details :rowData="rowData" />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   title="SMS"
@@ -233,7 +234,6 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
@@ -260,12 +260,12 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  components: { ExerciceDetails },
   data() {
     return {
       loading: true,
       tab: 'exercice',
       selectedId: null,
-      detailRowComponent: markRaw(ExerciceDetails),
       fieldsBase: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Categorie', key: 'categorie' },

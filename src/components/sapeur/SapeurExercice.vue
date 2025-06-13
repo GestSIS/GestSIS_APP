@@ -16,10 +16,14 @@
         :fields="fields"
         :data="exercices"
         :selectable="true"
-        no-data="Aucun exercice pour le
-      moment"
-        :detail-row-component="detailRowComponent"
+        no-data="Aucune heure supp"
       >
+        <template #detail-row="{ rowData }">
+          <mes-heures-supp-detail-row
+            :options="detailRowOptions"
+            :rowData="rowData"
+          />
+        </template>
         <template #excuse="{ rowData }">
           <div class="text-center">
             <span
@@ -84,7 +88,6 @@ import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 
-import { markRaw } from 'vue';
 import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
 
 import store from '/src/store/index';
@@ -107,9 +110,9 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  components: { MesHeuresSuppDetailRow },
   data() {
     return {
-      detailRowComponent: markRaw(MesHeuresSuppDetailRow),
       fields: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Heure', key: 'heure', formatter: (h) => h.slice(0, 5) },

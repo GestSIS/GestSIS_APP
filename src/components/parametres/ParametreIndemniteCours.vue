@@ -12,11 +12,11 @@
         :data="computedData"
         :fields="fields"
         no-data="Aucune indemnité de cours"
-        detail-row-class="m-td-0"
         :detail-row-column="true"
-        :detail-row-component="detailRowComponent"
-        :detail-row-options="detailRowOptions"
       >
+        <template #detail-row="{ rowData }">
+          <generic-details-row :options="detailRowOptions" :rowData="rowData" />
+        </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">
             <button
@@ -45,7 +45,6 @@ import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
 import store from '/src/store/index';
-import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 async function loadData(_, next) {
@@ -66,9 +65,9 @@ export default {
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  components: { GenericDetailsRow },
   data() {
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       fields: [
         {
           title: 'Désignation',

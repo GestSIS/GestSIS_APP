@@ -18,11 +18,15 @@
             no-data="Aucune indemnité de cours"
             detail-row-class="m-td-0"
             :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            :detail-row-options="detailRowOptions"
             :selectable="true"
             @selected="(indemnite) => selectIndemnite(indemnite)"
           >
+            <template #detail-row="{ rowData }">
+              <generic-details-row
+                :options="detailRowOptions"
+                :rowData="rowData"
+              />
+            </template>
             <template #actions="{ rowData }">
               <td class="align-middle text-center">
                 <button
@@ -106,12 +110,12 @@ import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '/src/components/MultiStep.vue';
-import { markRaw } from 'vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 export default {
   name: 'ModalImputerExercice',
   components: { MultiStep },
+  components: { GenericDetailsRow },
   props: {
     data: {
       type: Object,
@@ -125,7 +129,6 @@ export default {
   data() {
     return {
       phase: 1,
-      detailRowComponent: markRaw(GenericDetailsRow),
       fields: [
         { title: 'Désignation', key: 'designation' },
         { title: 'Catégorie comptable', key: 'categorie' },

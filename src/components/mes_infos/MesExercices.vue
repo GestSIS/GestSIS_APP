@@ -1,7 +1,6 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject, markRaw, watch } from 'vue';
-import MesHeuresSuppDetailRow from './MesHeuresSuppDetailRow.vue';
+import { computed, inject, watch } from 'vue';
 import { exercicesToIcs } from '../../tools/exportExercices';
 import ExerciceService from '../../services/ExerciceService';
 import { useStore } from 'vuex';
@@ -100,7 +99,6 @@ const downloadJustificatif = (exercice) => {
 };
 const onRowClass = (dataItem) => (dataItem.statut == 0 ? 'table-danger' : '');
 
-const detailRowComponent = markRaw(MesHeuresSuppDetailRow);
 const fields = [
   { title: 'Date', key: 'date', type: Date },
   { title: 'Heure', key: 'heure', formatter: (h) => h?.slice(0, 5) },
@@ -144,7 +142,6 @@ const fields = [
         :selectable="true"
         :hide-download="true"
         no-data="Aucun exercice pour le moment"
-        :detail-row-component="detailRowComponent"
         :row-class="onRowClass"
       >
         <template #excuse="{ rowData }">

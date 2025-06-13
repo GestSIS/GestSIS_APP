@@ -96,12 +96,16 @@
               no-data="Aucun travail à afficher"
               :detail-row-column="true"
               :detail-row-column-hide-button="(r) => r.statut !== 2"
-              :detail-row-component="detailRowComponent"
-              :detail-row-options="detailRowOptions"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission && rowData.statut == 2"
@@ -133,7 +137,6 @@ import store from '/src/store/index';
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
@@ -172,9 +175,9 @@ export default {
       default: '',
     },
   },
+  components: { GenericDetailsRow },
   data() {
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       selectedId: null,
       detailRowOptions: {

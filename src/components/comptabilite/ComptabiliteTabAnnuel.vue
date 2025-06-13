@@ -62,12 +62,15 @@
               :row-class="onRowClass"
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
-              :detail-row-component="detailRowComponent"
-              :detail-row-options="detailRowOptions"
-              detail-row-class="m-td-0 p-0"
               :selectable="true"
               @selected="selected"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission"
@@ -106,7 +109,6 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
@@ -123,6 +125,7 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'FraisTabAnnuel',
+  components: { GenericDetailsRow },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
@@ -132,7 +135,6 @@ export default {
   data() {
     const svm = this;
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       selectedId: null,
       detailRowOptions: {

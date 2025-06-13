@@ -13,9 +13,6 @@ const {
   rowSelectedClass,
   detailRowColumn,
   detailRowColumnHideButton,
-  detailRowComponent,
-  detailRowOptions,
-  detailRowClass,
   hideDownload,
 } = defineProps({
   data: {
@@ -69,18 +66,6 @@ const {
     type: Function,
     default: () => false,
   },
-  detailRowComponent: {
-    type: Object,
-    default: () => {},
-  },
-  detailRowOptions: {
-    type: Object,
-    default: () => {},
-  },
-  detailRowClass: {
-    type: String,
-    default: () => '',
-  },
   hideDownload: {
     type: Boolean,
     default: () => false,
@@ -96,7 +81,7 @@ const sorted = ref({
 });
 const selected = ref(null);
 const detailsRowVisibility = ref(
-  !!slots['detail-row'] || detailRowComponent
+  !!slots['detail-row']
     ? Object.fromEntries(data.map((d) => [d[selectKey], false]))
     : {},
 );
@@ -259,7 +244,11 @@ defineExpose({
       <span class="visually-hidden">Chargement...</span>
     </div>
   </div>
-  <table v-show="!loading" class="table table-sm table-hover mb-0">
+  <table
+    v-show="!loading"
+    class="table table-sm table-hover mb-0"
+    v-bind="$attrs"
+  >
     <slot name="head">
       <thead>
         <tr>
@@ -455,18 +444,7 @@ defineExpose({
             class="p-0 detail-row"
           >
             <div>
-              <slot name="detail-row" v-bind="{ rowData: r }">
-                <component
-                  :is="detailRowComponent"
-                  :options="detailRowOptions"
-                  :class="detailRowClass"
-                  v-bind="{
-                    visible: detailsRowVisibility[r[selectKey]],
-                    rowData: r,
-                  }"
-                >
-                </component>
-              </slot>
+              <slot name="detail-row" v-bind="{ rowData: r }"></slot>
             </div>
           </td>
         </tr>

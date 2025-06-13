@@ -15,10 +15,6 @@ export default {
       type: Object,
       required: true,
     },
-    rowIndex: {
-      type: Number,
-      default: () => {},
-    },
     options: {
       type: Object,
       default: () => {},

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, markRaw, watch } from 'vue';
+import { computed, watch } from 'vue';
 import InterventionPresenceDetails from '/src/components/mes_infos/InterventionPresenceDetails.vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { useStore } from 'vuex';
@@ -56,7 +56,6 @@ const fields = [
   { title: 'Lieu', key: 'lieu' },
   { title: 'Objet', key: 'objet' },
 ];
-const detailRowComponent = markRaw(InterventionPresenceDetails);
 const detailRowOptions = {
   fields: [
     {
@@ -92,10 +91,16 @@ const detailRowOptions = {
         :data="computedInterventions"
         :selectable="true"
         :hide-download="true"
-        :detail-row-options="detailRowOptions"
-        :detail-row-component="detailRowComponent"
+        :detail-row-column="true"
         no-data="Aucune intervention pour le moment"
-      />
+      >
+        <template #detail-row="{ rowData }">
+          <intervention-presence-details
+            :options="detailRowOptions"
+            :rowData="rowData"
+          />
+        </template>
+      </base-table>
     </div>
   </div>
 </template>

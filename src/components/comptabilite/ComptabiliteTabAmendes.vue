@@ -50,13 +50,16 @@
               :row-class="onRowClass"
               no-data="Aucune amende à afficher"
               :detail-row-column="true"
-              :detail-row-options="detailRowOptions"
-              :detail-row-component="detailRowComponent"
-              detail-row-class="m-td-0"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #foot="{ data }">
                 <tr>
                   <th :colspan="data.length ? 3 : 2">Total</th>
@@ -80,7 +83,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import store from '/src/store/index';
@@ -104,9 +106,11 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  components: {
+    GenericDetailsRow,
+  },
   data() {
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: true,
       detailRowOptions: {
         fields: [

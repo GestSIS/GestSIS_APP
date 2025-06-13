@@ -83,10 +83,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 
-import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 async function loadData(routeTo, next) {
@@ -120,7 +118,6 @@ export default {
     return {
       loading: true,
       selectedId: null,
-      detailRowComponent: markRaw(ExerciceDetails),
       fields: [
         { title: 'Date', key: 'date', type: Date },
         { title: 'Cours', key: 'designation' },

@@ -102,13 +102,17 @@
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
               :detail-row-column-hide-button="(r) => r.statut !== 3"
-              :detail-row-component="detailRowComponent"
-              :detail-row-options="detailRowOptions"
               detail-row-class="m-td-0"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
             >
+              <template #detail-row="{ rowData }">
+                <generic-details-row
+                  :options="detailRowOptions"
+                  :rowData="rowData"
+                />
+              </template>
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission && rowData.statut === 2"
@@ -131,7 +135,6 @@ import store from '/src/store/index';
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
@@ -163,13 +166,13 @@ async function loadData(_, next) {
 
 export default {
   name: 'ComptabiliteTabIntervention',
-
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
+  components: { GenericDetailsRow },
   props: {
     id: {
       type: String,
@@ -185,7 +188,6 @@ export default {
         { id: 3, designation: 'Moyenne' },
         { id: 4, designation: 'Grande' },
       ],
-      detailRowComponent: markRaw(GenericDetailsRow),
       loading: false,
       selectedItemId: null,
       detailRowOptions: {

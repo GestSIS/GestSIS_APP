@@ -111,12 +111,15 @@
             :data="computedData"
             :selectable="true"
             :detail-row-column="true"
-            :detail-row-component="detailRowComponent"
-            :detail-row-options="detailRowOptions"
-            detail-row-class="m-td-0"
             no-data="Aucun décompte existant pour l'instant, cliquez sur le bouton 'nouveau' pour en générer un."
             @selected="selected"
           >
+            <template #detail-row="{ rowData }">
+              <generic-details-row
+                :options="detailRowOptions"
+                :rowData="rowData"
+              />
+            </template>
             <template #actions="{ value }">
               <!-- <button type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
@@ -141,7 +144,6 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { markRaw } from 'vue';
 import store from '/src/store/index';
 import DecompteService from '/src/services/DecompteService.js';
 
@@ -167,10 +169,10 @@ export default {
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
+  components: { GenericDetailsRow },
   data() {
     const svm = this;
     return {
-      detailRowComponent: markRaw(GenericDetailsRow),
       dropdown: false,
       loading: true,
       selectedId: 0,
