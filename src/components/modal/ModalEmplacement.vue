@@ -19,6 +19,7 @@ const errors = ref({});
 const emplacement = ref({
   statut: 1,
   est_etiquete: false,
+  est_compartimentable: false,
   ...data,
 });
 
@@ -59,6 +60,11 @@ const save = async () => {
       <base-checkbox
         v-model="emplacement.est_etiquete"
         label="Est etiqueté"
+        class="mb-3"
+      />
+      <base-checkbox
+        v-model="emplacement.est_compartimentable"
+        label="Est compartimenté"
         class="mb-3"
       />
       <base-checkbox v-model="emplacement.statut" label="Actif" class="mb-3" />

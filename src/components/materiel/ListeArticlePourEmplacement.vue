@@ -11,6 +11,7 @@ import useHasPermission from '../../hooks/usePermission';
 import TableArticlePourEmplacement from './TableArticlePourEmplacement.vue';
 import TableArticlePourType from './TableArticlePourType.vue';
 import { useModalStore } from '../../stores/common/Modal';
+import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 
 const { id } = defineProps({
   id: {
@@ -20,6 +21,7 @@ const { id } = defineProps({
 });
 
 const materielCategorieStore = useMaterielCategorieStore();
+const emplacementStore = useEmplacementStore();
 const materielTypeStore = useMaterielTypeStore();
 const couleurStore = useCouleurStore();
 
@@ -28,7 +30,9 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(false);
-
+const emplacement = computed(() =>
+  emplacementStore.liste.find((e) => e.id === parseInt(id)),
+);
 const loadArticles = async () => {
   loading.value = true;
   articles.value = await ArticleService.getParEmplacement(id);
@@ -110,7 +114,9 @@ const linearCategories = (categorieId) => {
 
 const colonnes = computed(() => [
   { title: 'Type', key: 'typeDesignation' },
-  { title: 'Compartiment', key: 'compartiment' },
+  ...(emplacement.value?.est_compartimentable
+    ? [{ title: 'Compartiment', key: 'compartiment' }]
+    : []),
   { title: 'Quantité', key: 'quantite' },
 ]);
 
@@ -174,6 +180,7 @@ const ajouter = () =>
         :loading="loading"
         :articles="computedData"
         :refresh="loadArticles"
+        :emplacement="emplacement"
       />
       <base-table
         v-else
@@ -192,6 +199,7 @@ const ajouter = () =>
             :avec-emplacement="false"
             :materielType="rowData.type"
             :refresh="loadArticles"
+            :emplacement="emplacement"
           />
         </template>
 

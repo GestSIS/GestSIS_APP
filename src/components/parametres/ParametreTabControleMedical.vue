@@ -65,12 +65,6 @@ export default {
   data() {
     return { tab: 'medecin' };
   },
-  methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
-  },
 };
 </script>
 

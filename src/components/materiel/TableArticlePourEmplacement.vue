@@ -10,7 +10,7 @@ import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 
-const { loading, articles, hideDownload, refresh } = defineProps({
+const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   loading: {
     type: Boolean,
     required: true,
@@ -21,6 +21,10 @@ const { loading, articles, hideDownload, refresh } = defineProps({
   },
   articles: {
     type: Array,
+    required: true,
+  },
+  emplacement: {
+    type: Object,
     required: true,
   },
   refresh: {
@@ -51,7 +55,9 @@ const linearCategories = (categorieId) => {
 
 const piecesColonnes = computed(() => [
   { title: 'Type', key: 'typeDesignation' },
-  { title: 'Compartiment', key: 'compartiment' },
+  ...(emplacement?.est_compartimentable
+    ? [{ title: 'Compartiment', key: 'compartiment' }]
+    : []),
   { title: 'Numéro', key: 'numero' },
   { title: 'Taille', key: 'taille' },
   { title: 'Remarque', key: 'remarque' },

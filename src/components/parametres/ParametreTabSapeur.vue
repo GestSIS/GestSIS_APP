@@ -72,12 +72,6 @@ export default {
   data() {
     return { tab: 'cours' };
   },
-  methods: {
-    // newExerciceComptable() {
-    // },
-    // save() {
-    // },
-  },
 };
 </script>
 

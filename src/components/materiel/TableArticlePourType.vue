@@ -9,33 +9,43 @@ import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 
-const { loading, articles, materielType, avecEmplacement, refresh } =
-  defineProps({
-    loading: {
-      type: Boolean,
-      required: true,
-    },
-    hideDownload: {
-      type: Boolean,
-      default: () => false,
-    },
-    avecEmplacement: {
-      type: Boolean,
-      default: () => true,
-    },
-    articles: {
-      type: Array,
-      required: true,
-    },
-    materielType: {
-      type: Object,
-      required: true,
-    },
-    refresh: {
-      type: Function,
-      required: true,
-    },
-  });
+const {
+  loading,
+  articles,
+  materielType,
+  avecEmplacement,
+  emplacement,
+  refresh,
+} = defineProps({
+  loading: {
+    type: Boolean,
+    required: true,
+  },
+  hideDownload: {
+    type: Boolean,
+    default: () => false,
+  },
+  avecEmplacement: {
+    type: Boolean,
+    default: () => true,
+  },
+  emplacement: {
+    type: Object,
+    default: () => {},
+  },
+  articles: {
+    type: Array,
+    required: true,
+  },
+  materielType: {
+    type: Object,
+    required: true,
+  },
+  refresh: {
+    type: Function,
+    required: true,
+  },
+});
 
 const couleurStore = useCouleurStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
@@ -47,7 +57,9 @@ const colonnes = computed(() => [
   ...(avecEmplacement
     ? [{ title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' }]
     : []),
-  { title: 'Compartiment', key: 'compartiment' },
+  ...(avecEmplacement || emplacement?.est_compartimentable // TODO: Check si un emplacement est compartimentable pour remplacer le test est_compartimentable
+    ? [{ title: 'Compartiment', key: 'compartiment' }]
+    : []),
   ...(materielType.type === 3
     ? [
         { title: 'Désignation', key: 'designation' },
