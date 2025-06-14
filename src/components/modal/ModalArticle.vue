@@ -17,7 +17,7 @@ const { data, callback } = defineProps({
 });
 
 const errors = ref({});
-const activeItem = ref({ ...data });
+const activeItem = ref({quantite:1, ...data });
 
 const typeStore = useMaterielTypeStore();
 await typeStore.fetchMaterielTypes();
@@ -37,9 +37,9 @@ const save = async () => {
       callback();
     })
     .catch(
-      (errors) =>
+      (err) =>
         (errors.value = {
-          ...errors,
+          ...err,
         }),
     );
 };
