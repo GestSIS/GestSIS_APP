@@ -1,3 +1,55 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import useHasPermission from '../../hooks/usePermission.js';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+
+const store = useStore();
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurGrades', store.state.sapeur.active.id);
+  loading.value = false;
+});
+await store.dispatch('fetchGrades');
+
+const activeSapeurGrades = computed(() =>
+  store.state.sapeur.active.grades
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((g) => ({
+      ...g,
+      designation: store.state.grade.liste.find(
+        (grade) => grade.id == g.grade_id,
+      )?.designation,
+    })),
+);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const { showModal, confirm } = useModalStore();
+const newGrade = () => {
+  store.dispatch('resetActiveGrade');
+  showModal('ModalSapeurPromotion');
+};
+const editGrade = (grade) => {
+  store.dispatch('updateActiveGrade', Object.assign({}, grade));
+  showModal('ModalSapeurPromotion');
+};
+const supprimerGrade = (grade) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce grade ?',
+    "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
+  ).then(() => store.dispatch('removeSapeurGrade', grade?.id));
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Remarques', key: 'remarques' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -13,6 +65,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :fields="fields"
         :data="activeSapeurGrades"
         no-data="Aucun grade"
@@ -39,96 +92,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  const loadSapeurGrade = store.dispatch('fetchSapeurGrades');
-
-  Promise.all([loadSapeurGrade]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurPromotion',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Remarques', key: 'remarques' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurGrades: (state) =>
-        state.sapeur.active.grades
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map((g) => ({
-            ...g,
-            designation: state.grade.liste.find(
-              (grade) => grade.id == g.grade_id,
-            )?.designation,
-          })),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGrades', id);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchGrades');
-    this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    formatGrade(grade) {
-      return grade?.designation;
-    },
-    newGrade() {
-      this.$store.dispatch('resetActiveGrade');
-      this.SHOW_MODAL('ModalSapeurPromotion');
-    },
-    editGrade(grade) {
-      this.$store.dispatch('updateActiveGrade', Object.assign({}, grade));
-      this.SHOW_MODAL('ModalSapeurPromotion');
-    },
-    supprimerGrade(grade) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce grade ?',
-          question:
-            "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeSapeurGrade', grade?.id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

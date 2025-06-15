@@ -1,3 +1,27 @@
+<script setup>
+import { computed, inject, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+
+const store = useStore();
+const awn = inject('awn');
+
+const activeSapeur = computed(() => store.state.sapeur.active.data);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+watchEffect(() => store.dispatch('fetchSapeur', store.state.sapeur.active.id));
+
+const save = async () => {
+  store
+    .dispatch('saveActiveSapeur', {
+      iban: activeSapeur.value.iban,
+    })
+    .then(() => awn.success('Modification enregistrée'))
+    .catch((err) => awn.alert(err?.message ?? 'Erreur lors la sauvegarde'));
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-12">
@@ -29,42 +53,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'SapeurBanque',
-  computed: {
-    ...mapState({
-      activeSapeur: (state) => state.sapeur.active.data,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeur', id);
-    },
-  },
-  methods: {
-    async save() {
-      this.$store
-        .dispatch('saveActiveSapeur', {
-          iban: this.activeSapeur.iban,
-        })
-        .then(() => {
-          this.$awn.success('Modification enregistrée');
-        })
-        .catch((err) => {
-          this.$awn.alert(err?.message ?? 'Erreur lors la sauvegarde');
-        });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

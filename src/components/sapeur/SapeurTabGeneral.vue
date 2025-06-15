@@ -1,3 +1,138 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+
+import SapeurService from '../../services/SapeurService.js';
+import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+const errors = ref({});
+const defaultPhoto = ref('');
+const photo = ref(null); //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
+
+store.dispatch('fetchCivilites');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchGrades');
+store.dispatch('fetchFonctions');
+
+watchEffect(async () => {
+  const sapeurId = store.state.sapeur.active.id ?? 0;
+  if (sapeurId > 0) {
+    if (store.state.sapeur.active.data.type === 0) {
+      SapeurService.fetchPhoto(sapeurId).then((p) => {
+        photo.value = p;
+      });
+    }
+  }
+});
+
+const activeSapeur = computed(() => store.state.sapeur.active.data);
+const activeSapeurId = computed(() => store.state.sapeur.active.id ?? 0);
+const estSapeur = computed(() => store.state.sapeur.active.data.type === 0);
+const civilites = computed(() => store.state.baseData.civilites);
+const localites = computed(() =>
+  store.state.localite.liste.map((l) => ({
+    ...l,
+    npa_localite: `${l.npa} ${l.designation}`,
+  })),
+);
+const fonctions = computed(() => store.state.fonction.liste);
+const grades = computed(() => store.state.grade.liste);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const { showModal, confirm } = useModalStore();
+const awn = inject('awn');
+
+const saveSapeur = async () => {
+  let fields = [
+    'civilite_id',
+    'nom',
+    'prenom',
+    'rue',
+    'no_rue',
+    'localite_id',
+    'no_av',
+    'email',
+    'date_naissance',
+    'suffixe',
+    'remarque',
+  ];
+  let saveSapeur = Object.assign({}, activeSapeur.value);
+  for (let key in Object.keys(saveSapeur)) {
+    if (!fields.includes(key)) {
+      delete saveSapeur[key];
+    }
+  }
+  store
+    .dispatch('saveActiveSapeur', saveSapeur)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res.message || 'Modifications sauvegardées');
+    })
+    .catch((err) => {
+      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
+      errors.value = err;
+    });
+};
+const saveNonSapeurStatut = async () => {
+  let saveSapeur = {
+    id: activeSapeur.value.id,
+    actif: activeSapeur.value.actif,
+  };
+  store
+    .dispatch('saveNonSapeurStatut', saveSapeur)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res.message || 'Modifications sauvegardées');
+    })
+    .catch((err) => {
+      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
+      errors.value = err;
+    });
+};
+const saveSapeurRefPro = () =>
+  store
+    .dispatch('saveActiveSapeur', {
+      profession: activeSapeur.value.profession,
+      employeur: activeSapeur.value.employeur,
+      lieu_de_travail: activeSapeur.value.lieu_de_travail,
+    })
+    .then((res) => {
+      awn.success(res.message || 'Modifications sauvegardées');
+    })
+    .catch((err) => {
+      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
+    });
+const supprimerPhoto = () =>
+  confirm(
+    `Voulez-vous vraiment supprimer cette photo ?`,
+    'Attention, cette action est irréversible ! La photo sera perdue.',
+  ).then(() =>
+    SapeurService.deletePhoto(activeSapeurId.value).then(() => {
+      photo.value = null;
+    }),
+  );
+const editPhoto = () =>
+  showModal({
+    component: 'ModalPhotoSapeur',
+    size: 1,
+    data: photo.value,
+    callback: (data) => {
+      if (!data) {
+        return;
+      }
+      return SapeurService.updatePhoto(activeSapeurId.value, data?.blob).then(
+        () => {
+          photo.value = data?.image;
+        },
+      );
+    },
+  });
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
@@ -271,7 +406,7 @@
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Photo</h3>
           <button
-            v-if="hasEditPermission"
+            v-if="photo && hasEditPermission"
             class="ms-auto me-2 btn btn-outline-danger"
             @click="supprimerPhoto"
           >
@@ -340,202 +475,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import SapeurService from '../../services/SapeurService.js';
-import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  if (routeTo.params.id == 'ajout') {
-    next();
-  } else {
-    const sapeurId = parseInt(routeTo.params.id);
-    await store.dispatch('selectSapeur', sapeurId);
-
-    const loadTelephones = store.dispatch('fetchSapeurTelephones');
-    const loadTelephonesType = store.dispatch('fetchTelephoneTypes');
-    const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
-
-    Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
-      next();
-    });
-  }
-}
-
-export default {
-  name: 'SapeurTabGeneral',
-  components: {
-    SapeurTelephones,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      errors: {},
-      defaultPhoto: '',
-      photo: null, //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeur: (state) => state.sapeur.active.data,
-      activeSapeurId: (state) => state.sapeur.active.id ?? 0,
-      estSapeur: (state) => state.sapeur.active.data.type === 0,
-      civilites: (state) => state.baseData.civilites,
-      localites: (state) =>
-        state.localite.liste.map((l) => ({
-          ...l,
-          npa_localite: `${l.npa} ${l.designation}`,
-        })),
-      fonctions: (state) => state.fonction.liste,
-      grades: (state) => state.grade.liste,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurId() {
-      this.errors = {};
-      if (this.activeSapeur.type === 0) {
-        SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
-          this.photo = photo;
-        });
-      }
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchCivilites');
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchGrades');
-    this.$store.dispatch('fetchFonctions');
-
-    // Photo uniquement pour les sapeurs
-    if (this.activeSapeur.type === 0) {
-      SapeurService.fetchPhoto(this.activeSapeurId).then((photo) => {
-        this.photo = photo;
-      });
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    async saveSapeur() {
-      let fields = [
-        'civilite_id',
-        'nom',
-        'prenom',
-        'rue',
-        'no_rue',
-        'localite_id',
-        'no_av',
-        'email',
-        'date_naissance',
-        'suffixe',
-        'remarque',
-      ];
-      let saveSapeur = Object.assign({}, this.activeSapeur);
-      for (let key in Object.keys(saveSapeur)) {
-        if (!fields.includes(key)) {
-          delete saveSapeur[key];
-        }
-      }
-      this.$store
-        .dispatch('saveActiveSapeur', saveSapeur)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res.message || 'Modifications sauvegardées');
-        })
-        .catch((err) => {
-          this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données",
-          );
-          this.errors = err;
-        });
-    },
-    async saveNonSapeurStatut() {
-      let saveSapeur = {
-        id: this.activeSapeur.id,
-        actif: this.activeSapeur.actif,
-      };
-      this.$store
-        .dispatch('saveNonSapeurStatut', saveSapeur)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res.message || 'Modifications sauvegardées');
-        })
-        .catch((err) => {
-          this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données",
-          );
-          this.errors = err;
-        });
-    },
-    async saveSapeurRefPro() {
-      this.$store
-        .dispatch('saveActiveSapeur', {
-          profession: this.activeSapeur.profession,
-          employeur: this.activeSapeur.employeur,
-          lieu_de_travail: this.activeSapeur.lieu_de_travail,
-        })
-        .then((res) => {
-          this.$awn.success(res.message || 'Modifications sauvegardées');
-        })
-        .catch((err) => {
-          this.$awn.alert(
-            err.message || "Erreur lors de l'enregistrement des données",
-          );
-        });
-    },
-    supprimerPhoto() {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: `Voulez-vous vraiment supprimer cette photo ?`,
-          question:
-            'Attention, cette action est irréversible ! La photo sera perdue.',
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            SapeurService.deletePhoto(this.activeSapeurId).then(() => {
-              this.photo = null;
-            });
-          }
-        },
-      });
-    },
-    editPhoto() {
-      this.SHOW_MODAL({
-        component: 'ModalPhotoSapeur',
-        size: 1,
-        data: this.photo,
-        callback: (data) => {
-          if (!data) {
-            return;
-          }
-          return SapeurService.updatePhoto(
-            this.activeSapeurId,
-            data?.blob,
-          ).then(() => {
-            this.photo = data?.image;
-          });
-        },
-      });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

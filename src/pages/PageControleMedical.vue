@@ -1,11 +1,10 @@
 <script setup>
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-
-import PdfViewer from '/src/components/pdf/PdfViewer.vue';
-import { useStore } from 'vuex';
 import { computed, inject, ref, useTemplateRef, watch } from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import useConfirmation from '../hooks/useConfirmation';
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
+import PdfViewer from '/src/components/pdf/PdfViewer.vue';
+import { useModalStore } from '../stores/common/Modal';
 
 const store = useStore();
 const router = useRouter();
@@ -37,7 +36,6 @@ await Promise.all([
 ]);
 
 const errors = ref({});
-const loading = ref(true);
 const pdfData = ref(null);
 const file = ref(null);
 
@@ -152,7 +150,7 @@ const ajoutJustificatif = () => {
     store.dispatch('addJustificatif', file);
   }
 };
-const { confirm } = useConfirmation();
+const { confirm } = useModalStore();
 const removeJustificatif = () =>
   confirm(
     'Voulez-vous vraiment supprimer ce justificatif ?',

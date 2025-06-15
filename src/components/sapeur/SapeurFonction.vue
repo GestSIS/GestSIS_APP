@@ -1,3 +1,58 @@
+<script setup>
+import { computed, ref, watch, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+  loading.value = false;
+});
+await store.dispatch('fetchFonctions');
+
+const activeSapeurFonctions = computed(() =>
+  store.state.sapeur.active.fonctions
+    .sort((a, b) => b.debut.localeCompare(a.debut))
+    .map((f) => ({
+      ...f,
+      fonction: store.state.fonction.liste.find(
+        (fonction) => fonction.id == f.fonction_id,
+      )?.nom,
+    })),
+);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const { showModal, confirm } = useModalStore();
+
+const newFonction = () => {
+  store.dispatch('resetActiveFonction');
+  showModal('ModalSapeurFonction');
+};
+const editFonction = (fonction) => {
+  store.dispatch('updateActiveFonction', Object.assign({}, fonction));
+  showModal('ModalSapeurFonction');
+};
+const supprimerFonction = (fonction) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette fonction ?',
+
+    "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
+  ).then(() => store.dispatch('removeSapeurFonction', fonction?.id));
+
+const fields = [
+  { title: 'Début', key: 'debut', type: Date },
+  { title: 'Fin', key: 'fin', type: Date },
+  { title: 'Fonction', key: 'fonction' },
+  { title: 'Remarques', key: 'remarque' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -13,6 +68,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :fields="fields"
         :data="activeSapeurFonctions"
         no-data="Aucune fonction"
@@ -39,95 +95,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadSapeurFonctions = store.dispatch('fetchSapeurFonctions');
-
-  Promise.all([loadFonctions, loadSapeurFonctions]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurFonction',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Début', key: 'debut', type: Date },
-        { title: 'Fin', key: 'fin', type: Date },
-        { title: 'Fonction', key: 'fonction' },
-        { title: 'Remarques', key: 'remarque' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurFonctions: (state) =>
-        state.sapeur.active.fonctions
-          .sort((a, b) => b.debut.localeCompare(a.debut))
-          .map((f) => ({
-            ...f,
-            fonction: state.fonction.liste.find(
-              (fonction) => fonction.id == f.fonction_id,
-            )?.nom,
-          })),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurFonctions', id);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newFonction() {
-      this.$store.dispatch('resetActiveFonction');
-      this.SHOW_MODAL('ModalSapeurFonction');
-    },
-    editFonction(fonction) {
-      this.$store.dispatch('updateActiveFonction', Object.assign({}, fonction));
-      this.SHOW_MODAL('ModalSapeurFonction');
-    },
-    supprimerFonction(fonction) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette fonction ?',
-          question:
-            "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeSapeurFonction', fonction?.id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

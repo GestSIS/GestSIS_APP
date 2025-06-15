@@ -5,7 +5,6 @@ import { exercicesToIcs } from '../../tools/exportExercices';
 import ExerciceService from '../../services/ExerciceService';
 import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
-import useConfirmation from '../../hooks/useConfirmation.js';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
@@ -56,8 +55,7 @@ const exercices = computed(() =>
     .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
 );
 
-const { showModal } = useModalStore();
-const { confirm } = useConfirmation();
+const { showModal, confirm } = useModalStore();
 const awn = inject('awn');
 
 const download = () => {

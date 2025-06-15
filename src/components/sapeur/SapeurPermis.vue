@@ -1,3 +1,113 @@
+<script setup>
+import { computed, inject, ref, watch, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+
+const store = useStore();
+
+watchEffect(() => {
+  store.dispatch('fetchSapeurPermis', store.state.sapeur.active.id);
+});
+
+await store.dispatch('fetchPermisType');
+
+const publicPath = import.meta.env.BASE_URL;
+const permisData = ref({});
+const errors = ref({});
+
+const listPermisType = computed(() => store.state.baseData.permisTypes);
+const activeSapeurPermis = computed(() => store.state.sapeur.active.permis);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+watch(
+  activeSapeurPermis,
+  () => {
+    listPermisType.value.forEach((p) => {
+      permisData.value[p.id] = {
+        permis_type_id: p.id,
+        type: p.type,
+        date: null,
+        id: null,
+      };
+    });
+    activeSapeurPermis.value.forEach((p) => {
+      permisData.value[p.permis_type_id] = {
+        ...permisData.value[p.permis_type_id],
+        date: p.date,
+        id: p.id,
+      };
+    });
+  },
+  { immediate: true },
+);
+
+const awn = inject('awn');
+
+const saveSuccessfull = (permis_type_id) => {
+  errors.value = {
+    ...errors.value,
+    [permis_type_id]: undefined,
+  };
+};
+const saveError = (permis_type_id, error) => {
+  errors.value = {
+    ...errors.value,
+    [permis_type_id]: error,
+  };
+};
+const supprimerPermis = (permis_type_id) => {
+  console.log('Remove ...', permis_type_id);
+  permisData.value = {
+    ...permisData.value,
+    [permis_type_id]: {
+      ...permisData.value[permis_type_id],
+      date: '',
+    },
+  };
+  console.log(permisData.value[permis_type_id]);
+};
+const savePermis = () => {
+  Object.values(permisData.value).forEach((p) => {
+    //New one
+    if (p.id === null && p.date !== null) {
+      store
+        .dispatch('addPermis', {
+          permis_type_id: p.permis_type_id,
+          date: p.date,
+        })
+        .then(() => saveSuccessfull(p.permis_type_id))
+        .catch((err) => saveError(p.permis_type_id, err));
+    }
+    //Removed
+    else if (p.id !== null && (p.date === null || p.date === '')) {
+      store
+        .dispatch('removePermis', p.id)
+        .then(() => saveSuccessfull(p.permis_type_id))
+        .catch((err) => saveError(p.permis_type_id, err));
+    }
+    //Edited
+    else if (
+      p.id !== null &&
+      p.date !==
+        activeSapeurPermis.value.find((permis) => permis.id == p.id).date
+    ) {
+      store
+        .dispatch('editPermis', { id: p.id, date: p.date })
+        .then(() => saveSuccessfull(p.permis_type_id))
+        .catch((err) => saveError(p.permis_type_id, err));
+    } else {
+      //Remove potential error messages
+      saveSuccessfull(p.permis_type_id);
+    }
+  });
+  awn.success('Modifications enregistrées en avec succès');
+};
+const isInvalid = (key) => {
+  return errors.value[key] !== undefined;
+};
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -64,156 +174,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadPermis = store.dispatch('fetchPermisType');
-  const loadSapeurPermis = store.dispatch('fetchSapeurPermis');
-
-  Promise.all([loadPermis, loadSapeurPermis]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurPermis',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      publicPath: import.meta.env.BASE_URL,
-      permisData: {},
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      listPermisType: (state) => state.baseData.permisTypes,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurPermis: (state) => state.sapeur.active.permis,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurPermis() {
-      this.initPermisData();
-    },
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurPermis', id).then(() => {
-        this.initPermisData();
-      });
-    },
-  },
-  mounted() {
-    if (this.listPermisType.length === 0) {
-      this.$store.dispatch('fetchPermisType').then(() => {
-        this.$store
-          .dispatch('fetchSapeurPermis', this.activeSapeurId)
-          .then(() => {
-            this.initPermisData();
-          });
-      });
-    } else {
-      this.$store
-        .dispatch('fetchSapeurPermis', this.activeSapeurId)
-        .then(() => {
-          this.initPermisData();
-        });
-    }
-  },
-  methods: {
-    initPermisData() {
-      this.permisData = {};
-      this.errors = {};
-
-      this.listPermisType.forEach((p) => {
-        this.permisData[p.id] = {
-          permis_type_id: p.id,
-          type: p.type,
-          date: null,
-          id: null,
-        };
-      });
-      this.activeSapeurPermis.forEach((p) => {
-        this.permisData[p.permis_type_id] = {
-          ...this.permisData[p.permis_type_id],
-          date: p.date,
-          id: p.id,
-        };
-      });
-    },
-    saveSuccessfull(permis_type_id) {
-      this.errors = {
-        ...this.errors,
-        [permis_type_id]: undefined,
-      };
-    },
-    saveError(permis_type_id, error) {
-      this.errors = {
-        ...this.errors,
-        [permis_type_id]: error,
-      };
-    },
-    supprimerPermis(permis_type_id) {
-      this.permisData = {
-        ...this.permisData,
-        [permis_type_id]: {
-          ...this.permisData[permis_type_id],
-          date: '',
-        },
-      };
-    },
-    savePermis() {
-      Object.values(this.permisData).forEach((p) => {
-        //New one
-        if (p.id === null && p.date !== null) {
-          this.$store
-            .dispatch('addPermis', {
-              permis_type_id: p.permis_type_id,
-              date: p.date,
-            })
-            .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch((err) => this.saveError(p.permis_type_id, err));
-        }
-        //Removed
-        else if (p.id !== null && (p.date === null || p.date === '')) {
-          this.$store
-            .dispatch('removePermis', p.id)
-            .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch((err) => this.saveError(p.permis_type_id, err));
-        }
-        //Edited
-        else if (
-          p.id !== null &&
-          p.date !==
-            this.activeSapeurPermis.find((permis) => permis.id == p.id).date
-        ) {
-          this.$store
-            .dispatch('editPermis', { id: p.id, date: p.date })
-            .then(() => this.saveSuccessfull(p.permis_type_id))
-            .catch((err) => this.saveError(p.permis_type_id, err));
-        } else {
-          //Remove potential error messages
-          this.saveSuccessfull(p.permis_type_id);
-        }
-      });
-      this.$awn.success('Modifications enregistrées en avec succès');
-    },
-    isInvalid(key) {
-      return this.errors[key] !== undefined;
-    },
-  },
-};
-</script>
-
-<style scoped></style>

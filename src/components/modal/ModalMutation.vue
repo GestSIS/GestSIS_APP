@@ -77,6 +77,7 @@ export default {
   computed: {
     ...mapState({
       activeSapeurId: (state) => state.sapeur.active.id,
+      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
       activeMutation: (state) => state.mutation.active,
       localites: (state) => state.localite.liste,
     }),
@@ -106,7 +107,11 @@ export default {
     this.$store.dispatch('fetchGroupes', this.activeSapeurId);
 
     this.$store
-      .dispatch('fetchSapeurExercices', this.activeSapeurId)
+      .dispatch(
+        'fetchSapeurExercices',
+        this.activeSapeurId,
+        this.activeExerciceComptableId,
+      )
       .then((data) => (this.exercices = data));
     this.$store
       .dispatch('fetchSapeurGroupes', this.activeSapeurId)

@@ -78,7 +78,7 @@ const colonnes = computed(() => [
   { title: 'Actions', key: 'id', slot: 'actions' },
 ]);
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 
 const infoMateriel = (materiel) =>
   showModal({
@@ -108,7 +108,6 @@ const attribuerMateriel = (materiel) =>
     callback: refresh,
   });
 
-const { confirm } = useConfirmation();
 const supprimer = (article) =>
   confirm(
     'Voulez-vous vraiment supprimer cet article ?',

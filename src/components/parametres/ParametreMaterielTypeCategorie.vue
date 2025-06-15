@@ -67,8 +67,7 @@ const computedData = computed(() => {
   return data;
 });
 
-const { showModal } = useModalStore();
-const { confirm } = useConfirmation();
+const { showModal, confirm } = useModalStore();
 
 const ajoutCategorie = () =>
   showModal({ component: 'ModalMaterielCategorie', data: {} });

@@ -29,5 +29,23 @@ export const useModalStore = defineStore('Modal', {
     resize(payload) {
       this.size = payload;
     },
+    confirm(title, question) {
+      return new Promise((resolve, reject) => {
+        this.showModal({
+          component: 'ModalConfirmation',
+          data: {
+            title: title,
+            question: question,
+          },
+          callback: (confirmed) => {
+            if (confirmed) {
+              resolve()
+            } else {
+              reject();
+            }
+          },
+        });
+      })
+    }
   },
 });

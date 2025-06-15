@@ -1,3 +1,65 @@
+<script setup>
+import { ref, computed, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurMutations', store.state.sapeur.active.id);
+  loading.value = false;
+});
+
+const mutations = computed(() =>
+  store.state.sapeur.active.mutations.map((m) => ({
+    ...m,
+    localite: store.state.localite.liste.find((l) => l.id == m.localite_id)
+      ?.designation,
+  })),
+);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+const finServiceButtonState = computed(
+  () => mutations.value.length > 0 && mutations.value.find((m) => !m.sortie),
+);
+
+const { showModal, confirm } = useModalStore();
+
+const removeMutation = (mutation) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette mutation ?',
+    "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
+  ).then(() => store.dispatch('removeMutation', mutation?.id));
+const editMutation = (mutation) => {
+  store.dispatch('updateActiveMutation', Object.assign({}, mutation));
+  showModal('ModalMutation');
+};
+const finService = () => {
+  store.dispatch(
+    'updateActiveMutation',
+    Object.assign(
+      { action: 'finService' },
+      mutations.value.find((m) => !m.sortie),
+    ),
+  );
+  showModal('ModalMutation');
+};
+const incorporation = () => {
+  store.dispatch('resetActiveMutation');
+  showModal('ModalMutation');
+};
+
+const fields = [
+  { title: 'Incorporation', key: 'incorporation', type: Date },
+  { title: 'Sortie', key: 'sortie', type: Date },
+  { title: 'Motif', key: 'motif' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -7,6 +69,7 @@
     <form role="form">
       <div class="card-body">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="mutations"
           no-data="Aucune mutation"
@@ -54,105 +117,3 @@
     </form>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadSapeurMutations = store.dispatch('fetchSapeurMutations');
-
-  Promise.all([loadSapeurMutations]).then(() => {
-    next();
-  });
-}
-
-export default {
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Incorporation', key: 'incorporation', type: Date },
-        { title: 'Sortie', key: 'sortie', type: Date },
-        { title: 'Motif', key: 'motif' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      mutations: (state) =>
-        state.sapeur.active.mutations.map((m) => ({
-          ...m,
-          localite: state.localite.liste.find((l) => l.id == m.localite_id)
-            ?.designation,
-        })),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-    finServiceButtonState() {
-      return this.mutations.length > 0 && this.mutations.find((m) => !m.sortie);
-    },
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurMutations', id);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchSapeurMutations', this.activeSapeurId);
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    removeMutation(mutation) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette mutation ?',
-          question:
-            "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeMutation', mutation?.id);
-          }
-        },
-      });
-    },
-    editMutation(mutation) {
-      this.$store.dispatch('updateActiveMutation', Object.assign({}, mutation));
-      this.SHOW_MODAL('ModalMutation');
-    },
-    finService() {
-      this.$store.dispatch(
-        'updateActiveMutation',
-        Object.assign(
-          { action: 'finService' },
-          this.mutations.find((m) => !m.sortie),
-        ),
-      );
-      this.SHOW_MODAL('ModalMutation');
-    },
-    incorporation() {
-      this.$store.dispatch('resetActiveMutation');
-      this.SHOW_MODAL('ModalMutation');
-    },
-  },
-};
-</script>
-
-<style></style>

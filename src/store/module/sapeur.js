@@ -75,14 +75,14 @@ export default {
       state.liste.map((s) =>
         s.id == payload.id
           ? {
-              ...s,
-              fonction_id: payload.fonction_id,
-              nom: payload.nom,
-              prenom: payload.prenom,
-              nom_prenom: `${payload.nom} ${payload.prenom}`,
-              actif: payload.actif,
-              date_naissance: payload.date_naissance,
-            }
+            ...s,
+            fonction_id: payload.fonction_id,
+            nom: payload.nom,
+            prenom: payload.prenom,
+            nom_prenom: `${payload.nom} ${payload.prenom}`,
+            actif: payload.actif,
+            date_naissance: payload.date_naissance,
+          }
           : s
       );
     },
@@ -259,57 +259,52 @@ export default {
         commit(types.UPDATE_CURRENT_SAPEUR_DATA, data)
       );
     },
-    fetchSapeurPermis({ commit, state }) {
-      return SapeurService.getPermis(state.active.id).then((data) =>
+    fetchSapeurPermis({ commit }, sapeurId) {
+      return SapeurService.getPermis(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_PERMIS, data)
       );
     },
-    fetchSapeurTelephones({ commit, state }) {
-      return SapeurService.getTelephones(state.active.id).then((data) =>
+    fetchSapeurTelephones({ commit }, sapeurId) {
+      return SapeurService.getTelephones(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_TELEPHONES, data)
       );
     },
-    fetchSapeurMateriels({ commit, state }) {
-      return SapeurService.getMateriels(state.active.id).then((data) =>
-        commit(types.UPDATE_CURRENT_SAPEUR_MATERIELS, data)
-      );
-    },
-    fetchSapeurGrades({ commit, state }) {
-      return SapeurService.getGrades(state.active.id).then((data) =>
+    fetchSapeurGrades({ commit }, sapeurId) {
+      return SapeurService.getGrades(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_GRADES, data)
       );
     },
-    fetchSapeurFonctions({ commit, state }) {
-      return SapeurService.getFonctions(state.active.id).then((data) => {
+    fetchSapeurFonctions({ commit }, sapeurId) {
+      return SapeurService.getFonctions(sapeurId).then((data) => {
         commit(types.UPDATE_CURRENT_SAPEUR_FONCTIONS, data);
         return data;
       });
     },
-    fetchSapeurCours({ commit, state }) {
-      return SapeurService.getCours(state.active.id).then((data) =>
+    fetchSapeurCours({ commit }, sapeurId) {
+      return SapeurService.getCours(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_COURS, data)
       );
     },
-    fetchSapeurControlesMedicaux({ commit, state }) {
-      return SapeurService.getControlesMedicaux(state.active.id).then((data) =>
+    fetchSapeurControlesMedicaux({ commit }, sapeurId) {
+      return SapeurService.getControlesMedicaux(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_CONTROLES_MEDICAUX, data)
       );
     },
-    fetchSapeurMutations({ commit, state }) {
-      return SapeurService.getMutations(state.active.id).then((data) =>
+    fetchSapeurMutations({ commit }, sapeurId) {
+      return SapeurService.getMutations(sapeurId).then((data) =>
         commit(types.UPDATE_CURRENT_SAPEUR_MUTATIONS, data)
       );
     },
-    fetchSapeurGroupes({ commit, state }) {
-      return SapeurService.getGroupes(state.active.id).then((data) => {
+    fetchSapeurGroupes({ commit }, sapeurId) {
+      return SapeurService.getGroupes(sapeurId).then((data) => {
         commit(types.UPDATE_CURRENT_SAPEUR_GROUPES, data);
         return data;
       });
     },
-    fetchSapeurExercices({ commit, getters, state }) {
+    fetchSapeurExercices({ commit }, { sapeurId, exerciceComptableId }) {
       return SapeurService.getExercices(
-        state.active.id,
-        getters.activeExerciceComptableId
+        sapeurId,
+        exerciceComptableId
       ).then((data) => {
         commit(types.UPDATE_CURRENT_SAPEUR_EXERCICES, data);
         return data;

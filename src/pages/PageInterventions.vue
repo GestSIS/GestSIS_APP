@@ -105,10 +105,9 @@ watch(
   },
 );
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);
 
-const { confirm } = useConfirmation();
 const supprimerIntervention = (id) =>
   confirm(
     "Voulez-vous vraiment supprimer l'intervention ?",

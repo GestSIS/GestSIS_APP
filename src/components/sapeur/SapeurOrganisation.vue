@@ -1,3 +1,36 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurGroupes', store.state.sapeur.active.id);
+  loading.value = false;
+});
+await store.dispatch('fetchGroupes');
+
+const groupes = computed(() => store.state.groupe.liste);
+const activeSapeurGroupes = computed(() => store.state.sapeur.active.groupes);
+
+const computedGroupes = computed(() => {
+  return activeSapeurGroupes.value.map((groupe) => {
+    let g = groupes.value.find((g) => g.id == groupe.groupe_id);
+    return {
+      id: groupe.id,
+      designation: g?.designation,
+      numero: g?.no || '',
+    };
+  });
+});
+
+const fields = [
+  { title: 'Numéro', key: 'numero' },
+  { title: 'Désignation', key: 'designation' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -5,6 +38,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :fields="fields"
         :data="computedGroupes"
         no-data="Aucun groupe"
@@ -12,59 +46,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadGroupes = store.dispatch('fetchGroupes');
-  const loadSapeurGroupes = store.dispatch('fetchSapeurGroupes');
-
-  Promise.all([loadGroupes, loadSapeurGroupes]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurOrganisation',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Désignation', key: 'designation' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) => state.groupe.liste,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurGroupes: (state) => state.sapeur.active.groupes,
-    }),
-    computedGroupes() {
-      return this.activeSapeurGroupes.map((groupe) => {
-        let g = this.groupes.find((g) => g.id == groupe.groupe_id);
-        return {
-          id: groupe.id,
-          designation: g?.designation,
-          numero: g?.no || '',
-        };
-      });
-    },
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurGroupes', id);
-    },
-  },
-};
-</script>
-
-<style scoped></style>

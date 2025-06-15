@@ -82,7 +82,7 @@ const computedData = computed(() =>
     })),
 );
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const infoMateriel = (materiel) =>
   showModal({
     component: 'ModalArticleInfo',
@@ -97,7 +97,6 @@ const ajouterLavages = () =>
     callback: loadLavages,
   });
 
-const { confirm } = useConfirmation();
 const supprimer = (lavage) =>
   confirm(
     'Voulez-vous vraiment supprimer ce lavage ?',

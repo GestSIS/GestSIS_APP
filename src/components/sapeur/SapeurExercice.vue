@@ -1,3 +1,84 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
+import ExerciceService from '../../services/ExerciceService';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+const loading = ref(true);
+await store.dispatch('fetchExercicesComptables');
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurExercices', {
+    sapeurId: store.state.sapeur.active.id,
+    exerciceComptableId: store.state.exerciceComptable.activeId,
+  });
+  loading.value = false;
+});
+
+await Promise.all([
+  store.dispatch('fetchExcuseTypes'),
+  store.dispatch('fetchExerciceCategories'),
+]);
+
+const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
+const exercices = computed(() =>
+  store.state.sapeur.active.exercices
+    .map((e) => ({
+      ...e.presence,
+      ...e,
+      excuse: store.state.excuseType.liste.find(
+        (t) => t.id == e.presence?.excuse_type_id,
+      )?.designation,
+      localite: store.state.localite.liste.find((l) => l.id == e.localite_id)
+        ?.designation,
+      categorie: store.state.exerciceCategorie.liste.find(
+        (c) => c.id == e.exercice_categorie_id,
+      )?.designation,
+    }))
+    .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
+);
+
+const { showModal } = useModalStore();
+
+const edit = () =>
+  showModal({
+    component: 'ModalPresenceExercice',
+    size: 2,
+  });
+
+const awn = inject('awn');
+const downloadJustificatif = (exercice) =>
+  ExerciceService.downloadExcuseJustificatif(
+    exercice.exercice_id,
+    exercice.sapeur_id,
+    'justificatif_' + sapeur.justificatif_filename,
+  ).catch((err) =>
+    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
+  );
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Heure', key: 'heure', formatter: (h) => h.slice(0, 5) },
+  { title: 'Categorie', key: 'categorie' },
+  { title: 'Exercice', key: 'designation' },
+  { title: 'Durée [min]', key: 'duree' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Lieu', key: 'lieu' },
+  { title: 'Communications', key: 'communications' },
+  { title: 'Convoqué', type: Boolean, key: 'convoque' },
+  { title: 'Présent', type: Boolean, key: 'present' },
+  { title: 'Absent', type: Boolean, key: 'absent' },
+  { title: 'Remplacé', type: Boolean, key: 'remplace' },
+  { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
+  { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -12,11 +93,11 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
+        :loading="loading"
         :fields="fields"
         :data="exercices"
         :selectable="true"
-        no-data="Aucune heure supp"
+        no-data="Aucun exercice"
       >
         <template #detail-row="{ rowData }">
           <mes-heures-supp-detail-row
@@ -81,123 +162,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
-
-import store from '/src/store/index';
-import ExerciceService from '../../services/ExerciceService';
-async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadExerciceSapeur = store.dispatch('fetchSapeurExercices');
-
-  Promise.all([loadExerciceSapeur]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurExercice',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  components: { MesHeuresSuppDetailRow },
-  data() {
-    return {
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Heure', key: 'heure', formatter: (h) => h.slice(0, 5) },
-        { title: 'Categorie', key: 'categorie' },
-        { title: 'Exercice', key: 'designation' },
-        { title: 'Durée [min]', key: 'duree' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Lieu', key: 'lieu' },
-        { title: 'Communications', key: 'communications' },
-        { title: 'Convoqué', type: Boolean, key: 'convoque' },
-        { title: 'Présent', type: Boolean, key: 'present' },
-        { title: 'Absent', type: Boolean, key: 'absent' },
-        { title: 'Remplacé', type: Boolean, key: 'remplace' },
-        { title: 'Excuse', slot: 'excuse', key: 'excuse_type_id' },
-        { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasPresencePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
-      exercices: (state) =>
-        state.sapeur.active.exercices
-          .map((e) => ({
-            ...e.presence,
-            ...e,
-            excuse: state.excuseType.liste.find(
-              (t) => t.id == e.presence?.excuse_type_id,
-            )?.designation,
-            localite: state.localite.liste.find((l) => l.id == e.localite_id)
-              ?.designation,
-            categorie: state.exerciceCategorie.liste.find(
-              (c) => c.id == e.exercice_categorie_id,
-            )?.designation,
-          }))
-          .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.init(id);
-    },
-    activeExerciceComptableId() {
-      this.init(this.activeSapeurId);
-    },
-  },
-  mounted() {
-    //TODO: Load before any display
-    this.$store.dispatch('fetchExcuseTypes', this.activeSapeurId);
-    this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-    this.init(this.activeSapeurId);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    init(sapeurId) {
-      this.$store.dispatch('fetchSapeurExercices', sapeurId).then(() => {
-        this.exercices
-          ?.filter((e) => e.heures.length)
-          ?.forEach((e) => this.$refs.table.showDetailRow(e.id));
-      });
-    },
-    edit() {
-      this.SHOW_MODAL({
-        component: 'ModalPresenceExercice',
-        size: 2,
-      });
-    },
-    // FIXME: detailExcuse fonction non existante
-    downloadJustificatif(exercice) {
-      ExerciceService.downloadExcuseJustificatif(
-        exercice.exercice_id,
-        exercice.sapeur_id,
-        'justificatif_' + sapeur.justificatif_filename,
-      ).catch((err) =>
-        this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif',
-        ),
-      );
-    },
-  },
-};
-</script>
-
-<style scoped></style>

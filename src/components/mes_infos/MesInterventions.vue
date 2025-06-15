@@ -1,6 +1,5 @@
 <script setup>
 import { computed, watch } from 'vue';
-import InterventionPresenceDetails from '/src/components/mes_infos/InterventionPresenceDetails.vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { useStore } from 'vuex';
 
@@ -56,26 +55,24 @@ const fields = [
   { title: 'Lieu', key: 'lieu' },
   { title: 'Objet', key: 'objet' },
 ];
-const detailRowOptions = {
-  fields: [
-    {
-      title: 'Début',
-      key: 'debut',
-      type: 'datetime',
-      columnClass: 'col-2',
-    },
-    { title: 'Fin', key: 'fin', type: 'datetime', columnClass: 'col-2' },
-    { title: 'Durée [heure]', key: 'duree', columnClass: 'col-2' },
-    {
-      title: 'Piquet',
-      key: 'piquet',
-      type: Boolean,
-      titleClass: 'text-center',
-      columnClass: 'text-center col-2',
-    },
-    {}, // Pour que la table soit compressée, ne pas supprimer
-  ],
-};
+const detailRowFields = [
+  {
+    title: 'Début',
+    key: 'debut',
+    type: 'datetime',
+    columnClass: 'col-2',
+  },
+  { title: 'Fin', key: 'fin', type: 'datetime', columnClass: 'col-2' },
+  { title: 'Durée [heure]', key: 'duree', columnClass: 'col-2' },
+  {
+    title: 'Piquet',
+    key: 'piquet',
+    type: Boolean,
+    titleClass: 'text-center',
+    columnClass: 'text-center col-2',
+  },
+  {}, // Pour que la table soit compressée, ne pas supprimer
+];
 </script>
 
 <template>
@@ -95,9 +92,11 @@ const detailRowOptions = {
         no-data="Aucune intervention pour le moment"
       >
         <template #detail-row="{ rowData }">
-          <intervention-presence-details
-            :options="detailRowOptions"
-            :rowData="rowData"
+          <base-table
+            :fields="detailRowFields"
+            :data="rowData.presences"
+            :hide-download="true"
+            no-data="Aucune présence"
           />
         </template>
       </base-table>

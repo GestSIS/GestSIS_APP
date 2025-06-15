@@ -3,7 +3,6 @@ import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject, ref, watch } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
-import useConfirmation from '../../hooks/useConfirmation.js';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
@@ -26,8 +25,7 @@ watch(anneeComptableId, () =>
   infosStore.fetchMesAbsences(anneeComptableId.value),
 );
 
-const { showModal } = useModalStore();
-const { confirm } = useConfirmation();
+const { showModal, confirm } = useModalStore();
 const awn = inject('awn');
 const addAbsence = () =>
   showModal({

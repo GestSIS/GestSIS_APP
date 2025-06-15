@@ -1,12 +1,19 @@
 <script setup>
 import permissions from '../store/permissions.js';
-import { mapActions } from 'pinia';
 import { useModalStore } from '../stores/common/Modal';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import SapeurService from '/src/services/SapeurService';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import useHasPermission from '../hooks/usePermission.js';
-import { computed, inject, onMounted, ref, useTemplateRef } from 'vue';
+import {
+  computed,
+  inject,
+  onMounted,
+  ref,
+  useTemplateRef,
+  watch,
+  watchEffect,
+} from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -36,83 +43,62 @@ store.dispatch('fetchFonctions');
 
 await store.dispatch('fetchListeSapeur');
 
-const redirectToLatestOpennedSapeur = async (routeTo, routeFrom, next) => {
-  if (store.state.sapeur.liste.length <= 0) {
-    // Load sapeurs liste
-    await store.dispatch('fetchListeSapeur');
-  }
+const route = useRoute();
+const router = useRouter();
 
-  if (routeTo.params.id == 0 || !routeTo.params.id) {
-    // Ancien sapeur sélectionné
-    if (store.state.sapeur.active.id > 0) {
-      // Rediction vers le sapeur précédemment sélectionné
-      next({
-        name: 'sapeur-details',
-        params: { id: store.state.sapeur.active.id },
-      });
-      return;
-    }
+const activeSapeurId = computed(() => store.state.sapeur.active.id);
+if (route.params.id == 0 || !route.params.id) {
+  console.log('Trigger 1');
+  if (activeSapeurId.value > 0) {
+    // Sapeur précédemment sélectionné
+    console.log('Push 1');
+    router.push({
+      name: 'sapeur-details',
+      params: { id: activeSapeurId.value },
+    });
+  } else if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
     // Sapeurs disponible
-    if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
-      await store.dispatch(
-        'selectSapeur',
-        store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
-      );
-      next({
-        name: 'sapeur-details',
-        params: { id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id },
-      });
-      return;
-    }
-
-    // Aucun sapeur de disponible
-    next();
-    return;
-  } else {
-    // Sélection du sapeur
-    await store.dispatch('selectSapeur', routeTo.params.id);
+    console.log('Push 2');
+    router.push({
+      name: 'sapeur-details',
+      params: {
+        id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
+      },
+    });
   }
+}
 
-  if (!store.state.sapeur.active.id) {
-    // Aucun sapeur
-    next();
-    return;
-  }
+// Select sapeur
+watch(
+  () => route.params.id,
+  () => {
+    store.dispatch('selectSapeur', route.params.id);
+  },
+  { immediate: true },
+);
 
-  // Load sapeur data
+// Fetch sapeur Data
+watchEffect(async () => {
+  console.log('Trigger fetch');
   if (store.state.sapeur.active.id) {
-    // Check civil status
     await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
-    const isCivil = store.state.sapeur.active.data.type != 0;
-
-    if (isCivil) {
-      // Civil détecté
-      if (routes.find((r) => r.to.name == routeTo.name && r.civil == true)) {
-        next();
-      } else {
-        // Redirection pour onglet valable
-        next({
-          name: 'sapeur-details',
-          params: { id: store.state.sapeur.active.id },
-        });
-      }
-    } else {
-      if (routeTo.name == 'sapeur-index') {
-        next({
-          name: 'sapeur-details',
-          params: { id: store.state.sapeur.active.id },
-        });
-      } else {
-        next();
-      }
-    }
-    return;
   }
+});
 
-  next();
-};
-
-onBeforeRouteUpdate(redirectToLatestOpennedSapeur);
+// Redirect civile vers route pertinentes
+watchEffect(() => {
+  const isCivil = store.state.sapeur.active.data?.type;
+  const routeName = route.name;
+  if (
+    isCivil &&
+    routes.find((r) => r.to.name == routeName && r.civil !== true)
+  ) {
+    router.push({
+      name: 'sapeur-details',
+      params: { id: store.state.sapeur.active.id },
+    });
+  }
+});
 
 const filter = ref('actif');
 const filters = ref({
@@ -123,14 +109,13 @@ const filters = ref({
 const eventListener = ref(null);
 
 const sapeurs = computed(() => store.state.sapeur.liste);
-const activeSapeurId = computed(() => store.state.sapeur.active.id);
 const activeSapeur = computed(() => store.state.sapeur.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const filteredSapeurs = computed(() =>
   sapeurs.value.filter(filters.value[filter.value]),
 );
-const route = useRoute();
+
 const currentRouteName = computed(() => route.name);
 
 const listeSapeurComponent = useTemplateRef('liste-sapeurs');
@@ -150,7 +135,6 @@ onMounted(() => {
 
 const { showModal, closeModal } = useModalStore();
 const awn = inject('awn');
-const router = useRouter();
 
 const ficheSapeur = () => {
   showModal({ component: 'ModalChargement' });

@@ -1,3 +1,63 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurCours', store.state.sapeur.active.id);
+  loading.value = false;
+});
+await store.dispatch('fetchCours');
+
+const activeSapeurCours = computed(() =>
+  store.state.sapeur.active.cours
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((c) => ({
+      ...c,
+      designation: store.state.cours.liste.find(
+        (cours) => cours.id == c.cours_id,
+      )?.designation,
+      localite: store.state.localite.liste.find((l) => l.id == c.localite_id)
+        ?.designation,
+    })),
+);
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const { showModal, confirm } = useModalStore();
+
+const newCours = () => {
+  store.dispatch('resetActiveCours');
+  showModal('ModalSapeurCours');
+};
+const editCours = (cours) => {
+  store.dispatch(
+    'updateActiveCours',
+    Object.assign({ precedent_id: 0 }, cours),
+  );
+  showModal('ModalSapeurCours');
+};
+
+const supprimerCours = (cours) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce cours ?',
+    "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
+  ).then(() => store.dispatch('removeSapeurCours', cours?.id));
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Lieu', key: 'localite' },
+  { title: 'Durée [jours]', key: 'duree' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -13,6 +73,7 @@
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
+        :loading="loading"
         :fields="fields"
         :data="activeSapeurCours"
         no-data="Aucun cours suivi"
@@ -39,100 +100,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  const loadCours = store.dispatch('fetchCours');
-  const loadSapeurCours = store.dispatch('fetchSapeurCours');
-
-  Promise.all([loadCours, loadSapeurCours]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurCours',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Lieu', key: 'localite' },
-        { title: 'Durée [jours]', key: 'duree' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurCours: (state) =>
-        state.sapeur.active.cours
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map((c) => ({
-            ...c,
-            designation: state.cours.liste.find(
-              (cours) => cours.id == c.cours_id,
-            )?.designation,
-            localite: state.localite.liste.find((l) => l.id == c.localite_id)
-              ?.designation,
-          })),
-      activeSapeurId: (state) => state.sapeur.active.id,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchCours');
-    this.$store.dispatch('fetchSapeurCours', this.activeSapeurId);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newCours() {
-      this.$store.dispatch('resetActiveCours');
-      this.SHOW_MODAL('ModalSapeurCours');
-    },
-    editCours(cours) {
-      this.$store.dispatch(
-        'updateActiveCours',
-        Object.assign({ precedent_id: 0 }, cours),
-      );
-      this.SHOW_MODAL('ModalSapeurCours');
-    },
-    supprimerCours(cours) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce cours ?',
-          question:
-            "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeSapeurCours', cours?.id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

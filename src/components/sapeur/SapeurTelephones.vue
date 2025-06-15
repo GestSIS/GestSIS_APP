@@ -1,3 +1,83 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+
+const store = useStore();
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchSapeurTelephones', store.state.sapeur.active.id);
+  loading.value = false;
+});
+await store.dispatch('fetchTelephoneTypes');
+
+const telephonesData = ref([]);
+const telephones = computed({
+  get: () => telephonesData.value,
+  set: (tels) => {
+    tels.forEach((t, i) => (t.priorite = i + 1));
+    telephonesData.value = tels.sort((t1, t2) => t1.priorite - t2.priorite);
+  },
+});
+
+const activeSapeurTelephones = computed(() =>
+  store.state.sapeur.active.telephones
+    .slice(0)
+    .sort((t1, t2) => t1.priorite - t2.priorite),
+);
+watchEffect(
+  () =>
+    (telephonesData.value = [
+      ...(activeSapeurTelephones.value || []).map((t) => ({ ...t })),
+    ]),
+);
+
+const sapeurType = computed(() => store.state.sapeur.active.data.type);
+const telephoneTypes = computed(() => store.state.baseData.telephoneTypes);
+
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+
+const saveTelephones = () => {
+  const savedTelephones = [...telephones.value];
+  activeSapeurTelephones.value.forEach((t) => {
+    //Suppression des numéros supprimé
+    if (telephones.value.filter((t2) => t2.id === t.id).length === 0) {
+      store.dispatch('removeTelephoneSapeur', t.id);
+    }
+  });
+
+  savedTelephones.forEach((t) => {
+    //Numéros modifiés
+    if (t.id !== null) {
+      store.dispatch('editTelephoneSapeur', t);
+    }
+    //Nouveaux numéros
+    else {
+      store.dispatch('addTelephoneSapeur', t);
+    }
+  });
+};
+const addTelephone = () => {
+  if (telephonesData.value.length < 3) {
+    telephones.value = [
+      ...telephones.value,
+      {
+        id: null,
+        telephone_type_id: 0,
+        rta: 0,
+        priorite: telephones.value.length + 1,
+      },
+    ];
+  }
+};
+const removeTelephone = (priorite) => {
+  telephones.value = telephones.value.filter((t) => t.priorite !== priorite);
+};
+</script>
+
 <template>
   <!-- Téléphones -->
   <div class="card card-primary card-outline mb-3">
@@ -12,7 +92,12 @@
       </button>
     </div>
     <div class="card-body table-responsive p-0">
-      <table class="table table-sm">
+      <div v-if="loading" class="p-3 d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+      <table v-else class="table table-sm">
         <thead>
           <tr>
             <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">
@@ -100,94 +185,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  data() {
-    return {
-      telephonesData: [],
-      errorsTel: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurType: (state) => state.sapeur.active.data.type,
-      telephoneTypes: (state) => state.baseData.telephoneTypes,
-      activeSapeurTelephones: (state) =>
-        state.sapeur.active.telephones
-          .slice(0)
-          .sort((t1, t2) => t1.priorite - t2.priorite),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SAPEUR.MODIFICATION),
-    }),
-
-    telephones: {
-      get() {
-        return this.telephonesData;
-      },
-      set(telephones) {
-        telephones.forEach((t, i) => (t.priorite = i + 1));
-
-        this.telephonesData = telephones.sort(
-          (t1, t2) => t1.priorite - t2.priorite
-        );
-      },
-    },
-  },
-  watch: {
-    activeSapeurTelephones() {
-      this.telephonesData = this.activeSapeurTelephones.map((t) => ({ ...t }));
-    },
-  },
-  mounted() {
-    this.telephonesData = [
-      ...(this.activeSapeurTelephones || []).map((t) => ({ ...t })),
-    ];
-  },
-  methods: {
-    saveTelephones() {
-      //TODO: Validation de toutes les données
-
-      this.activeSapeurTelephones.forEach((t) => {
-        //Suppression des numéros supprimé
-        if (this.telephones.filter((t2) => t2.id === t.id).length === 0) {
-          this.$store.dispatch('removeTelephoneSapeur', t.id);
-        }
-      });
-
-      this.telephones.forEach((t) => {
-        //Numéros modifiés
-        if (t.id !== null) {
-          this.$store.dispatch('editTelephoneSapeur', t);
-        }
-        //Nouveaux numéros
-        else {
-          this.$store.dispatch('addTelephoneSapeur', t);
-        }
-      });
-    },
-    addTelephone() {
-      if (this.telephonesData.length < 3) {
-        this.telephones = [
-          ...this.telephones,
-          {
-            id: null,
-            telephone_type_id: 0,
-            rta: 0,
-            priorite: this.telephones.length + 1,
-          },
-        ];
-      }
-    },
-    removeTelephone(priorite) {
-      this.telephones = this.telephones.filter((t) => t.priorite !== priorite);
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

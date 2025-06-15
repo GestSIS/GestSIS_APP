@@ -2,10 +2,11 @@
   "releases": [
     {
       "date": "15.06.2025",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Migration de la page sapeur > materiel vers la nouvelle interface"
+        "Migration de la page sapeur > materiel vers la nouvelle interface",
+        "Amélioration du système de navigation pour le module sapeur"
       ]
     },
     {

@@ -1,3 +1,52 @@
+<script setup>
+import { useStore } from 'vuex';
+import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
+import { computed, ref, watchEffect } from 'vue';
+
+const store = useStore();
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchSapeurControlesMedicaux',
+    store.state.sapeur.active.id,
+  );
+  loading.value = false;
+});
+
+await Promise.all([
+  store.dispatch('fetchMedecins'),
+  store.dispatch('fetchControlesMedicauxTypes'),
+]);
+
+const controles = computed(() =>
+  store.state.sapeur.active.controles.map((c) => ({
+    ...c,
+    controle_medical_type: store.state.controlesMedicauxType.liste.find(
+      (l) => l.id == c.controle_medical_type_id,
+    )?.designation,
+    medecin: store.state.medecin.liste.find((l) => l.id == c.medecin_id)
+      ?.designation,
+  })),
+);
+
+const downloadJustificatif = ({ id, filename }) => {
+  ControlesMedicauxService.downloadJustificatif(id, filename);
+};
+
+const fields = [
+  { title: 'Type', key: 'controle_medical_type' },
+  { title: 'Médecin', key: 'medecin' },
+  { title: 'Consultation', key: 'consultation', type: Date },
+  { title: 'Validité', key: 'validite', type: Date },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Accepté', key: 'accepte', type: Boolean },
+  { title: 'En cours', key: 'en_cours', type: Boolean },
+  { title: 'Doc', slot: 'doc' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
@@ -6,6 +55,7 @@
     <form role="form">
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="controles"
           no-data="Aucun contrôle médical"
@@ -24,80 +74,3 @@
     </form>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-
-import store from '/src/store/index';
-async function loadData(routeTo, next) {
-  if (routeTo.params.id == 'ajout') {
-    next();
-  } else {
-    const sapeurId = parseInt(routeTo.params.id);
-    await store.dispatch('selectSapeur', sapeurId);
-
-    const loadTelephones = store.dispatch('fetchSapeurTelephones');
-    const loadTelephonesType = store.dispatch('fetchTelephoneTypes');
-    const loadSapeur = store.dispatch('fetchSapeur', sapeurId);
-
-    Promise.all([loadSapeur, loadTelephones, loadTelephonesType]).then(() => {
-      next();
-    });
-  }
-}
-
-export default {
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Type', key: 'controle_medical_type' },
-        { title: 'Médecin', key: 'medecin' },
-        { title: 'Consultation', key: 'consultation', type: Date },
-        { title: 'Validité', key: 'validite', type: Date },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Accepté', key: 'accepte', type: Boolean },
-        { title: 'En cours', key: 'en_cours', type: Boolean },
-        { title: 'Doc', slot: 'doc' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      controles: (state) =>
-        state.sapeur.active.controles.map((c) => ({
-          ...c,
-          controle_medical_type: state.controlesMedicauxType.liste.find(
-            (l) => l.id == c.controle_medical_type_id
-          )?.designation,
-          medecin: state.medecin.liste.find((l) => l.id == c.medecin_id)
-            ?.designation,
-        })),
-    }),
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurControlesMedicaux', id);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchSapeurControlesMedicaux', this.activeSapeurId);
-    this.$store.dispatch('fetchMedecins', this.activeSapeurId);
-    this.$store.dispatch('fetchControlesMedicauxTypes', this.activeSapeurId);
-  },
-  methods: {
-    downloadJustificatif({ id, filename }) {
-      ControlesMedicauxService.downloadJustificatif(id, filename);
-    },
-  },
-};
-</script>
-
-<style></style>
