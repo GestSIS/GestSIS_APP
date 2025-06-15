@@ -6,7 +6,6 @@ import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useConfirmation from '../../hooks/useConfirmation';
 
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();

@@ -48,17 +48,14 @@ const router = useRouter();
 
 const activeSapeurId = computed(() => store.state.sapeur.active.id);
 if (route.params.id == 0 || !route.params.id) {
-  console.log('Trigger 1');
   if (activeSapeurId.value > 0) {
     // Sapeur précédemment sélectionné
-    console.log('Push 1');
     router.push({
       name: 'sapeur-details',
       params: { id: activeSapeurId.value },
     });
   } else if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
     // Sapeurs disponible
-    console.log('Push 2');
     router.push({
       name: 'sapeur-details',
       params: {
@@ -79,7 +76,6 @@ watch(
 
 // Fetch sapeur Data
 watchEffect(async () => {
-  console.log('Trigger fetch');
   if (store.state.sapeur.active.id) {
     await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
   }

@@ -7,7 +7,6 @@ import permissions from '../store/permissions.js';
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 import SapeurService from '/src/services/SapeurService.js';
 import useHasPermission from '../hooks/usePermission';
-import useConfirmation from '../hooks/useConfirmation';
 
 const store = useStore();
 
@@ -109,7 +108,7 @@ const filteredAnneesExpiration = computed(() => {
   );
 });
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const selected = (item) => (selectedItem.value = item);
 const downloadJustificatif = ({ id, filename }) =>
   ControlesMedicauxService.downloadJustificatif(id, filename);
@@ -152,7 +151,7 @@ const email = (controleMedicaux) => {
   link.click();
 };
 const supprimer = async (controle) =>
-  useConfirmation(
+  confirm(
     'Voulez-vous vraiment supprimer ce contrôle médical ?',
     "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
   ).then(() => store.dispatch('removeControleMedical', controle.id));

@@ -4,7 +4,6 @@ import permissions from '../store/permissions.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { useStore } from 'vuex';
 import { computed, ref, watch } from 'vue';
-import useConfirmation from '../hooks/useConfirmation';
 import useHasPermission from '../hooks/usePermission';
 
 const store = useStore();

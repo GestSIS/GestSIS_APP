@@ -5,7 +5,6 @@ import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useConfirmation from '../../hooks/useConfirmation';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 

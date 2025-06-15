@@ -7,7 +7,6 @@ import TagCouleur from './TagCouleur.vue';
 import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useConfirmation from '../../hooks/useConfirmation';
 import LavageService from '../../services/materiel/LavageService';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
