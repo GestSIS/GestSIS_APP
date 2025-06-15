@@ -57,7 +57,7 @@ export default {
     return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
   },
   getMateriels(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/materiels');
+    return Api.api().get('/sapeurs/' + sapeurId + '/articles');
   },
   getExercices(sapeurId, exerciceComptableId) {
     return Api.api().get(
