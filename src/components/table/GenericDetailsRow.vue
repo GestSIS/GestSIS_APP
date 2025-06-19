@@ -1,3 +1,26 @@
+<script setup>
+import { ref } from 'vue';
+
+const { rowData, options } = defineProps({
+  rowData: {
+    type: Object,
+    required: true,
+  },
+  options: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const loading = ref(true);
+const data = ref([]);
+
+rowData.getData().then((loadedData) => {
+  data.value = loadedData;
+  loading.value = false;
+});
+</script>
+
 <template>
   <base-table
     :loading="loading"
@@ -7,35 +30,6 @@
     :hide-download="true"
   />
 </template>
-
-<script>
-export default {
-  name: 'GeneriqueDetailRow',
-  props: {
-    rowData: {
-      type: Object,
-      required: true,
-    },
-    options: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      loading: true,
-      data: [],
-    };
-  },
-  mounted() {
-    this.loading = true;
-    this.rowData.getData().then((data) => {
-      this.data = data;
-      this.loading = false;
-    });
-  },
-};
-</script>
 
 <style scoped>
 th {

@@ -1,9 +1,31 @@
+<script setup>
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const router = useRouter();
+
+const availableSisListe = computed(() => store.getters.availableSisListe);
+const activeSisId = computed(() => store.state.auth.sis.activeId);
+const listeSis = computed(() => store.state.auth.sis.liste);
+
+const selectSis = (sisId) => {
+  if (sisId != activeSisId.value) {
+    const sis = listeSis.value.find((s) => s.id == sisId);
+    store.dispatch('selectSis', sis).then(() => {
+      router.push({ name: 'dashboard' });
+    });
+  }
+};
+</script>
+
 <template>
   <div>
     <hr class="bg-secondary" />
     <div class="info">
       <base-select
-        v-model="sisId"
+        :model-value="activeSisId"
         class="mb-3"
         display-key="nom"
         :options="availableSisListe"
@@ -20,43 +42,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapGetters, mapState } from 'vuex';
-
-export default {
-  name: 'SisSelection',
-  data() {
-    return {
-      sisId: null,
-    };
-  },
-  computed: {
-    ...mapGetters(['availableSisListe']),
-    ...mapState({
-      activeSisId: (state) => state.auth.sis.activeId,
-      listeSis: (state) => state.auth.sis.liste,
-    }),
-  },
-  watch: {
-    activeSisId() {
-      this.sisId = this.activeSisId;
-    },
-  },
-  mounted() {
-    this.sisId = this.activeSisId;
-  },
-  methods: {
-    selectSis(sisId) {
-      if (sisId != this.activeSisId) {
-        const sis = this.listeSis.find((s) => s.id == sisId);
-        this.$store.dispatch('selectSis', sis).then(() => {
-          this.$router.push({ name: 'dashboard' });
-        });
-      }
-    },
-  },
-};
-</script>
-
-<style lang="scss" scoped></style>

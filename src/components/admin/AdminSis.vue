@@ -1,3 +1,59 @@
+<script setup>
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal';
+
+const store = useStore();
+const loadSis = store.dispatch('loadSisListe');
+const loadParams = store.dispatch('loadAllSisParams');
+const loadContacts = store.dispatch('loadAllSisContacts');
+
+await Promise.all([loadSis, loadContacts, loadParams]);
+
+const sis = computed(() => store.state.admin.sis);
+const contacts = computed(() => store.state.admin.contacts);
+const params = computed(() => store.state.admin.params);
+const computedSis = computed(() =>
+  sis.value?.map((s) => {
+    const computedContacts = contacts.value[s.api_key] ?? [];
+    return {
+      ...s,
+      news: computedContacts.filter((c) => c.liste === 'news'),
+      facturation: computedContacts.filter((c) => c.liste === 'facturation'),
+    };
+  }),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const jsonExport = () => {
+  const data = JSON.stringify(
+    sis.value.map((sis) => ({
+      ...sis,
+      contacts: contacts.value[sis.api_key],
+      params: params.value[sis.api_key],
+    })),
+  );
+
+  navigator.clipboard.writeText(data);
+
+  awn.success('Données copiées dans le press papier');
+};
+const editSis = (sis) => showModal({ component: 'ModalSis', data: sis });
+const ajoutSis = () => showModal({ component: 'ModalSis' });
+
+const fields = [
+  { title: 'id', key: 'id' },
+  { title: 'api_key', key: 'api_key' },
+  { title: 'Nom', key: 'nom' },
+  { title: 'Abréviation', key: 'abreviation' },
+  { title: 'Mobile', key: 'mobile', type: Boolean },
+  { title: 'Newsletter', key: 'news', slot: 'badges' },
+  { title: 'Facturation', key: 'facturation', slot: 'badges' },
+  { title: 'Actions', key: 'id', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="row">
     <div class="col-md-3">
@@ -103,91 +159,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(routeTo, next) {
-  const loadSis = store.dispatch('loadSisListe');
-  const loadParams = store.dispatch('loadAllSisParams');
-  const loadContacts = store.dispatch('loadAllSisContacts');
-
-  Promise.all([loadSis, loadContacts, loadParams]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'AdminSis',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'id', key: 'id' },
-        { title: 'api_key', key: 'api_key' },
-        { title: 'Nom', key: 'nom' },
-        { title: 'Abréviation', key: 'abreviation' },
-        { title: 'Mobile', key: 'mobile', type: Boolean },
-        { title: 'Newsletter', key: 'news', slot: 'badges' },
-        { title: 'Facturation', key: 'facturation', slot: 'badges' },
-        { title: 'Actions', key: 'id', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sis: (state) => state.admin.sis,
-      contacts: (state) => state.admin.contacts,
-      params: (state) => state.admin.params,
-    }),
-    computedSis() {
-      return this.sis?.map((s) => {
-        const contacts = this.contacts[s.api_key] ?? [];
-        return {
-          ...s,
-          news: contacts.filter((c) => c.liste === 'news'),
-          facturation: contacts.filter((c) => c.liste === 'facturation'),
-        };
-      });
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    jsonExport() {
-      const data = JSON.stringify(
-        this.sis.map((sis) => ({
-          ...sis,
-          contacts: this.contacts[sis.api_key],
-          params: this.params[sis.api_key],
-        })),
-      );
-
-      navigator.clipboard.writeText(data);
-
-      this.$awn.success('Données copiées dans le press papier');
-    },
-    editSis(sis) {
-      this.SHOW_MODAL({ component: 'ModalSis', data: sis });
-      // .then((res) => this.$awn.success(res?.message || 'Sis modifié'))
-      // .catch((e) =>
-      //   this.$awn.alert(e?.message || 'Erreur lors de la modification'),
-      // );
-    },
-    ajoutSis() {
-      this.SHOW_MODAL({ component: 'ModalSis' });
-      // .then((res) => this.$awn.success(res?.message || 'Sis ajouté'))
-      // .catch((e) => this.$awn.alert(e?.message || "Erreur lors de l'ajout"));
-    },
-  },
-};
-</script>
-
-<style scoped></style>

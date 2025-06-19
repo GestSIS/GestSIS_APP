@@ -1,3 +1,51 @@
+<script setup>
+import { useStore } from 'vuex';
+import AdminService from '../../services/AdminService';
+import { computed, inject } from 'vue';
+import { useModalStore } from '../../stores/common/Modal';
+
+const store = useStore();
+
+const loadSis = store.dispatch('loadSisListe');
+const loadUsers = store.dispatch('loadAllUsers');
+
+await Promise.all([loadSis, loadUsers]);
+
+const users = computed(() => store.state.admin.users);
+const sis = computed(() => store.state.admin.sis);
+
+const { showModal, confirm } = useModalStore();
+const awn = inject('awn');
+
+const tokenForUser = (user) =>
+  AdminService.getUserToken(user.id).then((data) => {
+    navigator.clipboard.writeText(data.accessToken);
+    this.$awn.success('Token copié dans le press papier');
+  });
+const editUser = (user) => showModal({ component: 'ModalUser', data: user });
+const deleteUser = (user) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cet utilisateur ?',
+    "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
+  ).then(() =>
+    store
+      .dispatch('deleteUser', user?.id)
+      .then((res) => awn.success(res?.message || 'Utilisateur supprimé'))
+      .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression')),
+  );
+
+const fields = [
+  { title: 'id', key: 'id' },
+  { title: 'name', key: 'name' },
+  { title: 'email', key: 'email' },
+  { title: 'admin', key: 'admin', type: Boolean },
+  { title: 'sapeur', key: 'sapeur', slot: 'liste' },
+  { title: 'created_at', key: 'created_at', type: Date },
+  { title: 'email_verified_at', key: 'email_verified_at', type: Date },
+  { title: 'Actions', key: 'id', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="card card-primary card-outline mb-3 col-12">
     <div class="card-header d-flex justify-content-between">
@@ -49,86 +97,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-import AdminService from '../../services/AdminService';
-
-async function loadData(routeTo, next) {
-  const loadSis = store.dispatch('loadSisListe');
-  const loadUsers = store.dispatch('loadAllUsers');
-
-  Promise.all([loadSis, loadUsers]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'AdminUsers',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'id', key: 'id' },
-        { title: 'name', key: 'name' },
-        { title: 'email', key: 'email' },
-        { title: 'admin', key: 'admin', type: Boolean },
-        { title: 'sapeur', key: 'sapeur', slot: 'liste' },
-        { title: 'created_at', key: 'created_at', type: Date },
-        { title: 'email_verified_at', key: 'email_verified_at', type: Date },
-        { title: 'Actions', key: 'id', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      users: (state) => state.admin.users,
-      sis: (state) => state.admin.sis,
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    tokenForUser(user) {
-      AdminService.getUserToken(user.id).then((data) => {
-        navigator.clipboard.writeText(data.accessToken);
-        this.$awn.success('Token copié dans le press papier');
-      });
-    },
-    editUser(user) {
-      this.SHOW_MODAL({ component: 'ModalUser', data: user });
-    },
-    deleteUser(user) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cet utilisateur ?',
-          question:
-            "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('deleteUser', user?.id)
-              .then((res) =>
-                this.$awn.success(res?.message || 'Utilisateur supprimé'),
-              )
-              .catch((e) =>
-                this.$awn.alert(e?.message || 'Erreur lors de la suppression'),
-              );
-          }
-        },
-      });
-    },
-  },
-};
-</script>
-
-<style scoped></style>

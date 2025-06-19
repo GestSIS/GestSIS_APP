@@ -1,3 +1,33 @@
+<script setup>
+import { computed, useTemplateRef } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+
+const listeExerciceComptable = computed(() =>
+  store.state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
+);
+const activeExerciceComptable = computed(() =>
+  store.state.exerciceComptable.liste.find(
+    (e) => e.id == store.state.exerciceComptable.activeId,
+  ),
+);
+const hasConfigPermission = useHasPermission(permissions.COMPTABILITE.CONFIG);
+
+if (listeExerciceComptable.value.length === 0) {
+  store.dispatch('fetchExercicesComptables');
+}
+
+const dropdownComponent = useTemplateRef('dropdown');
+const selectExercice = (id) => {
+  dropdownComponent.value.close();
+  dropdownComponent.value.value = false;
+  store.dispatch('selectExerciceComptable', id);
+};
+</script>
+
 <template>
   <div
     v-if="activeExerciceComptable"
@@ -36,43 +66,6 @@
     </base-dropdown>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ExerciceComptable',
-  computed: {
-    ...mapState({
-      listeExerciceComptable: (state) =>
-        state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
-      activeExerciceComptable: (state) =>
-        state.exerciceComptable.liste.find(
-          (e) => e.id == state.exerciceComptable.activeId,
-        ),
-      hasConfigPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.COMPTABILITE.CONFIG),
-    }),
-  },
-  mounted() {
-    if (this.listeExerciceComptable.length === 0) {
-      this.$store.dispatch('fetchExercicesComptables');
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    selectExercice(id) {
-      this.$refs.dropdown.close();
-      this.dropdown = false;
-      this.$store.dispatch('selectExerciceComptable', id);
-    },
-  },
-};
-</script>
 
 <style scoped>
 .exercice-comptable {

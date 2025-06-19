@@ -1,3 +1,36 @@
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+
+const { pdfData } = defineProps({
+  pdfData: {
+    type: Object,
+  },
+});
+
+const url = ref(null);
+const displayPdf = (data) => {
+  const previousUrl = url.value;
+
+  if (data === null) {
+    document.getElementById('pdf-viewer').setAttribute('src', null);
+  } else {
+    url.value = URL.createObjectURL(
+      new Blob([data], { type: 'application/pdf' }),
+    );
+    document.getElementById('pdf-viewer').setAttribute('src', url.value);
+  }
+
+  if (previousUrl !== null) {
+    URL.revokeObjectURL(previousUrl);
+  }
+};
+watch(
+  () => pdfData,
+  () => displayPdf(pdfData),
+);
+onMounted(() => displayPdf(pdfData));
+</script>
+
 <template>
   <iframe
     id="pdf-viewer"
@@ -15,47 +48,3 @@
     </html>
   </iframe>
 </template>
-
-<script>
-export default {
-  props: {
-    pdfData: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      url: null,
-    };
-  },
-  watch: {
-    pdfData(next) {
-      this.displayPdf(next);
-    },
-  },
-  mounted() {
-    this.displayPdf(this.pdfData);
-  },
-  methods: {
-    displayPdf(data) {
-      const previousUrl = this.url;
-
-      if (data === null) {
-        document.getElementById('pdf-viewer').setAttribute('src', null);
-      } else {
-        this.url = URL.createObjectURL(
-          new Blob([data], { type: 'application/pdf' })
-        );
-        document.getElementById('pdf-viewer').setAttribute('src', this.url);
-      }
-
-      if (previousUrl !== null) {
-        URL.revokeObjectURL(previousUrl);
-      }
-    },
-  },
-};
-</script>
-
-<style></style>

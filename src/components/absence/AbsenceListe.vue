@@ -1,3 +1,80 @@
+<script setup>
+import { useStore } from 'vuex';
+import permissions from '../../store/permissions.js';
+import { computed, ref, watchEffect } from 'vue';
+import useHasPermission from '../../hooks/usePermission.js';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const store = useStore();
+
+await store.dispatch('fetchExercicesComptables');
+
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalites = store.dispatch('fetchLocalites');
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchAbsences', store.state.exerciceComptable.activeId);
+  loading.value = false;
+});
+await Promise.all([loadSapeurs, loadLocalites]);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const absences = computed(() =>
+  store.state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
+);
+const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
+
+const computedData = computed(() => {
+  return absences.value.map((a) => ({
+    ...a,
+    nom_prenom: sapeurs.value.find((s) => s.id === a.sapeur_id)?.nom_prenom,
+  }));
+});
+
+const { showModal, confirm } = useModalStore();
+const addAbsence = () => showModal({ component: 'ModalAbsence' });
+
+const modifierAbsence = (absence) =>
+  showModal({ component: 'ModalAbsence', data: absence });
+
+const removeAbsence = (id) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette absence ?',
+    "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+  ).then(() => store.dispatch('removeAbsence', id));
+
+const onRowClass = (dataItem, isSelected) => {
+  if (dataItem.statut == 0) {
+    return 'text-danger';
+  }
+  if (isSelected) {
+    return '';
+  }
+
+  const statutsClass = {
+    0: '', //'Annulé',
+    1: '', //'A saisir',
+    2: '', //'Saisie',
+    3: '', //'Validé',
+    4: 'table-success', //'Imputée'
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const fields = [
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Départ', key: 'debut', type: Date },
+  { title: 'Retour', key: 'fin', type: Date },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter id="absences" v-slot="{ filteredData }" :data="computedData">
     <div class="row">
@@ -39,11 +116,10 @@
               :loading="loading"
               ref="basetable_absences"
               :selectable="true"
-              :fields="fieldsBase"
+              :fields="fields"
               no-data="Aucune absence"
               :data="filteredData"
               :row-class="onRowClass"
-              @selected="selectAbsence"
             >
               <template #actions="{ rowData }">
                 <button
@@ -70,130 +146,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-import permissions from '../../store/permissions.js';
-
-async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadAbsences = store.dispatch(
-    'fetchAbsences',
-    store.state.exerciceComptable.activeId,
-  );
-  const loadLocalites = store.dispatch('fetchLocalites');
-  Promise.all([loadAbsences, loadSapeurs, loadLocalites]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'AbsenceListe',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      fieldsBase: [
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Départ', key: 'debut', type: Date },
-        { title: 'Retour', key: 'fin', type: Date },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      absences: (state) =>
-        state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.ABSENCE.MODIFICATION),
-    }),
-    computedData() {
-      return this.absences.map((a) => ({
-        ...a,
-        nom_prenom: this.sapeurs.find((s) => s.id === a.sapeur_id)?.nom_prenom,
-      }));
-    },
-    filteredLocalites() {
-      const ids = new Set(this.absences.map((i) => parseInt(i.localite_id)));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId(id) {
-      this.loading = true;
-      this.$store.dispatch('fetchAbsences', id).then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    addAbsence() {
-      this.SHOW_MODAL({ component: 'ModalAbsence' });
-    },
-    modifierAbsence(absence) {
-      this.SHOW_MODAL({ component: 'ModalAbsence', data: absence });
-    },
-    removeAbsence(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette absence ?',
-          question:
-            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeAbsence', id);
-          }
-        },
-      });
-    },
-    selectAbsence(row) {
-      this.selectedId = row?.id;
-    },
-    onRowClass(dataItem, isSelected) {
-      if (dataItem.statut == 0) {
-        return 'text-danger';
-      }
-      if (isSelected) {
-        return '';
-      }
-
-      const statutsClass = {
-        0: '', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'Saisie',
-        3: '', //'Validé',
-        4: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>
-
-<style scoped></style>
