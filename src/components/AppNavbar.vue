@@ -1,3 +1,46 @@
+<script setup>
+import { computed, ref, useTemplateRef } from 'vue';
+import * as releases from '../../releases.json';
+import { DOC_URL } from '../http/Env.js';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
+const store = useStore();
+const router = useRouter();
+const { hideSidebar, noSidebar } = defineProps({
+  hideSidebar: {
+    type: Boolean,
+    default: false,
+  },
+  noSidebar: {
+    type: Boolean,
+    default: () => false,
+  },
+});
+defineEmits(['toggleSidebar']);
+const showNotif = ref(
+  localStorage.getItem('latestReleaseDate') != releases.releases[0].date ||
+    localStorage.getItem('latestSeenVersion') != releases.releases[0].version,
+);
+
+const isAdmin = computed(() => store.state.auth.admin);
+const dropdownComponent = useTemplateRef('dropdown');
+
+const clickInfo = (navigate) => {
+  showNotif.value = false;
+  navigate();
+};
+const parametres = () => {
+  dropdownComponent.close();
+  router.push({ name: 'utilisateur' });
+};
+const logout = () => {
+  store.dispatch('logout').then(() => {
+    router.push({ name: 'login' });
+  });
+};
+</script>
+
 <template>
   <nav
     class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
@@ -23,7 +66,7 @@
     <ul class="navbar-nav me-2">
       <li class="position-relative me-2">
         <a
-          :href="docUrl"
+          :href="DOC_URL"
           target="_blank"
           class="btn btn-sm btn-link nav-link pt-0 pb-0"
         >
@@ -64,57 +107,3 @@
     </ul>
   </nav>
 </template>
-
-<script>
-import { mapGetters, mapState } from 'vuex';
-import * as data from '../../releases.json';
-import { DOC_URL } from '../http/Env.js';
-
-export default {
-  name: 'AppNavbar',
-  props: {
-    hideSidebar: {
-      type: Boolean,
-      default: false,
-    },
-    noSidebar: {
-      type: Boolean,
-      default: () => false,
-    },
-  },
-  emits: ['toggleSidebar'],
-  data: () => {
-    return {
-      releases: data.releases,
-      showNotif: false,
-      docUrl: DOC_URL,
-    };
-  },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
-    ...mapState({
-      isAdmin: (state) => state.auth.admin,
-    }),
-  },
-  mounted() {
-    this.showNotif =
-      localStorage.getItem('latestReleaseDate') != this.releases[0].date ||
-      localStorage.getItem('latestSeenVersion') != this.releases[0].version;
-  },
-  methods: {
-    clickInfo(navigate) {
-      this.showNotif = false;
-      navigate();
-    },
-    parametres() {
-      this.$refs.dropdown.close();
-      this.$router.push({ name: 'utilisateur' });
-    },
-    logout() {
-      this.$store.dispatch('logout').then(() => {
-        this.$router.push({ name: 'login' });
-      });
-    },
-  },
-};
-</script>

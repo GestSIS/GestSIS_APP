@@ -1,3 +1,105 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, ref } from 'vue';
+
+const store = useStore();
+const loadPermissions = store.dispatch('fetchPermissions');
+const loadRoles = store.dispatch('fetchRoles');
+const loadUsers = store.dispatch('fetchUsers');
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+
+const loading = ref(true);
+Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(
+  () => (loading.value = false),
+);
+
+const filters = ref({
+  inactif: false,
+  special: true,
+  user: '',
+  sapeur: '',
+});
+
+const sisId = computed(() => store.state.auth.sis.activeId);
+const users = computed(() => store.state.auth.users);
+const roles = computed(() => store.state.auth.roles);
+const permissions = computed(() => store.state.auth.permissions);
+const sapeurs = computed(() => store.state.sapeur.liste);
+
+const computedData = computed(() =>
+  users.value
+    .map((u) => {
+      const sapeurId = u.sapeur[0]?.sapeur_id;
+      const sapeur = sapeurs.value.find((s) => s.id === sapeurId);
+      return {
+        ...u,
+        special: !sapeurId,
+        inactif: (!u.user_roles?.length ?? false) && (!sapeur?.actif ?? false),
+        actifStatut: sapeur?.actif ?? true,
+        nom_prenom: !u?.sapeur?.length > 0 ? '-' : (sapeur?.nom_prenom ?? '-'),
+        type: !u?.sapeur?.length > 0 ? '-' : sapeur?.type,
+      };
+    })
+    .filter((u) => (filters.value.inactif ? true : !u.inactif))
+    .filter((u) => (filters.value.special ? true : !u.special))
+    .filter((u) => {
+      const sapeurId = u.sapeur[0]?.sapeur_id;
+      const sapeur = sapeurs.value?.find((s) => s.id === sapeurId);
+      return (
+        sapeur?.nom_prenom
+          ?.normalize('NFD')
+          ?.replace(/[\u0300-\u036f]/g, '')
+          ?.toLowerCase()
+          ?.includes(
+            filters.value.sapeur
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase(),
+          ) ?? true
+      );
+    })
+    .filter((u) =>
+      u.name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .includes(
+          filters.value.user
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase(),
+        ),
+    ),
+);
+
+const { showModal } = useModalStore();
+const formatRole = (id) => roles.value.find((r) => r.id === id)?.nom;
+
+const invite = () => showModal({ component: 'ModalRegisterToken' });
+
+const edit = (user) =>
+  showModal({
+    component: 'ModalUserRole',
+    data: { ...user, roles: user.user_roles.map((r) => r.role_id) },
+  });
+
+const onRowClass = (dataItem) => {
+  if (!dataItem) {
+    return '';
+  }
+  return !dataItem?.actifStatut ? 'table-danger' : '';
+};
+
+const fields = [
+  { title: 'Utilisateur', key: 'name' },
+  { title: 'Sapeur', slot: 'sapeur' },
+  { title: 'Email', key: 'email' },
+  { title: 'Rôles', key: 'roles', slot: 'badges' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="col-12 col-md-12 col-xl-8">
     <div class="card card-primary card-outline mb-3">
@@ -88,131 +190,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-function loadData(routeTo, next) {
-  const loadUsers = store.dispatch('fetchUsers');
-  const loadPermissions = store.dispatch('fetchPermissions');
-  const loadRoles = store.dispatch('fetchRoles');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-
-  Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ListeUtilisateur',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      toggles: {},
-      loading: true,
-      filters: {
-        inactif: false,
-        special: true,
-        user: '',
-        sapeur: '',
-      },
-      fields: [
-        { title: 'Utilisateur', key: 'name' },
-        { title: 'Sapeur', slot: 'sapeur' },
-        { title: 'Email', key: 'email' },
-        { title: 'Rôles', key: 'roles', slot: 'badges' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sisId: (state) => state.auth.sis.activeId,
-      users: (state) => state.auth.users,
-      roles: (state) => state.auth.roles,
-      permissions: (state) => state.auth.permissions,
-      sapeurs: (state) => state.sapeur.liste,
-    }),
-    computedData() {
-      return this.users
-        .map((u) => {
-          const sapeurId = u.sapeur[0]?.sapeur_id;
-          const sapeur = this.sapeurs.find((s) => s.id === sapeurId);
-          return {
-            ...u,
-            special: !sapeurId,
-            inactif:
-              (!u.user_roles?.length ?? false) && (!sapeur?.actif ?? false),
-            actifStatut: sapeur?.actif ?? true,
-            nom_prenom:
-              !u?.sapeur?.length > 0 ? '-' : (sapeur?.nom_prenom ?? '-'),
-            type: !u?.sapeur?.length > 0 ? '-' : sapeur?.type,
-          };
-        })
-        .filter((u) => (this.filters.inactif ? true : !u.inactif))
-        .filter((u) => (this.filters.special ? true : !u.special))
-        .filter((u) => {
-          const sapeurId = u.sapeur[0]?.sapeur_id;
-          const sapeur = this.sapeurs?.find((s) => s.id === sapeurId);
-          return (
-            sapeur?.nom_prenom
-              ?.normalize('NFD')
-              ?.replace(/[\u0300-\u036f]/g, '')
-              ?.toLowerCase()
-              ?.includes(
-                this.filters.sapeur
-                  .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-                  .toLowerCase(),
-              ) ?? true
-          );
-        })
-        .filter((u) =>
-          u.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filters.user
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        );
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    formatRole(id) {
-      return this.roles.find((r) => r.id === id)?.nom;
-    },
-    invite() {
-      this.SHOW_MODAL({ component: 'ModalRegisterToken' });
-    },
-    edit(user) {
-      this.SHOW_MODAL({
-        component: 'ModalUserRole',
-        data: { ...user, roles: user.user_roles.map((r) => r.role_id) },
-      });
-    },
-    onRowClass(dataItem) {
-      if (!dataItem) {
-        return '';
-      }
-
-      return !dataItem?.actifStatut ? 'table-danger' : '';
-    },
-  },
-};
-</script>

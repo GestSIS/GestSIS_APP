@@ -1,3 +1,16 @@
+<script setup>
+const { steps, activeIndex } = defineProps({
+  steps: {
+    type: Array,
+    default: () => [],
+  },
+  activeIndex: {
+    type: Number,
+    default: 0,
+  },
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-12 col-lg-8 ms-auto me-auto mb-4">
@@ -16,22 +29,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'MultiStep',
-  props: {
-    steps: {
-      type: Array,
-      default: () => [],
-    },
-    activeIndex: {
-      type: Number,
-      default: 0,
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .multisteps-form__panel[data-animation='scaleIn'] {
@@ -84,11 +81,14 @@ export default {
   content: '';
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  transition: all 0.15s linear 0s,
+  transition:
+    all 0.15s linear 0s,
     -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
-  transition: all 0.15s linear 0s,
+  transition:
+    all 0.15s linear 0s,
     transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
-  transition: all 0.15s linear 0s,
+  transition:
+    all 0.15s linear 0s,
     transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s,
     -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
   border: 2px solid currentColor;

@@ -1,3 +1,66 @@
+<script setup>
+import { useStore } from 'vuex';
+import { computed, ref } from 'vue';
+
+const store = useStore();
+const loadUsers = store.dispatch('fetchUsers');
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+
+const loading = ref(true);
+Promise.all([loadUsers, loadSapeurs]).then(() => (loading.value = false));
+
+const filters = ref({
+  sapeur: '',
+  email: '',
+});
+
+const sisId = computed(() => store.state.auth.sis.activeId);
+const users = computed(() => store.state.auth.users);
+const sapeurs = computed(() => store.state.sapeur.liste);
+
+const computedData = computed(() => {
+  const sapeurIds = new Set(
+    users.value.flatMap((u) =>
+      u.sapeur.filter((s) => s.sis_id == sisId.value).map((s) => s.sapeur_id),
+    ),
+  );
+  return sapeurs.value
+    .filter((s) => s.actif)
+    .filter((s) => s.type == 0)
+    .filter((s) => !sapeurIds.has(s.id))
+    .filter((s) =>
+      s.nom_prenom
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .includes(
+          filters.value.sapeur
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase(),
+        ),
+    )
+    .filter((s) =>
+      s.email
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .includes(
+          filters.value.email
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase(),
+        ),
+    );
+});
+
+const fields = [
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Email', key: 'email' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="col-12 col-md-6 col-xl-3">
     <div class="card card-primary card-outline mb-3">
@@ -69,105 +132,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-function loadData(routeTo, next) {
-  const loadUsers = store.dispatch('fetchUsers');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-
-  Promise.all([loadUsers, loadSapeurs]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'SapeurSansCompte',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      filters: {
-        sapeur: '',
-        email: '',
-      },
-      loading: true,
-      fields: [
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Email', key: 'email' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sisId: (state) => state.auth.sis.activeId,
-      users: (state) => state.auth.users,
-      sapeurs: (state) => state.sapeur.liste,
-    }),
-    computedData() {
-      const sapeurIds = new Set(
-        this.users.flatMap((u) =>
-          u.sapeur
-            .filter((s) => s.sis_id == this.sisId)
-            .map((s) => s.sapeur_id),
-        ),
-      );
-      return this.sapeurs
-        .filter((s) => s.actif)
-        .filter((s) => s.type == 0)
-        .filter((s) => !sapeurIds.has(s.id))
-        .filter((s) =>
-          s.nom_prenom
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filters.sapeur
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        )
-        .filter((s) =>
-          s.email
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              this.filters.email
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        );
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    onRowClass(dataItem) {
-      if (!dataItem?.sapeur?.length > 0) {
-        return '';
-      }
-
-      const sapeurId = dataItem.sapeur[0].sapeur_id;
-      return !this.sapeurs.find((s) => s.id === sapeurId)?.actif
-        ? 'text-danger'
-        : '';
-    },
-  },
-};
-</script>
-
-<style></style>
