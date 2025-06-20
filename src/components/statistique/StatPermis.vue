@@ -52,7 +52,7 @@ export default {
           (prev[permis_type_id] = (prev[permis_type_id] ?? 0) + parseFloat(nb)),
           prev
         ),
-        {}
+        {},
       );
     },
     filteredPermis() {
@@ -63,5 +63,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

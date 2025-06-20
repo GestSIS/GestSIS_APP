@@ -59,7 +59,7 @@ export default {
             (prev[vehicule.vehicule_id] ?? 0) + parseInt(vehicule.nb)),
           prev
         ),
-        {}
+        {},
       );
     },
     filteredVehicules() {
@@ -70,5 +70,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

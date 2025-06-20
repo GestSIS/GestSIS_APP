@@ -55,7 +55,7 @@
                 {{
                   Object.values(occurences).reduce(
                     (partialSum, a) => partialSum + (parseInt(a?.nb) ?? 0),
-                    0
+                    0,
                   )
                 }}
               </th>
@@ -68,7 +68,7 @@
                     .reduce(
                       (partialSum, a) =>
                         partialSum + Number.parseFloat(a?.heures ?? 0),
-                      0.0
+                      0.0,
                     )
                     ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                 }}
@@ -99,7 +99,7 @@ async function loadData(_, next) {
   Promise.all([loadInterventions, loadTypes, loadStats, loadTraitements]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -182,7 +182,7 @@ export default {
         },
       ].slice(
         0,
-        this.displayKey != 'statistiquesInterventionTraitement' ? 3 : 2
+        this.displayKey != 'statistiquesInterventionTraitement' ? 3 : 2,
       );
     },
   },
@@ -193,5 +193,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

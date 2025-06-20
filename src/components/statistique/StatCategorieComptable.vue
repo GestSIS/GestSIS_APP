@@ -29,7 +29,7 @@
                 {{
                   filteredData.reduce(
                     (acc, a) => acc + (parseInt(a.nb) ?? 0),
-                    0
+                    0,
                   )
                 }}
               </th>
@@ -92,5 +92,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -256,7 +256,7 @@ export default {
       const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
       const actuelIds = new Set(this.actuel.map((s) => s.sapeur_id));
       const potentielModifieIds = new Set(
-        [...referenceIds].filter((id) => actuelIds.has(id))
+        [...referenceIds].filter((id) => actuelIds.has(id)),
       );
 
       const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
@@ -283,7 +283,7 @@ export default {
           let modifie = false;
 
           const reference = this.reference.find(
-            (s2) => s2.sapeur_id == s.sapeur_id
+            (s2) => s2.sapeur_id == s.sapeur_id,
           );
           const fields = [
             'nom',
@@ -314,12 +314,12 @@ export default {
             .filter((g) => !actuelGroupes.has(g));
 
           const groupesReference = new Map(
-            reference.groupes.map((g) => [g.no, g.description])
+            reference.groupes.map((g) => [g.no, g.description]),
           );
           const groupesModifie = s.groupes.filter(
             (g) =>
               groupesReference.has(g.no) &&
-              groupesReference.get(g.no) !== g.description
+              groupesReference.get(g.no) !== g.description,
           );
 
           if (
@@ -407,7 +407,7 @@ export default {
   methods: {
     switchAll(valeur) {
       this.mutations.forEach(
-        (m) => (this.unselected[m.sapeur_id] = !valeur.target.checked)
+        (m) => (this.unselected[m.sapeur_id] = !valeur.target.checked),
       );
     },
     mutate() {
@@ -430,10 +430,10 @@ export default {
       const unselected = new Set(
         Object.entries(this.unselected)
           .filter((data) => data[1])
-          .map((data) => parseInt(data[0]))
+          .map((data) => parseInt(data[0])),
       );
       const mutations = this.mutations.filter(
-        (m) => !unselected.has(m.sapeur_id)
+        (m) => !unselected.has(m.sapeur_id),
       );
 
       const sis = this.activeSisData.nom;
@@ -449,7 +449,7 @@ export default {
           .map((s) => ({
             ...s,
             groupes: s.groupes.filter(
-              (g) => !s.changements.groupesSupprime.includes(g.no)
+              (g) => !s.changements.groupesSupprime.includes(g.no),
             ),
             numeros: s.numeros.slice(0, s.changements.numerosSupprime),
           })),
@@ -470,5 +470,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

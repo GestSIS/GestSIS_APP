@@ -29,7 +29,7 @@
                 {{
                   filteredData.reduce(
                     (acc, a) => acc + (parseInt(a.nb) ?? 0),
-                    0
+                    0,
                   )
                 }}
               </th>
@@ -39,7 +39,7 @@
                     .reduce(
                       (acc, a) =>
                         acc + ((a.produit ? -1 : 1) * parseFloat(a.total) ?? 0),
-                      0.0
+                      0.0,
                     )
                     .toLocaleString(undefined, { minimumFractionDigits: 2 })
                 }}
@@ -95,5 +95,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

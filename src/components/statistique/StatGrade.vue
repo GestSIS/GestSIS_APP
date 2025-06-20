@@ -51,7 +51,7 @@ export default {
         (prev, { grade_id, nb }) => (
           (prev[grade_id] = (prev[grade_id] ?? 0) + parseFloat(nb)), prev
         ),
-        {}
+        {},
       );
     },
     filteredGrade() {
@@ -62,5 +62,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

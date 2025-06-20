@@ -196,7 +196,7 @@ export default {
 
           // Modifie
           const reference = this.reference.find(
-            (s2) => s2.sapeur_id == s.sapeur_id
+            (s2) => s2.sapeur_id == s.sapeur_id,
           );
           const fields = [
             'nom',
@@ -221,12 +221,12 @@ export default {
             .filter((g) => !referenceGroupes.has(g));
 
           const groupesReference = new Map(
-            reference.groupes.map((g) => [g.no, g.description])
+            reference.groupes.map((g) => [g.no, g.description]),
           );
           const groupesModifie = s.groupes.filter(
             (g) =>
               groupesReference.has(g.no) &&
-              groupesReference.get(g.no) !== g.description
+              groupesReference.get(g.no) !== g.description,
           );
 
           changements = {
@@ -267,5 +267,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

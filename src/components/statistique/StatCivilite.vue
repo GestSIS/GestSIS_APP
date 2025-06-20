@@ -18,7 +18,7 @@
                 {{
                   Object.values(occurences).reduce(
                     (partialSum, a) => partialSum + (parseInt(a) ?? 0),
-                    0
+                    0,
                   )
                 }}
               </th>
@@ -54,7 +54,7 @@ export default {
         (prev, { civilite_id, nb }) => (
           (prev[civilite_id] = (prev[civilite_id] ?? 0) + parseFloat(nb)), prev
         ),
-        {}
+        {},
       );
     },
     filteredCivilite() {
@@ -66,5 +66,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

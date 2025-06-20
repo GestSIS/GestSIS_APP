@@ -51,7 +51,7 @@ export default {
         (prev, { fonction_id, nb }) => (
           (prev[fonction_id] = (prev[fonction_id] ?? 0) + parseFloat(nb)), prev
         ),
-        {}
+        {},
       );
     },
     filteredFonction() {
@@ -62,5 +62,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

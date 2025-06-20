@@ -58,7 +58,7 @@ export default {
         (prev, { materiel_id, nb }) => (
           (prev[materiel_id] = (prev[materiel_id] ?? 0) + parseFloat(nb)), prev
         ),
-        {}
+        {},
       );
     },
     filteredMateriel() {
@@ -69,5 +69,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

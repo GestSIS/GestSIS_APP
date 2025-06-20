@@ -83,7 +83,7 @@ export default {
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation)
+          a.designation.localeCompare(b.designation),
         ),
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
     }),
@@ -105,5 +105,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

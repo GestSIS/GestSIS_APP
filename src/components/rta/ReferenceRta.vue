@@ -230,12 +230,12 @@ export default {
             .filter((g) => !actuelGroupes.has(g));
 
           const groupesActuel = new Map(
-            actuel.groupes.map((g) => [g.no, g.description])
+            actuel.groupes.map((g) => [g.no, g.description]),
           );
           const groupesModifie = s.groupes.filter(
             (g) =>
               groupesActuel.has(g.no) &&
-              groupesActuel.get(g.no) !== g.description
+              groupesActuel.get(g.no) !== g.description,
           );
 
           changements = {
@@ -283,5 +283,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -81,5 +81,3 @@ watch(sisKey, init);
     v-bind="{ setFilter, filters, filteredData, reset, canReset }"
   ></slot>
 </template>
-
-<style lang="scss" scoped></style>

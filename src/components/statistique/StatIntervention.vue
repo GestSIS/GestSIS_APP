@@ -35,7 +35,7 @@ async function loadData(_, next) {
     loadTypeIntervention = store.dispatch('fetchStatistiqueTypeIntervention');
     loadStatFederal = store.dispatch('fetchStatistiqueStatFederal');
     loadTraitementIntervention = store.dispatch(
-      'fetchStatistiqueTraitementIntervention'
+      'fetchStatistiqueTraitementIntervention',
     );
   }
 
@@ -86,5 +86,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
