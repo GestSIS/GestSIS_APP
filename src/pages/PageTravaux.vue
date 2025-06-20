@@ -3,23 +3,26 @@ import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import useHasPermission from '../hooks/usePermission';
 
 const store = useStore();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadUnites = store.dispatch('fetchUnites');
-const loadTravailTypes = store.dispatch('fetchTravailTypes');
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchUnites');
+store.dispatch('fetchTravailTypes');
 
 const loading = ref(false);
 const selectedId = ref(null);
 
 await store.dispatch('fetchExercicesComptables');
-store.dispatch('fetchTravaux').then(() => (loading.value = false));
 
-await Promise.all([loadSapeurs, loadUnites, loadTravailTypes]);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchTravaux');
+  loading.value = false;
+});
 
 const activeExerciceComptableId = computed(
   () => store.state.exerciceComptable.activeId,
@@ -63,13 +66,6 @@ const filteredTravailTypes = computed(() => {
 });
 const selectedItem = computed(() => {
   return travaux.value.find((t) => t.id == selectedId.value);
-});
-
-watch(activeExerciceComptableId, () => {
-  loading.value = true;
-  await store.dispatch('fetchTravaux').then(() => {
-    loading.value = false;
-  });
 });
 
 const { showModal } = useModalStore();
