@@ -106,7 +106,6 @@
               no-data="Aucune écriture à afficher"
               :selectable="true"
               :data="filteredData"
-              @selected="selected"
             >
               <template #foot>
                 <tr>
@@ -162,7 +161,6 @@ export default {
     return {
       dropdown: false,
       loading: true,
-      selectedId: null,
       fields: [
         { title: 'Date', key: 'date', type: Date },
         {
@@ -231,9 +229,6 @@ export default {
       if (!compte) return '';
       return compte?.numero + ' - ' + compte?.designation;
     },
-    selected(id) {
-      this.selectedId = id;
-    },
     formatedDate() {
       var today = new Date();
       return new Date(today.getTime() - today.getTimezoneOffset() * 60000)
@@ -286,7 +281,6 @@ export default {
     },
     selectCompte(id) {
       this.$refs.dropdown.close();
-      this.selectedId = null;
       this.$store.dispatch('selectActiveCompte', id).then(() => {});
       this.dropdown = false;
     },
@@ -294,7 +288,6 @@ export default {
       if (this.activeCompteId) {
         this.$store.dispatch('fetchEcritureComptes').then(() => {
           this.loading = false;
-          this.selectedId = null;
         });
       }
     },
