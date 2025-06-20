@@ -384,8 +384,8 @@ export default {
     },
   },
   watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeIntervention');
+    activeExerciceComptableId(id) {
+      this.$store.dispatch('fetchListeIntervention', id);
     },
   },
   methods: {

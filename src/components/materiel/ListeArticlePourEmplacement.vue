@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { groupedByData, indexedData } from '../../tools';
 import ArticleService from '../../services/materiel/ArticleService';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
@@ -33,20 +33,18 @@ const affichageIndividuel = ref(false);
 const emplacement = computed(() =>
   emplacementStore.liste.find((e) => e.id === parseInt(id)),
 );
-const loadArticles = async () => {
+
+watchEffect(async () => {
   loading.value = true;
   articles.value = await ArticleService.getParEmplacement(id);
   loading.value = false;
-};
+});
 
-loadArticles();
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
   couleurStore.fetchCouleurs(),
 ]);
-
-watch(() => id, loadArticles);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));

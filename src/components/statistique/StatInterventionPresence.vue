@@ -1,3 +1,52 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchLocalites');
+store.dispatch('fetchListeSapeur');
+await store.dispatch('fetchExercicesComptables');
+
+watchEffect(() =>
+  store.dispatch(
+    'fetchStatistiquePresenceIntervention',
+    store.state.exerciceComptable.activeId,
+  ),
+);
+const allSapeurs = ref(false);
+const fields = [
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Nombre', key: 'nb' },
+  { title: 'Durée [h]', key: 'duree' },
+];
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const presences = computed(() =>
+  store.state.statistique.presencesIntervention.map((p) => ({
+    ...p,
+    duree:
+      (new Date(p.fin).getTime() - new Date(p.debut).getTime()) /
+      (1000 * 60 * 60),
+  })),
+);
+const computedData = computed(() => {
+  const reducedPresences = presences.value.reduce((acc, val) => {
+    const { nb, duree } = acc[val.sapeur_id] ?? { nb: 0, duree: 0 };
+    acc[val.sapeur_id] = { nb: nb + 1, duree: duree + val.duree };
+    return acc;
+  }, {});
+
+  return sapeurs.value
+    .map((s) => ({
+      ...s,
+      ...(reducedPresences[s.id] ?? { duree: 0, nb: 0 }),
+    }))
+    .filter((s) => (allSapeurs.value && s.actif) || s.duree !== 0);
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-12 col-xl-6 mb-3">
@@ -38,79 +87,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([loadLocalites, loadSapeurs, loadExercicesComptables]).then(
-    () => {
-      store.dispatch('fetchStatistiquePresenceIntervention');
-      next();
-    }
-  );
-}
-
-export default {
-  name: 'StatExercicePresences',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      allSapeurs: false,
-      fields: [
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Nombre', key: 'nb' },
-        { title: 'Durée [h]', key: 'duree' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      presences: (state) =>
-        state.statistique.presencesIntervention.map((p) => ({
-          ...p,
-          duree:
-            (new Date(p.fin).getTime() - new Date(p.debut).getTime()) /
-            (1000 * 60 * 60),
-        })),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    computedData() {
-      const reducedPresences = this.presences.reduce((acc, val) => {
-        const { nb, duree } = acc[val.sapeur_id] ?? { nb: 0, duree: 0 };
-        acc[val.sapeur_id] = { nb: nb + 1, duree: duree + val.duree };
-        return acc;
-      }, {});
-
-      return this.sapeurs
-        .map((s) => ({
-          ...s,
-          ...(reducedPresences[s.id] ?? { duree: 0, nb: 0 }),
-        }))
-        .filter((s) => (this.allSapeurs && s.actif) || s.duree !== 0);
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchStatistiquePresenceIntervention').then();
-    },
-  },
-  mounted() {
-    loadData('', () => {});
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 #legend-container {

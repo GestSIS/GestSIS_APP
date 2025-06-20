@@ -1,3 +1,55 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchEcritureCategories');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchStatistiqueCategorieComptable',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
+
+const allCategorie = ref(false);
+const fields = [
+  { title: 'Catégorie comptable', key: 'designation' },
+  {
+    title: 'Nb écritures',
+    key: 'nb',
+    columnClass: 'text-end',
+    titleClass: 'text-end',
+  },
+  {
+    title: 'Total',
+    key: 'total',
+    type: Number,
+    columnClass: 'text-end',
+    titleClass: 'text-end',
+  },
+];
+
+const categories = computed(() =>
+  store.state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
+);
+const stats = computed(() => store.state.statistique.categoriesComptable);
+const filteredData = computed(() => {
+  const ids = new Set(stats.value.map((c) => c.ecriture_categorie_id));
+  return categories.value
+    .filter((e) => allCategorie.value || ids.has(e.id))
+    .map((c) => ({
+      ...c,
+      ...(stats.value.find((s) => s.ecriture_categorie_id == c.id) ?? {}),
+    }));
+});
+</script>
+
 <template>
   <div class="col-12 col-md-6 col-xl-4">
     <div class="card card-primary card-outline">
@@ -17,6 +69,7 @@
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="filteredData"
           no-data="Aucun écriture"
@@ -47,48 +100,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'StatCategorieComptable',
-  data() {
-    return {
-      allCategorie: false,
-      fields: [
-        { title: 'Catégorie comptable', key: 'designation' },
-        {
-          title: 'Nb écritures',
-          key: 'nb',
-          columnClass: 'text-end',
-          titleClass: 'text-end',
-        },
-        {
-          title: 'Total',
-          key: 'total',
-          type: Number,
-          columnClass: 'text-end',
-          titleClass: 'text-end',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      categories: (state) =>
-        state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
-      stats: (state) => state.statistique.categoriesComptable,
-    }),
-    filteredData() {
-      const ids = new Set(this.stats.map((c) => c.ecriture_categorie_id));
-      return this.categories
-        .filter((e) => this.allCategorie || ids.has(e.id))
-        .map((c) => ({
-          ...c,
-          ...(this.stats.find((s) => s.ecriture_categorie_id == c.id) ?? {}),
-        }));
-    },
-  },
-};
-</script>

@@ -145,7 +145,10 @@ import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 
 async function loadData(_, next) {
-  const loadExercices = store.dispatch('fetchListeExercice');
+  const loadExercices = store.dispatch(
+    'fetchListeExercice',
+    store.state.exercice.active.id,
+  );
   const loadCategories = store.dispatch('fetchExerciceCategories');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');

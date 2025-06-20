@@ -119,7 +119,10 @@ import store from '/src/store/index';
 import permissions from '../../store/permissions.js';
 
 async function loadData(routeTo, next) {
-  const loadExercices = store.dispatch('fetchListeExercice');
+  const loadExercices = store.dispatch(
+    'fetchListeExercice',
+    store.state.exercice.active.id,
+  );
   const loadAbsences = store.dispatch('fetchExerciceAbsences');
   const loadExcuseParams = store.dispatch('fetchExcuseParams');
   const loadExcuseTypes = store.dispatch('fetchExcuseTypes');
@@ -255,7 +258,10 @@ export default {
     activeExerciceComptableId() {
       this.loading = true;
 
-      const loadExercices = this.$store.dispatch('fetchListeExercice');
+      const loadExercices = this.$store.dispatch(
+        'fetchListeExercice',
+        this.activeExerciceComptableId,
+      );
       const loadAbsences = this.$store.dispatch('fetchExerciceAbsences');
       Promise.all([loadExercices, loadAbsences]).then(() => {
         this.loading = false;

@@ -246,7 +246,10 @@ import { exercicesToIcs } from '../../tools/exportExercices';
 async function loadData(routeTo, next) {
   await store.dispatch('fetchExercicesComptables');
 
-  const loadExercices = store.dispatch('fetchListeExercice');
+  const loadExercices = store.dispatch(
+    'fetchListeExercice',
+    store.state.exerciceComptable.activeId,
+  );
   Promise.all([loadExercices]).then(() => {
     next();
   });
@@ -353,9 +356,9 @@ export default {
     },
   },
   watch: {
-    activeExerciceComptableId() {
+    activeExerciceComptableId(id) {
       this.loading = true;
-      this.$store.dispatch('fetchListeExercice').then(() => {
+      this.$store.dispatch('fetchListeExercice', id).then(() => {
         this.loading = false;
       });
     },

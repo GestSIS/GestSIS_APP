@@ -1,3 +1,44 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+store.dispatch('fetchGrades');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchStatistiqueGrade',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
+
+const allGrades = ref(false);
+const fields = [
+  { title: 'Grade', key: 'designation' },
+  { title: 'Nombre', key: 'quantite' },
+];
+
+const grades = computed(() => store.state.grade.liste);
+const sapeurGrades = computed(() => store.state.statistique.grades);
+const occurences = computed(() => {
+  return sapeurGrades.value.reduce(
+    (prev, { grade_id, nb }) => (
+      (prev[grade_id] = (prev[grade_id] ?? 0) + parseFloat(nb)), prev
+    ),
+    {},
+  );
+});
+const filteredGrade = computed(() => {
+  return grades.value
+    .filter((e) => allGrades.value || occurences.value[e.id])
+    .map((e) => ({ ...e, quantite: occurences.value[e.id] ?? 0 }));
+});
+</script>
+
 <template>
   <div class="col-12 col-md-6 col-xl-4">
     <div class="card card-primary card-outline">
@@ -17,6 +58,7 @@
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="filteredGrade"
           no-data="Aucun grade"
@@ -26,39 +68,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'StatGrade',
-  data() {
-    return {
-      allGrades: false,
-      fields: [
-        { title: 'Grade', key: 'designation' },
-        { title: 'Nombre', key: 'quantite' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      grades: (state) => state.grade.liste,
-      sapeurGrades: (state) => state.statistique.grades,
-    }),
-    occurences() {
-      return this.sapeurGrades.reduce(
-        (prev, { grade_id, nb }) => (
-          (prev[grade_id] = (prev[grade_id] ?? 0) + parseFloat(nb)), prev
-        ),
-        {},
-      );
-    },
-    filteredGrade() {
-      return this.grades
-        .filter((e) => this.allGrades || this.occurences[e.id])
-        .map((e) => ({ ...e, quantite: this.occurences[e.id] ?? 0 }));
-    },
-  },
-};
-</script>

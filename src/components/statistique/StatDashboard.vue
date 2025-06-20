@@ -30,21 +30,23 @@
           <ul>
             <li>Stat catégorie/module comptable, compte</li>
           </ul>
-          <!-- <h3>TODO: Second temps</h3>
-            <h4>Exercices</h4>
+          <!--
+          <h3>TODO: Second temps</h3>
+          <h4>Matériel</h4>
+          <ul>
+            <li>Longeur tuyau</li>
+          </ul>
+          <h4>Exercices</h4>
           <ul>
             <li>Nb heure par sapeur</li>
           </ul>
           <h4>Intervention</h4>
           <ul>
             <li>Statistiques de présences sur intervention</li>
-          </ul>-->
+          </ul>
+          -->
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {};
-</script>

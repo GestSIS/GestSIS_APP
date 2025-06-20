@@ -76,82 +76,82 @@ export default {
     },
   },
   actions: {
-    fetchStatistiqueCivilite({ getters, commit }) {
+    fetchStatistiqueCivilite({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatCivilite(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_CIVILITE, data));
     },
-    fetchStatistiqueFonction({ getters, commit }) {
+    fetchStatistiqueFonction({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatFonction(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_FONCTION, data));
     },
-    fetchStatistiqueGrade({ getters, commit }) {
+    fetchStatistiqueGrade({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatGrade(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_GRADE, data));
     },
-    fetchStatistiquePermis({ getters, commit }) {
+    fetchStatistiquePermis({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatPermis(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_PERMIS, data));
     },
-    fetchStatistiqueCategorieComptable({ getters, commit }) {
+    fetchStatistiqueCategorieComptable({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatCategorieComptable(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_CATEGORIE_COMPTABLE, data)
       );
     },
-    fetchStatistiqueCompte({ getters, commit }) {
+    fetchStatistiqueCompte({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatCompte(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_COMPTE, data));
     },
-    fetchStatistiqueModuleComptable({ getters, commit }) {
+    fetchStatistiqueModuleComptable({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatModuleComptable(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_MODULE_COMPTABLE, data));
     },
-    fetchStatistiqueVehicule({ getters, commit }) {
+    fetchStatistiqueVehicule({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatVehicule(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_VEHICULE, data));
     },
-    fetchStatistiqueMateriel({ getters, commit }) {
+    fetchStatistiqueMateriel({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatMateriel(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_MATERIEL, data));
     },
-    fetchStatistiquePresenceExercice({ getters, commit }) {
+    fetchStatistiquePresenceExercice({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatPresencesExercice(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_PRESENCE_EXERCICE, data)
       );
     },
-    fetchStatistiquePresenceIntervention({ getters, commit }) {
+    fetchStatistiquePresenceIntervention({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatPresencesIntervention(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_PRESENCE_INTERVENTION, data)
       );
     },
-    fetchStatistiqueTypeIntervention({ getters, commit }) {
+    fetchStatistiqueTypeIntervention({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatTypeIntervention(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_TYPE_INTERVENTION, data)
       );
     },
-    fetchStatistiqueStatFederal({ getters, commit }) {
+    fetchStatistiqueStatFederal({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatStatFederal(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_STAT_FEDERAL, data));
     },
-    fetchStatistiqueTraitementIntervention({ getters, commit }) {
+    fetchStatistiqueTraitementIntervention({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatTraitementIntervention(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) =>
         commit(types.UPDATE_STATISTIQUE_INTERVENTION_TRAITEMENT, data)
       );

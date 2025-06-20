@@ -1,3 +1,311 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchLocalites');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchExcuseTypes');
+store.dispatch('fetchExerciceCategories');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchListeExercice',
+    store.state.exerciceComptable.activeId,
+  );
+  store.dispatch(
+    'fetchStatistiquePresenceExercice',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
+
+const selectedSapeurId = ref(null);
+const unselectedCategories = ref([]);
+const unselectedSapeurDe = ref([]);
+const unselectedExerciceA = ref([]);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const indexedSapeursLocaliteId = computed(() =>
+  store.state.sapeur.liste.reduce((map, e) => {
+    map.set(e.id, e.localite_id);
+    return map;
+  }, new Map()),
+);
+const fonctions = computed(() => store.state.fonction.liste);
+const exercices = computed(() =>
+  store.state.exercice.liste.sort(
+    (a, b) => new Date(a.date) - new Date(b.date),
+  ),
+);
+const indexedExercices = computed(() =>
+  store.state.exercice.liste.reduce((map, e) => {
+    map.set(e.id, e);
+    return map;
+  }, new Map()),
+);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const presences = computed(() =>
+  store.state.statistique.presencesExercice.map((e) => ({
+    ...e,
+    sapeur_id: parseInt(e.sapeur_id),
+    exercice_id: parseInt(e.exercice_id),
+    convoque: parseInt(e.convoque),
+    present: parseInt(e.present),
+    absent: parseInt(e.absent),
+    remplace: parseInt(e.remplace),
+    excuse_type_id: parseInt(e.excuse_type_id),
+    excuse_statut: parseInt(e.excuse_statut),
+  })),
+);
+const excuses = computed(() => store.state.excuseType.liste);
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+const localiteExercices = computed(() => {
+  const loc = new Set(exercices.value.map((e) => e.localite_id));
+  return localites.value.filter((l) => loc.has(l.id));
+});
+const localiteSapeurs = computed(() => {
+  const loc = new Set(sapeurs.value.map((e) => e.localite_id));
+  return localites.value.filter((l) => loc.has(l.id));
+});
+const categorieExercices = computed(() => {
+  const cat = new Set(exercices.value.map((e) => e.exercice_categorie_id));
+  return categories.value.filter((c) => cat.has(c.id));
+});
+const filteredSapeurs = computed(() => {
+  const sapeurIds = new Set(presences.value.map((s) => s.sapeur_id));
+  return sapeurs.value.filter((s) => sapeurIds.has(s.id));
+});
+const displayExercice = computed(() => {
+  const unselectedCat = new Set(unselectedCategories.value);
+  const unselectedLoc = new Set(unselectedExerciceA.value);
+  return exercices.value.filter(
+    (e) =>
+      !unselectedCat.has(e.exercice_categorie_id) &&
+      !unselectedLoc.has(e.localite_id),
+  );
+});
+
+const computeStats = (presences) => {
+  const stats = presences
+    .map((p) => [
+      p.convoque ? 1 : 0,
+      p.present ? 1 : 0,
+      p.absent ? 1 : 0,
+      p.remplace ? 1 : 0,
+      p.excuse_type_id ? 1 : 0,
+      p.excuse_statut === -2 ? 1 : 0,
+    ])
+    .reduce(
+      (accumulator, p) => accumulator.map((v, i) => v + p[i]),
+      [0, 0, 0, 0, 0],
+    );
+  return {
+    convoque: stats[0],
+    present: stats[1],
+    absent: stats[2],
+    remplace: stats[3],
+    excuse: stats[4],
+    amende: stats[5],
+  };
+};
+const computedData = computed(() => {
+  const unselectedLocaliteSapeur = new Set(unselectedSapeurDe.value);
+  const unselectedLocaliteExercice = new Set(unselectedExerciceA.value);
+  const unselectedExerciceCategorie = new Set(unselectedCategories.value);
+
+  const filteredPresences = presences.value.filter((p) => {
+    const exercice = indexedExercices.value.get(p.exercice_id);
+    return (
+      !unselectedLocaliteExercice.has(exercice?.localite_id) &&
+      !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
+      !unselectedLocaliteSapeur.has(
+        indexedSapeursLocaliteId.value.get(p.sapeur_id),
+      )
+    );
+  });
+  const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
+    const sapeurList = map[e.sapeur_id] || [];
+    map[e.sapeur_id] = [...sapeurList, e];
+    return map;
+  }, {});
+
+  const sapeurExerciceIndexedPresence = filteredPresences.reduce((map, e) => {
+    const sapeurMap = map.get(e.sapeur_id) || new Map();
+    sapeurMap.set(e.exercice_id, e);
+    map.set(e.sapeur_id, sapeurMap);
+    return map;
+  }, new Map());
+
+  return filteredSapeurs.value
+    .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
+    .map((s) => ({
+      ...s,
+      presences: displayExercice.value.map((e) =>
+        sapeurExerciceIndexedPresence.get(s.id)?.get(e.id),
+      ),
+      stats: computeStats(sapeurIndexedPresence[s.id] || []),
+      temp: sapeurIndexedPresence[s.id] || [],
+      localite: localites.value.find((l) => l.id == s.localiteId)?.designation,
+      fonction: fonctions.value.find((f) => f.id == s.fonction_id)?.nom || '-',
+    }));
+});
+
+const computedStats = computed(() => {
+  const unselectedLocaliteSapeur = new Set(unselectedSapeurDe.value);
+  const unselectedLocaliteExercice = new Set(unselectedExerciceA.value);
+  const unselectedExerciceCategorie = new Set(unselectedCategories.value);
+
+  return computeStats(
+    presences.value?.filter((p) => {
+      const exercice = indexedExercices.value.get(p.exercice_id);
+      return (
+        !unselectedLocaliteExercice.has(exercice?.localite_id) &&
+        !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
+        !unselectedLocaliteSapeur.has(
+          indexedSapeursLocaliteId.value.get(p.sapeur_id),
+        )
+      );
+    }),
+  );
+});
+
+const formatPresence = (presence) => {
+  if (!presence) {
+    return '';
+  }
+  if (presence.present) {
+    return '✓';
+  }
+  if (presence.remplace) {
+    return 'Rpl';
+  }
+  if (presence.excuse_type_id) {
+    const excuse = excuses.value.find((e) => e.id == presence.excuse_type_id);
+    return excuse?.abreviation;
+  }
+  return '✕';
+};
+const formatPresenceExport = (presence) => {
+  if (!presence) {
+    return '';
+  }
+  let prefix = '';
+  if (!presence.convoque) {
+    prefix = 'A';
+  }
+  if (presence.present) {
+    return prefix + 'Présent';
+  }
+  if (presence.remplace) {
+    return prefix + 'Remplacé';
+  }
+  if (presence.excuse_type_id) {
+    const excuse = excuses.value.find((e) => e.id == presence.excuse_type_id);
+    return prefix + excuse?.designation;
+  }
+  return prefix + '-';
+};
+const formatPresenceClass = (presence) => {
+  if (!presence) {
+    return '';
+  }
+  if (presence.excuse_statut == 1 || presence.present || presence.remplace) {
+    return 'text-bg-success';
+  }
+  if (presence.excuse_statut == -2) {
+    return 'text-bg-danger';
+  }
+  if (presence.excuse_statut == -1) {
+    return 'text-bg-warning';
+  }
+  if (presence.excuse_statut == 0) {
+    return 'text-bg-secondary';
+  }
+  if (presence.remplace || presence.statut == 1) {
+    return 'text-bg-success';
+  }
+};
+const toCvs = () => {
+  // TODO: Migrate to BaseTable and remove duplicates
+  const data =
+    'data:text/csv;charset=utf-8,\ufeff' +
+    [
+      'Sapeur',
+      'Localité',
+      'Fonction',
+      ...displayExercice.value.map((e) => e.designation),
+      'Nombre Convoqué',
+      'Nombre Présent',
+      'Nombre Remplacé',
+      'Nombre excusé',
+      'Nombre absent',
+    ].join(';') +
+    '\n' +
+    [
+      '',
+      '',
+      '',
+      ...displayExercice.value.map((e) =>
+        new Date(e.date).toLocaleDateString('fr-CH'),
+      ),
+      '',
+      '',
+      '',
+      '',
+      '',
+    ].join(';') +
+    '\n' +
+    computedData.value
+      .map((s) =>
+        [
+          s.nom_prenom,
+          s.localite,
+          s.fonction,
+          ...s.presences.map((p) => formatPresenceExport(p)),
+          s.stats.convoque,
+          s.stats.present,
+          s.stats.absent,
+          s.stats.remplace,
+          s.stats.excuse,
+          s.stats.amende,
+        ].join(';'),
+      )
+      .join('\n') +
+    '\n' +
+    [
+      `Total : ${exercices.value.length}`,
+      '',
+      '',
+      ...displayExercice.value.map(() => ''),
+      computedStats.value.convoque,
+      computedStats.value.present,
+      computedStats.value.absent,
+      computedStats.value.remplace,
+      computedStats.value.excuse,
+      computedStats.value.amende,
+    ].join(';');
+
+  // V2
+  var encodedUri = encodeURI(data);
+  var link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'statistiques_presences.csv');
+  document.body.appendChild(link); // Required for FF
+
+  link.click();
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-12 col-xl-6 mb-3">
@@ -221,353 +529,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadExcuses = store.dispatch('fetchExcuseTypes');
-  const loadCategories = store.dispatch('fetchExerciceCategories');
-  const loadExercicesComptables = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([
-    loadLocalites,
-    loadFonctions,
-    loadSapeurs,
-    loadExcuses,
-    loadCategories,
-    loadExercicesComptables,
-  ]).then(() => {
-    store.dispatch('fetchListeExercice');
-    store.dispatch('fetchStatistiquePresenceExercice');
-    next();
-  });
-}
-
-export default {
-  name: 'StatExercicePresences',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      selectedSapeurId: null,
-      unselectedCategories: [],
-      unselectedSapeurDe: [],
-      unselectedExerciceA: [],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      indexedSapeursLocaliteId: (state) =>
-        state.sapeur.liste.reduce((map, e) => {
-          map.set(e.id, e.localite_id);
-          return map;
-        }, new Map()),
-      fonctions: (state) => state.fonction.liste,
-      exercices: (state) =>
-        state.exercice.liste.sort(
-          (a, b) => new Date(a.date) - new Date(b.date),
-        ),
-      indexedExercices: (state) =>
-        state.exercice.liste.reduce((map, e) => {
-          map.set(e.id, e);
-          return map;
-        }, new Map()),
-      categories: (state) => state.exerciceCategorie.liste,
-      presences: (state) =>
-        state.statistique.presencesExercice.map((e) => ({
-          ...e,
-          sapeur_id: parseInt(e.sapeur_id),
-          exercice_id: parseInt(e.exercice_id),
-          convoque: parseInt(e.convoque),
-          present: parseInt(e.present),
-          absent: parseInt(e.absent),
-          remplace: parseInt(e.remplace),
-          excuse_type_id: parseInt(e.excuse_type_id),
-          excuse_statut: parseInt(e.excuse_statut),
-        })),
-      excuses: (state) => state.excuseType.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    localiteExercices() {
-      const localites = new Set(this.exercices.map((e) => e.localite_id));
-      return this.localites.filter((l) => localites.has(l.id));
-    },
-    localiteSapeurs() {
-      const localites = new Set(this.sapeurs.map((e) => e.localite_id));
-      return this.localites.filter((l) => localites.has(l.id));
-    },
-    categorieExercices() {
-      const categories = new Set(
-        this.exercices.map((e) => e.exercice_categorie_id),
-      );
-      return this.categories.filter((c) => categories.has(c.id));
-    },
-    categoriesOccurence() {
-      return this.exercices
-        .map((e) => e.exercice_categorie_id)
-        .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
-    },
-    filteredSapeurs() {
-      const sapeurIds = new Set(this.presences.map((s) => s.sapeur_id));
-      return this.sapeurs.filter((s) => sapeurIds.has(s.id));
-    },
-    displayExercice() {
-      const unselectedCategories = new Set(this.unselectedCategories);
-      const unselectedLocalites = new Set(this.unselectedExerciceA);
-      return this.exercices.filter(
-        (e) =>
-          !unselectedCategories.has(e.exercice_categorie_id) &&
-          !unselectedLocalites.has(e.localite_id),
-      );
-    },
-    computedData() {
-      const unselectedLocaliteSapeur = new Set(this.unselectedSapeurDe);
-      const unselectedLocaliteExercice = new Set(this.unselectedExerciceA);
-      const unselectedExerciceCategorie = new Set(this.unselectedCategories);
-
-      const filteredPresences = this.presences.filter((p) => {
-        const exercice = this.indexedExercices.get(p.exercice_id);
-        return (
-          !unselectedLocaliteExercice.has(exercice?.localite_id) &&
-          !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-          !unselectedLocaliteSapeur.has(
-            this.indexedSapeursLocaliteId.get(p.sapeur_id),
-          )
-        );
-      });
-      const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
-        const sapeurList = map[e.sapeur_id] || [];
-        map[e.sapeur_id] = [...sapeurList, e];
-        return map;
-      }, {});
-
-      const sapeurExerciceIndexedPresence = filteredPresences.reduce(
-        (map, e) => {
-          const sapeurMap = map.get(e.sapeur_id) || new Map();
-          sapeurMap.set(e.exercice_id, e);
-          map.set(e.sapeur_id, sapeurMap);
-          return map;
-        },
-        new Map(),
-      );
-
-      return this.filteredSapeurs
-        .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
-        .map((s) => ({
-          ...s,
-          presences: this.displayExercice.map((e) =>
-            sapeurExerciceIndexedPresence.get(s.id)?.get(e.id),
-          ),
-          stats: this.computeStats(sapeurIndexedPresence[s.id] || []),
-          temp: sapeurIndexedPresence[s.id] || [],
-          localite: this.localites.find((l) => l.id == s.localiteId)
-            ?.designation,
-          fonction:
-            this.fonctions.find((f) => f.id == s.fonction_id)?.nom || '-',
-        }));
-    },
-    computedStats() {
-      const unselectedLocaliteSapeur = new Set(this.unselectedSapeurDe);
-      const unselectedLocaliteExercice = new Set(this.unselectedExerciceA);
-      const unselectedExerciceCategorie = new Set(this.unselectedCategories);
-
-      return this.computeStats(
-        this.presences?.filter((p) => {
-          const exercice = this.indexedExercices.get(p.exercice_id);
-          return (
-            !unselectedLocaliteExercice.has(exercice?.localite_id) &&
-            !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-            !unselectedLocaliteSapeur.has(
-              this.indexedSapeursLocaliteId.get(p.sapeur_id),
-            )
-          );
-        }),
-      );
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeExercice');
-      this.$store.dispatch('fetchStatistiquePresenceExercice').then();
-    },
-  },
-  mounted() {
-    loadData('', () => {});
-  },
-  methods: {
-    computeStats(presences) {
-      const stats = presences
-        .map((p) => [
-          p.convoque ? 1 : 0,
-          p.present ? 1 : 0,
-          p.absent ? 1 : 0,
-          p.remplace ? 1 : 0,
-          p.excuse_type_id ? 1 : 0,
-          p.excuse_statut === -2 ? 1 : 0,
-        ])
-        .reduce(
-          (accumulator, p) => accumulator.map((v, i) => v + p[i]),
-          [0, 0, 0, 0, 0],
-        );
-      return {
-        convoque: stats[0],
-        present: stats[1],
-        absent: stats[2],
-        remplace: stats[3],
-        excuse: stats[4],
-        amende: stats[5],
-      };
-    },
-    formatPresence(presence) {
-      if (!presence) {
-        return '';
-      }
-      if (presence.present) {
-        return '✓';
-      }
-      if (presence.remplace) {
-        return 'Rpl';
-      }
-      if (presence.excuse_type_id) {
-        const excuse = this.excuses.find(
-          (e) => e.id == presence.excuse_type_id,
-        );
-        return excuse?.abreviation;
-      }
-      return '✕';
-    },
-    formatPresenceExport(presence) {
-      if (!presence) {
-        return '';
-      }
-      let prefix = '';
-      if (!presence.convoque) {
-        prefix = 'A';
-      }
-      if (presence.present) {
-        return prefix + 'Présent';
-      }
-      if (presence.remplace) {
-        return prefix + 'Remplacé';
-      }
-      if (presence.excuse_type_id) {
-        const excuse = this.excuses.find(
-          (e) => e.id == presence.excuse_type_id,
-        );
-        return prefix + excuse?.designation;
-      }
-      return prefix + '-';
-    },
-    formatPresenceClass(presence) {
-      if (!presence) {
-        return '';
-      }
-      if (
-        presence.excuse_statut == 1 ||
-        presence.present ||
-        presence.remplace
-      ) {
-        return 'text-bg-success';
-      }
-      if (presence.excuse_statut == -2) {
-        return 'text-bg-danger';
-      }
-      if (presence.excuse_statut == -1) {
-        return 'text-bg-warning';
-      }
-      if (presence.excuse_statut == 0) {
-        return 'text-bg-secondary';
-      }
-      if (presence.remplace || presence.statut == 1) {
-        return 'text-bg-success';
-      }
-    },
-    toCvs() {
-      // TODO: Migrate to BaseTable and remove duplicates
-      const data =
-        'data:text/csv;charset=utf-8,\ufeff' +
-        [
-          'Sapeur',
-          'Localité',
-          'Fonction',
-          ...this.displayExercice.map((e) => e.designation),
-          'Nombre Convoqué',
-          'Nombre Présent',
-          'Nombre Remplacé',
-          'Nombre excusé',
-          'Nombre absent',
-        ].join(';') +
-        '\n' +
-        [
-          '',
-          '',
-          '',
-          ...this.displayExercice.map((e) =>
-            new Date(e.date).toLocaleDateString('fr-CH'),
-          ),
-          '',
-          '',
-          '',
-          '',
-          '',
-        ].join(';') +
-        '\n' +
-        this.computedData
-          .map((s) =>
-            [
-              s.nom_prenom,
-              s.localite,
-              s.fonction,
-              ...s.presences.map((p) => this.formatPresenceExport(p)),
-              s.stats.convoque,
-              s.stats.present,
-              s.stats.absent,
-              s.stats.remplace,
-              s.stats.excuse,
-              s.stats.amende,
-            ].join(';'),
-          )
-          .join('\n') +
-        '\n' +
-        [
-          `Total : ${this.exercices.length}`,
-          '',
-          '',
-          ...this.displayExercice.map(() => ''),
-          this.computedStats.convoque,
-          this.computedStats.present,
-          this.computedStats.absent,
-          this.computedStats.remplace,
-          this.computedStats.excuse,
-          this.computedStats.amende,
-        ].join(';');
-
-      // V2
-      var encodedUri = encodeURI(data);
-      var link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'statistiques_presences.csv');
-      document.body.appendChild(link); // Required for FF
-
-      link.click();
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 #legend-container {

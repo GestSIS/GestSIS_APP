@@ -3,7 +3,7 @@ import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { useStore } from 'vuex';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import useHasPermission from '../hooks/usePermission';
 
 const store = useStore();
@@ -18,25 +18,26 @@ const loadInterventionTraitement = store.dispatch(
 
 await store.dispatch('fetchExercicesComptables');
 
-const loading = ref();
-const loadInterventions = store
-  .dispatch('fetchListeIntervention')
-  .then(() => (loading.value = false));
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchListeIntervention',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
 
 await Promise.all([
   loadSapeurs,
   loadLocalities,
   loadStatFederal,
-  loadInterventions,
   loadTypeInterventions,
   loadInterventionTraitement,
 ]);
 
 const selectedId = ref(null);
 
-const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
-);
 const interventions = computed(() =>
   store.state.intervention.liste.sort((a, b) =>
     b.date_debut.localeCompare(a.date_debut),
@@ -93,16 +94,6 @@ const canDelete = computed(() => {
       .length > 0
   );
 });
-
-watch(
-  () => activeExerciceComptableId.value,
-  () => {
-    loading.value = true;
-    store.dispatch('fetchListeIntervention').then(() => {
-      loading.value = false;
-    });
-  },
-);
 
 const { showModal, confirm } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);

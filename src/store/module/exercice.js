@@ -107,9 +107,9 @@ export default {
     },
   },
   actions: {
-    fetchListeExercice({ getters, commit }) {
+    fetchListeExercice({ commit }, exerciceComptableId) {
       return ExerciceService.getExercices(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
     fetchExerciceAbsences({ getters, commit }) {

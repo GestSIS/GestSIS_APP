@@ -1,3 +1,46 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchPermisType');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchStatistiquePermis',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
+
+const allPermis = ref(false);
+const fields = [
+  { title: 'Permis', key: 'type' },
+  { title: 'Nombre', key: 'quantite' },
+];
+
+const permis = computed(() => store.state.baseData.permisTypes);
+const sapeurPermis = computed(() => store.state.statistique.permis);
+const occurences = computed(() => {
+  return sapeurPermis.value.reduce(
+    (prev, { permis_type_id, nb }) => (
+      (prev[permis_type_id] = (prev[permis_type_id] ?? 0) + parseFloat(nb)),
+      prev
+    ),
+    {},
+  );
+});
+const filteredPermis = computed(() => {
+  return permis.value
+    .filter((e) => allPermis.value || occurences.value[e.id])
+    .map((e) => ({ ...e, quantite: occurences.value[e.id] ?? 0 }));
+});
+</script>
+
 <template>
   <div class="col-12 col-md-6 col-xl-4">
     <div class="card card-primary card-outline">
@@ -17,6 +60,7 @@
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="filteredPermis"
           no-data="Aucun permis"
@@ -26,40 +70,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'StatPermis',
-  data() {
-    return {
-      allPermis: false,
-      fields: [
-        { title: 'Permis', key: 'type' },
-        { title: 'Nombre', key: 'quantite' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      permis: (state) => state.baseData.permisTypes,
-      sapeurPermis: (state) => state.statistique.permis,
-    }),
-    occurences() {
-      return this.sapeurPermis.reduce(
-        (prev, { permis_type_id, nb }) => (
-          (prev[permis_type_id] = (prev[permis_type_id] ?? 0) + parseFloat(nb)),
-          prev
-        ),
-        {},
-      );
-    },
-    filteredPermis() {
-      return this.permis
-        .filter((e) => this.allPermis || this.occurences[e.id])
-        .map((e) => ({ ...e, quantite: this.occurences[e.id] ?? 0 }));
-    },
-  },
-};
-</script>

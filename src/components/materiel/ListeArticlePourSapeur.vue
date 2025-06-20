@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
+import { computed, ref, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import { groupedByData, indexedData } from '../../tools';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import TagCouleur from './TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
+import ArticleService from '../../services/materiel/ArticleService';
+import TagCouleur from './TagCouleur.vue';
 
 const { id } = defineProps({
   id: {
@@ -28,20 +28,17 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 
-const loadArticles = async () => {
+watchEffect(async () => {
   loading.value = true;
   articles.value = await ArticleService.getParSapeur(id);
   loading.value = false;
-};
+});
 
-loadArticles();
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
   couleurStore.fetchCouleurs(),
 ]);
-
-watch(() => id, loadArticles);
 
 // Partie pièces
 const piecesColonnes = [

@@ -21,7 +21,7 @@ const awn = inject('awn');
 
 if (listeSis.value.length <= 0) {
   loading.value = true;
-  store.dispatch('loadSisListe').then(() => {
+  await store.dispatch('loadSisListe').then(() => {
     loading.value = false;
   });
 }

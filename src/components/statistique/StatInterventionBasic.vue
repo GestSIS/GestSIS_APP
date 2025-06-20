@@ -1,3 +1,108 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchTypeInterventions');
+store.dispatch('fetchStatFederals');
+store.dispatch('fetchInterventionTraitements');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch(
+      'fetchStatistiqueTypeIntervention',
+      store.state.intervention.active.id,
+    ),
+    store.dispatch(
+      'fetchStatistiqueStatFederal',
+      store.state.intervention.active.id,
+    ),
+    store.dispatch(
+      'fetchStatistiqueTraitementIntervention',
+      store.state.intervention.active.id,
+    ),
+  ]);
+  loading.value = false;
+});
+
+const allCategories = ref(false);
+const displayKey = ref('statistiquesTypeIntervention');
+const grouping = {
+  statistiquesTypeIntervention: 'Types',
+  statistiquesStatFederal: 'Statistiques fédérale',
+  statistiquesInterventionTraitement: 'Traitements',
+};
+
+const types = computed(() => store.state.typeIntervention.liste);
+const traitements = computed(() => store.state.interventionTraitement.liste);
+const statsFederal = computed(() => store.state.statFederal.liste);
+
+const statistiquesStatFederal = computed(
+  () => store.state.statistique.statFederal,
+);
+const statistiquesTypeIntervention = computed(
+  () => store.state.statistique.typeIntervention,
+);
+const statistiquesInterventionTraitement = computed(
+  () => store.state.statistique.interventionTraitement,
+);
+
+const occurences = computed(() => {
+  const map = {
+    statistiquesStatFederal: statistiquesStatFederal,
+    statistiquesTypeIntervention: statistiquesTypeIntervention,
+    statistiquesInterventionTraitement: statistiquesInterventionTraitement,
+  };
+  return map[displayKey.value].value.reduce((acc, e) => {
+    acc[e.id] = e;
+    return acc;
+  }, {});
+});
+const groupingLabel = computed(() => grouping[displayKey.value]);
+const groupingData = computed(() => {
+  const mapping = {
+    statistiquesTypeIntervention: types.value,
+    statistiquesStatFederal: statsFederal.value,
+    statistiquesInterventionTraitement: traitements.value,
+  };
+  return mapping[displayKey.value];
+});
+const filteredData = computed(() => {
+  return groupingData.value
+    .filter((e) => allCategories.value || occurences.value[e.id])
+    .map((e) => ({
+      ...e,
+      nb: occurences.value[e.id]?.nb ?? 0,
+      heures: occurences.value[e.id]?.heures ?? 0,
+    }));
+});
+const fields = computed(() => {
+  return [
+    {
+      title: grouping[displayKey.value],
+      key: 'designation',
+    },
+    {
+      title: 'Nombre',
+      key: 'nb',
+      titleClass: 'text-center',
+      columnClass: 'text-center',
+    },
+    {
+      title: 'Heures',
+      key: 'heures',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-center',
+    },
+  ].slice(0, displayKey.value != 'statistiquesInterventionTraitement' ? 3 : 2);
+});
+</script>
+
 <template>
   <div class="col-12 col-md-6 col-xl-4">
     <div class="card card-primary card-outline">
@@ -17,6 +122,7 @@
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="filteredData"
           no-data="Aucune intervention"
@@ -85,111 +191,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadInterventions = store.dispatch('fetchListeIntervention');
-  const loadTypes = store.dispatch('fetchTypeInterventions');
-  const loadStats = store.dispatch('fetchStatFederals');
-  const loadTraitements = store.dispatch('fetchInterventionTraitements');
-
-  Promise.all([loadInterventions, loadTypes, loadStats, loadTraitements]).then(
-    () => {
-      next();
-    },
-  );
-}
-
-export default {
-  name: 'StatInterventionBasic',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      allCategories: false,
-      displayKey: 'statistiquesTypeIntervention',
-      grouping: {
-        statistiquesTypeIntervention: 'Types',
-        statistiquesStatFederal: 'Statistiques fédérale',
-        statistiquesInterventionTraitement: 'Traitements',
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      interventions: (state) => state.intervention.liste,
-      types: (state) => state.typeIntervention.liste,
-      traitements: (state) => state.interventionTraitement.liste,
-      statsFederal: (state) => state.statFederal.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      statistiquesStatFederal: (state) => state.statistique.statFederal,
-      statistiquesTypeIntervention: (state) =>
-        state.statistique.typeIntervention,
-      statistiquesInterventionTraitement: (state) =>
-        state.statistique.interventionTraitement,
-    }),
-    occurences() {
-      return this[this.displayKey].reduce((acc, e) => {
-        acc[e.id] = e;
-        return acc;
-      }, {});
-    },
-    groupingLabel() {
-      return this.grouping[this.displayKey];
-    },
-    groupingData() {
-      const mapping = {
-        statistiquesTypeIntervention: this.types,
-        statistiquesStatFederal: this.statsFederal,
-        statistiquesInterventionTraitement: this.traitements,
-      };
-      return mapping[this.displayKey];
-    },
-    filteredData() {
-      return this.groupingData
-        .filter((e) => this.allCategories || this.occurences[e.id])
-        .map((e) => ({
-          ...e,
-          nb: this.occurences[e.id]?.nb ?? 0,
-          heures: this.occurences[e.id]?.heures ?? 0,
-        }));
-    },
-    fields() {
-      return [
-        {
-          title: this.grouping[this.displayKey],
-          key: 'designation',
-        },
-        {
-          title: 'Nombre',
-          key: 'nb',
-          titleClass: 'text-center',
-          columnClass: 'text-center',
-        },
-        {
-          title: 'Heures',
-          key: 'heures',
-          type: Number,
-          titleClass: 'text-center',
-          columnClass: 'text-center',
-        },
-      ].slice(
-        0,
-        this.displayKey != 'statistiquesInterventionTraitement' ? 3 : 2,
-      );
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeIntervention');
-    },
-  },
-};
-</script>

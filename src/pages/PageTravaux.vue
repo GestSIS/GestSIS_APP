@@ -67,7 +67,7 @@ const selectedItem = computed(() => {
 
 watch(activeExerciceComptableId, () => {
   loading.value = true;
-  store.dispatch('fetchTravaux').then(() => {
+  await store.dispatch('fetchTravaux').then(() => {
     loading.value = false;
   });
 });

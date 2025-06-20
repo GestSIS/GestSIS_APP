@@ -29,7 +29,7 @@ await Promise.all([
 
 watchEffect(async () => {
   loading.value = true;
-  store.dispatch('fetchAbsences', store.state.exerciceComptable.activeId);
+  await store.dispatch('fetchAbsences', store.state.exerciceComptable.activeId);
   loading.value = false;
 });
 

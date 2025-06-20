@@ -1,14 +1,14 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
-import { useStore } from 'vuex';
 import { groupedByData, indexedData } from '../../tools';
-import { useModalStore } from '../../stores/common/Modal.js';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
+import ArticleService from '../../services/materiel/ArticleService';
 import TableArticlePourType from './TableArticlePourType.vue';
 import TagCouleur from './TagCouleur.vue';
 
@@ -30,21 +30,18 @@ const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(true);
 
-const loadArticles = async () => {
+watchEffect(async () => {
   loading.value = true;
   articles.value = await ArticleService.getParMaterielType(id);
   loading.value = false;
-};
+});
 
-loadArticles();
 await Promise.all([
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
   store.dispatch('fetchListeSapeur'),
 ]);
-
-watch(() => id, loadArticles);
 
 const materielType = computed(() =>
   materielTypeStore.liste.find((m) => m.id === parseInt(id)),

@@ -1,25 +1,18 @@
 <script setup>
 import store from '/src/store/index';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
 
-async function loadData(routeTo, next) {
-  const loadLocalities = store.dispatch('fetchLocalites');
-  const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalities = store.dispatch('fetchLocalites');
+const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
+const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
 
-  Promise.all([
-    loadSapeurs,
-    loadLocalities,
-    loadExerciceCategories,
-    loadExerciceComptables,
-  ]).then(() => {
-    next();
-  });
-}
-
-onBeforeRouteUpdate(loadData);
+await Promise.all([
+  loadSapeurs,
+  loadLocalities,
+  loadExerciceCategories,
+  loadExerciceComptables,
+]);
 </script>
 
 <template>

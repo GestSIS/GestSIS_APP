@@ -1,3 +1,49 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+store.dispatch('fetchExerciceCategories');
+await store.dispatch('fetchExercicesComptables');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchListeExercice',
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
+
+const allCategories = ref(false);
+const fields = [
+  { title: 'Catégorie', key: 'designation' },
+  { title: 'Amendable', key: 'amendable', type: Boolean },
+  {
+    title: 'Nombre',
+    key: 'nb',
+    titleClass: 'text-center',
+    columnClass: 'text-center',
+  },
+];
+
+const exercices = computed(() => store.state.exercice.liste);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+
+const categoriesOccurence = computed(() => {
+  return exercices.value
+    .map((e) => e.exercice_categorie_id)
+    .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
+});
+const filteredCategories = computed(() => {
+  return categories.value
+    .filter((c) => allCategories.value || categoriesOccurence.value[c.id])
+    .map((e) => ({ ...e, nb: categoriesOccurence.value[e.id] ?? 0 }));
+});
+</script>
+
 <template>
   <div class="row">
     <div class="col-12 col-md-6 mb-3">
@@ -18,6 +64,7 @@
         </div>
         <div class="card-body table-responsive p-0">
           <base-table
+            :loading="loading"
             :fields="fields"
             :data="filteredCategories"
             no-data="Aucun exercice pour l'instant"
@@ -40,68 +87,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadExercies = store.dispatch('fetchListeExercice');
-  const loadCategories = store.dispatch('fetchExerciceCategories');
-
-  Promise.all([loadExercies, loadCategories]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'StatExerciceSimple',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      allCategories: false,
-      fields: [
-        { title: 'Catégorie', key: 'designation' },
-        { title: 'Amendable', key: 'amendable', type: Boolean },
-        {
-          title: 'Nombre',
-          key: 'nb',
-          titleClass: 'text-center',
-          columnClass: 'text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      exercices: (state) => state.exercice.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    categoriesOccurence() {
-      return this.exercices
-        .map((e) => e.exercice_categorie_id)
-        .reduce((prev, id) => ((prev[id] = ++prev[id] || 1), prev), {});
-    },
-    filteredCategories() {
-      return this.categories
-        .filter((c) => this.allCategories || this.categoriesOccurence[c.id])
-        .map((e) => ({ ...e, nb: this.categoriesOccurence[e.id] ?? 0 }));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.$store.dispatch('fetchListeExercice');
-    },
-  },
-};
-</script>

@@ -132,10 +132,9 @@ export default {
     },
   },
   actions: {
-    fetchListeIntervention({ getters, commit }) {
-      return InterventionService.getInterventions(
-        getters.activeExerciceComptableId
-      ).then((data) => commit(types.UPDATE_INTERVENTION_LISTE, data));
+    fetchListeIntervention({ commit }, exerciceComptableId) {
+      return InterventionService.getInterventions(exerciceComptableId)
+        .then((data) => commit(types.UPDATE_INTERVENTION_LISTE, data));
     },
     fetchIntervention({ commit }, payload) {
       return InterventionService.getIntervention(payload).then((data) =>
