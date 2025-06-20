@@ -38,5 +38,3 @@ const filteredRoutes = computed(() =>
     </router-link>
   </nav>
 </template>
-
-<style lang="scss" scoped></style>

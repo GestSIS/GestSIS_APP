@@ -1,3 +1,24 @@
+<script setup>
+const model = defineModel({
+  type: [Boolean, Number],
+  default: undefined,
+});
+const { label, trueValue, falseValue } = defineProps({
+  label: {
+    type: String,
+    default: () => '',
+  },
+  trueValue: {
+    type: [Boolean, Number, Function],
+    default: true,
+  },
+  falseValue: {
+    type: [Boolean, Number, Function],
+    default: false,
+  },
+});
+</script>
+
 <template>
   <div class="form-check">
     <input
@@ -14,43 +35,3 @@
     </label>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BaseCheckbox',
-  props: {
-    label: {
-      type: String,
-      default: () => '',
-    },
-    modelValue: {
-      type: [Boolean, Number],
-      default: undefined,
-    },
-    trueValue: {
-      type: [Boolean, Number, Function],
-      default: true,
-    },
-    falseValue: {
-      type: [Boolean, Number, Function],
-      default: false,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      model: this.modelValue,
-    };
-  },
-  watch: {
-    modelValue(newValue, oldValue) {
-      if (oldValue !== newValue) {
-        this.model = newValue;
-      }
-    },
-    model(currentValue) {
-      this.$emit('update:modelValue', currentValue);
-    },
-  },
-};
-</script>

@@ -1,3 +1,38 @@
+<script setup>
+import { ref } from 'vue';
+
+const model = defineModel({
+  type: [Boolean, Number],
+  default: undefined,
+});
+
+const { label, options, advancedLabel } = defineProps({
+  label: {
+    type: String,
+    default: () => '',
+  },
+  options: {
+    required: true,
+    type: Array,
+  },
+  advancedLabel: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const generateQuickGuid = () => {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};
+
+const uuid = ref(generateQuickGuid());
+
+const splittedLabel = (label) => (label ?? '').split('\n');
+</script>
+
 <template>
   <div>
     <div v-for="option in options" :key="option.value" class="form-check">
@@ -24,59 +59,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BaseCheckbox',
-  props: {
-    label: {
-      type: String,
-      default: () => '',
-    },
-    modelValue: {
-      type: [Boolean, Number],
-      default: undefined,
-    },
-    options: {
-      required: true,
-      type: Array,
-    },
-    advancedLabel: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    const generateQuickGuid = () => {
-      return (
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15)
-      );
-    };
-    return {
-      generateQuickGuid: generateQuickGuid,
-      uuid: generateQuickGuid(),
-      model: this.modelValue,
-    };
-  },
-  watch: {
-    modelValue(newValue, oldValue) {
-      if (oldValue !== newValue) {
-        this.model = newValue;
-      }
-    },
-    model(currentValue) {
-      this.$emit('update:modelValue', currentValue);
-    },
-  },
-  methods: {
-    splitNewLines(text) {
-      return text.replace('\n', '<br />');
-    },
-    splittedLabel(label) {
-      return (label ?? '').split('\n');
-    },
-  },
-};
-</script>

@@ -1,3 +1,76 @@
+<script setup>
+import { nextTick, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+
+const search = defineModel({
+  type: [Object, Number, String],
+  default: '',
+});
+
+const { items, error, title } = defineProps({
+  items: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+  error: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  title: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+
+const isOpen = ref(false);
+const results = ref([]);
+const arrowCounter = ref(0);
+const uid = ref(Math.random());
+
+onMounted(() => document.addEventListener('click', handleClickOutside.value));
+onUnmounted(() =>
+  document.removeEventListener('click', handleClickOutside.value),
+);
+
+watchEffect(() => {
+  results.value = items.filter((item) => {
+    return item.toLowerCase().indexOf(search.value.toLowerCase()) > -1;
+  });
+  isOpen.value = true;
+});
+
+const setResult = (result) => {
+  search.value = result;
+  nextTick(() => (isOpen.value = false));
+  arrowCounter.value = -1;
+};
+
+const onArrowDown = () => {
+  if (arrowCounter.value < results.value.length) {
+    arrowCounter.value = arrowCounter.value + 1;
+  }
+};
+const onArrowUp = () => {
+  if (arrowCounter.value > 0) {
+    arrowCounter.value = arrowCounter.value - 1;
+  }
+};
+const onEnter = () => {
+  if (results.value.length === 0 || arrowCounter.value < 0) return;
+  search.value = results.value[arrowCounter.value];
+  nextTick(() => (isOpen.value = false));
+  arrowCounter.value = -1;
+};
+const handleClickOutside = (evt) => {
+  if (!this.$el.contains(evt.target)) {
+    isOpen.value = false;
+    arrowCounter.value = -1;
+  }
+};
+</script>
+
 <template>
   <div class="autocomplete">
     <label :for="'d1_' + uid">{{ title }}</label>
@@ -29,107 +102,6 @@
     </ul>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BaseAutocomplete',
-  props: {
-    modelValue: {
-      type: [Object, Number, String],
-      default: '',
-    },
-    items: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    error: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    title: {
-      type: String,
-      required: false,
-      default: '',
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      isOpen: false,
-      results: [],
-      search: this.modelValue,
-      isLoading: false,
-      arrowCounter: 0,
-      uid: Math.random(),
-    };
-  },
-  watch: {
-    items: function (val, oldValue) {
-      // actually compare them
-      if (val.length !== oldValue.length) {
-        this.results = val;
-      }
-    },
-    modelValue: function (val) {
-      this.search = val;
-    },
-  },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside);
-  },
-  unmounted() {
-    document.removeEventListener('click', this.handleClickOutside);
-  },
-  methods: {
-    onChange() {
-      // Let's warn the parent that a change was made
-      this.$emit('update:modelValue', this.search);
-
-      // Let's  our flat array
-      this.filterResults();
-      this.isOpen = true;
-    },
-
-    filterResults() {
-      // first uncapitalize all the things
-      this.results = this.items.filter((item) => {
-        return item.toLowerCase().indexOf(this.search.toLowerCase()) > -1;
-      });
-    },
-    setResult(result) {
-      this.search = result;
-      this.isOpen = false;
-      this.arrowCounter = -1;
-      this.$emit('update:modelValue', this.search);
-    },
-    onArrowDown() {
-      if (this.arrowCounter < this.results.length) {
-        this.arrowCounter = this.arrowCounter + 1;
-      }
-    },
-    onArrowUp() {
-      if (this.arrowCounter > 0) {
-        this.arrowCounter = this.arrowCounter - 1;
-      }
-    },
-    onEnter() {
-      if (this.results.length === 0 || this.arrowCounter < 0) return;
-      this.search = this.results[this.arrowCounter];
-      this.isOpen = false;
-      this.arrowCounter = -1;
-      this.$emit('update:modelValue', this.search);
-    },
-    handleClickOutside(evt) {
-      if (!this.$el.contains(evt.target)) {
-        this.isOpen = false;
-        this.arrowCounter = -1;
-      }
-    },
-  },
-};
-</script>
 
 <style>
 .autocomplete {
