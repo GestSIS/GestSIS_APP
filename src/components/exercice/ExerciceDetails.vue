@@ -1,3 +1,37 @@
+<script setup>
+import { onMounted, ref } from 'vue';
+import ExerciceService from '/src/services/ExerciceService.js';
+
+const { rowData } = defineProps({
+  rowData: {
+    type: Object,
+    required: true,
+  },
+  options: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const convoque = ref(0);
+const present = ref(0);
+const absent = ref(0);
+const remplace = ref(0);
+const excuse = ref(0);
+const amende = ref(0);
+
+onMounted(() =>
+  ExerciceService.getSapeurs(rowData.id).then((data) => {
+    convoque.value = data.filter((s) => s.convoque).length;
+    present.value = data.filter((s) => s.present).length;
+    absent.value = data.filter((s) => s.absent).length;
+    remplace.value = data.filter((s) => s.remplace).length;
+    excuse.value = data.filter((s) => s.excuse_type_id).length;
+    amende.value = data.filter((s) => s.amende).length;
+  }),
+);
+</script>
+
 <template>
   <div class="detail-row-padding d-flex">
     <div class="me-3">
@@ -50,45 +84,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import ExerciceService from '/src/services/ExerciceService.js';
-
-export default {
-  name: 'ExerciceDetails',
-  props: {
-    rowData: {
-      type: Object,
-      required: true,
-    },
-    options: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data() {
-    return {
-      data: {},
-      convoque: 0,
-      present: 0,
-      absent: 0,
-      remplace: 0,
-      excuse: 0,
-      amende: 0,
-    };
-  },
-  mounted() {
-    ExerciceService.getSapeurs(this.rowData.id).then((data) => {
-      this.convoque = data.filter((s) => s.convoque).length;
-      this.present = data.filter((s) => s.present).length;
-      this.absent = data.filter((s) => s.absent).length;
-      this.remplace = data.filter((s) => s.remplace).length;
-      this.excuse = data.filter((s) => s.excuse_type_id).length;
-      this.amende = data.filter((s) => s.amende).length;
-    });
-  },
-};
-</script>
 
 <style scoped>
 .detail-row-padding {
