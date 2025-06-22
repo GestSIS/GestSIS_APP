@@ -28,11 +28,12 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 
-watchEffect(async () => {
+const loadArticles = async () => {
   loading.value = true;
   articles.value = await ArticleService.getParSapeur(id);
   loading.value = false;
-});
+};
+watchEffect(loadArticles);
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),

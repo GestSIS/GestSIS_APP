@@ -30,11 +30,12 @@ const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(true);
 
-watchEffect(async () => {
+const loadArticles = async () => {
   loading.value = true;
   articles.value = await ArticleService.getParMaterielType(id);
   loading.value = false;
-});
+};
+watchEffect(loadArticles);
 
 await Promise.all([
   emplacementStore.fetchEmplacements(),

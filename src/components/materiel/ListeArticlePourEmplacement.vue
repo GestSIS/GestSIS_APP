@@ -34,11 +34,12 @@ const emplacement = computed(() =>
   emplacementStore.liste.find((e) => e.id === parseInt(id)),
 );
 
-watchEffect(async () => {
+const loadArticles = async () => {
   loading.value = true;
   articles.value = await ArticleService.getParEmplacement(id);
   loading.value = false;
-});
+};
+watchEffect(loadArticles);
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
