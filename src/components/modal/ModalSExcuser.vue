@@ -141,14 +141,14 @@ const close = () => {
         />
         <div class="mb-3">
           <label for="remarque">Raison</label>
-          <input
+          <textarea
             id="remarque"
             v-model="activeExcuse.remarque"
             required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"
-          />
+          ></textarea>
           <div v-if="errors['remarque']" class="invalid-feedback">
             Trop long
           </div>

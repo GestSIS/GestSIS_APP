@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "24.06.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Excuse, augmentation de la taille de la justification"
+      ]
+    },
+    {
       "date": "15.06.2025",
       "version": "2.0",
       "app": "GestSIS APP",
