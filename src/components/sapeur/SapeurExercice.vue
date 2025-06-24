@@ -116,7 +116,6 @@ const fields = [
                 'text-bg-secondary': rowData.excuse_statut == 0,
                 'text-bg-success': rowData.excuse_statut == 1,
               }"
-              @click="detailExcuse(rowData)"
               >{{ rowData?.excuse }}</span
             >
             <button
@@ -139,7 +138,6 @@ const fields = [
                 'text-bg-secondary': rowData.excuse_statut == 0,
                 'text-bg-success': rowData.excuse_statut == 1,
               }"
-              @click="detailExcuse(rowData)"
               >{{
                 {
                   '-2': 'Amendée',

@@ -86,7 +86,6 @@ const removeExcuse = (exercice) =>
       ),
   );
 
-// FIXME: detailExcuse fonction non existante
 const downloadJustificatif = (exercice) => {
   ExerciceService.downloadMonExcuseJustificatif(
     exercice.exercice_id,
@@ -152,7 +151,6 @@ const fields = [
                 'text-bg-secondary': rowData.excuse_statut == 0,
                 'text-bg-success': rowData.excuse_statut == 1,
               }"
-              @click="detailExcuse(rowData)"
               >{{ rowData?.excuse }}</span
             >
             <button
