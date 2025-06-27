@@ -145,15 +145,17 @@ import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 
 async function loadData(_, next) {
-  const loadExercices = store.dispatch(
-    'fetchListeExercice',
-    store.state.exerciceComptable.activeId
-  );
   const loadCategories = store.dispatch('fetchExerciceCategories');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
   const loadLocalites = store.dispatch('fetchLocalites');
   const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
   const loadComptes = store.dispatch('fetchComptes');
+
+  await store.dispatch('fetchExercicesComptables');
+  const loadExercices = store.dispatch(
+    'fetchListeExercice',
+    store.state.exerciceComptable.activeId
+  );
 
   Promise.all([
     loadExercices,
