@@ -32,7 +32,7 @@
               @click="
                 genererDecompteExercice(
                   selectedItem.id,
-                  selectedItem.designation,
+                  selectedItem.designation
                 )
               "
             >
@@ -147,7 +147,7 @@ import permissions from '../../store/permissions';
 async function loadData(_, next) {
   const loadExercices = store.dispatch(
     'fetchListeExercice',
-    store.state.exercice.active.id,
+    store.state.exerciceComptable.activeId
   );
   const loadCategories = store.dispatch('fetchExerciceCategories');
   const loadSapeurs = store.dispatch('fetchListeSapeur');
@@ -308,7 +308,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
+          permissions.COMPTABILITE.MODIFICATION
         ),
     }),
     selectedItem() {
@@ -323,7 +323,7 @@ export default {
         return {
           ...e,
           categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id,
+            (c) => c.id == e.exercice_categorie_id
           )?.designation,
           localite: this.localites.find((l) => l.id == e.localite_id)
             ?.designation,
@@ -355,7 +355,7 @@ export default {
     ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
     init() {
       ImputationService.getExerciceEcriturePourExerciceComptable(
-        this.activeExerciceComptableId,
+        this.activeExerciceComptableId
       ).then((e) => {
         this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
         this.loading = false;
@@ -405,7 +405,7 @@ export default {
               })
               .catch((err) => {
                 this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation",
+                  err?.message ?? "Erreur impossible d'annuler l'imputation"
                 );
               });
           }
