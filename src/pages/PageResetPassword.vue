@@ -1,5 +1,5 @@
 <script setup>
-import { onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -45,7 +45,7 @@ const reset = async () => {
           if (time.value <= 0) {
             clearInterval(timeInterval.value);
             router.push(
-              route.query.redirect ? route.query.redirect : 'accueil',
+              route.query.redirect ? route.query.redirect : 'accueil'
             );
           } else {
             time.value--;
