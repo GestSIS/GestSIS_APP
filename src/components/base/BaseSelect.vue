@@ -54,7 +54,7 @@ const {
     default: null,
   },
 });
-const model = defineModel({ default: '' });
+const model = defineModel({ default: placeholder ? '' : undefined });
 const input = useTemplateRef('input');
 const focus = () => {
   input.value.focus();
