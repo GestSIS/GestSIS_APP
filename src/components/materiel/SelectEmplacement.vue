@@ -6,11 +6,15 @@ import VueSelect from 'vue3-select-component';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
-const { label, emplacementIdToIgnore, emplacementRacine, disabled } =
+const { label, emplacementIdToIgnore, emplacementRacine, disabled, required } =
   defineProps({
     label: {
       type: String,
       default: () => '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
     },
     disabled: {
       type: Boolean,
@@ -81,6 +85,7 @@ const emplacements = computed(() => {
     <label v-if="label">{{ label }}</label>
     <VueSelect
       v-model="model"
+      :required="required"
       :is-disabled="disabled"
       :options="emplacements"
       placeholder="Sélectionnez un emplacement"

@@ -3,6 +3,8 @@ import { useTemplateRef } from 'vue';
 
 const {
   label,
+  placeholder,
+  required,
   selectClass,
   baseOption,
   baseValue,
@@ -11,6 +13,14 @@ const {
   valueKey,
   displayKey,
 } = defineProps({
+  required: {
+    type: Boolean,
+    default: () => false,
+  },
+  placeholder: {
+    type: String,
+    default: () => '',
+  },
   label: {
     type: String,
     default: () => '',
@@ -44,7 +54,7 @@ const {
     default: null,
   },
 });
-const model = defineModel();
+const model = defineModel({ default: '' });
 const input = useTemplateRef('input');
 const focus = () => {
   input.value.focus();
@@ -59,10 +69,14 @@ defineExpose({ focus });
     <select
       :id="label"
       ref="input"
+      :required="required"
       v-model="model"
       :class="['form-select form-select-sm', selectClass]"
       v-bind="{ ...$attrs }"
     >
+      <option v-if="placeholder !== ''" value="" disabled hidden>
+        {{ placeholder }}
+      </option>
       <option v-if="baseOption" :value="baseValue">{{ baseOption }}</option>
       <option v-for="o in options" :key="o[valueKey]" :value="o[valueKey]">
         {{ formatter ? formatter(o) : o[displayKey] }}

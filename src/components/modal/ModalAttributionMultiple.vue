@@ -100,70 +100,74 @@ const save = async () => {
 </script>
 
 <template>
-  <div class="overflow-visible">
-    <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Attribuer du matériel</h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
-    </div>
-    <div class="modal-body overflow-visible">
-      <div class="row">
-        <div class="col-6 mb-3">
-          <label for="date">Date attribution</label>
-          <input
-            id="date"
-            v-model="activeAttribution.date"
-            type="date"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['attributions.0.date'] }"
-          />
-        </div>
-        <div class="col-6">
-          <base-select
-            ref="sapeur"
-            v-model="activeAttribution.sapeur_id"
-            class="mb-3"
-            label="Sapeur"
-            display-key="nom_prenom"
-            :options="sapeurs"
-            :select-class="{ 'is-invalid': errors['attributions.0.sapeur_id'] }"
-          />
-        </div>
-        <div class="col-md-12 mb-3">
-          <div class="form-check form-switch">
+  <form @submit.prevent="save">
+    <div class="overflow-visible">
+      <div class="modal-header">
+        <h5 id="exampleModalLabel" class="modal-title">
+          Attribuer du matériel
+        </h5>
+        <button type="button" class="btn-close" @click="closeModal"></button>
+      </div>
+      <div class="modal-body overflow-visible">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="date">Date attribution</label>
             <input
-              id="switch-mode-attribution"
-              v-model="depuisInventaire"
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
+              id="date"
+              v-model="activeAttribution.date"
+              type="date"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['attributions.0.date'] }"
             />
-            <label class="form-check-label" for="switch-mode-attribution"
-              >Attribuer depuis l'inventaire
-            </label>
+          </div>
+          <div class="col-6">
+            <base-select
+              ref="sapeur"
+              v-model="activeAttribution.sapeur_id"
+              class="mb-3"
+              label="Sapeur"
+              display-key="nom_prenom"
+              :options="sapeurs"
+              :select-class="{
+                'is-invalid': errors['attributions.0.sapeur_id'],
+              }"
+            />
+          </div>
+          <div class="col-md-12 mb-3">
+            <div class="form-check form-switch">
+              <input
+                id="switch-mode-attribution"
+                v-model="depuisInventaire"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+              />
+              <label class="form-check-label" for="switch-mode-attribution"
+                >Attribuer depuis l'inventaire
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 overflow-visible">
+            <article-selecteur
+              v-if="depuisInventaire"
+              v-model="activeAttribution.articlesDepuisInventaire"
+              :articles="articlesAttribuable"
+            />
+            <article-creation
+              v-if="!depuisInventaire"
+              v-model="activeAttribution.articlesHorsInventaire"
+            />
           </div>
         </div>
-        <div class="col-md-12 overflow-visible">
-          <article-selecteur
-            v-show="depuisInventaire"
-            v-model="activeAttribution.articlesDepuisInventaire"
-            :articles="articlesAttribuable"
-          />
-          <article-creation
-            v-show="!depuisInventaire"
-            v-model="activeAttribution.articlesHorsInventaire"
-          />
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" @click="closeModal">
+          Fermer
+        </button>
+        <button type="submit" class="btn btn-primary">Attribuer</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        Attribuer
-      </button>
-    </div>
-  </div>
+  </form>
 </template>
 
 <style scoped></style>

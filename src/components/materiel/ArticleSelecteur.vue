@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, useTemplateRef } from 'vue';
 
 import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -18,13 +18,15 @@ const props = defineProps({
 
 const articlesAttribuable = computed(() => props.articles);
 const selectedArticles = defineModel({ default: () => [] });
-selectedArticles.value.push({
-  id: null,
-  materiel_type_id: null,
-  emplacement_id: null,
-  taille: null,
-  remarque: null,
-});
+if (selectedArticles.value.length === 0) {
+  selectedArticles.value.push({
+    id: null,
+    materiel_type_id: '',
+    emplacement_id: null,
+    taille: null,
+    remarque: null,
+  });
+}
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
@@ -77,7 +79,7 @@ const typesDisponible = computed(() => {
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   selectedArticles.value.push({
-    materiel_type_id: null,
+    materiel_type_id: '',
     numero: null,
     taille: null,
     remarque: null,
@@ -124,8 +126,8 @@ const selectMaterielTypeNumerote = (item, value) => {
             ref="articles-reference"
             v-model="item.materiel_type_id"
             :options="typesDisponible"
-            base-option="&lt;Sélectionnez le matériel type&gt;"
-            :base-value="null"
+            :required="true"
+            placeholder="&lt;Sélectionnez le matériel type&gt;"
             @update:model-value="
               (value) => selectMaterielTypeNumerote(item, value)
             "

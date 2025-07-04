@@ -15,12 +15,14 @@ const { data, avecCompartiment } = defineProps({
 });
 
 const articles = defineModel({ default: () => [] });
-articles.value.push({
-  materiel_type_id: null,
-  taille: null,
-  remarque: null,
-  quantite: 1,
-});
+if (articles.value.length === 0) {
+  articles.value.push({
+    materiel_type_id: '',
+    taille: null,
+    remarque: null,
+    quantite: 1,
+  });
+}
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
@@ -60,7 +62,7 @@ const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   articles.value.push({
     compartiment: null,
-    materiel_type_id: null,
+    materiel_type_id: '',
     numero: null,
     taille: null,
     remarque: null,
@@ -105,15 +107,16 @@ const addEmptyLine = () => {
         <td>
           <base-select
             ref="articles-reference"
+            :required="true"
             v-model="item.materiel_type_id"
-            base-option="&lt;Sélectionnez un matériel type&gt;"
-            :base-value="null"
+            placeholder="&lt;Sélectionnez un matériel type&gt;"
             :options="types"
           />
         </td>
         <td v-if="afficherColoneVehicule">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.type === 3"
+            :required="true"
             v-model="item.designation"
             class="form-control form-control-sm"
             type="text"
@@ -156,6 +159,7 @@ const addEmptyLine = () => {
         <td v-if="afficherColoneNumero">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
+            :required="true"
             v-model="item.numero"
             class="form-control form-control-sm"
             type="text"
@@ -170,6 +174,7 @@ const addEmptyLine = () => {
         <td v-if="afficherColoneQuantite">
           <input
             v-if="!indexedTypes[item.materiel_type_id]?.est_numerote"
+            :required="true"
             v-model="item.quantite"
             class="form-control form-control-sm"
             type="text"

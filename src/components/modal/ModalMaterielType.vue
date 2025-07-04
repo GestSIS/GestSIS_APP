@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import { useMaterielTypeStore } from '../../stores/materiel/Type.js';
 import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre.js';
 import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
@@ -15,6 +15,7 @@ const { data } = defineProps({
 
 const errors = ref({});
 const activeItem = ref({
+  type: 0,
   est_attribuable: false,
   est_numerote: false,
   est_taillee: false,
@@ -36,7 +37,12 @@ await Promise.all([
 ]);
 
 const { closeModal } = useModalStore();
+const awn = inject('awn');
 const save = async () => {
+  if (activeItem.value.materiel_categorie_id == null) {
+    awn.alert('Veuillez sélectionnez une catégorie');
+    return;
+  }
   ((activeItem.value.id || 0) === 0
     ? typeStore.addMaterielType
     : typeStore.updateMaterielType)(activeItem.value)
@@ -51,7 +57,7 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un matériel type
@@ -62,6 +68,7 @@ const save = async () => {
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
+          required
           id="designation"
           v-model="activeItem.designation"
           type="text"
@@ -146,6 +153,7 @@ const save = async () => {
         />
       </div>
       <base-select
+        :required="true"
         v-model="activeItem.type"
         class="mb-3"
         label="Type"
@@ -214,11 +222,11 @@ const save = async () => {
       <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save">
+      <button type="submit" class="btn btn-primary">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped></style>
