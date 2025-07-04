@@ -394,12 +394,12 @@ export default {
       activeInterventionData: (state) => state.intervention.active.data,
       activeExerciceComptable: (state) =>
         state.exerciceComptable.liste.find(
-          (e) => e.id === state.exerciceComptable.activeId
+          (e) => e.id === state.exerciceComptable.activeId,
         ),
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
       newMode: (state) => state.intervention.active.id === null,
     }),
@@ -457,19 +457,19 @@ export default {
   },
   mounted() {
     this.activeInterventionData.responsable = this.replaceBr(
-      this.activeInterventionData.responsable
+      this.activeInterventionData.responsable,
     );
     this.activeInterventionData.description = this.replaceBr(
-      this.activeInterventionData.description
+      this.activeInterventionData.description,
     );
     this.activeInterventionData.proprietaire = this.replaceBr(
-      this.activeInterventionData.proprietaire
+      this.activeInterventionData.proprietaire,
     );
     this.activeInterventionData.heure_debut = this.formatHeure(
-      this.activeInterventionData.heure_debut
+      this.activeInterventionData.heure_debut,
     );
     this.activeInterventionData.heure_fin = this.formatHeure(
-      this.activeInterventionData.heure_fin
+      this.activeInterventionData.heure_fin,
     );
   },
   methods: {
@@ -512,5 +512,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

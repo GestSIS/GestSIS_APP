@@ -81,5 +81,3 @@ const tab = ref('categorie');
     </div>
   </div>
 </template>
-
-<style scoped></style>

@@ -49,5 +49,3 @@ const cours = computed(() =>
     </div>
   </div>
 </template>
-
-<style scoped></style>

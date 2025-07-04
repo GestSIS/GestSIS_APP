@@ -75,7 +75,7 @@ async function loadData(_, next) {
   Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]).then(
     () => {
       next();
-    }
+    },
   );
 }
 
@@ -140,5 +140,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

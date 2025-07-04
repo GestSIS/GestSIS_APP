@@ -62,7 +62,7 @@
                     CHF /
                     {{
                       unites.find(
-                        (u) => u.id == activeTravailType.type_unite_id
+                        (u) => u.id == activeTravailType.type_unite_id,
                       )?.unite
                     }}</span
                   >
@@ -255,5 +255,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

@@ -217,7 +217,7 @@ export default {
   },
   mounted() {
     this.activeExerciceData.heure = this.formatHeure(
-      this.activeExerciceData.heure
+      this.activeExerciceData.heure,
     );
   },
   methods: {
@@ -256,5 +256,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

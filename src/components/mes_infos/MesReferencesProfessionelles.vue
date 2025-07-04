@@ -46,5 +46,3 @@ const model = defineModel();
     </form>
   </div>
 </template>
-
-<style scoped></style>

@@ -121,5 +121,3 @@ const estSapeur = computed(() => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

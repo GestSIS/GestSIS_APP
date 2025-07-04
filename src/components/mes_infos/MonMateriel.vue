@@ -46,5 +46,3 @@ const fields = [
     </div>
   </div>
 </template>
-
-<style scoped></style>

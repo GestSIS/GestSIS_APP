@@ -22,5 +22,3 @@ const activeSapeur = defineModel();
     </div>
   </div>
 </template>
-
-<style scoped></style>

@@ -179,5 +179,3 @@ const civilites = computed(() => store.state.baseData.civilites);
     </div>
   </div>
 </template>
-
-<style scoped></style>

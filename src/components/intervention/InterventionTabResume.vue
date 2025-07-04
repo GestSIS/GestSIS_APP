@@ -59,7 +59,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
   },
@@ -82,5 +82,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

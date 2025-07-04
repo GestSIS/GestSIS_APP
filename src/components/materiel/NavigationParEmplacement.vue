@@ -117,5 +117,3 @@ const ajoutEmplacement = () =>
     Ajouter
   </button>
 </template>
-
-<style scoped></style>

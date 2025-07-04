@@ -140,5 +140,3 @@ const { closeModal } = useModalStore();
     </div>
   </div>
 </template>
-
-<style scoped></style>

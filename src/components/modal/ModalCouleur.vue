@@ -91,5 +91,3 @@ const save = async () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

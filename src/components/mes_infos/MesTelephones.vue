@@ -98,5 +98,3 @@ const telephoneTypes = computed(() => store.state.baseData.telephoneTypes);
     </div>
   </div>
 </template>
-
-<style scoped></style>

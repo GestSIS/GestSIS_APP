@@ -84,7 +84,7 @@ export default {
       hasEditPermission: (state) =>
         state.auth.admin ||
         state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION
+          permissions.INTERVENTION.MODIFICATION,
         ),
     }),
     filteredGroupes() {
@@ -117,7 +117,7 @@ export default {
     async save() {
       let groupesIds = this.interventionGroupes.map((g) => g.pseudo_id);
       let ids = Object.keys(this.selected).filter(
-        (item) => this.selected[item]
+        (item) => this.selected[item],
       );
 
       //New One
@@ -147,11 +147,9 @@ export default {
       const svm = this;
 
       value.forEach(
-        (v) => (svm.selected = { ...svm.selected, [v.pseudo_id]: true })
+        (v) => (svm.selected = { ...svm.selected, [v.pseudo_id]: true }),
       );
     },
   },
 };
 </script>
-
-<style scoped></style>
