@@ -251,5 +251,3 @@ const addEmptyLine = () => {
     </tbody>
   </table>
 </template>
-
-<style scoped></style>

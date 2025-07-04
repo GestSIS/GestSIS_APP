@@ -72,5 +72,3 @@ const fields = [{ title: 'Date', key: 'date' }];
     </div>
   </div>
 </template>
-
-<style scoped></style>

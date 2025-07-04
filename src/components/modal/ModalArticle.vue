@@ -186,5 +186,3 @@ const save = async () => {
     </div>
   </form>
 </template>
-
-<style scoped></style>

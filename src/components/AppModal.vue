@@ -65,5 +65,3 @@ onUnmounted(() => document.removeEventListener('keydown', escapeHandler));
     ></div>
   </div>
 </template>
-
-<style scoped></style>
