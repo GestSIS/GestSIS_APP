@@ -120,7 +120,7 @@ const down = () => groupeEdition.value.down(active.value);
 const right = () => groupeEdition.value.right(active.value);
 const left = () => groupeEdition.value.left(active.value);
 const deleteGroupe = () => {
-  if (active.valueIsGroupe) {
+  if (activeIsGroupe) {
     showModal({
       component: 'ModalConfirmation',
       data: {
