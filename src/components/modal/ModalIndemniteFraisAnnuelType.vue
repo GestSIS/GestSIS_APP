@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
@@ -14,6 +14,7 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
+          required
           id="designation"
           v-model="active.designation"
           type="text"
@@ -22,6 +23,7 @@
         />
       </div>
       <base-select
+        :required="true"
         v-model="active.type"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
@@ -32,6 +34,7 @@
         ]"
       />
       <base-select
+        :required="true"
         v-model="active.compte_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['compte_id'] }"
@@ -40,6 +43,7 @@
         :options="listeCompte"
       />
       <base-select
+        :required="true"
         v-model="active.ecriture_categorie_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
@@ -49,6 +53,7 @@
       <div class="mb-3">
         <div class="form-check">
           <input
+            required
             id="fonction-actif-modal"
             v-model="active.cumulable"
             type="checkbox"
@@ -64,11 +69,11 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="submit" class="btn btn-primary">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
@@ -22,6 +22,7 @@
       <div class="mb-3">
         <label for="montant">Montant</label>
         <input
+          required
           id="montant"
           v-model="active.montant"
           type="text"
@@ -32,6 +33,7 @@
       <div class="mb-3">
         <label for="quantite">Quantité</label>
         <input
+          required
           id="quantite"
           v-model="active.quantite"
           type="text"
@@ -40,6 +42,7 @@
         />
       </div>
       <base-select
+        :required="true"
         v-model="active.type_unite_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['type_unite_id'] }"
@@ -52,11 +55,11 @@
       <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="submit" class="btn btn-primary">
         {{ active.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
