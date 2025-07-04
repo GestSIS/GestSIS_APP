@@ -32,7 +32,7 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeAbsence?.id ? 'Modifier' : 'Ajouter' }} une absence
@@ -43,6 +43,7 @@ const save = async () => {
       <div class="mb-3">
         <label for="cours-date">Départ</label>
         <input
+          required
           id="debut"
           v-model="activeAbsence.debut"
           type="date"
@@ -54,9 +55,11 @@ const save = async () => {
       <div class="mb-3">
         <label for="cours-date">Retour</label>
         <input
+          required
           id="cours-date"
           v-model="activeAbsence.fin"
           type="date"
+          :min="activeAbsence.debut"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
         />
@@ -67,11 +70,11 @@ const save = async () => {
       <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save">
+      <button type="submit" class="btn btn-primary">
         {{ activeAbsence?.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped></style>
