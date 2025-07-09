@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import AppNavbar from '/src/components/AppNavbar.vue';
 import AppModal from '/src/components/AppModal.vue';
-import MainSidebar from '/src/components/MainSidebar.vue';
+import AppSidebar from '/src/components/AppSidebar.vue';
 
 const hideSidebar = ref(false);
 
@@ -17,8 +17,8 @@ const isMobile = computed(() => {
 <template>
   <div class="wrapper">
     <div class="wrapper">
-      <!-- Main Sidebar Container -->
-      <main-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
+      <!-- App Sidebar Container -->
+      <app-sidebar class="custom-sidebar" :class="{ 'd-none': hideSidebar }" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
         <!-- <div class="position-absolute top-0">
           <button

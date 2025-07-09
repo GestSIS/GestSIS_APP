@@ -1,5 +1,4 @@
 <script setup>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { TokenService } from '../services/StorageService.js';
 import { useStore } from 'vuex';
 import * as data from '../../releases.json';
@@ -17,7 +16,7 @@ const isAdmin = computed(() => store.state.auth.admin);
 const date = localStorage.getItem('latestReleaseDate', releases.value[0].date);
 const version = localStorage.getItem(
   'latestSeenVersion',
-  releases.value[0].version,
+  releases.value[0].version
 );
 localStorage.setItem('latestReleaseDate', releases.value[0].date);
 localStorage.setItem('latestSeenVersion', releases.value[0].version);
@@ -53,9 +52,6 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             <li class="breadcrumb-item active" aria-current="page">A propos</li>
           </ol>
         </nav>
-      </div>
-      <div class="col-sm-6 d-flex justify-content-end">
-        <exercice-comptable />
       </div>
     </div>
     <div class="row">

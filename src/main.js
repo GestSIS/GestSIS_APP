@@ -5,6 +5,7 @@ import types from './store/mutationTypes';
 import store from './store/index';
 import { TokenService } from './services/StorageService.js';
 import { createPinia } from 'pinia';
+
 // Page layouts
 import Default from './layouts/DefaultLayout.vue';
 import Empty from './layouts/EmptyLayout.vue';
@@ -13,16 +14,10 @@ import NoSidebar from './layouts/NoSidebarLayout.vue';
 // External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatingVue from 'floating-vue';
-// import VueAWN from 'vue-awesome-notifications';
 import VueAWN from './plugins/vue-awesome-notifications';
 
-// External css dependencies
-
 // Css assets
-// import './assets/sass/main.scss';
 import './icons';
-
-// import bootstrap from 'bootstrap';
 
 // Base components
 import BaseDropdown from '/src/components/base/BaseDropdown.vue';
