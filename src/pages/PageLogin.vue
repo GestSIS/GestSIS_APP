@@ -69,10 +69,10 @@ const login = async () => {
       <div v-if="error" class="invalid-feedback">
         Informations de connexion invalides
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
+      <button class="btn btn-lg btn-primary w-100" type="submit">
         Se connecter
       </button>
-      <p class="mt-5 mb-3 text-muted">
+      <p class="mt-5 mb-3 text-body-secondary">
         © GestSIS {{ new Date().getFullYear() }}
       </p>
 

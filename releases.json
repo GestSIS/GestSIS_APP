@@ -1776,7 +1776,7 @@
         "Vérification des droits d'édition des présences une fois un exercice validé",
         "Affichage du nombre de sapeurs et des statistiques de présence dans l'interface de saisie",
         "Résolution d'un problème de chargement de la page statistiques interventions",
-        "Correction d'un problème d'affichage pour les statistiques véhicules et matériel "
+        "Correction d'un problème d'affichage pour les statistiques véhicules et matériel"
       ]
     },
     {
@@ -1789,7 +1789,7 @@
         "Fix couleur pour phase intervention avec Chrome",
         "Déplacement du bouton valider",
         "Amélioration de la redirection lors de la déconnexion",
-        "Choix des écritures pour décomptes "
+        "Choix des écritures pour décomptes"
       ]
     },
     {
@@ -1816,7 +1816,7 @@
         "Correction d'un problème pour les statistiques véhicules",
         "Homogénéisation des statuts pour intervention et exercice",
         "Description de rôle obligatoire",
-        "Possibilité d'afficher les montants pour les rapports d'intervention "
+        "Possibilité d'afficher les montants pour les rapports d'intervention"
       ]
     },
     {
@@ -1828,7 +1828,7 @@
         "Ajout de colonnes dans la table comptabilité-intervention",
         "Suppression des colonnes inutiles de la modale pour l'imputation des exercices",
         "Correction d'un problème lié à l'imputation avec les tarifs min et taux nuit/week-end",
-        "Arrondi des montants pour les écriture à 5 centimes "
+        "Arrondi des montants pour les écriture à 5 centimes"
       ]
     },
     {
@@ -1837,7 +1837,7 @@
       "app": "GestSIS APP",
       "changes": [
         "Correction d'un problème d'affichage des localités dans la fenêtre de sélection des sapeurs",
-        "Correction d'un problème pour cocher les catégories dans la fenêtre de sélection des sapeurs "
+        "Correction d'un problème pour cocher les catégories dans la fenêtre de sélection des sapeurs"
       ]
     },
     {
@@ -1857,7 +1857,7 @@
         "Affichage des heures supplémentaires pour exercices",
         "Ajout de l'icône",
         "Correction d'un problème pour la saisie des heure supplémentaires d'un exercice",
-        "Correction d'un bug pour le renouvellement de l'authentification "
+        "Correction d'un bug pour le renouvellement de l'authentification"
       ]
     },
     {
@@ -1877,7 +1877,7 @@
       "changes": [
         "Affichage des en-têtes pour la saisie des présences",
         "Résolution d'un problème lié au renouvellement des accès",
-        "Amélioration des performances d'affichage pour la saisie des présences "
+        "Amélioration des performances d'affichage pour la saisie des présences"
       ]
     },
     {
@@ -1887,7 +1887,7 @@
       "changes": [
         "Affichage des titres du tableau de saisie des présences lors du défilement",
         "Correction d'un problème lié au rafraichissement des droits d'accès",
-        "Correction d'un bug pour la suppression de frais/indemnité annuel type "
+        "Correction d'un bug pour la suppression de frais/indemnité annuel type"
       ]
     },
     {
@@ -1908,7 +1908,7 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Correction des droits pour l'affichage des exercices et interventions en mode lecture seule "
+        "Correction des droits pour l'affichage des exercices et interventions en mode lecture seule"
       ]
     },
     {
@@ -1919,7 +1919,7 @@
         "Mode lecture pour sapeurs",
         "Mode lecture pour exercices",
         "Mode lecture pour interventions",
-        "Correction du type de droit requis pour la visualisation de l'effectif "
+        "Correction du type de droit requis pour la visualisation de l'effectif"
       ]
     }
   ]
