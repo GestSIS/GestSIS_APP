@@ -1,3 +1,215 @@
+<script setup>
+import { computed, ref, useTemplateRef } from 'vue';
+import EditableTree from '/src/components/editable_tree/EditableTree.vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const { editMode } = defineProps({
+  editMode: {
+    type: Boolean,
+    default: false,
+  },
+});
+const emit = defineEmits(['selected']);
+
+const active = ref(null);
+const types = {
+  groupe: {
+    icon: ['fas', 'sitemap'],
+    color: '#2c3e50',
+  },
+  groupeInter: {
+    icon: ['fas', 'fire'],
+    color: '#f39c12',
+  },
+  groupeInactif: {
+    icon: ['fas', 'sitemap'],
+    color: '#bdc3c7',
+  },
+};
+const tree = ref([
+  {
+    id: 'g',
+    type: 'groupe',
+    label: 'Groupes',
+    children: [],
+  },
+]);
+
+const groupes = computed(() => store.state.groupe.liste);
+const groupeTree = computed(() => {
+  const groupFilter = (parentId) => (g) => g.parent_id == parentId;
+  const sapeurMapping = (s) => {
+    const sapeur = store.state.sapeur.liste.find(
+      (sap) => sap.id == s.sapeur_id,
+    ) || {
+      nom: 'Ancien',
+      prenom: 'Sapeur',
+      civilite: 1,
+      id: s.sapeur_id,
+    };
+    return {
+      id: s.sapeur_id,
+      key: `s-${s.sapeur_id}`,
+      label: sapeur.nom_prenom,
+      type: 'sapeur',
+    };
+  };
+  const groupeMapping = (g) => ({
+    label:
+      (g.no ? `${g.no} ${g.designation}` : g.designation) +
+      (g.sapeur_ids.length ? ` (${g.sapeur_ids.length})` : ''),
+    type: g.type == 0 ? 'groupe' : 'groupeInter',
+    id: g.id,
+    key: `g-${g.id}`,
+    tri: g.tri,
+    children: [
+      ...store.state.groupe.liste.filter(groupFilter(g.id)).map(groupeMapping),
+      ...g.sapeur_ids
+        .map(sapeurMapping)
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    ],
+  });
+
+  return store.state.groupe.liste.filter(groupFilter(null)).map(groupeMapping);
+});
+
+tree.value.children = groupeTree.value;
+
+const selected = (elem) => {
+  active.value = elem;
+  emit('selected', elem);
+};
+
+const left = (node) => {
+  const groupe = groupes.value.find((g) => g.id == node.data.id);
+
+  // On ne change que parent_id
+  const parent = groupes.value.find((g) => g.id == groupe.parent_id);
+  store.dispatch('updateGroupe', {
+    groupeId: groupe.id,
+    data: {
+      ...groupe,
+      parent_id: parent.parent_id,
+    },
+  });
+};
+const right = (node) => {
+  const groupe = groupes.value.find((g) => g.id == node.data.id);
+
+  // On ne change que parent_id
+  const groupesOfSameLevel = groupes.value
+    .filter((g) => g.parent_id == groupe.parent_id)
+    .filter((g) => g.tri < groupe.tri);
+  const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
+  store.dispatch('updateGroupe', {
+    groupeId: groupe.id,
+    data: {
+      ...groupe,
+      parent_id: previousGroupe.id,
+    },
+  });
+};
+const up = (node) => {
+  const groupe = groupes.value.find((g) => g.id == node.data.id);
+
+  if (node.isFirstOfLevel) {
+    // On change parent_id uniquement
+    const parent = groupes.value.find((g) => g.id == groupe.parent_id);
+    const groupesOfSameLevelAsParent = groupes.value
+      .filter((g) => g.parent_id == parent.parent_id)
+      .filter((g) => g.tri < parent.tri);
+    const previousParentGroupe =
+      groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
+    store.dispatch('updateGroupe', {
+      groupeId: groupe.id,
+      data: {
+        ...groupe,
+        parent_id: previousParentGroupe.id,
+      },
+    });
+  } else {
+    // On échange tri avec l'autre élément adjacent
+    const groupeTri = groupe.tri;
+    const groupesOfSameLevel = groupes.value
+      .filter((g) => g.parent_id == groupe.parent_id)
+      .filter((g) => g.tri < groupe.tri);
+    const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
+    store.dispatch('updateGroupe', {
+      groupeId: groupe.id,
+      data: {
+        ...groupe,
+        tri: previousGroupe.tri,
+      },
+    });
+    store.dispatch('updateGroupe', {
+      groupeId: previousGroupe.id,
+      data: {
+        ...previousGroupe,
+        tri: groupeTri,
+      },
+    });
+  }
+};
+const down = (node) => {
+  const groupe = groupes.value.find((g) => g.id == node.data.id);
+
+  if (node.isLastOfLevel) {
+    // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
+    // On change parent_id uniquement
+    let nextParentGroupe = null;
+    let groupeId = groupe.parent_id;
+    while (!nextParentGroupe) {
+      const parent = groupes.value.find((g) => g.id == groupeId);
+      const groupesOfSameLevelAsParent = groupes.value
+        .filter((g) => g.parent_id == parent.parent_id)
+        .filter((g) => g.tri > parent.tri);
+      nextParentGroupe = groupesOfSameLevelAsParent[0];
+      groupeId = parent.parent_id;
+    }
+
+    store.dispatch('updateGroupe', {
+      groupeId: groupe.id,
+      data: {
+        ...groupe,
+        parent_id: nextParentGroupe.id,
+      },
+    });
+  } else {
+    // On échange tri avec l'autre élément adjacent
+    const groupeTri = groupe.tri;
+    const groupesOfSameLevel = groupes.value
+      .filter((g) => g.parent_id == groupe.parent_id)
+      .filter((g) => g.tri > groupe.tri);
+    const nextGroupe = groupesOfSameLevel[0];
+    store.dispatch('updateGroupe', {
+      groupeId: groupe.id,
+      data: {
+        ...groupe,
+        tri: nextGroupe.tri,
+      },
+    });
+    store.dispatch('updateGroupe', {
+      groupeId: nextGroupe.id,
+      data: {
+        ...nextGroupe,
+        tri: groupeTri,
+      },
+    });
+  }
+};
+
+const treeRef = useTemplateRef('tree');
+const contract = () => treeRef.contract();
+const expand = () => treeRef.expand();
+
+defineExpose({
+  expand,
+  contract,
+});
+</script>
+
 <template>
   <editable-tree
     ref="tree"
@@ -41,245 +253,3 @@
     </template>
   </editable-tree>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import EditableTree from '/src/components/editable_tree/EditableTree.vue';
-
-export default {
-  name: 'GroupeEdition',
-  components: {
-    EditableTree,
-  },
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    editMode: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['selected'],
-  data() {
-    return {
-      active: null,
-      types: {
-        groupe: {
-          icon: ['fas', 'sitemap'],
-          color: '#2c3e50',
-        },
-        groupeInter: {
-          icon: ['fas', 'fire'],
-          color: '#f39c12',
-        },
-        groupeInactif: {
-          icon: ['fas', 'sitemap'],
-          color: '#bdc3c7',
-        },
-      },
-      tree: [
-        {
-          id: 'g',
-          type: 'groupe',
-          label: 'Groupes',
-          children: [],
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) => state.groupe.liste,
-      sapeurs: (state) => state.sapeur.liste,
-    }),
-    groupeTree() {
-      const groupFilter = (parentId) => (g) => g.parent_id == parentId;
-      const sapeurMapping = (s) => {
-        const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id) || {
-          nom: 'Ancien',
-          prenom: 'Sapeur',
-          civilite: 1,
-          id: s.sapeur_id,
-        };
-        return {
-          id: s.sapeur_id,
-          key: `s-${s.sapeur_id}`,
-          label: sapeur.nom_prenom,
-          type: 'sapeur',
-        };
-      };
-      const groupeMapping = (g) => ({
-        label:
-          (g.no ? `${g.no} ${g.designation}` : g.designation) +
-          (g.sapeur_ids.length ? ` (${g.sapeur_ids.length})` : ''),
-        type: g.type == 0 ? 'groupe' : 'groupeInter',
-        id: g.id,
-        key: `g-${g.id}`,
-        tri: g.tri,
-        children: [
-          ...this.groupes.filter(groupFilter(g.id)).map(groupeMapping),
-          ...g.sapeur_ids
-            .map(sapeurMapping)
-            .sort((a, b) => a.label.localeCompare(b.label)),
-        ],
-      });
-
-      return this.groupes.filter(groupFilter(null)).map(groupeMapping);
-    },
-  },
-  mounted() {
-    this.tree.children = this.groupeTree;
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    contract() {
-      this.$refs.tree.contract();
-    },
-    expand() {
-      this.$refs.tree.expand();
-    },
-    selected(elem) {
-      this.active = elem;
-      this.$emit('selected', elem);
-    },
-    modifierGroupes() {
-      const data = [];
-      this.SHOW_MODAL({
-        component: 'ModalGroupeEdition',
-        size: 1,
-        data,
-      });
-    },
-    close() {
-      this.HIDE_MODAL();
-    },
-    left(node) {
-      const groupe = this.groupes.find((g) => g.id == node.data.id);
-
-      // On ne change que parent_id
-      const parent = this.groupes.find((g) => g.id == groupe.parent_id);
-      this.$store.dispatch('updateGroupe', {
-        groupeId: groupe.id,
-        data: {
-          ...groupe,
-          parent_id: parent.parent_id,
-        },
-      });
-    },
-    right(node) {
-      const groupe = this.groupes.find((g) => g.id == node.data.id);
-
-      // On ne change que parent_id
-      const groupesOfSameLevel = this.groupes
-        .filter((g) => g.parent_id == groupe.parent_id)
-        .filter((g) => g.tri < groupe.tri);
-      const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
-      this.$store.dispatch('updateGroupe', {
-        groupeId: groupe.id,
-        data: {
-          ...groupe,
-          parent_id: previousGroupe.id,
-        },
-      });
-    },
-    up(node) {
-      const groupe = this.groupes.find((g) => g.id == node.data.id);
-
-      if (node.isFirstOfLevel) {
-        // On change parent_id uniquement
-        const parent = this.groupes.find((g) => g.id == groupe.parent_id);
-        const groupesOfSameLevelAsParent = this.groupes
-          .filter((g) => g.parent_id == parent.parent_id)
-          .filter((g) => g.tri < parent.tri);
-        const previousParentGroupe =
-          groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
-        this.$store.dispatch('updateGroupe', {
-          groupeId: groupe.id,
-          data: {
-            ...groupe,
-            parent_id: previousParentGroupe.id,
-          },
-        });
-      } else {
-        // On échange tri avec l'autre élément adjacent
-        const groupeTri = groupe.tri;
-        const groupesOfSameLevel = this.groupes
-          .filter((g) => g.parent_id == groupe.parent_id)
-          .filter((g) => g.tri < groupe.tri);
-        const previousGroupe =
-          groupesOfSameLevel[groupesOfSameLevel.length - 1];
-        this.$store.dispatch('updateGroupe', {
-          groupeId: groupe.id,
-          data: {
-            ...groupe,
-            tri: previousGroupe.tri,
-          },
-        });
-        this.$store.dispatch('updateGroupe', {
-          groupeId: previousGroupe.id,
-          data: {
-            ...previousGroupe,
-            tri: groupeTri,
-          },
-        });
-      }
-    },
-    down(node) {
-      const groupe = this.groupes.find((g) => g.id == node.data.id);
-
-      if (node.isLastOfLevel) {
-        // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
-        // On change parent_id uniquement
-        let nextParentGroupe = null;
-        let groupeId = groupe.parent_id;
-        while (!nextParentGroupe) {
-          const parent = this.groupes.find((g) => g.id == groupeId);
-          const groupesOfSameLevelAsParent = this.groupes
-            .filter((g) => g.parent_id == parent.parent_id)
-            .filter((g) => g.tri > parent.tri);
-          nextParentGroupe = groupesOfSameLevelAsParent[0];
-          groupeId = parent.parent_id;
-        }
-
-        this.$store.dispatch('updateGroupe', {
-          groupeId: groupe.id,
-          data: {
-            ...groupe,
-            parent_id: nextParentGroupe.id,
-          },
-        });
-      } else {
-        // On échange tri avec l'autre élément adjacent
-        const groupeTri = groupe.tri;
-        const groupesOfSameLevel = this.groupes
-          .filter((g) => g.parent_id == groupe.parent_id)
-          .filter((g) => g.tri > groupe.tri);
-        const nextGroupe = groupesOfSameLevel[0];
-        this.$store.dispatch('updateGroupe', {
-          groupeId: groupe.id,
-          data: {
-            ...groupe,
-            tri: nextGroupe.tri,
-          },
-        });
-        this.$store.dispatch('updateGroupe', {
-          groupeId: nextGroupe.id,
-          data: {
-            ...nextGroupe,
-            tri: groupeTri,
-          },
-        });
-      }
-    },
-  },
-};
-</script>

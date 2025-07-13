@@ -27,7 +27,6 @@ const groupes = computed(() =>
     label: (g.no ? g.no + ' ' : '') + g.designation,
   })),
 );
-const sapeurs = computed(() => store.state.sapeur.liste);
 const hasEditPermission = useHasPermission(
   permissions.ORGANISATION.MODIFICATION,
 );
