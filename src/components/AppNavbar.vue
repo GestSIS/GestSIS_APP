@@ -31,7 +31,7 @@ const clickInfo = (navigate) => {
   navigate();
 };
 const parametres = () => {
-  dropdownComponent.close();
+  dropdownComponent.value.close();
   router.push({ name: 'utilisateur' });
 };
 const logout = () => {

@@ -805,8 +805,7 @@ const router = createRouter({
       path: '/rta',
       name: 'rta',
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-      component: () =>
-        import(/* webpackChunkName: "rta" */ '/src/pages/PageRta.vue'),
+      component: () => import('/src/pages/PageRta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
@@ -814,27 +813,19 @@ const router = createRouter({
           name: 'rta-mutations',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
           component: () =>
-            import(
-              /* webpackChunkName: "rta" */ '/src/components/rta/MutationsRta.vue'
-            ),
+            import('/src/components/rta/MutationsRta.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () =>
-            import(
-              /* webpackChunkName: "rta" */ '/src/components/rta/ReferenceRta.vue'
-            ),
+          component: () => import('/src/components/rta/ReferenceRta.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
           beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-          component: () =>
-            import(
-              /* webpackChunkName: "rta" */ '/src/components/rta/GestSisRta.vue'
-            ),
+          component: () => import('/src/components/rta/GestSisRta.vue'),
         },
       ],
     },
