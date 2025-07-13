@@ -461,7 +461,7 @@ defineExpose({
   </table>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 th,
 tr {
   cursor: pointer;

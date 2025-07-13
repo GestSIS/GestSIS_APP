@@ -28,7 +28,7 @@ import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
 import StatefulFilter from '/src/components/base/StatefulFilter.vue';
 import BaseTable from '/src/components/table/BaseTable.vue';
 import BaseNavigationTab from '/src/components/base/BaseNavigationTab.vue';
-import BaseCard from './components/table/BaseCard.vue';
+import BaseCard from '/src/components/base/BaseCard.vue';
 
 router.beforeEach((to, from, next) => {
   if (store.state.auth.sis.liste.length <= 0) {

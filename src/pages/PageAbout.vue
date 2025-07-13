@@ -84,7 +84,6 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             </button>
           </div>
         </div>
-        <div class="timeline"></div>
       </div>
       <div class="col-md-4">
         <div class="card card-primary card-outline mb-3">

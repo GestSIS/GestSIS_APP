@@ -109,7 +109,7 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '/src/components/MultiStep.vue';
+import MultiStep from '/src/components/base/MultiStep.vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 export default {
