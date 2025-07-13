@@ -47,11 +47,11 @@ const save = async () => {
   store
     .dispatch('updateAmendes', params.value)
     .then((res) => {
-      errors = {};
+      errors.value = {};
       awn.success(res?.message || 'Modifications enregistrées');
     })
     .catch((e) => {
-      errors = { ...e };
+      errors.value = { ...e };
       awn.alert(e?.message || "Erreur lors de l'enregistrement");
     });
 };
