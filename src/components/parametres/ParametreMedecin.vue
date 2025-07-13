@@ -1,3 +1,40 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchMedecins');
+
+const fields = [
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Adresse', key: 'adresse' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Actif', key: 'actif', type: Boolean },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeMedecin = computed(() =>
+  store.state.medecin.liste
+    .map((m) => ({
+      ...m,
+      localite: store.state.localite.liste.find((l) => l.id == m.localite_id)
+        ?.designation,
+    }))
+    .sort((a, b) => a.designation?.localeCompare(b.designation)),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutMedecin = () => showModal({ component: 'ModalMedecin', data: {} });
+const updateMedecin = (medecin) =>
+  showModal({ component: 'ModalMedecin', data: { ...medecin } });
+const deleteMedecin = (medecin) =>
+  store
+    .dispatch('removeMedecin', medecin.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,67 +70,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadMedecin = store.dispatch('fetchMedecins');
-
-  Promise.all([loadMedecin]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreMedecin',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Adresse', key: 'adresse' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Actif', key: 'actif', type: Boolean },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeMedecin: (state) =>
-        state.medecin.liste
-          .map((m) => ({
-            ...m,
-            localite: state.localite.liste.find((l) => l.id == m.localite_id)
-              ?.designation,
-          }))
-          .sort((a, b) => a.designation?.localeCompare(b.designation)),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutMedecin() {
-      this.SHOW_MODAL({ component: 'ModalMedecin', data: {} });
-    },
-    updateMedecin(medecin) {
-      this.SHOW_MODAL({ component: 'ModalMedecin', data: { ...medecin } });
-    },
-    deleteMedecin(medecin) {
-      this.$store
-        .dispatch('removeMedecin', medecin.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

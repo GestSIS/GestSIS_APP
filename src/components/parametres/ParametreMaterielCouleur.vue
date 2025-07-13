@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, ref, warn } from 'vue';
+import { computed, inject } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -12,7 +12,7 @@ const couleurs = computed(() =>
 );
 
 const awn = inject('awn');
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 
 const ajout = () => {
   showModal({ component: 'ModalCouleur', data: {} });
@@ -23,24 +23,17 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: 'Voulez-vous vraiment supprimer cette couleur ?',
-      question: "Attention, la suppression d'une couleur est irréversible !",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        couleurStore
-          .removeCouleur(elem.id)
-          .catch((error) =>
-            awn.alert(error.message ?? 'Impossible de supprimer cette couleur'),
-          );
-      }
-    },
-  });
-};
+const remove = (elem) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette couleur ?',
+    "Attention, la suppression d'une couleur est irréversible !",
+  ).then(() =>
+    couleurStore
+      .removeCouleur(elem.id)
+      .catch((error) =>
+        awn.alert(error.message ?? 'Impossible de supprimer cette couleur'),
+      ),
+  );
 
 const fields = [
   { title: 'Couleur', slot: 'couleur' },

@@ -1,3 +1,39 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import ParametreMission from './ParametreMission.vue';
+import ParametreTelephone from './ParametreTelephone.vue';
+import ParametreMateriel from './ParametreMateriel.vue';
+import ParametreVehicule from './ParametreVehicule.vue';
+import ParametreTraitement from './ParametreTraitement.vue';
+import ParametreTypeIntervention from './ParametreTypeIntervention.vue';
+import ParametreStatFederal from './ParametreStatFederal.vue';
+
+const store = useStore();
+const loadVehicule = store.dispatch('fetchVehicules');
+const loadMateriel = store.dispatch('fetchMateriels');
+const loadMission = store.dispatch('fetchMissions');
+const loadAppel = store.dispatch('fetchTelephones');
+const loadStatFederal = store.dispatch('fetchStatFederals');
+const loadStatIntervention = store.dispatch('fetchStatInterventions');
+const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
+const loadTraitement = store.dispatch('fetchInterventionTraitements');
+const loadUnite = store.dispatch('fetchUnites');
+
+await Promise.all([
+  loadVehicule,
+  loadMateriel,
+  loadMission,
+  loadAppel,
+  loadStatFederal,
+  loadStatIntervention,
+  loadTypeIntervention,
+  loadTraitement,
+  loadUnite,
+]);
+const tab = ref('vehicule');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -75,62 +111,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreMission from './ParametreMission.vue';
-import ParametreTelephone from './ParametreTelephone.vue';
-import ParametreMateriel from './ParametreMateriel.vue';
-import ParametreVehicule from './ParametreVehicule.vue';
-import ParametreTraitement from './ParametreTraitement.vue';
-import ParametreTypeIntervention from './ParametreTypeIntervention.vue';
-import ParametreStatFederal from './ParametreStatFederal.vue';
-
-async function loadData(_, next) {
-  const loadVehicule = store.dispatch('fetchVehicules');
-  const loadMateriel = store.dispatch('fetchMateriels');
-  const loadMission = store.dispatch('fetchMissions');
-  const loadAppel = store.dispatch('fetchTelephones');
-  const loadStatFederal = store.dispatch('fetchStatFederals');
-  const loadStatIntervention = store.dispatch('fetchStatInterventions');
-  const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
-  const loadTraitement = store.dispatch('fetchInterventionTraitements');
-  const loadUnite = store.dispatch('fetchUnites');
-
-  Promise.all([
-    loadVehicule,
-    loadMateriel,
-    loadMission,
-    loadAppel,
-    loadStatFederal,
-    loadStatIntervention,
-    loadTypeIntervention,
-    loadTraitement,
-    loadUnite,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabIntervention',
-  components: {
-    ParametreMission,
-    ParametreTelephone,
-    ParametreMateriel,
-    ParametreVehicule,
-    ParametreTraitement,
-    ParametreTypeIntervention,
-    ParametreStatFederal,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'vehicule' };
-  },
-};
-</script>

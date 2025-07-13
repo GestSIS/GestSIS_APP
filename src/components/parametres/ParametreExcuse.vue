@@ -1,3 +1,40 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+await store.dispatch('fetchExcuseParams');
+
+const excuseParams = computed(() => store.state.excuseParam.params);
+
+const errors = ref({});
+const params = ref({
+  actif: false,
+  delai_excuse: null,
+  email_rappel: false,
+  texte_email_rappel: '',
+});
+
+params.value = {
+  ...params.value,
+  ...excuseParams,
+};
+
+const awn = inject('awn');
+
+const save = async () =>
+  store
+    .dispatch('updateExcuseParams', params.value)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+    })
+    .catch((e) => {
+      errors.value = { ...e };
+      awn.alert(e?.message || "Erreur lors de l'enregistrement");
+    });
+</script>
+
 <template>
   <div class="row">
     <div class="col-12">
@@ -74,65 +111,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadExcuseParams = store.dispatch('fetchExcuseParams');
-
-  Promise.all([loadExcuseParams]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreExcuse',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      errors: {},
-      params: {
-        actif: false,
-        delai_excuse: null,
-        email_rappel: false,
-        texte_email_rappel: '',
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      excuseParams: (state) => state.excuseParam.params,
-    }),
-  },
-  mounted() {
-    this.params = {
-      ...this.params,
-      ...this.excuseParams,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    async save() {
-      this.$store
-        .dispatch('updateExcuseParams', this.params)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((e) => {
-          this.errors = { ...e };
-          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>

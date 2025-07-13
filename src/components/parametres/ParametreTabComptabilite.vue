@@ -1,3 +1,42 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+import ParametreCompte from './ParametreCompte.vue';
+import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
+import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
+import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
+import ParametreIndemniteCours from './ParametreIndemniteCours.vue';
+import ParametreHeureExercice from './ParametreHeureExercice.vue';
+import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
+import ParametreAvs from './ParametreAvs.vue';
+import ParametreAmende from './ParametreAmende.vue';
+
+const store = useStore();
+const loadAmendes = store.dispatch('fetchAmendes');
+const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+const loadFonctions = store.dispatch('fetchFonctions');
+const loadComptes = store.dispatch('fetchComptes');
+const loadUnites = store.dispatch('fetchUnites');
+const loadCategories = store.dispatch('fetchEcritureCategories');
+const loadAvsParams = store.dispatch('fetchAvsParams');
+const loadPhases = store.dispatch('fetchPhaseTypes');
+const loadHeures = store.dispatch('fetchHeuresExercice');
+
+await Promise.all([
+  loadAmendes,
+  loadFraisIndemnites,
+  loadFonctions,
+  loadComptes,
+  loadUnites,
+  loadCategories,
+  loadAvsParams,
+  loadPhases,
+  loadHeures,
+]);
+const tab = ref('compte');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -96,68 +135,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-
-import ParametreCompte from './ParametreCompte.vue';
-import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
-import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
-import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
-import ParametreIndemniteCours from './ParametreIndemniteCours.vue';
-import ParametreHeureExercice from './ParametreHeureExercice.vue';
-import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
-import ParametreAvs from './ParametreAvs.vue';
-import ParametreAmende from './ParametreAmende.vue';
-
-async function loadData(_, next) {
-  const loadAmendes = store.dispatch('fetchAmendes');
-  const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadCategories = store.dispatch('fetchEcritureCategories');
-  const loadAvsParams = store.dispatch('fetchAvsParams');
-  const loadPhases = store.dispatch('fetchPhaseTypes');
-  const loadHeures = store.dispatch('fetchHeuresExercice');
-
-  Promise.all([
-    loadAmendes,
-    loadFraisIndemnites,
-    loadFonctions,
-    loadComptes,
-    loadUnites,
-    loadCategories,
-    loadAvsParams,
-    loadPhases,
-    loadHeures,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabComptabilite',
-  components: {
-    ParametreCompte,
-    ParametreEcritureCategorie,
-    ParametreIndemniteCours,
-    ParametreIndemniteExercice,
-    ParametreIndemniteFraisAnnuel,
-    ParametreIndemniteIntervention,
-    ParametreHeureExercice,
-    ParametreAvs,
-    ParametreAmende,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'compte' };
-  },
-  methods: {},
-};
-</script>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject } from 'vue';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
@@ -31,7 +31,8 @@ const computedData = computed(() => {
   return recursive(null);
 });
 
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
+const awn = inject('awn');
 
 const ajout = () => showModal({ component: 'ModalEmplacement', data: {} });
 const update = (elem) =>
@@ -39,25 +40,17 @@ const update = (elem) =>
     component: 'ModalEmplacement',
     data: { ...elem },
   });
-
-const remove = (elem) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: `Voulez-vous vraiment supprimer cet emplacement ?`,
-      question: 'Attention, la suppression de cet élément est irréversible !',
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        emplacementStore
-          .removeEmplacement(elem.id)
-          .catch((res) =>
-            this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-          );
-      }
-    },
-  });
-};
+const remove = (elem) =>
+  confirm(
+    `Voulez-vous vraiment supprimer cet emplacement ?`,
+    'Attention, la suppression de cet élément est irréversible !',
+  ).then(() =>
+    emplacementStore
+      .removeEmplacement(elem.id)
+      .catch((res) =>
+        awn.alert(res.message || 'Erreur lors de la suppression'),
+      ),
+  );
 
 const fields = [
   { title: 'Emplacement', slot: 'emplacement' },

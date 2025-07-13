@@ -1,3 +1,42 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+const store = useStore();
+await store.dispatch('fetchExcuseTypes');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Abréviation', key: 'abreviation' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Amende', key: 'amende', type: Boolean },
+  {
+    title: 'Disponibilité',
+    key: 'statut',
+    formatter: (statut) =>
+      ({
+        0: 'Désactivé',
+        1: "Exercice + S'excuser",
+        2: 'Exercice',
+      })[statut],
+  },
+  { title: 'Actions', slot: 'actions' },
+];
+const listeExcuse = computed(() =>
+  store.state.excuseType.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutExcuse = () => showModal({ component: 'ModalExcuseType', data: {} });
+const updateExcuse = (excuse) =>
+  showModal({ component: 'ModalExcuseType', data: { ...excuse } });
+const deleteExcuse = (excuse) =>
+  store
+    .dispatch('removeExcuseType', excuse.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,71 +72,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadExcuses = store.dispatch('fetchExcuseTypes');
-
-  Promise.all([loadExcuses]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreExcuseType',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Abréviation', key: 'abreviation' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Amende', key: 'amende', type: Boolean },
-        {
-          title: 'Disponibilité',
-          key: 'statut',
-          formatter: (statut) =>
-            ({
-              0: 'Désactivé',
-              1: "Exercice + S'excuser",
-              2: 'Exercice',
-            })[statut],
-        },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeExcuse: (state) =>
-        state.excuseType.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutExcuse() {
-      this.SHOW_MODAL({ component: 'ModalExcuseType', data: {} });
-    },
-    updateExcuse(excuse) {
-      this.SHOW_MODAL({ component: 'ModalExcuseType', data: { ...excuse } });
-    },
-    deleteExcuse(excuse) {
-      this.$store
-        .dispatch('removeExcuseType', excuse.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

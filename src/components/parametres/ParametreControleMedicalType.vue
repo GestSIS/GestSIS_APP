@@ -1,3 +1,38 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchControlesMedicauxTypes');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Remarque', key: 'remarque' },
+  { title: 'Validité [ans]', key: 'duree_validite' },
+  { title: 'Expirable', key: 'expirable', type: Boolean },
+  { title: 'Actions', slot: 'actions' },
+];
+const listeType = computed(() =>
+  store.state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutType = () =>
+  showModal({ component: 'ModalControleMedicalType', data: {} });
+const updateType = (type) =>
+  showModal({
+    component: 'ModalControleMedicalType',
+    data: { ...type },
+  });
+const deleteType = (type) =>
+  store
+    .dispatch('removeControlesMedicauxTypes', type.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -32,65 +67,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadType = store.dispatch('fetchControlesMedicauxTypes');
-
-  Promise.all([loadType]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreControleMedicalType',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Remarque', key: 'remarque' },
-        { title: 'Validité [ans]', key: 'duree_validite' },
-        { title: 'Expirable', key: 'expirable', type: Boolean },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeType: (state) =>
-        state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutType() {
-      this.SHOW_MODAL({ component: 'ModalControleMedicalType', data: {} });
-    },
-    updateType(type) {
-      this.SHOW_MODAL({
-        component: 'ModalControleMedicalType',
-        data: { ...type },
-      });
-    },
-    deleteType(type) {
-      this.$store
-        .dispatch('removeControlesMedicauxTypes', type.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

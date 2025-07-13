@@ -1,3 +1,34 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+const fields = [
+  { title: 'Année', key: 'annee' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Début', key: 'debut', type: Date },
+  { title: 'Fin', key: 'fin', type: Date },
+  { title: 'Bouclé', key: 'boucle', type: Boolean },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeExerciceComptable = computed(() =>
+  store.state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
+);
+
+const { showModal } = useModalStore();
+const newExerciceComptable = () =>
+  showModal({ component: 'ModalExerciceComptable', data: {} });
+const updateExerciceComptable = (exercice) =>
+  showModal({
+    component: 'ModalExerciceComptable',
+    data: { ...exercice },
+  });
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -39,58 +70,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadExerciceComptable = store.dispatch('fetchExercicesComptables');
-
-  Promise.all([loadExerciceComptable]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabExerciceComptable',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Année', key: 'annee' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Début', key: 'debut', type: Date },
-        { title: 'Fin', key: 'fin', type: Date },
-        { title: 'Bouclé', key: 'boucle', type: Boolean },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeExerciceComptable: (state) =>
-        state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newExerciceComptable() {
-      this.SHOW_MODAL({ component: 'ModalExerciceComptable', data: {} });
-    },
-    updateExerciceComptable(exercice) {
-      this.SHOW_MODAL({
-        component: 'ModalExerciceComptable',
-        data: { ...exercice },
-      });
-    },
-  },
-};
-</script>

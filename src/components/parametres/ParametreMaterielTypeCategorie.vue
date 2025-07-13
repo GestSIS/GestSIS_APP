@@ -88,7 +88,7 @@ const remove = (elem) => {
     (elem.estCategorie
       ? categorieStore.removeMaterielCategorie
       : typeStore.removeMaterielType)(elem.id).catch((res) =>
-      this.$awn.alert(res.message || 'Erreur lors de la suppression'),
+      awn.alert(res.message || 'Erreur lors de la suppression'),
     ),
   );
 };

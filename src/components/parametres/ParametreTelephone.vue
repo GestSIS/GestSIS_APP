@@ -1,3 +1,35 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchTelephones');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Nom', key: 'nom' },
+  { title: 'Numéro', key: 'numero' },
+  { title: 'Actions', slot: 'actions' },
+];
+const listeTelephone = computed(() =>
+  store.state.telephone.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { confirm, showModal } = useModalStore();
+const ajoutTelephone = () =>
+  showModal({ component: 'ModalTelephone', data: {} });
+
+const updateTelephone = (telephone) =>
+  showModal({ component: 'ModalTelephone', data: { ...telephone } });
+
+const deleteTelephone = (telephone) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce contact ?',
+    "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
+  ).then(() => store.dispatch('removeTelephone', telephone.id));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,68 +65,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadAppel = store.dispatch('fetchTelephones');
-
-  Promise.all([loadAppel]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTelephone',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Nom', key: 'nom' },
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeTelephone: (state) =>
-        state.telephone.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutTelephone() {
-      this.SHOW_MODAL({ component: 'ModalTelephone', data: {} });
-    },
-    updateTelephone(telephone) {
-      this.SHOW_MODAL({ component: 'ModalTelephone', data: { ...telephone } });
-    },
-    deleteTelephone(telephone) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce contact ?',
-          question:
-            "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeTelephone', telephone.id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>

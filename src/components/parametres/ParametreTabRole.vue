@@ -1,3 +1,79 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const store = useStore();
+const loadPermissions = store.dispatch('fetchPermissions');
+const loadRoles = store.dispatch('fetchRoles');
+
+await Promise.all([loadPermissions, loadRoles]);
+
+const selectedId = ref(null);
+const permissions = computed(() =>
+  store.state.auth.permissions.sort((a, b) => a.tri - b.tri),
+);
+
+const formattedRoles = computed(() => {
+  return store.state.auth.roles.map((r) => ({
+    ...r,
+    permissions: r.permission_roles.map((p) => parseInt(p.permission_id)),
+  }));
+});
+const groupedPermissions = computed(() => {
+  return Object.entries(
+    permissions.value.reduce((acc, p) => {
+      const keyParts = p.api_key.split('.');
+      const key = keyParts[0];
+      const permission = keyParts[1];
+      if (!(key in acc)) {
+        acc[key] = [];
+      }
+      acc[key].push({ ...p, permission });
+      return acc;
+    }, {}),
+  );
+});
+
+const { confirm, showModal } = useModalStore();
+const selectRole = (role) => (selectedId.value = role.id);
+
+const edit = (role) => showModal({ component: 'ModalRole', data: role });
+const newRole = () => showModal({ component: 'ModalRole', data: {} });
+const remove = (role) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce rôle ?',
+    "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
+  ).then(() => store.dispatch('deleteRole', role.id));
+
+const moduleMapping = (key) => {
+  // Permet d'améliorer certains textes à afficher
+  const mapping = {
+    controle_medical: 'Contrôles médicaux',
+    comptabilite: 'Comptabilité',
+    organisation: 'Groupes',
+    sis: 'Config générale',
+    mat_perso: 'Matériel personnel',
+    fiche_travail: 'Fiche de travail',
+  };
+  if (key in mapping) {
+    return mapping[key];
+  }
+  return key;
+};
+const permissionMapping = (key) => {
+  // Permet d'améliorer certains textes à afficher
+  const mapping = {
+    saisie_perso: 'Saisie perso',
+    saisie_commune: 'Saisie commune',
+  };
+  if (key in mapping) {
+    return mapping[key];
+  }
+  return key;
+};
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -88,117 +164,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadPermissions = store.dispatch('fetchPermissions');
-  const loadRoles = store.dispatch('fetchRoles');
-
-  Promise.all([loadPermissions, loadRoles]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabRoles',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      selectedId: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      permissions: (state) =>
-        state.auth.permissions.sort((a, b) => a.tri - b.tri),
-      roles: (state) => state.auth.roles,
-    }),
-    formattedRoles() {
-      return this.roles.map((r) => ({
-        ...r,
-        permissions: r.permission_roles.map((p) => parseInt(p.permission_id)),
-      }));
-    },
-    groupedPermissions() {
-      return Object.entries(
-        this.permissions.reduce((acc, p) => {
-          const keyParts = p.api_key.split('.');
-          const key = keyParts[0];
-          const permission = keyParts[1];
-          if (!(key in acc)) {
-            acc[key] = [];
-          }
-          acc[key].push({ ...p, permission });
-          return acc;
-        }, {}),
-      );
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    selectRole(role) {
-      this.selectedId = role.id;
-    },
-    edit(role) {
-      this.SHOW_MODAL({ component: 'ModalRole', data: role });
-    },
-    newRole() {
-      this.SHOW_MODAL({ component: 'ModalRole', data: {} });
-    },
-    remove(role) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce rôle ?',
-          question:
-            "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('deleteRole', role.id);
-          }
-        },
-      });
-    },
-    moduleMapping(key) {
-      // Permet d'améliorer certains textes à afficher
-      const mapping = {
-        controle_medical: 'Contrôles médicaux',
-        comptabilite: 'Comptabilité',
-        organisation: 'Groupes',
-        sis: 'Config générale',
-        mat_perso: 'Matériel personnel',
-        fiche_travail: 'Fiche de travail',
-      };
-      if (key in mapping) {
-        return mapping[key];
-      }
-      return key;
-    },
-    permissionMapping(key) {
-      // Permet d'améliorer certains textes à afficher
-      const mapping = {
-        saisie_perso: 'Saisie perso',
-        saisie_commune: 'Saisie commune',
-      };
-      if (key in mapping) {
-        return mapping[key];
-      }
-      return key;
-    },
-  },
-};
-</script>
 
 <style scoped>
 table {

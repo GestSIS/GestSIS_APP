@@ -1,3 +1,62 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const loadAmendes = store.dispatch('fetchAmendes');
+const loadFonctions = store.dispatch('fetchFonctions');
+const loadComptes = store.dispatch('fetchComptes');
+const loadUnites = store.dispatch('fetchUnites');
+
+await Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]);
+
+const errors = ref({});
+const params = ref({
+  compte_id: null,
+  ecriture_categorie_id: null,
+  amendes: [],
+});
+
+const listeAmende = computed(() =>
+  store.state.amende.liste.sort((a, b) => a.order - b.order),
+);
+const listeCompte = computed(() => store.state.compte.liste);
+const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
+
+if (listeAmende.length > 0) {
+  params.value.compte_id = listeAmende[0]?.compte_id;
+  params.value.ecriture_categorie_id = listeAmende[0]?.ecriture_categorie_id;
+  params.value.amendes = listeAmende.map((a) => ({
+    montant: a.montant,
+  }));
+}
+
+const removeAmende = (index) => {
+  params.value.amendes.splice(index, 1);
+};
+const updateAmende = (index, e) => {
+  params.value.amendes[index].montant = e.target.value;
+};
+const addAmende = () => {
+  params.value.amendes = [...params.value.amendes, { montant: 0 }];
+};
+
+const awn = inject('awn');
+const save = async () => {
+  store
+    .dispatch('updateAmendes', params.value)
+    .then((res) => {
+      errors = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+    })
+    .catch((e) => {
+      errors = { ...e };
+      awn.alert(e?.message || "Erreur lors de l'enregistrement");
+    });
+};
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -61,82 +120,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadAmendes = store.dispatch('fetchAmendes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadUnites = store.dispatch('fetchUnites');
-
-  Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]).then(
-    () => {
-      next();
-    },
-  );
-}
-
-export default {
-  name: 'ParametreAmende',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      errors: {},
-      params: {
-        compte_id: null,
-        ecriture_categorie_id: null,
-        amendes: [],
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeAmende: (state) =>
-        state.amende.liste.sort((a, b) => a.order - b.order),
-      listeCompte: (state) => state.compte.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-    }),
-  },
-  mounted() {
-    if (this.listeAmende.length > 0) {
-      this.params.compte_id = this.listeAmende[0]?.compte_id;
-      this.params.ecriture_categorie_id =
-        this.listeAmende[0]?.ecriture_categorie_id;
-      this.params.amendes = this.listeAmende.map((a) => ({
-        montant: a.montant,
-      }));
-    }
-  },
-  methods: {
-    removeAmende(index) {
-      this.params.amendes.splice(index, 1);
-    },
-    updateAmende(index, e) {
-      this.params.amendes[index].montant = e.target.value;
-    },
-    addAmende() {
-      this.params.amendes = [...this.params.amendes, { montant: 0 }];
-    },
-    async save() {
-      this.$store
-        .dispatch('updateAmendes', this.params)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((e) => {
-          this.errors = { ...e };
-          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>

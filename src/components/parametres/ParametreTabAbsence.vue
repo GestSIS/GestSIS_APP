@@ -1,3 +1,14 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import ParametreAbsence from './ParametreAbsence.vue';
+
+const store = useStore();
+await store.dispatch('fetchAbsenceParams');
+
+const tab = ref('absence');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -27,28 +38,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreAbsence from './ParametreAbsence.vue';
-
-async function loadData(_, next) {
-  store.dispatch('fetchAbsenceParams').then(next).catch(next);
-}
-
-export default {
-  name: 'ParametreTabAbsence',
-  components: {
-    ParametreAbsence,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'absence' };
-  },
-};
-</script>

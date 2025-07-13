@@ -1,3 +1,45 @@
+<script setup>
+import { computed, inject, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const errors = ref({});
+const params = ref({
+  username: null,
+  password: null,
+});
+
+const aspsmsParams = computed(() => store.state.aspsmsParam.params);
+const credit = computed(() => store.state.aspsmsParam.credit);
+
+watch(aspsmsParams, (value) => {
+  if (value && value?.username && value?.password) {
+    params.value = value;
+  }
+});
+
+params.value = aspsmsParams ? aspsmsParams : params.value;
+
+const awn = inject('awn');
+const save = async () => {
+  if (params.value.password === '********') {
+    awn.success('Modifications enregistrées');
+    return;
+  }
+  store
+    .dispatch('updateAspsmsParams', { ...params.value })
+    .then((res) => {
+      errors.value = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+    })
+    .catch((e) => {
+      errors.value = { ...e };
+      awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
+    });
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-12 col-xl-6">
@@ -49,59 +91,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ParametreAspsms',
-  data() {
-    return {
-      errors: {},
-      params: {
-        username: null,
-        password: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      aspsmsParams: (state) => state.aspsmsParam.params,
-      credit: (state) => state.aspsmsParam.credit,
-    }),
-  },
-  watch: {
-    aspsmsParams(value) {
-      if (value && value?.username && value?.password) {
-        this.params = value;
-      }
-    },
-  },
-  mounted() {
-    this.params = this.aspsmsParams ? this.aspsmsParams : this.params;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    async save() {
-      if (this.password === '********') {
-        this.$awn.success('Modifications enregistrées');
-        return;
-      }
-      this.$store
-        .dispatch('updateAspsmsParams', { ...this.params })
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((e) => {
-          this.errors = { ...e };
-          this.$awn.alert(
-            this.errors?.message || "Erreur lors de l'enregistrement",
-          );
-        });
-    },
-  },
-};
-</script>

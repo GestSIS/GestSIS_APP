@@ -1,3 +1,24 @@
+<script setup>
+import { useStore } from 'vuex';
+import { ref } from 'vue';
+import ParametreTravailType from './ParametreTravailType.vue';
+const store = useStore();
+
+const loadTravailTypes = store.dispatch('fetchTravailTypes');
+const loadUnites = store.dispatch('fetchUnites');
+const loadComptes = store.dispatch('fetchComptes');
+const loadEcritureCategories = store.dispatch('fetchEcritureCategories');
+
+await Promise.all([
+  loadComptes,
+  loadUnites,
+  loadTravailTypes,
+  loadEcritureCategories,
+  loadTravailTypes,
+]);
+const tab = ref('type');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -27,41 +48,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreTravailType from './ParametreTravailType.vue';
-
-async function loadData(_, next) {
-  const loadTravailTypes = store.dispatch('fetchTravailTypes');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadEcritureCategories = store.dispatch('fetchEcritureCategories');
-
-  Promise.all([
-    loadComptes,
-    loadUnites,
-    loadTravailTypes,
-    loadEcritureCategories,
-    loadTravailTypes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabExercice',
-  components: {
-    ParametreTravailType,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'type' };
-  },
-};
-</script>

@@ -1,3 +1,31 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchMissions');
+
+const fields = [
+  { title: 'Titre', key: 'titre' },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeMission = computed(() =>
+  store.state.mission.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { confirm, showModal } = useModalStore();
+const ajoutMission = () => showModal({ component: 'ModalMission', data: {} });
+const updateMission = (mission) =>
+  showModal({ component: 'ModalMission', data: { ...mission } });
+const deleteMission = (mission) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette mission ?',
+    "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
+  ).then(() => store.dispatch('removeMission', mission.id));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,66 +61,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadMission = store.dispatch('fetchMissions');
-
-  Promise.all([loadMission]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreMission',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Titre', key: 'titre' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeMission: (state) =>
-        state.mission.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutMission() {
-      this.SHOW_MODAL({ component: 'ModalMission', data: {} });
-    },
-    updateMission(mission) {
-      this.SHOW_MODAL({ component: 'ModalMission', data: { ...mission } });
-    },
-    deleteMission(mission) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette mission ?',
-          question:
-            "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeMission', mission.id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>

@@ -1,3 +1,39 @@
+<script setup>
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const store = useStore();
+const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
+const loadFonctions = store.dispatch('fetchFonctions');
+const loadComptes = store.dispatch('fetchComptes');
+const loadUnites = store.dispatch('fetchUnites');
+
+await Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]);
+
+const fields = [
+  { title: 'Numéro', key: 'numero' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Produit / Charge', key: 'typeLabel' },
+  { title: 'Actions', slot: 'actions' },
+];
+const listeCompte = computed(() =>
+  store.state.compte.liste
+    .map((c) => ({ ...c, typeLabel: c.produit ? 'Produit' : 'Charge' }))
+    .sort((a, b) => a.numero.localeCompare(b.numero)),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutCompte = () => showModal({ component: 'ModalCompte', data: {} });
+const updateCompte = (compte) =>
+  showModal({ component: 'ModalCompte', data: { ...compte } });
+const deleteCompte = (compteId) =>
+  store
+    .dispatch('removeCompte', compteId)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,67 +69,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadUnites = store.dispatch('fetchUnites');
-
-  Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]).then(
-    () => {
-      next();
-    },
-  );
-}
-
-export default {
-  name: 'ParametreCompte',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Produit / Charge', key: 'typeLabel' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeCompte: (state) =>
-        state.compte.liste
-          .map((c) => ({ ...c, typeLabel: c.produit ? 'Produit' : 'Charge' }))
-          .sort((a, b) => a.numero.localeCompare(b.numero)),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutCompte() {
-      this.SHOW_MODAL({ component: 'ModalCompte', data: {} });
-    },
-    updateCompte(compte) {
-      this.SHOW_MODAL({ component: 'ModalCompte', data: { ...compte } });
-    },
-    deleteCompte(compteId) {
-      this.$store
-        .dispatch('removeCompte', compteId)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

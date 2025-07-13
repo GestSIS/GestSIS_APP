@@ -1,3 +1,19 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import ParametreMedecin from './ParametreMedecin.vue';
+import ParametreControleMedicalType from './ParametreControleMedicalType.vue';
+
+const store = useStore();
+const loadMedecin = store.dispatch('fetchMedecins');
+const loadType = store.dispatch('fetchControlesMedicauxTypes');
+const loadLocalite = store.dispatch('fetchLocalites');
+
+await Promise.all([loadMedecin, loadType, loadLocalite]);
+
+const tab = ref('medecin');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -37,33 +53,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreMedecin from './ParametreMedecin.vue';
-import ParametreControleMedicalType from './ParametreControleMedicalType.vue';
-
-async function loadData(_, next) {
-  const loadMedecin = store.dispatch('fetchMedecins');
-  const loadType = store.dispatch('fetchControlesMedicauxTypes');
-  const loadLocalite = store.dispatch('fetchLocalites');
-
-  Promise.all([loadMedecin, loadType, loadLocalite]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabControleMedical',
-  components: { ParametreMedecin, ParametreControleMedicalType },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'medecin' };
-  },
-};
-</script>

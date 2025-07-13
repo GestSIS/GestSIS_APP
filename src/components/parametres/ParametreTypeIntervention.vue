@@ -1,3 +1,72 @@
+<script setup>
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal';
+const store = useStore();
+
+const loadStatIntervention = store.dispatch('fetchStatInterventions');
+const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
+
+await Promise.all([loadStatIntervention, loadTypeIntervention]);
+
+const fieldsType = [
+  { title: 'Tri', key: 'tri' },
+  { title: "Type d'intervention", key: 'designation' },
+  { title: 'Statistique', key: 'statistique' },
+  { title: 'Actions', slot: 'actions' },
+];
+const fieldsStat = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeType = computed(() =>
+  store.state.typeIntervention.liste
+    .map((t) => ({
+      ...t,
+      statistique: store.state.statIntervention.liste.find(
+        (s) => s.id == t.stat_intervention_id,
+      )?.designation,
+    }))
+    .sort((a, b) => a.tri - b.tri),
+);
+const listeStat = computed(() =>
+  store.state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { showModal } = useModalStore();
+
+const ajoutType = () =>
+  showModal({ component: 'ModalTypeIntervention', data: {} });
+
+const updateType = (type) =>
+  showModal({
+    component: 'ModalTypeIntervention',
+    data: { ...type },
+  });
+
+const awn = inject('awn');
+const deleteType = (type) =>
+  store
+    .dispatch('removeTypeIntervention', type.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+
+const ajoutStat = () =>
+  showModal({ component: 'ModalStatIntervention', data: {} });
+
+const updateStat = (stat) =>
+  showModal({
+    component: 'ModalStatIntervention',
+    data: { ...stat },
+  });
+
+const deleteStat = (stat) =>
+  store
+    .dispatch('removeStatIntervention', stat.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
@@ -71,94 +140,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadStatIntervention = store.dispatch('fetchStatInterventions');
-  const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
-
-  Promise.all([loadStatIntervention, loadTypeIntervention]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTypeIntervention',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fieldsType: [
-        { title: 'Tri', key: 'tri' },
-        { title: "Type d'intervention", key: 'designation' },
-        { title: 'Statistique', key: 'statistique' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-      fieldsStat: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeType: (state) =>
-        state.typeIntervention.liste
-          .map((t) => ({
-            ...t,
-            statistique: state.statIntervention.liste.find(
-              (s) => s.id == t.stat_intervention_id,
-            )?.designation,
-          }))
-          .sort((a, b) => a.tri - b.tri),
-      listeStat: (state) =>
-        state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutType() {
-      this.SHOW_MODAL({ component: 'ModalTypeIntervention', data: {} });
-    },
-    updateType(type) {
-      this.SHOW_MODAL({
-        component: 'ModalTypeIntervention',
-        data: { ...type },
-      });
-    },
-    deleteType(type) {
-      this.$store
-        .dispatch('removeTypeIntervention', type.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-    ajoutStat() {
-      this.SHOW_MODAL({ component: 'ModalStatIntervention', data: {} });
-    },
-    updateStat(stat) {
-      this.SHOW_MODAL({
-        component: 'ModalStatIntervention',
-        data: { ...stat },
-      });
-    },
-    deleteStat(stat) {
-      this.$store
-        .dispatch('removeStatIntervention', stat.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

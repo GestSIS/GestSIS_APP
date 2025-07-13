@@ -1,3 +1,43 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchGrades');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Abréviation', key: 'abreviation' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Groupe', key: 'groupeDesignation' },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeGrade = computed(() =>
+  store.state.grade.liste
+    .map((g) => ({
+      ...g,
+      groupeDesignation: {
+        1: 'Officier',
+        2: 'Sous-Officier',
+        3: 'Sapeur',
+      }[g?.groupe ?? 0],
+    }))
+    .sort((a, b) => b.tri - a.tri),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutGrade = () => showModal({ component: 'ModalGrade', data: {} });
+const updateGrade = (grade) =>
+  showModal({ component: 'ModalGrade', data: { ...grade } });
+const deleteGrade = (grade) =>
+  store
+    .dispatch('removeGrade', grade.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,70 +73,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadGrade = store.dispatch('fetchGrades');
-
-  Promise.all([loadGrade]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreGrade',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Abréviation', key: 'abreviation' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Groupe', key: 'groupeDesignation' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeGrade: (state) =>
-        state.grade.liste
-          .map((g) => ({
-            ...g,
-            groupeDesignation: {
-              1: 'Officier',
-              2: 'Sous-Officier',
-              3: 'Sapeur',
-            }[g?.groupe ?? 0],
-          }))
-          .sort((a, b) => b.tri - a.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutGrade() {
-      this.SHOW_MODAL({ component: 'ModalGrade', data: {} });
-    },
-    updateGrade(grade) {
-      this.SHOW_MODAL({ component: 'ModalGrade', data: { ...grade } });
-    },
-    deleteGrade(grade) {
-      this.$store
-        .dispatch('removeGrade', grade.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

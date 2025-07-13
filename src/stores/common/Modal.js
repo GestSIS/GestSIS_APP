@@ -30,7 +30,7 @@ export const useModalStore = defineStore('Modal', {
       this.size = payload;
     },
     confirm(title, question) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) =>
         this.showModal({
           component: 'ModalConfirmation',
           data: {
@@ -44,8 +44,8 @@ export const useModalStore = defineStore('Modal', {
               reject();
             }
           },
-        });
-      })
+        })
+      )
     }
   },
 });

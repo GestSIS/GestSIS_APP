@@ -10,7 +10,7 @@ await diametreStore.fetchTuyauDiametres();
 const diametres = computed(() => diametreStore.liste);
 
 const awn = inject('awn');
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 
 const ajout = () => {
   showModal({ component: 'ModalTuyauDiametre', data: {} });
@@ -21,24 +21,17 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: 'Voulez-vous vraiment supprimer ce diamètre ?',
-      question: "Attention, la suppression d'un diamètre est irréversible !",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        diametreStore
-          .removeTuyauDiametre(elem.id)
-          .catch((error) =>
-            awn.alert(error.message ?? 'Impossible de supprimer ce diamètre'),
-          );
-      }
-    },
-  });
-};
+const remove = (elem) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce diamètre ?',
+    "Attention, la suppression d'un diamètre est irréversible !",
+  ).then(() =>
+    diametreStore
+      .removeTuyauDiametre(elem.id)
+      .catch((error) =>
+        awn.alert(error.message ?? 'Impossible de supprimer ce diamètre'),
+      ),
+  );
 
 const fields = [
   { title: 'Diamètre', key: 'diametre' },

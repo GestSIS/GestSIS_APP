@@ -1,3 +1,38 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchExerciceCategories');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Durée de base [min]', key: 'duree_base' },
+  { title: 'Amendable', key: 'amendable', type: Boolean },
+  { title: 'Actif', key: 'statut', type: Boolean },
+  { title: 'Actions', slot: 'actions' },
+];
+const listeCategorie = computed(() =>
+  store.state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutCategorie = () =>
+  showModal({ component: 'ModalExerciceCategorie', data: {} });
+const updateCategorie = (categorie) =>
+  showModal({
+    component: 'ModalExerciceCategorie',
+    data: { ...categorie },
+  });
+const deleteCategorie = (categorie) =>
+  store
+    .dispatch('removeExerciceCategorie', categorie.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -32,65 +67,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadCategories = store.dispatch('fetchExerciceCategories');
-
-  Promise.all([loadCategories]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreExerciceCategorie',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Durée de base [min]', key: 'duree_base' },
-        { title: 'Amendable', key: 'amendable', type: Boolean },
-        { title: 'Actif', key: 'statut', type: Boolean },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeCategorie: (state) =>
-        state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutCategorie() {
-      this.SHOW_MODAL({ component: 'ModalExerciceCategorie', data: {} });
-    },
-    updateCategorie(categorie) {
-      this.SHOW_MODAL({
-        component: 'ModalExerciceCategorie',
-        data: { ...categorie },
-      });
-    },
-    deleteCategorie(categorie) {
-      this.$store
-        .dispatch('removeExerciceCategorie', categorie.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

@@ -1,3 +1,19 @@
+<script setup>
+import { useStore } from 'vuex';
+
+import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
+import ParametreExcuseType from './ParametreExcuseType.vue';
+import ParametreExcuse from './ParametreExcuse.vue';
+import { ref } from 'vue';
+
+const store = useStore();
+const loadExcuses = store.dispatch('fetchExcuseTypes');
+const loadCategories = store.dispatch('fetchExerciceCategories');
+await store.dispatch('fetchExcuseParams');
+
+const tab = ref('categorie');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-3">
@@ -42,38 +58,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
-import ParametreExcuseType from './ParametreExcuseType.vue';
-import ParametreExcuse from './ParametreExcuse.vue';
-
-async function loadData(_, next) {
-  const loadExcuses = store.dispatch('fetchExcuseTypes');
-  const loadCategories = store.dispatch('fetchExerciceCategories');
-  const loadExcuseParam = store.dispatch('fetchExcuseParams');
-
-  Promise.all([loadExcuses, loadCategories, loadExcuseParam]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabExercice',
-  components: {
-    ParametreExcuseType,
-    ParametreExcuse,
-    ParametreExerciceCategorie,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'categorie' };
-  },
-};
-</script>

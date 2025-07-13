@@ -1,3 +1,19 @@
+<script setup>
+import { useStore } from 'vuex';
+import ParametreCours from './ParametreCours.vue';
+import ParametreFonction from './ParametreFonction.vue';
+import ParametreGrade from './ParametreGrade.vue';
+import { ref } from 'vue';
+
+const store = useStore();
+const loadFonction = store.dispatch('fetchFonctions');
+const loadCours = store.dispatch('fetchCours');
+const loadGrade = store.dispatch('fetchGrades');
+
+await Promise.all([loadFonction, loadCours, loadGrade]);
+const tab = ref('cours');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -43,34 +59,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreCours from './ParametreCours.vue';
-import ParametreFonction from './ParametreFonction.vue';
-import ParametreGrade from './ParametreGrade.vue';
-
-async function loadData(_, next) {
-  const loadFonction = store.dispatch('fetchFonctions');
-  const loadCours = store.dispatch('fetchCours');
-  const loadGrade = store.dispatch('fetchGrades');
-
-  Promise.all([loadFonction, loadCours, loadGrade]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreTabSapeur',
-  components: { ParametreCours, ParametreFonction, ParametreGrade },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'cours' };
-  },
-};
-</script>

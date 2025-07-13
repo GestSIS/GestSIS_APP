@@ -9,7 +9,7 @@ await batterieStore.fetchBatterieTypes();
 const batteries = computed(() => batterieStore.liste);
 
 const awn = inject('awn');
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 
 const ajout = () => {
   showModal({ component: 'ModalBatterieType', data: {} });
@@ -20,26 +20,17 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: 'Voulez-vous vraiment supprimer cette batterie ?',
-      question: "Attention, la suppression d'une batterie est irréversible !",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        batterieStore
-          .removeBatterieType(elem.id)
-          .catch((error) =>
-            awn.alert(
-              error.message ?? 'Impossible de supprimer cette batterie',
-            ),
-          );
-      }
-    },
-  });
-};
+const remove = (elem) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette batterie ?',
+    "Attention, la suppression d'une batterie est irréversible !",
+  ).then(() =>
+    batterieStore
+      .removeBatterieType(elem.id)
+      .catch((error) =>
+        awn.alert(error.message ?? 'Impossible de supprimer cette batterie'),
+      ),
+  );
 
 const fields = [
   { title: 'Designation', key: 'nom' },

@@ -1,3 +1,14 @@
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import ParametreAspsms from './ParametreAspsms.vue';
+
+const store = useStore();
+await store.dispatch('fetchAspsmsParams');
+
+const tab = ref('aspsms');
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -27,28 +38,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import store from '/src/store/index';
-import ParametreAspsms from './ParametreAspsms.vue';
-
-async function loadData(_, next) {
-  store.dispatch('fetchAspsmsParams').then(next).catch(next);
-}
-
-export default {
-  name: 'ParametreTabSMS',
-  components: {
-    ParametreAspsms,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return { tab: 'aspsms' };
-  },
-};
-</script>

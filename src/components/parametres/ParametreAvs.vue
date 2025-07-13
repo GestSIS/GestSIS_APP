@@ -1,3 +1,41 @@
+<script setup>
+import { useStore } from 'vuex';
+import { computed, inject, ref } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchFraisIndemnitesTypes');
+
+const listeCompte = computed(() => store.state.compte.liste);
+const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
+const avsParams = computed(() => store.state.avsParam.params);
+
+const errors = ref({});
+const params = ref({
+  taux_avs: null,
+  taux_ac: null,
+  franchise_avs: null,
+  franchise_imposition: null,
+  franchise_imposition_cantonale: null,
+  compte_id: null,
+});
+
+params.value = avsParams ? avsParams : params.value;
+
+const awn = inject('awn');
+
+const save = async () =>
+  store
+    .dispatch('updateAvsParams', params.value)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+    })
+    .catch((e) => {
+      errors.value = { ...e };
+      awn.alert(e?.message || "Erreur lors de l'enregistrement");
+    });
+</script>
+
 <template>
   <div class="row">
     <div class="col-12">
@@ -100,66 +138,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-
-  Promise.all([loadIndemnites]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreAvs',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      errors: {},
-      params: {
-        taux_avs: null,
-        taux_ac: null,
-        franchise_avs: null,
-        franchise_imposition: null,
-        franchise_imposition_cantonale: null,
-        compte_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeCompte: (state) => state.compte.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-      avsParams: (state) => state.avsParam.params,
-    }),
-  },
-  mounted() {
-    this.params = this.avsParams ? this.avsParams : this.params;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    async save() {
-      this.$store
-        .dispatch('updateAvsParams', this.params)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((e) => {
-          this.errors = { ...e };
-          this.$awn.alert(e?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>

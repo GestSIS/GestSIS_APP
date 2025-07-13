@@ -1,3 +1,35 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, inject } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchFonctions');
+
+const fields = [
+  { title: 'Tri', key: 'tri' },
+  { title: 'Abréviation', key: 'abreviation' },
+  { title: 'Nom', key: 'nom' },
+  { title: 'Cumulable', key: 'cumulable', type: Boolean },
+  { title: 'Actif', key: 'actif', type: Boolean },
+  { title: 'Actions', slot: 'actions' },
+];
+
+const listeFonction = computed(() =>
+  store.state.fonction.liste.sort((a, b) => b.tri - a.tri),
+);
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+const ajoutFonction = () => showModal({ component: 'ModalFonction', data: {} });
+const updateFonction = (fonction) =>
+  showModal({ component: 'ModalFonction', data: { ...fonction } });
+const deleteFonction = (fonction) =>
+  store
+    .dispatch('removeFonction', fonction.id)
+    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -33,62 +65,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadFonction = store.dispatch('fetchFonctions');
-
-  Promise.all([loadFonction]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreFonction',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { title: 'Tri', key: 'tri' },
-        { title: 'Abréviation', key: 'abreviation' },
-        { title: 'Nom', key: 'nom' },
-        { title: 'Cumulable', key: 'cumulable', type: Boolean },
-        { title: 'Actif', key: 'actif', type: Boolean },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      listeFonction: (state) =>
-        state.fonction.liste.sort((a, b) => b.tri - a.tri),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    ajoutFonction() {
-      this.SHOW_MODAL({ component: 'ModalFonction', data: {} });
-    },
-    updateFonction(fonction) {
-      this.SHOW_MODAL({ component: 'ModalFonction', data: { ...fonction } });
-    },
-    deleteFonction(fonction) {
-      this.$store
-        .dispatch('removeFonction', fonction.id)
-        .catch((res) =>
-          this.$awn.alert(res.message || 'Erreur lors de la suppression'),
-        );
-    },
-  },
-};
-</script>

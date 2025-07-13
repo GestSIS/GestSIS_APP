@@ -1,3 +1,20 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+await store.dispatch('fetchVehicules');
+
+const fields = [
+  { columnClass: 'col-2', title: 'Actif', key: 'statut', type: Boolean },
+  { title: 'Désignation', key: 'designation' },
+];
+
+const vehicules = computed(() =>
+  store.state.vehicule.liste.sort((a, b) => a.tri - b.tri),
+);
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -13,39 +30,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import store from '/src/store/index';
-
-async function loadData(_, next) {
-  const loadVehicule = store.dispatch('fetchVehicules');
-
-  Promise.all([loadVehicule]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ParametreVehicule',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      fields: [
-        { columnClass: 'col-2', title: 'Actif', key: 'statut', type: Boolean },
-        { title: 'Désignation', key: 'designation' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      vehicules: (state) => state.vehicule.liste.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-};
-</script>

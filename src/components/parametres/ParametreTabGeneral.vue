@@ -1,3 +1,137 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import SisParamService from '../../services/SisParamService';
+import permissions from '../../store/permissions';
+
+import Api from '/src/http/Request';
+import useHasPermission from '../../composables/usePermission.js';
+
+const store = useStore();
+const loadLocalites = store.dispatch('fetchLocalites');
+const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadParams = store.dispatch('fetchSisParams');
+const loadContacts = store.dispatch('fetchSisContacts');
+
+await Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]);
+await store.dispatch('fetchLocalitesSis');
+
+const logo = ref(null);
+const logoUrl = ref('');
+const loadingLogo = ref(true);
+const errors = ref({});
+const fields = [
+  { title: 'Npa', key: 'npa' },
+  { title: 'Localité', key: 'localite' },
+];
+const listes = [
+  { id: 'news', designation: 'Newsletter' },
+  { id: 'facturation', designation: 'Facturation' },
+];
+
+const hasConfigGeneralPermission = useHasPermission(permissions.SIS.CONFIG);
+const activeSisKey = computed(() => store.state.auth.sis.activeKey);
+const params = computed(() => store.state.sisParam.params);
+const contacts = computed(() => store.state.sisParam.contacts);
+const localites = computed(() => store.state.localite.liste);
+const localitesSis = computed(() =>
+  store.state.localite.listeSis.map((l) => ({
+    id: l,
+    npa: store.state.localite.liste.find((e) => e.id == l)?.npa,
+    localite: store.state.localite.liste.find((e) => e.id == l)?.designation,
+  })),
+);
+const sapeurs = computed(() =>
+  store.state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
+);
+
+const sisParam = ref({});
+sisParam.value = { ...params };
+
+const { confirm, showModal } = useModalStore();
+const formatLocalite = (localite) => localite?.designation;
+const addContact = (liste) =>
+  showModal({
+    component: 'ModalSisContact',
+    data: liste,
+  });
+const removeContact = (contact) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cet email ?',
+    'Attention, cet email ne recevra plus les emails de cette liste de diffusion !',
+  ).then(() => store.dispatch('removeSisContact', contact.id));
+
+const updateLocalitesSis = () => {
+  const callback = (res) => {
+    if (!res) {
+      return;
+    }
+    const { ajoute, supprime } = res;
+    if (ajoute.length) {
+      store.dispatch('addLocalitesSis', ajoute);
+    }
+    if (supprime.length) {
+      store.dispatch('removeLocalitesSis', supprime);
+    }
+
+    return Promise.resolve();
+  };
+
+  showModal({
+    component: 'ModalLocaliteSelect',
+    callback,
+    size: 1,
+    data: { ids: localitesSis.map((l) => l?.id ?? l) },
+  });
+};
+const save = async () => {
+  store
+    .dispatch('updateSisParams', sisParam.value)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+    })
+    .catch((errors) => {
+      errors.value = {
+        ...errors,
+      };
+      awn.alert(errors?.message || "Erreur lors de l'enregistrement");
+    });
+};
+const loadSisLogo = () => {
+  const timestamp = new Date().getTime();
+  logoUrl.value = Api.API_URL + '/sis-logo/' + activeSisKey + '?t=' + timestamp;
+  loadingLogo.value = false;
+};
+loadSisLogo();
+
+const onFileChange = (event) => {
+  const files = event.target.files || event.dataTransfer.files;
+  if (!files.length) return;
+  logo.value = files[0];
+};
+const awn = inject('awn');
+const saveLogo = async () => {
+  if (!logo.value) {
+    awn.warning('Veuillez sélectionner un logo');
+    return;
+  }
+  SisParamService.updateLogo(logo.value)
+    .then((res) => {
+      errors.value = {};
+      awn.success(res?.message || 'Modifications enregistrées');
+      loadSisLogo();
+    })
+    .catch((e) => {
+      errors.value = {
+        ...e,
+      };
+      awn.alert(e?.message || "Erreur lors de l'enregistrement");
+    });
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
@@ -262,170 +396,3 @@
     </div> -->
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import SisParamService from '../../services/SisParamService';
-import permissions from '../../store/permissions';
-import store from '/src/store/index';
-import Api from '/src/http/Request';
-
-async function loadData(_, next) {
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadParams = store.dispatch('fetchSisParams');
-  const loadContacts = store.dispatch('fetchSisContacts');
-
-  Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]).then(
-    () => {
-      next();
-    },
-  );
-}
-
-export default {
-  name: 'ParametreTabGeneral',
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      logo: null,
-      logoUrl: '',
-      loadingLogo: true,
-      errors: {},
-      sisParam: {},
-      fields: [
-        { title: 'Npa', key: 'npa' },
-        { title: 'Localité', key: 'localite' },
-      ],
-      listes: [
-        { id: 'news', designation: 'Newsletter' },
-        { id: 'facturation', designation: 'Facturation' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      hasConfigGeneralPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.SIS.CONFIG),
-      activeSisKey: (state) => state.auth.sis.activeKey,
-      params: (state) => state.sisParam.params,
-      contacts: (state) => state.sisParam.contacts,
-      localites: (state) => state.localite.liste,
-      localitesSis: (state) =>
-        state.localite.listeSis.map((l) => ({
-          id: l,
-          npa: state.localite.liste.find((e) => e.id == l)?.npa,
-          localite: state.localite.liste.find((e) => e.id == l)?.designation,
-        })),
-      sapeurs: (state) =>
-        state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  mounted() {
-    this.sisParam = { ...this.params };
-    this.$store.dispatch('fetchLocalitesSis');
-    this.loadSisLogo();
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    formatLocalite(localite) {
-      return localite?.designation;
-    },
-    addContact(liste) {
-      this.SHOW_MODAL({
-        component: 'ModalSisContact',
-        data: liste,
-      });
-    },
-    removeContact(contact) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cet email ?',
-          question:
-            'Attention, cet email ne recevra plus les emails de cette liste de diffusion !',
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeSisContact', contact.id);
-          }
-        },
-      });
-    },
-    updateLocalitesSis() {
-      const callback = (res) => {
-        if (!res) {
-          return;
-        }
-        const { ajoute, supprime } = res;
-        if (ajoute.length) {
-          this.$store.dispatch('addLocalitesSis', ajoute);
-        }
-        if (supprime.length) {
-          this.$store.dispatch('removeLocalitesSis', supprime);
-        }
-
-        return Promise.resolve();
-      };
-
-      this.SHOW_MODAL({
-        component: 'ModalLocaliteSelect',
-        callback,
-        size: 1,
-        data: { ids: this.localitesSis.map((l) => l?.id ?? l) },
-      });
-    },
-    async save() {
-      this.$store
-        .dispatch('updateSisParams', this.sisParam)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((errors) => {
-          this.errors = {
-            ...errors,
-          };
-          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-    loadSisLogo() {
-      const timestamp = new Date().getTime();
-      this.logoUrl =
-        Api.API_URL + '/sis-logo/' + this.activeSisKey + '?t=' + timestamp;
-      this.loadingLogo = false;
-    },
-    onFileChange(event) {
-      const files = event.target.files || event.dataTransfer.files;
-      if (!files.length) return;
-      this.logo = files[0];
-    },
-    async saveLogo() {
-      if (!this.logo) {
-        this.$awn.warning('Veuillez sélectionner un logo');
-        return;
-      }
-      SisParamService.updateLogo(this.logo)
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-          this.loadSisLogo();
-        })
-        .catch((errors) => {
-          this.errors = {
-            ...errors,
-          };
-          this.$awn.alert(errors?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>
