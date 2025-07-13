@@ -102,8 +102,7 @@ const supprimerIntervention = (id) =>
   confirm(
     "Voulez-vous vraiment supprimer l'intervention ?",
     "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    () => store.dispatch('removeIntervention', id),
-  );
+  ).then(() => store.dispatch('removeIntervention', id));
 const validerIntervention = (id) => store.dispatch('validerIntervention', id);
 
 const rapportIntervention = () => {
