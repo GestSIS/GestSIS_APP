@@ -1,3 +1,57 @@
+<script setup>
+import { ref, useTemplateRef, watch } from 'vue';
+import EditableNode from '/src/components/editable_tree/EditableNode.vue';
+
+const { types, tree, selectable, active } = defineProps({
+  types: {
+    type: Object,
+    required: false,
+    default: () => {},
+  },
+  tree: {
+    type: Array,
+    required: true,
+  },
+  selectable: {
+    type: Boolean,
+    required: false,
+    default: () => false,
+  },
+  active: {
+    type: Object,
+    required: false,
+    default: () => null,
+  },
+});
+
+const emit = defineEmits(['selected']);
+const localActive = ref(null);
+
+watch(
+  () => active,
+  (newValue) => {
+    localActive.value = newValue.data;
+  },
+);
+
+localActive.value = active?.data;
+
+const nodeRef = useTemplateRef('node');
+const contract = () => nodeRef.forEach((node) => node.expand(false));
+const expand = () => nodeRef.forEach((node) => node.expand(true));
+const select = (elem) => {
+  if (selectable) {
+    localActive.value = elem.data;
+    emit('selected', elem);
+  }
+};
+defineExpose({
+  contract,
+  expand,
+  select,
+});
+</script>
+
 <template>
   <div class="tree">
     <div v-if="!tree.length">Aucun élément à afficher</div>
@@ -21,63 +75,3 @@
     </editable-node>
   </div>
 </template>
-
-<script>
-import EditableNode from '/src/components/editable_tree/EditableNode.vue';
-
-export default {
-  name: 'EditableTree',
-  components: {
-    EditableNode,
-  },
-  props: {
-    types: {
-      type: Object,
-      required: false,
-      default: () => {},
-    },
-    tree: {
-      type: Array,
-      required: true,
-    },
-    selectable: {
-      type: Boolean,
-      required: false,
-      default: () => false,
-    },
-    active: {
-      type: Object,
-      required: false,
-      default: () => null,
-    },
-  },
-  emits: ['selected'],
-  data() {
-    return {
-      localActive: null,
-    };
-  },
-  watch: {
-    active(newValue) {
-      this.localActive = newValue.data;
-    },
-  },
-  mounted() {
-    this.localActive = this.active?.data;
-  },
-  methods: {
-    contract() {
-      this.$refs.node.forEach((node) => node.expand(false));
-    },
-    expand() {
-      this.$refs.node.forEach((node) => node.expand(true));
-    },
-    select(elem) {
-      if (this.selectable) {
-        this.localActive = elem.data;
-        this.$emit('selected', elem);
-      }
-    },
-  },
-};
-</script>

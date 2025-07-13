@@ -1,3 +1,90 @@
+<script setup>
+import { computed, ref, useTemplateRef } from 'vue';
+import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
+
+const {
+  types,
+  node,
+  isRoot,
+  isFirst,
+  isFirstOfLevel,
+  isLast,
+  isLastOfLevel,
+  select,
+  active,
+} = defineProps({
+  types: {
+    required: false,
+    type: Object,
+    default: () => {},
+  },
+  node: {
+    required: true,
+    type: Object,
+  },
+  isRoot: {
+    required: false,
+    type: Boolean,
+    default: false,
+  },
+  isFirst: {
+    required: true,
+    type: Boolean,
+  },
+  isFirstOfLevel: {
+    required: true,
+    type: Boolean,
+  },
+  isLast: {
+    required: true,
+    type: Boolean,
+  },
+  isLastOfLevel: {
+    required: true,
+    type: Boolean,
+  },
+  select: {
+    type: Function,
+    required: true,
+  },
+  active: {
+    type: Object,
+    required: false,
+    default: () => {},
+  },
+});
+
+const expanded = ref(false);
+
+const data = computed(() => {
+  return {
+    ...types[node.type],
+    ...node,
+  };
+});
+
+const handleClick = () => {
+  select({
+    isRoot: isRoot,
+    isFirst: isFirst,
+    isFirstOfLevel: isFirstOfLevel,
+    isLast: isLast,
+    isLastOfLevel: isLastOfLevel,
+    data: node,
+  });
+};
+
+const nodeRef = useTemplateRef('node');
+const expand = (exp) => {
+  expanded.value = exp;
+  if (nodeRef) {
+    nodeRef.forEach((node) => node.expand(exp));
+  }
+};
+
+defineExpose({ expand });
+</script>
+
 <template>
   <div class="tree-node" :class="[!isRoot ? 'tree-node--parent' : '']">
     <div
@@ -67,90 +154,6 @@
   </div>
 </template>
 
-<script>
-import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
-
-export default {
-  name: 'EditableNode',
-  components: {
-    TransitionExpand,
-  },
-  props: {
-    types: {
-      required: false,
-      type: Object,
-      default: () => {},
-    },
-    node: {
-      required: true,
-      type: Object,
-    },
-    isRoot: {
-      required: false,
-      type: Boolean,
-      default: false,
-    },
-    isFirst: {
-      required: true,
-      type: Boolean,
-    },
-    isFirstOfLevel: {
-      required: true,
-      type: Boolean,
-    },
-    isLast: {
-      required: true,
-      type: Boolean,
-    },
-    isLastOfLevel: {
-      required: true,
-      type: Boolean,
-    },
-    select: {
-      type: Function,
-      required: true,
-    },
-    active: {
-      type: Object,
-      required: false,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      expanded: false,
-      computed: true,
-    };
-  },
-  computed: {
-    data() {
-      return {
-        ...this.types[this.node.type],
-        ...this.node,
-      };
-    },
-  },
-  methods: {
-    expand(expanded) {
-      this.expanded = expanded;
-      if (this.$refs.node) {
-        this.$refs.node.forEach((node) => node.expand(expanded));
-      }
-    },
-    handleClick() {
-      this.select({
-        isRoot: this.isRoot,
-        isFirst: this.isFirst,
-        isFirstOfLevel: this.isFirstOfLevel,
-        isLast: this.isLast,
-        isLastOfLevel: this.isLastOfLevel,
-        data: this.node,
-      });
-    },
-  },
-};
-</script>
-
 <style scoped>
 * {
   will-change: height;
@@ -183,7 +186,8 @@ export default {
   pointer-events: none;
   border-radius: 4px;
   opacity: 0;
-  transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1),
+  transition:
+    background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1),
     opacity 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
 
