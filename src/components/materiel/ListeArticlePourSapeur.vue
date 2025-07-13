@@ -151,7 +151,7 @@ const linearCategories = (categorieId) => {
           <div v-if="rowData.sapeur_id" class="badge bg-primary">
             {{ rowData.sapeur }}
           </div>
-          <div v-else v-for="e in rowData.emplacements" :key="e.id">
+          <div v-for="e in rowData.emplacements" v-else :key="e.id">
             {{ e }}
           </div>
         </template>

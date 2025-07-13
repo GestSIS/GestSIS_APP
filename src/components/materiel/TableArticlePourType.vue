@@ -123,7 +123,7 @@ const supprimer = (article) =>
     no-data="Aucune pièce"
     :fields="colonnes"
     :selectable="true"
-    :hideDownload="hideDownload"
+    :hide-download="hideDownload"
   >
     <template #emplacement="{ rowData }">
       <div v-if="rowData.sapeur_id" class="badge bg-primary">

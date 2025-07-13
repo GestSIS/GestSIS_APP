@@ -110,7 +110,7 @@
               <template #detail-row="{ rowData }">
                 <generic-details-row
                   :options="detailRowOptions"
-                  :rowData="rowData"
+                  :row-data="rowData"
                 />
               </template>
               <template #actions="{ rowData }">
@@ -169,13 +169,13 @@ async function loadData(_, next) {
 
 export default {
   name: 'ComptabiliteTabIntervention',
+  components: { GenericDetailsRow },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, _, next) {
     loadData(routeTo, next);
   },
-  components: { GenericDetailsRow },
   props: {
     id: {
       type: String,

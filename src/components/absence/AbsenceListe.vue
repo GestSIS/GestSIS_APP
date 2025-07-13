@@ -113,8 +113,8 @@ const fields = [
         <div class="card card-primary card-outline mb-3">
           <div class="card-body table-responsive p-0">
             <base-table
-              :loading="loading"
               ref="basetable_absences"
+              :loading="loading"
               :selectable="true"
               :fields="fields"
               no-data="Aucune absence"

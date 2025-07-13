@@ -82,7 +82,7 @@ const updateLocalitesSis = () => {
     component: 'ModalLocaliteSelect',
     callback,
     size: 1,
-    data: { ids: localitesSis.map((l) => l?.id ?? l) },
+    data: { ids: localitesSis.value.map((l) => l?.id ?? l) },
   });
 };
 const save = async () => {
@@ -101,7 +101,7 @@ const save = async () => {
 };
 const loadSisLogo = () => {
   const timestamp = new Date().getTime();
-  logoUrl.value = Api.API_URL + '/sis-logo/' + activeSisKey + '?t=' + timestamp;
+  logoUrl.value = Api.API_URL + '/sis-logo/' + activeSisKey.value + '?t=' + timestamp;
   loadingLogo.value = false;
 };
 loadSisLogo();

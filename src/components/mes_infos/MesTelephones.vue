@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 
-const model = defineModel();
+const model = defineModel({ type: Array });
 defineProps({
   sapeurType: {
     type: Number,

@@ -139,12 +139,12 @@ const ajouter = () =>
         aria-label="Basic radio toggle button group"
       >
         <input
+          id="individuel"
+          v-model="affichageIndividuel"
           type="radio"
           class="btn-sm btn-check"
           name="groupingBy"
-          id="individuel"
           autocomplete="off"
-          v-model="affichageIndividuel"
           :value="true"
           checked
         />
@@ -152,11 +152,11 @@ const ajouter = () =>
           >Individuel</label
         >
         <input
+          id="par-type"
+          v-model="affichageIndividuel"
           type="radio"
           class="btn-sm btn-check"
           name="groupingBy"
-          id="par-type"
-          v-model="affichageIndividuel"
           :value="false"
           autocomplete="off"
         />
@@ -188,15 +188,15 @@ const ajouter = () =>
         no-data="Aucune pièce"
         :fields="colonnes"
         :selectable="true"
-        :detailRowColumn="true"
-        :hideDownload="true"
+        :detail-row-column="true"
+        :hide-download="true"
       >
         <template #detail-row="{ rowData }">
           <table-article-pour-type
             :loading="loading"
             :articles="rowData.data"
             :avec-emplacement="false"
-            :materielType="rowData.type"
+            :materiel-type="rowData.type"
             :refresh="loadArticles"
             :emplacement="emplacement"
           />

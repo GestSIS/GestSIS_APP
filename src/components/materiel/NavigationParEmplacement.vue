@@ -67,14 +67,14 @@ const ajoutEmplacement = () =>
       <font-awesome-icon :icon="['far', 'edit']" />
     </router-link>
     <input
-      type="text"
       v-model="filtre"
+      type="text"
       class="form-control form-control-sm"
       placeholder="Chercher..."
       aria-label="Chercher..."
       aria-describedby="filtre emplacement"
     />
-    <span class="input-group-text" id="basic-addon1">
+    <span id="basic-addon1" class="input-group-text">
       <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
     </span>
   </div>

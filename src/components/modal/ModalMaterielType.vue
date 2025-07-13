@@ -68,9 +68,9 @@ const save = async () => {
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          required
           id="designation"
           v-model="activeItem.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -153,8 +153,8 @@ const save = async () => {
         />
       </div>
       <base-select
-        :required="true"
         v-model="activeItem.type"
+        :required="true"
         class="mb-3"
         label="Type"
         :options="[
@@ -178,8 +178,8 @@ const save = async () => {
       </div>
       <base-select
         v-if="activeItem.type === 1"
-        label="Diamètre"
         v-model="activeItem.tuyau.tuyau_diametre_id"
+        label="Diamètre"
         class="mb-3"
         :options="diametreStore.liste"
         display-key="diametre"
@@ -187,8 +187,8 @@ const save = async () => {
       />
       <base-select
         v-if="activeItem.type === 1"
-        label="Roulé"
         v-model="activeItem.tuyau.separement"
+        label="Roulé"
         class="mb-3"
         :options="[
           { id: true, designation: 'Séparément' },
@@ -210,8 +210,8 @@ const save = async () => {
       </div>
       <base-select
         v-if="activeItem.type === 2"
-        label="Modèle"
         v-model="activeItem.batterie.batterie_type_id"
+        label="Modèle"
         class="mb-3"
         :options="batterieStore.liste"
         display-key="nom"

@@ -56,9 +56,9 @@ const save = async () => {
       </div>
       <div class="modal-body overflow-visible">
         <base-select
+          v-model="activeItem.materiel_type_id"
           :required="true"
           placeholder="<Sélectionnez un type de matériel>"
-          v-model="activeItem.materiel_type_id"
           :disabled="activeItem.id"
           class="mb-3"
           :class="{ 'is-invalid': errors['materiel_type_id'] }"
@@ -69,9 +69,9 @@ const save = async () => {
         <div v-if="!activeItem.id && type && !type.est_numerote" class="mb-3">
           <label for="quantite">Quantité</label>
           <input
-            required
             id="quantite"
             v-model="activeItem.quantite"
+            required
             min="1"
             type="number"
             class="form-control form-control-sm"
@@ -79,17 +79,17 @@ const save = async () => {
           />
         </div>
         <select-emplacement
-          label="Emplacement"
           v-if="!activeItem.id || activeItem.emplacement_id"
-          class="mb-3"
           v-model="activeItem.emplacement_id"
+          label="Emplacement"
+          class="mb-3"
         />
         <div v-if="type && type.type === 3" class="mb-3">
           <label for="designation">Désignation</label>
           <input
-            required
             id="designation"
             v-model="activeItem.designation"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['designation'] }"
@@ -116,8 +116,8 @@ const save = async () => {
           />
         </div>
         <div
-          class="mb-3"
           v-if="type && activeItem.emplacement_id && type.type !== 3"
+          class="mb-3"
         >
           <label for="compartiment">Compartiment</label>
           <input
@@ -129,16 +129,16 @@ const save = async () => {
           />
         </div>
         <base-checkbox
+          v-model="activeItem.est_etiquete"
           class="mb-3"
           label="Est étiquetté correctement"
-          v-model="activeItem.est_etiquete"
         />
         <div v-if="type && type.est_numerote" class="mb-3">
           <label for="numero">Numéro</label>
           <input
-            required
             id="numero"
             v-model="activeItem.numero"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['numero'] }"

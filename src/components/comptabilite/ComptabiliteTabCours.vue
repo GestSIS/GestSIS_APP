@@ -88,7 +88,7 @@
               <template #detail-row="{ rowData }">
                 <generic-details-row
                   :options="detailRowOptions"
-                  :rowData="rowData"
+                  :row-data="rowData"
                 />
               </template>
               <template #actions="{ rowData }">
@@ -149,6 +149,7 @@ async function loadData(_, next) {
 
 export default {
   name: 'ComptabiliteTabCours',
+  components: { GenericDetailsRow },
   beforeRouteEnter(routeTo, _, next) {
     loadData(routeTo, next);
   },
@@ -161,7 +162,6 @@ export default {
       default: '',
     },
   },
-  components: { GenericDetailsRow },
   data() {
     const svm = this;
     return {

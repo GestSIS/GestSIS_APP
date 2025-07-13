@@ -19,7 +19,7 @@ const params = ref({
   compte_id: null,
 });
 
-params.value = avsParams ? avsParams : params.value;
+params.value = avsParams.value ? avsParams.value : params.value;
 
 const awn = inject('awn');
 

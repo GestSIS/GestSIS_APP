@@ -93,11 +93,11 @@ const permissionMapping = (key) => {
           <tr>
             <th colspan="2" class="sticky"></th>
             <th
-              v-for="[key, permissions] in groupedPermissions"
+              v-for="[key, perms] in groupedPermissions"
               :key="key"
               class="text-center text-capitalize"
-              :colspan="permissions.length"
-              :rowspan="permissions.length === 1 ? 2 : 1"
+              :colspan="perms.length"
+              :rowspan="perms.length === 1 ? 2 : 1"
             >
               {{ moduleMapping(key) }}
             </th>
@@ -107,13 +107,13 @@ const permissionMapping = (key) => {
             <th class="sticky" data-field="date">Rôle</th>
             <th class="sticky" data-field="designation">Désignation</th>
             <template
-              v-for="[key, permissions] in groupedPermissions.filter(
-                ([, permissions]) => permissions.length !== 1,
+              v-for="[key, perms] in groupedPermissions.filter(
+                ([, perms]) => perms.length !== 1,
               )"
               :key="key"
             >
               <th
-                v-for="(p, i) in permissions"
+                v-for="(p, i) in perms"
                 :key="i"
                 class="text-center text-capitalize"
               >

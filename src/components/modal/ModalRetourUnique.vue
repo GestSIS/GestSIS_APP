@@ -50,8 +50,8 @@ const save = async () =>
         />
       </div>
       <select-emplacement
-        label="Emplacement"
         v-model="emplacement_id"
+        label="Emplacement"
         class="mb-3"
       />
     </div>

@@ -22,7 +22,7 @@ const { id } = defineProps({
       </suspense>
     </div>
     <div class="col-9">
-      <div class="row" v-if="parseInt(id) > 0">
+      <div v-if="parseInt(id) > 0" class="row">
         <div class="col-12">
           <suspense>
             <materiel-type-detail :id="id" />

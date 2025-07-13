@@ -14,17 +14,17 @@
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
-          required
           id="designation"
           v-model="active.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        :required="true"
         v-model="active.type"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
         label="Type"
@@ -34,8 +34,8 @@
         ]"
       />
       <base-select
-        :required="true"
         v-model="active.compte_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['compte_id'] }"
         label="Compte"
@@ -43,8 +43,8 @@
         :options="listeCompte"
       />
       <base-select
-        :required="true"
         v-model="active.ecriture_categorie_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         label="Catégorie comptable"
@@ -53,9 +53,9 @@
       <div class="mb-3">
         <div class="form-check">
           <input
-            required
             id="fonction-actif-modal"
             v-model="active.cumulable"
+            required
             type="checkbox"
             class="form-check-input"
           />

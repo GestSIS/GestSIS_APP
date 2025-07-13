@@ -19,7 +19,7 @@ watch(aspsmsParams, (value) => {
   }
 });
 
-params.value = aspsmsParams ? aspsmsParams : params.value;
+params.value = aspsmsParams.value ? aspsmsParams.value : params.value;
 
 const awn = inject('awn');
 const save = async () => {

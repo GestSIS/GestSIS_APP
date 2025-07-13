@@ -117,7 +117,7 @@
             <template #detail-row="{ rowData }">
               <generic-details-row
                 :options="detailRowOptions"
-                :rowData="rowData"
+                :row-data="rowData"
               />
             </template>
             <template #actions="{ value }">
@@ -163,13 +163,13 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'FraisTabDecompte',
+  components: { GenericDetailsRow },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  components: { GenericDetailsRow },
   data() {
     const svm = this;
     return {

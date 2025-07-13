@@ -22,9 +22,9 @@
       <div class="mb-3">
         <label for="montant">Montant</label>
         <input
-          required
           id="montant"
           v-model="active.montant"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['montant'] }"
@@ -33,17 +33,17 @@
       <div class="mb-3">
         <label for="quantite">Quantité</label>
         <input
-          required
           id="quantite"
           v-model="active.quantite"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['quantite'] }"
         />
       </div>
       <base-select
-        :required="true"
         v-model="active.type_unite_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['type_unite_id'] }"
         label="Unité"

@@ -43,9 +43,9 @@ const save = async () => {
       <div class="mb-3">
         <label for="cours-date">Départ</label>
         <input
-          required
           id="debut"
           v-model="activeAbsence.debut"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
@@ -55,9 +55,9 @@ const save = async () => {
       <div class="mb-3">
         <label for="cours-date">Retour</label>
         <input
-          required
           id="cours-date"
           v-model="activeAbsence.fin"
+          required
           type="date"
           :min="activeAbsence.debut"
           class="form-control form-control-sm"

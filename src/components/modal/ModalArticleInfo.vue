@@ -59,35 +59,35 @@ const fields = [
             :options="typeStore.liste"
           />
           <select-emplacement
+            v-if="!activeItem.id || activeItem.emplacement_id"
+            v-model="activeItem.emplacement_id"
             :disabled="true"
             label="Emplacement"
-            v-if="!activeItem.id || activeItem.emplacement_id"
             class="mb-3"
-            v-model="activeItem.emplacement_id"
           />
-          <div class="mb-3" v-if="!activeItem.id || activeItem.emplacement_id">
+          <div v-if="!activeItem.id || activeItem.emplacement_id" class="mb-3">
             <label for="compartiment">Compartiment</label>
             <input
               id="compartiment"
-              disabled
               v-model="activeItem.compartiment"
+              disabled
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['compartiment'] }"
             />
           </div>
           <base-checkbox
+            v-model="activeItem.est_etiquete"
             :disabled="true"
             class="mb-3"
             label="Est étiquetté correctement"
-            v-model="activeItem.est_etiquete"
           />
           <div v-if="type && type.est_numerote" class="mb-3">
             <label for="numero">Numéro</label>
             <input
               id="numero"
-              disabled
               v-model="activeItem.numero"
+              disabled
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['numero'] }"
@@ -97,8 +97,8 @@ const fields = [
             <label for="taille">Taille</label>
             <input
               id="taille"
-              disabled
               v-model="activeItem.taille"
+              disabled
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taille'] }"
@@ -108,8 +108,8 @@ const fields = [
             <label for="achat">Achat</label>
             <input
               id="achat"
-              disabled
               v-model="activeItem.achat"
+              disabled
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['achat'] }"
@@ -119,8 +119,8 @@ const fields = [
             <label for="remarque">Remarque</label>
             <input
               id="remarque"
-              disabled
               v-model="activeItem.remarque"
+              disabled
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['remarque'] }"

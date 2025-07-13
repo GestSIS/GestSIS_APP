@@ -70,11 +70,11 @@
               <input
                 id="select-all"
                 checked
-                @change="switchAll"
                 type="checkbox"
                 class="form-check-input"
                 :false-value="true"
                 :true-value="false"
+                @change="switchAll"
               />
               <label class="form-check-label" for="select-all"></label>
             </th>

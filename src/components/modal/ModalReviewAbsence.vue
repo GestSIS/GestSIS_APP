@@ -180,8 +180,8 @@
         </div>
         <div class="col-9">
           <base-table
-            :loading="loading"
             ref="table"
+            :loading="loading"
             :fields="fields"
             :data="computedData"
             :selectable="false"

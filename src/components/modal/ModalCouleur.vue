@@ -58,8 +58,8 @@ const save = async () => {
         <label for="texte">Texte</label>
         <input
           id="texte"
-          type="color"
           v-model="activeItem.texte"
+          type="color"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['texte'] }"
         />
@@ -68,8 +68,8 @@ const save = async () => {
         <label for="fond">Fond</label>
         <input
           id="fond"
-          type="color"
           v-model="activeItem.fond"
+          type="color"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fond'] }"
         />

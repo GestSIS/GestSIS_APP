@@ -102,7 +102,7 @@ const fields = [
         <template #detail-row="{ rowData }">
           <mes-heures-supp-detail-row
             :options="detailRowOptions"
-            :rowData="rowData"
+            :row-data="rowData"
           />
         </template>
         <template #excuse="{ rowData }">

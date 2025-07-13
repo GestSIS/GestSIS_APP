@@ -57,7 +57,7 @@
               <template #detail-row="{ rowData }">
                 <generic-details-row
                   :options="detailRowOptions"
-                  :rowData="rowData"
+                  :row-data="rowData"
                 />
               </template>
               <template #foot="{ data }">
@@ -100,14 +100,14 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'ComptabiliteTabAmendes',
+  components: {
+    GenericDetailsRow,
+  },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
-  },
-  components: {
-    GenericDetailsRow,
   },
   data() {
     return {

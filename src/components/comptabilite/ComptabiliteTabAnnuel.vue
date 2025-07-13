@@ -68,7 +68,7 @@
               <template #detail-row="{ rowData }">
                 <generic-details-row
                   :options="detailRowOptions"
-                  :rowData="rowData"
+                  :row-data="rowData"
                 />
               </template>
               <template #actions="{ rowData }">

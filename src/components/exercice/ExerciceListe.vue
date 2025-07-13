@@ -151,8 +151,8 @@
         <div class="card card-primary card-outline mb-3">
           <div class="card-body table-responsive p-0">
             <base-table
-              :loading="loading"
               ref="basetable_exercices"
+              :loading="loading"
               :selectable="true"
               :fields="fieldsBase"
               :detail-row-column="true"
@@ -162,7 +162,7 @@
               @selected="selectExercice"
             >
               <template #detail-row="{ rowData }">
-                <exercice-details :rowData="rowData" />
+                <exercice-details :row-data="rowData" />
               </template>
               <template #actions="{ rowData }">
                 <button
@@ -257,13 +257,13 @@ async function loadData(routeTo, next) {
 
 export default {
   name: 'ExerciceListe',
+  components: { ExerciceDetails },
   beforeRouteEnter(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
     loadData(routeTo, next);
   },
-  components: { ExerciceDetails },
   data() {
     return {
       loading: true,

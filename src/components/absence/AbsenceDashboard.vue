@@ -304,14 +304,14 @@ const showAbsences = (absences) =>
               >
                 <th class="sticky">{{ f.nom }}</th>
                 <td
-                  v-for="({ jourSemaine, fonctions }, i) in computedAbsences"
+                  v-for="({ jourSemaine, foncs }, i) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
                       (((referenceData.fonctions[f.id] ?? 0) -
-                        (fonctions[f.id] ?? new Set()).size) /
+                        (foncs[f.id] ?? new Set()).size) /
                         referenceData.fonctions[f.id] ?? 0) * 120
                     ).toString(10) +
                     ',100%,50%)'
@@ -320,11 +320,11 @@ const showAbsences = (absences) =>
                   <template v-if="referenceData.fonctions[f.id]">
                     <span
                       class="clickable"
-                      @click="showAbsences(fonctions[f.id] ?? new Set())"
+                      @click="showAbsences(foncs[f.id] ?? new Set())"
                     >
                       {{
                         (referenceData.fonctions[f.id] ?? 0) -
-                        (fonctions[f.id] ?? new Set()).size
+                        (foncs[f.id] ?? new Set()).size
                       }}/{{ referenceData.fonctions[f.id] ?? 0 }}
                     </span>
                   </template>
@@ -403,14 +403,14 @@ const showAbsences = (absences) =>
               <tr v-for="g in groupes" :key="g.id">
                 <th class="sticky">{{ g.no }} {{ g.designation }}</th>
                 <td
-                  v-for="({ jourSemaine, groupes }, i) in computedAbsences"
+                  v-for="({ jourSemaine, groups }, i) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
                       (((referenceData.groupes[g.id] ?? 0) -
-                        (groupes[g.id] ?? new Set()).size) /
+                        (groups[g.id] ?? new Set()).size) /
                         referenceData.groupes[g.id] ?? 0) * 120
                     ).toString(10) +
                     ',100%,50%)'
@@ -423,7 +423,7 @@ const showAbsences = (absences) =>
                     >
                       {{
                         (referenceData.groupes[g.id] ?? 0) -
-                        (groupes[g.id] ?? new Set()).size
+                        (groups[g.id] ?? new Set()).size
                       }}/{{ referenceData.groupes[g.id] ?? 0 }}
                     </span>
                   </template>

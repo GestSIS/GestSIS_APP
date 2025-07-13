@@ -106,7 +106,7 @@ const deleteTravailType = (travailType) =>
         :selectable="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row :options="detailRowOptions" :rowData="rowData" />
+          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
         </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">

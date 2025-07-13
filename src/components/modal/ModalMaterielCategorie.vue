@@ -55,9 +55,9 @@ const save = async () => {
         <div class="mb-3">
           <label for="designation">Désignation</label>
           <input
-            required
             id="designation"
             v-model="activeItem.designation"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['designation'] }"
@@ -65,14 +65,14 @@ const save = async () => {
         </div>
         <!-- TODO: Migrer base-select afin de permettre la customization du contenu -->
         <select-categorie
-          label="Catégorie parente"
           v-model="activeItem.parent_id"
+          label="Catégorie parente"
           :categorie-id-to-ignore="activeItem.id"
           class="mb-3"
         />
         <select-couleur
-          label="Couleur"
           v-model="activeItem.couleur_id"
+          label="Couleur"
           class="mb-3"
         />
       </div>

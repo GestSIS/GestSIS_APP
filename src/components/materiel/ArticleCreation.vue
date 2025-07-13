@@ -107,8 +107,8 @@ const addEmptyLine = () => {
         <td>
           <base-select
             ref="articles-reference"
-            :required="true"
             v-model="item.materiel_type_id"
+            :required="true"
             placeholder="&lt;Sélectionnez un matériel type&gt;"
             :options="types"
           />
@@ -116,15 +116,15 @@ const addEmptyLine = () => {
         <td v-if="afficherColoneVehicule">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.type === 3"
-            :required="true"
             v-model="item.designation"
+            :required="true"
             class="form-control form-control-sm"
             type="text"
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Uniquement pour les véhicules'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -137,8 +137,8 @@ const addEmptyLine = () => {
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Uniquement pour les véhicules'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -151,38 +151,38 @@ const addEmptyLine = () => {
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Uniquement pour les véhicules'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
         <td v-if="afficherColoneNumero">
           <input
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
-            :required="true"
             v-model="item.numero"
+            :required="true"
             class="form-control form-control-sm"
             type="text"
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Matériel non numéroté'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
         <td v-if="afficherColoneQuantite">
           <input
             v-if="!indexedTypes[item.materiel_type_id]?.est_numerote"
-            :required="true"
             v-model="item.quantite"
+            :required="true"
             class="form-control form-control-sm"
             type="text"
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Matériel unique'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -190,8 +190,8 @@ const addEmptyLine = () => {
           <div class="form-check">
             <input
               v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
-              type="checkbox"
               v-model="item.est_etiquete"
+              type="checkbox"
               class="form-check-input"
             />
           </div>
@@ -205,8 +205,8 @@ const addEmptyLine = () => {
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Taille unique'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>

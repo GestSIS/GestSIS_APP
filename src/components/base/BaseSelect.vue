@@ -73,8 +73,8 @@ defineExpose({ focus });
     <select
       :id="label"
       ref="input"
-      :required="required"
       v-model="model"
+      :required="required"
       :class="['form-select form-select-sm', selectClass]"
       v-bind="{ ...$attrs }"
     >

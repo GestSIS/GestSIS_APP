@@ -108,7 +108,7 @@ const removeIndemnite = (indemnite) =>
         :detail-row-column="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row :options="detailRowOptions" :rowData="rowData" />
+          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
         </template>
         <template #actions="{ rowData }">
           <button

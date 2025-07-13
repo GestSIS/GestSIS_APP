@@ -139,7 +139,7 @@ const selectMaterielTypeNumerote = (item, value) => {
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.id"
             :is-clearable="false"
-            noResults="Aucun article correspondant"
+            no-results="Aucun article correspondant"
             :options="
               [
                 ...articlesAttribuable
@@ -153,8 +153,8 @@ const selectMaterielTypeNumerote = (item, value) => {
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Matériel non numéroté'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -173,8 +173,8 @@ const selectMaterielTypeNumerote = (item, value) => {
           />
           <font-awesome-icon
             v-else
-            class="ms-4"
             v-tooltip.bottom="'Taille unique'"
+            class="ms-4"
             :icon="['far', 'circle-question']"
           />
         </td>
@@ -194,13 +194,13 @@ const selectMaterielTypeNumerote = (item, value) => {
                 {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
               </span>
               <tag-couleur
-                v-if="option.emplacement_id"
                 v-for="id in emplacements.find(
                   (e) =>
                     e.id ===
                     articlesAttribuable.find((a) => a.id === option.value)
                       .emplacement_id,
                 )?.emplacements ?? []"
+                v-if="option.emplacement_id"
                 :key="id"
                 :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
               >
@@ -212,13 +212,13 @@ const selectMaterielTypeNumerote = (item, value) => {
                 {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
               </span>
               <tag-couleur
-                v-if="option.emplacement_id"
                 v-for="id in emplacements.find(
                   (e) =>
                     e.id ===
                     articlesAttribuable.find((a) => a.id === option.value)
                       .emplacement_id,
                 )?.emplacements ?? []"
+                v-if="option.emplacement_id"
                 :key="id"
                 :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
               >

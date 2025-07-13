@@ -24,10 +24,10 @@ const listeAmende = computed(() =>
 const listeCompte = computed(() => store.state.compte.liste);
 const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
 
-if (listeAmende.length > 0) {
-  params.value.compte_id = listeAmende[0]?.compte_id;
-  params.value.ecriture_categorie_id = listeAmende[0]?.ecriture_categorie_id;
-  params.value.amendes = listeAmende.map((a) => ({
+if (listeAmende.value.length > 0) {
+  params.value.compte_id = listeAmende.value[0]?.compte_id;
+  params.value.ecriture_categorie_id = listeAmende.value[0]?.ecriture_categorie_id;
+  params.value.amendes = listeAmende.value.map((a) => ({
     montant: a.montant,
   }));
 }

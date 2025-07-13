@@ -120,10 +120,10 @@ const actions = computed(() => {
 watch(
   () => data,
   (val) => {
-    if (selected) {
+    if (selected.value) {
       // Watcher pour déselectionner l'élément actif en cas de suppression
       const selectedKey = selected; //[selectKey];
-      if (val.filter((e) => e[selectKey] === selectedKey).length <= 0) {
+      if (val.filter((e) => e[selectKey] === selectedKey.value).length <= 0) {
         emit('selected', null);
       }
     }
@@ -311,10 +311,10 @@ defineExpose({
       </tr>
     </tbody>
     <tbody
-      v-show="!loading"
       v-for="groupe in groupedData.length === 0
         ? [{ key: 'default', data: sortedData }]
         : groupedData"
+      v-show="!loading"
       :key="groupe.key"
     >
       <tr v-if="!groupe.data.length">

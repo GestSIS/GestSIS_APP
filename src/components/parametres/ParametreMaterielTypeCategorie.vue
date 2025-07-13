@@ -141,8 +141,8 @@ const fields = [
               :icon="['fas', rowData.tag]"
             />
             <tag-couleur
-              class="ms-2"
               v-if="rowData.estCategorie"
+              class="ms-2"
               :couleur="indexedCouleurs[rowData.couleur_id]"
             >
               {{ rowData.designation }}
