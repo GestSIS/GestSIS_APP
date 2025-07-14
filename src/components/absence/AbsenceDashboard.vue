@@ -51,32 +51,32 @@ const mois = [
 ];
 
 const sapeurs = computed(() =>
-  store.state.sapeur.liste.filter((s) => s.actif && s.type == 0),
+  store.state.sapeur.liste.filter((s) => s.actif && s.type == 0)
 );
 const absences = computed(() =>
-  store.state.absence.liste.sort((a, b) => a.debut?.localeCompare(b.debut)),
+  store.state.absence.liste.sort((a, b) => a.debut?.localeCompare(b.debut))
 );
 const localitesSis = computed(() =>
   store.state.localite.listeSis.map((l) => ({
     id: l,
     ...store.state.localite.liste.find((e) => e.id == l),
-  })),
+  }))
 );
 const groupes = computed(() =>
   store.state.groupe.liste
     .filter((g) => g.type && g.no)
-    .sort((a, b) => a.no - b.no),
+    .sort((a, b) => a.no - b.no)
 );
 const fonctions = computed(() =>
   store.state.fonction.liste
     .filter((f) => !f.cumulable && f.actif)
-    .sort((a, b) => b.tri - a.tri),
+    .sort((a, b) => b.tri - a.tri)
 );
 const permisTypes = computed(() => store.state.baseData.permisTypes);
 const activeExerciceComptable = computed(() =>
   store.state.exerciceComptable.liste.find(
-    (e) => store.state.exerciceComptable.activeId === e.id,
-  ),
+    (e) => store.state.exerciceComptable.activeId === e.id
+  )
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 
@@ -87,10 +87,10 @@ const computedSapeurs = computed(() =>
       ...s,
       mainFonctionId: fonctions.value.find((f) => fonctionsIds.has(f.id))?.id,
       groupeIds: groupes.value.map(
-        (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id,
+        (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id
       ),
     };
-  }),
+  })
 );
 const indexedSapeurs = computed(() => {
   const indexedSapeurs = {};
@@ -113,11 +113,10 @@ const referenceData = computed(() => {
       (data.fonctions[s.mainFonctionId] ?? 0) + 1;
 
     s.groupeIds?.forEach(
-      (groupeId) =>
-        (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1),
+      (groupeId) => (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1)
     );
     s.permis.forEach(
-      (permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1),
+      (permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
     );
   });
   return data;
@@ -161,13 +160,13 @@ const computedAbsences = computed(() => {
             (permisId) =>
               (record.permis[permisId] = (
                 record.permis[permisId] ?? new Set()
-              ).add(sapeur.id)),
+              ).add(sapeur.id))
           );
           sapeur.groupeIds?.forEach(
             (groupeId) =>
               (record.groupes[groupeId] = (
                 record.groupes[groupeId] ?? new Set()
-              ).add(sapeur.id)),
+              ).add(sapeur.id))
           );
           record.fonctions[sapeur.mainFonctionId] = (
             record.fonctions[sapeur.mainFonctionId] ?? new Set()
@@ -186,7 +185,7 @@ const computedAbsences = computed(() => {
 });
 const filteredPermis = computed(() => {
   const ids = new Set(
-    Object.keys(referenceData.value.permis).map((id) => parseInt(id)),
+    Object.keys(referenceData.value.permis).map((id) => parseInt(id))
   );
   return permisTypes.value.filter((p) => ids.has(p.id));
 });
@@ -304,7 +303,9 @@ const showAbsences = (absences) =>
               >
                 <th class="sticky">{{ f.nom }}</th>
                 <td
-                  v-for="({ jourSemaine, foncs }, i) in computedAbsences"
+                  v-for="(
+                    { jourSemaine, fonctions: foncs }, i
+                  ) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
@@ -403,7 +404,9 @@ const showAbsences = (absences) =>
               <tr v-for="g in groupes" :key="g.id">
                 <th class="sticky">{{ g.no }} {{ g.designation }}</th>
                 <td
-                  v-for="({ jourSemaine, groups }, i) in computedAbsences"
+                  v-for="(
+                    { jourSemaine, groupes: groups }, i
+                  ) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
@@ -419,7 +422,7 @@ const showAbsences = (absences) =>
                   <template v-if="referenceData.groupes[g.id]">
                     <span
                       class="clickable"
-                      @click="showAbsences(groupes[g.id] ?? new Set())"
+                      @click="showAbsences(groups[g.id] ?? new Set())"
                     >
                       {{
                         (referenceData.groupes[g.id] ?? 0) -
