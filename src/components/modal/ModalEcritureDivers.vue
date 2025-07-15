@@ -1,17 +1,88 @@
+<script setup>
+import { computed, inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  quantite: 0,
+  tarif: 0,
+  type_unite_id: 1,
+  type: 0,
+  module: 0,
+  ...data,
+});
+
+const types = [
+  { id: 0, designation: 'Autre' },
+  { id: 1, designation: 'Solde' },
+  { id: 2, designation: 'Indemnité' },
+  { id: 3, designation: 'Frais forfaitaire' },
+  { id: 4, designation: 'Frais effectif' },
+];
+
+const store = useStore();
+const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const activeUnite = computed(() =>
+  unites.value.find((u) => u.id == form.type_unite_id),
+);
+
+form.exercice_comptable_id =
+  form.exercice_comptable_id ?? activeExerciceComptableId.value;
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const save = async () => {
+  if (!activeUnite.value?.comptable) {
+    form.quantite = 1;
+  }
+  form.total = form?.tarif * form?.quantite;
+
+  store
+    .dispatch((form.id || 0) === 0 ? 'addEcriture' : 'updateEcriture', form)
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = {
+        ...err,
+      };
+
+      if (err.message) {
+        awn.alert(errors.value?.message);
+      }
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ activeEcriture.id ? 'Modifier' : 'Ajouter' }} une écriture
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une écriture
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeEcriture.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -19,7 +90,8 @@
       </div>
 
       <base-select
-        v-model="activeEcriture.sapeur_id"
+        v-model="form.sapeur_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['sapeur_id'] }"
         label="Sapeur"
@@ -30,14 +102,16 @@
         <label for="date">Date</label>
         <input
           id="date"
-          v-model="activeEcriture.date"
+          v-model="form.date"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
         />
       </div>
       <base-select
-        v-model="activeEcriture.type_unite_id"
+        v-model="form.type_unite_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['type_unite_id'] }"
         label="Unité"
@@ -50,7 +124,8 @@
           <div class="input-group input-group-sm">
             <input
               id="quantite"
-              v-model="activeEcriture.quantite"
+              v-model="form.quantite"
+              required
               type="string"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
@@ -66,7 +141,8 @@
           <div class="input-group input-group-sm">
             <input
               id="tarif"
-              v-model="activeEcriture.tarif"
+              v-model="form.tarif"
+              required
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
@@ -85,7 +161,7 @@
               id="tarif"
               type="text"
               readonly
-              :value="activeEcriture?.quantite * activeEcriture?.tarif || 0"
+              :value="form?.quantite * form?.tarif || 0"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
             />
@@ -94,7 +170,8 @@
         </div>
       </div>
       <base-select
-        v-model="activeEcriture.compte_id"
+        v-model="form.compte_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['compte_id'] }"
         label="Compte"
@@ -102,14 +179,16 @@
         :options="comptes"
       />
       <base-select
-        v-model="activeEcriture.type"
+        v-model="form.type"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
         label="Type d'écriture"
         :options="types"
       />
       <base-select
-        v-model="activeEcriture.ecriture_categorie_id"
+        v-model="form.ecriture_categorie_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         label="Catégorie comptable"
@@ -117,111 +196,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeEcriture.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalEcritureDivers',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeEcriture: {
-        quantite: 0,
-        tarif: 0,
-        type_unite_id: 1,
-        type: 0,
-        module: 0,
-      },
-      types: [
-        { id: 0, designation: 'Autre' },
-        { id: 1, designation: 'Solde' },
-        { id: 2, designation: 'Indemnité' },
-        { id: 3, designation: 'Frais forfaitaire' },
-        { id: 4, designation: 'Frais effectif' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    activeCompteType() {
-      return this.comptes.find((c) => c.id == this.activeEcriture.compte_id);
-    },
-    activeUnite() {
-      return this.unites.find((u) => u.id == this.activeEcriture.type_unite_id);
-    },
-  },
-  mounted() {
-    this.activeEcriture = {
-      ...this.activeEcriture,
-      exercice_comptable_id: this.activeExerciceComptableId,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      //TODO: validate input
-
-      if (!this.activeUnite?.comptable) {
-        this.activeEcriture.quantite = 1;
-      }
-      this.activeEcriture.total =
-        this.activeEcriture?.tarif * this.activeEcriture?.quantite;
-
-      if ((this.activeEcriture.id || 0) === 0) {
-        this.$store
-          .dispatch('addEcriture', this.activeEcriture)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-
-            if (errors.message) {
-              this.$awn.alert(errors?.message);
-            }
-          });
-      } else {
-        this.$store
-          .dispatch('updateEcriture', this.activeEcriture)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

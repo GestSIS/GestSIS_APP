@@ -30,7 +30,7 @@
         label="Catégorie"
         :options="categories"
         :disabled="!hasEditPermission"
-        required
+        :required="true"
         class="mb-3"
         :select-class="{ 'is-invalid': errors['exercice_categorie_id'] }"
       />

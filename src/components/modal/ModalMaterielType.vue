@@ -183,7 +183,7 @@ const save = async () => {
         class="mb-3"
         :options="diametreStore.liste"
         display-key="diametre"
-        required
+        :required="true"
       />
       <base-select
         v-if="activeItem.type === 1"
@@ -194,7 +194,7 @@ const save = async () => {
           { id: true, designation: 'Séparément' },
           { id: false, designation: 'Dévidoire' },
         ]"
-        required
+        :required="true"
       />
       <div v-if="activeItem.type === 2" class="mb-3">
         <label for="nombre">Nombre</label>
@@ -215,7 +215,7 @@ const save = async () => {
         class="mb-3"
         :options="batterieStore.liste"
         display-key="nom"
-        required
+        :required="true"
       />
     </div>
     <div class="modal-footer">

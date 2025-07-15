@@ -74,7 +74,7 @@ const civilites = computed(() => store.state.baseData.civilites);
         v-model="model.localite_id"
         class="mb-3"
         label="Localité"
-        required
+        :required="true"
         disabled
         :options="localites"
       />

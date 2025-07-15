@@ -68,7 +68,7 @@ const save = async () => {
       <base-select
         v-model="form.localite_id"
         placeholder="<Localité>"
-        required
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['localite_id'] }"
         label="Localité"

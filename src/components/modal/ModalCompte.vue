@@ -64,7 +64,7 @@ const save = async () => {
       </div>
       <base-select
         v-model="form.produit"
-        required
+        :required="true"
         class="mb-3"
         label="Type comptable"
         :options="[

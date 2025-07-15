@@ -1,17 +1,52 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  statut: 1,
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch((form.id || 0) === 0 ? 'addExcuseType' : updateExcuseType, form)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeExcuse.id ? 'Modifier' : 'Ajouter' }} une excuse type
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une excuse type
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeExcuse.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -21,7 +56,8 @@
         <label for="abreviation">Abréviation</label>
         <input
           id="abreviation"
-          v-model="activeExcuse.abreviation"
+          v-model="form.abreviation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
@@ -31,7 +67,8 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeExcuse.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -41,7 +78,7 @@
         <div class="form-check">
           <input
             id="amendable-modal"
-            v-model="activeExcuse.amende"
+            v-model="form.amende"
             type="checkbox"
             class="form-check-input"
           />
@@ -49,7 +86,8 @@
         </div>
       </div>
       <base-select
-        v-model="activeExcuse.statut"
+        v-model="form.statut"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['compte_id'] }"
         label="Disponibilité"
@@ -61,79 +99,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeExcuse.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalExcuseType',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeExcuse: {
-        statut: 1,
-        amende: false,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeExcuse: (state) => state.medecin.liste,
-    }),
-  },
-  mounted() {
-    this.activeExcuse = {
-      ...this.activeExcuse,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeExcuse.id || 0) === 0) {
-        this.$store
-          .dispatch('addExcuseType', this.activeExcuse)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateExcuseType', this.activeExcuse)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

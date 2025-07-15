@@ -1,5 +1,62 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+import { useStore } from 'vuex';
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  remarque: '',
+  excuse_type_id: null,
+  excuse_statut: 0,
+  justification: '',
+  ...data,
+});
+
+const store = useStore();
+const listeExcuseTypes = computed(() => store.state.excuseType.liste);
+const hasValidationPermission = useHasPermission(
+  permissions.EXERCICE.VALIDATION,
+);
+
+const { closeModal } = useModalStore();
+
+const onFileChange = (event) => {
+  const files = event.target.files || event.dataTransfer.files;
+  if (!files.length) return;
+  form.justificatif_file = files[0];
+};
+const close = () => {
+  (callback(null) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+
+const save = () => {
+  (callback(form) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         Sélectionner une excuse
@@ -8,7 +65,8 @@
     </div>
     <div class="modal-body">
       <base-select
-        v-model="activeExcuse.excuse_type_id"
+        v-model="form.excuse_type_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['excuse_type_id'] }"
         :options="listeExcuseTypes"
@@ -18,7 +76,8 @@
         <label for="remarque">Raison <em>(optionnel)</em></label>
         <input
           id="remarque"
-          v-model="activeExcuse.remarque"
+          v-model="form.remarque"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
@@ -36,7 +95,8 @@
       </div>
       <base-select
         v-if="hasValidationPermission"
-        v-model="activeExcuse.excuse_statut"
+        v-model="form.excuse_statut"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['excuse_type_id'] }"
         :options="[
@@ -53,7 +113,7 @@
         >
         <input
           id="justification"
-          v-model="activeExcuse.justification"
+          v-model="form.justification"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['justification'] }"
@@ -61,76 +121,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="validate">Valider</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="submit" class="btn btn-outline-primary">Valider</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ModalExcuse',
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeExcuse: {
-        remarque: '',
-        excuse_type_id: null,
-        excuse_statut: 0,
-        justification: '',
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeExcuseTypes: (state) => state.excuseType.liste,
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
-    }),
-  },
-  mounted() {
-    this.activeExcuse = {
-      ...this.activeExcuse,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    onFileChange(event) {
-      const files = event.target.files || event.dataTransfer.files;
-      if (!files.length) return;
-      this.activeExcuse.justificatif_file = files[0];
-    },
-    validate() {
-      (this.callback(this.activeExcuse) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-  },
-};
-</script>

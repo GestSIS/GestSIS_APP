@@ -45,7 +45,7 @@ const save = async () => {
     <div class="modal-body">
       <base-select
         v-model="form.sapeur_id"
-        required
+        :required="true"
         :disabled="form?.id"
         placeholder="<sapeur>"
         class="mb-3"

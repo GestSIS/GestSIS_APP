@@ -16,7 +16,7 @@ const emplacementStore = useEmplacementStore();
 await emplacementStore.fetchEmplacements();
 
 const errors = ref({});
-const emplacement = ref({
+const form = reactive({
   statut: 1,
   est_etiquete: false,
   est_compartimentable: false,
@@ -25,9 +25,9 @@ const emplacement = ref({
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((emplacement.value.id || 0) === 0
+  ((form.id || 0) === 0
     ? emplacementStore.addEmplacement
-    : emplacementStore.updateEmplacement)(emplacement.value)
+    : emplacementStore.updateEmplacement)(form)
     .then(closeModal)
     .catch(
       (errors) =>
@@ -39,10 +39,10 @@ const save = async () => {
 </script>
 
 <template>
-  <div class="overflow-visible">
+  <form class="overflow-visible" @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ emplacement.id ? 'Modifier' : 'Ajouter' }} un emplacement
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un emplacement
       </h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
@@ -51,40 +51,36 @@ const save = async () => {
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="emplacement.designation"
+          v-model="form.designation"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-checkbox
-        v-model="emplacement.est_etiquete"
+        v-model="form.est_etiquete"
         label="Est etiqueté"
         class="mb-3"
       />
       <base-checkbox
-        v-model="emplacement.est_compartimentable"
+        v-model="form.est_compartimentable"
         label="Est compartimenté"
         class="mb-3"
       />
-      <base-checkbox v-model="emplacement.statut" label="Actif" class="mb-3" />
+      <base-checkbox v-model="form.statut" label="Actif" class="mb-3" />
       <select-emplacement
-        v-model="emplacement.parent_id"
+        v-model="form.parent_id"
         label="Emplacement parent"
-        :emplacement-id-to-ignore="emplacement.id"
+        :emplacement-id-to-ignore="form.id"
         :emplacement-racine="true"
         class="mb-3"
       />
-      <select-couleur
-        v-model="emplacement.couleur_id"
-        label="Couleur"
-        class="mb-3"
-      />
+      <select-couleur v-model="form.couleur_id" label="Couleur" class="mb-3" />
       <div class="mb-3">
         <label for="remarque">Remarque</label>
         <input
           id="remarque"
-          v-model="emplacement.remarque"
+          v-model="form.remarque"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
@@ -95,9 +91,9 @@ const save = async () => {
       <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        {{ emplacement.id ? 'Modifier' : 'Ajouter' }}
+      <button type="sumit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
