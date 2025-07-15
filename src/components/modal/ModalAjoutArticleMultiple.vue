@@ -1,14 +1,13 @@
 <script setup>
-import { computed, inject, onMounted, ref, useTemplateRef } from 'vue';
-
+import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
+
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
 
+import ArticleService from '../../services/materiel/ArticleService';
 import ArticleCreation from '../materiel/ArticleCreation.vue';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
 
 const { data, callback } = defineProps({
   data: {

@@ -1,5 +1,12 @@
 <script setup>
-import { computed, inject, onMounted, ref, useTemplateRef } from 'vue';
+import {
+  computed,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  useTemplateRef,
+} from 'vue';
 
 import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -29,7 +36,7 @@ onMounted(() => {
 
 const errors = ref({});
 const depuisInventaire = ref(true);
-const activeAttribution = ref({
+const form = reactive({
   date: new Date().toISOString().slice(0, 10),
   quantite: 1,
   sapeur_id: data?.sapeurId ?? null,
@@ -53,7 +60,7 @@ const sapeurs = computed(() => store.state.sapeur.liste);
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  if (!activeAttribution.value.sapeur_id) {
+  if (!form.sapeur_id) {
     awn.warning('Veuillez sélectionner un sapeur');
     return;
   }
@@ -61,15 +68,10 @@ const save = async () => {
   if (depuisInventaire.value) {
     // Attribution du matériel
     const attribution = {
-      date: activeAttribution.value.date,
-      articleIds: activeAttribution.value.articlesDepuisInventaire.map(
-        (a) => a.id,
-      ),
+      date: form.date,
+      articleIds: form.articlesDepuisInventaire.map((a) => a.id),
     };
-    ArticleService.attribuerArticles(
-      activeAttribution.value.sapeur_id,
-      attribution,
-    )
+    ArticleService.attribuerArticles(form.sapeur_id, attribution)
       .then((data) => {
         callback();
         closeModal();
@@ -79,14 +81,12 @@ const save = async () => {
       );
   } else {
     // Création du matériel
-    const articles = activeAttribution.value.articlesHorsInventaire.map(
-      (a) => ({
-        sapeur_id: activeAttribution.value.sapeur_id,
-        emplacement_id: null,
-        attribution: activeAttribution.value.date,
-        ...a,
-      }),
-    );
+    const articles = form.articlesHorsInventaire.map((a) => ({
+      sapeur_id: form.sapeur_id,
+      emplacement_id: null,
+      attribution: form.date,
+      ...a,
+    }));
     ArticleService.creerArticles(articles)
       .then((data) => {
         callback();
@@ -114,7 +114,7 @@ const save = async () => {
             <label for="date">Date attribution</label>
             <input
               id="date"
-              v-model="activeAttribution.date"
+              v-model="form.date"
               type="date"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['attributions.0.date'] }"
@@ -123,7 +123,7 @@ const save = async () => {
           <div class="col-6">
             <base-select
               ref="sapeur"
-              v-model="activeAttribution.sapeur_id"
+              v-model="form.sapeur_id"
               class="mb-3"
               label="Sapeur"
               display-key="nom_prenom"
@@ -150,12 +150,12 @@ const save = async () => {
           <div class="col-md-12 overflow-visible">
             <article-selecteur
               v-if="depuisInventaire"
-              v-model="activeAttribution.articlesDepuisInventaire"
+              v-model="form.articlesDepuisInventaire"
               :articles="articlesAttribuable"
             />
             <article-creation
               v-if="!depuisInventaire"
-              v-model="activeAttribution.articlesHorsInventaire"
+              v-model="form.articlesHorsInventaire"
             />
           </div>
         </div>

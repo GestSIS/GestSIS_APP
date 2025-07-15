@@ -1,63 +1,48 @@
+<script setup>
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data, callback } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const { closeModal } = useModalStore();
+
+const submit = async (confirm) => {
+  const close = await (callback(confirm) ?? Promise.resolve(true));
+  if (close ?? true) {
+    closeModal();
+  }
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
       <h5 class="modal-title">{{ data.title }}</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="submit(false)"></button>
     </div>
     <div class="modal-body">
       <p>{{ data.question }}</p>
     </div>
     <div class="modal-footer">
       <button
-        ref="cancelButton"
+        autofocus
         type="button"
         class="btn btn-secondary"
-        @click="cancel()"
+        @click="submit(false)"
       >
         Annuler
       </button>
-      <button type="button" class="btn btn-primary" @click="confirmer()">
+      <button type="button" class="btn btn-primary" @click="submit(true)">
         Confirmer
       </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalConfirmation',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  mounted() {
-    this.$refs.cancelButton.focus();
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    cancel() {
-      (this.callback(false) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-    confirmer() {
-      (this.callback(true) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-  },
-};
-</script>

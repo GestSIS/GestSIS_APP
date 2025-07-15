@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
 
@@ -11,7 +11,7 @@ const { data } = defineProps({
 });
 
 const errors = ref({});
-const activeItem = ref({
+const form = reactive({
   ...data,
 });
 
@@ -19,9 +19,9 @@ const batterieStore = useBatterieTypeStore();
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((activeItem.value.id || 0) === 0
+  ((form.id || 0) === 0
     ? batterieStore.addBatterieType
-    : batterieStore.updateBatterieType)(activeItem.value)
+    : batterieStore.updateBatterieType)(form)
     .then(closeModal)
     .catch(
       (err) =>
@@ -33,19 +33,19 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un type de batterie
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un type de batterie
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="nom">Modèle</label>
         <input
           id="nom"
-          v-model="activeItem.nom"
+          v-model="form.nom"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
@@ -53,12 +53,12 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>

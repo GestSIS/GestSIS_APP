@@ -21,7 +21,7 @@ await store.dispatch('fetchListeSapeur');
 const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
 
 const errors = ref({});
-const activeAttribution = ref({
+const form = ref({
   date: new Date().toISOString().slice(0, 10),
   sapeur_id: null,
   id: data?.id,
@@ -29,9 +29,9 @@ const activeAttribution = ref({
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ArticleService.attribuerArticles(activeAttribution.value.sapeur_id, {
-    date: activeAttribution.value.date,
-    articleIds: [activeAttribution.value.id],
+  ArticleService.attribuerArticles(form.value.sapeur_id, {
+    date: form.value.date,
+    articleIds: [form.value.id],
   })
     .then(() => {
       closeModal();
@@ -45,7 +45,7 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Attribuer du matériel</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
@@ -55,14 +55,14 @@ const save = async () => {
         <label for="date">Date attribution</label>
         <input
           id="date"
-          v-model="activeAttribution.date"
+          v-model="form.date"
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />
       </div>
       <base-select
-        v-model="activeAttribution.sapeur_id"
+        v-model="form.sapeur_id"
         class="mb-3"
         label="Sapeur"
         display-key="nom_prenom"
@@ -74,9 +74,7 @@ const save = async () => {
       <button type="button" class="btn btn-secondary" @click="closeModal">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        Attribuer
-      </button>
+      <button type="submit" class="btn btn-primary">Attribuer</button>
     </div>
-  </div>
+  </form>
 </template>

@@ -1,17 +1,51 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch(form?.id ? 'updateCompte' : 'addCompte', form)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeCompte.id ? 'Modifier' : 'Ajouter' }} un compte
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un compte
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="numero">Numéro</label>
         <input
           id="numero"
-          v-model="activeCompte.numero"
+          v-model="form.numero"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
@@ -21,14 +55,16 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeCompte.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        v-model="activeCompte.produit"
+        v-model="form.produit"
+        required
         class="mb-3"
         label="Type comptable"
         :options="[
@@ -38,57 +74,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeCompte.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalCompte',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeCompte: {},
-    };
-  },
-  mounted() {
-    this.activeCompte = {
-      ...this.activeCompte,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      const action = this.activeCompte?.id ? 'updateCompte' : 'addCompte';
-      this.$store
-        .dispatch(action, this.activeCompte)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

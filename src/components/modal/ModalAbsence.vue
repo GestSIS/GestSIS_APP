@@ -1,15 +1,53 @@
+<script setup>
+import { computed, inject, reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  sapeur_id: null,
+  ...data,
+});
+
+const store = useStore();
+const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const save = async () => {
+  const action = form?.id ? 'updateAbsence' : 'addAbsence';
+  store
+    .dispatch(action, form)
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeAbsence?.id ? 'Modifier' : 'Ajouter' }} une absence
+        {{ form?.id ? 'Modifier' : 'Ajouter' }} une absence
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <base-select
-        v-model="activeAbsence.sapeur_id"
-        :disabled="activeAbsence?.id"
+        v-model="form.sapeur_id"
+        required
+        :disabled="form?.id"
+        placeholder="<sapeur>"
         class="mb-3"
         label="Sapeur"
         display-key="nom_prenom"
@@ -19,7 +57,9 @@
         <label for="cours-date">Départ</label>
         <input
           id="debut"
-          v-model="activeAbsence.debut"
+          v-model="form.debut"
+          required
+          :max="form.fin"
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
@@ -30,7 +70,9 @@
         <label for="cours-date">Retour</label>
         <input
           id="cours-date"
-          v-model="activeAbsence.fin"
+          v-model="form.fin"
+          required
+          :min="form.debut"
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
@@ -39,68 +81,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeAbsence?.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form?.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModAbsence',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeAbsence: {
-        sapeur_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-    }),
-  },
-  mounted() {
-    this.activeAbsence = {
-      ...this.activeAbsence,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    async save() {
-      const action = this.activeAbsence?.id ? 'updateAbsence' : 'addAbsence';
-      this.$store
-        .dispatch(action, this.activeAbsence)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = errors;
-          this.$awn.alert(
-            errors?.message ?? "Impossible d'ajouter cette absence",
-          );
-        });
-    },
-  },
-};
-</script>

@@ -1,17 +1,55 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  actif: 1,
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch(
+      form?.id ? 'updateControlesMedicauxTypes' : 'addControlesMedicauxTypes',
+      form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeType.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeType.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -21,7 +59,8 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeType.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -31,7 +70,7 @@
         <label for="remarque">Remarque</label>
         <textarea
           id="remarque"
-          v-model="activeType.remarque"
+          v-model="form.remarque"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
@@ -41,7 +80,7 @@
         <label for="validite">Validité</label>
         <input
           id="validite"
-          v-model="activeType.duree_validite"
+          v-model="form.duree_validite"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite'] }"
@@ -51,7 +90,7 @@
         <div class="form-check">
           <input
             id="type-expirable-modal"
-            v-model="activeType.expirable"
+            v-model="form.expirable"
             type="checkbox"
             class="form-check-input"
           />
@@ -62,68 +101,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeType.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalControleMedicalType',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeType: {
-        actif: 1,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeType: (state) => state.medecin.liste,
-      listeLocalite: (state) => state.localite.liste,
-    }),
-  },
-  mounted() {
-    this.activeType = {
-      ...this.activeType,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      const action = this.activeType?.id
-        ? 'updateControlesMedicauxTypes'
-        : 'addControlesMedicauxTypes';
-      this.$store
-        .dispatch(action, this.activeType)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

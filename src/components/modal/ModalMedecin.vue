@@ -1,17 +1,54 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  actif: 1,
+  ...data,
+});
+
+const store = useStore();
+const localites = computed(() => store.state.localite.liste);
+
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch((form.id || 0) === 0 ? 'addMedecin' : 'updateMedecin', form)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }} un médecin
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un médecin
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeMedecin.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -21,14 +58,17 @@
         <label for="adresse">Adresse</label>
         <input
           id="adresse"
-          v-model="activeMedecin.adresse"
+          v-model="form.adresse"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['adresse'] }"
         />
       </div>
       <base-select
-        v-model="activeMedecin.localite_id"
+        v-model="form.localite_id"
+        placeholder="<Localité>"
+        required
         class="mb-3"
         :class="{ 'is-invalid': errors['localite_id'] }"
         label="Localité"
@@ -38,7 +78,7 @@
         <div class="form-check">
           <input
             id="medecin-actif-modal"
-            v-model="activeMedecin.actif"
+            v-model="form.actif"
             type="checkbox"
             class="form-check-input"
             :true-value="1"
@@ -50,78 +90,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMedecin.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalMedecin',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeMedecin: {
-        actif: 1,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      localites: (state) => state.localite.liste,
-    }),
-  },
-  mounted() {
-    this.activeMedecin = {
-      ...this.activeMedecin,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeMedecin.id || 0) === 0) {
-        this.$store
-          .dispatch('addMedecin', this.activeMedecin)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateMedecin', this.activeMedecin)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

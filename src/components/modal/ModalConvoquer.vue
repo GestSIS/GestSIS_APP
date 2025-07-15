@@ -1,20 +1,91 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import ConvocationService from '/src/services/ConvocationService.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = ref({
+  sapeurIds: [],
+});
+
+if (data.remount) {
+  form.value = data.save;
+}
+
+const store = useStore();
+const convocationParams = computed(() => store.state.convocationParam.params);
+const exerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const { showModal, closeModal } = useModalStore();
+
+const convoquer = () => {
+  showModal({ component: 'ModalChargement' });
+  ConvocationService.downloadConvocations(exerciceComptableId, form)
+    .then(closeModal)
+    .catch(closeModal);
+};
+const saveParam = () => {
+  store.dispatch('updateConvocationParams', convocationParams);
+};
+const select = () => {
+  const save = {
+    ...data,
+    remount: true,
+    save: { ...form.value },
+  };
+  const callback = (res) => {
+    if (res) {
+      save.save.sapeurIds = res.tous;
+    }
+    showModal({
+      component: 'ModalConvoquer',
+      size: 1,
+      callback,
+      data: save,
+    });
+    return Promise.resolve(false);
+  };
+  showModal({
+    component: 'ModalSapeurSelect',
+    size: 1,
+    callback,
+    data: {
+      ids: form.value.sapeurIds.slice(0) ?? [],
+    },
+  });
+};
+const resetSelection = () => {
+  form.value.sapeurIds = [];
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="convoquer">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Convocations</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="row mb-3">
         <div class="col-12 mb-3">
-          <span v-if="!params.sapeurIds.length" class="me-3"
+          <span v-if="!form.sapeurIds.length" class="me-3"
             >Tous les sapeurs actifs</span
           >
-          <span v-else-if="params.sapeurIds.length === 1" class="me-3"
+          <span v-else-if="form.sapeurIds.length === 1" class="me-3"
             >1 sapeur sélectionné</span
           >
           <span v-else class="me-3"
-            >{{ params.sapeurIds.length }} sapeurs sélectionnés</span
+            >{{ form.sapeurIds.length }} sapeurs sélectionnés</span
           >
           <button
             class="me-3 btn btn-outline-primary"
@@ -24,7 +95,7 @@
             Sélection des sapeurs
           </button>
           <button
-            v-if="params.sapeurIds.length"
+            v-if="form.sapeurIds.length"
             class="btn btn-outline-secondary"
             type="button"
             @click="resetSelection()"
@@ -39,6 +110,7 @@
             <span id="titre" class="input-group-text">Titre</span>
             <input
               v-model="convocationParams.titre"
+              required
               type="text"
               class="form-control form-control-sm"
               placeholder="Convocation"
@@ -108,97 +180,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="convoquer()">
-        Convoquer
-      </button>
+      <button type="submit" class="btn btn-primary">Convoquer</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ConvocationService from '/src/services/ConvocationService.js';
-
-export default {
-  name: 'ModalConvoquer',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      params: {
-        sapeurIds: [],
-      },
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      convocationParams: (state) => state.convocationParam.params,
-      exerciceComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-  },
-  mounted() {
-    if (this.data.remount) {
-      this.params = this.data.save;
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    convoquer() {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-      ConvocationService.downloadConvocations(
-        this.exerciceComptableId,
-        this.params,
-      )
-        .then(() => this.HIDE_MODAL())
-        .catch(() => this.HIDE_MODAL());
-    },
-    saveParam() {
-      this.$store.dispatch('updateConvocationParams', this.convocationParams);
-    },
-    select() {
-      const save = {
-        ...this.data,
-        remount: true,
-        save: { ...this.params },
-      };
-      const data = {
-        ids: this.params.sapeurIds.slice(0),
-      };
-      const callback = (res) => {
-        if (res) {
-          save.save.sapeurIds = res.tous;
-        }
-        this.SHOW_MODAL({
-          component: 'ModalConvoquer',
-          size: 1,
-          callback,
-          data: save,
-        });
-        return Promise.resolve(false);
-      };
-      this.SHOW_MODAL({
-        component: 'ModalSapeurSelect',
-        size: 1,
-        callback,
-        data,
-      });
-    },
-    resetSelection() {
-      this.params.sapeurIds = [];
-    },
-  },
-};
-</script>

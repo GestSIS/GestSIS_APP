@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
@@ -17,21 +17,21 @@ const { data, callback } = defineProps({
 });
 
 const errors = ref({});
-const activeItem = ref({ quantite: 1, ...data });
+const form = reactive({ quantite: 1, ...data });
 
 const typeStore = useMaterielTypeStore();
 await typeStore.fetchMaterielTypes();
 
 const type = computed(() =>
-  typeStore.liste.find((t) => t.id == activeItem.value.materiel_type_id),
+  typeStore.liste.find((t) => t.id == form.materiel_type_id),
 );
 
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  ((activeItem.value.id || 0) === 0
+  ((form.id || 0) === 0
     ? ArticleService.creerArticles
-    : ArticleService.updateArticles)([activeItem.value])
+    : ArticleService.updateArticles)([form])
     .then(() => {
       closeModal();
       callback();
@@ -50,27 +50,27 @@ const save = async () => {
     <div class="overflow-visible">
       <div class="modal-header">
         <h5 id="exampleModalLabel" class="modal-title">
-          {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un article
+          {{ form.id ? 'Modifier' : 'Ajouter' }} un article
         </h5>
         <button type="button" class="btn-close" @click="closeModal"></button>
       </div>
       <div class="modal-body overflow-visible">
         <base-select
-          v-model="activeItem.materiel_type_id"
+          v-model="form.materiel_type_id"
           :required="true"
           placeholder="<Sélectionnez un type de matériel>"
-          :disabled="activeItem.id"
+          :disabled="form.id"
           class="mb-3"
           :class="{ 'is-invalid': errors['materiel_type_id'] }"
           label="Matériel type"
           display-key="designation"
           :options="typeStore.liste"
         />
-        <div v-if="!activeItem.id && type && !type.est_numerote" class="mb-3">
+        <div v-if="!form.id && type && !type.est_numerote" class="mb-3">
           <label for="quantite">Quantité</label>
           <input
             id="quantite"
-            v-model="activeItem.quantite"
+            v-model="form.quantite"
             required
             min="1"
             type="number"
@@ -79,8 +79,8 @@ const save = async () => {
           />
         </div>
         <select-emplacement
-          v-if="!activeItem.id || activeItem.emplacement_id"
-          v-model="activeItem.emplacement_id"
+          v-if="!form.id || form.emplacement_id"
+          v-model="form.emplacement_id"
           label="Emplacement"
           class="mb-3"
         />
@@ -88,7 +88,7 @@ const save = async () => {
           <label for="designation">Désignation</label>
           <input
             id="designation"
-            v-model="activeItem.designation"
+            v-model="form.designation"
             required
             type="text"
             class="form-control form-control-sm"
@@ -99,7 +99,7 @@ const save = async () => {
           <label for="immatriculation">Immatriculation</label>
           <input
             id="immatriculation"
-            v-model="activeItem.immatriculation"
+            v-model="form.immatriculation"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['immatriculation'] }"
@@ -109,27 +109,24 @@ const save = async () => {
           <label for="chassis">Chassis</label>
           <input
             id="chassis"
-            v-model="activeItem.chassis"
+            v-model="form.chassis"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['chassis'] }"
           />
         </div>
-        <div
-          v-if="type && activeItem.emplacement_id && type.type !== 3"
-          class="mb-3"
-        >
+        <div v-if="type && form.emplacement_id && type.type !== 3" class="mb-3">
           <label for="compartiment">Compartiment</label>
           <input
             id="compartiment"
-            v-model="activeItem.compartiment"
+            v-model="form.compartiment"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['compartiment'] }"
           />
         </div>
         <base-checkbox
-          v-model="activeItem.est_etiquete"
+          v-model="form.est_etiquete"
           class="mb-3"
           label="Est étiquetté correctement"
         />
@@ -137,7 +134,7 @@ const save = async () => {
           <label for="numero">Numéro</label>
           <input
             id="numero"
-            v-model="activeItem.numero"
+            v-model="form.numero"
             required
             type="text"
             class="form-control form-control-sm"
@@ -148,7 +145,7 @@ const save = async () => {
           <label for="taille">Taille</label>
           <input
             id="taille"
-            v-model="activeItem.taille"
+            v-model="form.taille"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['taille'] }"
@@ -158,7 +155,7 @@ const save = async () => {
           <label for="achat">Achat</label>
           <input
             id="achat"
-            v-model="activeItem.achat"
+            v-model="form.achat"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['achat'] }"
@@ -168,7 +165,7 @@ const save = async () => {
           <label for="remarque">Remarque</label>
           <input
             id="remarque"
-            v-model="activeItem.remarque"
+            v-model="form.remarque"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"
@@ -180,7 +177,7 @@ const save = async () => {
           Fermer
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
+          {{ form.id ? 'Modifier' : 'Ajouter' }}
         </button>
       </div>
     </div>
