@@ -29,9 +29,9 @@ export default {
         ...state.liste.map((m) =>
           m.id === compte.id
             ? {
-                ...compte,
-                label: `${compte.numero} ${compte.designation}`,
-              }
+              ...compte,
+              label: `${compte.numero} ${compte.designation}`,
+            }
             : m
         ),
       ];
@@ -45,9 +45,10 @@ export default {
       if (state.liste.length > 0) {
         return Promise.resolve();
       } else {
-        return CompteService.getComptes().then((data) =>
-          commit(types.UPDATE_COMPTE_LISTE, data)
-        );
+        return CompteService.getComptes().then((data) => {
+          commit(types.UPDATE_COMPTE_LISTE, data);
+          return data;
+        });
       }
     },
     addCompte({ commit }, compte) {

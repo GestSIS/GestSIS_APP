@@ -77,7 +77,6 @@ const save = () => {
         <input
           id="remarque"
           v-model="form.remarque"
-          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"

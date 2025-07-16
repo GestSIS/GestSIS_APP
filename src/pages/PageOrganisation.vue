@@ -82,7 +82,7 @@ const canMoveRight = computed(() => {
   );
 });
 
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 
 const contract = () => {
   groupeEdition.value.contract();
@@ -120,19 +120,10 @@ const right = () => groupeEdition.value.right(active.value);
 const left = () => groupeEdition.value.left(active.value);
 const deleteGroupe = () => {
   if (activeIsGroupe.value) {
-    showModal({
-      component: 'ModalConfirmation',
-      data: {
-        title: 'Voulez-vous vraiment supprimer ce groupe ?',
-        question:
-          "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-      },
-      callback: (confirmed) => {
-        if (confirmed) {
-          store.dispatch('deleteGroupe', active.value.data.id);
-        }
-      },
-    });
+    confirm(
+      'Voulez-vous vraiment supprimer ce groupe ?',
+      "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+    ).then(() => store.dispatch('deleteGroupe', active.value.data.id));
   } else {
     awn.warning('Sélectionnez un groupe afin de pouvoir le supprimer.');
   }

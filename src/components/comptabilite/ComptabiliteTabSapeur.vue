@@ -1,3 +1,226 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import DecompteService from '../../services/DecompteService';
+import ImputationService from '/src/services/ImputationService.js';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchComptes');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+const ecritures = ref([]);
+watchEffect(async () => {
+  loading.value = true;
+  ecritures.value = await ImputationService.getEcrituresForExerciceComptable(
+    activeExerciceComptableId.value,
+  );
+  loading.value = false;
+});
+
+const selectedId = ref(null);
+const selected = (row) => (selectedId.value = row?.id ?? null);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const fonctions = computed(() => store.state.fonction.liste);
+const comptes = computed(() => store.state.compte.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  let ecrituresBySapeur = ecritures.value
+    .filter((s) => s.sapeur_id)
+    .reduce((acc, e) => {
+      acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
+      return acc;
+    }, new Map());
+
+  return sapeurs.value
+    .filter((s) => ecrituresBySapeur.has(s.id))
+    .map((s) => {
+      return {
+        id: s.id,
+        nom_prenom: s.nom_prenom,
+        fonction: fonctions.value.find((f) => f.id == s.fonction_id)?.nom ?? '',
+        aPayer:
+          ecrituresBySapeur
+            .get(s.id)
+            .findIndex(
+              (e) =>
+                e.decompte_id == null &&
+                !comptes.value.find((c) => c.id === e.compte_id)?.produit,
+            ) >= 0,
+        total: ecrituresBySapeur
+          .get(s.id)
+          .reduce(
+            (a, b) =>
+              a +
+              (comptes.value.find((c) => c.id === b.compte_id)?.produit
+                ? -b.total
+                : +b.total),
+            0,
+          ),
+        getData: () =>
+          Promise.resolve(
+            ecrituresBySapeur
+              .get(s.id)
+              .map((e) =>
+                comptes.value.find((c) => c.id === e.compte_id)?.produit
+                  ? { ...e, total: -e.total, tarif: -e.tarif }
+                  : e,
+              ),
+          ),
+      };
+    });
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(ecritures.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { closeModal, showModal } = useModalStore();
+
+const printPourSapeur = (sapeurId) => {
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadResumePourSapeur(
+    activeExerciceComptableId.value,
+    sapeurId,
+    `resume_pour_sapeur.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message || 'Erreur lors de la génération du résumé pour sapeur',
+      );
+    });
+};
+const printParSapeur = () => {
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadResumeParSapeur(
+    activeExerciceComptableId.value,
+    `resume_par_sapeur.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message || 'Erreur lors de la génération du résumé par sapeur',
+      );
+    });
+};
+const genererDecompteSapeur = (sapeurId, sapeur) => {
+  showModal({
+    component: 'ModalDecompte',
+    data: {
+      type: 'sapeur',
+      sapeurId,
+      designation: sapeur,
+    },
+  });
+};
+
+const detailRowOptions = {
+  fields: [
+    { title: 'Date', key: 'date', type: Date },
+    { title: 'Ecriture', key: 'designation' },
+    {
+      title: 'Module',
+      key: 'module',
+      formatter: (t) => {
+        const mapping = {
+          1: 'Exercice & séance',
+          2: 'Intervention',
+          3: 'Frais et indemnité annuel',
+          0: 'Ecriture divers',
+          5: 'Amende',
+          6: 'Fiche de travail',
+          7: 'Cours',
+          4: 'Avs',
+        };
+        return mapping[t] ?? 'Autre';
+      },
+    },
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (t) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Cotisation AVS/AC',
+        };
+        return mapping[t] ?? 'Autre';
+      },
+    },
+    {
+      title: 'Tarif',
+      key: 'tarif',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Tarif min',
+      key: 'indemnite',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Quantité',
+      key: 'quantite',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Taux',
+      key: 'taux',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+  ],
+};
+const fields = [
+  { title: 'Sapeur', key: 'nom_prenom', sortField: 'nom_prenom' },
+  { title: 'Fonction', key: 'fonction', sortField: 'fonction' },
+  { title: 'Total', key: 'total', type: Number },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="sapeurs"
@@ -70,7 +293,7 @@
               :detail-row-column="true"
               no-data="Aucun sapeur à afficher"
               :data="filteredData"
-              @selected="select"
+              @selected="selected"
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row
@@ -113,281 +336,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import store from '/src/store/index';
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import DecompteService from '../../services/DecompteService';
-import ImputationService from '/src/services/ImputationService.js';
-import permissions from '../../store/permissions';
-
-async function loadData(_, next) {
-  const loadExercicesComptable = store.dispatch('fetchExercicesComptables');
-  const loadSapeur = store.dispatch('fetchListeSapeur');
-  const loadFonction = store.dispatch('fetchFonctions');
-  const loadCompte = store.dispatch('fetchComptes');
-
-  Promise.all([
-    loadExercicesComptable,
-    loadSapeur,
-    loadFonction,
-    loadCompte,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'FraisTabSapeur',
-  components: {
-    GenericDetailsRow,
-  },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    return {
-      loading: true,
-      ecritures: [],
-      selectedId: null,
-      detailRowOptions: {
-        fields: [
-          { title: 'Date', key: 'date', type: Date },
-          { title: 'Ecriture', key: 'designation' },
-          {
-            title: 'Module',
-            key: 'module',
-            formatter: (t) => {
-              const mapping = {
-                1: 'Exercice & séance',
-                2: 'Intervention',
-                3: 'Frais et indemnité annuel',
-                0: 'Ecriture divers',
-                5: 'Amende',
-                6: 'Fiche de travail',
-                7: 'Cours',
-                4: 'Avs',
-              };
-              return mapping[t] ?? 'Autre';
-            },
-          },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (t) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Cotisation AVS/AC',
-              };
-              return mapping[t] ?? 'Autre';
-            },
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Tarif min',
-            key: 'indemnite',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantité',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Taux',
-            key: 'taux',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
-      fields: [
-        { title: 'Sapeur', key: 'nom_prenom', sortField: 'nom_prenom' },
-        { title: 'Fonction', key: 'fonction', sortField: 'fonction' },
-        { title: 'Total', key: 'total', type: Number },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      fonctions: (state) => state.fonction.liste,
-      comptes: (state) => state.compte.liste,
-      exercicesComptable: (state) => state.exerciceComptable.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeInterventionId: (state) => state.intervention.active.id,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      let ecrituresBySapeur = this.ecritures
-        .filter((s) => s.sapeur_id)
-        .reduce((acc, e) => {
-          acc.set(e.sapeur_id, [...(acc.get(e.sapeur_id) || []), e]);
-          return acc;
-        }, new Map());
-
-      return this.sapeurs
-        .filter((s) => ecrituresBySapeur.has(s.id))
-        .map((s) => {
-          return {
-            id: s.id,
-            nom_prenom: s.nom_prenom,
-            fonction:
-              this.fonctions.find((f) => f.id == s.fonction_id)?.nom ?? '',
-            aPayer:
-              ecrituresBySapeur
-                .get(s.id)
-                .findIndex(
-                  (e) =>
-                    e.decompte_id == null &&
-                    !this.comptes.find((c) => c.id === e.compte_id)?.produit,
-                ) >= 0,
-            total: ecrituresBySapeur
-              .get(s.id)
-              .reduce(
-                (a, b) =>
-                  a +
-                  (this.comptes.find((c) => c.id === b.compte_id)?.produit
-                    ? -b.total
-                    : +b.total),
-                0,
-              ),
-            getData: () =>
-              Promise.resolve(
-                ecrituresBySapeur
-                  .get(s.id)
-                  .map((e) =>
-                    this.comptes.find((c) => c.id === e.compte_id)?.produit
-                      ? { ...e, total: -e.total, tarif: -e.tarif }
-                      : e,
-                  ),
-              ),
-          };
-        });
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      ImputationService.getEcrituresForExerciceComptable(
-        this.activeExerciceComptableId,
-      ).then((data) => {
-        this.ecritures = data;
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = true;
-    ImputationService.getEcrituresForExerciceComptable(
-      this.activeExerciceComptableId,
-    ).then((data) => {
-      this.ecritures = data;
-      this.loading = false;
-    });
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    printPourSapeur(sapeurId) {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadResumePourSapeur(
-        this.activeExerciceComptableId,
-        sapeurId,
-        `resume_pour_sapeur.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              'Erreur lors de la génération du résumé pour sapeur',
-          );
-        });
-    },
-    printParSapeur() {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadResumeParSapeur(
-        this.activeExerciceComptableId,
-        `resume_par_sapeur.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé par sapeur',
-          );
-        });
-    },
-    genererDecompteSapeur(sapeurId, sapeur) {
-      this.SHOW_MODAL({
-        component: 'ModalDecompte',
-        data: {
-          type: 'sapeur',
-          sapeurId,
-          designation: sapeur,
-        },
-      });
-    },
-    select(sapeur) {
-      this.selectedId = sapeur?.id;
-    },
-  },
-};
-</script>

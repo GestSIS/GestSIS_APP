@@ -9,5 +9,3 @@
 import InterventionTabMateriel from '/src/components/intervention/InterventionTabMateriel.vue';
 import InterventionTabVehicule from '/src/components/intervention/InterventionTabVehicule.vue';
 </script>
-
-<style></style>

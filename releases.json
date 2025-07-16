@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "16.07.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nombreuses améliorations des formulaires des fenêtres de saisie",
+        "Nombreuses petites améliorations de l'interface graphique"
+      ]
+    },
+    {
       "date": "04.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",

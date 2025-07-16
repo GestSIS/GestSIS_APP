@@ -215,5 +215,3 @@ const ajouter = () =>
     </template>
   </base-card>
 </template>
-
-<style></style>

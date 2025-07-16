@@ -1,18 +1,65 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  nom: '',
+  abreviation: '',
+  mobile: false,
+  api_key: '',
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const close = () => {
+  (callback(null) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+
+const save = async () => {
+  store
+    .dispatch(sis?.id ? 'editSis' : 'addSis', sis)
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Erreur lors de l'ajout du SIS");
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ sis.id ? 'Modifier' : 'Ajouter' }} Sis
+        {{ form.id ? 'Modifier' : 'Ajouter' }} Sis
       </h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
-      <!-- NOM -->
       <div class="mb-3">
         <label for="m-sis-nom">Nom</label>
         <input
           id="m-sis-nom"
-          v-model="sis.nom"
+          v-model="form.nom"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
@@ -24,7 +71,7 @@
         <label for="m-sis-abreviation">Abréviation</label>
         <input
           id="m-sis-abreviation"
-          v-model="sis.abreviation"
+          v-model="form.abreviation"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
@@ -36,20 +83,20 @@
         <label for="m-sis-api_key">API KEY</label>
         <input
           id="m-sis-api_key"
-          v-model="sis.api_key"
+          v-model="form.api_key"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['api_key'] }"
           name="m-sis-api_key"
           required
-          :readonly="sis?.id"
-          :disabled="sis?.id"
+          :readonly="form?.id"
+          :disabled="form?.id"
         />
       </div>
       <div class="mb-3">
         <input
           id="sis-mobile"
-          v-model="sis.mobile"
+          v-model="form.mobile"
           name="sis-mobile"
           type="checkbox"
           class="form-check-input"
@@ -58,67 +105,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" @click="save()">
-        {{ sis.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalSis',
-  props: {
-    data: {
-      type: Object,
-      default: () => ({}),
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      sis: {
-        nom: '',
-        abreviation: '',
-        mobile: false,
-        api_key: '',
-      },
-    };
-  },
-  mounted() {
-    this.sis = {
-      ...this.sis,
-      ...(this.data ?? {}),
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-    async save() {
-      this.$store
-        .dispatch(this.sis?.id ? 'editSis' : 'addSis', this.sis)
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = errors;
-          this.$awn.alert(errors?.message ?? "Erreur lors de l'ajout du SIS");
-        });
-    },
-  },
-};
-</script>

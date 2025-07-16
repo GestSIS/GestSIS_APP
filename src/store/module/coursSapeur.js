@@ -19,9 +19,9 @@ export default {
     },
   },
   actions: {
-    fetchCoursSapeurs({ commit, getters }) {
+    fetchCoursSapeurs({ commit }, exerciceComptableId) {
       return CoursSapeurService.getCoursSapeurs(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_COURS_SAPEUR_LISTE, data));
     },
   },

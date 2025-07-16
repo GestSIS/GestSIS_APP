@@ -172,5 +172,3 @@ const supprimer = (lavage) =>
     </div>
   </div>
 </template>
-
-<style></style>

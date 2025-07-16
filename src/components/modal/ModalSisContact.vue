@@ -1,5 +1,58 @@
+<script setup>
+import { inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  email: '',
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const close = () => {
+  (callback(null) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+
+const save = async () => {
+  form.email = form.email?.toLowerCase()?.trim();
+  const validRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  if (!form.email || !form.email.match(validRegex)) {
+    errors.value['email'] = 'Email invalide !';
+    return;
+  }
+
+  store
+    .dispatch('addSisContact', { ...form, liste: data.id })
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Erreur lors de l'ajout du contact");
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         Ajouter un contact à la liste <em>{{ data?.designation }}</em>
@@ -12,8 +65,8 @@
         <label for="m-sis-email">Email</label>
         <input
           id="m-sis-email"
-          ref="input"
-          v-model="contact.email"
+          v-model="form.email"
+          autofocus
           type="email"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['email'] }"
@@ -26,71 +79,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" @click="save()">
-        {{ contact.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalSis',
-  props: {
-    data: {
-      type: Object,
-      default: () => ({}),
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      contact: {
-        email: '',
-      },
-    };
-  },
-  mounted() {
-    this.$refs.input.focus();
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-    async save() {
-      this.contact.email = this.contact.email?.toLowerCase()?.trim();
-      const validRegex =
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      if (!this.contact.email || !this.contact.email.match(validRegex)) {
-        this.errors['email'] = 'Email invalide !';
-        return;
-      }
-
-      this.$store
-        .dispatch('addSisContact', { ...this.contact, liste: this.data.id })
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = errors;
-          this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'ajout du contact",
-          );
-        });
-    },
-  },
-};
-</script>

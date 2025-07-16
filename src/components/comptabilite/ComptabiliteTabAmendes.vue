@@ -1,3 +1,103 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchListeSapeur');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchAmendesExerciceComptable',
+    activeExerciceComptableId.value,
+  );
+  loading.value = false;
+});
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const amendes = computed(() => store.state.imputation.ecritures.amendes);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  const sapeursAmendes = amendes.value.reduce((rv, a) => {
+    (rv[a.sapeur_id] = rv[a.sapeur_id] || {
+      ...sapeurs.value.find((s) => s.id == a.sapeur_id),
+      amendes: [],
+    }).amendes.push(a);
+    return rv;
+  }, {});
+  return Object.values(sapeursAmendes).map((s) => ({
+    ...s,
+    nb: s.amendes.length,
+    sapeur: s.nom_prenom,
+    total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
+    getData: () => Promise.resolve(s.amendes),
+  }));
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(amendes.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const generer = () => {
+  store
+    .dispatch('genererAmendesAnnuels', activeExerciceComptableId.value)
+    .then((amendes) => {
+      if (amendes?.length == 0) {
+        awn.success('Aucune amende requise pour cet exercice comptable');
+      } else {
+        awn.success('Amendes générées avec succes');
+      }
+    })
+    .catch((err) =>
+      awn.alert(
+        err?.message ??
+          'Une erreur est survenue durant le génération des indemnités/frais annuelles',
+      ),
+    );
+};
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+  const statutsClass = {
+    0: '', // A saisir
+    1: '', // En attente de validation
+    2: '', // Validée
+    3: 'table-success', // Imputée
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const detailRowOptions = {
+  fields: [
+    { title: 'Date', key: 'date', type: Date },
+    { title: 'Exercice', key: 'designation' },
+    { title: 'Excuse', key: 'complement' },
+    { title: 'Total', key: 'total', type: Number },
+  ],
+};
+const fields = [
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Nombre', key: 'nb' },
+  { title: 'Montant', key: 'total', type: Number },
+];
+</script>
+
 <template>
   <stateful-filter
     id="amendes"
@@ -25,7 +125,7 @@
           <form class="card-body">
             <base-select
               display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
+              base-option="<Sapeur>"
               :options="filteredSapeurs"
               :model-value="filters.id"
               @update:model-value="(value) => setFilter('id', value)"
@@ -52,7 +152,6 @@
               :detail-row-column="true"
               :data="filteredData"
               :selectable="true"
-              @selected="selected"
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row
@@ -80,135 +179,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import store from '/src/store/index';
-import permissions from '../../store/permissions';
-
-async function loadData(routeTo, next) {
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadAmendes = store.dispatch('fetchAmendesExerciceComptable');
-  Promise.all([loadSapeurs, loadAmendes]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ComptabiliteTabAmendes',
-  components: {
-    GenericDetailsRow,
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      detailRowOptions: {
-        fields: [
-          { title: 'Date', key: 'date', type: Date },
-          { title: 'Exercice', key: 'designation' },
-          { title: 'Excuse', key: 'complement' },
-          { title: 'Total', key: 'total', type: Number },
-        ],
-      },
-      fields: [
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Nombre', key: 'nb' },
-        { title: 'Montant', key: 'total', type: Number },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
-        ),
-      amendes: (state) => state.imputation.ecritures.amendes,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      const sapeurs = this.amendes.reduce((rv, a) => {
-        (rv[a.sapeur_id] = rv[a.sapeur_id] || {
-          ...this.sapeurs.find((s) => s.id == a.sapeur_id),
-          amendes: [],
-        }).amendes.push(a);
-        return rv;
-      }, {});
-      return Object.values(sapeurs).map((s) => ({
-        ...s,
-        nb: s.amendes.length,
-        sapeur: s.nom_prenom,
-        total: s.amendes.reduce((rv, a) => rv + parseFloat(a.total), 0.0),
-        getData: () => Promise.resolve(s.amendes),
-      }));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.amendes.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchAmendesExerciceComptable').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    selected(id) {
-      this.selectedId = id;
-    },
-    generer() {
-      this.$store
-        .dispatch('genererAmendesAnnuels', this.activeExerciceComptableId)
-        .then((amendes) => {
-          if (amendes?.length == 0) {
-            this.$awn.success(
-              'Aucune amende requise pour cet exercice comptable',
-            );
-          } else {
-            this.$awn.success('Amendes générées avec succes');
-          }
-        })
-        .catch((err) =>
-          this.$awn.alert(
-            err?.message ??
-              'Une erreur est survenue durant le génération des indemnités/frais annuelles',
-          ),
-        );
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-      const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'En attente de validation',
-        2: '', // 'Validée',
-        3: 'table-success', //'Imputée'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>

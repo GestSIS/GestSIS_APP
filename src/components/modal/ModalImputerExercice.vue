@@ -187,7 +187,7 @@
 import { mapState } from 'vuex';
 import { mapActions } from 'pinia';
 import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '/src/components/base/MultiStep.vue';
+import MultiStep from '../base/MultiStep.vue';
 
 export default {
   name: 'ModalImputerExercice',

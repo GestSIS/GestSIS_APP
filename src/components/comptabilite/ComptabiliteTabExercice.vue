@@ -1,3 +1,236 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import ImputationService from '/src/services/ImputationService.js';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchExerciceCategories');
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchFraisIndemnitesTypes');
+store.dispatch('fetchComptes');
+
+const loading = ref(false);
+const exercices = ref([]);
+const init = async () => {
+  loading.value = true;
+  const ecritures =
+    await ImputationService.getExerciceEcriturePourExerciceComptable(
+      store.state.exerciceComptable.activeId,
+    );
+  exercices.value = [...ecritures].sort((a, b) => a.date.localeCompare(b.date));
+  loading.value = false;
+};
+watchEffect(init);
+
+const selectedItemId = ref(null);
+const selected = (item) => (selectedItemId.value = item?.id ?? null);
+const selectedItem = computed(() =>
+  exercices.value.find((e) => e.id === selectedItemId.value),
+);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const localites = computed(() => store.state.localite.liste);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  return exercices.value.map((e) => {
+    let aPayer = e.statut == 4;
+    if (e.statut == 4) {
+      aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
+    }
+    return {
+      ...e,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
+        ?.designation,
+      localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
+      aPayer,
+      getData: () => Promise.resolve(e.ecritures),
+    };
+  });
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(exercices.value.map((i) => i.localite_id));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+const filteredCategories = computed(() => {
+  const ids = new Set(exercices.value.map((i) => i.exercice_categorie_id));
+  return categories.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { confirm, showModal } = useModalStore();
+
+const genererDecompteExercice = (exerciceId, designation) =>
+  showModal({
+    component: 'ModalDecompte',
+    data: {
+      exerciceId,
+      designation,
+      callback: init,
+    },
+  });
+const imputer = (exerciceId) =>
+  showModal({
+    component: 'ModalImputerExercice',
+    data: { id: exerciceId },
+    size: 2,
+    callback: init,
+  });
+const annulerImputer = (exerciceId) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
+  ).then(() =>
+    store
+      .dispatch('annulerImputationExercice', exerciceId)
+      .then(({ statut }) => {
+        exercices.value = [
+          ...exercices.value.filter((e) => e.id != exerciceId),
+          {
+            ...exercices.value.find((e) => e.id == exerciceId),
+            statut: statut,
+          },
+        ].sort((a, b) => a.date.localeCompare(b.date));
+      })
+      .catch((err) => {
+        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
+      }),
+  );
+
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+
+  const statutsClass = {
+    0: '', //'Annulé',
+    1: '', //'A saisir',
+    2: '', //'En attente de validation',
+    3: 'table-warning', //'Validé',
+    4: 'table-success', //'Imputé'
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const detailRowOptions = {
+  fields: [
+    {
+      title: 'Sapeur',
+      key: 'sapeur_id',
+      formatter: (sapeurId) =>
+        sapeurs.value.find((e) => e.id === sapeurId)?.nom_prenom,
+    },
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (type) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Charges AVS/AC',
+        };
+        return mapping[type] || '';
+      },
+    },
+    {
+      title: 'Tarif',
+      key: 'tarif',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Quantite',
+      key: 'quantite',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Amende',
+      key: 'total',
+      formatter: (total, ecriture) =>
+        ecriture.module == 5 ? ecriture.total : '0.00',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+  ],
+};
+const fields = [
+  {
+    title: 'Date',
+    key: 'date',
+    type: Date,
+  },
+  {
+    title: 'Categorie',
+    key: 'categorie',
+  },
+  {
+    title: 'Heure',
+    key: 'heure',
+    formatter(value) {
+      return value.slice(0, 5);
+    },
+  },
+  {
+    title: 'Duree',
+    key: 'duree',
+  },
+  {
+    title: 'Localité',
+    key: 'localite',
+  },
+  {
+    title: 'Lieu',
+    key: 'lieu',
+  },
+  {
+    title: 'Designation',
+    key: 'designation',
+  },
+  {
+    title: 'statut',
+    key: 'statut',
+    formatter(value) {
+      const statuts = {
+        0: 'Annulé',
+        1: 'A saisir',
+        2: 'En attente de validation',
+        3: 'Validé',
+        4: 'Imputé',
+      };
+      return statuts[value];
+    },
+  },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="exercices"
@@ -32,7 +265,7 @@
               @click="
                 genererDecompteExercice(
                   selectedItem.id,
-                  selectedItem.designation
+                  selectedItem.designation,
                 )
               "
             >
@@ -133,307 +366,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import store from '/src/store/index';
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import ImputationService from '/src/services/ImputationService.js';
-import permissions from '../../store/permissions';
-
-async function loadData(_, next) {
-  const loadCategories = store.dispatch('fetchExerciceCategories');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-  const loadComptes = store.dispatch('fetchComptes');
-
-  await store.dispatch('fetchExercicesComptables');
-  const loadExercices = store.dispatch(
-    'fetchListeExercice',
-    store.state.exerciceComptable.activeId
-  );
-
-  Promise.all([
-    loadExercices,
-    loadCategories,
-    loadSapeurs,
-    loadLocalites,
-    loadIndemnites,
-    loadComptes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'FraisTabExercice',
-  components: { GenericDetailsRow },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    const svm = this;
-    return {
-      loading: true,
-      exercices: [],
-      selectedItemId: null,
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Sapeur',
-            key: 'sapeur_id',
-            formatter: (sapeurId) =>
-              svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
-          },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantite',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Amende',
-            key: 'total',
-            formatter: (total, ecriture) =>
-              ecriture.module == 5 ? ecriture.total : '0.00',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            formatter: (total, ecriture) =>
-              ecriture.module == 5 ? -total : total,
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
-      fields: [
-        {
-          title: 'Date',
-          key: 'date',
-          type: Date,
-        },
-        {
-          title: 'Categorie',
-          key: 'categorie',
-        },
-        {
-          title: 'Heure',
-          key: 'heure',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
-        },
-        {
-          title: 'Duree',
-          key: 'duree',
-        },
-        {
-          title: 'Localité',
-          key: 'localite',
-        },
-        {
-          title: 'Lieu',
-          key: 'lieu',
-        },
-        {
-          title: 'Designation',
-          key: 'designation',
-        },
-        {
-          title: 'statut',
-          key: 'statut',
-          formatter(value) {
-            const statuts = {
-              0: 'Annulé',
-              1: 'A saisir',
-              2: 'En attente de validation',
-              3: 'Validé',
-              4: 'Imputé',
-            };
-            return statuts[value];
-          },
-        },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION
-        ),
-    }),
-    selectedItem() {
-      return this.exercices.find((e) => e.id == this.selectedItemId);
-    },
-    computedData() {
-      return this.exercices.map((e) => {
-        let aPayer = e.statut == 4;
-        if (e.statut == 4) {
-          aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
-        }
-        return {
-          ...e,
-          categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id
-          )?.designation,
-          localite: this.localites.find((l) => l.id == e.localite_id)
-            ?.designation,
-          aPayer,
-          getData: () => Promise.resolve(e.ecritures),
-        };
-      });
-    },
-    filteredLocalites() {
-      const ids = new Set(this.exercices.map((i) => i.localite_id));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-    filteredCategories() {
-      const ids = new Set(this.exercices.map((i) => i.exercice_categorie_id));
-      return this.categories.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    init() {
-      ImputationService.getExerciceEcriturePourExerciceComptable(
-        this.activeExerciceComptableId
-      ).then((e) => {
-        this.exercices = [...e].sort((a, b) => a.date.localeCompare(b.date));
-        this.loading = false;
-      });
-    },
-    selected(item) {
-      this.selectedItemId = item?.id;
-    },
-    genererDecompteExercice(exerciceId, designation) {
-      this.SHOW_MODAL({
-        component: 'ModalDecompte',
-        data: {
-          exerciceId,
-          designation,
-        },
-        callback: () => this.init(),
-      });
-    },
-    imputer(exerciceId) {
-      this.SHOW_MODAL({
-        component: 'ModalImputerExercice',
-        data: { id: exerciceId },
-        size: 2,
-        callback: () => this.init(),
-      });
-    },
-    annulerImputer(exerciceId) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette imputation ?',
-          question:
-            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('annulerImputationExercice', exerciceId)
-              .then(({ statut }) => {
-                this.exercices = [
-                  ...this.exercices.filter((e) => e.id != exerciceId),
-                  {
-                    ...this.exercices.find((e) => e.id == exerciceId),
-                    statut: statut,
-                  },
-                ].sort((a, b) => a.date.localeCompare(b.date));
-              })
-              .catch((err) => {
-                this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation"
-                );
-              });
-          }
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-
-      const statutsClass = {
-        0: '', //'Annulé',
-        1: '', //'A saisir',
-        2: '', //'En attente de validation',
-        3: 'table-warning', //'Validé',
-        4: 'table-success', //'Imputé'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

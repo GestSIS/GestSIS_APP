@@ -1,7 +1,7 @@
 <script setup>
 import { useStore } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 const store = useStore();
 
@@ -11,12 +11,18 @@ const loadSapeurs = store.dispatch('fetchListeSapeur');
 
 await store.dispatch('fetchExercicesComptables');
 
-const loading = ref(true);
-const loadCoursSapeurs = store
-  .dispatch('fetchCoursSapeurs')
-  .then(() => (loading.value = false));
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
 
-await Promise.all([loadLocalities, loadCours, loadSapeurs, loadCoursSapeurs]);
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchCoursSapeurs', activeExerciceComptableId.value);
+  loading.value = false;
+});
+
+await Promise.all([loadLocalities, loadCours, loadSapeurs]);
 
 const sapeurs = computed(() =>
   store.state.sapeur.liste.sort((a, b) =>
@@ -35,15 +41,6 @@ const localites = computed(() =>
   store.state.localite.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
-);
-watch(
-  () => store.state.exerciceComptable.activeId,
-  () => {
-    loading.value = true;
-    store.dispatch('fetchCoursSapeurs').then(() => {
-      loading.value = false;
-    });
-  },
 );
 
 const computedData = computed(() =>

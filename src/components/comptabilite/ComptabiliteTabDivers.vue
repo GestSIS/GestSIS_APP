@@ -1,3 +1,141 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchUnites');
+store.dispatch('fetchComptes');
+store.dispatch('fetchEcritureCategories');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchEcrituresDivers', activeExerciceComptableId.value);
+  loading.value = false;
+});
+
+const selectedItem = ref(null);
+const selected = (item) => (selectedItem.value = item);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+const ecritures = computed(() => store.state.imputation.ecritures.divers);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  const formatCompte = (compte) => compte?.numero + ' ' + compte?.designation;
+  const formatType = (type) => {
+    const mapping = {
+      0: 'Autre',
+      1: 'Solde',
+      2: 'Indemnité',
+      3: 'Frais forfaitaire',
+      4: 'Frais effectif',
+      5: 'Charges AVS/AC',
+    };
+    return mapping[type] || '';
+  };
+
+  return ecritures.value?.map((e) => ({
+    ...e,
+    sapeur: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+    unite: unites.value.find((u) => u.id == e.type_unite_id)?.unite,
+    ecriture_categorie: categories.value.find(
+      (c) => c.id == e.ecriture_categorie_id,
+    )?.designation,
+    compte: formatCompte(comptes.value.find((c) => c.id == e.compte_id)),
+    ecritureType: formatType(e.type),
+  }));
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(ecritures.value?.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+const filteredComptes = computed(() => {
+  const ids = new Set(ecritures.value?.map((i) => i.compte_id));
+  return comptes.value.filter((t) => ids.has(t.id));
+});
+const filteredCategories = computed(() => {
+  const ids = new Set(ecritures.value?.map((i) => i.ecriture_categorie_id));
+  return categories.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { confirm, showModal } = useModalStore();
+
+const newEcriture = () => {
+  showModal({ component: 'ModalEcritureDivers', data: {} });
+};
+const editEcriture = (ecriture) => {
+  if (!ecriture.decompte_id) {
+    showModal({ component: 'ModalEcritureDivers', data: ecriture });
+  } else {
+    awn.alert(
+      'Impossible de modifier une écriture déjà présente dans un décompte',
+    );
+  }
+};
+const deleteEcriture = (ecritureId) => {
+  confirm(
+    'Voulez-vous vraiment supprimer cette écriture ?',
+    "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
+  ).then(() =>
+    store
+      .dispatch('removeEcriture', ecritureId)
+      .catch((err) =>
+        awn.alert(
+          err?.message ?? 'Erreur, impossible de supprimer cette écriture',
+        ),
+      ),
+  );
+};
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+  const statutsClass = {
+    0: '', //'A saisir',
+    1: '', //'En attente de validation',
+    2: '', // 'Validé',
+    3: 'table-success', //'Imputé'
+  };
+  return statutsClass[dataItem.statut];
+};
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Designation', key: 'designation' },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Type', key: 'ecritureType' },
+  { title: 'Compte', key: 'compte' },
+  { title: 'Catégorie', key: 'ecriture_categorie' },
+  { title: 'Quantité', key: 'quantite' },
+  { title: 'Unité', key: 'unite' },
+  { title: 'Tarif', key: 'tarif', type: Number },
+  { title: 'Total', key: 'total', type: Number },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="compta-divers"
@@ -39,7 +177,7 @@
           <form class="card-body">
             <div class="row">
               <base-select
-                class="col-md-4"
+                class="col-md-4 mb-1"
                 display-key="nom_prenom"
                 base-option="&lt;Sapeur&gt;"
                 :options="filteredSapeurs"
@@ -47,7 +185,7 @@
                 @update:model-value="(value) => setFilter('sapeur_id', value)"
               />
               <base-select
-                class="col-md-4"
+                class="col-md-4 mb-1"
                 base-option="&lt;Type&gt;"
                 :options="[
                   { id: 0, designation: 'Autre' },
@@ -61,16 +199,17 @@
                 @update:model-value="(value) => setFilter('type', value)"
               />
               <base-select
-                class="col-md-4"
+                class="col-md-4 mb-1"
                 base-option="&lt;Compte&gt;"
                 :options="filteredComptes"
                 :model-value="filters.compte_id"
                 @update:model-value="(value) => setFilter('compte_id', value)"
               />
               <base-select
-                class="col-md-4"
+                class="col-md-4 mb-1"
                 base-option="&lt;Catégorie comptable&gt;"
                 :options="filteredCategories"
+                :model-value="filters.ecriture_categorie_id"
                 @update:model-value="
                   (value) => setFilter('ecriture_categorie_id', value)
                 "
@@ -140,181 +279,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import store from '/src/store/index';
-import permissions from '../../store/permissions';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadEcritureCategorie = store.dispatch('fetchEcritureCategories');
-
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadEcrituresDivers = store.dispatch('fetchEcrituresDivers');
-
-  Promise.all([
-    loadSapeurs,
-    loadUnites,
-    loadComptes,
-    loadEcritureCategorie,
-    loadEcrituresDivers,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ComptabiliteDivers',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      loading: true,
-      selectedItem: null,
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Designation', key: 'designation' },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Type', key: 'ecritureType' },
-        { title: 'Compte', key: 'compte' },
-        { title: 'Catégorie', key: 'ecriture_categorie' },
-        { title: 'Quantité', key: 'quantite' },
-        { title: 'Unité', key: 'unite' },
-        { title: 'Tarif', key: 'tarif', type: Number },
-        { title: 'Total', key: 'total', type: Number },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      ecritures: (state) => state.imputation.ecritures.divers,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      const svm = this;
-      const formatCompte = (compte) =>
-        compte?.numero + ' ' + compte?.designation;
-      return this.ecritures?.map((e) => ({
-        ...e,
-        sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
-        unite: svm.unites.find((u) => u.id == e.type_unite_id)?.unite,
-        ecriture_categorie: svm.categories.find(
-          (c) => c.id == e.ecriture_categorie_id,
-        )?.designation,
-        compte: formatCompte(svm.comptes.find((c) => c.id == e.compte_id)),
-        ecritureType: svm.formatType(e.type),
-      }));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.ecritures?.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-    filteredComptes() {
-      const ids = new Set(this.ecritures?.map((i) => i.compte_id));
-      return this.comptes.filter((t) => ids.has(t.id));
-    },
-    filteredCategories() {
-      const ids = new Set(this.ecritures?.map((i) => i.ecriture_categorie_id));
-      return this.categories.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresDivers').then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newEcriture() {
-      this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: {} });
-    },
-    editEcriture(ecriture) {
-      if (!ecriture.decompte_id) {
-        this.SHOW_MODAL({ component: 'ModalEcritureDivers', data: ecriture });
-      } else {
-        this.$awn.alert(
-          'Impossible de modifier une écriture déjà présente dans un décompte',
-        );
-      }
-    },
-    deleteEcriture(ecritureId) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette écriture ?',
-          question:
-            "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeEcriture', ecritureId).catch((err) => {
-              this.$awn.alert(
-                err?.message ??
-                  'Erreur, impossible de supprimer cette écriture',
-              );
-            });
-          }
-        },
-      });
-    },
-    selected(item) {
-      this.selectedItem = item;
-    },
-    formatType(type) {
-      const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC',
-      };
-      return mapping[type] || '';
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-      const statutsClass = {
-        0: '', //'A saisir',
-        1: '', //'En attente de validation',
-        2: '', // 'Validé',
-        3: 'table-success', //'Imputé'
-      };
-      return statutsClass[dataItem.statut];
-    },
-  },
-};
-</script>

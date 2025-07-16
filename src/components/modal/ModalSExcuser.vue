@@ -1,6 +1,5 @@
 <script setup>
 import { useStore } from 'vuex';
-import permissions from '/src/store/permissions.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { computed, inject, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal';

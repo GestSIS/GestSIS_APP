@@ -202,5 +202,3 @@ const supprimer = (article) =>
     </template>
   </base-table>
 </template>
-
-<style></style>

@@ -28,8 +28,8 @@ export default {
     },
   },
   actions: {
-    fetchTravaux({ commit, getters }) {
-      return Travail.getTravaux(getters.activeExerciceComptableId).then(
+    fetchTravaux({ commit }, exerciceComptableId) {
+      return Travail.getTravaux(exerciceComptableId).then(
         (data) => commit(types.UPDATE_TRAVAIL_LISTE, data)
       );
     },

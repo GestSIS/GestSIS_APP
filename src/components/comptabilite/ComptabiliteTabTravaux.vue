@@ -1,3 +1,184 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchEcritureCategories');
+store.dispatch('fetchUnites');
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchTravailTypes');
+store.dispatch('fetchComptes');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  store.dispatch('fetchTravaux', activeExerciceComptableId.value);
+  loading.value = false;
+});
+
+const selectedId = ref(null);
+const selected = (row) => (selectedId.value = row?.id ?? null);
+const selectedItem = computed(() => {
+  return travaux.value.find((c) => c.id == selectedId.value);
+});
+
+const travaux = computed(() =>
+  store.state.travail.liste.filter((t) => t.statut >= 1),
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const travailTypes = computed(() => store.state.travailType.liste);
+const unites = computed(() => store.state.unite.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  return travaux.value.map((e) => ({
+    ...e,
+    travail_type: travailTypes.value.find((t) => t.id == e.travail_type_id)
+      ?.designation,
+    sapeur: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+    auteur: sapeurs.value.find((s) => s.id == e.auteur_id)?.nom_prenom,
+    unite: unites.value.find(
+      (u) =>
+        u.id ==
+        travailTypes.value.find((t) => t.id == e.travail_type_id)
+          ?.type_unite_id,
+    )?.unite,
+    getData: () => Promise.resolve(e.ecritures),
+  }));
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(travaux.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+const filteredTravailTypes = computed(() => {
+  const ids = new Set(travaux.value.map((i) => i.travail_type_id));
+  return travailTypes.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { confirm, showModal } = useModalStore();
+
+const imputer = (travailId) => {
+  const ids = travailId
+    ? [travailId]
+    : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
+
+  if (!ids.length) {
+    awn.warning('Aucun travail à impossible');
+    return;
+  }
+
+  store
+    .dispatch('imputerTravail', ids)
+    .then((res) => {
+      store.dispatch('fetchTravaux', activeExerciceComptableId.value);
+      awn.success(res?.message ?? 'Travaux imputé avec succès');
+    })
+    .catch((err) => {
+      awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
+    });
+};
+const annulerImputer = (travailId) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
+  ).then(() =>
+    store
+      .dispatch('annulerImputationTravail', travailId)
+      .then((res) => {
+        awn.success(res?.message ?? 'Travaux imputé avec succès');
+      })
+      .catch((err) => {
+        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
+      }),
+  );
+
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+
+  return dataItem?.statut == 2 ? 'table-success' : 'table-warning';
+};
+
+const detailRowOptions = {
+  fields: [
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (type) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Charges AVS/AC',
+        };
+        return mapping[type] || '';
+      },
+    },
+    {
+      title: 'Tarif',
+      key: 'tarif',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Quantite',
+      key: 'quantite',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+  ],
+};
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Travail', key: 'travail_type' },
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Quantité', key: 'quantite' },
+  { title: 'Unité', key: 'unite' },
+  { title: 'Auteur', key: 'auteur' },
+  { title: 'Date demande', key: 'date_demande', type: Date },
+  {
+    title: 'Statut',
+    key: 'statut',
+    formatter(statut) {
+      return {
+        [-1]: 'Refusé',
+        0: 'En attente',
+        1: 'Accepté',
+        2: 'Imputé',
+      }[statut];
+    },
+  },
+  { title: 'Justification', key: 'justification' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="travaux"
@@ -131,243 +312,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import store from '/src/store/index';
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-
-async function loadData(_, next) {
-  const loadCategories = store.dispatch('fetchEcritureCategories');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadTravailTypes = store.dispatch('fetchTravailTypes');
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadTravaux = store.dispatch('fetchTravaux');
-
-  Promise.all([
-    loadCategories,
-    loadUnites,
-    loadTravailTypes,
-    loadSapeurs,
-    loadTravaux,
-    loadComptes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ComptabiliteTabTravaux',
-  components: { GenericDetailsRow },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    return {
-      loading: true,
-      selectedId: null,
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantite',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            formatter: (total, ecriture) =>
-              ecriture.module == 5 ? -total : total,
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Travail', key: 'travail_type' },
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Quantité', key: 'quantite' },
-        { title: 'Unité', key: 'unite' },
-        { title: 'Auteur', key: 'auteur' },
-        { title: 'Date demande', key: 'date_demande', type: Date },
-        {
-          title: 'Statut',
-          key: 'statut',
-          formatter(statut) {
-            return {
-              [-1]: 'Refusé',
-              0: 'En attente',
-              1: 'Accepté',
-              2: 'Imputé',
-            }[statut];
-          },
-        },
-        { title: 'Justification', key: 'justification' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      travaux: (state) => state.travail.liste.filter((t) => t.statut >= 1),
-      sapeurs: (state) => state.sapeur.liste,
-      travailTypes: (state) => state.travailType.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      unites: (state) => state.unite.liste,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      return this.travaux.map((e) => ({
-        ...e,
-        travail_type: this.travailTypes.find((t) => t.id == e.travail_type_id)
-          ?.designation,
-        sapeur: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
-        auteur: this.sapeurs.find((s) => s.id == e.auteur_id)?.nom_prenom,
-        unite: this.unites.find(
-          (u) =>
-            u.id ==
-            this.travailTypes.find((t) => t.id == e.travail_type_id)
-              ?.type_unite_id,
-        )?.unite,
-        getData: () => Promise.resolve(e.ecritures),
-      }));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.travaux.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-    filteredTravailTypes() {
-      const ids = new Set(this.travaux.map((i) => i.travail_type_id));
-      return this.travailTypes.filter((t) => ids.has(t.id));
-    },
-    selectedItem() {
-      return this.travaux.find((c) => c.id == this.selectedId);
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    init() {
-      store.dispatch('fetchTravaux').then(() => {
-        this.loading = false;
-      });
-    },
-    selected(item) {
-      this.selectedId = item?.id;
-    },
-    imputer(travailId) {
-      const ids = travailId
-        ? [travailId]
-        : this.travaux.filter((t) => t.statut == 1).map((t) => t.id);
-
-      if (!ids.length) {
-        this.$awn.warning('Aucun travail à impossible');
-        return;
-      }
-
-      this.$store
-        .dispatch('imputerTravail', ids)
-        .then((res) => {
-          this.$store.dispatch('fetchTravaux');
-          this.$awn.success(res?.message ?? 'Travaux imputé avec succès');
-        })
-        .catch((err) => {
-          this.$awn.alert(
-            err?.message ?? "Erreur impossible d'annuler l'imputation",
-          );
-        });
-    },
-    annulerImputer(travailId) {
-      // const ids = travailId ? [travailId] : this.travaux.map((t) => t.id);
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette imputation ?',
-          question:
-            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('annulerImputationTravail', travailId)
-              .then((res) => {
-                this.$awn.success(res?.message ?? 'Travaux imputé avec succès');
-              })
-              .catch((err) => {
-                this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation",
-                );
-              });
-          }
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-
-      return dataItem?.statut == 2 ? 'table-success' : 'table-warning';
-    },
-  },
-};
-</script>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

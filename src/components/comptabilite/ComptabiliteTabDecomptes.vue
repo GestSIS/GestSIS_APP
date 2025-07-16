@@ -1,3 +1,260 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import DecompteService from '/src/services/DecompteService.js';
+
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchUnites');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchDecomptes', activeExerciceComptableId.value);
+  loading.value = false;
+});
+
+const selectedId = ref(null);
+const selected = (row) => (selectedId.value = row?.id ?? null);
+
+const exercicesComptables = computed(() => store.state.exerciceComptable.liste);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const decomptes = computed(() => store.state.decompte.liste);
+const unites = computed(() => store.state.unite.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+const computedData = computed(() =>
+  decomptes.value.map((d) => ({
+    ...d,
+    getData: () => DecompteService.getEcritures(d.id),
+  })),
+);
+
+const awn = inject('awn');
+const { confirm, showModal } = useModalStore();
+
+const supprimer = (decompteId) => {
+  confirm(
+    'Voulez-vous vraiment supprimer ce décompte ?',
+    "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
+  ).then(() =>
+    store
+      .dispatch('removeDecompte', decompteId)
+      .catch((err) =>
+        awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
+      ),
+  );
+};
+const impressionResumeParSapeur = () => {
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadResumeParSapeur(
+    activeExerciceComptableId.value,
+    `resume_par_sapeur.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message || 'Erreur lors de la génération du résumé par sapeur',
+      );
+    });
+};
+const impressionStandard = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadDecompte(decompteId, `decompte_${decompte.date}.pdf`)
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+      );
+    });
+};
+const impressionParSapeur = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadDecompteParSapeur(
+    decompteId,
+    `decompte_${decompte.date}.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+      );
+    });
+};
+const impressionParCompte = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadDecompteParCompte(
+    decompteId,
+    `decompte_${decompte.date}.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+      );
+    });
+};
+const iso20022Decompte = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadIso20022PourDecompte(
+    decompteId,
+    `decompte_${decompte.date}.xml`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+      );
+    });
+};
+const excelAFacturer = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadExcelAFacturer(
+    decompteId,
+    `decompte_${decompte.date}_a_facturer.xlsx`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+      );
+    });
+};
+const exportEcritures = (decompteId) => {
+  const decompte = decomptes.value.find((d) => d.id == decompteId);
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadExcelEcritures(
+    decompteId,
+    `decompte_${decompte.date}_ecritures.xlsx`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+      );
+    });
+};
+const certificatsDeSalaire = () => {
+  if (decomptes.value.length === 0) {
+    return awn.warning(
+      'Impossible de générer les certificats de salaire sans décompte !',
+    );
+  }
+
+  const annee = exercicesComptables.value.find(
+    (e) => e.id == activeExerciceComptableId.value,
+  )?.annee;
+
+  showModal({ component: 'ModalChargement' });
+
+  DecompteService.downloadCertificatSalaires(
+    activeExerciceComptableId.value,
+    `certificats_salaire_${annee}.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
+      );
+    });
+};
+const generer = () => showModal({ component: 'ModalDecompte', data: {} });
+
+const detailRowOptions = {
+  fields: [
+    { title: 'Designation', key: 'designation' },
+    { title: 'Date', key: 'date', type: Date },
+    {
+      title: 'Sapeur',
+      key: 'sapeur_id',
+      formatter: (sapeurId) =>
+        sapeurs.value.find((e) => e.id == sapeurId)?.nom_prenom,
+    },
+    { title: 'Quantité', key: 'quantite' },
+    {
+      title: 'Unité',
+      key: 'type_unite_id',
+      formatter: (id) => unites.value.find((u) => u.id == id)?.abreviation,
+    },
+    { title: 'Tarif', key: 'tarif' },
+    { title: 'Tarif min', key: 'tarif_min' },
+    { title: 'Pour', key: 'tarif_min_pour' },
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (type) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Charges AVS/AC',
+        };
+        return mapping[type] || '';
+      },
+    },
+    { title: 'Total', key: 'total' },
+  ],
+};
+const fields = [
+  { title: 'Designation', key: 'designation' },
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'A payer', key: 'a_payer_total' },
+  { title: 'A facturer', key: 'a_facturer_total' },
+  { title: 'Déductions', key: 'deduction', type: Boolean },
+  { title: 'Charges AVS', key: 'avs_total' },
+  { title: 'Charges AC', key: 'ac_total' },
+  { title: 'Total', key: 'total' },
+  { title: 'Actions', key: 'id', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="row">
     <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
@@ -139,321 +396,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-import DecompteService from '/src/services/DecompteService.js';
-
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-
-async function loadData(routeTo, next) {
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadUnites = store.dispatch('fetchUnites');
-  await store.dispatch('fetchExercicesComptables');
-
-  const loadDecomptes = store.dispatch('fetchDecomptes');
-  Promise.all([loadDecomptes, loadSapeurs, loadUnites]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'FraisTabDecompte',
-  components: { GenericDetailsRow },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    const svm = this;
-    return {
-      dropdown: false,
-      loading: true,
-      selectedId: 0,
-      detailRowOptions: {
-        fields: [
-          { title: 'Designation', key: 'designation' },
-          { title: 'Date', key: 'date', type: Date },
-          {
-            title: 'Sapeur',
-            key: 'sapeur_id',
-            formatter: (sapeurId) =>
-              svm.sapeurs.find((e) => e.id == sapeurId)?.nom_prenom,
-          },
-          { title: 'Quantité', key: 'quantite' },
-          {
-            title: 'Unité',
-            key: 'type_unite_id',
-            formatter: (id) => svm.unites.find((u) => u.id == id)?.abreviation,
-          },
-          { title: 'Tarif', key: 'tarif' },
-          { title: 'Tarif min', key: 'tarif_min' },
-          { title: 'Pour', key: 'tarif_min_pour' },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          { title: 'Total', key: 'total' },
-        ],
-      },
-      fields: [
-        { title: 'Designation', key: 'designation' },
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'A payer', key: 'a_payer_total' },
-        { title: 'A facturer', key: 'a_facturer_total' },
-        { title: 'Déductions', key: 'deduction', type: Boolean },
-        { title: 'Charges AVS', key: 'avs_total' },
-        { title: 'Charges AC', key: 'ac_total' },
-        { title: 'Total', key: 'total' },
-        { title: 'Actions', key: 'id', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      exercicesComptables: (state) => state.exerciceComptable.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      decomptes: (state) => state.decompte.liste,
-      unites: (state) => state.unite.liste,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      return this.decomptes.map((d) => ({
-        ...d,
-        getData: () => DecompteService.getEcritures(d.id),
-      }));
-    },
-  },
-  watch: {
-    decomptes() {
-      this.loading = false;
-    },
-    activeExerciceComptableId() {
-      this.loading = true;
-      store.dispatch('fetchDecomptes');
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    selected(row) {
-      this.selectedId = row?.id || null;
-    },
-    async supprimer(decompteId) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer ce décompte ?',
-          question:
-            "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('removeDecompte', decompteId)
-              .catch((err) =>
-                this.$awn.alert(
-                  err?.message ?? "Impossible d'effectuer cette action",
-                ),
-              );
-          }
-        },
-      });
-    },
-    impressionResumeParSapeur() {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadResumeParSapeur(
-        this.activeExerciceComptableId,
-        `resume_par_sapeur.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message || 'Erreur lors de la génération du résumé par sapeur',
-          );
-        });
-    },
-    impressionStandard(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadDecompte(
-        decompteId,
-        `decompte_${decompte.date}.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-          );
-        });
-    },
-    impressionParSapeur(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadDecompteParSapeur(
-        decompteId,
-        `decompte_${decompte.date}.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-          );
-        });
-    },
-    impressionParCompte(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadDecompteParCompte(
-        decompteId,
-        `decompte_${decompte.date}.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-          );
-        });
-    },
-    iso20022Decompte(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadIso20022PourDecompte(
-        decompteId,
-        `decompte_${decompte.date}.xml`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-          );
-        });
-    },
-    excelAFacturer(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadExcelAFacturer(
-        decompteId,
-        `decompte_${decompte.date}_a_facturer.xlsx`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
-          );
-        });
-    },
-    exportEcritures(decompteId) {
-      const decompte = this.decomptes.find((d) => d.id == decompteId);
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadExcelEcritures(
-        decompteId,
-        `decompte_${decompte.date}_ecritures.xlsx`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
-          );
-        });
-    },
-    certificatsDeSalaire() {
-      if (this.decomptes.length === 0) {
-        return this.$awn.warning(
-          'Impossible de générer les certificats de salaire sans décompte !',
-        );
-      }
-
-      const annee = this.exercicesComptables.find(
-        (e) => e.id == this.activeExerciceComptableId,
-      )?.annee;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      DecompteService.downloadCertificatSalaires(
-        this.activeExerciceComptableId,
-        `certificats_salaire_${annee}.pdf`,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
-          );
-        });
-    },
-    generer() {
-      this.SHOW_MODAL({ component: 'ModalDecompte', data: {} });
-    },
-  },
-};
-</script>
-
-<style></style>

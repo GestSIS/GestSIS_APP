@@ -20,13 +20,10 @@ await store.dispatch('fetchExercicesComptables');
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchTravaux');
+  await store.dispatch('fetchTravaux', store.state.exerciceComptable.activeId);
   loading.value = false;
 });
 
-const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
-);
 const activeSapeurId = computed(() => store.state.auth.sapeurId);
 const travaux = computed(() =>
   store.state.travail.liste.map((t) => ({
@@ -68,7 +65,7 @@ const selectedItem = computed(() => {
   return travaux.value.find((t) => t.id == selectedId.value);
 });
 
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);
 
 const createTravail = () => showModal({ component: 'ModalTravail' });
@@ -79,36 +76,18 @@ const updateTravail = (travail) =>
 const reviewTravail = (travail) =>
   showModal({ component: 'ModalReviewTravail', data: travail });
 
-const cancelReviewTravail = (travail) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: "Voulez-vous vraiment annuler l'examen de ce travail ?",
-      question:
-        "Attention, la justification fournie lors de l'examen sera perdue.",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        store.dispatch('cancelReviewTravail', travail?.id);
-      }
-    },
-  });
-};
-const supprimerTravail = (travail) => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: 'Voulez-vous vraiment supprimer ce travail ?',
-      question:
-        "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        store.dispatch('removeTravail', travail?.id);
-      }
-    },
-  });
-};
+const cancelReviewTravail = (travail) =>
+  confirm(
+    "Voulez-vous vraiment annuler l'examen de ce travail ?",
+    "Attention, la justification fournie lors de l'examen sera perdue.",
+  ).then(() => store.dispatch('cancelReviewTravail', travail?.id));
+
+const supprimerTravail = (travail) =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce travail ?',
+    "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+  ).then(() => store.dispatch('removeTravail', travail?.id));
+
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
     return;

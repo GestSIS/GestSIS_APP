@@ -94,5 +94,3 @@ const editEmplacement = () => {
     </div>
   </div>
 </template>
-
-<style></style>

@@ -185,5 +185,3 @@ const linearCategories = (categorieId) => {
     </template>
   </base-card>
 </template>
-
-<style></style>

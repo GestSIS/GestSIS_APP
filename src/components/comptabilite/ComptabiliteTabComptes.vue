@@ -1,3 +1,132 @@
+<script setup>
+import { computed, inject, ref, useTemplateRef, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import CompteService from '/src/services/CompteService.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchExercicesComptables');
+store.dispatch('fetchListeSapeur');
+await store.dispatch('fetchComptes');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const activeCompteId = ref(store.state.compte.liste[0]?.id ?? null);
+
+const loading = ref(false);
+watchEffect(async () => {
+  if (activeCompteId.value === null) {
+    return;
+  }
+  loading.value = true;
+  await store.dispatch('fetchEcritureComptes', {
+    exerciceComptableId: activeExerciceComptableId.value,
+    compteId: activeCompteId.value,
+  });
+  loading.value = false;
+});
+
+const dropdown = useTemplateRef('dropdown');
+
+const ecritures = computed(() => store.state.imputation.active.ecritures);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => store.state.compte.liste);
+
+const computedData = computed(() => {
+  return ecritures.value.map((e) => ({
+    ...e,
+    sapeur: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+  }));
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(ecritures.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { showModal, closeModal } = useModalStore();
+
+const formatCompte = (compte) => {
+  if (!compte) return '';
+  return compte?.numero + ' - ' + compte?.designation;
+};
+const formatedDate = () => {
+  var today = new Date();
+  return new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split('T')[0];
+};
+const justificatifIndividuel = (compteId) => {
+  const compte = comptes.value.find((f) => f.id == activeCompteId.value);
+  const filename = `${formatedDate()}_justificatif-compte-${compte.numero}.pdf`;
+
+  showModal({ component: 'ModalChargement' });
+
+  CompteService.downloadJustificatifIndividuel(
+    filename,
+    activeExerciceComptableId.value,
+    compteId,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          'Une erreur a eu lieu durant la génération de votre fichier',
+      );
+    });
+};
+const justificatifComplet = () => {
+  const filename = `${formatedDate()}_justificatif-complet.pdf`;
+  showModal({ component: 'ModalChargement' });
+
+  CompteService.downloadJustificatifComplet(
+    filename,
+    activeExerciceComptableId.value,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message ||
+          'Une erreur a eu lieu durant la génération de votre fichier',
+      );
+    });
+};
+
+const selectCompte = (id) => {
+  dropdown.value.close();
+  activeCompteId.value = id;
+};
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  {
+    title: 'Type',
+    key: 'type',
+    formatter: (type) => {
+      const mapping = {
+        0: 'Autre',
+        1: 'Solde',
+        2: 'Indemnité',
+        3: 'Frais forfaitaire',
+        4: 'Frais effectif',
+        5: 'Charges AVS/AC',
+      };
+      return mapping[type] || '';
+    },
+  },
+  { title: 'Designation', key: 'designation' },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Total', key: 'total', type: Number },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="comptes"
@@ -55,7 +184,7 @@
                 :model-value="filters.type"
                 @update:model-value="(value) => setFilter('type', value)"
               />
-              <div v-if="canReset" class="col-md-6">
+              <div v-if="canReset" class="col-md-6 mt-1">
                 <button class="btn btn-sm btn-warning w-100" @click="reset">
                   Réinitialiser
                 </button>
@@ -130,173 +259,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-
-import CompteService from '/src/services/CompteService.js';
-
-async function loadData(routeTo, next) {
-  const loadExercices = store.dispatch('fetchExercicesComptables');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadComptes = store.dispatch('fetchComptes');
-
-  Promise.all([loadExercices, loadComptes, loadSapeurs]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'FraisTabCompte',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    return {
-      dropdown: false,
-      loading: true,
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        {
-          title: 'Type',
-          key: 'type',
-          formatter: (type) => {
-            const mapping = {
-              0: 'Autre',
-              1: 'Solde',
-              2: 'Indemnité',
-              3: 'Frais forfaitaire',
-              4: 'Frais effectif',
-              5: 'Charges AVS/AC',
-            };
-            return mapping[type] || '';
-          },
-        },
-        { title: 'Designation', key: 'designation' },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Total', key: 'total', type: Number },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      ecritures: (state) => state.imputation.active.ecritures,
-      activeCompteId: (state) => state.imputation.active.compteId,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      sapeurs: (state) => state.sapeur.liste,
-      comptes: (state) => state.compte.liste,
-    }),
-    computedData() {
-      const svm = this;
-      return this.ecritures.map((e) => ({
-        ...e,
-        sapeur: svm.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
-      }));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-    comptes(newOne, oldOne) {
-      if (oldOne.length === 0) {
-        this.init();
-      }
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    formatCompte(compte) {
-      if (!compte) return '';
-      return compte?.numero + ' - ' + compte?.designation;
-    },
-    formatedDate() {
-      var today = new Date();
-      return new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-        .toISOString()
-        .split('T')[0];
-    },
-    justificatifIndividuel(compteId) {
-      const compte = this.comptes.find((f) => f.id == this.activeCompteId);
-      const filename = `${this.formatedDate()}_justificatif-compte-${
-        compte.numero
-      }.pdf`;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      CompteService.downloadJustificatifIndividuel(
-        filename,
-        this.activeExerciceComptableId,
-        compteId,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier',
-          );
-        });
-    },
-    justificatifComplet() {
-      const filename = `${this.formatedDate()}_justificatif-complet.pdf`;
-
-      this.SHOW_MODAL({ component: 'ModalChargement' });
-
-      CompteService.downloadJustificatifComplet(
-        filename,
-        this.activeExerciceComptableId,
-      )
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((err) => {
-          this.HIDE_MODAL();
-          this.$awn.alert(
-            err?.message ||
-              'Une erreur a eu lieu durant la génération de votre fichier',
-          );
-        });
-    },
-    selectCompte(id) {
-      this.$refs.dropdown.close();
-      this.$store.dispatch('selectActiveCompte', id).then(() => {});
-      this.dropdown = false;
-    },
-    init() {
-      if (this.activeCompteId) {
-        this.$store.dispatch('fetchEcritureComptes').then(() => {
-          this.loading = false;
-        });
-      }
-    },
-  },
-};
-</script>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

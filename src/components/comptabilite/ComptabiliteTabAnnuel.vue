@@ -1,3 +1,175 @@
+<script setup>
+import { useModalStore } from '../../stores/common/Modal.js';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import permissions from '../../store/permissions';
+import { useStore } from 'vuex';
+import { computed, inject, ref, watchEffect } from 'vue';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchComptes');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchFraisIndemnitesTypes');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch(
+    'fetchEcrituresAnnuels',
+    activeExerciceComptableId.value,
+  );
+  loading.value = false;
+});
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => store.state.compte.liste);
+const ecritures = computed(() => store.state.imputation.ecritures.annuels);
+const fonctions = computed(() => store.state.fonction.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+const computedData = computed(() => {
+  //Group by sapeur ID
+  return (
+    Object.entries(
+      ecritures.value.reduce((reduced, ecriture) => {
+        (reduced[ecriture.sapeur_id] = reduced[ecriture.sapeur_id] || []).push(
+          ecriture,
+        );
+        return reduced;
+      }, {}),
+    )
+      // Map to real data
+      .map(([key, value]) => ({
+        id: +key,
+        ecritures: value,
+        total: value.map((e) => parseFloat(e.total)).reduce((a, b) => a + b),
+      }))
+      // Add sapeur data
+      .map((e) => {
+        let sapeur = sapeurs.value.find((s) => s.id == e.id);
+        return {
+          ...e,
+          ...sapeur,
+          fonction: fonctions.value.find((f) => f.id == sapeur.fonction_id)
+            ?.nom,
+        };
+      })
+      // Add data relative to table
+      .map((s) => ({
+        ...s,
+        getData: () =>
+          new Promise(
+            function (resolve) {
+              resolve(ecritures.value);
+            }.bind(s),
+          ),
+      }))
+  );
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(ecritures.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+
+const { confirm, showModal } = useModalStore();
+const awn = inject('awn');
+
+const regenererSapeur = () =>
+  showModal({ component: 'ModalImputerAnnuel', size: 2 });
+
+const annulerImputation = async () =>
+  confirm(
+    "Voulez-vous annuler l'imputation annuel des frais ?",
+    'Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.',
+  ).then(() =>
+    store
+      .dispatch('annulerImputationAnnuel', activeExerciceComptableId.value)
+      .catch((err) =>
+        awn.alert(
+          err?.message ??
+            "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
+        ),
+      ),
+  );
+const generer = () => showModal({ component: 'ModalImputerAnnuel', size: 2 });
+
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+  const statutsClass = {
+    0: 'text-danger', //'inactif',
+    1: '', //'Actif',
+  };
+  return statutsClass[dataItem.actif];
+};
+
+const detailRowOptions = {
+  fields: [
+    { title: 'Designation', key: 'designation' },
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (t) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Cotisation AVS/AC',
+        };
+        return mapping[t] ?? 'Autre';
+      },
+    },
+    {
+      title: 'Compte',
+      key: 'compte_id',
+      formatter: (id) => comptes.value.find((f) => f.id == id)?.label,
+    },
+    {
+      title: 'Tarif',
+      key: 'tarif',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Quantité',
+      key: 'quantite',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+  ],
+};
+const fields = [
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Fonction', key: 'fonction' },
+  { title: 'Total', key: 'total', type: Number },
+  {
+    title: 'Actions',
+    slot: 'actions',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+  },
+];
+</script>
+
 <template>
   <stateful-filter
     id="annuel"
@@ -63,7 +235,6 @@
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
               :selectable="true"
-              @selected="selected"
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row
@@ -104,231 +275,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-
-async function loadData(routeTo, next) {
-  const loadComptes = store.dispatch('fetchComptes');
-  const loadFonctions = store.dispatch('fetchFonctions');
-  const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-
-  Promise.all([loadComptes, loadFraisIndemnites, loadFonctions]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'FraisTabAnnuel',
-  components: { GenericDetailsRow },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    const svm = this;
-    return {
-      loading: true,
-      selectedId: null,
-      detailRowOptions: {
-        fields: [
-          { title: 'Designation', key: 'designation' },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (t) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Cotisation AVS/AC',
-              };
-              return mapping[t] ?? 'Autre';
-            },
-          },
-          {
-            title: 'Compte',
-            key: 'compte_id',
-            formatter: (id) => svm.comptes.find((f) => f.id == id)?.label,
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantité',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
-      fields: [
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Fonction', key: 'fonction' },
-        { title: 'Total', key: 'total', type: Number },
-        {
-          title: 'Actions',
-          slot: 'actions',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      comptes: (state) => state.compte.liste,
-      ecritures: (state) => state.imputation.ecritures.annuels,
-      fonctions: (state) => state.fonction.liste,
-      exercicesComptable: (state) => state.exerciceComptable.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      //Group by sapeur ID
-      return (
-        Object.entries(
-          this.ecritures.reduce((reduced, ecriture) => {
-            (reduced[ecriture.sapeur_id] =
-              reduced[ecriture.sapeur_id] || []).push(ecriture);
-            return reduced;
-          }, {}),
-        )
-          // Map to real data
-          .map(([key, value]) => ({
-            id: +key,
-            ecritures: value,
-            total: value
-              .map((e) => parseFloat(e.total))
-              .reduce((a, b) => a + b),
-          }))
-          // Add sapeur data
-          .map((e) => {
-            let sapeur = this.sapeurs.find((s) => s.id == e.id);
-            return {
-              ...e,
-              ...sapeur,
-              fonction: this.fonctions.find((f) => f.id == sapeur?.fonction_id)
-                ?.nom,
-            };
-          })
-          // Add data relative to table
-          .map((s) => ({
-            ...s,
-            getData: () =>
-              new Promise(
-                function (resolve) {
-                  resolve(this.ecritures);
-                }.bind(s),
-              ),
-          }))
-      );
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.ecritures.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.selectedId = null;
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchListeSapeur');
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-
-    if (this.activeExerciceComptableId || 0 !== 0) {
-      this.$store.dispatch('fetchEcrituresAnnuels').then(() => {
-        this.loading = false;
-        this.selectedId = null;
-      });
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    selected(id) {
-      this.selectedId = id;
-    },
-    regenererSapeur() {
-      // TODO: Fix this feature
-      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
-    },
-    async annulerImputation() {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: "Voulez-vous annuler l'imputation annuel des frais ?",
-          question:
-            'Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.',
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch(
-                'annulerImputationAnnuel',
-                this.activeExerciceComptableId,
-              )
-              .catch((err) =>
-                this.$awn.alert(
-                  err?.message ??
-                    "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
-                ),
-              );
-          }
-        },
-      });
-    },
-    generer() {
-      this.SHOW_MODAL({ component: 'ModalImputerAnnuel', size: 2 });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-      const statutsClass = {
-        0: 'text-danger', //'inactif',
-        1: '', //'Actif',
-      };
-      return statutsClass[dataItem.actif];
-    },
-  },
-};
-</script>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

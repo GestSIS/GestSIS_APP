@@ -113,9 +113,8 @@ import MultiStep from '/src/components/base/MultiStep.vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 export default {
-  name: 'ModalImputerExercice',
-  components: { MultiStep },
-  components: { GenericDetailsRow },
+  name: 'ModalImputerCours',
+  components: { MultiStep, GenericDetailsRow },
   props: {
     data: {
       type: Object,

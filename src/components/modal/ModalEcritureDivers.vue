@@ -126,7 +126,8 @@ const save = async () => {
               id="quantite"
               v-model="form.quantite"
               required
-              type="string"
+              type="number"
+              step=".01"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
             />
@@ -143,7 +144,8 @@ const save = async () => {
               id="tarif"
               v-model="form.tarif"
               required
-              type="text"
+              type="number"
+              step=".05"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif'] }"
             />

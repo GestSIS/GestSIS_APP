@@ -1,3 +1,174 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../store/permissions';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+
+const store = useStore();
+await store.dispatch('fetchExercicesComptables');
+
+store.dispatch('fetchEcritureCategories');
+store.dispatch('fetchUnites');
+store.dispatch('fetchCours');
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchFraisIndemnitesTypes');
+store.dispatch('fetchComptes');
+
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchCoursSapeurs', activeExerciceComptableId.value);
+  loading.value = false;
+});
+
+const selectedItemId = ref(null);
+const selected = (item) => (selectedItemId.value = item?.id ?? null);
+const selectedItem = computed(() =>
+  coursSapeurs.value.find((c) => c.id === selectedItemId.value),
+);
+
+const cours = computed(() => store.state.cours.liste);
+const unites = computed(() => store.state.unite.liste);
+const coursSapeurs = computed(() =>
+  store.state.coursSapeur.liste.map((e) => ({ ...e.cours, ...e })),
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const localites = computed(() => store.state.localite.liste);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const hasEditPermission = useHasPermission(
+  permissions.COMPTABILITE.MODIFICATION,
+);
+
+const computedData = computed(() => {
+  return coursSapeurs.value.map((e) => ({
+    ...e,
+    categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
+      ?.designation,
+    localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
+    nom_prenom: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
+    getData: () => Promise.resolve(e.ecritures),
+  }));
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => i.localite_id));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+const filteredSapeurs = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => i.sapeur_id));
+  return sapeurs.value.filter((t) => ids.has(t.id));
+});
+const filteredDataTypes = computed(() => {
+  const ids = new Set(coursSapeurs.value.map((i) => i.cours_id));
+  return cours.value.filter((t) => ids.has(t.id));
+});
+
+const awn = inject('awn');
+const { confirm, showModal } = useModalStore();
+
+const imputer = (courSapeur) => {
+  showModal({
+    component: 'ModalImputerCours',
+    data: { id: courSapeur?.id },
+    size: 2,
+  });
+};
+const annulerImputer = (courSapeur) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
+  ).then(() =>
+    store
+      .dispatch('annulerImputationCours', courSapeur?.id)
+      .then(({ statut }) => {
+        coursSapeurs.value = [
+          ...coursSapeurs.value.filter((e) => e.id != courSapeur?.id),
+          {
+            ...coursSapeurs.value.find((e) => e.id == courSapeur?.id),
+            statut: statut,
+          },
+        ].sort((a, b) => a.date.localeCompare(b.date));
+      })
+      .catch((err) => {
+        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
+      }),
+  );
+
+const onRowClass = (dataItem, isSelected) => {
+  if (isSelected) {
+    return;
+  }
+
+  return dataItem?.ecritures?.length > 0 ? 'table-success' : 'table-warning';
+};
+
+const detailRowOptions = {
+  fields: [
+    {
+      title: 'Sapeur',
+      key: 'sapeur_id',
+      formatter: (sapeurId) =>
+        sapeurs.value.find((e) => e.id === sapeurId)?.nom_prenom,
+    },
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (type) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Charges AVS/AC',
+        };
+        return mapping[type] || '';
+      },
+    },
+    {
+      title: 'Tarif',
+      key: 'tarif',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Quantite',
+      key: 'quantite',
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+    {
+      title: 'Unite',
+      key: 'type_unite_id',
+      formatter: (type_unite_id) =>
+        unites.value.find((u) => u.id == type_unite_id)?.unite,
+    },
+    {
+      title: 'Total',
+      key: 'total',
+      formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
+      type: Number,
+      titleClass: 'text-center',
+      columnClass: 'text-end',
+    },
+  ],
+};
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Cours', key: 'designation' },
+  { title: 'Sapeur', key: 'nom_prenom' },
+  { title: 'Durée [jour]', key: 'duree' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="cours"
@@ -77,7 +248,6 @@
               :loading="loading"
               :fields="fields"
               :row-class="onRowClass"
-              detail-row-class="m-td-0"
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
               :detail-row-column-hide-button="(r) => !r?.ecritures?.length"
@@ -116,239 +286,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import store from '/src/store/index';
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-
-async function loadData(_, next) {
-  const loadCategories = store.dispatch('fetchEcritureCategories');
-  const loadUnites = store.dispatch('fetchUnites');
-  const loadCours = store.dispatch('fetchCours');
-  const loadSapeurs = store.dispatch('fetchListeSapeur');
-  const loadLocalites = store.dispatch('fetchLocalites');
-  const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-  const loadComptes = store.dispatch('fetchComptes');
-
-  Promise.all([
-    loadCategories,
-    loadUnites,
-    loadCours,
-    loadSapeurs,
-    loadLocalites,
-    loadIndemnites,
-    loadComptes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ComptabiliteTabCours',
-  components: { GenericDetailsRow },
-  beforeRouteEnter(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, _, next) {
-    loadData(routeTo, next);
-  },
-  props: {
-    id: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    const svm = this;
-    return {
-      loading: true,
-      selectedId: null,
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Sapeur',
-            key: 'sapeur_id',
-            formatter: (sapeurId) =>
-              svm.sapeurs.find((e) => e.id === sapeurId)?.nom_prenom,
-          },
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          {
-            title: 'Tarif',
-            key: 'tarif',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Quantite',
-            key: 'quantite',
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-          {
-            title: 'Unite',
-            key: 'type_unite_id',
-            formatter: (type_unite_id) =>
-              svm.unites.find((u) => u.id == type_unite_id)?.unite,
-          },
-          {
-            title: 'Total',
-            key: 'total',
-            formatter: (total, ecriture) =>
-              ecriture.module == 5 ? -total : total,
-            type: Number,
-            titleClass: 'text-center',
-            columnClass: 'text-end',
-          },
-        ],
-      },
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Cours', key: 'designation' },
-        { title: 'Sapeur', key: 'nom_prenom' },
-        { title: 'Durée [jour]', key: 'duree' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      cours: (state) => state.cours.liste,
-      unites: (state) => state.unite.liste,
-      coursSapeurs: (state) =>
-        state.coursSapeur.liste.map((e) => ({ ...e.cours, ...e })),
-      sapeurs: (state) => state.sapeur.liste,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      listeExerciceComptable: (state) => state.exerciceComptable.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.COMPTABILITE.MODIFICATION,
-        ),
-    }),
-    computedData() {
-      return this.coursSapeurs.map((e) => ({
-        ...e,
-        categorie: this.categories.find((c) => c.id == e.exercice_categorie_id)
-          ?.designation,
-        localite: this.localites.find((l) => l.id == e.localite_id)
-          ?.designation,
-        nom_prenom: this.sapeurs.find((s) => s.id == e.sapeur_id)?.nom_prenom,
-        getData: () => Promise.resolve(e.ecritures),
-      }));
-    },
-    filteredLocalites() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.localite_id));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-    filteredSapeurs() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.sapeur_id));
-      return this.sapeurs.filter((t) => ids.has(t.id));
-    },
-    filteredDataTypes() {
-      const ids = new Set(this.coursSapeurs.map((i) => i.cours_id));
-      return this.cours.filter((t) => ids.has(t.id));
-    },
-    selectedItem() {
-      return this.coursSapeurs.find((c) => c.id == this.selectedId);
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-      this.init();
-    },
-  },
-  mounted() {
-    this.loading = true;
-    this.init();
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    init() {
-      store.dispatch('fetchCoursSapeurs').then(() => {
-        this.loading = false;
-      });
-    },
-    selected(item) {
-      this.selectedId = item?.id;
-    },
-    imputer(courSapeur) {
-      this.SHOW_MODAL({
-        component: 'ModalImputerCours',
-        data: { id: courSapeur?.id },
-        size: 2,
-        callback: () => this.init(),
-      });
-    },
-    annulerImputer(courSapeur) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette imputation ?',
-          question:
-            "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store
-              .dispatch('annulerImputationCours', courSapeur?.id)
-              .then(({ statut }) => {
-                this.coursSapeurs = [
-                  ...this.coursSapeurs.filter((e) => e.id != courSapeur?.id),
-                  {
-                    ...this.coursSapeurs.find((e) => e.id == courSapeur?.id),
-                    statut: statut,
-                  },
-                ].sort((a, b) => a.date.localeCompare(b.date));
-                this.selectedItem = this.coursSapeurs.find(
-                  (e) => e.id == courSapeur?.id,
-                );
-              })
-              .catch((err) => {
-                this.$awn.alert(
-                  err?.message ?? "Erreur impossible d'annuler l'imputation",
-                );
-              });
-          }
-        },
-      });
-    },
-    onRowClass(dataItem, isSelected) {
-      if (isSelected) {
-        return;
-      }
-
-      return dataItem?.ecritures?.length > 0
-        ? 'table-success'
-        : 'table-warning';
-    },
-  },
-};
-</script>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

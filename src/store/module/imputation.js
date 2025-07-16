@@ -15,7 +15,6 @@ export default {
       divers: [],
     },
     active: {
-      compteId: null,
       ecritures: [],
     },
   },
@@ -227,10 +226,10 @@ export default {
       });
     },
 
-    fetchEcritureComptes({ state, getters, commit }, compteId) {
+    fetchEcritureComptes({ state, commit }, { exerciceComptableId, compteId }) {
       return ImputationService.getEcritureForCompte(
         compteId ?? state.active.compteId,
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => {
         return commit(types.UPDATE_CURRENT_COMPTE_ECRITURES, data);
       });
@@ -240,19 +239,19 @@ export default {
         commit(types.UPDATE_FRAIS_INDEMNITES_TYPES, data)
       );
     },
-    fetchEcrituresAnnuels({ commit, getters }) {
+    fetchEcrituresAnnuels({ commit }, exerciceComptableId) {
       return ImputationService.getEcrituresAnnuelsForExerciceComptable(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_ANNUEL_TYPES_LISTE, data));
     },
-    fetchEcrituresDivers({ commit, getters }) {
+    fetchEcrituresDivers({ commit }, exerciceComptableId) {
       return ImputationService.getEcrituresDiversForExerciceComptable(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_DIVERS_LISTE, data));
     },
-    fetchAmendesExerciceComptable({ commit, getters }) {
+    fetchAmendesExerciceComptable({ commit }, exerciceComptableId) {
       return ImputationService.getAmendesForExerciceComptable(
-        getters.activeExerciceComptableId
+        exerciceComptableId
       ).then((data) => commit(types.UPDATE_ECRITURES_AMENDES, data));
     },
     imputerCours({ commit }, payload) {
@@ -269,7 +268,6 @@ export default {
     annulerImputationCours({ commit }, coursSapeurId) {
       return ImputationService.annulerImputationCours(coursSapeurId).then(
         (data) => {
-          // TODO:
           commit(types.UPDATE_COURS_SAPEUR_ECRITURE_STATUT, {
             id: coursSapeurId,
             ecritures: [],

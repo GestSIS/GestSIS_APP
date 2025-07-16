@@ -129,7 +129,7 @@ onMounted(() => {
   );
 });
 
-const { showModal, closeModal } = useModalStore();
+const { confirm, showModal, closeModal } = useModalStore();
 const awn = inject('awn');
 
 const ficheSapeur = () => {
@@ -177,35 +177,27 @@ const addSapeur = () => {
     },
   });
 };
-const deleteSapeur = () => {
-  showModal({
-    component: 'ModalConfirmation',
-    data: {
-      title: 'Voulez-vous vraiment supprimer ce sapeur ?',
-      question:
-        "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
-    },
-    callback: (confirmed) => {
-      if (confirmed) {
-        store
-          .dispatch('deleteSapeur', activeSapeur.value.id)
-          .then(() => {
-            const newSelectedSapeurId = svm.sapeurs[0].id;
-            store.dispatch('selectSapeur', newSelectedSapeurId).then(() => {
-              router.push({
-                name: 'sapeur-details',
-                params: { id: newSelectedSapeurId },
-              });
-            });
-            awn.success('Sapeur supprimé avec succès');
-          })
-          .catch((err) => {
-            awn.alert(err?.message ?? 'Impossible de supprimer ce sapeur');
+const deleteSapeur = () =>
+  confirm(
+    'Voulez-vous vraiment supprimer ce sapeur ?',
+    "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
+  ).then(() =>
+    store
+      .dispatch('deleteSapeur', activeSapeur.value.id)
+      .then(() => {
+        const newSelectedSapeurId = svm.sapeurs[0].id;
+        store.dispatch('selectSapeur', newSelectedSapeurId).then(() => {
+          router.push({
+            name: 'sapeur-details',
+            params: { id: newSelectedSapeurId },
           });
-      }
-    },
-  });
-};
+        });
+        awn.success('Sapeur supprimé avec succès');
+      })
+      .catch((err) => {
+        awn.alert(err?.message ?? 'Impossible de supprimer ce sapeur');
+      }),
+  );
 </script>
 
 <template>

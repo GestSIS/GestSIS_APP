@@ -20,10 +20,9 @@ export default {
     },
   },
   actions: {
-    fetchDecomptes({ getters, commit }) {
-      return DecompteService.getDecomptes(
-        getters.activeExerciceComptableId
-      ).then((data) => commit(types.UPDATE_DECOMPTES, data));
+    fetchDecomptes({ commit }, exerciceComptableId) {
+      return DecompteService.getDecomptes(exerciceComptableId)
+        .then((data) => commit(types.UPDATE_DECOMPTES, data));
     },
     removeDecompte({ commit }, decompteId) {
       return DecompteService.removeDecompte(decompteId).then(() => {
