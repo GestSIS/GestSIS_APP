@@ -1,17 +1,55 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  ...data,
+});
+
+const store = useStore();
+
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch(
+      (this.form.id || 0) === 0 ? 'addMission' : 'updateMission',
+      this.form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }} une mission
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une mission
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="titre">Titre</label>
         <input
           id="titre"
-          v-model="activeMission.titre"
+          v-model="form.titre"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['titre'] }"
@@ -19,69 +57,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalMission',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeMission: {},
-    };
-  },
-  mounted() {
-    this.activeMission = {
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeMission.id || 0) === 0) {
-        this.$store
-          .dispatch('addMission', this.activeMission)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateMission', this.activeMission)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

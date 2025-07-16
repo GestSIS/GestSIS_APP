@@ -1,15 +1,55 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  parent_id: null,
+  ...data,
+});
+
+const store = useStore();
+const groupes = computed(() =>
+  store.state.groupe.liste.map((g) => ({
+    ...g,
+    label: (g.no ? g.no + ' ' : '') + g.designation,
+  })),
+);
+
+const { closeModal } = useModalStore();
+const save = async () => {
+  store
+    .dispatch('createGroupe', this.groupe)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Ajouter un groupe</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="abreviation">No</label>
         <input
           id="no"
-          v-model="groupe.no"
+          v-model="form.no"
           type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['no'] }"
@@ -19,14 +59,16 @@
         <label for="abreviation">Nom</label>
         <input
           id="designation"
-          v-model="groupe.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        v-model="groupe.parent_id"
+        v-model="form.parent_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['parent_id'] }"
         label="Groupe parent"
@@ -39,7 +81,7 @@
         <div class="form-check">
           <input
             id="modal-type"
-            v-model="groupe.type"
+            v-model="form.type"
             type="checkbox"
             class="form-check-input"
             :true-value="1"
@@ -52,56 +94,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Ajouter
-      </button>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalGroupe',
-  data() {
-    return {
-      errors: {},
-      groupe: {
-        parent_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) =>
-        state.groupe.liste.map((g) => ({
-          ...g,
-          label: (g.no ? g.no + ' ' : '') + g.designation,
-        })),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      this.$store
-        .dispatch('createGroupe', this.groupe)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

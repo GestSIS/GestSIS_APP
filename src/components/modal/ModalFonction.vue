@@ -1,17 +1,53 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  cumulable: false,
+  actif: true,
+  ...data,
+});
+
+const store = useStore();
+
+const { closeModal } = useModalStore();
+const save = async () => {
+  store
+    .dispatch(form?.id ? 'updateFonction' : 'addFonction', form)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }} une fonction
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une fonction
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeFonction.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -21,7 +57,8 @@
         <label for="nom">Nom</label>
         <input
           id="nom"
-          v-model="activeFonction.nom"
+          v-model="form.nom"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
@@ -31,7 +68,8 @@
         <label for="abreviation">Abréviation</label>
         <input
           id="abreviation"
-          v-model="activeFonction.abreviation"
+          v-model="form.abreviation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
@@ -41,7 +79,7 @@
         <div class="form-check">
           <input
             id="fonction-cumulable-modal"
-            v-model="activeFonction.cumulable"
+            v-model="form.cumulable"
             type="checkbox"
             class="form-check-input"
           />
@@ -54,7 +92,7 @@
         <div class="form-check">
           <input
             id="fonction-actif-modal"
-            v-model="activeFonction.actif"
+            v-model="form.actif"
             type="checkbox"
             class="form-check-input"
           />
@@ -65,60 +103,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeFonction.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalFonction',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeFonction: {
-        cumulable: false,
-        actif: true,
-      },
-    };
-  },
-  mounted() {
-    this.activeFonction = {
-      ...this.activeFonction,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      const action = this.activeFonction?.id ? 'updateFonction' : 'addFonction';
-      this.$store
-        .dispatch(action, this.activeFonction)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

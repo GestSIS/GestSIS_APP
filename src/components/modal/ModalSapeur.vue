@@ -7,11 +7,6 @@
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
-      <!-- CIVILITE -->
-      <!-- <base-select class="mb-3" label="Type" valueKey="id" displayKey="designation" :options="[
-        { designation: 'Sapeur', id: 0 },
-        { designation: 'Civil', id: 1 }
-      ]" v-model="sapeur.type" /> -->
       <div class="mb-3">
         <div class="form-check form-check-inline">
           <input
@@ -43,7 +38,6 @@
         label="Civilité"
         :options="civilites"
       />
-      <!-- NOM -->
       <div class="mb-3 row">
         <div class="col-6">
           <label for="m-sap-nom">Nom</label>
@@ -68,7 +62,6 @@
           />
         </div>
       </div>
-      <!-- RUE -->
       <div class="mb-3 row">
         <base-select
           v-model="sapeur.localite_id"
@@ -181,7 +174,6 @@
           />
         </div>
       </div>
-      <!-- DATE INCORPORATION -->
       <div v-if="sapeur.type === 0" class="mb-3">
         <label for="m-sap-email">Date incorporation</label>
         <div class="input-group input-group-sm mb-3">
@@ -198,7 +190,6 @@
           />
         </div>
       </div>
-      <!-- REMARQUE -->
       <div class="mb-3">
         <label for="m-sap-remarques">Remarques</label>
         <textarea

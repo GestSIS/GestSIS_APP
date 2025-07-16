@@ -1,17 +1,52 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  groupe: 1,
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch((form.id || 0) === 0 ? 'addGrade' : 'updateGrade', form)
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }} un grade
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un grade
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeGrade.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -21,7 +56,8 @@
         <label for="abreviation">Abréviation</label>
         <input
           id="abreviation"
-          v-model="activeGrade.abreviation"
+          v-model="form.abreviation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['abreviation'] }"
@@ -31,14 +67,16 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeGrade.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        v-model="activeGrade.groupe"
+        v-model="form.groupe"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['groupe'] }"
         label="Groupe"
@@ -50,72 +88,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalGrade',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeGrade: {
-        groupe: 1,
-      },
-    };
-  },
-  mounted() {
-    this.activeGrade = {
-      ...this.activeGrade,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeGrade.id || 0) === 0) {
-        this.$store
-          .dispatch('addGrade', this.activeGrade)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateGrade', this.activeGrade)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

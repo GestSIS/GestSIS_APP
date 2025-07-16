@@ -1,17 +1,65 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const presetDebutFin = () => {
+  const annee = parseInt(form.annee);
+  if (!form.designation) {
+    form.designation = 'Exercice comptable ' + annee;
+  }
+  if (!form.debut) {
+    form.debut = annee + '-01-01';
+    form.fin = annee + '-12-31';
+  }
+};
+
+const save = async () => {
+  store
+    .dispatch(
+      (form.id || 0) === 0 ? 'addExerciceComptable' : 'updateExerciceComptable',
+      form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="annee">Année</label>
         <input
           id="annee"
-          v-model="activeExercice.annee"
+          v-model="form.annee"
+          required
           type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['annee'] }"
@@ -22,7 +70,8 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeExercice.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -32,7 +81,8 @@
         <label for="debut">Début</label>
         <input
           id="debut"
-          v-model="activeExercice.debut"
+          v-model="form.debut"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
@@ -42,7 +92,8 @@
         <label for="fin">Fin</label>
         <input
           id="fin"
-          v-model="activeExercice.fin"
+          v-model="form.fin"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
@@ -52,7 +103,7 @@
         <div class="form-check">
           <input
             id="exercice-comptable-boucle-modal"
-            v-model="activeExercice.boucle"
+            v-model="form.boucle"
             type="checkbox"
             class="form-check-input"
             :true-value="1"
@@ -65,79 +116,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeExercice.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalExercice',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeExercice: {},
-    };
-  },
-  mounted() {
-    this.activeExercice = {
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    presetDebutFin() {
-      const annee = parseInt(this.activeExercice.annee);
-      if (!this.activeExercice.designation) {
-        this.activeExercice.designation = 'Exercice comptable ' + annee;
-      }
-      if (!this.activeExercice.debut) {
-        this.activeExercice.debut = annee + '-01-01';
-        this.activeExercice.fin = annee + '-12-31';
-      }
-    },
-    async save() {
-      if ((this.activeExercice.id || 0) === 0) {
-        this.$store
-          .dispatch('addExerciceComptable', this.activeExercice)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateExerciceComptable', this.activeExercice)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

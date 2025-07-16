@@ -1,18 +1,57 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  amendable: true,
+  statut: 1,
+  ...data,
+});
+
+const store = useStore();
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  form.statut = form.statut ? 1 : 0;
+  store
+    .dispatch(
+      (form.id || 0) === 0 ? 'addExerciceCategorie' : 'updateExerciceCategorie',
+      form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+        }),
+    );
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }} une catégorie
-        d'exercice
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeCategorie.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -22,7 +61,8 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeCategorie.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -32,7 +72,8 @@
         <label for="duree_base">Durée standard</label>
         <input
           id="duree_base"
-          v-model="activeCategorie.duree_base"
+          v-model="form.duree_base"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['duree_base'] }"
@@ -42,7 +83,7 @@
         <div class="form-check">
           <input
             id="amendable-modal"
-            v-model="activeCategorie.amendable"
+            v-model="form.amendable"
             type="checkbox"
             class="form-check-input"
           />
@@ -55,7 +96,7 @@
         <div class="form-check">
           <input
             id="status-modal"
-            v-model="activeCategorie.statut"
+            v-model="form.statut"
             type="checkbox"
             class="form-check-input"
             :true-value="1"
@@ -65,80 +106,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeCategorie.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalExerciceCategorie',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeCategorie: {
-        amendable: true,
-        statut: 1,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      listeCategorie: (state) => state.exerciceCategorie.liste,
-    }),
-  },
-  mounted() {
-    this.activeCategorie = {
-      ...this.activeCategorie,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      this.activeCategorie.statut = this.activeCategorie.statut ? 1 : 0;
-      if ((this.activeCategorie.id || 0) === 0) {
-        this.$store
-          .dispatch('addExerciceCategorie', this.activeCategorie)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateExerciceCategorie', this.activeCategorie)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>
