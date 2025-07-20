@@ -8,6 +8,14 @@ import { useRouter } from 'vue-router';
 const store = useStore();
 const router = useRouter();
 
+await Promise.all([
+  store.dispatch('fetchListeSapeur'),
+  store.dispatch('fetchLocalites'),
+  store.dispatch('fetchStatFederals'),
+  store.dispatch('fetchTypeInterventions'),
+  store.dispatch('fetchInterventionTraitements'),
+]);
+
 const { id } = defineProps({
   id: {
     type: String,

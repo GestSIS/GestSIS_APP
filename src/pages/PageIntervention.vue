@@ -1,21 +1,10 @@
 <script setup>
 import { useStore } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { ref, watch } from 'vue';
+import { watchEffect } from 'vue';
 import { computed } from 'vue';
 
 const store = useStore();
-
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadLocalities = store.dispatch('fetchLocalites');
-const loadStatFederal = store.dispatch('fetchStatFederals');
-const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-const loadInterventionTraitement = store.dispatch(
-  'fetchInterventionTraitements',
-);
-
-await store.dispatch('fetchExercicesComptables');
-const loading = ref(true);
 
 const { id } = defineProps({
   id: {
@@ -25,20 +14,11 @@ const { id } = defineProps({
 });
 
 const newMode = computed(() => id === 'new');
-if (newMode.value) {
-  store.dispatch('resetActiveIntervention').then(() => (loading.value = false));
-} else {
-  store.dispatch('selectIntervention', id);
-  store.dispatch('fetchIntervention', id).then(() => (loading.value = false));
-}
-
-await Promise.all([
-  loadSapeurs,
-  loadLocalities,
-  loadStatFederal,
-  loadTypeInterventions,
-  loadInterventionTraitement,
-]);
+watchEffect(() => {
+  if (id !== 'new') {
+    store.dispatch('selectIntervention', id);
+  }
+});
 
 const activeInterventionData = computed(
   () => store.state.intervention.active.data,
@@ -52,19 +32,6 @@ const breadcrumbFinal = computed(() =>
       ) +
       ' - ' +
       activeInterventionData.value.objet,
-);
-
-// TODO: Refactor
-watch(
-  () => id,
-  () => {
-    if (!newMode.value) {
-      store.dispatch('selectIntervention', parseInt(id));
-      store
-        .dispatch('fetchIntervention', parseInt(id))
-        .then(() => (loading.value = false));
-    }
-  },
 );
 </script>
 
@@ -106,17 +73,8 @@ watch(
           ]"
         />
         <div id="nav-tabContent" class="tab-content">
-          <div
-            v-if="!loading"
-            class="tab-pane fade show active"
-            role="tabpanel"
-          >
+          <div class="tab-pane fade show active" role="tabpanel">
             <router-view />
-          </div>
-          <div v-else class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
           </div>
         </div>
       </div>
