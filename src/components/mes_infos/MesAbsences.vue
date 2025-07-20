@@ -1,28 +1,27 @@
 <script setup>
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject, ref, watch } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
 await store.dispatch('fetchExercicesComptables');
 
-await Promise.all([
-  infosStore.fetchMesAbsences(store.state.exerciceComptable.activeId),
-  store.dispatch('fetchAbsenceParams'),
-]);
+store.dispatch('fetchAbsenceParams');
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await infosStore.fetchMesAbsences(store.state.exerciceComptable.activeId);
+  loading.value = false;
+});
 
 const activeItemId = ref(null);
 
 const absenceParams = computed(() => store.state.absenceParam.params);
-const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
 const absences = computed(() =>
   infosStore.absences.sort((e1, e2) => e1.debut?.localeCompare(e2.debut)),
-);
-
-watch(anneeComptableId, () =>
-  infosStore.fetchMesAbsences(anneeComptableId.value),
 );
 
 const { showModal, confirm } = useModalStore();
@@ -71,8 +70,8 @@ const fields = [
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
         class="table-striped"
+        :loading="loading"
         :fields="fields"
         :data="absences"
         :selectable="true"

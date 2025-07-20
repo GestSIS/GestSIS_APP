@@ -3,7 +3,7 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import MesInfosService from '../../services/MesInfosService';
 import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
-import { computed, inject, watch } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
@@ -13,7 +13,13 @@ const exerciceComptableId = computed(
 );
 
 await store.dispatch('fetchExercicesComptables');
-await infosStore.fetchMesDecomptes(exerciceComptableId.value);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await infosStore.fetchMesDecomptes(store.state.exerciceComptable.activeId);
+  loading.value = false;
+});
 
 const paiements = computed(() =>
   infosStore.paiements
@@ -26,10 +32,6 @@ const exerciceComptable = computed(() =>
   store.state.exerciceComptable.liste.find(
     (e) => e.id == store.state.exerciceComptable.activeId,
   ),
-);
-
-watch(exerciceComptableId, () =>
-  infosStore.fetchMesDecomptes(exerciceComptableId.value),
 );
 
 const { showModal, closeModal } = useModalStore();
@@ -133,6 +135,7 @@ const fields = [
     <div class="card-body table-responsive p-0">
       <base-table
         class="table-striped"
+        :loading="loading"
         :fields="fields"
         :data="paiements"
         :selectable="true"

@@ -1,22 +1,26 @@
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { useStore } from 'vuex';
+import { ref } from 'vue';
 
 const store = useStore();
 const infosStore = useMesInfosStore();
 
-await store.dispatch('fetchExercicesComptables');
 await Promise.all([
-  infosStore.fetchMesInterventions(store.state.exerciceComptable.activeId),
+  store.dispatch('fetchExercicesComptables'),
   store.dispatch('fetchLocalites'),
   store.dispatch('fetchTypeInterventions'),
 ]);
 
-const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
-watch(anneeComptableId, () =>
-  infosStore.fetchMesInterventions(anneeComptableId.value),
-);
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await infosStore.fetchMesInterventions(
+    store.state.exerciceComptable.activeId,
+  );
+  loading.value = false;
+});
 
 const interventions = computed(() =>
   infosStore.interventions
@@ -45,8 +49,6 @@ const computedInterventions = computed(() => {
   });
   return Object.values(inter);
 });
-
-// this.$refs.table.showAllDetailRow();
 
 const fields = [
   { title: 'Date', key: 'inter_debut', type: 'datetime' },
@@ -82,8 +84,8 @@ const detailRowFields = [
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
         class="table-striped"
+        :loading="loading"
         :fields="fields"
         :data="computedInterventions"
         :selectable="true"

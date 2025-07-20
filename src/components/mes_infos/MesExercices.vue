@@ -1,6 +1,6 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject, watch } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 import { exercicesToIcs } from '../../tools/exportExercices';
 import ExerciceService from '../../services/ExerciceService';
 import { useStore } from 'vuex';
@@ -10,19 +10,20 @@ const store = useStore();
 const infosStore = useMesInfosStore();
 await store.dispatch('fetchExercicesComptables');
 
-const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
-watch(anneeComptableId, () =>
-  infosStore.fetchMesExercices(anneeComptableId.value),
-);
-
 Promise.all([
-  infosStore.fetchMesExercices(anneeComptableId.value),
   store.dispatch('fetchUnites'),
   store.dispatch('fetchLocalites'),
   store.dispatch('fetchExerciceCategories'),
   store.dispatch('fetchExcuseTypes'),
   store.dispatch('fetchExcuseParams'),
 ]);
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await infosStore.fetchMesExercices(store.state.exerciceComptable.activeId);
+  loading.value = false;
+});
 
 const excuseParams = computed(() => store.state.excuseParam.params);
 const annee = computed(
@@ -132,8 +133,8 @@ const fields = [
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
-        ref="table"
         class="table-striped"
+        :loading="loading"
         :fields="fields"
         :data="exercices"
         :selectable="true"

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import permissions from '../../store/permissions';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -11,15 +11,16 @@ const infosStore = useMesInfosStore();
 
 await store.dispatch('fetchExercicesComptables');
 await Promise.all([
-  infosStore.fetchMesTravaux(store.state.exerciceComptable.activeId),
   store.dispatch('fetchTravailTypes'),
   store.dispatch('fetchUnites'),
 ]);
 
-const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
-watch(anneeComptableId, () =>
-  infosStore.fetchMesInterventions(anneeComptableId.value),
-);
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await infosStore.fetchMesTravaux(store.state.exerciceComptable.activeId);
+  loading.value = false;
+});
 
 const travaux = computed(() =>
   infosStore.travaux.map((t) => ({
@@ -47,7 +48,8 @@ const { showModal } = useModalStore();
 const addTravail = () =>
   showModal({
     component: 'ModalTravail',
-    callback: () => infosStore.fetchMesTravaux(anneeComptableId.value),
+    callback: () =>
+      infosStore.fetchMesTravaux(store.state.exerciceComptable.activeId),
   });
 
 const fields = [
@@ -88,6 +90,7 @@ const fields = [
     <div class="card-body table-responsive p-0">
       <base-table
         class="table-striped"
+        :loading="loading"
         :fields="fields"
         :data="travaux"
         :selectable="true"
