@@ -54,14 +54,11 @@ const breadcrumbFinal = computed(() =>
       activeInterventionData.value.objet,
 );
 
+// TODO: Refactor
 watch(
   () => id,
   () => {
-    if (newMode.value) {
-      store
-        .dispatch('resetActiveIntervention')
-        .then(() => (loading.value = false));
-    } else {
+    if (!newMode.value) {
       store.dispatch('selectIntervention', parseInt(id));
       store
         .dispatch('fetchIntervention', parseInt(id))

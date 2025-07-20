@@ -15,15 +15,15 @@ watchEffect(async () => {
   await Promise.all([
     store.dispatch(
       'fetchStatistiqueTypeIntervention',
-      store.state.intervention.active.id,
+      store.state.exerciceComptable.activeId,
     ),
     store.dispatch(
       'fetchStatistiqueStatFederal',
-      store.state.intervention.active.id,
+      store.state.exerciceComptable.activeId,
     ),
     store.dispatch(
       'fetchStatistiqueTraitementIntervention',
-      store.state.intervention.active.id,
+      store.state.exerciceComptable.activeId,
     ),
   ]);
   loading.value = false;

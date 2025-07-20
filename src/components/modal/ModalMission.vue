@@ -21,10 +21,7 @@ const { closeModal } = useModalStore();
 
 const save = async () => {
   store
-    .dispatch(
-      (this.form.id || 0) === 0 ? 'addMission' : 'updateMission',
-      this.form,
-    )
+    .dispatch((form.id || 0) === 0 ? 'addMission' : 'updateMission', form)
     .then(closeModal)
     .catch(
       (err) =>

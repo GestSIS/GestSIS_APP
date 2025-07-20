@@ -1,155 +1,115 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import useHasPermission from '../../hooks/usePermission';
+import permissions from '/src/store/permissions.js';
+
+const store = useStore();
+store.dispatch('fetchGroupes');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const selected = ref({});
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchInterventionGroupes', id);
+  selected.value = Object.fromEntries(
+    store.state.intervention.active.groupes.map((g) => [
+      g.no + '_' + g.designation,
+      true,
+    ]),
+  );
+  loading.value = false;
+});
+
+const groupes = computed(() => {
+  const selectedGroupes = store.state.intervention.active.groupes;
+  const selectedNumeros = new Set(selectedGroupes.map((g) => g.no));
+
+  const availableGroupes = store.state.groupe.liste
+    .filter((g) => g.type === 1)
+    .filter((g) => !selectedNumeros.has(g.no));
+
+  return [...selectedGroupes, ...availableGroupes]
+    .map((g) => ({
+      ...g,
+      pseudo_id: g.no + '_' + g.designation,
+      label: g.no + ' ' + g.designation,
+    }))
+    .sort((g1, g2) => g1.no - g2.no);
+});
+
+// TODO: Check si intervention pas déjà imputé
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const awn = inject('awn');
+
+const editGroupe = async (groupeId) => {
+  // FIXME: Edit and add groupe again
+  const event = selected.value[groupeId];
+  const groupe = groupes.value.find((g) => g.pseudo_id === groupeId);
+
+  (event
+    ? store.dispatch('addInterventionGroupes', [groupe])
+    : store.dispatch('removeInterventionGroupes', [groupe.id])
+  )
+    .then(() => awn.success('Modifications enregistrées'))
+    .catch((err) =>
+      awn.alert(err.message ?? "Erreur lors de l'enregistrement"),
+    );
+};
+
+const fields = [
+  {
+    title: 'Groupe',
+    key: 'label',
+  },
+  {
+    title: 'Alarmé',
+    slot: 'check',
+    columnClass: 'ps-4',
+  },
+];
+</script>
+
 <template>
   <div class="col-xs-12 col-md-6">
-    <!-- general form elements -->
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Groupes</h3>
-        <button
-          v-if="hasEditPermission"
-          type="button"
-          class="btn btn-primary"
-          @click="save"
-        >
-          Enregistrer
-        </button>
       </div>
       <div class="card-body table-responsive p-0">
-        <table id="int-groupes" class="table table-sm">
-          <thead>
-            <tr>
-              <th>Groupe</th>
-              <th class="text-center">Alarmé</th>
-            </tr>
-          </thead>
-          <tbody id="groupes">
-            <tr v-if="groupes.length <= 0">
-              <td colspan="2">
-                Aucun groupe de disponible pour votre SIS, ajoutez-en dans
-                <em>organisation</em>.
-              </td>
-            </tr>
-            <tr v-for="g in groupes" :key="g.pseudo_id">
-              <td>
-                <label :for="'g-' + g.pseudo_id">
-                  {{ (g.no ? g.no + ' ' : '') + g.designation }}
-                </label>
-              </td>
-              <td>
-                <div class="text-center">
-                  <input
-                    :id="'g-' + g.pseudo_id"
-                    v-model="selected[g.pseudo_id]"
-                    type="checkbox"
-                    :disabled="!hasEditPermission"
-                    class="form-check-input"
-                  />
-                  <label
-                    class="form-check-label"
-                    :for="'g-' + g.pseudo_id"
-                  ></label>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table
+          :loading="loading"
+          :data="groupes"
+          :fields="fields"
+          no-data="Aucun groupe de disponible pour votre SIS, ajoutez-en dans oragnisation."
+        >
+          <template #check="{ rowData }">
+            <input
+              :id="'v-' + rowData.pseudo_id"
+              v-model="selected[rowData.pseudo_id]"
+              :disabled="!hasEditPermission"
+              type="checkbox"
+              class="form-check-input"
+              @change="editGroupe(rowData.pseudo_id)"
+            />
+            <label
+              class="form-check-label"
+              :for="'v-' + rowData.pseudo_id"
+            ></label>
+          </template>
+        </base-table>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'InterventionTabGroupes',
-  data() {
-    return {
-      selected: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) =>
-        state.groupe.liste
-          .filter((g) => g.type === 1)
-          .map((g) => ({ ...g, pseudo_id: g.no + '_' + g.designation })),
-      interventionGroupes: (state) =>
-        state.intervention.active.groupes.map((g) => ({
-          ...g,
-          pseudo_id: g.no + '_' + g.designation,
-        })),
-      activeInterventionId: (state) => state.intervention.active.id,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-    filteredGroupes() {
-      const ids = new Set(this.interventionGroupes.map((g) => g.pseudo_id));
-      return [
-        ...this.interventionGroupes,
-        ...this.groupes.filter((g) => !ids.has(g.pseudo_id)),
-      ];
-    },
-    additionalGroupes() {
-      return 0;
-    },
-  },
-  watch: {
-    interventionGroupes(value) {
-      this.updateGroupes(value);
-    },
-  },
-  mounted() {
-    if (this.groupes.length === 0) {
-      this.$store.dispatch('fetchGroupes');
-    }
-    this.$store
-      .dispatch('fetchInterventionGroupes', this.activeInterventionId)
-      .then(() => {
-        this.updateGroupes(this.interventionGroupes);
-      });
-  },
-  methods: {
-    async save() {
-      let groupesIds = this.interventionGroupes.map((g) => g.pseudo_id);
-      let ids = Object.keys(this.selected).filter(
-        (item) => this.selected[item],
-      );
-
-      //New One
-      let newOnes = ids.filter((item) => !groupesIds.includes(item));
-
-      //Removed
-      let removed = groupesIds.filter((item) => !ids.includes(item));
-      let removedIds = [
-        ...this.interventionGroupes
-          .filter((g) => removed.includes(g.pseudo_id))
-          .map((g) => g.id),
-      ];
-
-      Promise.all([
-        removedIds.length > 0
-          ? this.$store.dispatch('removeInterventionGroupes', removedIds)
-          : Promise.resolved,
-        newOnes.length > 0
-          ? this.$store.dispatch('addInterventionGroupes', [
-              ...this.groupes.filter((g) => newOnes.includes(g.pseudo_id)),
-            ])
-          : Promise.resolved,
-      ]).then(() => this.$awn.success('Modifications enregistrées'));
-    },
-    updateGroupes(value) {
-      this.selected = {};
-      const svm = this;
-
-      value.forEach(
-        (v) => (svm.selected = { ...svm.selected, [v.pseudo_id]: true }),
-      );
-    },
-  },
-};
-</script>

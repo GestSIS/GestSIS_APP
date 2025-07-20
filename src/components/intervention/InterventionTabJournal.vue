@@ -1,3 +1,249 @@
+<script setup>
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+import { computed, ref, watchEffect } from 'vue';
+
+const store = useStore();
+await store.dispatch('fetchMateriels');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch('fetchIntervention', id),
+    store.dispatch('fetchInterventionMissions', id),
+    store.dispatch('fetchInterventionAppels', id),
+  ]);
+  loading.value = false;
+});
+
+const dataInter = computed(() => store.state.intervention.active.data);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const missions = computed(() =>
+  store.state.intervention.active.missions.map((m) => ({
+    ...m,
+    sapeur:
+      m.sapeur ||
+      store.state.sapeur.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+  })),
+);
+const appels = computed(() => store.state.intervention.active.appels);
+// TODO: Check si intervention pas déjà imputé
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const events = computed(() => {
+  const events = [];
+  const missionAction = hasEditPermission.value ? editMission.value : () => {};
+  const appelAction = hasEditPermission.value ? editAppel.value : () => {};
+  missions.value.forEach((m) => {
+    events.push({
+      id: m.id,
+      date: m.debut,
+      title: 'Début ' + m.titre,
+      description: m.resume,
+      responsable: m.sapeur,
+      type: 'mission',
+      colorClass: m.fin ? 'mission-ended' : 'mission-running',
+      action: missionAction,
+    });
+
+    if (m.fin) {
+      events.push({
+        id: m.id,
+        date: m.fin,
+        title: 'Fin ' + m.titre,
+        description: m.resume,
+        type: 'mission',
+        colorClass: 'mission-ended',
+        action: missionAction,
+      });
+    }
+
+    return events;
+  });
+
+  const eventsAppels = appels.value.map((a) => ({
+    id: a.id,
+    date: a.date,
+    title: a.nom,
+    description: a.commentaire,
+    type: 'appel',
+    colorClass: 'appel',
+    action: appelAction,
+  }));
+
+  const chefIntervention = dataInter.value.sapeur_id
+    ? sapeurs.value.find((s) => s.id == dataInter.value.sapeur_id)
+    : null;
+  const endDate = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+  const startDate =
+    dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+
+  const startEvent = {
+    date: startDate,
+    title: "Debut de l'intervention",
+    description: chefIntervention
+      ? "Chef d'intervention : " + chefIntervention?.nom_prenom
+      : '',
+    type: 'start',
+    colorClass: 'default',
+    action: () => {},
+  };
+
+  const duree = Math.abs(new Date(endDate) - new Date(startDate)) / 6e4;
+  const heures = Math.floor(duree / 60);
+  const minutes = Math.floor(duree % 60);
+  let dureeFormatee = '';
+  if (heures && minutes) {
+    dureeFormatee = heures + 'h' + minutes;
+  } else if (heures) {
+    dureeFormatee = heures + ' heure' + (heures > 1 ? 's' : '');
+  } else {
+    dureeFormatee = minutes + ' minute' + (minutes > 1 ? 's' : '');
+  }
+  const endEvent = {
+    date: endDate,
+    title: "Fin de l'intervention",
+    description: 'Durée : ' + dureeFormatee,
+    type: 'end',
+    colorClass: 'default',
+    action: () => {},
+  };
+
+  return [
+    startEvent,
+    ...[...events, ...eventsAppels].sort(
+      (e1, e2) => new Date(e1.date) - new Date(e2.date),
+    ),
+    endEvent,
+  ];
+});
+
+const { confirm, showModal } = useModalStore();
+
+const supprimerAppel = (id) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cet appel ?',
+    "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
+  ).then(() => store.dispatch('removeInterventionAppel', id));
+
+const newAppel = () => {
+  const newAppel = {
+    id: null,
+    numero: '',
+    date: null,
+    nom: '',
+    commentaire: '',
+  };
+
+  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+
+  showModal({
+    component: 'ModalAppel',
+    data: { appel: newAppel, min, max },
+  });
+};
+const editAppel = (id) => {
+  const cloneAppel = {};
+  Object.assign(
+    cloneAppel,
+    appels.value.find((a) => a.id == id),
+  );
+
+  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+
+  showModal({
+    component: 'ModalAppel',
+    data: { appel: cloneAppel, min, max },
+  });
+};
+
+const supprimerMission = (id) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette mission ?',
+    "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
+  ).then(() => store.dispatch('removeInterventionMission', id));
+
+const newMission = () => {
+  const newMission = {
+    id: null,
+    titre: '',
+    debut: null,
+    fin: null,
+    sapeur_id: null,
+    resume: '',
+  };
+  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+
+  showModal({
+    component: 'ModalInterventionMission',
+    data: { mission: newMission, min, max },
+  });
+};
+const editMission = (id) => {
+  const cloneMission = {};
+  Object.assign(
+    cloneMission,
+    missions.value.find((m) => m.id == id),
+  );
+
+  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+
+  showModal({
+    component: 'ModalInterventionMission',
+    data: {
+      mission: cloneMission,
+      min,
+      max,
+    },
+  });
+};
+const icon = (type) => {
+  const icons = {
+    appel: ['fas', 'phone'],
+    mission: ['fas', 'child'],
+    start: ['fas', 'play'],
+    end: ['fas', 'stop'],
+  };
+  return icons[type];
+};
+const formatTime = (time) => {
+  const date = new Date(time);
+  return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2);
+};
+
+const fieldsMissions = [
+  { title: 'Date', type: 'time', key: 'fin' },
+  { title: 'Titre', key: 'titre' },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Quittance', type: 'time', key: 'fin' },
+  { title: 'Résumé', key: 'resume' },
+  { title: 'Actions', slot: 'actions' },
+];
+const fieldsAppels = [
+  { title: 'Date', type: 'time', key: 'date' },
+  { title: 'Numéro', key: 'numero' },
+  { title: 'Nom', key: 'nom' },
+  { title: 'Commentaire', key: 'commentaire' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -112,269 +358,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'InterventionTabJournal',
-  data() {
-    return {
-      fieldsMissions: [
-        { title: 'Date', type: 'time', key: 'fin' },
-        { title: 'Titre', key: 'titre' },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Quittance', type: 'time', key: 'fin' },
-        { title: 'Résumé', key: 'resume' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-      fieldsAppels: [
-        { title: 'Date', type: 'time', key: 'date' },
-        { title: 'Numéro', key: 'numero' },
-        { title: 'Nom', key: 'nom' },
-        { title: 'Commentaire', key: 'commentaire' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      id: (state) => state.intervention.active.id,
-      data: (state) => state.intervention.active.data,
-      sapeurs: (state) => state.sapeur.liste,
-      missions: (state) =>
-        state.intervention.active.missions.map((m) => ({
-          ...m,
-          sapeur:
-            m.sapeur ||
-            state.sapeur.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
-        })),
-      appels: (state) => state.intervention.active.appels,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-    sortedAppels() {
-      return this.appels
-        .slice(0)
-        .sort((a1, a2) => new Date(a1.date) - new Date(a2.date));
-    },
-    events() {
-      const events = [];
-      const missionAction = this.hasEditPermission
-        ? this.editMission
-        : () => {};
-      const appelAction = this.hasEditPermission ? this.editAppel : () => {};
-      this.missions.forEach((m) => {
-        events.push({
-          id: m.id,
-          date: m.debut,
-          title: 'Début ' + m.titre,
-          description: m.resume,
-          responsable: m.sapeur,
-          type: 'mission',
-          colorClass: m.fin ? 'mission-ended' : 'mission-running',
-          action: missionAction,
-        });
-
-        if (m.fin) {
-          events.push({
-            id: m.id,
-            date: m.fin,
-            title: 'Fin ' + m.titre,
-            description: m.resume,
-            type: 'mission',
-            colorClass: 'mission-ended',
-            action: missionAction,
-          });
-        }
-
-        return events;
-      });
-
-      const eventsAppels = this.appels.map((a) => ({
-        id: a.id,
-        date: a.date,
-        title: a.nom,
-        description: a.commentaire,
-        type: 'appel',
-        colorClass: 'appel',
-        action: appelAction,
-      }));
-
-      const chefIntervention = this.data.sapeur_id
-        ? this.sapeurs.find((s) => s.id == this.data.sapeur_id)
-        : null;
-      const endDate = this.data.date_fin + ' ' + this.data.heure_fin;
-      const startDate = this.data.date_debut + ' ' + this.data.heure_debut;
-
-      const startEvent = {
-        date: startDate,
-        title: "Debut de l'intervention",
-        description: chefIntervention
-          ? "Chef d'intervention : " + chefIntervention?.nom_prenom
-          : '',
-        type: 'start',
-        colorClass: 'default',
-        action: () => {},
-      };
-
-      const duree = Math.abs(new Date(endDate) - new Date(startDate)) / 6e4;
-      const heures = Math.floor(duree / 60);
-      const minutes = Math.floor(duree % 60);
-      let dureeFormatee = '';
-      if (heures && minutes) {
-        dureeFormatee = heures + 'h' + minutes;
-      } else if (heures) {
-        dureeFormatee = heures + ' heure' + (heures > 1 ? 's' : '');
-      } else {
-        dureeFormatee = minutes + ' minute' + (minutes > 1 ? 's' : '');
-      }
-      const endEvent = {
-        date: endDate,
-        title: "Fin de l'intervention",
-        description: 'Durée : ' + dureeFormatee,
-        type: 'end',
-        colorClass: 'default',
-        action: () => {},
-      };
-
-      return [
-        startEvent,
-        ...[...events, ...eventsAppels].sort(
-          (e1, e2) => new Date(e1.date) - new Date(e2.date),
-        ),
-        endEvent,
-      ];
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchInterventionMissions', this.id);
-    this.$store.dispatch('fetchInterventionAppels', this.id);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    supprimerAppel(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cet appel ?',
-          question:
-            "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeInterventionAppel', id);
-          }
-        },
-      });
-    },
-    newAppel() {
-      const newAppel = {
-        id: null,
-        numero: '',
-        date: null,
-        nom: '',
-        commentaire: '',
-      };
-
-      const min = this.data.date_debut + ' ' + this.data.heure_debut;
-      const max = this.data.date_fin + ' ' + this.data.heure_fin;
-
-      this.SHOW_MODAL({
-        component: 'ModalAppel',
-        data: { appel: newAppel, min, max },
-      });
-    },
-    editAppel(id) {
-      const cloneAppel = {};
-      Object.assign(
-        cloneAppel,
-        this.appels.find((a) => a.id == id),
-      );
-
-      const min = this.data.date_debut + ' ' + this.data.heure_debut;
-      const max = this.data.date_fin + ' ' + this.data.heure_fin;
-
-      this.SHOW_MODAL({
-        component: 'ModalAppel',
-        data: { appel: cloneAppel, min, max },
-      });
-    },
-
-    supprimerMission(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette mission ?',
-          question:
-            "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeInterventionMission', id);
-          }
-        },
-      });
-    },
-    newMission() {
-      const newMission = {
-        id: null,
-        titre: '',
-        debut: null,
-        fin: null,
-        sapeur_id: null,
-        resume: '',
-      };
-      const min = this.data.date_debut + ' ' + this.data.heure_debut;
-      const max = this.data.date_fin + ' ' + this.data.heure_fin;
-
-      this.SHOW_MODAL({
-        component: 'ModalInterventionMission',
-        data: { mission: newMission, min, max },
-      });
-    },
-    editMission(id) {
-      const cloneMission = {};
-      Object.assign(
-        cloneMission,
-        this.missions.find((m) => m.id == id),
-      );
-
-      const min = this.data.date_debut + ' ' + this.data.heure_debut;
-      const max = this.data.date_fin + ' ' + this.data.heure_fin;
-
-      this.SHOW_MODAL({
-        component: 'ModalInterventionMission',
-        data: {
-          mission: cloneMission,
-          min,
-          max,
-        },
-      });
-    },
-    icon(type) {
-      const icons = {
-        appel: ['fas', 'phone'],
-        mission: ['fas', 'child'],
-        start: ['fas', 'play'],
-        end: ['fas', 'stop'],
-      };
-      return icons[type];
-    },
-    formatTime(time) {
-      const date = new Date(time);
-      return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2);
-    },
-  },
-};
-</script>
 
 <style scoped, lang="scss">
 .timeline {

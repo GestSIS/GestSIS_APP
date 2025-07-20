@@ -392,6 +392,7 @@ const router = createRouter({
         {
           path: '',
           name: 'intervention-details',
+          props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
             import('/src/components/intervention/InterventionTabGeneral.vue'),
@@ -399,6 +400,7 @@ const router = createRouter({
         {
           path: 'resume',
           name: 'intervention-resume',
+          props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
             import('/src/components/intervention/InterventionTabResume.vue'),
@@ -406,6 +408,7 @@ const router = createRouter({
         {
           path: 'presence',
           name: 'intervention-presence',
+          props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
             import('/src/components/intervention/InterventionTabSapeurs.vue'),
@@ -413,6 +416,7 @@ const router = createRouter({
         {
           path: 'journal',
           name: 'intervention-journal',
+          props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
             import('/src/components/intervention/InterventionTabJournal.vue'),
@@ -420,6 +424,7 @@ const router = createRouter({
         {
           path: 'materiel-vehicule',
           name: 'intervention-materiel-vehicule',
+          props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
             import(

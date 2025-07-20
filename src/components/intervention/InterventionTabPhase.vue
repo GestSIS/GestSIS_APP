@@ -1,3 +1,79 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const store = useStore();
+store.dispatch('fetchPhaseTypes');
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  store.dispatch('fetchIntervention', id);
+  store.dispatch('fetchInterventionPhases', id);
+  loading.value = false;
+});
+
+const interData = computed(() => store.state.intervention.active.data);
+const phases = computed(() =>
+  store.state.intervention.active.phases.map((p) => ({
+    ...p,
+    date_heure:
+      p?.debut === null
+        ? `${store.state.intervention.active.data?.date_debut} ${store.state.intervention.active.data?.heure_debut}`
+        : p?.debut.slice(0, 16),
+    designation: store.state.phaseType.liste.find(
+      (phase) => phase.id == p.phase_type_id,
+    )?.designation,
+  })),
+);
+// TODO: Check si intervention pas déjà imputé
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const { confirm, showModal } = useModalStore();
+const newPhase = () =>
+  showModal({
+    component: 'ModalPhase',
+    data: {
+      min: interData.value.date_debut + ' ' + interData.value.heure_debut,
+      max: interData.value.date_fin + ' ' + interData.value.heure_fin,
+    },
+  });
+
+const editPhase = (phase) =>
+  showModal({
+    component: 'ModalPhase',
+    data: {
+      ...phase,
+      min: interData.value.date_debut + ' ' + interData.value.heure_debut,
+      max: interData.value.date_fin + ' ' + interData.value.heure_fin,
+    },
+  });
+
+const removePhase = (id) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette phase ?',
+    "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
+  ).then(() => store.dispatch('removePhase', id));
+
+const fields = [
+  { title: 'Début', key: 'date_heure', type: 'datetime' },
+  { title: 'Type', key: 'designation' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="col-xs-12 col-md-6">
     <div class="card card-primary card-outline mb-3">
@@ -42,96 +118,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'InterventionTabGroupes',
-  data() {
-    return {
-      selected: {},
-      fields: [
-        { title: 'Début', key: 'date_heure', type: 'datetime' },
-        { title: 'Type', key: 'designation' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      data: (state) => state.intervention.active.data,
-      phases: (state) =>
-        state.intervention.active.phases.map((p) => ({
-          ...p,
-          date_heure:
-            p?.debut === null
-              ? `${state.intervention.active.data?.date_debut} ${state.intervention.active.data?.heure_debut}`
-              : p?.debut.slice(0, 16),
-          designation: state.phaseType.liste.find(
-            (phase) => phase.id == p.phase_type_id,
-          )?.designation,
-        })),
-      sapeurs: (state) => state.sapeur.liste,
-      phasesType: (state) => state.phaseType.liste,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-      activeInterventionId: (state) => state.intervention.active.id,
-    }),
-  },
-  mounted() {
-    this.$store.dispatch('fetchPhaseTypes');
-    this.$store.dispatch('fetchIntervention', this.activeInterventionId);
-    this.$store.dispatch('fetchInterventionPhases', this.activeInterventionId);
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newPhase() {
-      this.$store.dispatch('resetActivePhase');
-      this.SHOW_MODAL({
-        component: 'ModalPhase',
-        callback: () => {},
-        data: {
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    editPhase(phase) {
-      const clone = {};
-      Object.assign(clone, phase);
-      this.$store.dispatch('updateActivePhase', clone);
-      this.SHOW_MODAL({
-        component: 'ModalPhase',
-        callback: () => {},
-        data: {
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    removePhase(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette phase ?',
-          question:
-            "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removePhase', id);
-          }
-        },
-      });
-    },
-  },
-};
-</script>

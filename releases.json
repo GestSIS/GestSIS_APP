@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "20.07.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Intervention sauvegarde automatique pour le résumé et groupes"
+      ]
+    },
+    {
       "date": "16.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",

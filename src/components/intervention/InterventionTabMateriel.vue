@@ -1,3 +1,62 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/store/permissions.js';
+
+const store = useStore();
+await store.dispatch('fetchMateriels');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchInterventionMateriels', id);
+  loading.value = false;
+});
+
+const activeMateriels = computed(() =>
+  store.state.intervention.active.materiels.map((m) => ({
+    ...m,
+    designation: store.state.materiel.liste?.find(
+      (mat) => mat.id == m.materiel_id,
+    )?.designation,
+  })),
+);
+
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const { confirm, showModal } = useModalStore();
+
+const newMateriel = () => showModal('ModalInterventionMateriel');
+
+const editMateriel = (materielId) =>
+  showModal('ModalInterventionMateriel', {
+    data: activeMateriels.value.find((m) => m.id == materielId),
+  });
+
+const supprimerMateriel = (materielId) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette absence ?',
+    "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+  ).then(() => store.dispatch('removeInterventionMateriel', materielId));
+
+const fields = [
+  { title: 'Matériel', key: 'designation' },
+  { title: 'Quantité', key: 'quantite' },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <div class="col-xs-12 col-lg-6">
     <div class="card card-primary card-outline mb-3">
@@ -14,6 +73,7 @@
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :fields="fields"
           :data="activeMateriels"
           :selectable="true"
@@ -42,90 +102,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'InterventionTabMateriel',
-  data() {
-    return {
-      fields: [
-        { title: 'Matériel', key: 'designation' },
-        { title: 'Quantité', key: 'quantite' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      materiels: (state) => state.materiel.liste,
-      activeMateriels: (state) =>
-        state.intervention.active.materiels.map((m) => ({
-          ...m,
-          designation: state.materiel.liste?.find(
-            (mat) => mat.id == m.materiel_id,
-          )?.designation,
-        })),
-      activeInterventionId: (state) => state.intervention.active.id,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-  },
-  mounted() {
-    if (this.materiels.length === 0) {
-      this.$store.dispatch('fetchMateriels').then(() => {
-        this.$store.dispatch(
-          'fetchInterventionMateriels',
-          this.activeInterventionId,
-        );
-      });
-    } else if (this.activeMateriels.length === 0) {
-      this.$store.dispatch(
-        'fetchInterventionMateriels',
-        this.activeInterventionId,
-      );
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    newMateriel() {
-      this.$store.dispatch('resetActiveMateriel');
-      this.SHOW_MODAL('ModalInterventionMateriel');
-    },
-    editMateriel(grade_id) {
-      this.$store.dispatch(
-        'updateActiveMateriel',
-        Object.assign(
-          {},
-          this.activeMateriels.find((m) => m.id == grade_id),
-        ),
-      );
-      this.SHOW_MODAL('ModalInterventionMateriel');
-    },
-    supprimerMateriel(grade_id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette absence ?',
-          question:
-            "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeAbsence', id);
-          }
-        },
-      });
-      this.$store.dispatch('removeInterventionMateriel', grade_id);
-    },
-  },
-};
-</script>

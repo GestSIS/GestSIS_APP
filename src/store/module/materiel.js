@@ -22,9 +22,6 @@ export default {
     [types.UPDATE_MATERIEL_LISTE](state, payload) {
       state.liste = payload;
     },
-    [types.UPDATE_CURRENT_MATERIEL](state, payload) {
-      state.active = payload;
-    },
     [types.ADD_MATERIEL](state, materiel) {
       state.liste = [...state.liste, materiel];
     },
@@ -61,15 +58,5 @@ export default {
         return data;
       });
     },
-    updateActiveMateriel({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_MATERIEL, payload);
-    },
-    resetActiveMateriel({ commit }) {
-      return commit(types.UPDATE_CURRENT_MATERIEL, {
-        id: null,
-        materiel_id: null,
-        quantite: 0,
-      });
-    },
-  },
+  }
 };

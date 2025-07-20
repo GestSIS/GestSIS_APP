@@ -1,13 +1,119 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+import { useRouter } from 'vue-router';
+
+const store = useStore();
+const router = useRouter();
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const errors = ref({});
+const newMode = ref(false);
+const form = ref({});
+
+watchEffect(async () => {
+  newMode.value = id === 'new';
+  if (!newMode.value) {
+    await store.dispatch('fetchIntervention', id);
+    form.value = { ...store.state.intervention.active.data };
+    form.value.heure_debut = form.value.heure_debut.slice(0, 5);
+    form.value.heure_fin = form.value.heure_fin.slice(0, 5);
+  } else {
+    form.value = {
+      stat_nb: 1,
+      exercice_comptable_id: store.state.exerciceComptable.activeId,
+      sauve_animaux: 0,
+      sauve_personne: 0,
+    };
+  }
+});
+
+const localites = computed(() => store.state.localite.liste);
+const typesIntervention = computed(() => store.state.typeIntervention.liste);
+const statsFederales = computed(() => store.state.statFederal.liste);
+const interventionTraitements = computed(
+  () => store.state.interventionTraitement.liste,
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+
+const activeExerciceComptable = computed(() =>
+  store.state.exerciceComptable.liste.find(
+    (e) => e.id === store.state.exerciceComptable.activeId,
+  ),
+);
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+const isValidWgs84 = computed(() => {
+  const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
+  return regex.test(form.value?.wgs84);
+});
+const dateDebutMin = computed(() => {
+  return activeExerciceComptable.value?.debut;
+});
+const dateDebutMax = computed(() => {
+  return activeExerciceComptable.value?.fin;
+});
+const dateFinMin = computed(() => {
+  return form.value.date_debut || activeExerciceComptable.value?.debut;
+});
+const dateFinMax = computed(() => {
+  return activeExerciceComptable.value?.fin;
+});
+
+const awn = inject('awn');
+const save = () => {
+  if (newMode.value) {
+    store
+      .dispatch('createIntervention', form.value)
+      .then((data) => {
+        router.push('/interventions/' + data.id);
+        errors.value = {};
+      })
+      .catch((err) => {
+        errors.value = err;
+        awn.alert(err?.message || "Erreur lors de l'enregistrement");
+      });
+  } else {
+    store
+      .dispatch('saveActiveIntervention', form.value)
+      .then((res) => {
+        errors.value = {};
+        awn.success(res?.message || 'Modifications enregistrées');
+      })
+      .catch((err) => {
+        errors.value = err;
+        awn.alert(err?.message || "Erreur lors de l'enregistrement");
+      });
+  }
+};
+
+const degre = [
+  { id: 1, type: 'Fausse-alarme' },
+  { id: 2, type: 'Petite' },
+  { id: 3, type: 'Moyenne' },
+  { id: 4, type: 'Grande' },
+];
+</script>
+
 <template>
-  <div class="row">
+  <form @submit.prevent="save" class="row">
     <div class="col-12">
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
           <button
+            type="submit"
             v-if="hasEditPermission"
             class="btn btn-primary"
-            @click.prevent="save"
           >
             Enregistrer
           </button>
@@ -30,7 +136,7 @@
                   </div>
                   <input
                     id="m-int-date-debut"
-                    v-model="activeInterventionData.date_debut"
+                    v-model="form.date_debut"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_debut'] }"
                     type="date"
@@ -51,7 +157,7 @@
                   </div>
                   <input
                     id="m-int-heure_debut"
-                    v-model="activeInterventionData.heure_debut"
+                    v-model="form.heure_debut"
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
@@ -74,7 +180,7 @@
                   </div>
                   <input
                     id="m-int-date-fin"
-                    v-model="activeInterventionData.date_fin"
+                    v-model="form.date_fin"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_fin'] }"
                     :min="dateFinMin"
@@ -95,7 +201,7 @@
                   </div>
                   <input
                     id="m-int-heure_fin"
-                    v-model="activeInterventionData.heure_fin"
+                    v-model="form.heure_fin"
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
@@ -113,8 +219,9 @@
             <label for="m-int-objet">Objet</label>
             <input
               id="m-int-objet"
-              v-model="activeInterventionData.objet"
+              v-model="form.objet"
               type="text"
+              required
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['objet'] }"
@@ -127,7 +234,7 @@
             <label for="m-int-lieu">Lieu (Rue, N°)</label>
             <input
               id="m-int-lieu"
-              v-model="activeInterventionData.lieu"
+              v-model="form.lieu"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
@@ -137,7 +244,7 @@
           </div>
           <!-- NPA + LOCALITE -->
           <base-select
-            v-model="activeInterventionData.localite_id"
+            v-model="form.localite_id"
             label="Localité"
             :options="localites"
             :disabled="!hasEditPermission"
@@ -147,7 +254,7 @@
           />
           <!-- Chef d'intervention -->
           <base-select
-            v-model="activeInterventionData.sapeur_id"
+            v-model="form.sapeur_id"
             label="Chef d'intervention"
             :options="sapeurs"
             :disabled="!hasEditPermission"
@@ -162,7 +269,7 @@
             <div class="input-group input-group-sm">
               <input
                 id="m-int-wgs84"
-                v-model="activeInterventionData.wgs84"
+                v-model="form.wgs84"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
@@ -184,10 +291,7 @@
                 class="btn btn-outline-secondary"
                 target="_blank"
                 rel="noopener noreferrer"
-                :href="
-                  'https://www.google.com/maps/place/' +
-                  activeInterventionData.wgs84
-                "
+                :href="'https://www.google.com/maps/place/' + form.wgs84"
                 >GPS</a
               >
             </div>
@@ -199,16 +303,16 @@
               <div class="input-group-text">
                 <input
                   id="m-sap-cotisation_avs"
-                  v-model="activeInterventionData.rapport_police"
+                  v-model="form.rapport_police"
                   type="checkbox"
                   :disabled="!hasEditPermission"
                   class="form-check-input"
                 />
               </div>
               <input
-                v-if="activeInterventionData.rapport_police"
+                v-if="form.rapport_police"
                 id="m-int-agent"
-                v-model="activeInterventionData.agent"
+                v-model="form.agent"
                 type="text"
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
@@ -229,23 +333,25 @@
         <div class="card-body">
           <!-- INTERVENTION TRAITEMENT -->
           <base-select
-            v-model="activeInterventionData.intervention_traitement_id"
+            v-model="form.intervention_traitement_id"
             class="mb-3"
             :class="{
               'is-invalid': errors['intervention_traitement_id'],
             }"
             label="Traitement"
+            :required="true"
             :options="interventionTraitements"
             :disabled="!hasEditPermission"
           />
           <div class="row mb-3">
             <base-select
-              v-model="activeInterventionData.type_intervention_id"
+              v-model="form.type_intervention_id"
               class="col-8"
               :class="{ 'is-invalid': errors['type_intervention_id'] }"
               label="Type d'intervention"
               :options="typesIntervention"
               :disabled="!hasEditPermission"
+              :required="true"
             />
             <div class="col-4">
               <label for="m-sap-suffixe">Nb intervention</label>
@@ -260,28 +366,30 @@
               />
               <input
                 id="m-sap-suffixe"
-                v-model="activeInterventionData.stat_nb"
+                v-model="form.stat_nb"
                 type="number"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': false }"
                 name="suffixe"
+                required
               />
             </div>
           </div>
           <base-select
-            v-model="activeInterventionData.stat_federal_id"
+            v-model="form.stat_federal_id"
             class="mb-3"
             :class="{ 'is-invalid': errors['stat_federal_id'] }"
             label="Statistique fédérale"
             :options="statsFederales"
             :disabled="!hasEditPermission"
+            :required="true"
           />
           <!-- Sauve personnes -->
           <div class="mb-3">
             <label for="m-int-save-pers">Nb de personnes sauvées</label>
             <input
               id="m-int-save-pers"
-              v-model="activeInterventionData.sauve_personne"
+              v-model="form.sauve_personne"
               type="number"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
@@ -295,7 +403,7 @@
             <label for="m-int-save-ani">Nb d'animaux sauvés</label>
             <input
               id="m-int-save-ani"
-              v-model="activeInterventionData.sauve_animaux"
+              v-model="form.sauve_animaux"
               type="number"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
@@ -307,13 +415,14 @@
 
           <!-- DEGRE -->
           <base-select
-            v-model="activeInterventionData.degre"
+            v-model="form.degre"
             class="mb-3"
             :class="{
               'is-invalid': errors['degre'],
             }"
             label="Traitement"
             display-key="type"
+            :required="true"
             :options="degre"
             :disabled="!hasEditPermission"
           />
@@ -334,7 +443,7 @@
                 <label for="m-int-save-ani">Propriétaire</label>
                 <textarea
                   id="m-int-proprietaire"
-                  v-model="activeInterventionData.proprietaire"
+                  v-model="form.proprietaire"
                   type="text"
                   :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
@@ -348,7 +457,7 @@
                 <label for="m-int-save-ani">Responsable</label>
                 <textarea
                   id="m-int-responsable"
-                  v-model="activeInterventionData.responsable"
+                  v-model="form.responsable"
                   type="text"
                   :readonly="!hasEditPermission"
                   class="form-control form-control-sm"
@@ -362,153 +471,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-const degre = [
-  { id: 1, type: 'Fausse-alarme' },
-  { id: 2, type: 'Petite' },
-  { id: 3, type: 'Moyenne' },
-  { id: 4, type: 'Grande' },
-];
-
-export default {
-  name: 'InterventionTabGeneral',
-  data() {
-    return {
-      errors: {},
-      degre,
-    };
-  },
-  computed: {
-    ...mapState({
-      localites: (state) => state.localite.liste,
-      typesIntervention: (state) => state.typeIntervention.liste,
-      statsFederales: (state) => state.statFederal.liste,
-      interventionTraitements: (state) => state.interventionTraitement.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      activeInterventionId: (state) => state.intervention.active.id,
-      activeInterventionData: (state) => state.intervention.active.data,
-      activeExerciceComptable: (state) =>
-        state.exerciceComptable.liste.find(
-          (e) => e.id === state.exerciceComptable.activeId,
-        ),
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-      newMode: (state) => state.intervention.active.id === null,
-    }),
-    isValidWgs84() {
-      const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
-      return regex.test(this.activeInterventionData?.wgs84);
-    },
-    description() {
-      return this.activeInterventionData.description;
-    },
-    proprietaire() {
-      return this.activeInterventionData.proprietaire;
-    },
-    responsable() {
-      return this.activeInterventionData.responsable;
-    },
-    heureDebut() {
-      return this.activeInterventionData.heure_debut;
-    },
-    heureFin() {
-      return this.activeInterventionData.heure_fin;
-    },
-    dateDebutMin() {
-      return this.activeExerciceComptable?.debut;
-    },
-    dateDebutMax() {
-      return this.activeExerciceComptable?.fin;
-    },
-    dateFinMin() {
-      return (
-        this.activeInterventionData.date_debut ||
-        this.activeExerciceComptable?.debut
-      );
-    },
-    dateFinMax() {
-      return this.activeExerciceComptable?.fin;
-    },
-  },
-  watch: {
-    responsable(value) {
-      this.activeInterventionData.responsable = this.replaceBr(value);
-    },
-    description(value) {
-      this.activeInterventionData.description = this.replaceBr(value);
-    },
-    proprietaire(value) {
-      this.activeInterventionData.proprietaire = this.replaceBr(value);
-    },
-    heureDebut(value) {
-      this.activeInterventionData.heure_debut = this.formatHeure(value);
-    },
-    heureFin(value) {
-      this.activeInterventionData.heure_fin = this.formatHeure(value);
-    },
-  },
-  mounted() {
-    this.activeInterventionData.responsable = this.replaceBr(
-      this.activeInterventionData.responsable,
-    );
-    this.activeInterventionData.description = this.replaceBr(
-      this.activeInterventionData.description,
-    );
-    this.activeInterventionData.proprietaire = this.replaceBr(
-      this.activeInterventionData.proprietaire,
-    );
-    this.activeInterventionData.heure_debut = this.formatHeure(
-      this.activeInterventionData.heure_debut,
-    );
-    this.activeInterventionData.heure_fin = this.formatHeure(
-      this.activeInterventionData.heure_fin,
-    );
-  },
-  methods: {
-    async save() {
-      if (this.newMode) {
-        this.$store
-          .dispatch('createIntervention', this.activeInterventionData)
-          .then((data) => {
-            this.$router.push('/interventions/' + data.id);
-            this.errors = {};
-          })
-          .catch((err) => {
-            this.errors = err;
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
-          });
-      } else {
-        this.$store
-          .dispatch('saveActiveIntervention', this.activeInterventionData)
-          .then((res) => {
-            this.errors = {};
-            this.$awn.success(res?.message || 'Modifications enregistrées');
-          })
-          .catch((err) => {
-            this.errors = err;
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
-          });
-      }
-    },
-    replaceBr(value) {
-      if (value) {
-        return value.replace('<br />', '\n');
-      }
-    },
-    formatHeure(value) {
-      if (value && value.length >= 8) {
-        return value.slice(0, 5);
-      }
-      return value;
-    },
-  },
-};
-</script>

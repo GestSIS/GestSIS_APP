@@ -1,3 +1,49 @@
+<script setup>
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+import { inject, reactive, ref, watchEffect } from 'vue';
+
+const store = useStore();
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const loading = ref(true);
+const form = reactive({
+  description: '',
+});
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchIntervention', id);
+  form.description = store.state.intervention.active.data.description;
+  loading.value = false;
+});
+
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const awn = inject('awn');
+const save = () => {
+  store
+    .dispatch('saveActiveIntervention', {
+      id,
+      ...form,
+    })
+    .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message || "Erreur lors de l'enregistrement");
+    });
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-12">
@@ -16,69 +62,14 @@
           <label for="m-int-resume">Description</label>
           <textarea
             id="m-int-resume"
-            v-model="activeInterventionData.description"
+            v-model="form.description"
             :readonly="!hasEditPermission"
             class="form-control form-control-sm"
             rows="30"
+            @blur="save"
           ></textarea>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-const degre = [
-  { id: 1, type: 'Fausse-alarme' },
-  { id: 2, type: 'Petite' },
-  { id: 3, type: 'Moyenne' },
-  { id: 4, type: 'Grande' },
-];
-
-export default {
-  name: 'InterventionTabResume',
-  props: {
-    newMode: {
-      type: Boolean,
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      degre,
-    };
-  },
-  computed: {
-    ...mapState({
-      activeInterventionId: (state) => state.intervention.active.id,
-      activeInterventionData: (state) => state.intervention.active.data,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-  },
-  methods: {
-    async save() {
-      this.$store
-        .dispatch('saveActiveIntervention', {
-          id: this.activeInterventionData.id,
-          description: this.activeInterventionData.description,
-        })
-        .then((res) => {
-          this.errors = {};
-          this.$awn.success(res?.message || 'Modifications enregistrées');
-        })
-        .catch((err) => {
-          this.errors = err;
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>

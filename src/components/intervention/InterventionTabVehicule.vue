@@ -1,12 +1,82 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission';
+
+const store = useStore();
+store.dispatch('fetchVehicules');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const selected = ref({});
+const loading = ref(true);
+
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchInterventionVehicules', id);
+  selected.value = Object.fromEntries(
+    store.state.intervention.active.vehicules.map((v) => [v.vehicule_id, true]),
+  );
+  loading.value = false;
+});
+
+const vehicules = computed(() =>
+  store.state.vehicule.liste.filter(
+    (v) =>
+      v.statut === 1 ||
+      store.state.intervention.active.vehicules.find(
+        (vi) => vi.vehicule_id === v.id,
+      ),
+  ),
+);
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const awn = inject('awn');
+
+const editVehicule = async (vehiculeId) => {
+  const event = selected.value[vehiculeId]
+    ? 'addInterventionVehicules'
+    : 'removeInterventionVehicules';
+
+  store
+    .dispatch(event, [vehiculeId])
+    .then(() => awn.success('Modifications enregistrées'))
+    .catch((err) =>
+      awn.alert(err.message ?? "Erreur lors de l'enregistrement"),
+    );
+};
+
+const fields = [
+  {
+    title: 'Véhicule',
+    key: 'designation',
+  },
+  {
+    title: 'Présent',
+    key: 'id',
+    slot: 'check',
+    columnClass: 'ps-4',
+  },
+];
+</script>
+
 <template>
   <div class="col-xs-12 col-lg-6">
-    <!-- general form elements -->
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Véhicules</h3>
       </div>
       <div class="card-body table-responsive p-0">
         <base-table
+          :loading="loading"
           :data="vehicules"
           :fields="fields"
           no-data="Aucun véhicule de disponible pour votre SIS, ajoutez-en dans configuration."
@@ -27,79 +97,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'InterventionTabVehicules',
-  data() {
-    return {
-      selected: {},
-      fields: [
-        {
-          title: 'Véhicule',
-          key: 'designation',
-        },
-        {
-          title: 'Présent',
-          key: 'id',
-          slot: 'check',
-          columnClass: 'ps-4',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      vehicules: (state) =>
-        state.vehicule.liste.filter(
-          (v) =>
-            v.statut === 1 ||
-            state.intervention.active.vehicules.find(
-              (vi) => vi.vehicule_id === v.id,
-            ),
-        ),
-      interventionVehicules: (state) => state.intervention.active.vehicules,
-      activeInterventionId: (state) => state.intervention.active.id,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-    // TODO: Fix reload data if id change
-  },
-  mounted() {
-    if (this.vehicules.length === 0) {
-      this.$store.dispatch('fetchVehicules');
-    }
-    this.$store
-      .dispatch('fetchInterventionVehicules', this.activeInterventionId)
-      .then(() => {
-        this.updateVehicules(this.interventionVehicules);
-      });
-  },
-  methods: {
-    async editVehicule(vehiculeId) {
-      const event = this.selected[vehiculeId]
-        ? 'addInterventionVehicules'
-        : 'removeInterventionVehicules';
-
-      this.$store
-        .dispatch(event, [vehiculeId])
-        .then(() => this.$awn.success('Modifications enregistrées'));
-    },
-    updateVehicules(value) {
-      this.selected = {};
-      const svm = this;
-
-      value.forEach(
-        (v) => (svm.selected = { ...svm.selected, [v.vehicule_id]: true }),
-      );
-    },
-  },
-};
-</script>

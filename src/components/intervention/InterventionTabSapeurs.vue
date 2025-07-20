@@ -1,8 +1,231 @@
+<script setup>
+import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/store/permissions.js';
+import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
+import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
+
+const store = useStore();
+store.dispatch('fetchPhaseTypes');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch('fetchInterventionQuittances', id),
+    store.dispatch('fetchInterventionPhases', id),
+    store.dispatch('fetchInterventionSapeurs', id),
+  ]);
+  loading.value = false;
+});
+
+const columns = ref([]);
+const toggles = ref({});
+const dismissedWarning = ref(false);
+
+const dataInter = computed(() => store.state.intervention.active.data);
+const quittances = computed(() => store.state.intervention.active.quittances);
+const presences = computed(() => store.state.intervention.active.sapeurs);
+const phases = computed(() => store.state.intervention.active.phases);
+const sapeurs = computed(() => store.state.sapeur.liste);
+
+// TODO: Check si intervention pas déjà imputé
+const hasEditPermission = useHasPermission(
+  permissions.INTERVENTION.MODIFICATION,
+);
+
+const listSapeurs = computed(() => {
+  return Array.from(
+    new Set([
+      ...presences.value.map((s) => s.sapeur_id),
+      ...quittances.value.map((s) => s.sapeur_id),
+    ]),
+  ).map((id) => sapeurs.value.find((s) => s.id == id));
+});
+const sortedSapeurs = computed(() => {
+  return [
+    ...Object.keys(computedPresences.value)
+      .map((s) => sapeurs.value.find((sapeur) => sapeur.id == parseInt(s)))
+      .sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom)),
+  ];
+});
+
+const computeSapeur = (id) => {
+  let res = {};
+  const start = new Date(
+    dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
+  );
+  start.setMinutes(0);
+
+  presences.value
+    .filter((s) => s.sapeur_id === id)
+    .forEach((q) => {
+      // Offset calculé à partir de l'heure de début d'intervention arrondi
+      const offset = ((new Date(q.debut) - start) / 3600000.0) * 4.0;
+      // Durée de la présence en quart d'heures
+      const duree = ((new Date(q.fin) - new Date(q.debut)) / 3600000.0) * 4.0;
+
+      for (let i = 0; i < duree; ++i) {
+        let code = null;
+        if (q.piquet) {
+          // Piquet
+          code = 3;
+        } else {
+          // DetectPhase
+          const currentDate = new Date(q.debut);
+          currentDate.setMinutes(currentDate.getMinutes() + i * 15);
+          code = getPhaseTypeAt(currentDate);
+        }
+        res = {
+          ...res,
+          [offset + i]: code,
+        };
+      }
+    });
+  return res;
+};
+const computedPresences = computed(() => {
+  let temp = [];
+  listSapeurs.value.forEach(
+    (s) =>
+      (temp = {
+        ...temp,
+        [s.id]: computeSapeur(s.id),
+      }),
+  );
+  return temp;
+});
+
+const startFloored = new Date(
+  dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
+);
+const end = new Date(
+  dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
+);
+
+startFloored.setMinutes(0);
+const diff = Math.abs(startFloored - end) / 3600000;
+
+// Génère une colonne par heure
+const min = startFloored.getHours();
+for (let i = 0; i < Math.ceil(diff); ++i) {
+  columns.value.push((min + i) % 24);
+}
+
+const wrapperNode = useTemplateRef('wrapper');
+onMounted(() => {
+  if (wrapperNode.value.addEventListener) {
+    // IE9, Chrome, Safari, Opera
+    wrapperNode.value.addEventListener('mousewheel', scrollHorizontally, false);
+    // Firefox
+    wrapperNode.value.addEventListener(
+      'DOMMouseScroll',
+      scrollHorizontally,
+      false,
+    );
+  } else {
+    // IE 6/7/8
+    wrapperNode.value.attachEvent('onmousewheel', scrollHorizontally);
+  }
+});
+
+const { confirm, showModal } = useModalStore();
+const formatDatePresence = (d) => {
+  return d.slice(-8, -3);
+};
+const scrollHorizontally = (e) => {
+  e = window.event || e;
+  var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+  wrapperNode.value.scrollLeft -= delta * 40; // Multiplied by 40
+  e.preventDefault();
+};
+const addPresences = () => {
+  showModal({
+    component: 'ModalPresenceIntervention',
+    callback: () => {},
+    data: {
+      mode: 'add',
+      id: dataInter.value.id,
+      min: dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
+      max: dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
+    },
+  });
+};
+const editPresence = (presence) => {
+  const clone = {};
+  Object.assign(clone, presence);
+  showModal({
+    component: 'ModalPresenceIntervention',
+    callback: () => {},
+    data: {
+      mode: 'edit',
+      sapeurs: [clone.sapeur_id],
+      presence: clone,
+      min: dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
+      max: dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
+    },
+  });
+};
+const removePresence = (id) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette présence ?',
+    "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
+  ).then(() => store.dispatch('removePresence', id));
+
+const editQuittance = (e, id) => {
+  const filteredQuittances = quittances.value.filter(
+    (q) => q.sapeur_id === parseInt(id),
+  );
+  if (filteredQuittances.length === 1) {
+    store.dispatch('removeQuittance', filteredQuittances[0].id);
+  } else {
+    store.dispatch('addQuittance', id);
+  }
+};
+
+const getPhaseTypeAt = (date) => {
+  const res = phases.value
+    .filter((p) => p.debut == null || new Date(p.debut) <= date)
+    .sort((d1, d2) =>
+      d1.debut == null
+        ? 1
+        : d2.debut == null
+          ? -1
+          : new Date(d1.debut) < new Date(d2.debut),
+    );
+  if (res.length > 0) {
+    return res[0].phase_type_id;
+  }
+  return 1;
+};
+
+const expandSap = (id) => {
+  toggles.value = {
+    ...toggles.value,
+    [id]: !toggles.value[id],
+  };
+};
+const sortedPresences = (id) => {
+  return presences.value
+    .filter((p) => p.sapeur_id === id)
+    .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-xs-12 col-md-12">
       <div
-        v-if="!dismissedWarning && data.statut > 2 && hasEditPermission"
+        v-if="!dismissedWarning && dataInter.statut > 2 && hasEditPermission"
         class="alert alert-dismissible alert-warning"
       >
         <button
@@ -14,8 +237,8 @@
         Intervention déjà imputée, impossible de modifier les présences.
       </div>
     </div>
-    <InterventionTabGroupe />
-    <InterventionTabPhase />
+    <InterventionTabGroupe :id="id" />
+    <InterventionTabPhase :id="id" />
     <div class="col-sm-12 col-md-12 col-xl-12">
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
@@ -23,7 +246,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            :disabled="data.statut > 2"
+            :disabled="dataInter.statut > 2"
             @click="addPresences"
           >
             Ajouter des présences
@@ -139,7 +362,7 @@
                         v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-primary border-0 ms-2"
-                        :disabled="data.statut > 2"
+                        :disabled="dataInter.statut > 2"
                         @click="editPresence(p)"
                       >
                         <font-awesome-icon :icon="['far', 'edit']" />
@@ -148,7 +371,7 @@
                         v-if="hasEditPermission"
                         type="button"
                         class="btn btn-outline-danger border-0"
-                        :disabled="data.statut > 2"
+                        :disabled="dataInter.statut > 2"
                         @click="removePresence(p.id)"
                       >
                         <font-awesome-icon :icon="['far', 'trash-alt']" />
@@ -171,237 +394,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
-import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
-
-export default {
-  name: 'InterventionTabSapeurs',
-  components: {
-    InterventionTabGroupe,
-    InterventionTabPhase,
-  },
-  data() {
-    return {
-      columns: [],
-      toggles: {},
-      dismissedWarning: false,
-    };
-  },
-  computed: {
-    ...mapState({
-      id: (state) => state.intervention.active.id,
-      data: (state) => state.intervention.active.data,
-      quittances: (state) => state.intervention.active.quittances,
-      presences: (state) => state.intervention.active.sapeurs,
-      phases: (state) => state.intervention.active.phases,
-      sapeurs: (state) => state.sapeur.liste,
-      // TODO: Check si intervention pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.INTERVENTION.MODIFICATION,
-        ),
-    }),
-    listSapeurs() {
-      return Array.from(
-        new Set([
-          ...this.presences.map((s) => s.sapeur_id),
-          ...this.quittances.map((s) => s.sapeur_id),
-        ]),
-      ).map((id) => this.sapeurs.find((s) => s.id == id));
-    },
-    sortedSapeurs() {
-      return [
-        ...Object.keys(this.computedPresences)
-          .map((s) => this.sapeurs.find((sapeur) => sapeur.id == parseInt(s)))
-          .sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom)),
-      ];
-    },
-    computedPresences() {
-      let temp = [];
-      this.listSapeurs.forEach(
-        (s) =>
-          (temp = {
-            ...temp,
-            [s.id]: this.computeSapeur(s.id),
-          }),
-      );
-      return temp;
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchPhaseTypes');
-    this.$store.dispatch('fetchInterventionQuittances', this.id);
-    this.$store.dispatch('fetchInterventionPhases', this.id);
-    this.$store.dispatch('fetchInterventionSapeurs', this.id);
-
-    const startFloored = new Date(
-      this.data.date_debut + ' ' + this.data.heure_debut,
-    );
-    const end = new Date(this.data.date_fin + ' ' + this.data.heure_fin);
-
-    startFloored.setMinutes(0);
-    const diff = Math.abs(startFloored - end) / 3600000;
-
-    // Génère une colonne par heure
-    const min = startFloored.getHours();
-    for (let i = 0; i < Math.ceil(diff); ++i) {
-      this.columns.push((min + i) % 24);
-    }
-
-    if (this.$refs.wrapper.addEventListener) {
-      // IE9, Chrome, Safari, Opera
-      this.$refs.wrapper.addEventListener(
-        'mousewheel',
-        this.scrollHorizontally,
-        false,
-      );
-      // Firefox
-      this.$refs.wrapper.addEventListener(
-        'DOMMouseScroll',
-        this.scrollHorizontally,
-        false,
-      );
-    } else {
-      // IE 6/7/8
-      this.$refs.wrapper.attachEvent('onmousewheel', this.scrollHorizontally);
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
-    formatDatePresence(d) {
-      return d.slice(-8, -3);
-    },
-    scrollHorizontally(e) {
-      e = window.event || e;
-      var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
-      this.$refs.wrapper.scrollLeft -= delta * 40; // Multiplied by 40
-      e.preventDefault();
-    },
-    addPresences() {
-      this.SHOW_MODAL({
-        component: 'ModalPresenceIntervention',
-        callback: () => {},
-        data: {
-          mode: 'add',
-          id: this.data.id,
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    editPresence(presence) {
-      const clone = {};
-      Object.assign(clone, presence);
-      this.SHOW_MODAL({
-        component: 'ModalPresenceIntervention',
-        callback: () => {},
-        data: {
-          mode: 'edit',
-          sapeurs: [clone.sapeur_id],
-          presence: clone,
-          min: this.data.date_debut + ' ' + this.data.heure_debut,
-          max: this.data.date_fin + ' ' + this.data.heure_fin,
-        },
-      });
-    },
-    removePresence(id) {
-      this.SHOW_MODAL({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette présence ?',
-          question:
-            "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removePresence', id);
-          }
-        },
-      });
-    },
-    editQuittance(e, id) {
-      const quittances = this.quittances.filter(
-        (q) => q.sapeur_id === parseInt(id),
-      );
-      if (quittances.length === 1) {
-        //remove quittance
-        this.$store.dispatch('removeQuittance', quittances[0].id);
-      } else {
-        //add quittance
-        this.$store.dispatch('addQuittance', id);
-      }
-    },
-    computeSapeur(id) {
-      let res = {};
-      const start = new Date(
-        this.data.date_debut + ' ' + this.data.heure_debut,
-      );
-      start.setMinutes(0);
-
-      this.presences
-        .filter((s) => s.sapeur_id === id)
-        .forEach((q) => {
-          // Offset calculé à partir de l'heure de début d'intervention arrondi
-          const offset = ((new Date(q.debut) - start) / 3600000.0) * 4.0;
-          // Durée de la présence en quart d'heures
-          const duree =
-            ((new Date(q.fin) - new Date(q.debut)) / 3600000.0) * 4.0;
-
-          for (let i = 0; i < duree; ++i) {
-            let code = null;
-            if (q.piquet) {
-              // Piquet
-              code = 3;
-            } else {
-              // DetectPhase
-              const currentDate = new Date(q.debut);
-              currentDate.setMinutes(currentDate.getMinutes() + i * 15);
-              code = this.getPhaseTypeAt(currentDate);
-            }
-            res = {
-              ...res,
-              [offset + i]: code,
-            };
-          }
-        });
-      return res;
-    },
-    getPhaseTypeAt(date) {
-      const res = this.phases
-        .filter((p) => p.debut == null || new Date(p.debut) <= date)
-        .sort((d1, d2) =>
-          d1.debut == null
-            ? 1
-            : d2.debut == null
-              ? -1
-              : new Date(d1.debut) < new Date(d2.debut),
-        );
-      if (res.length > 0) {
-        return res[0].phase_type_id;
-      }
-      return 1;
-    },
-    expandSap(id) {
-      this.toggles = {
-        ...this.toggles,
-        [id]: !this.toggles[id],
-      };
-    },
-    sortedPresences(id) {
-      return this.presences
-        .filter((p) => p.sapeur_id === id)
-        .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
-    },
-  },
-};
-</script>
 
 <style scoped>
 .no-wrap {
