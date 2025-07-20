@@ -3,8 +3,11 @@ import { useStore } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { watchEffect } from 'vue';
 import { computed } from 'vue';
+import router from '../router';
+import { useRoute } from 'vue-router';
 
 const store = useStore();
+const route = useRoute();
 
 const { id } = defineProps({
   id: {
@@ -17,6 +20,10 @@ const newMode = computed(() => id === 'new');
 watchEffect(() => {
   if (id !== 'new') {
     store.dispatch('selectIntervention', id);
+  } else {
+    if (route.name != 'intervention-details') {
+      router.push({ name: 'intervention-details', id: 'new' });
+    }
   }
 });
 
