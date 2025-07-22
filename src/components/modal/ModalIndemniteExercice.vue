@@ -1,32 +1,228 @@
+<script setup>
+import { computed, inject, reactive, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const store = useStore();
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  type_unite_id: 6,
+  fonctions: [],
+  par_fonction: false,
+  ...data,
+});
+const columnCreationIndex = ref(0);
+const columns = ref([]);
+const base = ref([]);
+
+const { closeModal, resize } = useModalStore();
+const awn = inject('awn');
+
+watchEffect(() => resize(form.par_fonction ? 2 : 1));
+
+const configurations = new Set(
+  data?.fonctions
+    ?.filter((f) => f.fonction_id)
+    ?.map((f) => f.type + ' ' + f.compte_id) || [],
+);
+columns.value = Object.fromEntries(
+  [...configurations]
+    .map((e) => [e, e.split(' ')])
+    .map(([index, e]) => [
+      index,
+      {
+        type: e[0],
+        compte_id: e[1],
+        fonctions: {},
+      },
+    ]),
+);
+
+data?.fonctions
+  ?.filter((f) => f.fonction_id)
+  ?.forEach((f) => {
+    columns.value[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
+      f.tarif;
+  });
+
+// Ajout un type par défault en cas d'utilisation des indemnités par fonction
+if (!Object.keys(columns.value).length) {
+  columns.value[columnCreationIndex.value] = {
+    type: 1,
+    compte_id: null,
+    fonctions: [],
+  };
+  columnCreationIndex.value++;
+}
+
+base.value = data?.fonctions?.filter((f) => !f.fonction_id) || [];
+if (!base.value.length) {
+  // Ajout d'un revenu de base de type solde
+  base.value.push({
+    type: 1,
+    id: null,
+    tarif: null,
+    tarif_min: null,
+    tarif_min_pour: null,
+    compte_id: null,
+    fonction_id: null,
+  });
+}
+
+const fonctions = computed(() => store.state.fonction.liste);
+const unites = computed(() => store.state.unite.liste); //.filter(u => !(u.id in [3, 4, 5, 7])),
+const comptes = computed(() => store.state.compte.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+
+const compte = (compte) => {
+  return `${compte?.numero} ${compte.designation}`;
+};
+const fonction = (id) => {
+  return fonctions.value.find((f) => f.id === id)?.nom;
+};
+const ajoutType = () => {
+  base.value.push({
+    type: 1,
+    tarif: null,
+    tarif_min: null,
+    tarif_min_pour: null,
+    compte_id: null,
+    fonction_id: null,
+  });
+};
+const supprimerType = (i) => {
+  base.value.splice(i, 1);
+};
+const ajoutTypePourFonction = () => {
+  columns.value[columnCreationIndex.value] = {
+    type: 1,
+    compte_id: null,
+    fonctions: [],
+  };
+  columnCreationIndex.value++;
+};
+const supprimerTypePourFonction = (i) => {
+  delete columns.value[i];
+};
+const save = () => {
+  errors.value = {};
+
+  // Contrôle qu'aucune colonne n'est dupliquée
+  const baseSet = new Set(base.value.map((e) => e.type + ' ' + e.compte_id));
+  if (baseSet.size != base.value.length) {
+    awn.alert(
+      "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
+    );
+    return;
+  }
+
+  if (form.par_fonction) {
+    const columnsFonctionsSet = new Set(
+      Object.values(columns.value).map((e) => e.type + ' ' + e.compte_id),
+    );
+    if (columnsFonctionsSet.size != Object.keys(columns.value).length) {
+      awn.alert(
+        "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprise dans les fonctions.",
+      );
+      return;
+    }
+  }
+
+  // Contrôle des données de base
+  base.value.forEach((e, i) => {
+    if (!e.type) errors.value['base-type' + i] = true;
+    if (!e.compte_id) errors.value['base-compte' + i] = true;
+    if (!e.tarif || e.tarif < 0) errors.value['base-tarif' + i] = true;
+    if (e.tarif_min && e.tarif_min < 0)
+      errors.value['base-tarif-min' + i] = true;
+    if (e.tarif_min_pour && e.tarif_min_pour < 0)
+      errors.value['base-tarif-min-pour' + i] = true;
+  });
+  if (form.par_fonction) {
+    Object.values(columns.value).forEach((e, i) => {
+      if (!e.type) errors.value['column-type' + i] = true;
+      if (!e.compte_id) errors.value['column-compte' + i] = true;
+    });
+  }
+
+  // Return en cas d'erreurs
+  if (Object.keys(errors.value).length > 0) {
+    return;
+  }
+
+  // Generate data
+  const foncs = [...base.value];
+
+  // TODO: Set tarif_min to null if unite == forfait
+  if (form.par_fonction) {
+    foncs.push(
+      ...Object.values(columns.value)
+        .map((e) => [
+          ...Object.entries(e.fonctions).map(([f, tarif]) => ({
+            type: e.type,
+            compte_id: e.compte_id,
+            fonction_id: f,
+            tarif: tarif,
+          })),
+        ])
+        .reduce((e, acc) => [...acc, ...e], []),
+    );
+  }
+
+  const indemnite = {
+    ...form,
+    foncs,
+  };
+
+  const action =
+    (indemnite.id || 0) === 0
+      ? 'addIndemniteExercice'
+      : 'updateIndemniteExercice';
+  store
+    .dispatch(action, indemnite)
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
-        exercice
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour exercice
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
         <div
           :class="{
-            'col-6': activeIndemnite.par_fonction,
-            'col-12': !activeIndemnite.par_fonction,
+            'col-6': form.par_fonction,
+            'col-12': !form.par_fonction,
           }"
         >
           <div class="mb-3">
             <label for="designation">Désignation</label>
             <input
               id="designation"
-              v-model="activeIndemnite.designation"
+              v-model="form.designation"
+              required
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['designation'] }"
             />
           </div>
           <base-select
-            v-model="activeIndemnite.type_unite_id"
+            v-model="form.type_unite_id"
+            :required="true"
             class="mb-3"
             :class="{ 'is-invalid': errors['type_unite_id'] }"
             label="Unité"
@@ -40,7 +236,7 @@
                   <th>Type</th>
                   <th>Tarif</th>
                   <th>Compte</th>
-                  <th></th>
+                  <th v-if="base.length > 1"></th>
                 </tr>
               </thead>
               <tbody>
@@ -49,6 +245,7 @@
                     <base-select
                       v-model="base[i].type"
                       :class="{ 'is-invalid': errors['base-type' + i] }"
+                      :required="true"
                       :options="[
                         { id: 1, designation: 'Solde' },
                         { id: 2, designation: 'Indemnite' },
@@ -58,6 +255,7 @@
                   <td class="col-2">
                     <input
                       v-model="base[i].tarif"
+                      required
                       type="text"
                       class="form-control form-control-sm"
                       :class="{ 'is-invalid': errors['base-tarif' + i] }"
@@ -66,6 +264,7 @@
                   <td class="col-6">
                     <select
                       v-model="base[i].compte_id"
+                      required
                       class="form-select form-select-sm"
                       :class="{ 'is-invalid': errors['base-compte' + i] }"
                     >
@@ -74,7 +273,7 @@
                       </option>
                     </select>
                   </td>
-                  <td v-if="base.length > 1" class="text-center">
+                  <td v-if="base.length > 1" class="text-center col-1">
                     <button
                       type="button"
                       class="btn btn-outline-danger border-0"
@@ -106,7 +305,7 @@
             <div class="form-check">
               <input
                 id="par-fonction-modal"
-                v-model="activeIndemnite.par_fonction"
+                v-model="form.par_fonction"
                 type="checkbox"
                 class="form-check-input"
               />
@@ -117,7 +316,7 @@
           </div>
 
           <base-select
-            v-model="activeIndemnite.ecriture_categorie_id"
+            v-model="form.ecriture_categorie_id"
             class="mb-3"
             :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
             label="Catégorie comptable"
@@ -125,7 +324,7 @@
           />
         </div>
 
-        <div v-if="activeIndemnite.par_fonction" class="col-6">
+        <div v-if="form.par_fonction" class="col-6">
           <table class="table table-sm">
             <thead>
               <tr v-if="Object.keys(columns).length > 1">
@@ -209,254 +408,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalIndemniteExercice',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      columnCreationIndex: 0,
-      columns: [],
-      base: [],
-      activeIndemnite: {
-        fonctions: [],
-        par_fonction: false,
-        type_unite_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
-      comptes: (state) => state.compte.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-    }),
-    parFonction() {
-      return this.activeIndemnite.par_fonction;
-    },
-    uniteComptable() {
-      // Désactive sold_min/solde_min_pour car a priori non-nécessaire pour des exercices
-      return false;
-      // const uniteId = this.activeIndemnite.type_unite_id;
-      // return (
-      //   this.unites.find((u) => u.id == uniteId)?.comptable || uniteId == 1
-      // ); // Comptable ou par pièces
-    },
-  },
-  watch: {
-    parFonction: function (val) {
-      this.UPDATE_MODAL_SIZE(val ? 2 : 1);
-    },
-  },
-  mounted() {
-    // Calcul des différentes combinaisons existantes
-    const configurations = new Set(
-      this.data?.fonctions
-        ?.filter((f) => f.fonction_id)
-        ?.map((f) => f.type + ' ' + f.compte_id) || [],
-    );
-    this.columns = Object.fromEntries(
-      [...configurations]
-        .map((e) => [e, e.split(' ')])
-        .map(([index, e]) => [
-          index,
-          {
-            type: e[0],
-            compte_id: e[1],
-            fonctions: {},
-          },
-        ]),
-    );
-
-    this.data?.fonctions
-      ?.filter((f) => f.fonction_id)
-      ?.forEach((f) => {
-        this.columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-          f.tarif;
-      });
-
-    // Ajout un type par défault en cas d'utilisation des indemnités par fonction
-    if (!Object.keys(this.columns).length) {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    }
-
-    this.activeIndemnite = {
-      ...this.activeIndemnite,
-      type_unite_id: 6, // Set unité type défault à forfait
-      ...this.data,
-    };
-
-    this.base = this.data?.fonctions?.filter((f) => !f.fonction_id) || [];
-    if (!this.base.length) {
-      // Ajout d'un revenu de base de type solde
-      this.base.push({
-        type: 1,
-        id: null,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
-      });
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      HIDE_MODAL: 'closeModal',
-      UPDATE_MODAL_SIZE: 'resize',
-    }),
-    unite(id) {
-      return this.unites.find((u) => u.id == id)?.abreviation;
-    },
-    compte(compte) {
-      return `${compte?.numero} ${compte.designation}`;
-    },
-    fonction(id) {
-      return this.fonctions.find((f) => f.id === id)?.nom;
-    },
-    updateTarif(index, e) {
-      this.activeIndemnite.fonctions[index].tarif = e.target.value;
-    },
-    updateIndemnite(index, e) {
-      this.activeIndemnite.fonctions[index].indemnite = e.target.value;
-    },
-    ajoutType() {
-      this.base.push({
-        type: 1,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
-      });
-    },
-    supprimerType(i) {
-      this.base.splice(i, 1);
-    },
-    ajoutTypePourFonction() {
-      this.columns[this.columnCreationIndex] = {
-        type: 1,
-        compte_id: null,
-        fonctions: [],
-      };
-      this.columnCreationIndex++;
-    },
-    supprimerTypePourFonction(i) {
-      delete this.columns[i];
-    },
-    async save() {
-      this.errors = {};
-
-      // Contrôle qu'aucune colonne n'est dupliquée
-      const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
-      if (baseSet.size != this.base.length) {
-        this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
-        );
-        return;
-      }
-
-      if (this.activeIndemnite.par_fonction) {
-        const columnsFonctionsSet = new Set(
-          Object.values(this.columns).map((e) => e.type + ' ' + e.compte_id),
-        );
-        if (columnsFonctionsSet.size != Object.keys(this.columns).length) {
-          this.$awn.alert(
-            "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprise dans les fonctions.",
-          );
-          return;
-        }
-      }
-
-      // Contrôle des données de base
-      this.base.forEach((e, i) => {
-        if (!e.type) this.errors['base-type' + i] = true;
-        if (!e.compte_id) this.errors['base-compte' + i] = true;
-        if (!e.tarif || e.tarif < 0) this.errors['base-tarif' + i] = true;
-        if (e.tarif_min && e.tarif_min < 0)
-          this.errors['base-tarif-min' + i] = true;
-        if (e.tarif_min_pour && e.tarif_min_pour < 0)
-          this.errors['base-tarif-min-pour' + i] = true;
-      });
-      if (this.activeIndemnite.par_fonction) {
-        Object.values(this.columns).forEach((e, i) => {
-          if (!e.type) this.errors['column-type' + i] = true;
-          if (!e.compte_id) this.errors['column-compte' + i] = true;
-        });
-      }
-
-      // Return en cas d'erreurs
-      if (Object.keys(this.errors).length > 0) {
-        return;
-      }
-
-      // Generate data
-      const fonctions = [...this.base];
-
-      // TODO: Set tarif_min to null if unite == forfait
-      if (this.activeIndemnite.par_fonction) {
-        fonctions.push(
-          ...Object.values(this.columns)
-            .map((e) => [
-              ...Object.entries(e.fonctions).map(([f, tarif]) => ({
-                type: e.type,
-                compte_id: e.compte_id,
-                fonction_id: f,
-                tarif: tarif,
-              })),
-            ])
-            .reduce((e, acc) => [...acc, ...e], []),
-        );
-      }
-
-      const indemnite = {
-        ...this.activeIndemnite,
-        fonctions,
-      };
-
-      const action =
-        (indemnite.id || 0) === 0
-          ? 'addIndemniteExercice'
-          : 'updateIndemniteExercice';
-      this.$store
-        .dispatch(action, indemnite)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

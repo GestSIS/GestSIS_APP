@@ -1,18 +1,65 @@
+<script setup>
+import { inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  name: '',
+  email: '',
+  admin: false,
+  ...data,
+});
+
+const store = useStore();
+const listeStatIntervention = computed(
+  () => store.state.statIntervention.liste,
+);
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const save = () =>
+  store
+    .dispatch(
+      (this.form.id || 0) === 0
+        ? 'addTypeIntervention'
+        : 'updateTypeIntervention',
+      form,
+    )
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
+    });
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }} un type
-        d'intervention
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un type d'intervention
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="tri">Tri</label>
         <input
           id="tri"
-          v-model="activeTypeIntervention.tri"
+          v-model="form.tri"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['tri'] }"
@@ -22,14 +69,16 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeTypeIntervention.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        v-model="activeTypeIntervention.stat_intervention_id"
+        v-model="form.stat_intervention_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['stat_intervention_id'] }"
         label="Statistique"
@@ -37,75 +86,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTypeIntervention.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalTypeIntervention',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeTypeIntervention: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      listeStatIntervention: (state) => state.statIntervention.liste,
-    }),
-  },
-  mounted() {
-    this.activeTypeIntervention = {
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeTypeIntervention.id || 0) === 0) {
-        this.$store
-          .dispatch('addTypeIntervention', this.activeTypeIntervention)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateTypeIntervention', this.activeTypeIntervention)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

@@ -1,17 +1,53 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const store = useStore();
+
+const errors = ref({});
+const form = reactive({
+  permissions: [],
+  sis_id: store.state.auth.sis.activeId,
+  ...data,
+});
+
+const permissions = computed(() =>
+  store.state.auth.permissions.sort((a, b) => a.tri - b.tri),
+);
+
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch((form.id || 0) === 0 ? 'createRole' : 'updateRole', form)
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ role.id ? 'Modifier' : 'Ajouter' }} un rôle
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un rôle
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="nom">Nom</label>
         <input
           id="nom"
-          v-model="role.nom"
+          v-model="form.nom"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['nom'] }"
@@ -21,7 +57,7 @@
         <label for="description">Description</label>
         <input
           id="description"
-          v-model="role.description"
+          v-model="form.description"
           type="text"
           required
           class="form-control form-control-sm"
@@ -37,7 +73,7 @@
         >
           <input
             :id="'r' + permission.id"
-            v-model="role.permissions"
+            v-model="form.permissions"
             type="checkbox"
             class="form-check-input"
             :value="permission.id"
@@ -55,94 +91,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ role.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalRole',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      role: {
-        permissions: [],
-        sis_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      permissions: (state) =>
-        state.auth.permissions.sort((a, b) => a.tri - b.tri),
-    }),
-  },
-  mounted() {
-    if (!this.data.sis_id) {
-      this.role.sis_id = this.$store.state.auth.sis.activeId;
-    }
-    this.role = {
-      ...this.role,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      this.errors = {};
-      if (!this.role.nom) {
-        this.errors.nom = 'Nom requis';
-      }
-      if (!this.role.nom) {
-        this.errors.description = 'Description requise';
-      }
-      if (Object.entries(this.errors).length > 0) {
-        return;
-      }
-
-      if ((this.role.id || 0) === 0) {
-        this.$store
-          .dispatch('createRole', this.role)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...(errors?.errors ?? errors),
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateRole', this.role)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...(errors?.errors ?? errors),
-            };
-          });
-      }
-    },
-  },
-};
-</script>

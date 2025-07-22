@@ -1,18 +1,95 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  phase_id: 0,
+  par_fonction: 0,
+  tarif_pro_rata: true,
+  tarif_min_pro_rata: false,
+  taux_nuit: 1,
+  taux_weekend: 1,
+  ...data,
+  debut: data?.debut?.slice(0, 5),
+  fin: data?.fin?.slice(0, 5),
+});
+
+const imputationType = ref(
+  form.taux_nuit || form.taux_weekend ? 'taux' : 'tarif-min',
+);
+
+const store = useStore();
+
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+const phases = computed(() => store.state.phaseType.liste);
+
+const { closeModal } = useModalStore();
+
+const save = () => {
+  if (imputationType.value == 'taux') {
+    form.type_unite_id = 2; // Par heure
+    form.tarif_pro_rata = null;
+    form.tarif_min = null;
+    form.tarif_min_pour = null;
+    form.phase_id = null;
+
+    if (
+      !form.taux_nuit ||
+      !form.taux_weekend ||
+      form.taux_nuit <= 0 ||
+      form.taux_weekend <= 0
+    ) {
+      errors.value = {
+        taux_nuit: !form.taux_nuit || form.taux_nuit <= 0 ? 'invalide' : null,
+        taux_weekend:
+          !form.taux_weekend || form.taux_weekend <= 0 ? 'invalide' : null,
+      };
+      return;
+    }
+  } else {
+    form.taux_nuit = null;
+    form.taux_weekend = null;
+    form.debut = null;
+    form.fin = null;
+  }
+
+  store
+    .dispatch(
+      (form.id || 0) === 0
+        ? 'addIndemniteIntervention'
+        : 'updateIndemniteIntervention',
+      form,
+    )
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }} une indemnité pour
-        intervention
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour intervention
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeIndemnite.designation"
+          v-model="form.designation"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -23,7 +100,7 @@
           <label for="tarif">Tarif</label>
           <input
             id="tarif"
-            v-model="activeIndemnite.tarif"
+            v-model="form.tarif"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['tarif'] }"
@@ -41,7 +118,7 @@
           <div class="form-check text-center col-6">
             <input
               id="pro-rata"
-              v-model="activeIndemnite.tarif_pro_rata"
+              v-model="form.tarif_pro_rata"
               type="checkbox"
               class="form-check-input"
             />
@@ -82,7 +159,7 @@
             <label for="tarif_min">Tarif min</label>
             <input
               id="tarif_min"
-              v-model="activeIndemnite.tarif_min"
+              v-model="form.tarif_min"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif_min'] }"
@@ -92,7 +169,7 @@
             <label for="tarif_min_pour">Pour</label>
             <input
               id="tarif_min_pour"
-              v-model="activeIndemnite.tarif_min_pour"
+              v-model="form.tarif_min_pour"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['tarif_min_pour'] }"
@@ -102,7 +179,7 @@
             <label for="unite">Unité</label>
             <select
               id="unite"
-              v-model="activeIndemnite.type_unite_id"
+              v-model="form.type_unite_id"
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
             >
@@ -123,7 +200,7 @@
             <div class="form-check text-center col-6">
               <input
                 id="min-pro-rata"
-                v-model="activeIndemnite.tarif_min_pro_rata"
+                v-model="form.tarif_min_pro_rata"
                 type="checkbox"
                 class="form-check-input"
               />
@@ -134,7 +211,7 @@
             <label for="phase_id">Tarif min pour phase</label>
             <select
               id="phase_id"
-              v-model="activeIndemnite.phase_id"
+              v-model="form.phase_id"
               class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
             >
@@ -150,7 +227,7 @@
             <label for="taux_nuit">Taux nuit</label>
             <input
               id="taux_nuit"
-              v-model="activeIndemnite.taux_nuit"
+              v-model="form.taux_nuit"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_nuit'] }"
@@ -160,7 +237,7 @@
             <label for="taux_weekend">Taux weekend</label>
             <input
               id="taux_weekend"
-              v-model="activeIndemnite.taux_weekend"
+              v-model="form.taux_weekend"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['taux_weekend'] }"
@@ -170,7 +247,7 @@
             <label for="debut">Début nuit</label>
             <input
               id="debut"
-              v-model="activeIndemnite.debut"
+              v-model="form.debut"
               type="time"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['debut'] }"
@@ -180,7 +257,7 @@
             <label for="fin">Fin nuit</label>
             <input
               id="fin"
-              v-model="activeIndemnite.fin"
+              v-model="form.fin"
               type="time"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['fin'] }"
@@ -192,7 +269,7 @@
         <label for="compte">Compte</label>
         <select
           id="compte"
-          v-model="activeIndemnite.compte_id"
+          v-model="form.compte_id"
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
         >
@@ -205,7 +282,7 @@
         <label for="categorie">Catégorie comptable</label>
         <select
           id="categorie"
-          v-model="activeIndemnite.ecriture_categorie_id"
+          v-model="form.ecriture_categorie_id"
           class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         >
@@ -215,7 +292,7 @@
         </select>
       </div>
       <base-select
-        v-model="activeIndemnite.type"
+        v-model="form.type"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
         label="Type comptable"
@@ -226,128 +303,12 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeIndemnite.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalIndemniteIntervention',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeIndemnite: {
-        phase_id: 0,
-        par_fonction: 0,
-        tarif_pro_rata: true,
-        tarif_min_pro_rata: false,
-        taux_nuit: 1,
-        taux_weekend: 1,
-      },
-      imputationType: 1,
-    };
-  },
-  computed: {
-    ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      phases: (state) => state.phaseType.liste,
-    }),
-  },
-  mounted() {
-    this.activeIndemnite = {
-      ...this.activeIndemnite,
-      ...this.data,
-      debut: this.data?.debut?.slice(0, 5),
-      fin: this.data?.fin?.slice(0, 5),
-    };
-    this.imputationType =
-      this.activeIndemnite.taux_nuit || this.activeIndemnite.taux_weekend
-        ? 'taux'
-        : 'tarif-min';
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if (this.imputationType == 'taux') {
-        this.activeIndemnite.type_unite_id = 2; // Par heure
-        this.activeIndemnite.tarif_pro_rata = null;
-        this.activeIndemnite.tarif_min = null;
-        this.activeIndemnite.tarif_min_pour = null;
-        this.activeIndemnite.phase_id = null;
-
-        if (
-          !this.activeIndemnite.taux_nuit ||
-          !this.activeIndemnite.taux_weekend ||
-          this.activeIndemnite.taux_nuit <= 0 ||
-          this.activeIndemnite.taux_weekend <= 0
-        ) {
-          this.errors = {
-            taux_nuit:
-              !this.activeIndemnite.taux_nuit ||
-              this.activeIndemnite.taux_nuit <= 0
-                ? 'invalide'
-                : null,
-            taux_weekend:
-              !this.activeIndemnite.taux_weekend ||
-              this.activeIndemnite.taux_weekend <= 0
-                ? 'invalide'
-                : null,
-          };
-          return;
-        }
-      } else {
-        this.activeIndemnite.taux_nuit = null;
-        this.activeIndemnite.taux_weekend = null;
-        this.activeIndemnite.debut = null;
-        this.activeIndemnite.fin = null;
-      }
-
-      if ((this.activeIndemnite.id || 0) === 0) {
-        this.$store
-          .dispatch('addIndemniteIntervention', this.activeIndemnite)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateIndemniteIntervention', this.activeIndemnite)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

@@ -1,18 +1,60 @@
+<script setup>
+import { inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  name: '',
+  email: '',
+  admin: false,
+  ...data,
+});
+
+const store = useStore();
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const save = () => {
+  if (!form?.id) {
+    return awn.alert("Impossible d'ajouter un utilisateur pour le moment");
+  }
+  store
+    .dispatch(form?.id ? 'editUser' : 'addUser', form)
+    .then(closeModal)
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ user.id ? 'Modifier' : 'Ajouter' }} Utilisateur
+        {{ form.id ? 'Modifier' : 'Ajouter' }} Utilisateur
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
-      <!-- NOM -->
       <div class="mb-3">
         <label for="m-user-name">Nom</label>
         <input
           id="m-user-name"
-          v-model="user.name"
+          v-model="form.name"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['name'] }"
@@ -25,7 +67,7 @@
         <label for="m-user-email">Email</label>
         <input
           id="m-user-email"
-          v-model="user.email"
+          v-model="form.email"
           type="email"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['email'] }"
@@ -36,7 +78,7 @@
       <div class="mb-3">
         <input
           id="user-admin"
-          v-model="user.admin"
+          v-model="form.admin"
           name="user-admin"
           type="checkbox"
           class="form-check-input"
@@ -45,71 +87,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" @click="save()">
-        {{ user.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="button" class="btn btn-outline-secondary">Annuler</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalUser',
-  props: {
-    data: {
-      type: Object,
-      default: () => ({}),
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      user: {
-        name: '',
-        email: '',
-        admin: false,
-      },
-    };
-  },
-  mounted() {
-    this.user = {
-      ...this.user,
-      ...(this.data ?? {}),
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.HIDE_MODAL();
-        }
-      });
-    },
-    async save() {
-      if (!this.user?.id) {
-        return this.$awn.alert(
-          "Impossible d'ajouter un utilisateur pour le moment",
-        );
-      }
-      this.$store
-        .dispatch(this.user?.id ? 'editUser' : 'addUser', this.user)
-        .then(() => {
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = errors;
-          this.$awn.alert(errors?.message ?? "Erreur lors de l'enregistrement");
-        });
-    },
-  },
-};
-</script>

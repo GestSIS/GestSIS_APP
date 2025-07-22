@@ -1,10 +1,41 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  name: '',
+  roles: [],
+  ...data,
+});
+
+const store = useStore();
+const roles = computed(() => store.state.auth.roles);
+
+const { closeModal } = useModalStore();
+
+const save = () =>
+  store
+    .dispatch('updateUserRoles', form)
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        Modification des rôles de <em>{{ user.name }}</em>
+        Modification des rôles de <em>{{ form.name }}</em>
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -12,7 +43,7 @@
         <div v-for="role in roles" :key="role.id" class="form-check">
           <input
             :id="'r' + role.id"
-            v-model="user.roles"
+            v-model="form.roles"
             type="checkbox"
             class="form-check-input"
             :value="role.id"
@@ -27,61 +58,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Annuler
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Enregistrer
-      </button>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalUserRole',
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      user: {
-        name: '',
-        roles: [],
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      roles: (state) => state.auth.roles,
-    }),
-  },
-  mounted() {
-    this.user = { ...this.$props.data };
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      this.$store
-        .dispatch('updateUserRoles', this.user)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch((errors) => {
-          this.errors = {
-            ...errors,
-          };
-        });
-    },
-  },
-};
-</script>

@@ -34,8 +34,8 @@ const save = async () =>
       (err) =>
         (errors.value = {
           ...err,
-          materiel_id: errors['materiels.0.materiel_id'],
-          quantite: errors['materiels.0.quantite'],
+          materiel_id: errors.value['materiels.0.materiel_id'],
+          quantite: errors.value['materiels.0.quantite'],
         }),
     );
 </script>

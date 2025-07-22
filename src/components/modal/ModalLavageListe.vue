@@ -1,10 +1,5 @@
 <script setup>
-import { inject, ref } from 'vue';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
-
-import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
+import { inject } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
 

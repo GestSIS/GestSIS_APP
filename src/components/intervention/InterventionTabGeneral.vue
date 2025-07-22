@@ -113,14 +113,14 @@ const degre = [
 </script>
 
 <template>
-  <form @submit.prevent="save" class="row">
+  <form class="row" @submit.prevent="save">
     <div class="col-12">
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
           <button
-            type="submit"
             v-if="hasEditPermission"
+            type="submit"
             class="btn btn-primary"
           >
             Enregistrer
