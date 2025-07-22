@@ -47,7 +47,7 @@ const sapeurs = computed(() =>
 );
 
 const sisParam = ref({});
-sisParam.value = { ...params };
+sisParam.value = { ...params.value };
 
 const { confirm, showModal } = useModalStore();
 const formatLocalite = (localite) => localite?.designation;
@@ -101,7 +101,8 @@ const save = async () => {
 };
 const loadSisLogo = () => {
   const timestamp = new Date().getTime();
-  logoUrl.value = Api.API_URL + '/sis-logo/' + activeSisKey.value + '?t=' + timestamp;
+  logoUrl.value =
+    Api.API_URL + '/sis-logo/' + activeSisKey.value + '?t=' + timestamp;
   loadingLogo.value = false;
 };
 loadSisLogo();
