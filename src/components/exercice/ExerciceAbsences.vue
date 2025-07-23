@@ -214,11 +214,11 @@ export default {
       sapeurs: (state) => state.sapeur.liste,
       absences: (state) => state.exercice.absences,
       exercices: (state) =>
-        state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
+        state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
-          a.designation.localeCompare(b.designation),
+          a.designation?.localeCompare(b.designation),
         ),
       activeExerciceId: (state) => state.exercice.active.id,
       activeExerciceComptableId: (state) => state.exerciceComptable.activeId,

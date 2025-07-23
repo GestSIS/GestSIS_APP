@@ -276,7 +276,7 @@ export default {
           title: 'Heure',
           key: 'heure',
           formatter(value) {
-            return value.slice(0, 5);
+            return value?.slice(0, 5);
           },
         },
         { title: 'Durée', key: 'duree' },
@@ -317,7 +317,7 @@ export default {
         )?.annee,
       sapeurs: (state) => state.sapeur.liste,
       exercices: (state) =>
-        state.exercice.liste.sort((a, b) => a.date.localeCompare(b.date)),
+        state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
       categories: (state) => state.exerciceCategorie.liste,
       localites: (state) =>
         state.localite.liste.sort((a, b) =>
