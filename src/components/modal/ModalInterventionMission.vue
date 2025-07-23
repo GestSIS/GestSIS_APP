@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Ajouter une mission</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -147,7 +147,7 @@ export default {
     this.activeMission.fin2 = this.activeMission.fin?.replace(' ', 'T');
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     async save() {
       // Format back dates to SQL Format
       this.activeMission.debut = DateTime.fromISO(
@@ -176,7 +176,7 @@ export default {
           .dispatch('addInterventionMission', this.activeMission)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>
@@ -194,7 +194,7 @@ export default {
           .dispatch('editInterventionMission', this.activeMission)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>

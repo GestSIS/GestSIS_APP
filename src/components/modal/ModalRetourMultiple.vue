@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Retour matériel</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -107,7 +107,7 @@ export default {
     this.data.forEach((m) => (this.selected[m.id] = true));
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     toggleAll(value) {
       this.selected = Object.fromEntries(this.data.map((e) => [e.id, value]));
     },
@@ -122,7 +122,7 @@ export default {
         .then(() => {
           this.errors = {};
           this.$store.dispatch('fetchMatPersoARecuperer');
-          this.HIDE_MODAL();
+          this.closeModal();
         })
         .catch((errors) => (this.errors = errors));
     },

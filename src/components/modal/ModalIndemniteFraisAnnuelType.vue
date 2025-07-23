@@ -8,7 +8,7 @@
         }}
         type
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="submit" class="btn btn-primary">
@@ -110,7 +110,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     async save() {
       const action = this.active?.id
         ? 'updateFraisIndemniteAnnuelType'
@@ -119,7 +119,7 @@ export default {
         .dispatch(action, this.active)
         .then(() => {
           this.errors = {};
-          this.HIDE_MODAL();
+          this.closeModal();
         })
         .catch(
           (errors) =>

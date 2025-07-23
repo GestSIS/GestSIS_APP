@@ -359,7 +359,7 @@ export default {
     this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
   },
   methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
+    ...mapActions(useModalStore, { showModal: 'showModal' }),
     selectAllConvoque(status) {
       this.presences = this.presences.map((p) => ({
         ...p,
@@ -480,7 +480,7 @@ export default {
           }
         });
       };
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalSapeurSelect',
         size: 1,
         callback,
@@ -531,7 +531,7 @@ export default {
         );
         return;
       }
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalExcuse',
         data: sapeur,
         callback: (presence) => {
@@ -549,7 +549,7 @@ export default {
       });
     },
     async addExcuse(sapeur) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalExcuse',
         data: sapeur,
         callback: (presence) => {
@@ -568,7 +568,7 @@ export default {
       });
     },
     removeExcuse(sapeur) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalConfirmation',
         data: {
           title: 'Voulez-vous vraiment supprimer cette excuse ?',

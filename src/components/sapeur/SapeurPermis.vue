@@ -57,7 +57,6 @@ const saveError = (permis_type_id, error) => {
   };
 };
 const supprimerPermis = (permis_type_id) => {
-  console.log('Remove ...', permis_type_id);
   permisData.value = {
     ...permisData.value,
     [permis_type_id]: {
@@ -65,7 +64,6 @@ const supprimerPermis = (permis_type_id) => {
       date: '',
     },
   };
-  console.log(permisData.value[permis_type_id]);
 };
 const savePermis = () => {
   Object.values(permisData.value).forEach((p) => {

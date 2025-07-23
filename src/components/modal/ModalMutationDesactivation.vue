@@ -1,10 +1,171 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const selectedExercices = ref({});
+const selectedGroupes = ref({});
+const selectedFonctions = ref({});
+const mutationDate = ref(null);
+
+const store = useStore();
+
+store.dispatch('fetchExerciceCategories', store.state.sapeur.active.id);
+store.dispatch('fetchGroupes', store.state.sapeur.active.id);
+
+const formatDate = (date) => {
+  var monthNames = [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre',
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+};
+
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const groupes = computed(() => store.state.groupe.liste);
+const fonctions = computed(() => store.state.fonction.liste);
+const activeSapeurExercice = computed(
+  () => store.state.sapeur.active.exercices,
+);
+const activeSapeurGroupe = computed(() => store.state.sapeur.active.groupes);
+const activeSapeurFonction = computed(() =>
+  store.state.sapeur.active.fonctions.filter((f) => !f.fin),
+);
+const exercicesSelectedState = computed(() => {
+  return Object.values(selectedExercices.value).every((e) => e);
+});
+const groupesSelectedState = computed(() => {
+  return Object.values(selectedGroupes.value).every((e) => e);
+});
+const fonctionsSelectedState = computed(() => {
+  return Object.values(selectedFonctions.value).every((e) => e);
+});
+const exercices = computed(() => {
+  return activeSapeurExercice.value
+    .filter(
+      (e) => e.statut <= 2 && e.statut > 0 && e.date > mutationDate.value, // Saisie ou vide et pas annulé
+    )
+    .map((e) => ({
+      ...e,
+      info: `${
+        categories.value.find((c) => c.id == e.exercice_categorie_id)
+          .designation
+      } : ${e.communications}`,
+    }));
+});
+const sapGroupes = computed(() => {
+  return activeSapeurGroupe.value.map((g) => ({
+    ...groupes.value.find((f) => f.id == g.groupe_id),
+    id: g.id,
+  }));
+});
+const sapFonctions = computed(() => {
+  return activeSapeurFonction.value.map((f) => ({
+    ...fonctions.value.find((e) => e.id == f.fonction_id),
+    debut: f.debut,
+    id: f.id,
+    info: `Début ${formatDate(new Date(f.debut))}`,
+  }));
+});
+
+const { closeModal } = useModalStore();
+
+const save = () => {
+  if (
+    sapFonctions.value.length > 0 &&
+    (!mutationDate.value ||
+      sapFonctions.value.some(
+        (f) => new Date(f.debut) >= new Date(mutationDate.value),
+      ))
+  ) {
+    errors.value.date = 'Date requise';
+    return;
+  }
+
+  let mapToId = (e) => e.id;
+
+  if (sapFonctions.value.filter((e) => selectedFonctions.value[e.id]).length) {
+    store.dispatch('finFonctions', {
+      fin: mutationDate.value,
+      ids: sapFonctions.value
+        .filter((e) => selectedFonctions.value[e.id])
+        .map(mapToId),
+    });
+  }
+  if (exercices.value.filter((e) => selectedExercices.value[e.id]).length) {
+    store.dispatch(
+      'supprimerConvocation',
+      exercices.value.filter((e) => selectedExercices.value[e.id]).map(mapToId),
+    );
+  }
+  if (sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).length) {
+    store.dispatch(
+      'quitterGroupes',
+      sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).map(mapToId),
+    );
+  }
+
+  closeModal();
+};
+const selectGroupe = (state, groupeId) => {
+  if (groupeId) {
+    selectedGroupes.value[groupeId] = state;
+  } else {
+    selectedGroupes.value = Object.fromEntries(
+      activeSapeurGroupe.value.map((g) => [g.id, state]),
+    );
+  }
+};
+const selectExercice = (state, exerciceId) => {
+  if (exerciceId) {
+    selectedExercices.value[exerciceId] = state;
+  } else {
+    selectedExercices.value = Object.fromEntries(
+      activeSapeurExercice.value.map((g) => [g.id, state]),
+    );
+  }
+};
+const selectFonction = (state, fonctionId) => {
+  if (fonctionId) {
+    selectedFonctions.value[fonctionId] = state;
+  } else {
+    selectedFonctions.value = Object.fromEntries(
+      activeSapeurFonction.value.map((g) => [g.id, state]),
+    );
+  }
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         Suppression des groupes, exercices et fonctions
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <form v-if="fonctions.length" class="row g-3 align-items-center mb-2">
@@ -17,11 +178,11 @@
             v-model="mutationDate"
             type="date"
             class="form-control mx-sm-3"
-            :class="{ 'is-invalid': erreurs.date }"
+            :class="{ 'is-invalid': errors.date }"
           />
         </div>
         <div class="col-auto">
-          <small v-if="erreurs.date" class="invalid-feedback">
+          <small v-if="errors.date" class="invalid-feedback">
             Date requise
           </small>
         </div>
@@ -118,7 +279,7 @@
       </table>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -127,190 +288,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalMutationDesactivation',
-  data() {
-    return {
-      selectedExercices: {},
-      selectedGroupes: {},
-      selectedFonctions: {},
-      mutationDate: null,
-      erreurs: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      categories: (state) => state.exerciceCategorie.liste,
-      groupes: (state) => state.groupe.liste,
-      fonctions: (state) => state.fonction.liste,
-      localites: (state) => state.localite.liste,
-      activeSapeurId: (state) => state.sapeur.id,
-      activeSapeurExercice: (state) => state.sapeur.active.exercices,
-      activeSapeurGroupe: (state) => state.sapeur.active.groupes,
-      activeSapeurMutations: (state) => state.sapeur.active.mutations,
-      activeSapeurFonction: (state) =>
-        state.sapeur.active.fonctions.filter((f) => !f.fin),
-    }),
-    exercicesSelectedState() {
-      return Object.values(this.selectedExercices).every((e) => e);
-    },
-    groupesSelectedState() {
-      return Object.values(this.selectedGroupes).every((e) => e);
-    },
-    fonctionsSelectedState() {
-      return Object.values(this.selectedFonctions).every((e) => e);
-    },
-    exercices() {
-      return this.activeSapeurExercice
-        .filter(
-          (e) => e.statut <= 2 && e.statut > 0 && e.date > this.mutationDate, // Saisie ou vide et pas annulé
-        )
-        .map((e) => ({
-          ...e,
-          info: `${
-            this.categories.find((c) => c.id == e.exercice_categorie_id)
-              .designation
-          } : ${e.communications}`,
-        }));
-    },
-    sapGroupes() {
-      return this.activeSapeurGroupe.map((g) => ({
-        ...this.groupes.find((f) => f.id == g.groupe_id),
-        id: g.id,
-      }));
-    },
-    sapFonctions() {
-      return this.activeSapeurFonction.map((f) => ({
-        ...this.fonctions.find((e) => e.id == f.fonction_id),
-        debut: f.debut,
-        id: f.id,
-        info: `Début ${this.formatDate(new Date(f.debut))}`,
-      }));
-    },
-  },
-  mounted() {
-    if (this.localites.length === 0) {
-      this.$store.dispatch('fetchLocalites');
-    }
-
-    // Récupère la date de la dernière mutation
-    if (this.activeSapeurMutations.length) {
-      this.mutationDate = this.activeSapeurMutations.sort(
-        (a, b) => new Date(b.sortie) - new Date(a.sortie),
-      )[0].sortie;
-    }
-
-    this.selectGroupe(true);
-    this.selectExercice(true);
-    this.selectFonction(true);
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    formatDate(date) {
-      var monthNames = [
-        'janvier',
-        'février',
-        'mars',
-        'avril',
-        'mai',
-        'juin',
-        'juillet',
-        'août',
-        'septembre',
-        'octobre',
-        'novembre',
-        'décembre',
-      ];
-
-      var day = date.getDate();
-      var monthIndex = date.getMonth();
-      var year = date.getFullYear();
-
-      return day + ' ' + monthNames[monthIndex] + ' ' + year;
-    },
-    async save() {
-      if (
-        this.sapFonctions.length > 0 &&
-        (!this.mutationDate ||
-          this.sapFonctions.some(
-            (f) => new Date(f.debut) >= new Date(this.mutationDate),
-          ))
-      ) {
-        this.erreurs = {
-          ...this.erreurs,
-          date: 'Date requise',
-        };
-        return;
-      }
-
-      let mapToId = (e) => e.id;
-
-      if (
-        this.sapFonctions.filter((e) => this.selectedFonctions[e.id]).length
-      ) {
-        this.$store.dispatch('finFonctions', {
-          fin: this.mutationDate,
-          ids: this.sapFonctions
-            .filter((e) => this.selectedFonctions[e.id])
-            .map(mapToId),
-        });
-      }
-      if (this.exercices.filter((e) => this.selectedExercices[e.id]).length) {
-        this.$store.dispatch(
-          'supprimerConvocation',
-          this.exercices
-            .filter((e) => this.selectedExercices[e.id])
-            .map(mapToId),
-        );
-      }
-      if (this.sapGroupes.filter((e) => this.selectedGroupes[e.id]).length) {
-        this.$store.dispatch(
-          'quitterGroupes',
-          this.sapGroupes
-            .filter((e) => this.selectedGroupes[e.id])
-            .map(mapToId),
-        );
-      }
-
-      this.errors = {};
-      this.HIDE_MODAL();
-    },
-    selectGroupe(state, groupeId) {
-      if (groupeId) {
-        this.selectedGroupes[groupeId] = state;
-      } else {
-        this.selectedGroupes = Object.fromEntries(
-          this.activeSapeurGroupe.map((g) => [g.id, state]),
-        );
-      }
-    },
-    selectExercice(state, exerciceId) {
-      if (exerciceId) {
-        this.selectedExercices[exerciceId] = state;
-      } else {
-        this.selectedExercices = Object.fromEntries(
-          this.activeSapeurExercice.map((g) => [g.id, state]),
-        );
-      }
-    },
-    selectFonction(state, fonctionId) {
-      if (fonctionId) {
-        this.selectedFonctions[fonctionId] = state;
-      } else {
-        this.selectedFonctions = Object.fromEntries(
-          this.activeSapeurFonction.map((g) => [g.id, state]),
-        );
-      }
-    },
-  },
-};
-</script>
 
 <style scoped>
 #mutation-desactivation-table tbody tr td:first-child,

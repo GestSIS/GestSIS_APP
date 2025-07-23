@@ -301,7 +301,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     selectIndemnite(index) {
       this.activeIndemniteIndex = index;
       this.activeIndemnite = this.computedIndemnites[index];
@@ -309,7 +309,7 @@ export default {
     cancel() {
       (this.callback() ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
-          this.HIDE_MODAL();
+          this.closeModal();
         }
       });
     },

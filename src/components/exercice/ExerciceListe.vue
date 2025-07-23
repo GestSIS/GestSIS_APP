@@ -368,13 +368,13 @@ export default {
   },
   methods: {
     ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
+      showModal: 'showModal',
+      closeModal: 'closeModal',
     }),
     convoquer() {
       this.$store
         .dispatch('fetchConvocationParams')
-        .then(() => this.SHOW_MODAL({ component: 'ModalConvoquer', size: 1 }));
+        .then(() => this.showModal({ component: 'ModalConvoquer', size: 1 }));
     },
     sms({ id }) {
       if (!this.hasSmsEnvoiePermission) {
@@ -384,7 +384,7 @@ export default {
         return;
       }
       const exercice = this.exercices.find((e) => e.id == id);
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalSmsExercice',
         size: 2,
         data: exercice,
@@ -412,7 +412,7 @@ export default {
       this.$store.dispatch('reactiverExercice', id);
     },
     removeExercice(id) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalConfirmation',
         data: {
           title: 'Voulez-vous vraiment supprimer cet exercice ?',
@@ -430,13 +430,13 @@ export default {
       this.selectedId = row?.id;
     },
     listePresences({ id }) {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
+      this.showModal({ component: 'ModalChargement' });
       ExerciceService.downloadListPresence(id, 'liste-presence.pdf')
         .then(() => {
-          this.HIDE_MODAL();
+          this.closeModal();
         })
         .catch((err) => {
-          this.HIDE_MODAL();
+          this.closeModal();
           this.$awn.alert(
             err?.message ||
               "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
@@ -444,13 +444,13 @@ export default {
         });
     },
     listeAppel({ id }) {
-      this.SHOW_MODAL({ component: 'ModalChargement' });
+      this.showModal({ component: 'ModalChargement' });
       ExerciceService.downloadListAppel(id, 'liste-appel.pdf')
         .then(() => {
-          this.HIDE_MODAL();
+          this.closeModal();
         })
         .catch((err) => {
-          this.HIDE_MODAL();
+          this.closeModal();
           this.$awn.alert(
             err?.message ||
               "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",

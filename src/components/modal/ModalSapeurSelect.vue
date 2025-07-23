@@ -479,7 +479,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     flattenedSapeurGeneric(relation, comparison, displayKey) {
       let liste = [];
       const svm = this;
@@ -523,7 +523,7 @@ export default {
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
-          this.HIDE_MODAL();
+          this.closeModal();
         }
       });
     },
@@ -543,7 +543,7 @@ export default {
       this.callback({ ajoute: newSap, supprime: removedSap, tous: sapeurs })
         .then((close) => {
           if (close ?? true) {
-            svm.HIDE_MODAL();
+            svm.closeModal();
           }
         })
         .catch((errorMessage) => {

@@ -31,7 +31,6 @@ export default {
         amendes: [],
       };
       state.active = {
-        compteId: null,
         ecritures: [],
       };
     },
@@ -58,11 +57,6 @@ export default {
         (e) => e.id != ecritureId
       );
     },
-    [types.UPDATE_COMPTE_LISTE](state, payload) {
-      if (state.active.compteId === null && payload.length > 0) {
-        state.active.compteId = payload[0].id;
-      }
-    },
     [types.UPDATE_FRAIS_INDEMNITES_TYPES](state, payload) {
       state.fraisIndemnites = {
         ...state.fraisIndemnites,
@@ -80,9 +74,6 @@ export default {
     },
     [types.UPDATE_CURRENT_COMPTE_ECRITURES](state, payload) {
       state.active.ecritures = payload;
-    },
-    [types.SELECT_CURRENT_COMPTE](state, payload) {
-      state.active.compteId = payload;
     },
     [types.ADD_FRAIS_INDEMNITE_ANNUEL](state, fraisIndemnite) {
       state.fraisIndemnites.annuels = [
@@ -202,11 +193,6 @@ export default {
     },
   },
   actions: {
-    selectActiveCompte({ commit, dispatch }, compteId) {
-      commit(types.SELECT_CURRENT_COMPTE, compteId);
-      return dispatch('fetchEcritureComptes', compteId);
-    },
-
     addEcriture({ commit }, ecriture) {
       return ImputationService.addEcriture(ecriture).then((data) => {
         commit(types.ADD_ECRITURE, data);

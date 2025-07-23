@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Nouveau jeton d'inscription</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div v-if="step === 1" class="modal-body">
       <div class="mb-3">
@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ step == 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
@@ -120,7 +120,7 @@ export default {
     this.$refs.desc.focus();
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     copyToClipboard() {
       const copyText = this.$refs.displayedToken;
 
@@ -155,7 +155,7 @@ export default {
           this.errors = {};
           this.step = 2;
           this.token.token = token;
-          // this.HIDE_MODAL();
+          // this.closeModal();
         })
         .catch((errors) => {
           this.errors = {

@@ -4,30 +4,13 @@ import FonctionService from '../../services/FonctionService.js';
 export default {
   state: {
     liste: [],
-    currentFonction: {
-      id: 0,
-      fonction_id: 0,
-      debut: null,
-      fin: null,
-      remarque: '',
-    },
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
-      state.currentFonction = {
-        id: 0,
-        fonction_id: 0,
-        debut: null,
-        fin: null,
-        remarque: '',
-      };
     },
     [types.UPDATE_FONCTION_LISTE](state, payload) {
       state.liste = payload.sort((a, b) => b.tri - a.tri);
-    },
-    [types.UPDATE_CURRENT_FONCTION](state, payload) {
-      state.currentFonction = payload;
     },
     [types.ADD_FONCTION](state, fonction) {
       state.liste = [...state.liste, fonction];
@@ -66,18 +49,6 @@ export default {
       return FonctionService.removeFonction(fonctionId).then((data) => {
         commit(types.REMOVE_FONCTION, fonctionId);
         return data;
-      });
-    },
-    updateActiveFonction({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_FONCTION, payload);
-    },
-    resetActiveFonction({ commit }) {
-      return commit(types.UPDATE_CURRENT_FONCTION, {
-        id: 0,
-        fonction_id: 0,
-        debut: null,
-        fin: null,
-        remarque: '',
       });
     },
   },

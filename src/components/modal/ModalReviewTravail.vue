@@ -1,12 +1,50 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  exercice_comptable_id: null,
+  ...data,
+  sapeurs: [
+    { sapeur_id: data?.sapeur_id ?? null, quantite: data?.quantite ?? null },
+  ],
+});
+const initialQuantite = ref(data.quantite);
+
+const store = useStore();
+
+const unites = computed(() => store.state.unite.liste);
+const travailTypes = computed(() => store.state.travailType.liste);
+const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+
+const { closeModal } = useModalStore();
+
+const review = (accepte) => {
+  store
+    .dispatch('reviewTravail', { ...form, accepte })
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="review(true)">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Revue du travail</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <base-select
-        v-model="activeTravail.travail_type_id"
+        v-model="form.travail_type_id"
         class="mb-3"
         :options="travailTypes"
         label="Travail"
@@ -16,7 +54,7 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeTravail.designation"
+          v-model="form.designation"
           type="text"
           class="form-control form-control-sm"
           disabled
@@ -28,7 +66,7 @@
             <label for="date">Date</label>
             <input
               id="date"
-              v-model="activeTravail.date"
+              v-model="form.date"
               type="date"
               class="form-control form-control-sm"
               disabled
@@ -37,7 +75,7 @@
         </div>
         <div class="col-6">
           <base-select
-            v-model="activeTravail.sapeur_id"
+            v-model="form.sapeur_id"
             class="mb-3"
             label="Sapeur"
             display-key="nom_prenom"
@@ -50,7 +88,7 @@
       <div class="input-group input-group-sm mb-3">
         <input
           id="quantite"
-          v-model="activeTravail.quantite"
+          v-model="form.quantite"
           name="quantite"
           type="number"
           min="0"
@@ -61,7 +99,7 @@
             unites.find(
               (u) =>
                 u.id ==
-                travailTypes.find((t) => t.id == activeTravail.travail_type_id)
+                travailTypes.find((t) => t.id == form.travail_type_id)
                   ?.type_unite_id,
             )?.unite
           }}</span
@@ -70,7 +108,7 @@
       <div class="row">
         <div class="col-6">
           <base-select
-            v-model="activeTravail.auteur_id"
+            v-model="form.auteur_id"
             class="mb-3"
             label="Saisie par"
             display-key="nom_prenom"
@@ -83,7 +121,7 @@
             <label for="date">Le</label>
             <input
               id="date"
-              v-model="activeTravail.date_demande"
+              v-model="form.date_demande"
               type="date"
               class="form-control form-control-sm"
               disabled
@@ -95,15 +133,13 @@
         <label for="justification">Justification</label>
         <textarea
           id="justification"
-          ref="justification"
-          v-model="activeTravail.justification"
+          v-model="form.justification"
+          autofocus
           class="form-control form-control-sm"
           placeholder="(optionnel)"
-          :required="initialQuantite != activeTravail.quantite"
+          :required="initialQuantite != form.quantite"
         ></textarea>
-        <label
-          v-if="initialQuantite != activeTravail.quantite"
-          class="text-danger"
+        <label v-if="initialQuantite != form.quantite" class="text-danger"
           ><em
             >Quantité modifiée, justifiez ce changement pour plus de
             transparence</em
@@ -113,12 +149,14 @@
 
       <div class="row">
         <div class="col-6">
-          <button class="btn btn-primary col-12" @click="review(true)">
-            Accepter
-          </button>
+          <button type="submit" class="btn btn-primary col-12">Accepter</button>
         </div>
         <div class="col-6">
-          <button class="btn btn-danger col-12" @click="review(false)">
+          <button
+            type="button"
+            class="btn btn-danger col-12"
+            @click="review(false)"
+          >
             Refuser
           </button>
         </div>
@@ -128,85 +166,10 @@
       <button
         type="button"
         class="btn btn-outline-secondary"
-        @click="HIDE_MODAL()"
+        @click="closeModal()"
       >
         Annuler
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import permissions from '../../store/permissions.js';
-
-export default {
-  name: 'ModalReviewTravail',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      columnCreationIndex: 0,
-      columns: [],
-      base: [],
-      activeTravail: {
-        exercice_comptable_id: null,
-        sapeurs: [{ sapeur_id: null, quantite: null }],
-      },
-      initialQuantite: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      unites: (state) => state.unite.liste,
-      travailTypes: (state) => state.travailType.liste,
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeSapeurId: (state) => state.auth.sapeurId,
-      hasSaisieCommunePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(
-          permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-        ),
-    }),
-  },
-  mounted() {
-    this.activeTravail = {
-      ...this.data,
-      sapeurs: [
-        { sapeur_id: this.data.sapeur_id, quantite: this.data.quantite },
-      ],
-    };
-    this.initialQuantite = this.data.quantite;
-    this.$refs.justification.focus();
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      HIDE_MODAL: 'closeModal',
-      UPDATE_MODAL_SIZE: 'resize',
-    }),
-    async review(accepte) {
-      this.$store
-        .dispatch('reviewTravail', { ...this.activeTravail, accepte })
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

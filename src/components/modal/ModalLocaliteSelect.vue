@@ -202,11 +202,11 @@ export default {
     this.$store.dispatch('fetchLocalites');
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
-          this.HIDE_MODAL();
+          this.closeModal();
         }
       });
     },
@@ -222,7 +222,7 @@ export default {
       this.callback({ ajoute: newLoc, supprime: removedLoc, tous: localites })
         .then((close) => {
           if (close ?? true) {
-            svm.HIDE_MODAL();
+            svm.closeModal();
           }
         })
         .catch((errorMessage) => {

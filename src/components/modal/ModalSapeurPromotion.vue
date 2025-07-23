@@ -1,22 +1,53 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  remarque: '',
+  ...data,
+});
+
+const store = useStore();
+const grades = computed(() => store.state.grade.liste);
+
+const { closeModal } = useModalStore();
+
+const save = () => {
+  store
+    .dispatch((form.id || 0) === 0 ? 'addSapeurGrade' : 'editSapeurGrade', form)
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Ajouter une promotion</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="cours-date">Date de la promotion</label>
         <input
           id="cours-date"
-          v-model="activeGrade.date"
+          v-model="form.date"
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
         />
       </div>
       <base-select
-        v-model="activeGrade.grade_id"
+        v-model="form.grade_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['grade_id'] }"
         label="Grade"
@@ -26,7 +57,7 @@
         <label for="remarque">Remarque</label>
         <input
           id="remarque"
-          v-model="activeGrade.remarque"
+          v-model="form.remarque"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
@@ -34,61 +65,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeGrade.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalSapeurPromotion',
-  data() {
-    return {
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      grades: (state) => state.grade.liste,
-      activeGrade: (state) => state.grade.active,
-      activeSapeurId: (state) => state.sapeur.active.id,
-    }),
-  },
-  mounted() {
-    if (this.grades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      if ((this.activeGrade.id || 0) === 0) {
-        this.$store
-          .dispatch('addSapeurGrade', this.activeGrade)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => (this.errors = errors));
-      } else {
-        this.$store
-          .dispatch('editSapeurGrade', this.activeGrade)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => (this.errors = errors));
-      }
-    },
-  },
-};
-</script>

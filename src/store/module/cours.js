@@ -4,40 +4,13 @@ import CoursService from '../../services/CoursService.js';
 export default {
   state: {
     liste: [],
-    active: {
-      id: 0,
-      cours_id: 0,
-      fonction_id: 0,
-      fonction_sapeur_id: 0,
-      grade_id: 0,
-      localite_id: 0,
-      precedent_id: 0,
-      date: null,
-      date_fonction: null,
-      date_grade: null,
-    },
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
-      state.active = {
-        id: 0,
-        cours_id: 0,
-        fonction_id: 0,
-        fonction_sapeur_id: 0,
-        grade_id: 0,
-        localite_id: 0,
-        precedent_id: 0,
-        date: null,
-        date_fonction: null,
-        date_grade: null,
-      };
     },
     [types.UPDATE_COURS_LISTE](state, payload) {
       state.liste = payload.sort((c1, c2) => c2.tri - c1.tri);
-    },
-    [types.UPDATE_CURRENT_COURS](state, payload) {
-      state.active = payload;
     },
     [types.ADD_COURS](state, cours) {
       state.liste = [...state.liste, cours].sort((c1, c2) => c2.tri - c1.tri);
@@ -73,23 +46,6 @@ export default {
       return CoursService.removeCours(coursId).then((data) => {
         commit(types.REMOVE_COURS, coursId);
         return data;
-      });
-    },
-    updateActiveCours({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_COURS, payload);
-    },
-    resetActiveCours({ commit }) {
-      return commit(types.UPDATE_CURRENT_COURS, {
-        id: 0,
-        cours_id: 0,
-        fonction_id: 0,
-        fonction_sapeur_id: 0,
-        grade_id: 0,
-        localite_id: 0,
-        precedent_id: 0,
-        date: null,
-        date_fonction: null,
-        date_grade: null,
       });
     },
   },

@@ -20,6 +20,7 @@ await Promise.all([
 const fields = [
   { title: 'Désignation', key: 'designation' },
   { title: 'Catégorie comptable', key: 'categorie' },
+  { title: 'Actif', key: 'actif', type: Boolean },
   { title: 'Actions', slot: 'actions' },
 ];
 
@@ -106,7 +107,10 @@ const deleteTravailType = (travailType) =>
         :selectable="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+          <generic-details-row
+            :options="detailRowOptions"
+            :row-data="rowData"
+          />
         </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">

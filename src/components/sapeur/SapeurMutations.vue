@@ -32,24 +32,17 @@ const removeMutation = (mutation) =>
     'Voulez-vous vraiment supprimer cette mutation ?',
     "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
   ).then(() => store.dispatch('removeMutation', mutation?.id));
-const editMutation = (mutation) => {
-  store.dispatch('updateActiveMutation', Object.assign({}, mutation));
-  showModal('ModalMutation');
-};
-const finService = () => {
-  store.dispatch(
-    'updateActiveMutation',
-    Object.assign(
-      { action: 'finService' },
-      mutations.value.find((m) => !m.sortie),
-    ),
-  );
-  showModal('ModalMutation');
-};
-const incorporation = () => {
-  store.dispatch('resetActiveMutation');
-  showModal('ModalMutation');
-};
+
+const editMutation = (mutation) =>
+  showModal({ component: 'ModalMutation', data: mutation });
+
+const finService = () =>
+  showModal({
+    component: 'ModalMutation',
+    data: { action: 'finService', ...mutations.value.find((m) => !m.sortie) },
+  });
+
+const incorporation = () => showModal('ModalMutation');
 
 const fields = [
   { title: 'Incorporation', key: 'incorporation', type: Date },

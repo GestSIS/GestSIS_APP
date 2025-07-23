@@ -192,7 +192,7 @@ export default {
     this.$refs.table.showAllDetailRow();
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     selectIndemnite(indemnite) {
       this.activeIndemnite = indemnite;
     },
@@ -200,7 +200,7 @@ export default {
       //TODO Cancel depending on state
       (this.callback() ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
-          this.HIDE_MODAL();
+          this.closeModal();
         }
       });
     },

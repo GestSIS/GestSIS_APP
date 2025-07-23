@@ -124,7 +124,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ phase === 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
@@ -188,7 +188,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     montantAnnuelTypePourFonction(type, fonction) {
       const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
       return elem?.quantite * elem?.montant || '';
@@ -207,7 +207,7 @@ export default {
       return this.categories.find((c) => c.id === id)?.designation;
     },
     cancel() {
-      this.HIDE_MODAL();
+      this.closeModal();
     },
     imputer() {
       this.$store

@@ -1,25 +1,126 @@
+<script setup>
+import { computed, inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  actif: true,
+  fonctions: [],
+  type_unite_id: 6,
+  ...data,
+});
+const base = ref(data?.fonctions?.filter((f) => !f.fonction_id) || []);
+if (!base.value.length) {
+  // Ajout d'un revenu de base de type solde
+  base.value.push({
+    type: 1,
+    id: null,
+    tarif: null,
+    tarif_min: null,
+    tarif_min_pour: null,
+    compte_id: null,
+    fonction_id: null,
+  });
+}
+
+const store = useStore();
+
+const unites = computed(() => store.state.unite.liste); //.filter(u => !(u.id in [3, 4, 5, 7])))
+const comptes = computed(() => store.state.compte.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const ajoutType = () => {
+  base.value.push({
+    type: 1,
+    tarif: null,
+    tarif_min: null,
+    tarif_min_pour: null,
+    compte_id: null,
+    fonction_id: null,
+  });
+};
+const supprimerType = (i) => {
+  base.value.splice(i, 1);
+};
+const save = async () => {
+  errors.value = {};
+
+  // Contrôle qu'aucune colonne n'est dupliquée
+  const baseSet = new Set(base.value.map((e) => e.type + ' ' + e.compte_id));
+  if (baseSet.size != base.value.length) {
+    awn.alert(
+      "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
+    );
+    return;
+  }
+
+  // Contrôle des données de base
+  base.value.forEach((e, i) => {
+    if (!e.type) errors.value['base-type' + i] = true;
+    if (!e.compte_id) errors.value['base-compte' + i] = true;
+    if (!e.tarif || e.tarif < 0) errors.value['base-tarif' + i] = true;
+    if (e.tarif_min && e.tarif_min < 0)
+      errors.value['base-tarif-min' + i] = true;
+    if (e.tarif_min_pour && e.tarif_min_pour < 0)
+      errors.value['base-tarif-min-pour' + i] = true;
+  });
+
+  // Return en cas d'erreurs
+  if (Object.keys(errors.value).length > 0) {
+    return;
+  }
+
+  // Generate data
+  const indemnite = {
+    ...form,
+    fonctions: [...base.value],
+  };
+
+  store
+    .dispatch(
+      (indemnite.id || 0) === 0 ? 'addTravailType' : 'updateTravailType',
+      indemnite,
+    )
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeTravailType.id ? 'Modifier' : 'Ajouter' }} un travail type
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un travail type
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeTravailType.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
       <base-select
-        v-model="activeTravailType.type_unite_id"
+        v-model="form.type_unite_id"
         class="mb-3"
+        :required="true"
         :class="{ 'is-invalid': errors['type_unite_id'] }"
         label="Unité"
         display-key="unite"
@@ -40,6 +141,7 @@
               <td class="col-3">
                 <base-select
                   v-model="base[i].type"
+                  :required="true"
                   :class="{ 'is-invalid': errors['base-type' + i] }"
                   :options="[
                     { id: 1, designation: 'Solde' },
@@ -54,6 +156,7 @@
                   <input
                     id="tarif"
                     v-model="base[i].tarif"
+                    required
                     type="text"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-tarif' + i] }"
@@ -61,9 +164,7 @@
                   <span class="input-group-text">
                     CHF /
                     {{
-                      unites.find(
-                        (u) => u.id == activeTravailType.type_unite_id,
-                      )?.unite
+                      unites.find((u) => u.id == form.type_unite_id)?.unite
                     }}</span
                   >
                 </div>
@@ -71,6 +172,7 @@
               <td class="col-7">
                 <base-select
                   v-model="base[i].compte_id"
+                  :required="true"
                   :class="{ 'is-invalid': errors['base-compte' + i] }"
                   display-key="label"
                   :options="comptes"
@@ -102,156 +204,22 @@
         </table>
       </div>
       <base-select
-        v-model="activeTravailType.ecriture_categorie_id"
+        v-model="form.ecriture_categorie_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         :options="categories"
         label="Catégorie comptable"
       />
-      <base-checkbox
-        v-model="activeTravailType.actif"
-        class="mb-3"
-        label="Actif"
-      />
+      <base-checkbox v-model="form.actif" class="mb-3" label="Actif" />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeTravailType.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalTravailType',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      columnCreationIndex: 0,
-      base: [],
-      activeTravailType: {
-        actif: true,
-        fonctions: [],
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      unites: (state) => state.unite.liste, //.filter(u => !(u.id in [3, 4, 5, 7])),
-      comptes: (state) => state.compte.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-    }),
-  },
-  mounted() {
-    this.activeTravailType = {
-      ...this.activeTravailType,
-      type_unite_id: 6, // Set unité type défault à forfait
-      ...this.data,
-    };
-
-    this.base = this.data?.fonctions?.filter((f) => !f.fonction_id) || [];
-    if (!this.base.length) {
-      // Ajout d'un revenu de base de type solde
-      this.base.push({
-        type: 1,
-        id: null,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
-      });
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      HIDE_MODAL: 'closeModal',
-      UPDATE_MODAL_SIZE: 'resize',
-    }),
-    updateTarif(index, e) {
-      this.activeTravailType.fonctions[index].tarif = e.target.value;
-    },
-    updateIndemnite(index, e) {
-      this.activeTravailType.fonctions[index].indemnite = e.target.value;
-    },
-    ajoutType() {
-      this.base.push({
-        type: 1,
-        tarif: null,
-        tarif_min: null,
-        tarif_min_pour: null,
-        compte_id: null,
-        fonction_id: null,
-      });
-    },
-    supprimerType(i) {
-      this.base.splice(i, 1);
-    },
-    async save() {
-      this.errors = {};
-
-      // Contrôle qu'aucune colonne n'est dupliquée
-      const baseSet = new Set(this.base.map((e) => e.type + ' ' + e.compte_id));
-      if (baseSet.size != this.base.length) {
-        this.$awn.alert(
-          "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
-        );
-        return;
-      }
-
-      // Contrôle des données de base
-      this.base.forEach((e, i) => {
-        if (!e.type) this.errors['base-type' + i] = true;
-        if (!e.compte_id) this.errors['base-compte' + i] = true;
-        if (!e.tarif || e.tarif < 0) this.errors['base-tarif' + i] = true;
-        if (e.tarif_min && e.tarif_min < 0)
-          this.errors['base-tarif-min' + i] = true;
-        if (e.tarif_min_pour && e.tarif_min_pour < 0)
-          this.errors['base-tarif-min-pour' + i] = true;
-      });
-
-      // Return en cas d'erreurs
-      if (Object.keys(this.errors).length > 0) {
-        return;
-      }
-
-      // Generate data
-      const fonctions = [...this.base];
-
-      const indemnite = {
-        ...this.activeTravailType,
-        fonctions,
-      };
-
-      const action =
-        (indemnite.id || 0) === 0 ? 'addTravailType' : 'updateTravailType';
-      this.$store
-        .dispatch(action, indemnite)
-        .then(() => {
-          this.errors = {};
-          this.HIDE_MODAL();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>

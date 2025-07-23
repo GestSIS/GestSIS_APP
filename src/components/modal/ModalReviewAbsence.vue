@@ -2,7 +2,7 @@
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Revue absence</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -315,7 +315,7 @@
       <button
         type="button"
         class="btn btn-outline-secondary"
-        @click="HIDE_MODAL()"
+        @click="closeModal()"
       >
         Fermer
       </button>
@@ -420,7 +420,7 @@ export default {
         (a) => a.id == this.data.id,
       );
     } else if (!this.computedAbsences.length) {
-      this.HIDE_MODAL();
+      this.closeModal();
       this.$awn.warning('Attention, aucune absence à traiter');
     } else {
       this.activeAbsence = this.computedAbsences[0];
@@ -428,10 +428,7 @@ export default {
     this.loadSapeurExercices();
   },
   methods: {
-    ...mapActions(useModalStore, {
-      HIDE_MODAL: 'closeModal',
-      UPDATE_MODAL_SIZE: 'resize',
-    }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     async review(state) {
       this.activeAbsence.excuse_statut = state;
       return this.$store

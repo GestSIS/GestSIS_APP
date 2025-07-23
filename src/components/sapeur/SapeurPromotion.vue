@@ -28,14 +28,9 @@ const activeSapeurGrades = computed(() =>
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
-const newGrade = () => {
-  store.dispatch('resetActiveGrade');
-  showModal('ModalSapeurPromotion');
-};
-const editGrade = (grade) => {
-  store.dispatch('updateActiveGrade', Object.assign({}, grade));
-  showModal('ModalSapeurPromotion');
-};
+const newGrade = () => showModal('ModalSapeurPromotion');
+const editGrade = (grade) =>
+  showModal({ component: 'ModalSapeurPromotion', data: grade });
 const supprimerGrade = (grade) =>
   confirm(
     'Voulez-vous vraiment supprimer ce grade ?',

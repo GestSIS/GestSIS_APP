@@ -249,11 +249,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     close() {
       (this.callback(null) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
-          this.HIDE_MODAL();
+          this.closeModal();
         }
       });
     },
@@ -263,7 +263,7 @@ export default {
         .then((data) => {
           (this.callback(data.id) ?? Promise.resolve()).then((close) => {
             if (close ?? true) {
-              this.HIDE_MODAL();
+              this.closeModal();
             }
           });
         })

@@ -272,23 +272,23 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
+    ...mapActions(useModalStore, { showModal: 'showModal' }),
     selectExercice(row) {
       this.selectedId = row?.id;
     },
     review() {
       // TODO: Select première absence
-      this.SHOW_MODAL({ component: 'ModalReviewAbsence', size: 2 });
+      this.showModal({ component: 'ModalReviewAbsence', size: 2 });
     },
     reviewAbsence(absence) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalReviewAbsence',
         size: 2,
         data: absence,
       });
     },
     cancelReviewAbsence(absence) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalConfirmation',
         data: {
           title: "Voulez-vous vraiment annuler l'examen de cette absence ?",

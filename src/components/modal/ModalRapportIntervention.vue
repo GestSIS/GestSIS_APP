@@ -4,7 +4,7 @@
       <h5 id="exampleModalLabel" class="modal-title">
         Rapport d'intervention - Configuration
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="form-check">
@@ -129,7 +129,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="generer()">
@@ -181,20 +181,20 @@ export default {
   },
   methods: {
     ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
+      showModal: 'showModal',
+      closeModal: 'closeModal',
     }),
     generer() {
       const interventionId = this.data.interventionId;
       const date = this.data.date;
-      this.SHOW_MODAL({ component: 'ModalChargement' });
+      this.showModal({ component: 'ModalChargement' });
       InterventionService.downloadRapport(
         interventionId,
         this.params,
         `${date}_intervention.pdf`,
       )
-        .then(() => this.HIDE_MODAL())
-        .catch(() => this.HIDE_MODAL());
+        .then(() => this.closeModal())
+        .catch(() => this.closeModal());
     },
   },
 };

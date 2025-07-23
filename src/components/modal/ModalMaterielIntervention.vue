@@ -4,7 +4,7 @@
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeMateriel.id ? 'Modifier' : 'Ajouter' }} du matériel
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -74,7 +74,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -120,7 +120,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     localite(localite) {
       return localite?.designation;
     },
@@ -130,7 +130,7 @@ export default {
           .dispatch('addMateriel', this.activeMateriel)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>
@@ -143,7 +143,7 @@ export default {
           .dispatch('updateMateriel', this.activeMateriel)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch((errors) => {
             this.errors = {

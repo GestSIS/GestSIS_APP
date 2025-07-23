@@ -1,15 +1,112 @@
+<script setup>
+import { computed, reactive, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  precedent_id: 0,
+  ...data,
+});
+
+const store = useStore();
+
+const cours = computed(() => store.state.cours.liste);
+const grades = computed(() => store.state.grade.liste);
+const fonctions = computed(() => store.state.fonction.liste);
+const localites = computed(() => store.state.localite.liste);
+const sapeurFonctions = computed(() => store.state.sapeur.active.fonctions);
+
+const addMode = computed(() => (form.id || 0) === 0);
+
+const filteredCours = computed(() => {
+  if (form.date == null) {
+    return cours.value;
+  } else {
+    const date = new Date(form.date);
+    return cours.value.filter(
+      (c) =>
+        (c.validite_fin == null || new Date(c.validite_fin) >= date) &&
+        (c.validite_debut == null || new Date(c.validite_debut) <= date),
+    );
+  }
+});
+
+if (data.id || 0 === 0) {
+  store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+  watch(
+    () => form.cours_id,
+    (cours_id) => {
+      let c = cours.value.find((c) => c.id == cours_id);
+      form.fonction_id = c.fonction_id || 0;
+      form.grade_id = c.grade_id || 0;
+      form.precedent_id = c.precedent_id || 0;
+      form.fonction_sapeur_id = 0;
+      form.duree = c?.duree ?? 0;
+
+      if (form.fonction_id !== 0) {
+        let fonction = fonctions.value.find((f) => f.id == form.fonction_id);
+        if (fonction.cumulable === 0) {
+          let funcs = sapeurFonctions.value
+            .filter((f) => f.fin === null)
+            .filter(
+              (f) =>
+                fonctions.value.find((e) => e.id == f.fonction_id).cumulable ===
+                0,
+            );
+          if (funcs.length > 0) {
+            form.fonction_sapeur_id = funcs[0].id || 0;
+          }
+        }
+      }
+    },
+  );
+}
+
+const { closeModal } = useModalStore();
+
+const save = () => {
+  let saveData = Object.assign({}, form);
+  Object.keys(saveData).map((key) => {
+    saveData[key] =
+      saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
+  });
+
+  store
+    .dispatch(addMode.value ? 'addSapeurCours' : 'editSapeurCours', saveData)
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+};
+const dateChange = () => {
+  if (!form.date_grade) {
+    form.date_grade = form.date;
+  }
+  if (!form.date_fonction) {
+    form.date_fonction = form.date;
+  }
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Saisie d'un cours</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="cours-date">Date du cours</label>
         <input
           id="cours-date"
-          v-model="activeCours.date"
+          v-model="form.date"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
@@ -17,7 +114,8 @@
         />
       </div>
       <base-select
-        v-model="activeCours.cours_id"
+        v-model="form.cours_id"
+        :required="true"
         class="mb-3"
         label="Cours"
         :class="{ 'is-invalid': errors['cours_id'] }"
@@ -29,7 +127,8 @@
         <div class="input-group">
           <input
             id="duree"
-            v-model="activeCours.duree"
+            v-model="form.duree"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['duree'] }"
@@ -38,7 +137,8 @@
         </div>
       </div>
       <base-select
-        v-model="activeCours.localite_id"
+        v-model="form.localite_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['localite_id'] }"
         label="Localité"
@@ -46,7 +146,8 @@
       />
       <base-select
         v-if="addMode"
-        v-model="activeCours.precedent_id"
+        v-model="form.precedent_id"
+        :required="true"
         class="mb-3"
         label="Cours précédent"
         base-option="-"
@@ -59,7 +160,8 @@
       <div v-if="addMode" class="row">
         <div class="col-md-8">
           <base-select
-            v-model="activeCours.grade_id"
+            v-model="form.grade_id"
+            :required="true"
             class="mb-3"
             :class="{ 'is-invalid': errors['grade_id'] }"
             base-option="-"
@@ -70,7 +172,7 @@
         <div class="col-md-4">
           <div class="mb-3">
             <input
-              v-model="activeCours.date_grade"
+              v-model="form.date_grade"
               type="date"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_grade'] }"
@@ -85,7 +187,8 @@
       <div v-if="addMode" class="row">
         <div class="col-md-8">
           <base-select
-            v-model="activeCours.fonction_id"
+            v-model="form.fonction_id"
+            :required="true"
             class="mb-3"
             :class="{ 'is-invalid': errors['fonction_id'] }"
             base-option="-"
@@ -97,7 +200,7 @@
         <div class="col-md-4">
           <div class="mb-3">
             <input
-              v-model="activeCours.date_fonction"
+              v-model="form.date_fonction"
               type="date"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_fonction'] }"
@@ -111,157 +214,29 @@
       <div v-if="addMode" class="row">
         <div class="col-md-8">
           <base-select
-            v-model="activeCours.fonction_sapeur_id"
+            v-model="form.fonction_sapeur_id"
+            :required="true"
             class="mb-3"
             :class="{ 'is-invalid': errors['fonction_sapeur_id'] }"
             base-option="-"
             base-value="0"
             display-key="nom"
             :options="
-              activeSapeurFonctions.map((s) =>
-                fonctions.find((f) => f.id == s.fonction_id),
-              )
+              sapeurFonctions
+                .map((s) => fonctions.find((f) => f.id == s.fonction_id))
+                .filter((f) => f)
             "
           />
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="submit" class="btn btn-primary">
         {{ addMode ? 'Ajouter' : 'Modifier' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalSapeurCours',
-  data() {
-    return {
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      cours: (state) => state.cours.liste,
-      grades: (state) => state.grade.liste,
-      fonctions: (state) => state.fonction.liste,
-      localites: (state) => state.localite.liste,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurFonctions: (state) => state.sapeur.active.fonctions,
-      activeCours: (state) => state.cours.active,
-    }),
-    addMode() {
-      return (this.activeCours.id || 0) === 0;
-    },
-    activeCoursId() {
-      return this.activeCours.cours_id;
-    },
-    activesFonctions() {
-      return this.activeSapeurFonctions.filter((f) => f.fin === null);
-    },
-    filteredCours() {
-      if (this.activeCours.date == null) {
-        return this.cours;
-      } else {
-        const date = new Date(this.activeCours.date);
-        return this.cours.filter(
-          (c) =>
-            (c.validite_fin == null || new Date(c.validite_fin) >= date) &&
-            (c.validite_debut == null || new Date(c.validite_debut) <= date),
-        );
-      }
-    },
-  },
-  watch: {
-    activeSapeurId(id) {
-      this.$store.dispatch('fetchSapeurCours', id);
-    },
-    activeCoursId: function (cours_id) {
-      let cours = this.cours.find((c) => c.id == cours_id);
-      this.activeCours.fonction_id = cours.fonction_id || 0;
-      this.activeCours.grade_id = cours.grade_id || 0;
-      this.activeCours.precedent_id = cours.precedent_id || 0;
-      this.activeCours.fonction_sapeur_id = 0;
-      this.activeCours.duree = cours?.duree ?? 0;
-
-      if (this.activeCours.fonction_id !== 0) {
-        let fonction = this.fonctions.find(
-          (f) => f.id == this.activeCours.fonction_id,
-        );
-        if (fonction.cumulable === 0) {
-          let fonctions = this.activesFonctions.filter(
-            (f) =>
-              this.fonctions.find((e) => e.id == f.fonction_id).cumulable === 0,
-          );
-          if (fonctions.length > 0) {
-            this.activeCours.fonction_sapeur_id = fonctions[0].id || 0;
-          }
-        }
-      }
-    },
-  },
-  mounted() {
-    if (this.activeSapeurFonctions.length === 0) {
-      this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-    }
-
-    if (this.cours.length === 0) {
-      this.$store.dispatch('fetchCours');
-    }
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-    if (this.grades.length === 0) {
-      this.$store.dispatch('fetchGrades');
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
-    async save() {
-      let saveData = Object.assign({}, this.activeCours);
-      Object.keys(saveData).map((key) => {
-        saveData[key] =
-          saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
-      });
-
-      if (this.addMode) {
-        this.$store
-          .dispatch('addSapeurCours', saveData)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-            this.$store.dispatch('fetchSapeurFonctions', this.activeSapeurId);
-            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-          })
-          .catch((errors) => (this.errors = errors));
-      } else {
-        this.$store
-          .dispatch('editSapeurCours', saveData)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-            this.$store.dispatch('fetchSapeurGrades', this.activeSapeurId);
-          })
-          .catch((errors) => (this.errors = errors));
-      }
-    },
-    dateChange() {
-      if (!this.activeCours.date_grade) {
-        this.activeCours.date_grade = this.activeCours.date;
-      }
-      if (!this.activeCours.date_fonction) {
-        this.activeCours.date_fonction = this.activeCours.date;
-      }
-    },
-  },
-};
-</script>

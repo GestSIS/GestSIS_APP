@@ -31,17 +31,9 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
 
-const newCours = () => {
-  store.dispatch('resetActiveCours');
-  showModal('ModalSapeurCours');
-};
-const editCours = (cours) => {
-  store.dispatch(
-    'updateActiveCours',
-    Object.assign({ precedent_id: 0 }, cours),
-  );
-  showModal('ModalSapeurCours');
-};
+const newCours = () => showModal('ModalSapeurCours');
+const editCours = (cours) =>
+  showModal({ component: 'ModalSapeurCours', data: cours });
 
 const supprimerCours = (cours) =>
   confirm(

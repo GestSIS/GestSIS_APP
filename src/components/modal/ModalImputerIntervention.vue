@@ -186,7 +186,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ phase === 1 ? 'Annuler' : 'Fermer' }}
       </button>
       <button
@@ -245,14 +245,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     selectIndemnite(index) {
       this.activeIndemniteIndex = index;
       this.activeIndemnite = this.indemnitesTypes[index];
     },
     cancel() {
       //TODO Cancel depending on state
-      this.HIDE_MODAL();
+      this.closeModal();
     },
     imputer() {
       if (this.indemniteType === null) {

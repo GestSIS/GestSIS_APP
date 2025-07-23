@@ -4,7 +4,7 @@
       <h5 id="exampleModalLabel" class="modal-title">
         Modifier présences de {{ sapeur?.nom_prenom }}
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body table-responsive p-0">
       <table id="sap-fonctions" class="table table-sm">
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr v-if="presences.length <= 0">
-            <td colspan="9">Aucun exercice à afficher</td>
+            <td colspan="12">Aucun exercice à afficher</td>
           </tr>
           <tr v-for="e in presences" :key="e.id">
             <td>
@@ -172,7 +172,7 @@
                   class="btn btn-outline-primary border-0"
                   @click="
                     () => {
-                      HIDE_MODAL();
+                      closeModal();
                       navigate();
                     }
                   "
@@ -186,7 +186,7 @@
       </table>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
     </div>
@@ -261,8 +261,8 @@ export default {
   },
   methods: {
     ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
+      showModal: 'showModal',
+      closeModal: 'closeModal',
     }),
     canEditAbsence(exercice) {
       // Possible de l'éditer si permission de validation ou si pas encore validé
@@ -308,7 +308,7 @@ export default {
       this.savePresence(sapeur);
     },
     detailExcuse(sapeur) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalExcuse',
         data: sapeur,
         callback: (presence) => {
@@ -322,7 +322,7 @@ export default {
               ),
             ];
           }
-          this.SHOW_MODAL({
+          this.showModal({
             component: 'ModalPresenceExercice',
             size: 2,
           });
@@ -331,7 +331,7 @@ export default {
       });
     },
     async addExcuse(sapeur) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalExcuse',
         data: sapeur,
         callback: async (presence) => {
@@ -346,7 +346,7 @@ export default {
               ),
             ];
           }
-          this.SHOW_MODAL({
+          this.showModal({
             component: 'ModalPresenceExercice',
             size: 2,
           });
@@ -355,7 +355,7 @@ export default {
       });
     },
     removeExcuse(sapeur) {
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalConfirmation',
         data: {
           title: 'Voulez-vous vraiment supprimer cette excuse ?',
@@ -366,7 +366,7 @@ export default {
           if (confirmed) {
             await this.$store.dispatch('removeExcuse', sapeur?.presence);
           }
-          this.SHOW_MODAL({
+          this.showModal({
             component: 'ModalPresenceExercice',
             size: 2,
           });

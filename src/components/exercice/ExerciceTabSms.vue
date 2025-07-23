@@ -74,7 +74,7 @@ export default {
     this.$store.dispatch('fetchExerciceSms', this.activeExerciceId);
   },
   methods: {
-    ...mapActions(useModalStore, { SHOW_MODAL: 'showModal' }),
+    ...mapActions(useModalStore, { showModal: 'showModal' }),
     sendSms() {
       if (!this.hasSmsEnvoiePermission) {
         this.$awn.alert(
@@ -83,7 +83,7 @@ export default {
         return;
       }
 
-      this.SHOW_MODAL({
+      this.showModal({
         component: 'ModalSmsExercice',
         size: 2,
         data: this.activeExerciceData,

@@ -4,28 +4,13 @@ import GradeService from '../../services/GradeService.js';
 export default {
   state: {
     liste: [],
-    active: {
-      id: 0,
-      grade_id: 0,
-      date: null,
-      remarque: '',
-    },
   },
   mutations: {
     [types.CLEAR_CACHE](state) {
       state.liste = [];
-      state.active = {
-        id: 0,
-        grade_id: 0,
-        date: null,
-        remarque: '',
-      };
     },
     [types.UPDATE_GRADE_LISTE](state, payload) {
       state.liste = payload;
-    },
-    [types.UPDATE_CURRENT_GRADE](state, payload) {
-      state.active = payload;
     },
     [types.ADD_GRADE](state, grade) {
       state.liste = [...state.liste, grade];
@@ -64,17 +49,6 @@ export default {
       return GradeService.removeGrade(gradeId).then((data) => {
         commit(types.REMOVE_GRADE, gradeId);
         return data;
-      });
-    },
-    updateActiveGrade({ commit }, payload) {
-      return commit(types.UPDATE_CURRENT_GRADE, payload);
-    },
-    resetActiveGrade({ commit }) {
-      return commit(types.UPDATE_CURRENT_GRADE, {
-        id: 0,
-        grade_id: 0,
-        date: null,
-        remarque: '',
       });
     },
   },

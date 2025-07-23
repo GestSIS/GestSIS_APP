@@ -1,15 +1,80 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  ...data,
+});
+
+const store = useStore();
+
+//Chargement de données en prévision de la fin de service
+store.dispatch('fetchSapeurExercices', {
+  sapeurId: store.state.sapeur.active.id,
+  exerciceComptableId: store.state.exerciceComptable.activeId,
+});
+store.dispatch('fetchSapeurGroupes', store.state.sapeur.active.id);
+store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+
+const localites = computed(() => store.state.localite.liste);
+
+const finDeService = computed(() => form.action == 'finService');
+
+const { closeModal, showModal } = useModalStore();
+
+const save = () => {
+  if ((form.id || 0) === 0) {
+    store
+      .dispatch('addMutation', form)
+      .then(closeModal)
+      .catch((err) => (errors.value = err));
+  } else {
+    store
+      .dispatch('editMutation', form)
+      .then(() => {
+        errors.value = {};
+
+        if (
+          (finDeService.value || (!form.sortie && !!form.sortie)) &&
+          store.state.sapeur.active.groupes.length +
+            store.state.sapeur.active.exercices.length +
+            store.state.sapeur.active.fonctions.length >
+            0
+        ) {
+          showModal('ModalMutationDesactivation');
+        } else {
+          closeModal();
+        }
+      })
+      .catch((err) => (errors.value = err));
+  }
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">{{ modalTitle }}</h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <h5 id="exampleModalLabel" class="modal-title">
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une mutation
+      </h5>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3" :class="{ 'd-none': finDeService }">
         <label for="cours-date">Incorporation</label>
         <input
           id="incorporation"
-          v-model="activeMutation.incorporation"
+          v-model="form.incorporation"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['incorporation'] }"
@@ -19,7 +84,7 @@
         <label for="cours-date">Fin de service</label>
         <input
           id="cours-date"
-          v-model="activeMutation.sortie"
+          v-model="form.sortie"
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['sortie'] }"
@@ -29,7 +94,8 @@
         </div>
       </div>
       <base-select
-        v-model="activeMutation.localite_id"
+        v-model="form.localite_id"
+        :required="true"
         class="mb-3"
         :class="{ 'd-none': finDeService, 'is-invalid': errors['localite_id'] }"
         label="Localité"
@@ -39,7 +105,7 @@
         <label for="motif">Motif</label>
         <input
           id="motif"
-          v-model="activeMutation.motif"
+          v-model="form.motif"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['motif'] }"
@@ -47,116 +113,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ buttonValidateText }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalMutation',
-  data() {
-    return {
-      errors: {},
-      modalTitle: 'Ajouter une mutation',
-      mutationInitiale: {},
-      groupes: [],
-      exercices: [],
-      fonctions: [],
-    };
-  },
-  computed: {
-    ...mapState({
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeMutation: (state) => state.mutation.active,
-      localites: (state) => state.localite.liste,
-    }),
-    finDeService() {
-      return this.activeMutation.action == 'finService';
-    },
-    buttonValidateText() {
-      if (this.finDeService) {
-        return 'Valider';
-      }
-
-      return this.activeMutation.id ? 'Modifier' : 'Ajouter';
-    },
-  },
-  mounted() {
-    if (this.finDeService) {
-      this.modalTitle = 'Fin de service';
-    }
-    if (this.localites.length === 0) {
-      this.$store.dispatch('fetchLocalites');
-    }
-
-    //Chargement de données en prévision de la fin de service
-
-    this.mutationInitiale = Object.assign({}, this.activeMutation);
-    this.$store.dispatch('fetchExerciceCategories', this.activeSapeurId);
-    this.$store.dispatch('fetchGroupes', this.activeSapeurId);
-
-    this.$store
-      .dispatch(
-        'fetchSapeurExercices',
-        this.activeSapeurId,
-        this.activeExerciceComptableId,
-      )
-      .then((data) => (this.exercices = data));
-    this.$store
-      .dispatch('fetchSapeurGroupes', this.activeSapeurId)
-      .then((data) => (this.groupes = data));
-    this.$store
-      .dispatch('fetchSapeurFonctions', this.activeSapeurId)
-      .then((data) => (this.fonctions = data));
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      SHOW_MODAL: 'showModal',
-      HIDE_MODAL: 'closeModal',
-    }),
-    async save() {
-      if ((this.activeMutation.id || 0) === 0) {
-        this.$store
-          .dispatch('addMutation', this.activeMutation)
-          .then(() => {
-            this.errors = {};
-            this.HIDE_MODAL();
-          })
-          .catch((errors) => (this.errors = errors));
-      } else {
-        this.$store
-          .dispatch('editMutation', this.activeMutation)
-          .then(() => {
-            this.errors = {};
-
-            if (
-              (this.finDeService ||
-                (!this.mutationInitiale.sortie &&
-                  !!this.activeMutation.sortie)) &&
-              this.groupes.length +
-                this.exercices.length +
-                this.fonctions.length >
-                0
-            ) {
-              this.SHOW_MODAL('ModalMutationDesactivation');
-            } else {
-              this.HIDE_MODAL();
-            }
-          })
-          .catch((errors) => (this.errors = errors));
-      }
-    },
-  },
-};
-</script>

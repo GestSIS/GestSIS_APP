@@ -5,7 +5,7 @@
         {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une heure additionelle
         pour exercice
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -69,7 +69,7 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -112,14 +112,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     async save() {
       if ((this.activeHeure.id || 0) === 0) {
         this.$store
           .dispatch('addExerciceHeure', this.activeHeure)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>
@@ -132,7 +132,7 @@ export default {
           .dispatch('updateExerciceHeure', this.activeHeure)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch((errors) => {
             this.errors = {

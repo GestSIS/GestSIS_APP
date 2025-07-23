@@ -4,7 +4,7 @@
       <h5 id="exampleModalLabel" class="modal-title">
         {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
       </h5>
-      <button type="button" class="btn-close" @click="HIDE_MODAL()"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="HIDE_MODAL()">
+      <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
@@ -119,7 +119,7 @@ export default {
       ?.slice(0, 16);
   },
   methods: {
-    ...mapActions(useModalStore, { HIDE_MODAL: 'closeModal' }),
+    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
     async save() {
       // Format back dates to SQL Format
       this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
@@ -131,7 +131,7 @@ export default {
           .dispatch('addInterventionAppel', this.activeAppel)
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>
@@ -151,7 +151,7 @@ export default {
           })
           .then(() => {
             this.errors = {};
-            this.HIDE_MODAL();
+            this.closeModal();
           })
           .catch(
             (errors) =>
