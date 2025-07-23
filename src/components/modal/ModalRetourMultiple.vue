@@ -1,5 +1,51 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const all = ref(true);
+const form = reactive({
+  date: new Date().toISOString().slice(0, 10),
+  ...data,
+});
+const selected = ref(Object.fromEntries(data.map((m) => [m.id, true])));
+
+const store = useStore();
+// FIXME: a réimplémenter
+const types = computed(() => store.state.matPersoType.liste);
+
+const { closeModal } = useModalStore();
+
+const toggleAll = (value) => {
+  selected.value = Object.fromEntries(data.map((e) => [e.id, value]));
+};
+
+const save = () => {
+  store
+    .dispatch('retourMatPerso', {
+      date: form.date,
+      materielIds: Object.entries(selected.value)
+        .filter(([, selected]) => selected)
+        .map(([id]) => id),
+    })
+    .then(() => {
+      store.dispatch('fetchMatPersoARecuperer');
+      closeModal();
+    })
+    .catch((err) => (errors.value = err));
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Retour matériel</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
@@ -9,7 +55,8 @@
         <label for="date">Date du retour</label>
         <input
           id="date"
-          v-model="activeAttribution.date"
+          v-model="form.date"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
@@ -67,65 +114,7 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Valider
-      </button>
+      <button type="submit" class="btn btn-primary">Valider</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalRetourMultiple',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      all: true,
-      errors: {},
-      activeAttribution: {
-        date: new Date().toISOString().slice(0, 10),
-      },
-      selected: {},
-    };
-  },
-  computed: {
-    ...mapState({ types: (state) => state.matPersoType.liste }),
-  },
-  mounted() {
-    this.activeAttribution = {
-      ...this.activeAttribution,
-    };
-    this.data.forEach((m) => (this.selected[m.id] = true));
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    toggleAll(value) {
-      this.selected = Object.fromEntries(this.data.map((e) => [e.id, value]));
-    },
-    async save() {
-      this.$store
-        .dispatch('retourMatPerso', {
-          date: this.activeAttribution.date,
-          materielIds: Object.entries(this.selected)
-            .filter(([, selected]) => selected)
-            .map(([id]) => id),
-        })
-        .then(() => {
-          this.errors = {};
-          this.$store.dispatch('fetchMatPersoARecuperer');
-          this.closeModal();
-        })
-        .catch((errors) => (this.errors = errors));
-    },
-  },
-};
-</script>

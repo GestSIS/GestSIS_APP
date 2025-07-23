@@ -1,9 +1,43 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  ...data,
+});
+
+const store = useStore();
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+
+const { closeModal } = useModalStore();
+
+const save = () =>
+  store
+    .dispatch(
+      (this.form.id || 0) === 0 ? 'addExerciceHeure' : 'updateExerciceHeure',
+      this.form,
+    )
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }} une heure additionelle
-        pour exercice
+        {{ form.id ? 'Modifier' : 'Ajouter' }} une heure additionelle pour
+        exercice
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -12,7 +46,8 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="activeHeure.designation"
+          v-model="form.designation"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['designation'] }"
@@ -22,14 +57,16 @@
         <label for="montant">Montant</label>
         <input
           id="montant"
-          v-model="activeHeure.montant"
+          v-model="form.montant"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['montant'] }"
         />
       </div>
       <base-select
-        v-model="activeHeure.type_unite_id"
+        v-model="form.type_unite_id"
+        :required="true"
         class="mb-3"
         label="Unité"
         display-key="unite"
@@ -38,7 +75,8 @@
         :select-class="{ 'is-invalid': errors['type_unite_id'] }"
       />
       <base-select
-        v-model="activeHeure.compte_id"
+        v-model="form.compte_id"
+        :required="true"
         class="mb-3"
         label="Compte"
         base-option="&lt;Compte&gt;"
@@ -46,7 +84,8 @@
         :select-class="{ 'is-invalid': errors['compte_id'] }"
       />
       <base-select
-        v-model="activeHeure.ecriture_categorie_id"
+        v-model="form.ecriture_categorie_id"
+        :required="true"
         class="mb-3"
         label="Catégorie comptable"
         base-option="&lt;Catégorie comptable&gt;"
@@ -54,7 +93,8 @@
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />
       <base-select
-        v-model="activeHeure.type"
+        v-model="form.type"
+        :required="true"
         class="mb-3"
         label="Type"
         :options="[
@@ -72,75 +112,9 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeHeure.id ? 'Modifier' : 'Ajouter' }}
+      <button type="submit" class="btn btn-primary">
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalExerciceHeure',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeHeure: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-    }),
-  },
-  mounted() {
-    this.activeHeure = {
-      ...this.activeHeure,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async save() {
-      if ((this.activeHeure.id || 0) === 0) {
-        this.$store
-          .dispatch('addExerciceHeure', this.activeHeure)
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('updateExerciceHeure', this.activeHeure)
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch((errors) => {
-            this.errors = {
-              ...errors,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

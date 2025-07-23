@@ -1,17 +1,68 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  type: 0,
+  nom: '',
+  prenom: '',
+  rue: '',
+  no_rue: '',
+  localite_id: null,
+  no_avs: '',
+  email: '',
+  date_naissance: '',
+  suffixe: '',
+  incorporation: '',
+  remarque: '',
+  civilite_id: null,
+});
+
+const store = useStore();
+const localites = computed(() => store.state.localite.liste);
+const civilites = computed(() => store.state.baseData.civilites);
+
+const { closeModal } = useModalStore();
+
+const save = async () => {
+  store
+    .dispatch('createSapeur', form)
+    .then((data) => {
+      (callback(data.id) ?? Promise.resolve()).then((close) => {
+        if (close ?? true) {
+          closeModal();
+        }
+      });
+    })
+    .catch((err) => {
+      errors.value = err;
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        Ajouter un {{ sapeur.type == 0 ? 'sapeur' : 'civil' }}
+        Ajouter un {{ form.type == 0 ? 'sapeur' : 'civil' }}
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check form-check-inline">
           <input
             id="inlineRadio1"
-            v-model="sapeur.type"
+            v-model="form.type"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
@@ -22,7 +73,7 @@
         <div class="form-check form-check-inline">
           <input
             id="inlineRadio2"
-            v-model="sapeur.type"
+            v-model="form.type"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
@@ -32,7 +83,8 @@
         </div>
       </div>
       <base-select
-        v-model="sapeur.civilite_id"
+        v-model="form.civilite_id"
+        :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['civilite_id'] }"
         label="Civilité"
@@ -43,7 +95,8 @@
           <label for="m-sap-nom">Nom</label>
           <input
             id="m-sap-nom"
-            v-model="sapeur.nom"
+            v-model="form.nom"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['nom'] }"
@@ -54,7 +107,8 @@
           <label for="m-sap-prenom">Prénom</label>
           <input
             id="m-sap-prenom"
-            v-model="sapeur.prenom"
+            v-model="form.prenom"
+            required
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['prenom'] }"
@@ -64,7 +118,8 @@
       </div>
       <div class="mb-3 row">
         <base-select
-          v-model="sapeur.localite_id"
+          v-model="form.localite_id"
+          :required="true"
           class="col-4"
           :class="{ 'is-invalid': errors['localite_id'] }"
           label="Localité"
@@ -74,7 +129,7 @@
           <label for="m-sap-rue">Rue</label>
           <input
             id="m-sap-rue"
-            v-model="sapeur.rue"
+            v-model="form.rue"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['rue'] }"
@@ -85,7 +140,7 @@
           <label for="m-sap-no-rue">N°</label>
           <input
             id="m-sap-no-rue"
-            v-model="sapeur.no_rue"
+            v-model="form.no_rue"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['no_rue'] }"
@@ -97,7 +152,7 @@
         <label for="m-sap-avs">N° AVS</label>
         <input
           id="m-sap-avs"
-          v-model="sapeur.no_avs"
+          v-model="form.no_avs"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['no_avs'] }"
@@ -113,7 +168,7 @@
             </div>
             <input
               id="m-sap-email"
-              v-model="sapeur.email"
+              v-model="form.email"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['email'] }"
               type="email"
@@ -129,7 +184,7 @@
             </div>
             <input
               id="m-sap-iban"
-              v-model="sapeur.iban"
+              v-model="form.iban"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['iban'] }"
               type="iban"
@@ -138,7 +193,7 @@
           </div>
         </div>
       </div>
-      <div v-if="sapeur.type === 0" class="row mb-3">
+      <div v-if="form.type === 0" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
           <div class="input-group input-group-sm">
@@ -147,7 +202,7 @@
             </div>
             <input
               id="m-sap-date-naissance"
-              v-model="sapeur.date_naissance"
+              v-model="form.date_naissance"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date_naissance'] }"
               type="date"
@@ -166,7 +221,7 @@
           />
           <input
             id="m-sap-suffixe"
-            v-model="sapeur.suffixe"
+            v-model="form.suffixe"
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['suffixe'] }"
@@ -174,7 +229,7 @@
           />
         </div>
       </div>
-      <div v-if="sapeur.type === 0" class="mb-3">
+      <div v-if="form.type === 0" class="mb-3">
         <label for="m-sap-email">Date incorporation</label>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-text">
@@ -182,7 +237,7 @@
           </div>
           <input
             id="m-sap-incorporation"
-            v-model="sapeur.incorporation"
+            v-model="form.incorporation"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['incorporation'] }"
             type="date"
@@ -194,7 +249,7 @@
         <label for="m-sap-remarques">Remarques</label>
         <textarea
           id="m-sap-remarques"
-          v-model="sapeur.remarque"
+          v-model="form.remarque"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['remarque'] }"
           rows="3"
@@ -203,74 +258,14 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" @click="save()">Ajouter</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="closeModal()"
+      >
+        Annuler
+      </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalSapeur',
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      sapeur: {
-        type: 0,
-        nom: '',
-        prenom: '',
-        rue: '',
-        no_rue: '',
-        localite_id: null,
-        no_avs: '',
-        email: '',
-        date_naissance: '',
-        suffixe: '',
-        incorporation: '',
-        remarque: '',
-        civilite_id: null,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      civilites: (state) => state.baseData.civilites,
-      localites: (state) => state.localite.liste,
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.closeModal();
-        }
-      });
-    },
-    async save() {
-      this.$store
-        .dispatch('createSapeur', this.sapeur)
-        .then((data) => {
-          (this.callback(data.id) ?? Promise.resolve()).then((close) => {
-            if (close ?? true) {
-              this.closeModal();
-            }
-          });
-        })
-        .catch((errors) => {
-          this.errors = errors;
-        });
-    },
-  },
-};
-</script>

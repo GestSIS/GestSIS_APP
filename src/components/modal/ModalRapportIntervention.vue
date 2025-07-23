@@ -1,5 +1,52 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '/src/store/permissions.js';
+import InterventionService from '/src/services/InterventionService.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  infoGeneral: true,
+  description: true,
+  groupes: true,
+  presences: true,
+  vehicules: true,
+  materiel: true,
+  absents: true,
+  statut: true,
+  missions: true,
+  appels: true,
+  montants: false,
+});
+
+const hasComptabilitePermission = useHasPermission(
+  permissions.COMPTABILITE.LECTURE,
+);
+
+const { closeModal, showModal } = useModalStore();
+
+const generer = () => {
+  showModal({ component: 'ModalChargement' });
+  InterventionService.downloadRapport(
+    data.interventionId,
+    form,
+    `${data.date}_intervention.pdf`,
+  )
+    .then(() => closeModal())
+    .catch(() => closeModal());
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="generer">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         Rapport d'intervention - Configuration
@@ -10,7 +57,7 @@
       <div class="form-check">
         <input
           id="infoGeneral"
-          v-model="params.infoGeneral"
+          v-model="form.infoGeneral"
           type="checkbox"
           class="form-check-input"
         />
@@ -21,7 +68,7 @@
       <div class="form-check">
         <input
           id="description"
-          v-model="params.description"
+          v-model="form.description"
           type="checkbox"
           class="form-check-input"
         />
@@ -32,7 +79,7 @@
       <div class="form-check">
         <input
           id="groupes"
-          v-model="params.groupes"
+          v-model="form.groupes"
           type="checkbox"
           class="form-check-input"
         />
@@ -41,7 +88,7 @@
       <div class="form-check">
         <input
           id="presences"
-          v-model="params.presences"
+          v-model="form.presences"
           type="checkbox"
           class="form-check-input"
         />
@@ -52,7 +99,7 @@
       <div class="form-check">
         <input
           id="vehicules"
-          v-model="params.vehicules"
+          v-model="form.vehicules"
           type="checkbox"
           class="form-check-input"
         />
@@ -63,7 +110,7 @@
       <div class="form-check">
         <input
           id="materiel"
-          v-model="params.materiel"
+          v-model="form.materiel"
           type="checkbox"
           class="form-check-input"
         />
@@ -72,7 +119,7 @@
       <div class="form-check">
         <input
           id="absents"
-          v-model="params.absents"
+          v-model="form.absents"
           type="checkbox"
           class="form-check-input"
         />
@@ -83,7 +130,7 @@
       <div class="form-check">
         <input
           id="statut"
-          v-model="params.statut"
+          v-model="form.statut"
           type="checkbox"
           class="form-check-input"
         />
@@ -94,7 +141,7 @@
       <div class="form-check">
         <input
           id="missions"
-          v-model="params.missions"
+          v-model="form.missions"
           type="checkbox"
           class="form-check-input"
         />
@@ -105,7 +152,7 @@
       <div class="form-check">
         <input
           id="appels"
-          v-model="params.appels"
+          v-model="form.appels"
           type="checkbox"
           class="form-check-input"
         />
@@ -119,7 +166,7 @@
       >
         <input
           id="montants"
-          v-model="params.montants"
+          v-model="form.montants"
           type="checkbox"
           class="form-check-input"
         />
@@ -132,70 +179,7 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button type="button" class="btn btn-primary" @click="generer()">
-        Générer
-      </button>
+      <button type="submit" class="btn btn-primary">Générer</button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-
-import InterventionService from '/src/services/InterventionService.js';
-
-export default {
-  name: 'ModalRapportIntervention',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      params: {
-        infoGeneral: true,
-        description: true,
-        groupes: true,
-        presences: true,
-        vehicules: true,
-        materiel: true,
-        absents: true,
-        statut: true,
-        missions: true,
-        appels: true,
-        montants: false,
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      hasComptabilitePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.COMPTABILITE.LECTURE),
-    }),
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      showModal: 'showModal',
-      closeModal: 'closeModal',
-    }),
-    generer() {
-      const interventionId = this.data.interventionId;
-      const date = this.data.date;
-      this.showModal({ component: 'ModalChargement' });
-      InterventionService.downloadRapport(
-        interventionId,
-        this.params,
-        `${date}_intervention.pdf`,
-      )
-        .then(() => this.closeModal())
-        .catch(() => this.closeModal());
-    },
-  },
-};
-</script>

@@ -1,10 +1,46 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  actif: 1,
+  ...data,
+});
+
+const store = useStore();
+const comptes = computed(() => store.state.compte.liste);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+
+const { closeModal } = useModalStore();
+
+const save = () =>
+  this.$store
+    .dispatch(
+      form?.id
+        ? 'updateFraisIndemniteAnnuelType'
+        : 'addFraisIndemniteAnnuelType',
+      form,
+    )
+    .then(closeModal)
+    .catch((err) => (errors.value = err));
+</script>
+
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ active.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
         {{
-          active.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
+          form.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
         }}
         type
       </h5>
@@ -15,7 +51,7 @@
         <label for="designation">Désignation</label>
         <input
           id="designation"
-          v-model="active.designation"
+          v-model="form.designation"
           required
           type="text"
           class="form-control form-control-sm"
@@ -23,7 +59,7 @@
         />
       </div>
       <base-select
-        v-model="active.type"
+        v-model="form.type"
         :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['type'] }"
@@ -34,27 +70,27 @@
         ]"
       />
       <base-select
-        v-model="active.compte_id"
+        v-model="form.compte_id"
         :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['compte_id'] }"
         label="Compte"
         display-key="label"
-        :options="listeCompte"
+        :options="comptes"
       />
       <base-select
-        v-model="active.ecriture_categorie_id"
+        v-model="form.ecriture_categorie_id"
         :required="true"
         class="mb-3"
         :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
         label="Catégorie comptable"
-        :options="listeCategorie"
+        :options="categories"
       />
       <div class="mb-3">
         <div class="form-check">
           <input
             id="fonction-actif-modal"
-            v-model="active.cumulable"
+            v-model="form.cumulable"
             required
             type="checkbox"
             class="form-check-input"
@@ -70,64 +106,8 @@
         Fermer
       </button>
       <button type="submit" class="btn btn-primary">
-        {{ active.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalIndemniteFraisAnnuelType',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      active: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      listeFonction: (state) => state.fonction.liste,
-      listeCompte: (state) => state.compte.liste,
-      listeUnite: (state) => state.unite.liste,
-      listeCategorie: (state) => state.ecritureCategorie.liste,
-    }),
-  },
-  mounted() {
-    this.active = {
-      ...this.active,
-      ...this.data,
-    };
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async save() {
-      const action = this.active?.id
-        ? 'updateFraisIndemniteAnnuelType'
-        : 'addFraisIndemniteAnnuelType';
-      this.$store
-        .dispatch(action, this.active)
-        .then(() => {
-          this.errors = {};
-          this.closeModal();
-        })
-        .catch(
-          (errors) =>
-            (this.errors = {
-              ...errors,
-            }),
-        );
-    },
-  },
-};
-</script>
