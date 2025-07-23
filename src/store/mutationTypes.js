@@ -1,8 +1,4 @@
 export default {
-  showModal: 'showModal',
-  closeModal: 'closeModal',
-  UPDATE_MODAL_SIZE: 'UPDATE_MODAL_SIZE',
-
   CLEAR_CACHE: 'CLEAR_CACHE',
 
   AUTH_SUCCESSFULL: 'AUTH_SUCCESSFULL',
