@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ConvocationService from '/src/services/ConvocationService.js';
@@ -11,17 +11,22 @@ const { data } = defineProps({
   },
 });
 
+const store = useStore();
+
 const errors = ref({});
 const form = ref({
   sapeurIds: [],
+});
+const params = reactive({
+  affichage_duree: true,
+  affichage_pour_info: true,
+  ...store.state.convocationParam.params,
 });
 
 if (data.remount) {
   form.value = data.save;
 }
 
-const store = useStore();
-const convocationParams = computed(() => store.state.convocationParam.params);
 const exerciceComptableId = computed(
   () => store.state.exerciceComptable.activeId,
 );
@@ -30,12 +35,12 @@ const { showModal, closeModal } = useModalStore();
 
 const convoquer = () => {
   showModal({ component: 'ModalChargement' });
-  ConvocationService.downloadConvocations(exerciceComptableId, form)
+  ConvocationService.downloadConvocations(exerciceComptableId.value, form.value)
     .then(closeModal)
     .catch(closeModal);
 };
 const saveParam = () => {
-  store.dispatch('updateConvocationParams', convocationParams);
+  store.dispatch('updateConvocationParams', params);
 };
 const select = () => {
   const save = {
@@ -109,7 +114,7 @@ const resetSelection = () => {
           <div class="input-group input-group-sm mb-3">
             <span id="titre" class="input-group-text">Titre</span>
             <input
-              v-model="convocationParams.titre"
+              v-model="params.titre"
               required
               type="text"
               class="form-control form-control-sm"
@@ -120,13 +125,13 @@ const resetSelection = () => {
             />
           </div>
           <base-checkbox
-            v-model="convocationParams.affichage_duree"
+            v-model="params.affichage_duree"
             class="mb-3"
             label="Affichage de la durée"
             @change="saveParam"
           />
           <base-checkbox
-            v-model="convocationParams.affichage_pour_info"
+            v-model="params.affichage_pour_info"
             class="mb-3"
             label="Affichage des personnes 'Pour information'"
             @change="saveParam"
@@ -143,10 +148,10 @@ const resetSelection = () => {
               />
             </span>
             <input
-              v-model="convocationParams.texte_pour_info"
+              v-model="params.texte_pour_info"
               type="text"
               class="form-control form-control-sm"
-              :disabled="!convocationParams.affichage_pour_info"
+              :disabled="!params.affichage_pour_info"
               placeholder="Pour information"
               aria-label="Pour information"
               aria-describedby="info"
@@ -160,7 +165,7 @@ const resetSelection = () => {
         <label for="debut">Texte de début de convocation</label>
         <textarea
           id="debut"
-          v-model="convocationParams.texte_debut"
+          v-model="params.texte_debut"
           rows="4"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['texte_debut'] }"
@@ -171,7 +176,7 @@ const resetSelection = () => {
         <label for="fin">Texte de fin de convocation</label>
         <textarea
           id="fin"
-          v-model="convocationParams.texte_fin"
+          v-model="params.texte_fin"
           rows="4"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['texte_fin'] }"
