@@ -1,7 +1,145 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const dateDebutMin = data.min.slice(0, 10);
+const dateDebutMax = data.max.slice(0, 10);
+const dateFinMin = null;
+// if (!activeExerciceComptableId) return
+// return (
+//   activeInterventionData.value.date_debut ||
+//   exerciceComptableDebut.value(
+//     activeInterventionData.value.exercice_comptable_id
+//   )
+// )
+const dateFinMax = data.max.slice(0, 10);
+
+const editMode = data.mode === 'edit';
+const date_debut = ref(data.presence?.debut?.slice(0, 10) ?? dateDebutMin);
+const date_fin = ref(data.presence?.fin?.slice(0, 10) ?? dateDebutMin);
+const heure_debut = ref(data.presence?.debut?.slice(11, 16));
+const heure_fin = ref(data.presence?.fin?.slice(11, 16));
+const errors = ref({});
+const selectedSapeurs = ref(
+  Object.fromEntries(data.sapeurs?.map((s) => [s, true]) ?? []),
+);
+const piquet = ref(data.presence?.piquet ?? false);
+
+const store = useStore();
+const sapeurs = computed(() =>
+  store.state.sapeur.liste.filter((s) => s.actif && s.type == 0),
+);
+
+const nbSelectedSapeurs = () => {
+  return Object.keys(selectedSapeurs.value).filter(
+    (s) => selectedSapeurs.value[s],
+  ).length;
+};
+
+const { closeModal } = useModalStore();
+
+const roundTime = (time, minutesToRound) => {
+  let [hours, minutes] = time.split(':');
+  hours = parseInt(hours);
+  minutes = parseInt(minutes);
+
+  // Convert hours and minutes to time in minutes
+  time = hours * 60 + minutes;
+
+  const rounded = Math.round(time / minutesToRound) * minutesToRound;
+  const rHr = '' + Math.floor(rounded / 60);
+  const rMin = '' + (rounded % 60);
+
+  return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
+};
+const roundFin = () => {
+  if (heure_fin.value) {
+    heure_fin.value = roundTime(heure_fin.value, 15);
+  }
+};
+const roundDebut = () => {
+  if (heure_debut.value) {
+    heure_debut.value = roundTime(heure_debut.value, 15);
+  }
+};
+const save = () => {
+  const debut = date_debut.value + ' ' + heure_debut.value;
+  const fin = date_fin.value + ' ' + heure_fin.value;
+  if (editMode) {
+    const presence = {
+      ...data.presence,
+      debut,
+      fin,
+      piquet: piquet.value,
+    };
+    store
+      .dispatch('editPresence', presence)
+      .then(() => {
+        (callback() ?? Promise.resolve()).then((close) => {
+          if (close ?? true) {
+            closeModal();
+          }
+        });
+      })
+      .catch((err) => {
+        errors.value = {
+          ...err,
+          date_debut: err['sapeurs.0.debut'],
+          date_fin: err['sapeurs.0.fin'],
+          heure_debut: err['sapeurs.0.debut'],
+          heure_fin: err['sapeurs.0.fin'],
+        };
+      });
+  } else {
+    let presences = [];
+    Object.keys(selectedSapeurs.value)
+      .filter((s) => selectedSapeurs.value[s])
+      .forEach((s) => {
+        presences = [
+          ...presences,
+          { sapeur_id: s, debut, fin, piquet: piquet.value },
+        ];
+      });
+    store
+      .dispatch('addPresences', presences)
+      .then(() => {
+        (callback() ?? Promise.resolve()).then((close) => {
+          if (close ?? true) {
+            closeModal();
+          }
+        });
+      })
+      .catch((error) => {
+        errors.value = {
+          ...error,
+          date_debut: error['sapeurs.0.debut'],
+          date_fin: error['sapeurs.0.fin'],
+          heure_debut: error['sapeurs.0.debut'],
+          heure_fin: error['sapeurs.0.fin'],
+        };
+      });
+  }
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Ajouter des présences</h5>
+      <h5 id="exampleModalLabel" class="modal-title">
+        {{ editMode ? 'Ajouter des présences' : 'Modifier une présence' }}
+      </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -27,6 +165,7 @@
               <input
                 id="m-int-date-debut"
                 v-model="date_debut"
+                required
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_debut'] }"
                 type="date"
@@ -47,6 +186,7 @@
               <input
                 id="m-int-heure_debut"
                 v-model="heure_debut"
+                required
                 type="time"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure_debut'] }"
@@ -69,6 +209,7 @@
               <input
                 id="m-int-date-fin"
                 v-model="date_fin"
+                required
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date_fin'] }"
                 :min="dateFinMin"
@@ -89,6 +230,7 @@
               <input
                 id="m-int-heure_fin"
                 v-model="heure_fin"
+                required
                 type="time"
                 class="form-control form-control-sm"
                 :class="{
@@ -123,188 +265,12 @@
         Fermer
       </button>
       <button
-        type="button"
+        type="submit"
         class="btn btn-primary"
         :disabled="!nbSelectedSapeurs"
-        @click="save()"
       >
         {{ editMode ? 'Enregistrer' : 'Ajouter' }}
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalPresenceIntervention',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      editMode: false,
-      date_debut: null,
-      date_fin: null,
-      heure_debut: null,
-      heure_fin: null,
-      errors: {},
-      selectedSapeurs: {},
-      piquet: false,
-    };
-  },
-  computed: {
-    ...mapState({
-      // Sapeurs actif et de type sapeur uniquement
-      sapeurs: (state) =>
-        state.sapeur.liste.filter((s) => s.actif && s.type == 0),
-    }),
-    heureDebut() {
-      return null; //this.activeInterventionData.heure_debut
-    },
-    heureFin() {
-      return null; //this.activeInterventionData.heure_fin
-    },
-    dateDebutMin() {
-      return this.data.min.slice(0, 10);
-    },
-    dateDebutMax() {
-      return this.data.max.slice(0, 10);
-    },
-    dateFinMin() {
-      return null;
-      // if (!this.activeExerciceComptableId) return
-      // return (
-      //   this.activeInterventionData.date_debut ||
-      //   this.exerciceComptableDebut(
-      //     this.activeInterventionData.exercice_comptable_id
-      //   )
-      // )
-    },
-    dateFinMax() {
-      return this.data.max.slice(0, 10);
-    },
-    nbSelectedSapeurs() {
-      return Object.keys(this.selectedSapeurs).filter(
-        (s) => this.selectedSapeurs[s],
-      ).length;
-    },
-  },
-  mounted() {
-    this.editMode = this.data.mode === 'edit';
-
-    if (this.editMode) {
-      this.data.sapeurs.forEach(
-        (s) => (this.selectedSapeurs = { ...this.selectedSapeurs, [s]: true }),
-      );
-      this.piquet = this.data.presence.piquet;
-      this.date_debut = this.data.presence.debut.slice(0, 10);
-      this.date_fin = this.data.presence.fin.slice(0, 10);
-      this.heure_debut = this.data.presence.debut.slice(11, 16);
-      this.heure_fin = this.data.presence.fin.slice(11, 16);
-    } else {
-      this.date_debut = this.dateDebutMin;
-      this.date_fin = this.dateDebutMin;
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    roundTime(time, minutesToRound) {
-      let [hours, minutes] = time.split(':');
-      hours = parseInt(hours);
-      minutes = parseInt(minutes);
-
-      // Convert hours and minutes to time in minutes
-      time = hours * 60 + minutes;
-
-      const rounded = Math.round(time / minutesToRound) * minutesToRound;
-      const rHr = '' + Math.floor(rounded / 60);
-      const rMin = '' + (rounded % 60);
-
-      return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
-    },
-    roundFin() {
-      if (this.heure_fin) {
-        this.heure_fin = this.roundTime(this.heure_fin, 15);
-      }
-    },
-    roundDebut() {
-      if (this.heure_debut) {
-        this.heure_debut = this.roundTime(this.heure_debut, 15);
-      }
-    },
-    async save() {
-      const debut = this.date_debut + ' ' + this.heure_debut;
-      const fin = this.date_fin + ' ' + this.heure_fin;
-      if (this.editMode) {
-        const presence = {
-          ...this.data.presence,
-          debut,
-          fin,
-          piquet: this.piquet,
-        };
-        this.$store
-          .dispatch('editPresence', presence)
-          .then(() => {
-            (this.callback() ?? Promise.resolve()).then((close) => {
-              if (close ?? true) {
-                this.closeModal();
-              }
-            });
-          })
-          .catch((error) => {
-            const debut = error['sapeurs.0.debut'];
-            const fin = error['sapeurs.0.fin'];
-            this.errors = {
-              ...error,
-              date_debut: debut,
-              date_fin: fin,
-              heure_debut: debut,
-              heure_fin: fin,
-            };
-          });
-      } else {
-        let presences = [];
-        Object.keys(this.selectedSapeurs)
-          .filter((s) => this.selectedSapeurs[s])
-          .forEach((s) => {
-            presences = [
-              ...presences,
-              { sapeur_id: s, debut, fin, piquet: this.piquet },
-            ];
-          });
-        this.$store
-          .dispatch('addPresences', presences)
-          .then(() => {
-            (this.callback() ?? Promise.resolve()).then((close) => {
-              if (close ?? true) {
-                this.closeModal();
-              }
-            });
-          })
-          .catch((error) => {
-            const debut = error['sapeurs.0.debut'];
-            const fin = error['sapeurs.0.fin'];
-            this.errors = {
-              ...error,
-              date_debut: debut,
-              date_fin: fin,
-              heure_debut: debut,
-              heure_fin: fin,
-            };
-          });
-      }
-    },
-  },
-};
-</script>

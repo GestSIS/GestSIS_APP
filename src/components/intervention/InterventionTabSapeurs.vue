@@ -9,6 +9,7 @@ import InterventionTabPhase from '/src/components/intervention/InterventionTabPh
 
 const store = useStore();
 store.dispatch('fetchPhaseTypes');
+store.dispatch('fetchListeSapeur');
 
 const { id } = defineProps({
   id: {

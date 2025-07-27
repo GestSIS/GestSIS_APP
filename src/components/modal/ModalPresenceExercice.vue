@@ -1,3 +1,177 @@
+<script setup>
+import { computed, inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import ExerciceService from '../../services/ExerciceService';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+
+const { callback, data } = defineProps({
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const excusesTypes = computed(() => store.state.excuseType.liste);
+const sapeur = computed(() =>
+  store.state.sapeur.liste.find((s) => s.id == store.state.sapeur.active.id),
+);
+const localites = computed(() => store.state.localite.liste);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const activeSapeurExercice = computed(
+  () => store.state.sapeur.active.exercices,
+);
+const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
+const hasValidationPermission = useHasPermission(
+  permissions.EXERCICE.VALIDATION,
+);
+const computeExercices = computed(() => {
+  return activeSapeurExercice.value
+    .map((exercice) => ({
+      ...exercice,
+      canceled: exercice.statut == 0,
+      date: new Date(exercice.date),
+      heure: exercice.heure.substr(0, 5),
+      categorie: categories.value.find(
+        (e) => e.id == exercice.exercice_categorie_id,
+      )?.designation,
+      localite: localites.value.find((l) => l.id == exercice.localite_id)
+        ?.designation,
+      amendable: categories.value.find(
+        (c) => c.id == exercice.exercice_categorie_id,
+      )?.amendable,
+    }))
+    .sort((a, b) => a.date - b.date);
+});
+
+const presences = ref([
+  ...computeExercices.value.map((e) => ({ ...e.presence, ...e })),
+]);
+
+const { closeModal, confirm, showModal } = useModalStore();
+const awn = inject('awn');
+
+const canEditAbsence = (exercice) => {
+  // Possible de l'éditer si permission de validation ou si pas encore validé
+  return (
+    exercice.statut > 0 &&
+    (hasValidationPermission.value ||
+      (hasPresencePermission.value && exercice.statut <= 2))
+  );
+};
+const canEditPresence = (exercice) => {
+  return (
+    exercice.statut > 0 &&
+    ((hasPresencePermission.value && exercice.statut <= 2) ||
+      (hasValidationPermission.value && exercice.statut <= 3))
+  );
+};
+const savePresence = async (sapeur) => {
+  try {
+    const res = await store.dispatch('editPresenceExercice', {
+      presenceId: sapeur?.presence?.id,
+      presence: sapeur,
+    });
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
+};
+const selectPresent = (sapeur) => {
+  sapeur.remplace = 0;
+  sapeur.absent = 0;
+  savePresence(sapeur);
+};
+const selectAbsent = (sapeur) => {
+  sapeur.remplace = 0;
+  sapeur.present = 0;
+  savePresence(sapeur);
+};
+const selectRemplace = (sapeur) => {
+  sapeur.present = 0;
+  sapeur.absent = 0;
+  savePresence(sapeur);
+};
+const detailExcuse = (sapeur) => {
+  const savedPresences = presences.value.map((p) => ({ ...p }));
+  showModal({
+    component: 'ModalExcuse',
+    data: sapeur,
+    callback: (presence) => {
+      if (presence !== null && presence !== undefined) {
+        presence.present = 0;
+        presence.remplace = 0;
+        savePresence(presence);
+        presences.value = [
+          ...presences.value?.map((p) =>
+            parseInt(p.id) == parseInt(presence.id) ? presence : p,
+          ),
+        ];
+      }
+      showModal({
+        component: 'ModalPresenceExercice',
+        size: 2,
+      });
+      return Promise.resolve(false);
+    },
+  });
+};
+const addExcuse = (sapeur) => {
+  showModal({
+    component: 'ModalExcuse',
+    data: sapeur,
+    callback: async (presence) => {
+      if (presence !== null && presence !== undefined) {
+        presence.present = 0;
+        presence.absent = 1;
+        presence.remplace = 0;
+        await savePresence(presence);
+        presences.value = [
+          ...presences.value.map((p) =>
+            parseInt(p.id) == parseInt(presence.id) ? presence : p,
+          ),
+        ];
+      }
+      showModal({
+        component: 'ModalPresenceExercice',
+        size: 2,
+      });
+      return Promise.resolve(false);
+    },
+  });
+};
+const removeExcuse = async (sapeur) => {
+  try {
+    await confirm(
+      'Voulez-vous vraiment supprimer cette excuse ?',
+      "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    );
+    await store.dispatch('removeExcuse', sapeur?.presence);
+  } catch {}
+
+  showModal({
+    component: 'ModalPresenceExercice',
+    size: 2,
+  });
+};
+const downloadJustificatif = (sapeur) => {
+  ExerciceService.downloadExcuseJustificatif(
+    sapeur.exercice_id,
+    sapeur.sapeur_id,
+    'justificatif.pdf',
+  ).catch((err) =>
+    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
+  );
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -192,200 +366,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ModalPresenceExercice',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      presences: [],
-    };
-  },
-  computed: {
-    ...mapState({
-      excusesTypes: (state) => state.excuseType.liste,
-      sapeur: (state) =>
-        state.sapeur.liste.find((s) => s.id == state.sapeur.active.id),
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      activeSapeurId: (state) => state.sapeur.active.id,
-      activeSapeurExercice: (state) => state.sapeur.active.exercices,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasPresencePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
-    }),
-    computeExercices() {
-      return this.activeSapeurExercice
-        .map((exercice) => ({
-          ...exercice,
-          canceled: exercice.statut == 0,
-          date: new Date(exercice.date),
-          heure: exercice.heure.substr(0, 5),
-          categorie: this.categories.find(
-            (e) => e.id == exercice.exercice_categorie_id,
-          )?.designation,
-          localite: this.localites.find((l) => l.id == exercice.localite_id)
-            ?.designation,
-          amendable: this.categories.find(
-            (c) => c.id == exercice.exercice_categorie_id,
-          )?.amendable,
-        }))
-        .sort((a, b) => a.date - b.date);
-    },
-  },
-  mounted() {
-    this.presences = [
-      ...this.computeExercices.map((e) => ({ ...e.presence, ...e })),
-    ];
-  },
-  methods: {
-    ...mapActions(useModalStore, {
-      showModal: 'showModal',
-      closeModal: 'closeModal',
-    }),
-    canEditAbsence(exercice) {
-      // Possible de l'éditer si permission de validation ou si pas encore validé
-      return (
-        exercice.statut > 0 &&
-        (this.hasValidationPermission ||
-          (this.hasPresencePermission && exercice.statut <= 2))
-      );
-    },
-    canEditPresence(exercice) {
-      return (
-        exercice.statut > 0 &&
-        ((this.hasPresencePermission && exercice.statut <= 2) ||
-          (this.hasValidationPermission && exercice.statut <= 3))
-      );
-    },
-    savePresence(sapeur) {
-      return this.$store
-        .dispatch('editPresenceExercice', {
-          presenceId: sapeur?.presence?.id,
-          presence: sapeur,
-        })
-        .then((res) =>
-          this.$awn.success(res?.message || 'Modifications enregistrées'),
-        )
-        .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-        );
-    },
-    selectPresent(sapeur) {
-      sapeur.remplace = 0;
-      sapeur.absent = 0;
-      this.savePresence(sapeur);
-    },
-    selectAbsent(sapeur) {
-      sapeur.remplace = 0;
-      sapeur.present = 0;
-      this.savePresence(sapeur);
-    },
-    selectRemplace(sapeur) {
-      sapeur.present = 0;
-      sapeur.absent = 0;
-      this.savePresence(sapeur);
-    },
-    detailExcuse(sapeur) {
-      this.showModal({
-        component: 'ModalExcuse',
-        data: sapeur,
-        callback: (presence) => {
-          if (presence !== null && presence !== undefined) {
-            presence.present = 0;
-            presence.remplace = 0;
-            this.savePresence(presence);
-            this.presences = [
-              ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p,
-              ),
-            ];
-          }
-          this.showModal({
-            component: 'ModalPresenceExercice',
-            size: 2,
-          });
-          return Promise.resolve(false);
-        },
-      });
-    },
-    async addExcuse(sapeur) {
-      this.showModal({
-        component: 'ModalExcuse',
-        data: sapeur,
-        callback: async (presence) => {
-          if (presence !== null && presence !== undefined) {
-            presence.present = 0;
-            presence.absent = 1;
-            presence.remplace = 0;
-            await this.savePresence(presence);
-            this.presences = [
-              ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p,
-              ),
-            ];
-          }
-          this.showModal({
-            component: 'ModalPresenceExercice',
-            size: 2,
-          });
-          return Promise.resolve(false);
-        },
-      });
-    },
-    removeExcuse(sapeur) {
-      this.showModal({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette excuse ?',
-          question:
-            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-        },
-        callback: async (confirmed) => {
-          if (confirmed) {
-            await this.$store.dispatch('removeExcuse', sapeur?.presence);
-          }
-          this.showModal({
-            component: 'ModalPresenceExercice',
-            size: 2,
-          });
-
-          return Promise.resolve(false);
-        },
-      });
-    },
-    downloadJustificatif(sapeur) {
-      ExerciceService.downloadExcuseJustificatif(
-        sapeur.exercice_id,
-        sapeur.sapeur_id,
-        'justificatif.pdf',
-      ).catch((err) =>
-        this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif',
-        ),
-      );
-    },
-  },
-};
-</script>
