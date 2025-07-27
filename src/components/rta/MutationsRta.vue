@@ -78,7 +78,7 @@ const mutations = computed(() => {
     .map((s) => {
       let modifie = false;
 
-      const reference = reference.value.find(
+      const referenceModifie = reference.value.find(
         (s2) => s2.sapeur_id == s.sapeur_id,
       );
       const fields = [
@@ -92,25 +92,27 @@ const mutations = computed(() => {
       let changements = {};
       // Fields
       fields.forEach((f) => {
-        if (s[f] != reference[f]) {
+        if (s[f] != referenceModifie[f]) {
           changements[f] = true;
           modifie = true;
         }
       });
 
       // Groupes
-      const referenceGroupes = new Set(reference.groupes.map((g) => g.no));
+      const referenceGroupes = new Set(
+        referenceModifie.groupes.map((g) => g.no),
+      );
       const actuelGroupes = new Set(s.groupes.map((g) => g.no));
 
       const groupesAjoute = s.groupes
         .map((g) => g.no)
         .filter((g) => !referenceGroupes.has(g));
-      const groupesSupprime = reference.groupes
+      const groupesSupprime = referenceModifie.groupes
         .map((g) => g.no)
         .filter((g) => !actuelGroupes.has(g));
 
       const groupesReference = new Map(
-        reference.groupes.map((g) => [g.no, g.description]),
+        referenceModifie.groupes.map((g) => [g.no, g.description]),
       );
       const groupesModifie = s.groupes.filter(
         (g) =>
@@ -135,20 +137,22 @@ const mutations = computed(() => {
 
       const groupes = [
         ...s.groupes,
-        ...reference.groupes.filter((g) => groupesSupprime.includes(g.no)),
+        ...referenceModifie.groupes.filter((g) =>
+          groupesSupprime.includes(g.no),
+        ),
       ];
 
       // Numéros
-      const numerosAjoute = reference.numeros.length;
+      const numerosAjoute = referenceModifie.numeros.length;
       const numerosSupprime = s.numeros.length;
       const numerosModifie = s.numeros
         .slice(0, Math.min(numerosAjoute, numerosSupprime))
-        .map((n, index) => (reference.numeros[index] != n ? index : -1))
+        .map((n, index) => (referenceModifie.numeros[index] != n ? index : -1))
         .filter((i) => i >= 0);
 
       const numeros = [
         ...s.numeros,
-        ...reference.numeros.slice(s.numeros.length),
+        ...referenceModifie.numeros.slice(s.numeros.length),
       ];
 
       if (
