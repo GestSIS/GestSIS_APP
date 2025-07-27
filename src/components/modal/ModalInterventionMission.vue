@@ -1,3 +1,82 @@
+<script setup>
+import { computed, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { DateTime } from 'luxon';
+import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
+
+const store = useStore();
+store.dispatch('fetchMissions');
+store.dispatch('fetchListeSapeur');
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  intervention_id: store.state.intervention.active.id,
+  ...data.mission,
+  debut2: data.mission.debut?.replace(' ', 'T'),
+  fin2: data.mission.fin?.replace(' ', 'T'),
+});
+// min = data.min;//DateTime.fromSQL(data.min)slice(0, ).toISO().slice(0, 16);
+// max = data.max;//DateTime.fromSQL(data.max).toISO().slice(0, 16);
+
+const responsableMode = ref(data?.mission?.sapeur_id ? 'sapeur_id' : 'sapeur');
+const format = 'yyyy-MM-dd HH:mm';
+
+const listMissions = computed(() => store.state.mission.liste);
+const listeSapeurs = computed(() =>
+  store.state.sapeur.liste.filter((s) => s.actif),
+);
+
+const { closeModal } = useModalStore();
+
+const save = () => {
+  // Format back dates to SQL Format
+  form.debut = DateTime.fromISO(form.debut2)?.toFormat(format);
+  form.fin = DateTime.fromISO(form.fin2)?.toFormat(format);
+
+  if (responsableMode.value == 'sapeur') {
+    delete form.sapeur_id;
+    if (!form.sapeur) {
+      errors.value.sapeur = 'Manquant';
+      return;
+    }
+  } else {
+    delete form.sapeur;
+    if (!form.sapeur_id) {
+      errors.value.sapeur_id = 'Manquant';
+      return;
+    }
+  }
+
+  store
+    .dispatch(
+      (form.id || 0) === 0
+        ? 'addInterventionMission'
+        : 'editInterventionMission',
+      form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+          debut: err['missions.0.debut'],
+          fin: err['missions.0.fin'],
+          sapeur_id: err['missions.0.sapeur_id'],
+          sapeur: err['missions.0.sapeur'],
+          titre: err['missions.0.titre'],
+        }),
+    );
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -9,17 +88,15 @@
         <label for="debut">Début</label>
         <input
           id="debut"
-          v-model="activeMission.debut2"
+          v-model="form.debut2"
           type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['debut'] }"
         />
-        <!-- :min="min"
-        :max="max"-->
       </div>
       <div class="mb-3">
         <base-autocomplete
-          v-model="activeMission.titre"
+          v-model="form.titre"
           :items="listMissions.map((m) => m.titre)"
           :error="!!errors['titre']"
           title="Titre"
@@ -52,7 +129,7 @@
       </div>
       <base-select
         v-if="responsableMode == 'sapeur_id'"
-        v-model="activeMission.sapeur_id"
+        v-model="form.sapeur_id"
         class="mb-3"
         :class="{ 'is-invalid': errors['sapeur_id'] }"
         display-key="nom_prenom"
@@ -60,7 +137,7 @@
       />
       <div v-if="responsableMode == 'sapeur'" class="mb-3">
         <input
-          v-model="activeMission.sapeur"
+          v-model="form.sapeur"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['sapeur'] }"
@@ -70,19 +147,19 @@
         <label for="fin">Quittance</label>
         <input
           id="fin"
-          v-model="activeMission.fin2"
+          v-model="form.fin2"
           type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['fin'] }"
         />
-        <!-- :min="activeMission.debut2 || min"
+        <!-- :min="form.debut2 || min"
         :max="max"-->
       </div>
       <div class="mb-3">
         <label for="resume">Résumé</label>
         <textarea
           id="resume"
-          v-model="activeMission.resume"
+          v-model="form.resume"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['resume'] }"
         ></textarea>
@@ -93,122 +170,8 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeMission.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-
-import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
-
-export default {
-  name: 'ModalInterventionMission',
-  components: {
-    BaseAutocomplete,
-  },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      responsableMode: this.data?.mission?.sapeur ? 'sapeur' : 'sapeur_id',
-      activeMission: {},
-      format: 'yyyy-MM-dd HH:mm',
-      // min: null,
-      // max: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      listMissions: (state) => state.mission.liste,
-      listeSapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-      activeInterventionId: (state) => state.intervention.active.id,
-    }),
-  },
-  mounted() {
-    if (this.listMissions.length === 0) {
-      this.$store.dispatch('fetchMissions');
-    }
-    this.activeMission = this.data.mission;
-    // this.min = this.data.min;//DateTime.fromSQL(this.data.min)slice(0, ).toISO().slice(0, 16);
-    // this.max = this.data.max;//DateTime.fromSQL(this.data.max).toISO().slice(0, 16);
-
-    this.activeMission.debut2 = this.activeMission.debut?.replace(' ', 'T');
-    this.activeMission.fin2 = this.activeMission.fin?.replace(' ', 'T');
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async save() {
-      // Format back dates to SQL Format
-      this.activeMission.debut = DateTime.fromISO(
-        this.activeMission.debut2,
-      )?.toFormat(this.format);
-      this.activeMission.fin = DateTime.fromISO(
-        this.activeMission.fin2,
-      )?.toFormat(this.format);
-
-      if (this.responsableMode == 'sapeur') {
-        delete this.activeMission.sapeur_id;
-        if (!this.activeMission.sapeur) {
-          this.errors.sapeur = 'Manquant';
-          return;
-        }
-      } else {
-        delete this.activeMission.sapeur;
-        if (!this.activeMission.sapeur_id) {
-          this.errors.sapeur_id = 'Manquant';
-          return;
-        }
-      }
-
-      if ((this.activeMission.id || 0) === 0) {
-        this.$store
-          .dispatch('addInterventionMission', this.activeMission)
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-                debut: errors['missions.0.debut'],
-                fin: errors['missions.0.fin'],
-                sapeur_id: errors['missions.0.sapeur_id'],
-                sapeur: errors['missions.0.sapeur'],
-                titre: errors['missions.0.titre'],
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('editInterventionMission', this.activeMission)
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-                debut: errors['missions.0.debut'],
-                fin: errors['missions.0.fin'],
-                sapeur_id: errors['missions.0.sapeur_id'],
-                sapeur: errors['missions.0.sapeur'],
-                titre: errors['missions.0.titre'],
-              }),
-          );
-      }
-    },
-  },
-};
-</script>

@@ -48,14 +48,6 @@ const actuel = computed(() =>
     .filter((s) => s.groupes.length > 0),
 );
 
-const nbNumero = computed(() => {
-  const numCount = mutations.value.map((s) => s.numeros.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
-const nbGroupes = computed(() => {
-  const numCount = mutations.value.map((s) => s.groupes.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
@@ -181,6 +173,15 @@ const mutations = computed(() => {
     .sort(sapeurCompare);
 
   return [...ajoutes, ...modifies, ...supprimes];
+});
+
+const nbNumero = computed(() => {
+  const numCount = mutations.value.map((s) => s.numeros.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const nbGroupes = computed(() => {
+  const numCount = mutations.value.map((s) => s.groupes.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
 
 watchEffect(() => {

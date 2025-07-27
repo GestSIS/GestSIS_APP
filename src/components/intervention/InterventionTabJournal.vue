@@ -6,7 +6,7 @@ import useHasPermission from '../../hooks/usePermission.js';
 import { computed, ref, watchEffect } from 'vue';
 
 const store = useStore();
-await store.dispatch('fetchMateriels');
+await store.dispatch('fetchListeSapeur');
 
 const { id } = defineProps({
   id: {

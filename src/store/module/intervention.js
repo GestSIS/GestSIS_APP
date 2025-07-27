@@ -304,17 +304,17 @@ export default {
     },
 
     //Missions
-    addInterventionMission({ state, commit }, payload) {
-      return InterventionService.addMission(state.active.data.id, payload).then(
+    addInterventionMission({ commit }, payload) {
+      return InterventionService.addMission(payload.intervention_id, payload).then(
         (data) => {
           commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data);
           return data;
         }
       );
     },
-    editInterventionMission({ state, commit }, payload) {
+    editInterventionMission({ commit }, payload) {
       return InterventionService.editMission(
-        state.active.data.id,
+        payload.intervention_id,
         payload
       ).then((data) => {
         commit(types.UPDATE_CURRENT_INTERVENTION_MISSIONS, data);

@@ -1,8 +1,75 @@
+<script setup>
+import { computed, reactive, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { DateTime } from 'luxon';
+import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
+
+const store = useStore();
+store.dispatch('fetchTelephones');
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const errors = ref({});
+const form = reactive({
+  intervention_id: store.state.intervention.active.id,
+  ...data.appel,
+  date2: DateTime.fromSQL(data.appel.date)?.toISO()?.slice(0, 16),
+});
+const format = 'yyyy-MM-dd HH:mm';
+
+const min = DateTime.fromSQL(data.min)?.toISO();
+const max = DateTime.fromSQL(data.max)?.toISO();
+
+const listTelephones = computed(() => store.state.telephone.liste);
+
+const { closeModal } = useModalStore();
+
+watch(
+  () => form.nom,
+  () => {
+    let result = listTelephones.value.filter(
+      (t) => form.nom.localeCompare(t.nom) === 0,
+    );
+    if (result.length > 0) {
+      form.numero = result[0].numero;
+    }
+  },
+);
+
+const save = () => {
+  // Format back dates to SQL Format
+  form.date = DateTime.fromISO(form.date2).toFormat(format);
+
+  store
+    .dispatch(
+      (form.id || 0) === 0 ? 'addInterventionAppel' : 'editInterventionAppel',
+      form,
+    )
+    .then(closeModal)
+    .catch(
+      (err) =>
+        (errors.value = {
+          ...err,
+          date: err['appels.0.date'],
+          nom: err['appels.0.nom'],
+          numero: err['appels.0.numero'],
+          commentaire: err['appels.0.commentaire'],
+        }),
+    );
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
-        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }} un appel
+        {{ form.id ? 'Modifier' : 'Ajouter' }} un appel
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -11,7 +78,7 @@
         <label for="heure">Heure</label>
         <input
           id="heure"
-          v-model="activeAppel.date2"
+          v-model="form.date2"
           type="datetime-local"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['date'] }"
@@ -21,7 +88,7 @@
       </div>
       <div class="mb-3">
         <base-autocomplete
-          v-model="activeAppel.nom"
+          v-model="form.nom"
           :items="listTelephones.map((t) => t.nom)"
           :error="!!errors['nom']"
           title="Correspondant"
@@ -31,7 +98,7 @@
         <label for="numero">Numéro</label>
         <input
           id="numero"
-          v-model="activeAppel.numero"
+          v-model="form.numero"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['numero'] }"
@@ -41,7 +108,7 @@
         <label for="commentaire">Commentaire</label>
         <textarea
           id="commentaire"
-          v-model="activeAppel.commentaire"
+          v-model="form.commentaire"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['commentaire'] }"
         ></textarea>
@@ -52,119 +119,8 @@
         Fermer
       </button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ activeAppel.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-
-import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
-
-export default {
-  name: 'ModalAppel',
-  components: {
-    BaseAutocomplete,
-  },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      errors: {},
-      activeAppel: {},
-      format: 'yyyy-MM-dd HH:mm',
-      min: null,
-      max: null,
-    };
-  },
-  computed: {
-    ...mapState({
-      listTelephones: (state) => state.telephone.liste,
-      activeInterventionId: (state) => state.intervention.active.id,
-    }),
-    responsable() {
-      return this.activeAppel.nom;
-    },
-  },
-  watch: {
-    responsable(value) {
-      let result = this.listTelephones.filter(
-        (t) => value.localeCompare(t.nom) === 0,
-      );
-      if (result.length > 0) {
-        this.activeAppel.numero = result[0].numero;
-      }
-    },
-  },
-  mounted() {
-    if (this.listTelephones.length === 0) {
-      this.$store.dispatch('fetchTelephones');
-    }
-    this.activeAppel = this.data.appel;
-
-    this.min = DateTime.fromSQL(this.data.min)?.toISO();
-    this.max = DateTime.fromSQL(this.data.max)?.toISO();
-
-    this.activeAppel.date2 = DateTime.fromSQL(this.activeAppel.date)
-      ?.toISO()
-      ?.slice(0, 16);
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async save() {
-      // Format back dates to SQL Format
-      this.activeAppel.date = DateTime.fromISO(this.activeAppel.date2).toFormat(
-        this.format,
-      );
-
-      if ((this.activeAppel.id || 0) === 0) {
-        this.$store
-          .dispatch('addInterventionAppel', this.activeAppel)
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-                date: errors['appels.0.date'],
-                nom: errors['appels.0.nom'],
-                numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire'],
-              }),
-          );
-      } else {
-        this.$store
-          .dispatch('editInterventionAppel', {
-            ...this.activeAppel,
-            date2: undefined,
-          })
-          .then(() => {
-            this.errors = {};
-            this.closeModal();
-          })
-          .catch(
-            (errors) =>
-              (this.errors = {
-                ...errors,
-                date: errors['appels.0.date'],
-                nom: errors['appels.0.nom'],
-                numero: errors['appels.0.numero'],
-                commentaire: errors['appels.0.commentaire'],
-              }),
-          );
-      }
-    },
-  },
-};
-</script>

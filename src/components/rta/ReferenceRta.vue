@@ -39,14 +39,6 @@ const actuel = computed(() =>
     })
     .filter((s) => s.groupes.length > 0),
 );
-const nbNumero = computed(() => {
-  const numCount = mutations.value.map((s) => s.numeros.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
-const nbGroupes = computed(() => {
-  const numCount = mutations.value.map((s) => s.groupes.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
 const mutations = computed(() => {
   const actuelsIds = new Set(reference.value.map((s) => s.sapeur_id));
   const fields = [
@@ -132,6 +124,15 @@ const mutations = computed(() => {
       return { ...s, groupes, statut: 'modifie', changements };
     })
     .sort(sapeurCompare);
+});
+
+const nbNumero = computed(() => {
+  const numCount = mutations.value.map((s) => s.numeros.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const nbGroupes = computed(() => {
+  const numCount = mutations.value.map((s) => s.groupes.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
 
 const reset = () => store.dispatch('resetReferenceRta');

@@ -1,3 +1,174 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import ExerciceService from '../../services/ExerciceService';
+import SapeurService from '../../services/SapeurService';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const loading = ref(true);
+const errors = ref({});
+
+const activeSapeurId = ref(null);
+
+const form = ref({
+  exercice_comptable_id: null,
+  sapeurs: [{ sapeur_id: null, quantite: null }],
+});
+const activeSapeurExercices = ref([]);
+
+const store = useStore();
+
+const absences = computed(() => store.state.exercice.absences);
+const exercices = computed(() => store.state.exercice.liste);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const activeExerciceComptableId = computed(
+  () => store.state.exerciceComptable.activeId,
+);
+const excuseTypes = computed(() => store.state.excuseType.liste);
+const localites = computed(() => store.state.localite.liste);
+
+const awn = inject('awn');
+
+const computedData = computed(() => {
+  return activeSapeurExercices.value
+    ?.map((e) => ({
+      ...e.presence,
+      ...e,
+      excuse: excuseTypes.value.find((t) => t.id == e.excuse_type_id)
+        ?.designation,
+      localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
+        ?.designation,
+    }))
+    ?.sort((e1, e2) => e1.date?.localeCompare(e2.date));
+});
+const activeExercice = computed(() => {
+  return exercices.value.find((e) => e.id == form.value?.exercice_id);
+});
+const computedAbsences = computed(() => {
+  return absences.value
+    .map((a) => ({
+      ...a,
+      nom_prenom: sapeurs.value.find((s) => s.id == a.sapeur_id)?.nom_prenom,
+      exercice_date: exercices.value.find((e) => e.id == a.exercice_id)?.date,
+    }))
+    .sort(
+      (a, b) =>
+        a?.nom_prenom?.localeCompare(b?.nom_prenom) ||
+        a?.exercice_date?.localeCompare(b?.exercice_date),
+    );
+});
+
+const { closeModal } = useModalStore();
+
+if (data?.id) {
+  form.value = computedAbsences.value.find((a) => a.id == data.id);
+} else if (!computedAbsences.value.length) {
+  closeModal();
+  awn.warning('Attention, aucune absence à traiter');
+} else {
+  form.value = computedAbsences.value[0];
+}
+activeSapeurId.value = form.value.sapeur_id;
+
+watchEffect(async () => {
+  // Load sapeurs exercices
+  // FIXME: Check permissions pour cette route
+  loading.value = true;
+  try {
+    const res = await SapeurService.getExercices(
+      activeSapeurId.value,
+      activeExerciceComptableId.value,
+    );
+    activeSapeurExercices.value = res;
+    loading.value = false;
+  } catch {
+    awn.alert(
+      'Une erreur a eu lieu durant la récupération des exercices du sapeur',
+    );
+  }
+});
+
+const review = async (state) => {
+  form.value.excuse_statut = state;
+  try {
+    const res = await store.dispatch('editPresenceExercice', {
+      presenceId: form.value?.id,
+      presence: form.value,
+    });
+    activeSapeurExercices.value = activeSapeurExercices.value.map((e) =>
+      e.presence.id === res.id ? { ...e, presence: res } : e,
+    );
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    return awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
+};
+const nextAbsence = () => {
+  // Switch to next absence
+  const activeIndex = computedAbsences.value.findIndex(
+    (a) => a.id == form.value?.id,
+  );
+  if (computedAbsences.value.length - 1 > activeIndex) {
+    form.value = { ...computedAbsences.value[activeIndex + 1] };
+  } else {
+    // TODO: Loop sur les excuses non-traitées ??
+  }
+
+  if (activeSapeurId.value != form.value.sapeur_id) {
+    activeSapeurId.value = form.value.sapeur_id;
+  }
+};
+const previousAbsence = () => {
+  // Switch to next absence
+  const activeIndex = computedAbsences.value.findIndex(
+    (a) => a.id == form.value?.id,
+  );
+  if (activeIndex > 0) {
+    form.value = { ...computedAbsences.value[activeIndex - 1] };
+  } else {
+    // TODO: Loop sur les excuses non-traitées ??
+  }
+
+  if (activeSapeurId.value != form.value.sapeur_id) {
+    activeSapeurId.value = form.value.sapeur_id;
+  }
+};
+const downloadJustificatif = (exercice) => {
+  ExerciceService.downloadExcuseJustificatif(
+    exercice.exercice_id,
+    exercice.sapeur_id,
+    'justificatif.pdf',
+  ).catch((err) =>
+    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
+  );
+};
+const rowClass = (rowData) => {
+  return rowData.id == form.value.exercice_id ? 'table-primary' : '';
+};
+
+const fields = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Categorie', key: 'categorie' },
+  { title: 'Exercice', key: 'designation' },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Convoqué', type: Boolean, key: 'convoque' },
+  { title: 'Présent', type: Boolean, key: 'present' },
+  { title: 'Absent', type: Boolean, key: 'absent' },
+  { title: 'Remplacé', type: Boolean, key: 'remplace' },
+  { title: 'Excuse', slot: 'excuse', key: 'excuse_statut' },
+  { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
+];
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -39,7 +210,7 @@
             </div>
             <div class="col-6">
               <base-select
-                v-model="activeAbsence.sapeur_id"
+                v-model="form.sapeur_id"
                 class="mb-3"
                 label="Sapeur"
                 display-key="nom_prenom"
@@ -49,7 +220,7 @@
             </div>
           </div>
           <base-select
-            v-model="activeAbsence.excuse_type_id"
+            v-model="form.excuse_type_id"
             class="mb-3"
             :options="excuseTypes"
             base-option="<Non excusé>"
@@ -61,7 +232,7 @@
             <label for="remarque">Raison <em>(optionnel)</em></label>
             <input
               id="remarque"
-              v-model="activeAbsence.remarque"
+              v-model="form.remarque"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['remarque'] }"
@@ -71,20 +242,20 @@
           <div class="mb-3">
             <label>Justificatif</label>
             <button
-              v-if="activeAbsence.justificatif_filename"
+              v-if="form.justificatif_filename"
               class="btn btn-outline-primary"
-              @click="downloadJustificatif(activeAbsence)"
+              @click="downloadJustificatif(form)"
             >
               Justificatif
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
-            <!-- {{ activeAbsence.justificatif_filename }} -->
+            <!-- {{ form.justificatif_filename }} -->
             <span v-else>Aucun justificatif</span>
           </div>
           <!-- <div class="row">
             <div class="col-6">
               <base-select
-                v-model="activeAbsence.auteur_id"
+                v-model="form.auteur_id"
                 class="mb-3"
                 label="Saisie par"
                 display-key="nom_prenom"
@@ -97,7 +268,7 @@
                 <label for="date">Le</label>
                 <input
                   id="date"
-                  v-model="activeAbsence.date_demande"
+                  v-model="form.date_demande"
                   type="date"
                   class="form-control form-control-sm"
                   disabled
@@ -113,7 +284,7 @@
             <textarea
               id="justification"
               ref="justification"
-              v-model="activeAbsence.justification"
+              v-model="form.justification"
               class="form-control form-control-sm"
               placeholder="(optionnel)"
             ></textarea>
@@ -127,9 +298,7 @@
               type="button"
               class="btn"
               :class="
-                'btn-' +
-                (activeAbsence.excuse_statut == -2 ? '' : 'outline-') +
-                'danger'
+                'btn-' + (form.excuse_statut == -2 ? '' : 'outline-') + 'danger'
               "
               :disabled="
                 !categories.find(
@@ -145,7 +314,7 @@
               class="btn"
               :class="
                 'btn-' +
-                (activeAbsence.excuse_statut == -1 ? '' : 'outline-') +
+                (form.excuse_statut == -1 ? '' : 'outline-') +
                 'warning'
               "
               @click="review(-1)"
@@ -156,9 +325,7 @@
               type="button"
               class="btn"
               :class="
-                'btn-' +
-                (activeAbsence.excuse_statut == 0 ? '' : 'outline-') +
-                'primary'
+                'btn-' + (form.excuse_statut == 0 ? '' : 'outline-') + 'primary'
               "
               @click="review(0)"
             >
@@ -168,9 +335,7 @@
               type="button"
               class="btn"
               :class="
-                'btn-' +
-                (activeAbsence.excuse_statut == 1 ? '' : 'outline-') +
-                'success'
+                'btn-' + (form.excuse_statut == 1 ? '' : 'outline-') + 'success'
               "
               @click="review(1)"
             >
@@ -294,9 +459,7 @@
       <button
         type="button"
         class="btn btn-outline-primary"
-        :disabled="
-          !computedAbsences || computedAbsences[0]?.id == activeAbsence?.id
-        "
+        :disabled="!computedAbsences || computedAbsences[0]?.id == form?.id"
         @click="previousAbsence()"
       >
         Précédent
@@ -306,7 +469,7 @@
         class="btn btn-outline-primary"
         :disabled="
           !computedAbsences ||
-          computedAbsences[computedAbsences.length - 1]?.id == activeAbsence?.id
+          computedAbsences[computedAbsences.length - 1]?.id == form?.id
         "
         @click="nextAbsence()"
       >
@@ -322,195 +485,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import SapeurService from '../../services/SapeurService';
-
-export default {
-  name: 'ModalReviewAbsence',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      loading: true,
-      errors: {},
-      columnCreationIndex: 0,
-      columns: [],
-      base: [],
-      activeAbsence: {
-        exercice_comptable_id: null,
-        sapeurs: [{ sapeur_id: null, quantite: null }],
-      },
-      activeSapeurExercices: [],
-      fields: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Categorie', key: 'categorie' },
-        { title: 'Exercice', key: 'designation' },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Convoqué', type: Boolean, key: 'convoque' },
-        { title: 'Présent', type: Boolean, key: 'present' },
-        { title: 'Absent', type: Boolean, key: 'absent' },
-        { title: 'Remplacé', type: Boolean, key: 'remplace' },
-        { title: 'Excuse', slot: 'excuse', key: 'excuse_statut' },
-        { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      excuseParam: (state) => state.excuseParam.params,
-      absences: (state) => state.exercice.absences,
-      exercices: (state) => state.exercice.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      sapeurs: (state) => state.sapeur.liste.filter((s) => s.actif),
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeSapeurId: (state) => state.auth.sapeurId,
-      excuseTypes: (state) => state.excuseType.liste,
-      localites: (state) => state.localite.liste,
-    }),
-    computedData() {
-      return this.activeSapeurExercices
-        ?.map((e) => ({
-          ...e.presence,
-          ...e,
-          excuse: this.excuseTypes.find((t) => t.id == e.excuse_type_id)
-            ?.designation,
-          localite: this.localites.find((l) => l.id == e.localite_id)
-            ?.designation,
-          categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id,
-          )?.designation,
-        }))
-        ?.sort((e1, e2) => e1.date?.localeCompare(e2.date));
-    },
-    activeExercice() {
-      return this.exercices.find(
-        (e) => e.id == this.activeAbsence?.exercice_id,
-      );
-    },
-    computedAbsences() {
-      return this.absences
-        .map((a) => ({
-          ...a,
-          nom_prenom: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
-          exercice_date: this.exercices.find((e) => e.id == a.exercice_id)
-            ?.date,
-        }))
-        .sort(
-          (a, b) =>
-            a?.nom_prenom?.localeCompare(b?.nom_prenom) ||
-            a?.exercice_date?.localeCompare(b?.exercice_date),
-        );
-    },
-    activeSapeurExcuses() {
-      return null;
-    },
-  },
-  mounted() {
-    if (this.data?.id) {
-      this.activeAbsence = this.computedAbsences.find(
-        (a) => a.id == this.data.id,
-      );
-    } else if (!this.computedAbsences.length) {
-      this.closeModal();
-      this.$awn.warning('Attention, aucune absence à traiter');
-    } else {
-      this.activeAbsence = this.computedAbsences[0];
-    }
-    this.loadSapeurExercices();
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async review(state) {
-      this.activeAbsence.excuse_statut = state;
-      return this.$store
-        .dispatch('editPresenceExercice', {
-          presenceId: this.activeAbsence?.id,
-          presence: this.activeAbsence,
-        })
-        .then(
-          (res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées'),
-          // TODO: Update locale stored presences
-        )
-        .catch((err) =>
-          this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-        );
-    },
-    nextAbsence() {
-      // Switch to next absence
-      const activeIndex = this.computedAbsences.findIndex(
-        (a) => a.id == this.activeAbsence?.id,
-      );
-      const previousSapeurId = this.activeAbsence.sapeur_id;
-      if (this.computedAbsences.length - 1 > activeIndex) {
-        this.activeAbsence = { ...this.computedAbsences[activeIndex + 1] };
-      } else {
-        // TODO: Loop sur les excuses non-traitées ??
-      }
-
-      if (previousSapeurId != this.activeAbsence.sapeur_id) {
-        this.loadSapeurExercices();
-      }
-    },
-    previousAbsence() {
-      // Switch to next absence
-      const activeIndex = this.computedAbsences.findIndex(
-        (a) => a.id == this.activeAbsence?.id,
-      );
-      const previousSapeurId = this.activeAbsence.sapeur_id;
-      if (activeIndex > 0) {
-        this.activeAbsence = { ...this.computedAbsences[activeIndex - 1] };
-      } else {
-        // TODO: Loop sur les excuses non-traitées ??
-      }
-
-      if (previousSapeurId != this.activeAbsence.sapeur_id) {
-        this.loadSapeurExercices();
-      }
-    },
-    loadSapeurExercices() {
-      // Load sapeurs exercices
-      // FIXME: Check permissions pour cette route
-      this.loading = true;
-      return SapeurService.getExercices(
-        this.activeAbsence.sapeur_id,
-        this.activeExerciceComptableId,
-      )
-        .then((data) => {
-          this.activeSapeurExercices = data;
-          this.loading = false;
-        })
-        .catch(() => {
-          this.$awn.alert(
-            'Une erreur a eu lieu durant la récupération des exercices du sapeur',
-          );
-        });
-    },
-    downloadJustificatif(exercice) {
-      ExerciceService.downloadExcuseJustificatif(
-        exercice.exercice_id,
-        exercice.sapeur_id,
-        'justificatif.pdf',
-      ).catch((err) =>
-        this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif',
-        ),
-      );
-    },
-    rowClass(rowData) {
-      return rowData.id == this.activeAbsence.exercice_id
-        ? 'table-primary'
-        : '';
-    },
-  },
-};
-</script>

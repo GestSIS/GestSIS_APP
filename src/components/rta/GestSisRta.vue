@@ -38,14 +38,6 @@ const actuel = computed(() =>
     })
     .filter((s) => s.groupes.length > 0),
 );
-const nbNumero = computed(() => {
-  const numCount = mutations.value.map((s) => s.numeros.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
-const nbGroupes = computed(() => {
-  const numCount = mutations.value.map((s) => s.groupes.length);
-  return numCount.length > 0 ? Math.max(...numCount) : 0;
-});
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
@@ -123,6 +115,15 @@ const mutations = computed(() => {
       return { ...s, statut: 'modifie', changements };
     })
     .sort(sapeurCompare);
+});
+
+const nbNumero = computed(() => {
+  const numCount = mutations.value.map((s) => s.numeros.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const nbGroupes = computed(() => {
+  const numCount = mutations.value.map((s) => s.groupes.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
 </script>
 
