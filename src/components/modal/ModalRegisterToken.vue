@@ -68,10 +68,10 @@ const save = () => {
         <label for="description">Description</label>
         <input
           id="description"
+          v-model="token.description"
           required
           autofocus
           minlength="1"
-          v-model="token.description"
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['description'] }"
@@ -81,8 +81,8 @@ const save = () => {
         <label for="validite">Validité</label>
         <input
           id="validite"
-          required
           v-model="token.validite"
+          required
           type="date"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['validite'] }"

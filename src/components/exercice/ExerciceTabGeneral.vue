@@ -55,7 +55,7 @@ const awn = inject('awn');
 const save = () =>
   store
     .dispatch(
-      (form.id || 0) === 0 ? 'createExercice' : 'saveExercice',
+      (form.value.id || 0) === 0 ? 'createExercice' : 'saveExercice',
       form.value,
     )
     .then((data) => {
@@ -72,12 +72,12 @@ const save = () =>
 </script>
 
 <template>
-  <form @submit.prevent="save" class="card card-primary card-outline">
+  <form class="card card-primary card-outline" @submit.prevent="save">
     <div class="card-header d-flex justify-content-between">
       <span></span>
       <button
-        type="submit"
         v-if="hasEditPermission"
+        type="submit"
         class="btn btn-outline-primary"
       >
         {{ (form.id || 0) === 0 ? 'Ajouter' : 'Sauvegarder' }}

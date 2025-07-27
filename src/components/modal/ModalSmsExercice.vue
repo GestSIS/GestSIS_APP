@@ -171,7 +171,7 @@ const fields = [
             class="mb-3"
             label="Envoie différé"
           />
-          <div class="mb-3" v-if="params.differe">
+          <div v-if="params.differe" class="mb-3">
             <label for="date">Date</label>
             <input
               id="date"
