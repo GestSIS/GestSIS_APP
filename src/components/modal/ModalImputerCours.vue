@@ -1,3 +1,125 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import MultiStep from '/src/components/base/MultiStep.vue';
+import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const phase = ref(1);
+const activeIndemnite = ref(null);
+const ecritures = ref([]);
+const successMessageVisibility = ref(true);
+
+const store = useStore();
+
+const indemnitesTypes = computed(
+  () => store.state.imputation.fraisIndemnites.cours,
+);
+const categories = computed(() => store.state.ecritureCategorie.liste);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
+
+const computedIndemnites = computed(() => {
+  return indemnitesTypes.value.map((c) => ({
+    ...c,
+    getData: () =>
+      Promise.resolve(
+        c.fonctions.map((e) => ({
+          ...e,
+          unite: unites.value.find((u) => u.id == e.type_unite_id)?.unite,
+          compte: comptes.value.find((c) => c.id == e.compte_id)?.designation,
+        })),
+      ),
+    categorie: categories.value.find((e) => e.id == c.ecriture_categorie_id)
+      ?.designation,
+  }));
+});
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const selectIndemnite = (indemnite) => {
+  activeIndemnite.value = indemnite;
+};
+const cancel = () => {
+  // TODO Cancel depending on state
+  (callback() ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+const imputer = () => {
+  if (activeIndemnite.value === null) {
+    awn.warning('Veuillez sélectioner une indemnité type');
+    return;
+  }
+
+  store
+    .dispatch('imputerCours', {
+      id: data.id,
+      indemnite_cours_type_id: activeIndemnite.value.id,
+      exercice_comptable_id: anneeComptableId.value,
+    })
+    .then((res) => {
+      phase.value = 2;
+      ecritures.value = res;
+    });
+};
+const formatType = (type) => {
+  const mapping = {
+    0: 'Autre',
+    1: 'Solde',
+    2: 'Indemnité',
+    3: 'Frais forfaitaire',
+    4: 'Frais effectif',
+    5: 'Charges AVS/AC',
+  };
+  return mapping[type] || '';
+};
+
+const fields = [
+  { title: 'Désignation', key: 'designation' },
+  { title: 'Catégorie comptable', key: 'categorie' },
+];
+const detailRowOptions = {
+  fields: [
+    {
+      title: 'Type',
+      key: 'type',
+      formatter: (type) => {
+        const mapping = {
+          0: 'Autre',
+          1: 'Solde',
+          2: 'Indemnité',
+          3: 'Frais forfaitaire',
+          4: 'Frais effectif',
+          5: 'Charges AVS/AC',
+        };
+        return mapping[type] || '';
+      },
+    },
+    { title: 'Tarif', key: 'tarif' },
+    { title: 'Unité', key: 'unite' },
+    { title: 'Compte', key: 'compte' },
+  ],
+  noData: 'Aucune indemnité',
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -26,24 +148,6 @@
                 :options="detailRowOptions"
                 :row-data="rowData"
               />
-            </template>
-            <template #actions="{ rowData }">
-              <td class="align-middle text-center">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary border-0"
-                  @click="updateIndemnite(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'edit']" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger border-0"
-                  @click="deleteIndemnite(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </td>
             </template>
           </base-table>
         </div>
@@ -104,134 +208,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '/src/components/base/MultiStep.vue';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-
-export default {
-  name: 'ModalImputerCours',
-  components: { MultiStep, GenericDetailsRow },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      phase: 1,
-      fields: [
-        { title: 'Désignation', key: 'designation' },
-        { title: 'Catégorie comptable', key: 'categorie' },
-        { title: 'Actions', slot: 'actions' },
-      ],
-      detailRowOptions: {
-        fields: [
-          {
-            title: 'Type',
-            key: 'type',
-            formatter: (type) => {
-              const mapping = {
-                0: 'Autre',
-                1: 'Solde',
-                2: 'Indemnité',
-                3: 'Frais forfaitaire',
-                4: 'Frais effectif',
-                5: 'Charges AVS/AC',
-              };
-              return mapping[type] || '';
-            },
-          },
-          { title: 'Tarif', key: 'tarif' },
-          { title: 'Unité', key: 'unite' },
-          { title: 'Compte', key: 'compte' },
-        ],
-        noData: 'Aucune indemnité',
-      },
-      activeIndemnite: null,
-      ecritures: [],
-      successMessageVisibility: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      indemnitesTypes: (state) => state.imputation.fraisIndemnites.cours,
-      categories: (state) => state.ecritureCategorie.liste,
-      fonctions: (state) => state.fonction.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      anneeComptableId: (state) => state.exerciceComptable.activeId,
-    }),
-    computedIndemnites() {
-      return this.indemnitesTypes.map((c) => ({
-        ...c,
-        getData: () =>
-          Promise.resolve(
-            c.fonctions.map((e) => ({
-              ...e,
-              unite: this.unites.find((u) => u.id == e.type_unite_id)?.unite,
-              compte: this.comptes.find((c) => c.id == e.compte_id)
-                ?.designation,
-            })),
-          ),
-        categorie: this.categories.find((e) => e.id == c.ecriture_categorie_id)
-          ?.designation,
-      }));
-    },
-  },
-  mounted() {
-    this.$refs.table.showAllDetailRow();
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    selectIndemnite(indemnite) {
-      this.activeIndemnite = indemnite;
-    },
-    cancel() {
-      //TODO Cancel depending on state
-      (this.callback() ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.closeModal();
-        }
-      });
-    },
-    imputer() {
-      if (this.indemniteType === null) {
-        return;
-      }
-
-      //TODO
-      this.$store
-        .dispatch('imputerCours', {
-          id: this.data.id,
-          indemnite_cours_type_id: this.activeIndemnite.id,
-          exercice_comptable_id: this.anneeComptableId,
-        })
-        .then((ecritures) => {
-          this.phase = 2;
-          this.ecritures = ecritures;
-        });
-    },
-    formatType(type) {
-      const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC',
-      };
-      return mapping[type] || '';
-    },
-  },
-};
-</script>

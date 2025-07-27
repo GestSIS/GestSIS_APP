@@ -1,3 +1,155 @@
+<script setup>
+import { computed, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import permissions from '../../store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+store.dispatch('fetchExerciceAbsences');
+store.dispatch('fetchExcuseParams');
+store.dispatch('fetchExcuseTypes');
+
+const loading = ref(true);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch(
+      'fetchListeExercice',
+      store.state.exerciceComptable.activeId,
+    ),
+    store.dispatch(
+      'fetchExerciceAbsences',
+      store.state.exerciceComptable.activeId,
+    ),
+  ]);
+  loading.value = false;
+});
+
+const selectedId = ref(null);
+const selectExercice = (row) => (selectedId.value = row?.id);
+
+const excuseParam = computed(() => store.state.excuseParam.params);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const absences = computed(() => store.state.exercice.absences);
+const exercices = computed(() =>
+  store.state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
+);
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation?.localeCompare(b.designation),
+  ),
+);
+const hasValidationPermission = useHasPermission(
+  permissions.EXERCICE.VALIDATION,
+);
+
+const computedData = computed(() => {
+  return absences.value
+    .map((a) => ({
+      ...a,
+      sapeur: sapeurs.value.find((s) => s.id == a.sapeur_id)?.nom_prenom,
+      ...exercices.value.find((e) => e.id == a.exercice_id),
+      id: a.id,
+    }))
+    .map((e) => ({
+      ...e,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
+        ?.designation,
+      localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
+    }));
+});
+const filteredExercicesCategories = computed(() => {
+  const ids = new Set(
+    exercices.value.map((i) => parseInt(i.exercice_categorie_id)),
+  );
+  return categories.value.filter((t) => ids.has(t.id));
+});
+const filteredLocalites = computed(() => {
+  const ids = new Set(exercices.value.map((i) => parseInt(i.localite_id)));
+  return localites.value.filter((t) => ids.has(t.id));
+});
+
+const { showModal } = useModalStore();
+
+const review = () => showModal({ component: 'ModalReviewAbsence', size: 2 });
+const reviewAbsence = (absence) =>
+  showModal({
+    component: 'ModalReviewAbsence',
+    size: 2,
+    data: absence,
+  });
+
+const onRowClass = (dataItem) => {
+  if (dataItem?.excuse_statut === -2) {
+    return 'text-danger';
+  }
+  const statutsClass = {
+    '-1': 'text-warning', //'Annulé',
+    0: '', //'A saisir',
+    1: 'text-success', //'Saisie',
+  };
+  return statutsClass[dataItem.excuse_statut];
+};
+
+const absenceStatuts = [
+  { id: -2, designation: 'Amendé' },
+  { id: -1, designation: 'Refusé' },
+  { id: 0, designation: 'A traiter' },
+  { id: -1, designation: 'Accepté' },
+];
+const fieldsBase = [
+  { title: 'Date', key: 'date', type: Date },
+  { title: 'Sapeur', key: 'sapeur' },
+  { title: 'Categorie', key: 'categorie' },
+  {
+    title: 'Heure',
+    key: 'heure',
+    formatter(value) {
+      return value.slice(0, 5);
+    },
+  },
+  { title: 'Localité', key: 'localite' },
+  { title: 'Designation', key: 'designation' },
+  {
+    title: 'Statut',
+    key: 'excuse_statut',
+    slot: 'statut',
+    formatter(value, rowData) {
+      const statuts = {
+        '-2': 'Amendée',
+        '-1': 'Refusée',
+        0: 'Excusé, à traiter',
+        1: 'Acceptée',
+      };
+      if (rowData.excuse_type_id) {
+        return statuts[value];
+      }
+
+      var dateParts = rowData.date.split('-');
+      const d = new Date(
+        dateParts[0],
+        dateParts[1] - 1,
+        dateParts[2].substr(0, 2),
+      );
+
+      d.setDate(d.getDate() + (excuseParam.value?.delai_excuse ?? 0));
+      const diffDays = Math.ceil(
+        Math.abs(new Date() - d) / (1000 * 60 * 60 * 24),
+      );
+
+      if (d < new Date()) {
+        return 'Non excusé, à traiter';
+      } else {
+        return 'Non excusé (' + diffDays + ' jours restants)';
+      }
+    },
+  },
+  { title: 'Actions', slot: 'actions' },
+];
+</script>
+
 <template>
   <stateful-filter
     id="absences"
@@ -110,209 +262,3 @@
     </div>
   </stateful-filter>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import store from '/src/store/index';
-import permissions from '../../store/permissions.js';
-
-async function loadData(routeTo, next) {
-  const loadExercices = store.dispatch(
-    'fetchListeExercice',
-    store.state.exercice.active.id,
-  );
-  const loadAbsences = store.dispatch('fetchExerciceAbsences');
-  const loadExcuseParams = store.dispatch('fetchExcuseParams');
-  const loadExcuseTypes = store.dispatch('fetchExcuseTypes');
-
-  Promise.all([
-    loadAbsences,
-    loadExercices,
-    loadExcuseParams,
-    loadExcuseTypes,
-  ]).then(() => {
-    next();
-  });
-}
-
-export default {
-  name: 'ExerciceAbsences',
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    loadData(routeTo, next);
-  },
-  data() {
-    const svm = this;
-    return {
-      loading: true,
-      tab: 'exercice',
-      selectedId: null,
-      absenceStatuts: [
-        { id: -2, designation: 'Amendé' },
-        { id: -1, designation: 'Refusé' },
-        { id: 0, designation: 'A traiter' },
-        { id: -1, designation: 'Accepté' },
-      ],
-      fieldsBase: [
-        { title: 'Date', key: 'date', type: Date },
-        { title: 'Sapeur', key: 'sapeur' },
-        { title: 'Categorie', key: 'categorie' },
-        {
-          title: 'Heure',
-          key: 'heure',
-          formatter(value) {
-            return value.slice(0, 5);
-          },
-        },
-        { title: 'Localité', key: 'localite' },
-        { title: 'Designation', key: 'designation' },
-        {
-          title: 'Statut',
-          key: 'excuse_statut',
-          slot: 'statut',
-          formatter(value, rowData) {
-            const statuts = {
-              '-2': 'Amendée',
-              '-1': 'Refusée',
-              0: 'Excusé, à traiter',
-              1: 'Acceptée',
-            };
-            if (rowData.excuse_type_id) {
-              return statuts[value];
-            }
-
-            var dateParts = rowData.date.split('-');
-            const d = new Date(
-              dateParts[0],
-              dateParts[1] - 1,
-              dateParts[2].substr(0, 2),
-            );
-
-            d.setDate(d.getDate() + (svm.excuseParam?.delai_excuse ?? 0));
-            const diffDays = Math.ceil(
-              Math.abs(new Date() - d) / (1000 * 60 * 60 * 24),
-            );
-
-            if (d < new Date()) {
-              return 'Non excusé, à traiter';
-            } else {
-              return 'Non excusé (' + diffDays + ' jours restants)';
-            }
-          },
-        },
-        { title: 'Actions', slot: 'actions' },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      excuseParam: (state) => state.excuseParam.params,
-      sapeurs: (state) => state.sapeur.liste,
-      absences: (state) => state.exercice.absences,
-      exercices: (state) =>
-        state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
-      categories: (state) => state.exerciceCategorie.liste,
-      localites: (state) =>
-        state.localite.liste.sort((a, b) =>
-          a.designation?.localeCompare(b.designation),
-        ),
-      activeExerciceId: (state) => state.exercice.active.id,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
-    }),
-    computedData() {
-      return this.absences
-        .map((a) => ({
-          ...a,
-          sapeur: this.sapeurs.find((s) => s.id == a.sapeur_id)?.nom_prenom,
-          ...this.exercices.find((e) => e.id == a.exercice_id),
-          id: a.id,
-        }))
-        .map((e) => ({
-          ...e,
-          categorie: this.categories.find(
-            (c) => c.id == e.exercice_categorie_id,
-          )?.designation,
-          localite: this.localites.find((l) => l.id == e.localite_id)
-            ?.designation,
-        }));
-    },
-    filteredExercicesCategories() {
-      const ids = new Set(
-        this.exercices.map((i) => parseInt(i.exercice_categorie_id)),
-      );
-      return this.categories.filter((t) => ids.has(t.id));
-    },
-    filteredLocalites() {
-      const ids = new Set(this.exercices.map((i) => parseInt(i.localite_id)));
-      return this.localites.filter((t) => ids.has(t.id));
-    },
-  },
-  watch: {
-    activeExerciceComptableId() {
-      this.loading = true;
-
-      const loadExercices = this.$store.dispatch(
-        'fetchListeExercice',
-        this.activeExerciceComptableId,
-      );
-      const loadAbsences = this.$store.dispatch('fetchExerciceAbsences');
-      Promise.all([loadExercices, loadAbsences]).then(() => {
-        this.loading = false;
-      });
-    },
-  },
-  mounted() {
-    this.loading = false;
-  },
-  methods: {
-    ...mapActions(useModalStore, { showModal: 'showModal' }),
-    selectExercice(row) {
-      this.selectedId = row?.id;
-    },
-    review() {
-      // TODO: Select première absence
-      this.showModal({ component: 'ModalReviewAbsence', size: 2 });
-    },
-    reviewAbsence(absence) {
-      this.showModal({
-        component: 'ModalReviewAbsence',
-        size: 2,
-        data: absence,
-      });
-    },
-    cancelReviewAbsence(absence) {
-      this.showModal({
-        component: 'ModalConfirmation',
-        data: {
-          title: "Voulez-vous vraiment annuler l'examen de cette absence ?",
-          question:
-            "Attention, la justification fournie lors de l'examen sera perdue.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('cancelReviewAbsence', absence?.id);
-          }
-        },
-      });
-    },
-    onRowClass(dataItem) {
-      if (dataItem?.excuse_statut === -2) {
-        return 'text-danger';
-      }
-      const statutsClass = {
-        '-1': 'text-warning', //'Annulé',
-        0: '', //'A saisir',
-        1: 'text-success', //'Saisie',
-      };
-      return statutsClass[dataItem.excuse_statut];
-    },
-  },
-};
-</script>

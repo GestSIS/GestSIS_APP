@@ -70,7 +70,7 @@ defineExpose({
   </component>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .dropdown-menu-end {
   right: 0;
   left: auto;

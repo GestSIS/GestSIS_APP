@@ -1,3 +1,107 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const store = useStore();
+store.dispatch('fetchLocalites');
+
+const chosen = ref(data.ids.map((l) => l).slice(0));
+const selected = ref({});
+
+const localites = computed(() => store.state.localite.liste);
+
+const availableLocalites = computed(() => {
+  const indexedChosen = chosen.value.reduce((acc, l) => {
+    acc[l] = l;
+    return acc;
+  }, {});
+  return localites.value.filter((l) => !indexedChosen[l.id]);
+});
+const indexedLocalite = computed(() => {
+  return localites.value.reduce((acc, l) => {
+    acc[l.id] = l;
+    return acc;
+  }, {});
+});
+const canAddSelected = computed(() => {
+  const indexedChosen = chosen.value.reduce((acc, l) => {
+    acc[l] = l;
+    return acc;
+  }, {});
+  return (
+    Object.entries(selected.value).find(
+      ([l, selected]) => selected && !indexedChosen[l],
+    ) != null
+  );
+});
+const canRemoveSelected = computed(() => {
+  return chosen.value.find((l) => selected.value[l]) != null;
+});
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const close = () => {
+  (callback(null) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+const save = () => {
+  // Localités ajoutés
+  const newLoc = chosen.value.filter((s) => !data.ids.includes(s));
+  // Localités supprimés
+  const removedLoc = data.ids.filter((s) => !chosen.value.includes(s));
+  // Localités tous
+  const localites = chosen.value;
+
+  callback({ ajoute: newLoc, supprime: removedLoc, tous: localites })
+    .then((close) => {
+      if (close ?? true) {
+        closeModal();
+      }
+    })
+    .catch((errorMessage) => {
+      awn.warning(errorMessage);
+    });
+};
+const select = (id) => {
+  selected.value[id] = true;
+};
+const addLocalite = (id) => {
+  chosen.value = [...chosen.value, id];
+};
+const removeLocalite = (id) => {
+  chosen.value = chosen.value.filter((l) => l != id);
+};
+const addSelected = () => {
+  chosen.value = Array.from(
+    new Set([
+      ...chosen.value,
+      ...Object.entries(selected.value)
+        .filter(([, selected]) => selected)
+        .map(([id]) => parseInt(id)),
+    ]),
+  );
+};
+const removeSelected = () => {
+  chosen.value = chosen.value.filter((id) => !selected.value[id]);
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -134,126 +238,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-//TODO:
-// - Par fonction -> effectif et non principale
-// - Par cours
-// - Date anniversaire
-// - Permis de conduire
-
-export default {
-  name: 'ModalLocaliteSelect',
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      groupBy: 'groupe',
-      chosen: [],
-      selected: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      localites: (state) => state.localite.liste,
-    }),
-    availableLocalites() {
-      const indexedChosen = this.chosen.reduce((acc, l) => {
-        acc[l] = l;
-        return acc;
-      }, {});
-      return this.localites.filter((l) => !indexedChosen[l.id]);
-    },
-    indexedLocalite() {
-      return this.localites.reduce((acc, l) => {
-        acc[l.id] = l;
-        return acc;
-      }, {});
-    },
-    canAddSelected() {
-      const indexedChosen = this.chosen.reduce((acc, l) => {
-        acc[l] = l;
-        return acc;
-      }, {});
-      return (
-        Object.entries(this.selected).find(
-          ([l, selected]) => selected && !indexedChosen[l],
-        ) != null
-      );
-    },
-    canRemoveSelected() {
-      return this.chosen.find((l) => this.selected[l]) != null;
-    },
-  },
-  mounted() {
-    this.chosen = this.data.ids.map((l) => l).slice(0);
-    this.$store.dispatch('fetchLocalites');
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.closeModal();
-        }
-      });
-    },
-    async save() {
-      // Sapeurs ajoutés
-      const newLoc = this.chosen.filter((s) => !this.data.ids.includes(s));
-      // Sapeurs supprimés
-      const removedLoc = this.data.ids.filter((s) => !this.chosen.includes(s));
-      // Sapeurs tous
-      const localites = this.chosen;
-
-      const svm = this;
-      this.callback({ ajoute: newLoc, supprime: removedLoc, tous: localites })
-        .then((close) => {
-          if (close ?? true) {
-            svm.closeModal();
-          }
-        })
-        .catch((errorMessage) => {
-          svm.$awn.warning(errorMessage);
-        });
-    },
-    select(id) {
-      this.selected[id] = true;
-    },
-    addLocalite(id) {
-      this.chosen = [...this.chosen, id];
-    },
-    removeLocalite(id) {
-      this.chosen = this.chosen.filter((l) => l != id);
-    },
-    addSelected() {
-      this.chosen = Array.from(
-        new Set([
-          ...this.chosen,
-          ...Object.entries(this.selected)
-            .filter(([, selected]) => selected)
-            .map(([id]) => parseInt(id)),
-        ]),
-      );
-    },
-    removeSelected() {
-      this.chosen = this.chosen.filter((id) => !this.selected[id]);
-    },
-  },
-};
-</script>
 
 <style scoped>
 .clickable {

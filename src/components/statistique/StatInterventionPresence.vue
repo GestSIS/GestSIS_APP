@@ -88,7 +88,7 @@ const computedData = computed(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 #legend-container {
   max-height: 140px;
 }

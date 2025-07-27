@@ -1,14 +1,29 @@
-<script>
-import { inject } from 'vue';
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
+const { id } = defineProps({
+  id: {
+    type: String,
+    default: 'new',
+  },
+});
+
 const store = useStore();
 
-// TODO: Access activeExerciceId from props
-const activeExerciceId = computed(() => store.state.exercice.active.id);
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch('fetchExercice', id),
+    store.dispatch('fetchExerciceSms', id),
+  ]);
+  loading.value = false;
+});
+
 const activeExerciceData = computed(() => store.state.exercice.active.data);
 const smsListe = computed(() =>
   store.state.exercice.active.sms.map((sms) => ({
@@ -19,8 +34,6 @@ const smsListe = computed(() =>
   })),
 );
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
-
-store.dispatch('fetchExerciceSms', activeExerciceId.value);
 
 const { showModal } = useModalStore();
 const awn = inject('awn');

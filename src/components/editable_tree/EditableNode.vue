@@ -163,8 +163,7 @@ defineExpose({ expand });
 }
 </style>
 
-<style lang="scss" scoped>
-// src/App.vue
+<style scoped>
 .expand-enter-active,
 .expand-leave-active {
   transition-property: height;

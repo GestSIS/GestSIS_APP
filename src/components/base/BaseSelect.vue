@@ -89,7 +89,7 @@ defineExpose({ focus });
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 select,
 option {
   cursor: pointer;

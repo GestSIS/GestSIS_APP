@@ -1,3 +1,390 @@
+<script setup>
+import { computed, inject, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal';
+
+// TODO:
+// - Date anniversaire
+// - Permis de conduire
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const civil = ref(true);
+const inactif = ref(false);
+const groupBy = ref('groupe');
+const chosenSapeurs = ref(data.ids.slice(0));
+const selectedGeneric = ref({
+  groupe: {},
+  fonction_id: {},
+  permis_type_id: {},
+  grade_id: {},
+  localite_id: {},
+  civilite_id: {},
+  annee_incorporation: {},
+  type: {},
+  sapeur: {},
+});
+const expanded = ref({});
+
+const store = useStore();
+
+store.dispatch('fetchLocalites');
+store.dispatch('fetchGrades');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchCivilites');
+store.dispatch('fetchPermisType');
+
+const treeGroupesSapeurs = computed(() => store.getters.treeGroupesSapeurs);
+store.dispatch('fetchGroupes').then(() => {
+  const recursive = (item) => {
+    expanded.value[item.id] = false;
+    item.groupes.forEach(recursive);
+  };
+  treeGroupesSapeurs.value.forEach(recursive);
+});
+
+const groupes = computed(() => store.state.groupe.liste);
+const localites = computed(() => store.state.localite.liste);
+const grades = computed(() => store.state.grade.liste);
+const fonctions = computed(() => store.state.fonction.liste);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const civilites = computed(() => store.state.baseData.civilites);
+const permis = computed(() => store.state.baseData.permisTypes);
+
+const filteredSapeurs = computed(() => {
+  return sapeurs.value.filter(
+    (s) =>
+      (inactif.value ? true : s?.actif) && (civil.value ? true : s?.type == 0),
+  );
+});
+const filteredLocalites = computed(() => {
+  const localitesIds = new Set(availableSapeur.value.map((s) => s.localite_id));
+  return localites.value.filter((l) => localitesIds.has(l.id));
+});
+const computedChosenSapeurs = computed(() => {
+  return chosenSapeurs.value
+    .map((sapeurId) => sapeurs.value.find((s) => s.id == sapeurId))
+    .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
+});
+const availableSapeur = computed(() => {
+  return filteredSapeurs.value
+    .slice(0)
+    .filter((s) => (data.filter ?? (() => true))(s))
+    .filter((s) => !chosenSapeurs.value.includes(s.id));
+});
+const listeSapeurSelect = computed(() => {
+  const option = selectOptions[groupBy.value];
+  if (option.generic) {
+    return flattenedSapeurGeneric(
+      option.collection(),
+      option.comparison ?? ((sapeur, value) => sapeur[groupBy.value] == value),
+      option.displayKey,
+    );
+  }
+
+  if (groupBy.value == 'groupe') {
+    return flattenedSapeurGroupe.value;
+  }
+  return [];
+});
+const flattenedSapeurGroupe = computed(() => {
+  let flattened = [];
+  const recursive = (groupe, level) => {
+    let expand = expanded.value[groupe.id];
+    let flaten = [
+      {
+        designation: groupeFormatter(groupe),
+        level: level,
+        leaf: false,
+        id: groupe.id,
+        expanded: expand,
+        empty:
+          !groupe.groupes.length &&
+          !groupe.sapeurs.filter(filtreSapeur()).length,
+      },
+    ];
+    if (expand) {
+      groupe.groupes.forEach(
+        (g) => (flaten = [...flaten, ...recursive(g, level + 1)]),
+      );
+      groupe.sapeurs
+        .filter(filtreSapeur())
+        .map((s) => filteredSapeurs.value.find((sap) => sap.id == s))
+        .filter((s) => s)
+        .forEach(
+          (s) =>
+            (flaten = [
+              ...flaten,
+              {
+                designation: s.nom_prenom,
+                leaf: true,
+                level: level + 1,
+                parent_id: groupe.id,
+                id: s.id,
+              },
+            ]),
+        );
+    }
+    return flaten;
+  };
+
+  treeGroupesSapeurs.value.forEach(
+    (i) => (flattened = [...flattened, ...recursive(i, 0)]),
+  );
+  return flattened;
+});
+const addSapeurState = computed(() => {
+  return (
+    Object.entries(selectedGeneric.value.sapeur).find(
+      ([id, selected]) =>
+        selected && !chosenSapeurs.value.includes(parseInt(id)),
+    ) != null
+  );
+});
+const removeSapeurState = computed(() => {
+  return (
+    Object.entries(selectedGeneric.value.sapeur).find(
+      ([id, selected]) =>
+        selected && chosenSapeurs.value.includes(parseInt(id)),
+    ) != null
+  );
+});
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const flattenedSapeurGeneric = (relation, comparison, displayKey) => {
+  let liste = [];
+  relation.forEach((elem) => {
+    let expand = expanded.value[elem.id];
+    liste = [
+      ...liste,
+      {
+        designation: elem[displayKey],
+        level: 0,
+        leaf: false,
+        id: elem.id,
+        expanded: expand,
+        parent_id: 0,
+        empty: !filteredSapeurs.value
+          .map((s) => ({ ...s, sapeur_id: s.id }))
+          .filter(filtreSapeur())
+          .filter((s) => comparison(s, elem.id)).length,
+      },
+    ];
+    if (expand) {
+      liste = [
+        ...liste,
+        ...filteredSapeurs.value
+          .map((s) => ({ ...s, sapeur_id: s.id }))
+          .filter(filtreSapeur())
+          .filter((s) => comparison(s, elem.id))
+          // .filter((s) => s[key] == elem.id)
+          .map((sapeur) => ({
+            designation: sapeur.nom_prenom,
+            level: 1,
+            leaf: true,
+            id: sapeur.id,
+            parent_id: elem.id,
+          })),
+      ];
+    }
+  });
+  return liste;
+};
+const close = () => {
+  (callback(null) ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+const save = () => {
+  // Sapeurs ajoutés
+  const newSap = chosenSapeurs.value.filter((s) => !data.ids.includes(s));
+  // Sapeurs supprimés
+  const removedSap = data.ids.filter((s) => !chosenSapeurs.value.includes(s));
+  // Sapeurs tous
+  const sapeurs = chosenSapeurs.value;
+
+  callback({ ajoute: newSap, supprime: removedSap, tous: sapeurs })
+    .then((close) => {
+      if (close ?? true) {
+        closeModal();
+      }
+    })
+    .catch((errorMessage) => {
+      awn.warning(errorMessage);
+    });
+};
+const select = (id, leaf = true) => {
+  if (leaf) {
+    selectSapeur(id);
+  } else if (groupBy.value == 'groupe') {
+    selectGroupe(id);
+  } else {
+    selectGeneric(id);
+  }
+};
+const selectSapeur = (id) => {
+  selectedGeneric.value.sapeur[id] = !selectedGeneric.value.sapeur[id];
+};
+const selectGeneric = (id) => {
+  const option = selectOptions[groupBy.value];
+  const comparison =
+    option.comparison ?? ((sapeur, value) => sapeur[groupBy.value] == value);
+
+  // Get group state
+  const state = selectedGeneric.value[groupBy.value][id] ?? false;
+
+  // Select groupe
+  selectedGeneric.value[groupBy.value][id] = !state;
+
+  // Select all sapeurs
+  availableSapeur.value
+    .filter((s) => comparison(s, id) && !chosenSapeurs.value.includes(s.id))
+    .forEach((s) => (selectedGeneric.value.sapeur[s.id] = !state));
+};
+const selectGroupe = (id) => {
+  const selected = !(selectedGeneric.value.groupe[id] ?? false);
+
+  // Select groupe itself
+  const recursiveSearch = (item) => {
+    const found = item.id == id;
+    if (found) {
+      selectGroupSingle(item, selected, true);
+    } else {
+      item.groupes.forEach(recursiveSearch);
+    }
+  };
+
+  // recursive search
+  treeGroupesSapeurs.value.forEach(recursiveSearch);
+};
+const selectGroupSingle = (groupe, state, first = false) => {
+  if (!first) {
+    selectedGeneric.value.groupe[groupe.id] = state;
+  }
+
+  (groupe.sapeur_ids ?? []).filter(filtreSapeur()).forEach((s) => {
+    selectedGeneric.value.sapeur[s.sapeur_id] = state;
+  });
+  groupe.groupes.forEach((g) => selectGroupSingle(g, state));
+};
+const filtreSapeur = () => {
+  return (s) =>
+    filteredSapeurs.value.find(
+      (sap) => sap.id == s?.sapeur_id || sap.id == s,
+    ) != null && !chosenSapeurs.value.includes(s.sapeur_id || s);
+};
+const groupeFormatter = (g) => {
+  return g.no ? g.no + ' ' + g.designation : g.designation;
+};
+const toggleGroupe = (id) => {
+  expanded.value = {
+    ...expanded.value,
+    [id]: !expanded.value[id],
+  };
+};
+const addSapeurs = () => {
+  chosenSapeurs.value = Array.from(
+    new Set([
+      ...chosenSapeurs.value,
+      ...Object.entries(selectedGeneric.value.sapeur)
+        .filter(([, selected]) => selected)
+        .map(([id]) => parseInt(id)),
+    ]),
+  );
+};
+const removeSapeurs = () => {
+  const sapeursToRemove = new Set([
+    ...Object.entries(selectedGeneric.value.sapeur)
+      .filter(([, selected]) => selected)
+      .map(([id]) => parseInt(id)),
+  ]);
+  chosenSapeurs.value = chosenSapeurs.value.filter(
+    (id) => !sapeursToRemove.has(id),
+  );
+};
+const addSingleSapeur = (id) => {
+  chosenSapeurs.value = [...chosenSapeurs.value, id];
+};
+const removeSingleSapeur = (id) => {
+  chosenSapeurs.value = chosenSapeurs.value.filter((item) => item != id);
+};
+const computeId = (item) => {
+  return item.leaf == true || item.leaf == undefined ? item.id : 'g' + item.id;
+};
+
+const selectOptions = {
+  none: {
+    label: 'Alphabétique',
+  },
+  groupe: {
+    label: 'Groupes',
+  },
+  localite_id: {
+    generic: true,
+    label: 'Localité',
+    collection: () => filteredLocalites.value,
+    displayKey: 'designation',
+  },
+  fonction_id: {
+    generic: true,
+    label: 'Fonction',
+    comparison: (sapeur, value) => sapeur.fonctions.includes(value),
+    collection: () => fonctions.value,
+    displayKey: 'nom',
+  },
+  permis_type_id: {
+    generic: true,
+    label: 'Permis de conduire',
+    comparison: (sapeur, value) => sapeur.permis.includes(value),
+    collection: () => permis.value,
+    displayKey: 'type',
+  },
+  grade_id: {
+    generic: true,
+    label: 'Grade',
+    collection: () => grades.value,
+    displayKey: 'designation',
+  },
+  civilite_id: {
+    generic: true,
+    label: 'Civilité',
+    collection: () => civilites.value,
+    displayKey: 'designation',
+  },
+  annee_incorporation: {
+    generic: true,
+    label: 'Année incorporation',
+    collection: () =>
+      [...new Set(filteredSapeurs.value.map((s) => s.annee_incorporation))]
+        .sort()
+        .map((annee) => ({ designation: annee, id: annee })),
+    displayKey: 'designation',
+  },
+  type: {
+    generic: true,
+    label: 'Type',
+    collection: () => [
+      { id: 0, designation: 'Sapeur' },
+      { id: 1, designation: 'Civil' },
+    ],
+    displayKey: 'designation',
+  },
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -244,417 +631,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapActions } from 'pinia';
-import { mapGetters, mapState } from 'vuex';
-import { useModalStore } from '../../stores/common/Modal';
-
-// TODO:
-// - Date anniversaire
-// - Permis de conduire
-
-export default {
-  name: 'ModalSapeurSelect',
-  props: {
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    const svm = this;
-    return {
-      civil: true,
-      inactif: false,
-      groupBy: 'groupe',
-      chosenSapeurs: [],
-      selectedGeneric: {
-        groupe: {},
-        fonction_id: {},
-        permis_type_id: {},
-        grade_id: {},
-        localite_id: {},
-        civilite_id: {},
-        annee_incorporation: {},
-        type: {},
-        sapeur: {},
-      },
-      expanded: {},
-      selectOptions: {
-        none: {
-          label: 'Alphabétique',
-        },
-        groupe: {
-          label: 'Groupes',
-        },
-        localite_id: {
-          generic: true,
-          label: 'Localité',
-          collection: () => svm.filteredLocalites,
-          displayKey: 'designation',
-        },
-        fonction_id: {
-          generic: true,
-          label: 'Fonction',
-          comparison: (sapeur, value) => sapeur.fonctions.includes(value),
-          collection: () => svm.fonctions,
-          displayKey: 'nom',
-        },
-        permis_type_id: {
-          generic: true,
-          label: 'Permis de conduire',
-          comparison: (sapeur, value) => sapeur.permis.includes(value),
-          collection: () => svm.permis,
-          displayKey: 'type',
-        },
-        grade_id: {
-          generic: true,
-          label: 'Grade',
-          collection: () => svm.grades,
-          displayKey: 'designation',
-        },
-        civilite_id: {
-          generic: true,
-          label: 'Civilité',
-          collection: () => svm.civilites,
-          displayKey: 'designation',
-        },
-        annee_incorporation: {
-          generic: true,
-          label: 'Année incorporation',
-          collection: () =>
-            [...new Set(svm.filteredSapeurs.map((s) => s.annee_incorporation))]
-              .sort()
-              .map((annee) => ({ designation: annee, id: annee })),
-          displayKey: 'designation',
-        },
-        type: {
-          generic: true,
-          label: 'Type',
-          collection: () => [
-            { id: 0, designation: 'Sapeur' },
-            { id: 1, designation: 'Civil' },
-          ],
-          displayKey: 'designation',
-        },
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      groupes: (state) => state.groupe.liste,
-      localites: (state) => state.localite.liste,
-      grades: (state) => state.grade.liste,
-      fonctions: (state) => state.fonction.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      civilites: (state) => state.baseData.civilites,
-      permis: (state) => state.baseData.permisTypes,
-    }),
-    ...mapGetters(['treeGroupesSapeurs']),
-    filteredSapeurs() {
-      return this.sapeurs.filter(
-        (s) =>
-          (this.inactif ? true : s?.actif) &&
-          (this.civil ? true : s?.type == 0),
-      );
-    },
-    filteredLocalites() {
-      const localitesIds = new Set(
-        this.availableSapeur.map((s) => s.localite_id),
-      );
-      return this.localites.filter((l) => localitesIds.has(l.id));
-    },
-    computedChosenSapeurs() {
-      return this.chosenSapeurs
-        .map((sapeurId) => this.sapeurs.find((s) => s.id == sapeurId))
-        .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
-    },
-    availableSapeur() {
-      return this.filteredSapeurs
-        .slice(0)
-        .filter((s) => (this.data.filter ?? (() => true))(s))
-        .filter((s) => !this.chosenSapeurs.includes(s.id));
-    },
-    listeSapeurSelect() {
-      const option = this.selectOptions[this.groupBy];
-      if (option.generic) {
-        return this.flattenedSapeurGeneric(
-          option.collection(),
-          option.comparison ??
-            ((sapeur, value) => sapeur[this.groupBy] == value),
-          option.displayKey,
-        );
-      }
-
-      if (this.groupBy == 'groupe') {
-        return this.flattenedSapeurGroupe;
-      }
-      return [];
-    },
-    flattenedSapeurGroupe() {
-      let flattened = [];
-      const svm = this;
-      const recursive = function (groupe, level) {
-        let expanded = svm.expanded[groupe.id];
-        let flaten = [
-          {
-            designation: svm.groupeFormatter(groupe),
-            level: level,
-            leaf: false,
-            id: groupe.id,
-            expanded: expanded,
-            empty:
-              !groupe.groupes.length &&
-              !groupe.sapeurs.filter(svm.filtreSapeur()).length,
-          },
-        ];
-        if (expanded) {
-          groupe.groupes.forEach(
-            (g) => (flaten = [...flaten, ...recursive(g, level + 1)]),
-          );
-          groupe.sapeurs
-            .filter(svm.filtreSapeur())
-            .map((s) => svm.filteredSapeurs.find((sap) => sap.id == s))
-            .filter((s) => s)
-            .forEach(
-              (s) =>
-                (flaten = [
-                  ...flaten,
-                  {
-                    designation: s.nom_prenom,
-                    leaf: true,
-                    level: level + 1,
-                    parent_id: groupe.id,
-                    id: s.id,
-                  },
-                ]),
-            );
-        }
-        return flaten;
-      };
-
-      this.treeGroupesSapeurs.forEach(
-        (i) => (flattened = [...flattened, ...recursive(i, 0)]),
-      );
-      return flattened;
-    },
-    addSapeurState() {
-      return (
-        Object.entries(this.selectedGeneric.sapeur).find(
-          ([id, selected]) =>
-            selected && !this.chosenSapeurs.includes(parseInt(id)),
-        ) != null
-      );
-    },
-    removeSapeurState() {
-      return (
-        Object.entries(this.selectedGeneric.sapeur).find(
-          ([id, selected]) =>
-            selected && this.chosenSapeurs.includes(parseInt(id)),
-        ) != null
-      );
-    },
-  },
-  mounted() {
-    this.chosenSapeurs = this.data.ids.slice(0);
-
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchGrades');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchCivilites');
-    this.$store.dispatch('fetchPermisType');
-
-    this.$store.dispatch('fetchGroupes').then(() => {
-      const svm = this;
-      let recursive = (item) => {
-        svm.expanded = { ...svm.expanded, [item.id]: false };
-        item.groupes.forEach(recursive);
-      };
-      this.treeGroupesSapeurs.forEach(recursive);
-    });
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    flattenedSapeurGeneric(relation, comparison, displayKey) {
-      let liste = [];
-      const svm = this;
-      relation.forEach((elem) => {
-        let expanded = svm.expanded[elem.id];
-        liste = [
-          ...liste,
-          {
-            designation: elem[displayKey],
-            level: 0,
-            leaf: false,
-            id: elem.id,
-            expanded: expanded,
-            parent_id: 0,
-            empty: !svm.filteredSapeurs
-              .map((s) => ({ ...s, sapeur_id: s.id }))
-              .filter(svm.filtreSapeur())
-              .filter((s) => comparison(s, elem.id)).length,
-          },
-        ];
-        if (expanded) {
-          liste = [
-            ...liste,
-            ...svm.filteredSapeurs
-              .map((s) => ({ ...s, sapeur_id: s.id }))
-              .filter(svm.filtreSapeur())
-              .filter((s) => comparison(s, elem.id))
-              // .filter((s) => s[key] == elem.id)
-              .map((sapeur) => ({
-                designation: sapeur.nom_prenom,
-                level: 1,
-                leaf: true,
-                id: sapeur.id,
-                parent_id: elem.id,
-              })),
-          ];
-        }
-      });
-      return liste;
-    },
-    close() {
-      (this.callback(null) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.closeModal();
-        }
-      });
-    },
-    async save() {
-      // Sapeurs ajoutés
-      const newSap = this.chosenSapeurs.filter(
-        (s) => !this.data.ids.includes(s),
-      );
-      // Sapeurs supprimés
-      const removedSap = this.data.ids.filter(
-        (s) => !this.chosenSapeurs.includes(s),
-      );
-      // Sapeurs tous
-      const sapeurs = this.chosenSapeurs;
-
-      const svm = this;
-      this.callback({ ajoute: newSap, supprime: removedSap, tous: sapeurs })
-        .then((close) => {
-          if (close ?? true) {
-            svm.closeModal();
-          }
-        })
-        .catch((errorMessage) => {
-          svm.$awn.warning(errorMessage);
-        });
-    },
-    select(id, leaf = true) {
-      if (leaf) {
-        this.selectSapeur(id);
-      } else if (this.groupBy == 'groupe') {
-        this.selectGroupe(id);
-      } else {
-        this.selectGeneric(id);
-      }
-    },
-    selectSapeur(id) {
-      this.selectedGeneric.sapeur[id] = !this.selectedGeneric.sapeur[id];
-    },
-    selectGeneric(id) {
-      const option = this.selectOptions[this.groupBy];
-      const comparison =
-        option.comparison ?? ((sapeur, value) => sapeur[this.groupBy] == value);
-
-      // Get group state
-      const state = this.selectedGeneric[this.groupBy][id] ?? false;
-
-      // Select groupe
-      this.selectedGeneric[this.groupBy][id] = !state;
-
-      // Select all sapeurs
-      this.availableSapeur
-        .filter((s) => comparison(s, id) && !this.chosenSapeurs.includes(s.id))
-        .forEach((s) => (this.selectedGeneric.sapeur[s.id] = !state));
-    },
-    selectGroupe(id) {
-      const selected = !(this.selectedGeneric.groupe[id] ?? false);
-      const svm = this;
-
-      // Select groupe itself
-      const recursiveSearch = (item) => {
-        const found = item.id == id;
-        if (found) {
-          svm.selectGroupSingle(item, selected, true);
-        } else {
-          item.groupes.forEach(recursiveSearch);
-        }
-      };
-
-      // recursive search
-      this.treeGroupesSapeurs.forEach(recursiveSearch);
-    },
-    selectGroupSingle(groupe, state, first = false) {
-      if (!first) {
-        this.selectedGeneric.groupe[groupe.id] = state;
-      }
-
-      (groupe.sapeur_ids ?? []).filter(this.filtreSapeur()).forEach((s) => {
-        this.selectedGeneric.sapeur[s.sapeur_id] = state;
-      });
-      groupe.groupes.forEach((g) => this.selectGroupSingle(g, state));
-    },
-    filtreSapeur() {
-      const svm = this;
-      return (s) =>
-        svm.filteredSapeurs.find(
-          (sap) => sap.id == s?.sapeur_id || sap.id == s,
-        ) != null && !svm.chosenSapeurs.includes(s.sapeur_id || s);
-    },
-    groupeFormatter(g) {
-      return g.no ? g.no + ' ' + g.designation : g.designation;
-    },
-    toggleGroupe(id) {
-      this.expanded = {
-        ...this.expanded,
-        [id]: !this.expanded[id],
-      };
-    },
-    addSapeurs() {
-      this.chosenSapeurs = Array.from(
-        new Set([
-          ...this.chosenSapeurs,
-          ...Object.entries(this.selectedGeneric.sapeur)
-            .filter(([, selected]) => selected)
-            .map(([id]) => parseInt(id)),
-        ]),
-      );
-    },
-    removeSapeurs() {
-      const sapeursToRemove = new Set([
-        ...Object.entries(this.selectedGeneric.sapeur)
-          .filter(([, selected]) => selected)
-          .map(([id]) => parseInt(id)),
-      ]);
-      this.chosenSapeurs = this.chosenSapeurs.filter(
-        (id) => !sapeursToRemove.has(id),
-      );
-    },
-    addSingleSapeur(id) {
-      this.chosenSapeurs = [...this.chosenSapeurs, id];
-    },
-    removeSingleSapeur(id) {
-      this.chosenSapeurs = this.chosenSapeurs.filter((item) => item != id);
-    },
-    computeId(item) {
-      return item.leaf == true || item.leaf == undefined
-        ? item.id
-        : 'g' + item.id;
-    },
-  },
-};
-</script>
 
 <style scoped>
 .clickable {

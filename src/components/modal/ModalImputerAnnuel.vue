@@ -1,3 +1,73 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import MultiStep from '../base/MultiStep.vue';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const phase = ref(1);
+const detailsTypes = ref(false);
+const ecritures = ref([]);
+
+const store = useStore();
+
+const fonctions = computed(() => store.state.fonction.liste);
+const fraisIndemniteAnnuel = computed(
+  () => store.state.imputation.fraisIndemnites.annuels,
+);
+const comptes = computed(() => store.state.compte.liste);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const typesAnnuel = computed(() => {
+  return [
+    ...fraisIndemniteAnnuel.value.map((f) => ({
+      ...f,
+      fonctions: f.frais_indemnite_annuels || [],
+    })),
+  ];
+});
+const filteredFonctions = computed(() => {
+  const fonctionIds = new Set(
+    typesAnnuel.value.flatMap((t) => t.fonctions.map((f) => f.fonction_id)),
+  );
+  return fonctions.value.filter((f) => fonctionIds.has(f.id));
+});
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const montantAnnuelTypePourFonction = (type, fonction) => {
+  const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
+  return elem?.quantite * elem?.montant || '';
+};
+const compte = (id) => {
+  if (!id) {
+    return '';
+  }
+  const compte = comptes.value.find((f) => f.id === id);
+  return `${compte?.numero} ${compte?.designation}`;
+};
+const cancel = () => {
+  closeModal();
+};
+const imputer = () => {
+  store
+    .dispatch('imputerAnnuel')
+    .then((data) => {
+      phase.value = 2;
+      ecritures.value = [...data].sort((e1, e2) => e2.sapeur_id - e1.sapeur_id);
+    })
+    .catch((err) =>
+      awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
+    );
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -7,7 +77,6 @@
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
-      <!--progress bar-->
       <multi-step
         :steps="['Type de frais', 'Résultat']"
         :active-index="phase - 1"
@@ -138,92 +207,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '../base/MultiStep.vue';
-
-export default {
-  name: 'ModalImputerAnnuel',
-  components: { MultiStep },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      phase: 1,
-      detailsTypes: false,
-      allFonctions: false,
-      ecritures: [],
-      successMessageVisibility: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      fonctions: (state) => state.fonction.liste,
-      fraisIndemniteAnnuel: (state) => state.imputation.fraisIndemnites.annuels,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.ecritureCategorie.liste,
-      sapeurs: (state) => state.sapeur.liste,
-    }),
-    typesAnnuel() {
-      return [
-        ...this.fraisIndemniteAnnuel.map((f) => ({
-          ...f,
-          fonctions: f.frais_indemnite_annuels || [],
-        })),
-      ];
-    },
-    filteredFonctions() {
-      const fonctionIds = new Set(
-        this.typesAnnuel.flatMap((t) => t.fonctions.map((f) => f.fonction_id)),
-      );
-      return this.fonctions.filter((f) => fonctionIds.has(f.id));
-    },
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    montantAnnuelTypePourFonction(type, fonction) {
-      const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
-      return elem?.quantite * elem?.montant || '';
-    },
-    compte(id) {
-      if (!id) {
-        return '';
-      }
-      const compte = this.comptes.find((f) => f.id === id);
-      return `${compte?.numero} ${compte?.designation}`;
-    },
-    unite(id) {
-      return this.unites.find((u) => u.id === id)?.abreviation;
-    },
-    categorie(id) {
-      return this.categories.find((c) => c.id === id)?.designation;
-    },
-    cancel() {
-      this.closeModal();
-    },
-    imputer() {
-      this.$store
-        .dispatch('imputerAnnuel')
-        .then((data) => {
-          this.phase = 2;
-          this.ecritures = [...data].sort(
-            (e1, e2) => e2.sapeur_id - e1.sapeur_id,
-          );
-        })
-        .catch((err) =>
-          this.$awn.alert(
-            err?.message ?? "Impossible d'effectuer cette action",
-          ),
-        );
-    },
-  },
-};
-</script>

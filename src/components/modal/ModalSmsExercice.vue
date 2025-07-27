@@ -1,5 +1,157 @@
+<script setup>
+import { computed, inject, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { DateTime } from 'luxon';
+
+import SapeurService from '../../services/SapeurService';
+import ExerciceService from '../../services/ExerciceService';
+import AspsmsParamService from '../../services/AspsmsParamService';
+
+const store = useStore();
+store.dispatch('fetchLocalites');
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+const sending = ref(false);
+const errors = ref({});
+
+const loadingSapeurs = ref(true);
+const sapeurs = ref([]);
+const presences = ref([]);
+Promise.all([
+  SapeurService.getSapeurPourConvocationSms().then((res) => {
+    sapeurs.value = res.map((s) => ({
+      ...s,
+      nom_prenom: `${s.nom} ${s.prenom}`,
+    }));
+  }),
+  ExerciceService.getSapeurs(data.id).then((res) => {
+    presences.value = res;
+  }),
+]).then(() => (loadingSapeurs.value = false));
+
+const localite = store.state.localite.liste.find(
+  (l) => l.id == data.localite_id,
+);
+const categorie = store.state.exerciceCategorie.liste.find(
+  (l) => l.id == data.exercice_categorie_id,
+);
+const params = ref({
+  origin: 'GestSIS',
+  differe: true,
+  sapeurIds: [],
+  date: data.date + ' ' + data.heure,
+  exerciceId: data.id,
+  message:
+    `Rappel\n` +
+    `${DateTime.fromSQL(data.date).toLocaleString(
+      DateTime.DATE_MED_WITH_WEEKDAY,
+    )} ${data.heure.slice(0, 5)} ${data.lieu} à ${
+      localite?.designation ?? ''
+    } \n` +
+    `${categorie?.designation} : ${data.communications}`,
+});
+
+const loadingCredit = ref(true);
+store
+  .dispatch('fetchAspsmsCredit')
+  .then(() => (loadingCredit.value = false))
+  .catch(() => (loadingCredit.value = false));
+
+const credit = computed(() => store.state.aspsmsParam.credit);
+
+const computedSapeurs = computed(() => {
+  const indexedSapeurs = {};
+  sapeurs.value.forEach(
+    (s) =>
+      (indexedSapeurs[s.id] = {
+        sapeur_id: s.id,
+        nom_prenom: s.nom_prenom,
+        portable: s.telephones
+          .filter((a) => a.telephone_type_id === 3)
+          .sort((a, b) => a.priorite - b.priorite)
+          .find(() => true)?.numero,
+      }),
+  );
+  return presences.value.map((s) => ({
+    ...s,
+    ...(indexedSapeurs[s.sapeur_id] ?? {}),
+  }));
+});
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const send = () => {
+  if (params.value.differe && new Date(params.value.date) < new Date()) {
+    return awn.alert('Date invalide');
+  }
+
+  const clonedParams = {
+    ...params.value,
+    message: params.value.message
+      .replaceAll('‘', "'")
+      .replaceAll('’', "'")
+      .replaceAll('«', '"')
+      .replaceAll('»', '"'),
+    contacts: computedSapeurs.value
+      .filter((s) => s?.portable)
+      .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
+  };
+
+  if (clonedParams.contacts.length == 0) {
+    return awn.alert('Aucun numéro disponible');
+  }
+
+  sending.value = true;
+  AspsmsParamService.sendSms(clonedParams)
+    .then(() => {
+      store.dispatch('fetchAspsmsCredit');
+      awn.success('Message envoyé avec succès');
+      closeModal();
+    })
+    .catch((err) => {
+      errors.value = err;
+      sending.value = false;
+      awn.alert(err?.message ?? "Erreur lors de l'envoie des SMS");
+    });
+};
+
+const fields = [
+  {
+    title: 'Nom prénom',
+    key: 'nom_prenom',
+    titleClass: 'align-middle',
+  },
+  {
+    title: 'Convoqué',
+    key: 'convoque',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+    type: 'boolean',
+  },
+  {
+    title: 'Excusé',
+    key: 'excuse',
+    titleClass: 'align-middle text-center',
+    columnClass: 'align-middle text-center',
+    type: 'boolean',
+  },
+  {
+    title: 'Portable',
+    key: 'portable',
+    titleClass: 'align-middle',
+  },
+];
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="send">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Convoquer par SMS</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
@@ -7,7 +159,11 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-8">
-          <base-table :fields="fields" :data="computedSapeurs" />
+          <base-table
+            :loading="loadingSapeurs"
+            :fields="fields"
+            :data="computedSapeurs"
+          />
         </div>
         <div class="col-4">
           <base-checkbox
@@ -15,12 +171,12 @@
             class="mb-3"
             label="Envoie différé"
           />
-          <div class="mb-3">
+          <div class="mb-3" v-if="params.differe">
             <label for="date">Date</label>
             <input
-              v-if="params.differe"
               id="date"
               v-model="params.date"
+              required
               type="datetime-local"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date'] }"
@@ -33,6 +189,8 @@
             <textarea
               id="commentaire"
               v-model="params.message"
+              required
+              minlength="1"
               maxlength="500"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['commentaire'] }"
@@ -49,188 +207,9 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :disabled="sending"
-        @click="send()"
-      >
+      <button type="submit" class="btn btn-primary" :disabled="sending">
         Envoyer
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-
-import SapeurService from '../../services/SapeurService';
-import ExerciceService from '../../services/ExerciceService';
-import AspsmsParamService from '../../services/AspsmsParamService';
-
-export default {
-  name: 'ModalSmsExercice',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      sending: false,
-      errors: {},
-      loadingSapeurs: true,
-      loadingCredit: true,
-      sapeurs: [],
-      presences: [],
-      params: {
-        message: '',
-        origin: 'GestSIS',
-        differe: true,
-        date: '',
-        sapeurIds: [],
-        exerciceId: null,
-      },
-      fields: [
-        {
-          title: 'Nom prénom',
-          key: 'nom_prenom',
-          titleClass: 'align-middle',
-        },
-        {
-          title: 'Convoqué',
-          key: 'convoque',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-          type: 'boolean',
-        },
-        {
-          title: 'Excusé',
-          key: 'excuse',
-          titleClass: 'align-middle text-center',
-          columnClass: 'align-middle text-center',
-          type: 'boolean',
-        },
-        {
-          title: 'Portable',
-          key: 'portable',
-          titleClass: 'align-middle',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      credit: (state) => state.aspsmsParam.credit,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-    }),
-    computedSapeurs() {
-      if (!this.loadingSapeurs) {
-        return [];
-      }
-      const indexedSapeurs = {};
-      this.sapeurs.forEach(
-        (s) =>
-          (indexedSapeurs[s.id] = {
-            sapeur_id: s.id,
-            nom_prenom: s.nom_prenom,
-            portable: s.telephones
-              .filter((a) => a.telephone_type_id === 3)
-              .sort((a, b) => a.priorite - b.priorite)
-              .find(() => true)?.numero,
-          }),
-      );
-      return this.presences.map((s) => ({
-        ...s,
-        ...(indexedSapeurs[s.sapeur_id] ?? {}),
-      }));
-    },
-  },
-  beforeMount() {
-    let resolvedCount = 0;
-    SapeurService.getSapeurPourConvocationSms().then((sapeurs) => {
-      this.sapeurs = sapeurs.map((s) => ({
-        ...s,
-        nom_prenom: `${s.nom} ${s.prenom}`,
-      }));
-      resolvedCount++;
-      this.loadingSapeurs = resolvedCount == 2;
-    });
-    ExerciceService.getSapeurs(this.data.id).then((presences) => {
-      this.presences = presences;
-      resolvedCount++;
-      this.loadingSapeurs = resolvedCount == 2;
-    });
-  },
-  mounted() {
-    this.loadingCredit = true;
-    this.$store
-      .dispatch('fetchAspsmsCredit')
-      .then(() => (this.loadingCredit = false))
-      .catch(() => {
-        this.loadingCredit = false;
-      });
-
-    const localite = this.localites.find((l) => l.id == this.data.localite_id);
-    const categorie = this.categories.find(
-      (l) => l.id == this.data.exercice_categorie_id,
-    );
-    this.params.date = this.data.date + ' ' + this.data.heure;
-    this.params.exerciceId = this.data.id;
-
-    this.params.message =
-      `Rappel\n` +
-      `${DateTime.fromSQL(this.data.date).toLocaleString(
-        DateTime.DATE_MED_WITH_WEEKDAY,
-      )} ${this.data.heure.slice(0, 5)} ${this.data.lieu} à ${
-        localite?.designation ?? ''
-      } \n` +
-      `${categorie?.designation} : ${this.data.communications}`;
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async send() {
-      const params = {
-        ...this.params,
-        message: this.params.message
-          .replaceAll('‘', "'")
-          .replaceAll('’', "'")
-          .replaceAll('«', '"')
-          .replaceAll('»', '"'),
-        contacts: this.computedSapeurs
-          .filter((s) => s?.portable)
-          .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
-      };
-
-      if (params.contacts.length == 0) {
-        return this.$awn.alert('Aucun numéro disponible');
-      }
-
-      if (params.differe && new Date(params.date) < new Date()) {
-        return this.$awn.alert('Date invalide');
-      }
-
-      this.sending = true;
-      AspsmsParamService.sendSms(params)
-        .then(() => {
-          this.errors = {};
-          this.sending = false;
-          this.$store.dispatch('fetchAspsmsCredit');
-          return this.$awn.success('Message envoyé avec succès');
-        })
-        .catch((errors) => {
-          this.errors = { ...errors };
-          this.sending = false;
-          return this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'envoie des SMS",
-          );
-        });
-    },
-  },
-};
-</script>

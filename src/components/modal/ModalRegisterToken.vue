@@ -1,15 +1,76 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useModalStore } from '../../stores/common/Modal.js';
+import { useStore } from 'vuex';
+
+const d = new Date();
+d.setMonth(d.getMonth() + 1);
+
+const step = ref(1);
+const errors = ref({});
+const token = ref({
+  description: '',
+  validite: d.toISOString().substring(0, 10),
+  email: '',
+  roles: [],
+  token: '',
+});
+
+const store = useStore();
+const roles = computed(() => store.state.auth.roles);
+
+const { closeModal } = useModalStore();
+
+const copyToClipboard = (value) => {
+  navigator.clipboard.writeText(value);
+};
+const save = () => {
+  if (token.value.roles.length <= 0) {
+    errors.value = { roles: 'Sélectionnez au minimum 1 rôle' };
+  } else {
+    delete errors.value.roles;
+  }
+  if (token.value.description === '') {
+    errors.value = { description: 'Description invalide' };
+  } else {
+    delete errors.value.description;
+  }
+  if (new Date(token.value.validite) <= new Date()) {
+    errors.value = { validite: 'Validité incorrecte' };
+  } else {
+    delete errors.value.validite;
+  }
+  if (Object.keys(errors.value).length > 0) {
+    return;
+  }
+
+  store
+    .dispatch('newRegisterToken', token.value)
+    .then((res) => {
+      errors.value = {};
+      step.value = 2;
+      token.value.token = res;
+    })
+    .catch((err) => {
+      errors.value = err;
+    });
+};
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">Nouveau jeton d'inscription</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div v-if="step === 1" class="modal-body">
       <div class="mb-3">
-        <label for="desc">Description</label>
+        <label for="description">Description</label>
         <input
-          id="desc"
-          ref="desc"
+          id="description"
+          required
+          autofocus
+          minlength="1"
           v-model="token.description"
           type="text"
           class="form-control form-control-sm"
@@ -17,9 +78,10 @@
         />
       </div>
       <div class="mb-3">
-        <label for="designation">Validité</label>
+        <label for="validite">Validité</label>
         <input
-          id="designation"
+          id="validite"
+          required
           v-model="token.validite"
           type="date"
           class="form-control form-control-sm"
@@ -65,7 +127,7 @@
           <button
             class="btn btn-outline-secondary"
             title="Copier dans le press-papier"
-            @click="copyToClipboard"
+            @click="copyToClipboard(token.token)"
           >
             <font-awesome-icon :icon="['fas', 'copy']" />
           </button>
@@ -76,93 +138,9 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ step == 1 ? 'Annuler' : 'Fermer' }}
       </button>
-      <button
-        v-if="step === 1"
-        type="button"
-        class="btn btn-primary"
-        @click="save()"
-      >
+      <button v-if="step === 1" type="submit" class="btn btn-primary">
         Créer
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-export default {
-  name: 'ModalRegisterToken',
-  data() {
-    return {
-      step: 1,
-      errors: {},
-      token: {
-        description: '',
-        validite: null,
-        email: '',
-        roles: [],
-        token: '',
-      },
-    };
-  },
-  computed: {
-    ...mapState({
-      roles: (state) => state.auth.roles,
-    }),
-  },
-  mounted() {
-    var d = new Date();
-    d.setMonth(d.getMonth() + 1);
-    this.token.validite = d.toISOString().substring(0, 10);
-    this.$refs.desc.focus();
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    copyToClipboard() {
-      const copyText = this.$refs.displayedToken;
-
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-      document.execCommand('copy');
-    },
-    async save() {
-      if (this.token.roles.length <= 0) {
-        this.errors = { roles: 'Sélectionnez au minimum 1 rôle' };
-      } else {
-        delete this.errors.roles;
-      }
-      if (this.token.description === '') {
-        this.errors = { description: 'Description invalide' };
-      } else {
-        delete this.errors.description;
-      }
-      if (new Date(this.token.validite) <= new Date()) {
-        this.errors = { validite: 'Validité incorrecte' };
-      } else {
-        delete this.errors.validite;
-      }
-      if (Object.keys(this.errors).length > 0) {
-        return;
-      }
-
-      this.$store
-        .dispatch('newRegisterToken', this.token)
-        .then((token) => {
-          this.errors = {};
-          this.step = 2;
-          this.token.token = token;
-          // this.closeModal();
-        })
-        .catch((errors) => {
-          this.errors = {
-            ...errors,
-          };
-        });
-    },
-  },
-};
-</script>

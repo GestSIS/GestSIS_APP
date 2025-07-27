@@ -30,7 +30,7 @@ const { steps, activeIndex } = defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .multisteps-form__panel[data-animation='scaleIn'] {
   -webkit-transform: scale(0.9);
   transform: scale(0.9);

@@ -302,6 +302,7 @@ const router = createRouter({
         {
           path: '',
           name: 'exercice-details',
+          props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () =>
             import('../components/exercice/ExerciceTabGeneral.vue'),
@@ -309,6 +310,7 @@ const router = createRouter({
         {
           path: 'presence',
           name: 'exercice-presence',
+          props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () =>
             import('../components/exercice/ExerciceTabSapeurs.vue'),
@@ -316,6 +318,7 @@ const router = createRouter({
         {
           path: 'sms',
           name: 'exercice-sms',
+          props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () => import('../components/exercice/ExerciceTabSms.vue'),
         },

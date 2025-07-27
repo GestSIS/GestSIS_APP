@@ -1,7 +1,8 @@
 <script setup>
+import { computed, watchEffect } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch } from 'vue';
 
 const { id } = defineProps({
   id: {
@@ -10,41 +11,20 @@ const { id } = defineProps({
   },
 });
 
-const loading = ref(true);
 const store = useStore();
-
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchExerciceCategories');
-store.dispatch('fetchExercicesComptables');
-store.dispatch('fetchExcuseTypes');
-store.dispatch('fetchHeuresExercice');
-store.dispatch('fetchUnites');
+const route = useRoute();
 
 const newMode = computed(() => id === 'new');
-
-if (newMode.value) {
-  store.dispatch('resetActiveExercice');
-} else {
-  store.dispatch('selectExercice', parseInt(id));
-  store.dispatch('fetchExercice', parseInt(id)).then(() => {
-    loading.value = false;
-  });
-  store.dispatch('fetchExerciceSapeurs', parseInt(id));
-}
-watch(
-  () => id,
-  () => {
-    if (newMode.value) {
-      store.dispatch('resetActiveExercice');
-    } else {
-      store.dispatch('selectExercice', parseInt(id));
-      store.dispatch('fetchExercice', parseInt(id));
-      store.dispatch('fetchExerciceSapeurs', parseInt(id));
-      store.dispatch('fetchExerciceSms', parseInt(id));
+watchEffect(() => {
+  if (id !== 'new') {
+    store.dispatch('selectExercice', parseInt(id));
+    store.dispatch('fetchExercice', parseInt(id));
+  } else {
+    if (route.name != 'exercice-details') {
+      router.push({ name: 'exercice-details', id: 'new' });
     }
-  },
-);
+  }
+});
 
 const activeExerciceId = computed(() => store.state.exercice.active.id);
 const activeExerciceData = computed(() => store.state.exercice.active.data);

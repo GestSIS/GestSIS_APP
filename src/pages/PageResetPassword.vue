@@ -45,7 +45,7 @@ const reset = async () => {
           if (time.value <= 0) {
             clearInterval(timeInterval.value);
             router.push(
-              route.query.redirect ? route.query.redirect : 'accueil'
+              route.query.redirect ? route.query.redirect : 'accueil',
             );
           } else {
             time.value--;
@@ -125,7 +125,7 @@ const reset = async () => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .centered {
   height: 100%;
   display: flex;

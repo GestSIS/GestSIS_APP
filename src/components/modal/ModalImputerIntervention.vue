@@ -1,8 +1,70 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import MultiStep from '../base/MultiStep.vue';
+
+const store = useStore();
+store.dispatch('fetchFonctions');
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const phase = ref(1);
+const activeIndemniteIndex = ref(null);
+const activeIndemnite = ref(null);
+const ecritures = ref([]);
+const successMessageVisibility = ref(true);
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+const indemnitesTypes = computed(
+  () => store.state.imputation.fraisIndemnites.interventions,
+);
+const fonctions = computed(() => store.state.fonction.liste);
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+const activeIndemniteHasFonction = computed(() => {
+  return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
+});
+
+const { closeModal } = useModalStore();
+
+const selectIndemnite = (index) => {
+  activeIndemniteIndex.value = index;
+  activeIndemnite.value = indemnitesTypes.value[index];
+};
+const imputer = () => {
+  if (activeIndemnite.value === null) {
+    return;
+  }
+
+  store
+    .dispatch('imputerIntervention', {
+      intervention_id: data.id,
+      indemnite_intervention_type_id: activeIndemnite.value.id,
+    })
+    .then((data) => {
+      phase.value = 2;
+      ecritures.value = data.ecritures;
+    })
+    .catch((err) =>
+      awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
+    );
+};
+const formatCompte = (compte) => {
+  if (!compte) return '';
+  return compte?.numero + ' - ' + compte?.designation;
+};
+</script>
 <template>
   <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Imputer l'intervention</h5>
-      <button type="button" class="btn-close" @click="cancel"></button>
+      <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <multi-step
@@ -17,11 +79,7 @@
           }"
         >
           <!-- TODO: Use BaseTable -->
-          <table
-            class="table table-sm"
-            @keydown.down="onKeyDown"
-            @keydown.up="onKeyUp"
-          >
+          <table class="table table-sm">
             <thead>
               <tr>
                 <th>Designation</th>
@@ -201,100 +259,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '../base/MultiStep.vue';
-
-export default {
-  name: 'ModalImputerIntervention',
-  components: { MultiStep },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      phase: 1,
-      activeIndemniteIndex: null,
-      activeIndemnite: null,
-      ecritures: [],
-      successMessageVisibility: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      sapeurs: (state) => state.sapeur.liste,
-      indemnitesTypes: (state) =>
-        state.imputation.fraisIndemnites.interventions,
-      fonctions: (state) => state.fonction.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-    }),
-    activeIndemniteHasFonction() {
-      return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
-    },
-  },
-  mounted() {
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    selectIndemnite(index) {
-      this.activeIndemniteIndex = index;
-      this.activeIndemnite = this.indemnitesTypes[index];
-    },
-    cancel() {
-      //TODO Cancel depending on state
-      this.closeModal();
-    },
-    imputer() {
-      if (this.indemniteType === null) {
-        return;
-      }
-
-      //TODO
-      this.$store
-        .dispatch('imputerIntervention', {
-          intervention_id: this.data.id,
-          indemnite_intervention_type_id: this.activeIndemnite.id,
-        })
-        .then((data) => {
-          this.phase = 2;
-          this.ecritures = data.ecritures;
-        })
-        .catch((err) =>
-          this.$awn.alert(
-            err?.message ?? "Impossible d'effectuer cette action",
-          ),
-        );
-    },
-    onKeyDown() {
-      // console.log('Key down');
-      this.selectIndemnite(
-        this.activeIndemniteIndex === null
-          ? 1
-          : ++this.activeIndemniteIndex % this.indemnitesTypes.length,
-      );
-    },
-    onKeyUp() {
-      // console.log('Key up');
-      this.selectIndemnite(
-        this.activeIndemniteIndex === null
-          ? 1
-          : --this.activeIndemniteIndex % this.indemnitesTypes.length,
-      );
-    },
-    formatCompte(compte) {
-      if (!compte) return '';
-      return compte?.numero + ' - ' + compte?.designation;
-    },
-  },
-};
-</script>

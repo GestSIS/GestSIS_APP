@@ -359,7 +359,7 @@ const fieldsAppels = [
   </div>
 </template>
 
-<style scoped, lang="scss">
+<style scoped lang="scss">
 .timeline {
   list-style: none;
   padding: 20px 0 0 0;

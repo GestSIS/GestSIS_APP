@@ -1,3 +1,325 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import ExerciceService from '../../services/ExerciceService';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const store = useStore();
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchExerciceCategories');
+store.dispatch('fetchExercicesComptables');
+store.dispatch('fetchExcuseTypes');
+store.dispatch('fetchHeuresExercice');
+store.dispatch('fetchUnites');
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    default: 'new',
+  },
+});
+
+const presences = ref([]);
+const dismissedWarning = ref(false);
+const allConvoque = ref(false);
+
+const loading = ref(false);
+const activeExerciceSapeurs = computed(
+  () => store.state.exercice.active.sapeurs,
+);
+watchEffect(async () => {
+  loading.value = true;
+  await Promise.all([
+    store.dispatch('fetchExercice', id),
+    store.dispatch('fetchExerciceSapeurs', id),
+  ]);
+  loading.value = false;
+});
+
+const sapeurs = computed(() => store.state.sapeur.liste);
+watchEffect(() => {
+  presences.value = store.state.exercice.active.sapeurs
+    .map((s) => {
+      const sapeur = sapeurs.value.find((sap) => sap.id == s.sapeur_id);
+      return {
+        ...s,
+        nom_prenom: sapeur?.nom_prenom ?? '...',
+        actif: sapeur?.actif,
+      };
+    })
+    .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
+});
+
+watchEffect(() => {
+  const status = presences.value?.map((p) => (p.convoque === 1 ? true : false));
+  allConvoque.value = status.length
+    ? status.reduce((c2, c1) => (c1 === c2 ? c1 : ''))
+    : false;
+});
+
+const excusesTypes = computed(() => store.state.excuseType.liste);
+
+const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
+const hasValidationPermission = useHasPermission(
+  permissions.EXERCICE.VALIDATION,
+);
+const activeExerciceData = computed(() => store.state.exercice.active.data);
+const heureTypes = computed(() => store.state.heureExercice.liste);
+const unites = computed(() => store.state.unite.liste);
+
+const canEditAbsence = computed(() => {
+  // Possible de l'éditer si permission de validation ou si pas encore validé
+  return (
+    activeExerciceData.value.statut > 0 &&
+    (hasValidationPermission.value ||
+      (hasPresencePermission.value && activeExerciceData.value.statut <= 2))
+  );
+});
+const canEditPresence = computed(() => {
+  return (
+    activeExerciceData.value.statut > 0 &&
+    ((hasPresencePermission.value && activeExerciceData.value.statut <= 2) ||
+      (hasValidationPermission.value && activeExerciceData.value.statut <= 3))
+  );
+});
+const canValidate = computed(() => {
+  return activeExerciceData.value.statut == 2;
+});
+
+const { showModal } = useModalStore();
+const awn = inject('awn');
+
+const selectAllConvoque = (status) => {
+  presences.value = presences.value.map((p) => ({
+    ...p,
+    convoque: status ? 1 : 0,
+  }));
+  Promise.all(presences.value.map((p) => savePresence(p, true))).then(
+    awn.success('Modifications enregistrées'),
+  );
+};
+const getHeureValue = (sapeur) => {
+  return sapeur?.quantite;
+};
+const updateHeureSapeur = (sap, h, quantite) => {
+  const heure = sap.heures.find(
+    (e) =>
+      e.heure_exercice_type_id == h.id ||
+      (!e.heure_exercice_type_id && e.designation == h.designation),
+  );
+  if (!heure) {
+    // Ajout de l'heure
+    const newHeure = {
+      heure_exercice_type_id: h.id,
+      quantite: parseFloat(quantite) || null,
+      exercice_id: id,
+      sapeur_id: sap.sapeur_id,
+    };
+
+    store
+      .dispatch('addHeure', newHeure)
+      .then(() => awn.success('Heure ajoutée'))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
+      );
+  } else if (!(parseFloat(quantite) || null)) {
+    // Suppression de l'heure
+    store
+      .dispatch('removeHeure', heure)
+      .then(() => awn.success('Heure supprimée'))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
+      );
+  } else {
+    heure.quantite = parseFloat(quantite) || null;
+    // Modification de l'heure
+    store
+      .dispatch('editHeure', heure)
+      .then(() => awn.success('Modifications enregistrées'))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
+      );
+  }
+};
+const validate = () => {
+  store
+    .dispatch('validerExercice', id)
+    .then((res) => awn.success(res?.message || 'Exercice validé avec succès.'))
+    .catch((err) =>
+      awn.alert(err?.message || "Erreur lors de la validation de l'exercice."),
+    );
+};
+const formatUnite = (type_unite_id) => {
+  return unites.value.find((u) => u.id == type_unite_id)?.abreviation;
+};
+const manageSapeurs = () => {
+  let callback = (param) => {
+    if (!param) {
+      return;
+    }
+    const { ajoute, supprime } = param;
+    if (ajoute === null || ajoute === undefined) {
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      let newSapeurs = ajoute.map((s) => ({
+        convoque: true,
+        present: false,
+        absent: false,
+        remplace: false,
+        excuse_type_id: null,
+        sapeur_id: s,
+        amende: false,
+      }));
+
+      //Sapeurs ajoutés
+      if (newSapeurs.length > 0) {
+        store
+          .dispatch('addSapeurs', newSapeurs)
+          .then(() => {
+            if (supprime.length <= 0) {
+              resolve();
+            }
+          })
+          .catch(() => {
+            reject("Erreur lors de l'opération");
+          });
+      }
+
+      if (supprime.length > 0) {
+        store
+          .dispatch('removeSapeurs', supprime)
+          .then(resolve)
+          .catch(() => {
+            reject("Erreur lors de l'opération");
+          });
+      }
+
+      if (newSapeurs.length <= 0 && supprime.length <= 0) {
+        resolve('Solved');
+      }
+    });
+  };
+  showModal({
+    component: 'ModalSapeurSelect',
+    size: 1,
+    callback,
+    data: { ids: presences.value.map((s) => s.sapeur_id) },
+  });
+};
+const savePresence = async (sapeur, hideNotification) => {
+  const promise = store.dispatch('editPresenceExercice', {
+    presenceId: sapeur.id,
+    presence: sapeur,
+  });
+  if (!hideNotification) {
+    try {
+      const res = await promise;
+      return awn.success(res?.message || 'Modifications enregistrées');
+    } catch (err) {
+      return awn.alert(err?.message || "Erreur lors de l'enregistrement");
+    }
+  } else {
+    return promise;
+  }
+};
+const selectConvoque = (sapeur) => {
+  savePresence(sapeur);
+};
+const selectPresent = (sapeur) => {
+  sapeur.remplace = 0;
+  sapeur.absent = 0;
+  sapeur.excuse_statut = 0;
+  savePresence(sapeur);
+};
+const selectAbsent = (sapeur) => {
+  sapeur.remplace = 0;
+  sapeur.present = 0;
+  savePresence(sapeur);
+};
+const selectRemplace = (sapeur) => {
+  sapeur.present = 0;
+  sapeur.absent = 0;
+  sapeur.excuse_statut = 0;
+  savePresence(sapeur);
+};
+const detailExcuse = (sapeur) => {
+  if (!hasPresencePermission.value) {
+    awn.warning(
+      "Permissions insuffisantes pour accéder au détails de l'excuse",
+    );
+    return;
+  }
+  showModal({
+    component: 'ModalExcuse',
+    data: sapeur,
+    callback: async (presence) => {
+      if (presence !== null && presence !== undefined) {
+        presence.present = 0;
+        presence.remplace = 0;
+        await savePresence(presence);
+        presences.value = [
+          ...presences.value.map((p) =>
+            parseInt(p.id) == parseInt(presence.id) ? presence : p,
+          ),
+        ];
+      }
+    },
+  });
+};
+const addExcuse = (sapeur) =>
+  showModal({
+    component: 'ModalExcuse',
+    data: sapeur,
+    callback: async (presence) => {
+      if (presence !== null && presence !== undefined) {
+        presence.present = 0;
+        presence.absent = 1;
+        presence.remplace = 0;
+        await savePresence(presence);
+        presences.value = [
+          ...presences.value.map((p) =>
+            parseInt(p.id) == parseInt(presence.id) ? presence : p,
+          ),
+        ];
+      }
+    },
+  });
+
+const removeExcuse = (sapeur) =>
+  confirm(
+    'Voulez-vous vraiment supprimer cette excuse ?',
+    "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+  ).then(() => store.dispatch('removeExcuse', sapeur));
+
+const downloadJustificatif = (sapeur) => {
+  if (!hasPresencePermission.value) {
+    awn.warning(
+      "Permissions insuffisantes pour accéder au détails de l'excuse",
+    );
+    return;
+  }
+  ExerciceService.downloadExcuseJustificatif(
+    sapeur.exercice_id,
+    sapeur.sapeur_id,
+    'justificatif_' + sapeur.justificatif_filename,
+  ).catch((err) =>
+    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
+  );
+};
+
+const statuts = [
+  { id: -2, designation: 'Amendée' },
+  { id: -1, designation: 'Refusée' },
+  { id: 0, designation: 'A traiter' },
+  { id: 1, designation: 'Acceptée' },
+];
+</script>
+
 <template>
   <div
     v-if="!dismissedWarning && canEditAbsence && !canEditPresence"
@@ -266,344 +588,7 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ExerciceTabSapeurs',
-  data: () => {
-    return {
-      statuts: [
-        { id: -2, designation: 'Amendée' },
-        { id: -1, designation: 'Refusée' },
-        { id: 0, designation: 'A traiter' },
-        { id: 1, designation: 'Acceptée' },
-      ],
-      presences: [],
-      dismissedWarning: false,
-      allConvoque: false,
-    };
-  },
-  computed: {
-    ...mapState({
-      excusesTypes: (state) => state.excuseType.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      hasPresencePermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.PRESENCE),
-      hasValidationPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.VALIDATION),
-      activeExerciceId: (state) => state.exercice.active.id,
-      activeExerciceData: (state) => state.exercice.active.data,
-      activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
-      heureTypes: (state) => state.heureExercice.liste,
-      unites: (state) => state.unite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-      id: (state) => state.exercice.active.data?.exercice_categorie_id,
-      amendable: (state) =>
-        state.exerciceCategorie.liste.find(
-          (c) => c.id == state.exercice.active.data?.exercice_categorie_id,
-        )?.amendable,
-    }),
-    isImpute() {
-      return this.activeExerciceData.statut == 4;
-    },
-    canEditAbsence() {
-      // Possible de l'éditer si permission de validation ou si pas encore validé
-      return (
-        this.activeExerciceData.statut > 0 &&
-        (this.hasValidationPermission ||
-          (this.hasPresencePermission && this.activeExerciceData.statut <= 2))
-      );
-    },
-    canEditPresence() {
-      return (
-        this.activeExerciceData.statut > 0 &&
-        ((this.hasPresencePermission && this.activeExerciceData.statut <= 2) ||
-          (this.hasValidationPermission && this.activeExerciceData.statut <= 3))
-      );
-    },
-    canValidate() {
-      return this.activeExerciceData.statut == 2;
-    },
-    computedExerciceSapeurs() {
-      return this.activeExerciceSapeurs
-        .map((s) => {
-          const sapeur = this.sapeurs.find((sap) => sap.id == s.sapeur_id);
-          return {
-            ...s,
-            nom_prenom: sapeur?.nom_prenom ?? '...',
-            actif: sapeur?.actif,
-          };
-        })
-        .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));
-    },
-  },
-  watch: {
-    computedExerciceSapeurs() {
-      this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
-    },
-    presences(values) {
-      const status = values?.map((p) => (p.convoque === 1 ? true : false));
-      this.allConvoque = status.length
-        ? status.reduce((c2, c1) => (c1 === c2 ? c1 : ''))
-        : false;
-    },
-  },
-  mounted() {
-    this.presences = this.computedExerciceSapeurs.map((s) => ({ ...s }));
-  },
-  methods: {
-    ...mapActions(useModalStore, { showModal: 'showModal' }),
-    selectAllConvoque(status) {
-      this.presences = this.presences.map((p) => ({
-        ...p,
-        convoque: status ? 1 : 0,
-      }));
-      Promise.all(this.presences.map((p) => this.savePresence(p, true))).then(
-        this.$awn.success('Modifications enregistrées'),
-      );
-    },
-    getHeureValue(sapeur) {
-      return sapeur?.quantite;
-    },
-    updateHeureSapeur(sap, h, quantite) {
-      const heure = sap.heures.find(
-        (e) =>
-          e.heure_exercice_type_id == h.id ||
-          (!e.heure_exercice_type_id && e.designation == h.designation),
-      );
-      if (!heure) {
-        // Ajout de l'heure
-        const newHeure = {
-          heure_exercice_type_id: h.id,
-          quantite: parseFloat(quantite) || null,
-          exercice_id: this.activeExerciceId,
-          sapeur_id: sap.sapeur_id,
-        };
-
-        this.$store
-          .dispatch('addHeure', newHeure)
-          .then(() => this.$awn.success('Heure ajoutée'))
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-          );
-      } else if (!(parseFloat(quantite) || null)) {
-        // Suppression de l'heure
-        this.$store
-          .dispatch('removeHeure', heure)
-          .then(() => this.$awn.success('Heure supprimée'))
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-          );
-      } else {
-        heure.quantite = parseFloat(quantite) || null;
-        // Modification de l'heure
-        this.$store
-          .dispatch('editHeure', heure)
-          .then(() => this.$awn.success('Modifications enregistrées'))
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-          );
-      }
-    },
-    async validate() {
-      this.$store
-        .dispatch('validerExercice', this.activeExerciceId)
-        .then((res) =>
-          this.$awn.success(res?.message || 'Exercice validé avec succès.'),
-        )
-        .catch((err) =>
-          this.$awn.alert(
-            err?.message || "Erreur lors de la validation de l'exercice.",
-          ),
-        );
-    },
-    formatUnite(type_unite_id) {
-      return this.unites.find((u) => u.id == type_unite_id)?.abreviation;
-    },
-    manageSapeurs() {
-      const data = {
-        ids: this.presences.map((s) => s.sapeur_id).slice(0),
-      };
-      const svm = this;
-      let callback = (param) => {
-        if (!param) {
-          return;
-        }
-        const { ajoute, supprime } = param;
-        if (ajoute === null || ajoute === undefined) {
-          return;
-        }
-
-        return new Promise((resolve, reject) => {
-          let newSapeurs = ajoute.map((s) => ({
-            convoque: true,
-            present: false,
-            absent: false,
-            remplace: false,
-            excuse_type_id: null,
-            sapeur_id: s,
-            amende: false,
-          }));
-
-          //Sapeurs ajoutés
-          if (newSapeurs.length > 0) {
-            svm.$store
-              .dispatch('addSapeurs', newSapeurs)
-              .then(() => {
-                if (supprime.length <= 0) {
-                  resolve();
-                }
-              })
-              .catch(() => {
-                reject("Erreur lors de l'opération");
-              });
-          }
-
-          if (supprime.length > 0) {
-            svm.$store
-              .dispatch('removeSapeurs', supprime)
-              .then(resolve)
-              .catch(() => {
-                reject("Erreur lors de l'opération");
-              });
-          }
-
-          if (newSapeurs.length <= 0 && supprime.length <= 0) {
-            resolve('Solved');
-          }
-        });
-      };
-      this.showModal({
-        component: 'ModalSapeurSelect',
-        size: 1,
-        callback,
-        data,
-      });
-    },
-    savePresence(sapeur, hideNotification) {
-      const promise = this.$store.dispatch('editPresenceExercice', {
-        presenceId: sapeur.id,
-        presence: sapeur,
-      });
-      if (!hideNotification) {
-        return promise
-          .then((res) =>
-            this.$awn.success(res?.message || 'Modifications enregistrées'),
-          )
-          .catch((err) =>
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-          );
-      } else {
-        return promise;
-      }
-    },
-    selectConvoque(sapeur) {
-      this.savePresence(sapeur);
-    },
-    selectPresent(sapeur) {
-      sapeur.remplace = 0;
-      sapeur.absent = 0;
-      sapeur.excuse_statut = 0;
-      this.savePresence(sapeur);
-    },
-    selectAbsent(sapeur) {
-      sapeur.remplace = 0;
-      sapeur.present = 0;
-      this.savePresence(sapeur);
-    },
-    selectRemplace(sapeur) {
-      sapeur.present = 0;
-      sapeur.absent = 0;
-      sapeur.excuse_statut = 0;
-      this.savePresence(sapeur);
-    },
-    detailExcuse(sapeur) {
-      if (!this.hasPresencePermission) {
-        this.$awn.warning(
-          "Permissions insuffisantes pour accéder au détails de l'excuse",
-        );
-        return;
-      }
-      this.showModal({
-        component: 'ModalExcuse',
-        data: sapeur,
-        callback: (presence) => {
-          if (presence !== null && presence !== undefined) {
-            presence.present = 0;
-            presence.remplace = 0;
-            this.savePresence(presence);
-            this.presences = [
-              ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p,
-              ),
-            ];
-          }
-        },
-      });
-    },
-    async addExcuse(sapeur) {
-      this.showModal({
-        component: 'ModalExcuse',
-        data: sapeur,
-        callback: (presence) => {
-          if (presence !== null && presence !== undefined) {
-            presence.present = 0;
-            presence.absent = 1;
-            presence.remplace = 0;
-            this.savePresence(presence);
-            this.presences = [
-              ...this.presences.map((p) =>
-                parseInt(p.id) == parseInt(presence.id) ? presence : p,
-              ),
-            ];
-          }
-        },
-      });
-    },
-    removeExcuse(sapeur) {
-      this.showModal({
-        component: 'ModalConfirmation',
-        data: {
-          title: 'Voulez-vous vraiment supprimer cette excuse ?',
-          question:
-            "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-        },
-        callback: (confirmed) => {
-          if (confirmed) {
-            this.$store.dispatch('removeExcuse', sapeur);
-          }
-        },
-      });
-    },
-    downloadJustificatif(sapeur) {
-      if (!this.hasPresencePermission) {
-        this.$awn.warning(
-          "Permissions insuffisantes pour accéder au détails de l'excuse",
-        );
-        return;
-      }
-      ExerciceService.downloadExcuseJustificatif(
-        sapeur.exercice_id,
-        sapeur.sapeur_id,
-        'justificatif_' + sapeur.justificatif_filename,
-      ).catch((err) =>
-        this.$awn.alert(
-          err?.message ?? 'Erreur lors du chargement du justificatif',
-        ),
-      );
-    },
-  },
-};
-</script>
-
-<style scoped lang="scss">
+<style scoped>
 thead {
   position: sticky;
   top: 0;

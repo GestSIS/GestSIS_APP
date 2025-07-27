@@ -61,7 +61,7 @@ const filteredLinks = computed(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .img-fetch {
   height: auto;
   max-height: 220px;

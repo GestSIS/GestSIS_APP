@@ -21,7 +21,7 @@ const localites = computed(() => store.state.localite.liste);
 
 const { closeModal } = useModalStore();
 
-const save = async () => {
+const save = () =>
   store
     .dispatch((form.id || 0) === 0 ? 'addMedecin' : 'updateMedecin', form)
     .then(closeModal)
@@ -31,7 +31,6 @@ const save = async () => {
           ...err,
         }),
     );
-};
 </script>
 
 <template>

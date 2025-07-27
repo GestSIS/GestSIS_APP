@@ -108,29 +108,24 @@ export default {
   },
   actions: {
     fetchListeExercice({ commit }, exerciceComptableId) {
-      return ExerciceService.getExercices(
-        exerciceComptableId
-      ).then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
+      return ExerciceService.getExercices(exerciceComptableId)
+        .then((data) => commit(types.UPDATE_EXERCICE_LISTE, data));
     },
-    fetchExerciceAbsences({ getters, commit }) {
-      return ExerciceService.getAbsences(
-        getters.activeExerciceComptableId
-      ).then((data) => commit(types.UPDATE_EXERCICE_ABSENCES, data));
+    fetchExerciceAbsences({ commit }, exerciceComptableId) {
+      return ExerciceService.getAbsences(exerciceComptableId)
+        .then((data) => commit(types.UPDATE_EXERCICE_ABSENCES, data));
     },
     fetchExercice({ commit }, exerciceId) {
-      return ExerciceService.getExercice(exerciceId).then((data) =>
-        commit(types.UPDATE_CURRENT_EXERCICE_DATA, data)
-      );
+      return ExerciceService.getExercice(exerciceId)
+        .then((data) => commit(types.UPDATE_CURRENT_EXERCICE_DATA, data));
     },
     fetchExerciceSms({ commit }, exerciceId) {
-      return ExerciceService.getSms(exerciceId).then((data) =>
-        commit(types.UPDATE_CURRENT_EXERCICE_SMS, data)
-      );
+      return ExerciceService.getSms(exerciceId)
+        .then((data) => commit(types.UPDATE_CURRENT_EXERCICE_SMS, data));
     },
     fetchExerciceSapeurs({ commit }, exerciceId) {
-      return ExerciceService.getSapeurs(exerciceId).then((data) =>
-        commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data)
-      );
+      return ExerciceService.getSapeurs(exerciceId)
+        .then((data) => commit(types.UPDATE_CURRENT_EXERCICE_SAPEURS, data));
     },
     selectExercice({ commit }, payload) {
       return commit(types.SELECT_CURRENT_EXERCICE, payload);
@@ -152,9 +147,9 @@ export default {
         statut: 0,
       });
     },
-    createExercice({ state, commit, getters }) {
+    createExercice({ commit, getters }, exercice) {
       return ExerciceService.createExercice({
-        ...state.active.data,
+        ...exercice,
         exercice_comptable_id: getters.activeExerciceComptableId,
       }).then(async (data) => {
         await commit(types.ADD_EXERCICE, data);
@@ -163,32 +158,34 @@ export default {
         return data;
       });
     },
-    validerExercice({ commit }, payload) {
-      return ExerciceService.validerExercice(payload).then(async (data) => {
+    validerExercice({ commit }, exerciceId) {
+      return ExerciceService.validerExercice(exerciceId)
+        .then(async (data) => {
+          await commit(types.UPDATE_EXERCICE_STATUT, {
+            id: exerciceId,
+            statut: data?.statut,
+          });
+          return data;
+        });
+    },
+    annulerExercice({ commit }, exerciceId) {
+      return ExerciceService.cancelExercice(exerciceId).then(async (data) => {
         await commit(types.UPDATE_EXERCICE_STATUT, {
-          id: payload,
+          id: exerciceId,
           statut: data?.statut,
         });
         return data;
       });
     },
-    annulerExercice({ commit }, payload) {
-      return ExerciceService.cancelExercice(payload).then(async (data) => {
-        await commit(types.UPDATE_EXERCICE_STATUT, {
-          id: payload,
-          statut: data?.statut,
+    reactiverExercice({ commit }, exerciceId) {
+      return ExerciceService.reactivateExercice(exerciceId)
+        .then(async (data) => {
+          await commit(types.UPDATE_EXERCICE_STATUT, {
+            id: exerciceId,
+            statut: data?.statut,
+          });
+          return data;
         });
-        return data;
-      });
-    },
-    reactiverExercice({ commit }, payload) {
-      return ExerciceService.reactivateExercice(payload).then(async (data) => {
-        await commit(types.UPDATE_EXERCICE_STATUT, {
-          id: payload,
-          statut: data?.statut,
-        });
-        return data;
-      });
     },
     removeExercice({ commit }, exerciceId) {
       return ExerciceService.deleteExercice(exerciceId).then(() => {
@@ -196,12 +193,12 @@ export default {
       });
     },
     saveExercice({ commit }, exercice) {
-      return ExerciceService.saveExercice(exercice.id, exercice).then(
-        async (data) => {
+      return ExerciceService.saveExercice(exercice.id, exercice)
+        .then(async (data) => {
           await commit(types.UPDATE_CURRENT_EXERCICE_DATA, data);
           return data;
         }
-      );
+        );
     },
 
     addSapeurs({ state, commit }, payload) {

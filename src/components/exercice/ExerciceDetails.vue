@@ -33,7 +33,7 @@ onMounted(() =>
 </script>
 
 <template>
-  <div class="detail-row-padding d-flex">
+  <div class="p-2 d-flex">
     <div class="me-3">
       Convoqué
       <span
@@ -84,9 +84,3 @@ onMounted(() =>
     </div>
   </div>
 </template>
-
-<style scoped>
-.detail-row-padding {
-  padding: 0.8em;
-}
-</style>

@@ -1,22 +1,95 @@
+<script setup>
+import { computed, inject, ref, watchEffect } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../hooks/usePermission.js';
+
+const { id } = defineProps({
+  id: {
+    type: String,
+    default: 'new',
+  },
+});
+
+const errors = ref({});
+const form = ref({
+  lieu: '',
+  communications: '',
+});
+
+const store = useStore();
+
+store.dispatch('fetchListeSapeur');
+store.dispatch('fetchLocalites');
+store.dispatch('fetchExerciceCategories');
+store.dispatch('fetchExercicesComptables');
+
+const loading = ref(false);
+watchEffect(async () => {
+  loading.value = true;
+  await store.dispatch('fetchExercice', id);
+  form.value = {
+    exercice_categorie_id: null,
+    ...store.state.exercice.active.data,
+    heure: store.state.exercice.active.data?.heure?.slice(0, 5),
+  };
+  loading.value = false;
+});
+
+const categories = computed(() => store.state.exerciceCategorie.liste);
+const localites = computed(() => store.state.localite.liste);
+const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
+
+watchEffect(() => {
+  if (id === 'new') {
+    form.value.duree = categories.value.find(
+      (e) => e.id == form.value.exercice_categorie_id,
+    )?.duree_base;
+  }
+});
+
+const router = useRouter();
+const awn = inject('awn');
+
+const save = () =>
+  store
+    .dispatch(
+      (form.id || 0) === 0 ? 'createExercice' : 'saveExercice',
+      form.value,
+    )
+    .then((data) => {
+      if (id === 'new') {
+        router.push('/exercices/' + data.id);
+      }
+      errors.value = {};
+      awn.success(data?.message || 'Exercice créé');
+    })
+    .catch((err) => {
+      errors.value = err;
+      awn.alert(err?.message || "Erreur lors de l'enregistrement");
+    });
+</script>
+
 <template>
-  <div class="card card-primary card-outline">
+  <form @submit.prevent="save" class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <span></span>
       <button
+        type="submit"
         v-if="hasEditPermission"
         class="btn btn-outline-primary"
-        @click="save"
       >
-        {{ newMode ? 'Ajouter' : 'Sauvegarder' }}
+        {{ (form.id || 0) === 0 ? 'Ajouter' : 'Sauvegarder' }}
       </button>
     </div>
     <div class="card-body">
-      <!-- NOM -->
       <div class="mb-3">
         <label for="m-exe-des">Designation</label>
         <input
           id="m-exe-des"
-          v-model="activeExerciceData.designation"
+          v-model="form.designation"
+          required
           type="text"
           :readonly="!hasEditPermission"
           class="form-control form-control-sm"
@@ -24,9 +97,8 @@
           name="nom"
         />
       </div>
-      <!-- CATEGORIE -->
       <base-select
-        v-model="activeExerciceData.exercice_categorie_id"
+        v-model="form.exercice_categorie_id"
         label="Catégorie"
         :options="categories"
         :disabled="!hasEditPermission"
@@ -36,7 +108,6 @@
       />
       <div class="row">
         <div class="col-6">
-          <!-- DATE -->
           <div class="mb-3">
             <label for="m-exe-date">Date</label>
             <div class="input-group input-group-sm">
@@ -45,8 +116,9 @@
               </div>
               <input
                 id="m-exe-date"
-                v-model="activeExerciceData.date"
+                v-model="form.date"
                 type="date"
+                required
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['date'] }"
@@ -56,7 +128,6 @@
           </div>
         </div>
         <div class="col-6">
-          <!-- HEURE -->
           <div class="mb-3">
             <label for="m-exe-heure">Heure de début</label>
             <div class="input-group input-group-sm">
@@ -65,8 +136,9 @@
               </div>
               <input
                 id="m-exe-heure"
-                v-model="activeExerciceData.heure"
+                v-model="form.heure"
                 type="time"
+                required
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['heure'] }"
@@ -78,17 +150,17 @@
       </div>
       <div class="row">
         <div class="col-6">
-          <!-- DUREE -->
           <div class="mb-3">
-            <label for="m-exe-duree">Durée (facturée)</label>
+            <label for="m-exe-duree">Durée</label>
             <div class="input-group input-group-sm">
               <div class="input-group-text">
                 <font-awesome-icon :icon="['fas', 'hourglass-end']" />
               </div>
               <input
                 id="m-exe-duree"
-                v-model="activeExerciceData.duree"
+                v-model="form.duree"
                 type="number"
+                required
                 :readonly="!hasEditPermission"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['duree'] }"
@@ -100,45 +172,25 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-6">
-          <div class="mb-3">
-            <label for="m-exe-duree">Heure de fin</label>
-            <div class="input-group input-group-sm">
-              <div class="input-group-text">
-                <font-awesome-icon :icon="['far', 'clock']" />
-              </div>
-              <input
-                id="m-exe-fin"
-                v-model="activeExerciceData.fin"
-                type="time"
-                :readonly="!hasEditPermission"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['fin'] }"
-              />
-            </div>
-          </div>
-        </div> -->
       </div>
       <div class="row">
         <div class="col-6">
-          <!-- LOCALITE -->
           <base-select
-            v-model="activeExerciceData.localite_id"
+            v-model="form.localite_id"
             label="Localité"
             :options="localites"
             :disabled="!hasEditPermission"
-            required
+            :required="true"
             :select-class="{ 'is-invalid': errors['localite_id'] }"
             class="mb-3"
           />
         </div>
         <div class="col-6">
-          <!-- LIEU -->
           <div class="mb-3">
             <label for="m-exe-lieu">Lieu</label>
             <input
               id="m-exe-lieu"
-              v-model="activeExerciceData.lieu"
+              v-model="form.lieu"
               type="text"
               :readonly="!hasEditPermission"
               class="form-control form-control-sm"
@@ -148,12 +200,11 @@
           </div>
         </div>
       </div>
-      <!-- COMMUNICATION -->
       <div class="mb-3">
         <label for="m-sap-communication">Communications</label>
         <textarea
           id="m-sap-communication"
-          v-model="activeExerciceData.communications"
+          v-model="form.communications"
           type="text"
           :readonly="!hasEditPermission"
           class="form-control form-control-sm"
@@ -162,97 +213,5 @@
         ></textarea>
       </div>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import permissions from '/src/store/permissions.js';
-
-export default {
-  name: 'ExerciceTabGeneral',
-  data() {
-    return {
-      errors: {},
-      loading: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      categories: (state) => state.exerciceCategorie.liste,
-      localites: (state) => state.localite.liste,
-      activeExerciceComptableId: (state) => state.exerciceComptable.activeId,
-      activeExerciceId: (state) => state.exercice.active.id,
-      activeExerciceData: (state) => state.exercice.active.data,
-      activeExerciceSapeurs: (state) => state.exercice.active.sapeurs,
-      // TODO: Check si exercice pas déjà imputé
-      hasEditPermission: (state) =>
-        state.auth.admin ||
-        state.auth.sis.permissions.includes(permissions.EXERCICE.MODIFICATION),
-      newMode: (state) => state.exercice.active.id === null,
-    }),
-    exerciceCategorie() {
-      return this.activeExerciceData.exercice_categorie_id;
-    },
-    exerciceHeure() {
-      return this.activeExerciceData.heure;
-    },
-    duree() {
-      return this.activeExerciceData.duree;
-    },
-  },
-  watch: {
-    exerciceCategorie(id) {
-      this.activeExerciceData.duree =
-        this.activeExerciceData.duree ||
-        this.categories.find((e) => e.id == id)?.duree_base;
-    },
-    exerciceHeure(data) {
-      this.activeExerciceData.heure = this.formatHeure(data);
-    },
-    duree(data) {
-      // TODO: heure de fin = heure de début + durée
-      this.activeExerciceData.fin = this.formatHeure(data);
-    },
-  },
-  mounted() {
-    this.activeExerciceData.heure = this.formatHeure(
-      this.activeExerciceData.heure,
-    );
-  },
-  methods: {
-    async save() {
-      if (this.newMode) {
-        this.$store
-          .dispatch('createExercice', this.activeExerciceData)
-          .then((data) => {
-            this.$router.push('/exercices/' + data.id);
-            this.errors = {};
-            this.$awn.success(data?.message || 'Exercice créé');
-          })
-          .catch((err) => {
-            this.errors = err;
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
-          });
-      } else {
-        this.$store
-          .dispatch('saveExercice', this.activeExerciceData)
-          .then((res) => {
-            this.errors = {};
-            this.$awn.success(res?.message || 'Modifications enregistrées');
-          })
-          .catch((err) => {
-            this.errors = err;
-            this.$awn.alert(err?.message || "Erreur lors de l'enregistrement");
-          });
-      }
-    },
-    formatHeure(value) {
-      if (value && value.length >= 8) {
-        return value.slice(0, 5);
-      }
-      return value;
-    },
-  },
-};
-</script>

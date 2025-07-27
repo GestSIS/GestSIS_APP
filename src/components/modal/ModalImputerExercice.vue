@@ -1,3 +1,160 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+import MultiStep from '../base/MultiStep.vue';
+
+const store = useStore();
+store.dispatch('fetchFonctions');
+
+const { callback, data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const phase = ref(1);
+const activeIndemniteIndex = ref(null);
+const activeIndemnite = ref(null);
+const ecritures = ref([]);
+const successMessageVisibility = ref(true);
+
+const indemnitesTypes = computed(
+  () => store.state.imputation.fraisIndemnites.exercices,
+);
+const fonctions = computed(() => store.state.fonction.liste);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => store.state.compte.liste);
+const unites = computed(() => store.state.unite.liste);
+
+const activeIndemniteHasFonction = computed(() => {
+  return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
+});
+const columns = computed(() => {
+  const configurations = new Set(
+    activeIndemnite.value?.fonctions
+      ?.filter((f) => f.fonction_id)
+      ?.map((f) => f.type + ' ' + f.compte_id) || [],
+  );
+  const columns = Object.fromEntries(
+    [...configurations]
+      .map((e) => [e, e.split(' ')])
+      .map(([index, e]) => [
+        index,
+        {
+          type: parseInt(e[0]),
+          compte_id: parseInt(e[1]),
+          fonctions: {},
+        },
+      ]),
+  );
+
+  activeIndemnite.value?.fonctions
+    ?.filter((f) => f.fonction_id)
+    ?.forEach((f) => {
+      columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] = f.tarif;
+    });
+  return columns;
+});
+const filteredFonctions = computed(() => {
+  const fonctionsIds = new Set(
+    [
+      ...Object.values(columns.value)
+        .map((e) => new Set(Object.keys(e.fonctions)))
+        .reduce((acc, b) => new Set([...acc, ...b])),
+    ].map((a) => parseInt(a)),
+  );
+  return fonctions.value.filter((f) => fonctionsIds.has(parseInt(f.id)));
+});
+const computedIndemnites = computed(() => {
+  return indemnitesTypes.value.map((e) => {
+    const indemniteBase = e.fonctions.filter((f) => !f.fonction_id);
+    const soldes = indemniteBase.filter((e) => e.type == 1);
+    const indemnites = indemniteBase.filter((e) => e.type == 2);
+
+    const sumReducer = (acc, a) => acc + parseFloat(a);
+
+    return {
+      ...e,
+      total_solde: soldes.map((e) => e.tarif).reduce(sumReducer, 0.0),
+      solde_undefined: soldes.length == 0,
+      // min_solde: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min || 0) : NaN,
+      // min_solde_pour: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min_pour || 0) : NaN,
+      compte_solde_id:
+        soldes.length == 0
+          ? null
+          : soldes.length == 1
+            ? soldes[0].compte_id
+            : NaN,
+      total_indemnite: indemnites.map((e) => e.tarif).reduce(sumReducer, 0.0),
+      indemnite_undefined: indemnites.length == 0,
+      // min_indemnite: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min || 0) : NaN,
+      // min_indemnite_pour: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min_pour || 0) : NaN,
+      compte_indemnite_id:
+        indemnites.length == 0
+          ? null
+          : indemnites.length == 1
+            ? indemnites[0].compte_id
+            : NaN,
+    };
+  });
+});
+
+const { closeModal } = useModalStore();
+
+const selectIndemnite = (index) => {
+  activeIndemniteIndex.value = index;
+  activeIndemnite.value = computedIndemnites.value[index];
+};
+const cancel = () => {
+  (callback() ?? Promise.resolve()).then((close) => {
+    if (close ?? true) {
+      closeModal();
+    }
+  });
+};
+const imputer = () => {
+  if (activeIndemnite.value === null) {
+    return;
+  }
+
+  store
+    .dispatch('imputerExercice', {
+      exercice_id: data.id,
+      indemnite_exercice_type_id: activeIndemnite.value.id,
+    })
+    .then((data) => {
+      phase.value = 2;
+      ecritures.value = data.ecritures;
+    });
+};
+const formatUnite = (uniteId) => {
+  return unites.value.find((f) => (f.id = uniteId))?.unite || '';
+};
+const formatCompte = (compteId) => {
+  const compte = comptes.value.find(
+    (f) => parseInt(f.id) == parseInt(compteId),
+  );
+  return compte ? compte?.numero + ' - ' + compte?.designation : '';
+};
+const formatType = (type) => {
+  const mapping = {
+    0: 'Autre',
+    1: 'Solde',
+    2: 'Indemnité',
+    3: 'Frais forfaitaire',
+    4: 'Frais effectif',
+    5: 'Charges AVS/AC',
+  };
+  return mapping[type] || '';
+};
+</script>
+
 <template>
   <div>
     <div class="modal-header">
@@ -16,11 +173,7 @@
             'col-8': activeIndemniteHasFonction,
           }"
         >
-          <table
-            class="table table-sm"
-            @keydown.down="onKeyDown"
-            @keydown.up="onKeyUp"
-          >
+          <table class="table table-sm">
             <thead>
               <tr>
                 <th>Désignation</th>
@@ -182,191 +335,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '../base/MultiStep.vue';
-
-export default {
-  name: 'ModalImputerExercice',
-  components: { MultiStep },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    callback: {
-      type: Function,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      phase: 1,
-      activeIndemniteIndex: null,
-      activeIndemnite: null,
-      ecritures: [],
-      successMessageVisibility: true,
-    };
-  },
-  computed: {
-    ...mapState({
-      indemnitesTypes: (state) => state.imputation.fraisIndemnites.exercices,
-      fonctions: (state) => state.fonction.liste,
-      sapeurs: (state) => state.sapeur.liste,
-      comptes: (state) => state.compte.liste,
-      unites: (state) => state.unite.liste,
-    }),
-    activeIndemniteHasFonction() {
-      return this.activeIndemnite !== null && this.activeIndemnite.par_fonction;
-    },
-    columns() {
-      const configurations = new Set(
-        this.activeIndemnite?.fonctions
-          ?.filter((f) => f.fonction_id)
-          ?.map((f) => f.type + ' ' + f.compte_id) || [],
-      );
-      const columns = Object.fromEntries(
-        [...configurations]
-          .map((e) => [e, e.split(' ')])
-          .map(([index, e]) => [
-            index,
-            {
-              type: parseInt(e[0]),
-              compte_id: parseInt(e[1]),
-              fonctions: {},
-            },
-          ]),
-      );
-
-      this.activeIndemnite?.fonctions
-        ?.filter((f) => f.fonction_id)
-        ?.forEach((f) => {
-          columns[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-            f.tarif;
-        });
-      return columns;
-    },
-    filteredFonctions() {
-      const fonctionsIds = new Set(
-        [
-          ...Object.values(this.columns)
-            .map((e) => new Set(Object.keys(e.fonctions)))
-            .reduce((acc, b) => new Set([...acc, ...b])),
-        ].map((a) => parseInt(a)),
-      );
-      return this.fonctions.filter((f) => fonctionsIds.has(parseInt(f.id)));
-    },
-    computedIndemnites() {
-      return this.indemnitesTypes.map((e) => {
-        const indemniteBase = e.fonctions.filter((f) => !f.fonction_id);
-        const soldes = indemniteBase.filter((e) => e.type == 1);
-        const indemnites = indemniteBase.filter((e) => e.type == 2);
-
-        const sumReducer = (acc, a) => acc + parseFloat(a);
-
-        return {
-          ...e,
-          total_solde: soldes.map((e) => e.tarif).reduce(sumReducer, 0.0),
-          solde_undefined: soldes.length == 0,
-          // min_solde: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min || 0) : NaN,
-          // min_solde_pour: soldes.length == 0 ? 0 : soldes.length == 1 ? (soldes[0].tarif_min_pour || 0) : NaN,
-          compte_solde_id:
-            soldes.length == 0
-              ? null
-              : soldes.length == 1
-                ? soldes[0].compte_id
-                : NaN,
-          total_indemnite: indemnites
-            .map((e) => e.tarif)
-            .reduce(sumReducer, 0.0),
-          indemnite_undefined: indemnites.length == 0,
-          // min_indemnite: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min || 0) : NaN,
-          // min_indemnite_pour: indemnites.length == 0 ? 0 : indemnites.length == 1 ? (indemnites[0].tarif_min_pour || 0) : NaN,
-          compte_indemnite_id:
-            indemnites.length == 0
-              ? null
-              : indemnites.length == 1
-                ? indemnites[0].compte_id
-                : NaN,
-        };
-      });
-    },
-  },
-  mounted() {
-    if (this.fonctions.length === 0) {
-      this.$store.dispatch('fetchFonctions');
-    }
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    selectIndemnite(index) {
-      this.activeIndemniteIndex = index;
-      this.activeIndemnite = this.computedIndemnites[index];
-    },
-    cancel() {
-      (this.callback() ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          this.closeModal();
-        }
-      });
-    },
-    imputer() {
-      if (this.indemniteType === null) {
-        return;
-      }
-
-      this.$store
-        .dispatch('imputerExercice', {
-          exercice_id: this.data.id,
-          indemnite_exercice_type_id: this.activeIndemnite.id,
-        })
-        .then((data) => {
-          this.phase = 2;
-          this.ecritures = data.ecritures;
-        });
-    },
-    onKeyDown() {
-      // console.log('Key down');
-      this.selectIndemnite(
-        this.activeIndemniteIndex === null
-          ? 1
-          : ++this.activeIndemniteIndex % this.indemnitesTypes.length,
-      );
-    },
-    onKeyUp() {
-      // consolelog('Key up');
-      this.selectIndemnite(
-        this.activeIndemniteIndex === null
-          ? 1
-          : --this.activeIndemniteIndex % this.indemnitesTypes.length,
-      );
-    },
-    formatFonction(fonctionId) {
-      return this.fonctions.find((f) => (f.id = fonctionId))?.designation || '';
-    },
-    formatUnite(uniteId) {
-      return this.unites.find((f) => (f.id = uniteId))?.unite || '';
-    },
-    formatCompte(compteId) {
-      const compte = this.comptes.find(
-        (f) => parseInt(f.id) == parseInt(compteId),
-      );
-      return compte ? compte?.numero + ' - ' + compte?.designation : '';
-    },
-    formatType(type) {
-      const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC',
-      };
-      return mapping[type] || '';
-    },
-  },
-};
-</script>

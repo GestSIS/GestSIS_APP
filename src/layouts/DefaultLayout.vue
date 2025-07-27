@@ -37,7 +37,7 @@ const isMobile = computed(() => {
   </div>
 </template>
 
-<style lang="scss">
+<style scoped>
 .wrapper {
   display: flex;
   width: 100%;
@@ -48,10 +48,7 @@ const isMobile = computed(() => {
 
 .content {
   flex-grow: 1;
-  /*ensures that the container will take up the full height of the parent container*/
-  // overflow-y: auto; /*adds scroll to this container*/
   overflow: scroll;
-  /*adds scroll to this container*/
   display: flex;
   flex-flow: column;
   height: 100%;

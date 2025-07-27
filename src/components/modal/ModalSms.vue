@@ -1,5 +1,100 @@
+<script setup>
+import { computed, inject, onMounted, reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useModalStore } from '../../stores/common/Modal.js';
+
+import AspsmsParamService from '../../services/AspsmsParamService';
+
+const { data } = defineProps({
+  data: {
+    type: Object,
+    default: () => {},
+  },
+});
+
+const sending = ref(false);
+const errors = ref({});
+const loadingCredit = ref(true);
+const sapeurs = ref([...data]);
+const params = ref({
+  message: '',
+  origin: 'GestSIS',
+  differe: false,
+  date: '',
+  sapeurIds: [],
+});
+
+const store = useStore();
+store
+  .dispatch('fetchAspsmsCredit')
+  .then(() => (loadingCredit.value = false))
+  .catch(() => (loadingCredit.value = false));
+
+const credit = computed(() => store.state.aspsmsParam.credit);
+const computedSapeurs = computed(() =>
+  sapeurs.value.map((s) => ({
+    ...s,
+    sapeur_id: s.id,
+    portable: s.telephones
+      .filter((a) => a.telephone_type_id === 3)
+      .sort((a, b) => a.priorite - b.priorite)
+      .find(() => true)?.numero,
+  })),
+);
+
+const { closeModal } = useModalStore();
+const awn = inject('awn');
+
+const send = () => {
+  if (params.value.differe && new Date(params.value.date) < new Date()) {
+    return awn.alert('Date invalide');
+  }
+
+  const clonedParams = {
+    ...params.value,
+    message: params.value.message
+      .replaceAll('‘', "'")
+      .replaceAll('’', "'")
+      .replaceAll('«', '"')
+      .replaceAll('»', '"'),
+    contacts: computedSapeurs.value
+      .filter((s) => s?.portable)
+      .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
+  };
+
+  if (clonedParams.contacts.length == 0) {
+    return awn.alert('Aucun numéro disponible');
+  }
+
+  AspsmsParamService.sendSms(clonedParams)
+    .then(() => {
+      store.dispatch('fetchAspsmsCredit');
+      awn.success('Message envoyé avec succès');
+      closeModal();
+    })
+    .catch((err) => {
+      errors.value = err;
+      sending.value = false;
+      awn.alert(err?.message ?? "Erreur lors de l'envoie des SMS");
+    });
+};
+
+const fields = [
+  {
+    title: 'Nom prénom',
+    key: 'nom_prenom',
+    titleClass: 'align-middle',
+  },
+  {
+    title: 'Portable',
+    key: 'portable',
+    titleClass: 'align-middle',
+  },
+];
+</script>
+
 <template>
-  <div>
+  <form @submit.prevent="send">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Convoquer par SMS</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
@@ -15,12 +110,12 @@
             class="mb-3"
             label="Envoie différé"
           />
-          <div class="mb-3">
+          <div class="mb-3" v-if="params.differe">
             <label for="date">Date</label>
             <input
-              v-if="params.differe"
               id="date"
               v-model="params.date"
+              required
               type="datetime-local"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['date'] }"
@@ -33,6 +128,8 @@
             <textarea
               id="commentaire"
               v-model="params.message"
+              required
+              minlength="1"
               maxlength="500"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['commentaire'] }"
@@ -49,127 +146,9 @@
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         Fermer
       </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :disabled="sending"
-        @click="send()"
-      >
+      <button type="submit" class="btn btn-primary" :disabled="sending">
         Envoyer
       </button>
     </div>
-  </div>
+  </form>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import { mapActions } from 'pinia';
-import { useModalStore } from '../../stores/common/Modal.js';
-
-import AspsmsParamService from '../../services/AspsmsParamService';
-
-export default {
-  name: 'ModalSms',
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-  },
-  data() {
-    return {
-      sending: false,
-      errors: {},
-      loadingSapeurs: true,
-      loadingCredit: true,
-      sapeurs: [],
-      presences: [],
-      params: {
-        message: '',
-        origin: 'GestSIS',
-        differe: false,
-        date: '',
-        sapeurIds: [],
-      },
-      fields: [
-        {
-          title: 'Nom prénom',
-          key: 'nom_prenom',
-          titleClass: 'align-middle',
-        },
-        {
-          title: 'Portable',
-          key: 'portable',
-          titleClass: 'align-middle',
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState({
-      credit: (state) => state.aspsmsParam.credit,
-      localites: (state) => state.localite.liste,
-      categories: (state) => state.exerciceCategorie.liste,
-    }),
-    computedSapeurs() {
-      return this.sapeurs.map((s) => ({
-        ...s,
-        sapeur_id: s.id,
-        portable: s.telephones
-          .filter((a) => a.telephone_type_id === 3)
-          .sort((a, b) => a.priorite - b.priorite)
-          .find(() => true)?.numero,
-      }));
-    },
-  },
-  mounted() {
-    this.sapeurs = this.data;
-    this.loadingCredit = true;
-    this.$store
-      .dispatch('fetchAspsmsCredit')
-      .then(() => (this.loadingCredit = false))
-      .catch(() => {
-        this.loadingCredit = false;
-      });
-  },
-  methods: {
-    ...mapActions(useModalStore, { closeModal: 'closeModal' }),
-    async send() {
-      const params = {
-        ...this.params,
-        message: this.params.message
-          .replaceAll('‘', "'")
-          .replaceAll('’', "'")
-          .replaceAll('«', '"')
-          .replaceAll('»', '"'),
-        contacts: this.computedSapeurs
-          .filter((s) => s?.portable)
-          .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
-      };
-
-      if (params.contacts.length == 0) {
-        return this.$awn.alert('Aucun numéro disponible');
-      }
-
-      if (params.differe && new Date(params.date) < new Date()) {
-        return this.$awn.alert('Date invalide');
-      }
-
-      AspsmsParamService.sendSms(params)
-        .then(() => {
-          this.errors = {};
-          this.sending = false;
-          this.$store.dispatch('fetchAspsmsCredit');
-          return this.$awn.success('Message envoyé avec succès');
-        })
-        .catch((errors) => {
-          this.errors = { ...errors };
-          this.sending = false;
-          return this.$awn.alert(
-            errors?.message ?? "Erreur lors de l'envoie des SMS",
-          );
-        });
-    },
-  },
-};
-</script>

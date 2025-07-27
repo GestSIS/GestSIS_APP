@@ -77,7 +77,7 @@ const request = async () => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .centered {
   height: 100%;
   display: flex;

@@ -56,7 +56,7 @@ const filteredLinks = computed(() =>
   </aside>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .sidebar-icon {
   width: 20px;
 }
