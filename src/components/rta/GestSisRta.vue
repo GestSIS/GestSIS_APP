@@ -1,3 +1,131 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+store.dispatch('fetchLocalites');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchGroupes');
+store.dispatch('fetchReferenceGestSis');
+store.dispatch('fetchReferenceRta');
+
+const maxNbNumero = 3;
+
+const reference = computed(() =>
+  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+);
+const actuel = computed(() =>
+  store.state.rta.actuel
+    .map((s) => ({
+      ...s,
+      localite: store.state.localite.liste.find((l) => l.id == s.localite_id)
+        ?.designation,
+      fonction:
+        store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
+        '',
+      sapeur_id: s.id,
+      numeros: s.telephones.map((t) => t.numero),
+      telephones: null,
+      groupes: s.groupes
+        .map((id) => store.state.groupe.liste.find((g) => g.id == id))
+        .filter((g) => g?.type == 1)
+        .map((g) => ({ no: g.no, designation: g.designation })),
+    }))
+    .map((s) => {
+      const groupes = s.groupes.slice(0);
+      groupes.sort((a, b) => a.no - b.no);
+      return { ...s, groupes };
+    })
+    .filter((s) => s.groupes.length > 0),
+);
+const nbNumero = computed(() => {
+  const numCount = mutations.value.map((s) => s.numeros.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const nbGroupes = computed(() => {
+  const numCount = mutations.value.map((s) => s.groupes.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const mutations = computed(() => {
+  const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
+  const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
+
+  return actuel.value
+    .map((s) => {
+      // Ajoute
+      if (!referenceIds.has(s.sapeur_id)) {
+        return {
+          ...s,
+          statut: 'ajoute',
+          changements: {},
+        };
+      }
+
+      // Modifie
+      const referenceModifie = reference.value.find(
+        (s2) => s2.sapeur_id == s.sapeur_id,
+      );
+      const fields = [
+        'nom',
+        'prenom',
+        'fonction',
+        'localite',
+        'adresse',
+        'date_naissance',
+      ];
+      let changements = {};
+      // Fields
+      fields.forEach((f) => {
+        if (s[f] != referenceModifie[f]) {
+          changements[f] = true;
+        }
+      });
+
+      // Groupes
+      const referenceGroupes = new Set(
+        referenceModifie.groupes.map((g) => g.no),
+      );
+      const groupesAjoute = s.groupes
+        .map((g) => g.no)
+        .filter((g) => !referenceGroupes.has(g));
+
+      const groupesReference = new Map(
+        referenceModifie.groupes.map((g) => [g.no, g.description]),
+      );
+      const groupesModifie = s.groupes.filter(
+        (g) =>
+          groupesReference.has(g.no) &&
+          groupesReference.get(g.no) !== g.description,
+      );
+
+      changements = {
+        ...changements,
+        groupesAjoute,
+        groupesModifie,
+        groupesSupprime: [],
+      };
+
+      // Numéros
+      const numerosAjoute = referenceModifie.numeros.length;
+      const numerosSupprime = s.numeros.length;
+      const numerosModifie = s.numeros
+        .slice(0, Math.min(numerosAjoute, numerosSupprime))
+        .map((n, index) => (referenceModifie.numeros[index] != n ? index : -1))
+        .filter((i) => i >= 0);
+
+      changements = {
+        ...changements,
+        numerosAjoute,
+        numerosModifie,
+        numerosSupprime,
+      };
+
+      return { ...s, statut: 'modifie', changements };
+    })
+    .sort(sapeurCompare);
+});
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -32,20 +160,6 @@
               'table-danger': e.statut == 'supprime',
             }"
           >
-            <!-- <td class="text-center">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="'select-' + e.sapeur_id"
-                  v-model="unselected[e.sapeur_id]"
-                  :false-value="true"
-                  :true-value="undefined"
-                />
-                <label
-                  class="form-check-label"
-                  :for="'select-' + e.sapeur_id"
-                ></label>
-            </td>-->
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
@@ -127,143 +241,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'GestSisRta',
-  data() {
-    return {
-      maxNbNumero: 3,
-      unselected: {},
-      username: '',
-      password: '',
-      communication: '',
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      reference: (state) =>
-        state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
-      actuel: (state) =>
-        state.rta.actuel
-          .map((s) => ({
-            ...s,
-            localite: state.localite.liste.find((l) => l.id == s.localite_id)
-              ?.designation,
-            fonction:
-              state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
-              '',
-            sapeur_id: s.id,
-            numeros: s.telephones.map((t) => t.numero),
-            telephones: null,
-            groupes: s.groupes
-              .map((id) => state.groupe.liste.find((g) => g.id == id))
-              .filter((g) => g?.type == 1)
-              .map((g) => ({ no: g.no, designation: g.designation })),
-          }))
-          .map((s) => {
-            const groupes = s.groupes.slice(0);
-            groupes.sort((a, b) => a.no - b.no);
-            return { ...s, groupes };
-          })
-          .filter((s) => s.groupes.length > 0),
-    }),
-    nbNumero() {
-      const numCount = this.mutations.map((s) => s.numeros.length);
-      return numCount.length > 0 ? Math.max(...numCount) : 0;
-    },
-    nbGroupes() {
-      const numCount = this.mutations.map((s) => s.groupes.length);
-      return numCount.length > 0 ? Math.max(...numCount) : 0;
-    },
-    mutations() {
-      const referenceIds = new Set(this.reference.map((s) => s.sapeur_id));
-      const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
-
-      return this.actuel
-        .map((s) => {
-          // Ajoute
-          if (!referenceIds.has(s.sapeur_id)) {
-            return {
-              ...s,
-              statut: 'ajoute',
-              changements: {},
-            };
-          }
-
-          // Modifie
-          const reference = this.reference.find(
-            (s2) => s2.sapeur_id == s.sapeur_id,
-          );
-          const fields = [
-            'nom',
-            'prenom',
-            'fonction',
-            'localite',
-            'adresse',
-            'date_naissance',
-          ];
-          let changements = {};
-          // Fields
-          fields.forEach((f) => {
-            if (s[f] != reference[f]) {
-              changements[f] = true;
-            }
-          });
-
-          // Groupes
-          const referenceGroupes = new Set(reference.groupes.map((g) => g.no));
-          const groupesAjoute = s.groupes
-            .map((g) => g.no)
-            .filter((g) => !referenceGroupes.has(g));
-
-          const groupesReference = new Map(
-            reference.groupes.map((g) => [g.no, g.description]),
-          );
-          const groupesModifie = s.groupes.filter(
-            (g) =>
-              groupesReference.has(g.no) &&
-              groupesReference.get(g.no) !== g.description,
-          );
-
-          changements = {
-            ...changements,
-            groupesAjoute,
-            groupesModifie,
-            groupesSupprime: [],
-          };
-
-          // Numéros
-          const numerosAjoute = reference.numeros.length;
-          const numerosSupprime = s.numeros.length;
-          const numerosModifie = s.numeros
-            .slice(0, Math.min(numerosAjoute, numerosSupprime))
-            .map((n, index) => (reference.numeros[index] != n ? index : -1))
-            .filter((i) => i >= 0);
-
-          changements = {
-            ...changements,
-            numerosAjoute,
-            numerosModifie,
-            numerosSupprime,
-          };
-
-          return { ...s, statut: 'modifie', changements };
-        })
-        .sort(sapeurCompare);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchGroupes');
-    this.$store.dispatch('fetchReferenceGestSis');
-    if (!this.reference.length) {
-      this.$store.dispatch('fetchReferenceRta');
-    }
-  },
-};
-</script>

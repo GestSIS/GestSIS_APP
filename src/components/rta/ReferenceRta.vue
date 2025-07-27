@@ -1,3 +1,142 @@
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const maxNbNumero = 3;
+
+const store = useStore();
+
+store.dispatch('fetchLocalites');
+store.dispatch('fetchFonctions');
+store.dispatch('fetchGroupes');
+store.dispatch('fetchReferenceGestSis');
+store.dispatch('fetchReferenceRta');
+
+const reference = computed(() =>
+  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+);
+const actuel = computed(() =>
+  store.state.rta.actuel
+    .map((s) => ({
+      ...s,
+      localite: store.state.localite.liste.find((l) => l.id == s.localite_id)
+        ?.designation,
+      fonction:
+        store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
+        '',
+      sapeur_id: s.id,
+      numeros: s.telephones.map((t) => t.numero),
+      telephones: null,
+      groupes: s.groupes
+        .map((id) => store.state.groupe.liste.find((g) => g.id == id))
+        .filter((g) => g?.type == 1)
+        .map((g) => ({ no: g.no, designation: g.designation })),
+    }))
+    .map((s) => {
+      const groupes = s.groupes.slice(0);
+      groupes.sort((a, b) => a.no - b.no);
+      return { ...s, groupes };
+    })
+    .filter((s) => s.groupes.length > 0),
+);
+const nbNumero = computed(() => {
+  const numCount = mutations.value.map((s) => s.numeros.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const nbGroupes = computed(() => {
+  const numCount = mutations.value.map((s) => s.groupes.length);
+  return numCount.length > 0 ? Math.max(...numCount) : 0;
+});
+const mutations = computed(() => {
+  const actuelsIds = new Set(reference.value.map((s) => s.sapeur_id));
+  const fields = [
+    'nom',
+    'prenom',
+    'fonction',
+    'localite',
+    'adresse',
+    'date_naissance',
+  ];
+  const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
+
+  return reference.value
+    .map((s) => {
+      // Ajoute
+      if (!actuelsIds.has(s.sapeur_id)) {
+        return {
+          ...s,
+          statut: 'supprime',
+          changements: {},
+        };
+      }
+
+      // Modifie
+      const actuelModifie = actuel.value.find(
+        (s2) => s2.sapeur_id == s.sapeur_id,
+      );
+      if (!actuelModifie) {
+        return {
+          ...s,
+          statut: 'supprime',
+          changements: {},
+        };
+      }
+
+      let changements = {};
+      // Fields
+      fields.forEach((f) => {
+        if (s[f] != actuelModifie[f]) {
+          changements[f] = true;
+        }
+      });
+
+      // Groupes
+      const actuelGroupes = new Set(actuelModifie.groupes.map((g) => g.no));
+
+      const groupesSupprime = s.groupes
+        .map((g) => g.no)
+        .filter((g) => !actuelGroupes.has(g));
+
+      const groupesActuel = new Map(
+        actuelModifie.groupes.map((g) => [g.no, g.description]),
+      );
+      const groupesModifie = s.groupes.filter(
+        (g) =>
+          groupesActuel.has(g.no) && groupesActuel.get(g.no) !== g.description,
+      );
+
+      changements = {
+        ...changements,
+        groupesAjoute: [],
+        groupesModifie,
+        groupesSupprime,
+      };
+
+      const groupes = [...s.groupes];
+
+      // Numéros
+      const numerosAjoute = s.numeros.length;
+      const numerosSupprime = actuel.numeros.length;
+      const numerosModifie = s.numeros
+        .slice(0, Math.min(numerosAjoute, numerosSupprime))
+        .map((n, index) => (actuel.numeros[index] != n ? index : -1))
+        .filter((i) => i >= 0);
+
+      changements = {
+        ...changements,
+        numerosAjoute,
+        numerosModifie,
+        numerosSupprime,
+      };
+
+      return { ...s, groupes, statut: 'modifie', changements };
+    })
+    .sort(sapeurCompare);
+});
+
+const reset = () => store.dispatch('resetReferenceRta');
+</script>
+
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
@@ -10,7 +149,6 @@
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
-            <!-- <th></th> -->
             <th>Nom Prénom</th>
             <th>Date de naissance</th>
             <th>Localité</th>
@@ -34,20 +172,6 @@
               'table-danger': e.statut == 'supprime',
             }"
           >
-            <!-- <td class="text-center">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  :id="'select-' + e.sapeur_id"
-                  v-model="unselected[e.sapeur_id]"
-                  :false-value="true"
-                  :true-value="undefined"
-                />
-                <label
-                  class="form-check-label"
-                  :for="'select-' + e.sapeur_id"
-                ></label>
-            </td>-->
             <td
               :class="{
                 'text-warning': e.changements.nom || e.changements.prenom,
@@ -129,157 +253,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-
-export default {
-  name: 'ReferenceRta',
-  data() {
-    return {
-      maxNbNumero: 3,
-      unselected: {},
-      username: '',
-      password: '',
-      communication: '',
-      errors: {},
-    };
-  },
-  computed: {
-    ...mapState({
-      reference: (state) =>
-        state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
-      actuel: (state) =>
-        state.rta.actuel
-          .map((s) => ({
-            ...s,
-            localite: state.localite.liste.find((l) => l.id == s.localite_id)
-              ?.designation,
-            fonction:
-              state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
-              '',
-            sapeur_id: s.id,
-            numeros: s.telephones.map((t) => t.numero),
-            telephones: null,
-            groupes: s.groupes
-              .map((id) => state.groupe.liste.find((g) => g.id == id))
-              .filter((g) => g?.type == 1)
-              .map((g) => ({ no: g.no, designation: g.designation })),
-          }))
-          .map((s) => {
-            const groupes = s.groupes.slice(0);
-            groupes.sort((a, b) => a.no - b.no);
-            return { ...s, groupes };
-          })
-          .filter((s) => s.groupes.length > 0),
-    }),
-    nbNumero() {
-      const numCount = this.mutations.map((s) => s.numeros.length);
-      return numCount.length > 0 ? Math.max(...numCount) : 0;
-    },
-    nbGroupes() {
-      const numCount = this.mutations.map((s) => s.groupes.length);
-      return numCount.length > 0 ? Math.max(...numCount) : 0;
-    },
-    mutations() {
-      const actuelsIds = new Set(this.reference.map((s) => s.sapeur_id));
-      const fields = [
-        'nom',
-        'prenom',
-        'fonction',
-        'localite',
-        'adresse',
-        'date_naissance',
-      ];
-      const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
-
-      return this.reference
-        .map((s) => {
-          // Ajoute
-          if (!actuelsIds.has(s.sapeur_id)) {
-            return {
-              ...s,
-              statut: 'supprime',
-              changements: {},
-            };
-          }
-
-          // Modifie
-          const actuel = this.actuel.find((s2) => s2.sapeur_id == s.sapeur_id);
-          if (!actuel) {
-            return {
-              ...s,
-              statut: 'supprime',
-              changements: {},
-            };
-          }
-
-          let changements = {};
-          // Fields
-          fields.forEach((f) => {
-            if (s[f] != actuel[f]) {
-              changements[f] = true;
-            }
-          });
-
-          // Groupes
-          const actuelGroupes = new Set(actuel.groupes.map((g) => g.no));
-
-          const groupesSupprime = s.groupes
-            .map((g) => g.no)
-            .filter((g) => !actuelGroupes.has(g));
-
-          const groupesActuel = new Map(
-            actuel.groupes.map((g) => [g.no, g.description]),
-          );
-          const groupesModifie = s.groupes.filter(
-            (g) =>
-              groupesActuel.has(g.no) &&
-              groupesActuel.get(g.no) !== g.description,
-          );
-
-          changements = {
-            ...changements,
-            groupesAjoute: [],
-            groupesModifie,
-            groupesSupprime,
-          };
-
-          const groupes = [...s.groupes];
-
-          // Numéros
-          const numerosAjoute = s.numeros.length;
-          const numerosSupprime = actuel.numeros.length;
-          const numerosModifie = s.numeros
-            .slice(0, Math.min(numerosAjoute, numerosSupprime))
-            .map((n, index) => (actuel.numeros[index] != n ? index : -1))
-            .filter((i) => i >= 0);
-
-          changements = {
-            ...changements,
-            numerosAjoute,
-            numerosModifie,
-            numerosSupprime,
-          };
-
-          return { ...s, groupes, statut: 'modifie', changements };
-        })
-        .sort(sapeurCompare);
-    },
-  },
-  mounted() {
-    this.$store.dispatch('fetchLocalites');
-    this.$store.dispatch('fetchFonctions');
-    this.$store.dispatch('fetchGroupes');
-    this.$store.dispatch('fetchReferenceGestSis');
-    if (!this.reference.length) {
-      this.$store.dispatch('fetchReferenceRta');
-    }
-  },
-  methods: {
-    reset() {
-      this.$store.dispatch('resetReferenceRta');
-    },
-  },
-};
-</script>
