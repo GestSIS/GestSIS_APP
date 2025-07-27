@@ -23,12 +23,7 @@ const save = async () => {
     ? batterieStore.addBatterieType
     : batterieStore.updateBatterieType)(form)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

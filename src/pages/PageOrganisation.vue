@@ -110,7 +110,7 @@ const save = async () => {
       awn.success('Groupe modifié avec succès');
     })
     .catch((err) => {
-      errors.value = { ...err };
+      errors.value = err;
       awn.alert(err.message || 'Erreur lors de la modification du groupe');
     });
 };

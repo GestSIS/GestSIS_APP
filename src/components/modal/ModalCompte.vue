@@ -22,12 +22,7 @@ const save = async () => {
   store
     .dispatch(form?.id ? 'updateCompte' : 'addCompte', form)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

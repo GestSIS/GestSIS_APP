@@ -26,7 +26,8 @@ const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
 
 if (listeAmende.value.length > 0) {
   params.value.compte_id = listeAmende.value[0]?.compte_id;
-  params.value.ecriture_categorie_id = listeAmende.value[0]?.ecriture_categorie_id;
+  params.value.ecriture_categorie_id =
+    listeAmende.value[0]?.ecriture_categorie_id;
   params.value.amendes = listeAmende.value.map((a) => ({
     montant: a.montant,
   }));
@@ -50,8 +51,8 @@ const save = async () => {
       errors.value = {};
       awn.success(res?.message || 'Modifications enregistrées');
     })
-    .catch((e) => {
-      errors.value = { ...e };
+    .catch((err) => {
+      errors.value = err;
       awn.alert(e?.message || "Erreur lors de l'enregistrement");
     });
 };

@@ -47,12 +47,7 @@ const save = async () => {
     ? typeStore.addMaterielType
     : typeStore.updateMaterielType)(activeItem.value)
     .then(closeModal)
-    .catch(
-      (errors) =>
-        (errors.value = {
-          ...errors,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

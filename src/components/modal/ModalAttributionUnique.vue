@@ -37,9 +37,9 @@ const save = async () => {
       closeModal();
       callback();
     })
-    .catch((errors) => {
-      errors.value = errors;
-      awn.warning(errors.message ?? "Erreur lors de l'attribution du matériel");
+    .catch((err) => {
+      errors.value = err;
+      awn.warning(err.message ?? "Erreur lors de l'attribution du matériel");
     });
 };
 </script>

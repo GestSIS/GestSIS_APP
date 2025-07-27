@@ -33,8 +33,8 @@ const save = async () => {
       errors.value = {};
       awn.success(res?.message || 'Modifications enregistrées');
     })
-    .catch((e) => {
-      errors.value = { ...e };
+    .catch((err) => {
+      errors.value = err;
       awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
     });
 };

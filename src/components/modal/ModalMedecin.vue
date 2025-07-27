@@ -25,12 +25,7 @@ const save = () =>
   store
     .dispatch((form.id || 0) === 0 ? 'addMedecin' : 'updateMedecin', form)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 </script>
 
 <template>

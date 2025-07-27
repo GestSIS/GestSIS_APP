@@ -29,12 +29,7 @@ const save = async () => {
   store
     .dispatch('createGroupe', this.groupe)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

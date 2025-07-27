@@ -26,12 +26,7 @@ const save = async () => {
       form,
     )
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

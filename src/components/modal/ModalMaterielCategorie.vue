@@ -33,12 +33,7 @@ const save = async () => {
     ? categorieStore.addMaterielCategorie
     : categorieStore.updateMaterielCategorie)(activeItem.value)
     .then(closeModal)
-    .catch(
-      (errors) =>
-        (errors.value = {
-          ...errors,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

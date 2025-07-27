@@ -36,12 +36,7 @@ const save = async () => {
       closeModal();
       callback();
     })
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

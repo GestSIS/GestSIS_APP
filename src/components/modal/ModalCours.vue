@@ -30,12 +30,7 @@ const save = async () => {
   store
     .dispatch(form?.id ? 'updateCours' : 'addCours', form)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

@@ -23,12 +23,7 @@ const save = async () => {
   store
     .dispatch((form.id || 0) === 0 ? 'addMission' : 'updateMission', form)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 

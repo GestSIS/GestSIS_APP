@@ -26,12 +26,7 @@ const save = async () => {
     ? couleurStore.addCouleur
     : couleurStore.updateCouleur)(activeItem.value)
     .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-        }),
-    );
+    .catch((err) => (errors.value = err));
 };
 </script>
 
