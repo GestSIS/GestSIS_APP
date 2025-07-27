@@ -4,12 +4,42 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-store.dispatch('fetchLocalites');
-store.dispatch('fetchFonctions');
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchExcuseTypes');
-store.dispatch('fetchExerciceCategories');
+await Promise.all([
+  store.dispatch('fetchLocalites'),
+  store.dispatch('fetchFonctions'),
+  store.dispatch('fetchListeSapeur'),
+  store.dispatch('fetchExcuseTypes'),
+  store.dispatch('fetchExerciceCategories'),
+]);
 await store.dispatch('fetchExercicesComptables');
+
+const exercices = computed(() =>
+  store.state.exercice.liste.sort(
+    (a, b) => new Date(a.date) - new Date(b.date),
+  ),
+);
+const localites = computed(() =>
+  store.state.localite.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
+const sapeurs = computed(() => store.state.sapeur.liste);
+const localiteExercices = computed(() => {
+  const loc = new Set(exercices.value.map((e) => e.localite_id));
+  return localites.value.filter((l) => loc.has(l.id));
+});
+const localiteSapeurs = computed(() => {
+  const loc = new Set(sapeurs.value.map((e) => e.localite_id));
+  return localites.value.filter((l) => loc.has(l.id));
+});
+const categorieExercices = computed(() => {
+  const cat = new Set(exercices.value.map((e) => e.exercice_categorie_id));
+  return categories.value.filter((c) => cat.has(c.id));
+});
+
+const selectedCategories = ref([]);
+const selectedSapeurDe = ref([]);
+const selectedExerciceA = ref([]);
 
 const loading = ref(true);
 watchEffect(async () => {
@@ -18,19 +48,19 @@ watchEffect(async () => {
     'fetchListeExercice',
     store.state.exerciceComptable.activeId,
   );
-  store.dispatch(
+  await store.dispatch(
     'fetchStatistiquePresenceExercice',
     store.state.exerciceComptable.activeId,
   );
+  selectedCategories.value = categorieExercices.value.map((c) => c.id);
+  selectedSapeurDe.value = localiteSapeurs.value.map((l) => l.id);
+  selectedExerciceA.value = localiteExercices.value.map((l) => l.id);
+
   loading.value = false;
 });
 
 const selectedSapeurId = ref(null);
-const unselectedCategories = ref([]);
-const unselectedSapeurDe = ref([]);
-const unselectedExerciceA = ref([]);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
 const indexedSapeursLocaliteId = computed(() =>
   store.state.sapeur.liste.reduce((map, e) => {
     map.set(e.id, e.localite_id);
@@ -38,11 +68,6 @@ const indexedSapeursLocaliteId = computed(() =>
   }, new Map()),
 );
 const fonctions = computed(() => store.state.fonction.liste);
-const exercices = computed(() =>
-  store.state.exercice.liste.sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
-  ),
-);
 const indexedExercices = computed(() =>
   store.state.exercice.liste.reduce((map, e) => {
     map.set(e.id, e);
@@ -64,34 +89,17 @@ const presences = computed(() =>
   })),
 );
 const excuses = computed(() => store.state.excuseType.liste);
-const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
-);
-const localiteExercices = computed(() => {
-  const loc = new Set(exercices.value.map((e) => e.localite_id));
-  return localites.value.filter((l) => loc.has(l.id));
-});
-const localiteSapeurs = computed(() => {
-  const loc = new Set(sapeurs.value.map((e) => e.localite_id));
-  return localites.value.filter((l) => loc.has(l.id));
-});
-const categorieExercices = computed(() => {
-  const cat = new Set(exercices.value.map((e) => e.exercice_categorie_id));
-  return categories.value.filter((c) => cat.has(c.id));
-});
 const filteredSapeurs = computed(() => {
   const sapeurIds = new Set(presences.value.map((s) => s.sapeur_id));
   return sapeurs.value.filter((s) => sapeurIds.has(s.id));
 });
 const displayExercice = computed(() => {
-  const unselectedCat = new Set(unselectedCategories.value);
-  const unselectedLoc = new Set(unselectedExerciceA.value);
+  const selectedCat = new Set(selectedCategories.value);
+  const selectedLoc = new Set(selectedExerciceA.value);
   return exercices.value.filter(
     (e) =>
-      !unselectedCat.has(e.exercice_categorie_id) &&
-      !unselectedLoc.has(e.localite_id),
+      selectedCat.has(e.exercice_categorie_id) &&
+      selectedLoc.has(e.localite_id),
   );
 });
 
@@ -119,16 +127,16 @@ const computeStats = (presences) => {
   };
 };
 const computedData = computed(() => {
-  const unselectedLocaliteSapeur = new Set(unselectedSapeurDe.value);
-  const unselectedLocaliteExercice = new Set(unselectedExerciceA.value);
-  const unselectedExerciceCategorie = new Set(unselectedCategories.value);
+  const selectedLocaliteSapeur = new Set(selectedSapeurDe.value);
+  const selectedLocaliteExercice = new Set(selectedExerciceA.value);
+  const selectedExerciceCategorie = new Set(selectedCategories.value);
 
   const filteredPresences = presences.value.filter((p) => {
     const exercice = indexedExercices.value.get(p.exercice_id);
     return (
-      !unselectedLocaliteExercice.has(exercice?.localite_id) &&
-      !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-      !unselectedLocaliteSapeur.has(
+      selectedLocaliteExercice.has(exercice?.localite_id) &&
+      selectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
+      selectedLocaliteSapeur.has(
         indexedSapeursLocaliteId.value.get(p.sapeur_id),
       )
     );
@@ -147,7 +155,7 @@ const computedData = computed(() => {
   }, new Map());
 
   return filteredSapeurs.value
-    .filter((s) => !unselectedLocaliteSapeur.has(s.localite_id))
+    .filter((s) => selectedLocaliteSapeur.has(s.localite_id))
     .map((s) => ({
       ...s,
       presences: displayExercice.value.map((e) =>
@@ -161,17 +169,17 @@ const computedData = computed(() => {
 });
 
 const computedStats = computed(() => {
-  const unselectedLocaliteSapeur = new Set(unselectedSapeurDe.value);
-  const unselectedLocaliteExercice = new Set(unselectedExerciceA.value);
-  const unselectedExerciceCategorie = new Set(unselectedCategories.value);
+  const selectedLocaliteSapeur = new Set(selectedSapeurDe.value);
+  const selectedLocaliteExercice = new Set(selectedExerciceA.value);
+  const selectedExerciceCategorie = new Set(selectedCategories.value);
 
   return computeStats(
     presences.value?.filter((p) => {
       const exercice = indexedExercices.value.get(p.exercice_id);
       return (
-        !unselectedLocaliteExercice.has(exercice?.localite_id) &&
-        !unselectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-        !unselectedLocaliteSapeur.has(
+        selectedLocaliteExercice.has(exercice?.localite_id) &&
+        selectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
+        selectedLocaliteSapeur.has(
           indexedSapeursLocaliteId.value.get(p.sapeur_id),
         )
       );
@@ -315,20 +323,20 @@ const toCvs = () => {
         </div>
         <form class="card-body p-2 pb-0">
           <div class="row">
-            <base-multi-unselect
-              v-model="unselectedCategories"
+            <base-multi-select
+              v-model="selectedCategories"
               class="col-md-4"
               label="Catégorie :"
               :options="categorieExercices"
             />
-            <base-multi-unselect
-              v-model="unselectedSapeurDe"
+            <base-multi-select
+              v-model="selectedSapeurDe"
               class="col-md-4"
               label="Sapeur de :"
               :options="localiteSapeurs"
             />
-            <base-multi-unselect
-              v-model="unselectedExerciceA"
+            <base-multi-select
+              v-model="selectedExerciceA"
               class="col-md-4"
               label="Exercice à :"
               :options="localiteExercices"

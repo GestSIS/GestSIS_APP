@@ -1,7 +1,7 @@
 <script setup>
 const model = defineModel({
-  type: [String, Number],
-  default: undefined,
+  type: Array,
+  default: [],
 });
 const { label, baseOption, options, valueKey, displayKey, formatter } =
   defineProps({
@@ -38,6 +38,7 @@ const { label, baseOption, options, valueKey, displayKey, formatter } =
     <select
       :id="label"
       v-model="model"
+      multiple
       class="form-select form-select-sm"
       v-bind="{
         ...$attrs,

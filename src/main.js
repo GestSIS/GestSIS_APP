@@ -24,7 +24,7 @@ import BaseDropdown from '/src/components/base/BaseDropdown.vue';
 import BaseSelect from '/src/components/base/BaseSelect.vue';
 import BaseCheckbox from '/src/components/base/BaseCheckbox.vue';
 import BaseRadio from '/src/components/base/BaseRadio.vue';
-import BaseMultiUnselect from '/src/components/base/BaseMultiUnselect.vue';
+import BaseMultiSelect from '/src/components/base/BaseMultiSelect.vue';
 import StatefulFilter from '/src/components/base/StatefulFilter.vue';
 import BaseTable from '/src/components/table/BaseTable.vue';
 import BaseNavigationTab from '/src/components/base/BaseNavigationTab.vue';
@@ -70,7 +70,7 @@ app
   .component('BaseSelect', BaseSelect)
   .component('BaseCheckbox', BaseCheckbox)
   .component('BaseRadio', BaseRadio)
-  .component('BaseMultiUnselect', BaseMultiUnselect)
+  .component('BaseMultiSelect', BaseMultiSelect)
   .component('StatefulFilter', StatefulFilter)
   .component('BaseTable', BaseTable)
   .component('BaseCard', BaseCard)
