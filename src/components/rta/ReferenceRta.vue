@@ -108,10 +108,10 @@ const mutations = computed(() => {
 
       // Numéros
       const numerosAjoute = s.numeros.length;
-      const numerosSupprime = actuel.value.numeros.length;
+      const numerosSupprime = actuelModifie.numeros.length;
       const numerosModifie = s.numeros
         .slice(0, Math.min(numerosAjoute, numerosSupprime))
-        .map((n, index) => (actuel.value.numeros[index] != n ? index : -1))
+        .map((n, index) => (actuelModifie.numeros[index] != n ? index : -1))
         .filter((i) => i >= 0);
 
       changements = {
