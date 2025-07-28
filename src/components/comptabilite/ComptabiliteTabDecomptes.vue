@@ -43,7 +43,7 @@ const computedData = computed(() =>
 );
 
 const awn = inject('awn');
-const { confirm, showModal } = useModalStore();
+const { closeModal, confirm, showModal } = useModalStore();
 
 const supprimer = (decompteId) => {
   confirm(
