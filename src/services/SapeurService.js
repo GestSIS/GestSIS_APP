@@ -26,8 +26,8 @@ export default {
   getSapeursTelephones() {
     return Api.api().get('/sapeurs-telephones');
   },
-  getSapeurs() {
-    return Api.api().get('/sapeurs');
+  getSapeurs(options = {}) {
+    return Api.api().get('/sapeurs', { params: options });
   },
   getData(sapeurId) {
     return Api.api().get('/sapeurs/' + sapeurId);

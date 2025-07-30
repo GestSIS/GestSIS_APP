@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "30.07.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Mise en évidence des sapeurs inactif dans l'affichage du matériel par sapeur"
+      ]
+    },
+    {
       "date": "20.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",

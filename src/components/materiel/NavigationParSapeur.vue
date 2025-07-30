@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
+import SapeurService from '../../services/SapeurService';
 
 const { id } = defineProps({
   id: {
@@ -11,8 +11,11 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
-store.dispatch('fetchListeSapeur');
+const listeSapeurs = (
+  await SapeurService.getSapeurs({
+    'avec-materiel': true,
+  })
+).map((s) => ({ ...s, nom_prenom: `${s.nom} ${s.prenom}` }));
 
 const hasSapeurEditPermission = useHasPermission(
   permissions.SAPEUR.MODIFICATION,
@@ -21,11 +24,9 @@ const hasSapeurEditPermission = useHasPermission(
 const filtre = ref('');
 
 const sapeurs = computed(() =>
-  store.state['sapeur'].liste
-    .filter((s) => s.actif)
-    .filter((s) =>
-      s.nom_prenom.toLowerCase().includes(filtre.value.toLowerCase().trim(' ')),
-    ),
+  listeSapeurs.filter((s) =>
+    s.nom_prenom.toLowerCase().includes(filtre.value.toLowerCase().trim(' ')),
+  ),
 );
 </script>
 
@@ -69,9 +70,18 @@ const sapeurs = computed(() =>
           class="nav-link list-group-item list-group-item-action pt-1 pb-1"
           href="#"
           role="link"
-          :class="{ active: isExactActive }"
+          :class="{
+            active: isExactActive,
+            'bg-danger-subtle': !item.actif && !isExactActive,
+          }"
           @click="navigate"
-          >{{ item.nom_prenom }}
+        >
+          <font-awesome-icon
+            class="text-danger"
+            v-if="!item.actif"
+            :icon="['fas', 'triangle-exclamation']"
+            v-tooltip.bottom="'Sapeur inactif'"
+          />{{ item.nom_prenom }}
         </a>
       </router-link>
     </ul>

@@ -74,7 +74,7 @@ const filteredLocalites = computed(() => {
   return localites.value.filter((t) => ids.has(t.id));
 });
 
-const { confirm, showModal } = useModalStore();
+const { closeModal, confirm, showModal } = useModalStore();
 const awn = inject('awn');
 const convoquer = () => {
   store
