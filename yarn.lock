@@ -1367,9 +1367,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:^10.3.0":
-  version: 10.3.0
-  resolution: "eslint-plugin-vue@npm:10.3.0"
+"eslint-plugin-vue@npm:^10.4.0":
+  version: 10.4.0
+  resolution: "eslint-plugin-vue@npm:10.4.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.4.0"
     natural-compare: "npm:^1.4.0"
@@ -1384,7 +1384,7 @@ __metadata:
   peerDependenciesMeta:
     "@typescript-eslint/parser":
       optional: true
-  checksum: 10/6458aa6330449abf1c1e7c002db7bb43730f72dc724ee13c81ffb6a0f81770b988752fa269341c745ff02e06070c60ea73aa464711b29d1e893cacf8ecc4e03d
+  checksum: 10/35acdd40c99a1e254bf2ebf8afd5c979593f06a7fb10f1e8b632edd45170716d9dfd3da64848a2fc43b032f30b3c32ca96b64af632c529169773abd5e73fc1a9
   languageName: node
   linkType: hard
 
@@ -1713,7 +1713,7 @@ __metadata:
     bootstrap: "npm:^5.3.7"
     eslint: "npm:^9.32.0"
     eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-vue: "npm:^10.3.0"
+    eslint-plugin-vue: "npm:^10.4.0"
     floating-vue: "npm:^5.2.2"
     globals: "npm:^16.3.0"
     jwt-decode: "npm:^4.0.0"
