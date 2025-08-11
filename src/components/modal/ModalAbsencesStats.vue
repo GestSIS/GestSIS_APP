@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 
@@ -24,11 +25,12 @@ const { closeModal } = useModalStore();
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
-      <ul>
+      <ul v-if="data.absences.length">
         <li v-for="sapeurId in data.absences ?? []" :key="sapeurId">
           {{ sapeurs.find((s) => s.id == sapeurId)?.nom_prenom }}
         </li>
       </ul>
+      <div v-else>Aucune absence</div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">
