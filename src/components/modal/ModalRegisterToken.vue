@@ -125,6 +125,7 @@ const save = () => {
             readonly
           />
           <button
+            type="button"
             class="btn btn-outline-secondary"
             title="Copier dans le press-papier"
             @click="copyToClipboard(token.token)"

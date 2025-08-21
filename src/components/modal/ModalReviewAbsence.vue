@@ -243,6 +243,7 @@ const fields = [
             <label>Justificatif</label>
             <button
               v-if="form.justificatif_filename"
+              type="button"
               class="btn btn-outline-primary"
               @click="downloadJustificatif(form)"
             >
@@ -373,6 +374,7 @@ const fields = [
                 >
                 <button
                   v-if="rowData.justificatif_filename != ''"
+                  type="button"
                   class="btn"
                   @click="downloadJustificatif(rowData)"
                 >

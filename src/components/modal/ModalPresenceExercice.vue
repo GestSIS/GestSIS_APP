@@ -294,6 +294,7 @@ const downloadJustificatif = (sapeur) => {
                 >
                 <button
                   v-if="e.justificatif_filename"
+                  type="button"
                   class="btn"
                   @click="downloadJustificatif(e)"
                 >
@@ -301,6 +302,7 @@ const downloadJustificatif = (sapeur) => {
                 </button>
                 <button
                   v-if="!e.excuse_type_id"
+                  type="button"
                   class="btn btn-outline-primary border-0"
                   @click="addExcuse(e)"
                 >
@@ -308,6 +310,7 @@ const downloadJustificatif = (sapeur) => {
                 </button>
                 <button
                   v-else
+                  type="button"
                   class="btn btn-outline-danger border-0"
                   @click="removeExcuse(e)"
                 >
@@ -342,6 +345,7 @@ const downloadJustificatif = (sapeur) => {
                 custom
               >
                 <button
+                  type="button"
                   title="modifier"
                   class="btn btn-outline-primary border-0"
                   @click="

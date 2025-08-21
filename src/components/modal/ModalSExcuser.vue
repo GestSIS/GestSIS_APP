@@ -90,7 +90,7 @@ const close = () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="validate">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">S'excuser</h5>
       <button type="button" class="btn-close" @click="close"></button>
@@ -165,8 +165,10 @@ const close = () => {
       </template>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="validate">Valider</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="submit" class="btn btn-outline-primary">Valider</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
-  </div>
+  </form>
 </template>

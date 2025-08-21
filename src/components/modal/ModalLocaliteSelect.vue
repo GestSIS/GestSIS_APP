@@ -113,6 +113,7 @@ const removeSelected = () => {
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Localités sélectionnés ({{ chosen.length }})</h6>
           <button
+            type="button"
             class="btn btn-outline-danger"
             :disabled="!canRemoveSelected"
             @click="removeSelected"
@@ -123,6 +124,7 @@ const removeSelected = () => {
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Localités disponibles</h6>
           <button
+            type="button"
             class="btn btn-outline-primary"
             :disabled="!canAddSelected"
             @click="addSelected"
@@ -169,6 +171,7 @@ const removeSelected = () => {
                 <td>{{ indexedLocalite[item]?.designation }}</td>
                 <td>
                   <button
+                    type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeLocalite(item)"
                   >
@@ -220,6 +223,7 @@ const removeSelected = () => {
                 <td>{{ item.designation }}</td>
                 <td>
                   <button
+                    type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addLocalite(item.id)"
                   >
@@ -233,8 +237,12 @@ const removeSelected = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="save">Enregistrer</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="button" class="btn btn-outline-primary" @click="save">
+        Enregistrer
+      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
   </div>
 </template>

@@ -449,6 +449,7 @@ const selectOptions = {
             Sapeurs sélectionnés ({{ chosenSapeurs.length }})
           </h6>
           <button
+            type="button"
             class="btn btn-outline-danger"
             :disabled="!removeSapeurState"
             @click="removeSapeurs"
@@ -459,6 +460,7 @@ const selectOptions = {
         <div class="col-6 d-flex justify-content-between align-items-center">
           <h6 class="mb-0">Sapeurs disponibles</h6>
           <button
+            type="button"
             class="btn btn-outline-primary"
             :disabled="!addSapeurState"
             @click="addSapeurs"
@@ -503,6 +505,7 @@ const selectOptions = {
                 <td>{{ item.nom_prenom }}</td>
                 <td>
                   <button
+                    type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeSingleSapeur(item.id)"
                   >
@@ -567,6 +570,7 @@ const selectOptions = {
                 <td>
                   <button
                     v-if="item.leaf"
+                    type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"
                   >
@@ -613,6 +617,7 @@ const selectOptions = {
                 <td>{{ item.nom_prenom }}</td>
                 <td>
                   <button
+                    type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"
                   >
@@ -626,8 +631,12 @@ const selectOptions = {
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline-primary" @click="save">Enregistrer</button>
-      <button class="btn btn-outline-secondary" @click="close">Annuler</button>
+      <button type="button" class="btn btn-outline-primary" @click="save">
+        Enregistrer
+      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">
+        Annuler
+      </button>
     </div>
   </div>
 </template>

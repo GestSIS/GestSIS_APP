@@ -77,10 +77,10 @@ const sapeurs = computed(() =>
           @click="navigate"
         >
           <font-awesome-icon
-            class="text-danger"
             v-if="!item.actif"
-            :icon="['fas', 'triangle-exclamation']"
             v-tooltip.bottom="'Sapeur inactif'"
+            class="text-danger"
+            :icon="['fas', 'triangle-exclamation']"
           />{{ item.nom_prenom }}
         </a>
       </router-link>
