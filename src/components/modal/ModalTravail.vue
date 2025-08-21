@@ -176,6 +176,7 @@ const save = async () => {
           name="quantite"
           type="number"
           min="0"
+          step=".01"
           class="form-control form-control-sm"
         />
         <span class="input-group-text">
