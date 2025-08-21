@@ -220,6 +220,7 @@ const save = async () => {
                     required
                     type="number"
                     min="0"
+                    step=".01"
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-quantite' + i] }"
                   />
