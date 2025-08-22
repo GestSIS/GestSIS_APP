@@ -225,9 +225,7 @@ const mutate = () => {
       .filter((data) => data[1])
       .map((data) => parseInt(data[0])),
   );
-  const mutations = mutations.value.filter(
-    (m) => !unselectedItems.has(m.sapeur_id),
-  );
+  const muts = mutations.value.filter((m) => !unselectedItems.has(m.sapeur_id));
   const sis = activeSisData.value.nom;
 
   const data = {
@@ -235,8 +233,8 @@ const mutate = () => {
     username: username.value,
     password: password.value,
     communication: communication.value || '-',
-    ajoutes: mutations.filter((m) => m.statut === 'ajoute'),
-    modifies: mutations
+    ajoutes: muts.filter((m) => m.statut === 'ajoute'),
+    modifies: muts
       .filter((m) => m.statut === 'modifie')
       .map((s) => ({
         ...s,
@@ -245,10 +243,9 @@ const mutate = () => {
         ),
         numeros: s.numeros.slice(0, s.changements.numerosSupprime),
       })),
-    supprimes: mutations.filter((m) => m.statut === 'supprime'),
+    supprimes: muts.filter((m) => m.statut === 'supprime'),
   };
 
-  loading.value = true;
   store
     .dispatch('updateReferenceRta', data)
     .then(() => {
