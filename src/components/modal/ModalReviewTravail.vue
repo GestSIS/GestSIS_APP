@@ -91,6 +91,7 @@ const review = (accepte) => {
           v-model="form.quantite"
           name="quantite"
           type="number"
+          step=".01"
           min="0"
           class="form-control form-control-sm"
         />
