@@ -48,17 +48,17 @@ const localites = computed(() => store.state.localite.liste);
 const typesIntervention = computed(() => store.state.typeIntervention.liste);
 const statsFederales = computed(() => store.state.statFederal.liste);
 const interventionTraitements = computed(
-  () => store.state.interventionTraitement.liste,
+  () => store.state.interventionTraitement.liste
 );
 const sapeurs = computed(() => store.state.sapeur.liste);
 
 const activeExerciceComptable = computed(() =>
   store.state.exerciceComptable.liste.find(
-    (e) => e.id === store.state.exerciceComptable.activeId,
-  ),
+    (e) => e.id === store.state.exerciceComptable.activeId
+  )
 );
 const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
+  permissions.INTERVENTION.MODIFICATION
 );
 const isValidWgs84 = computed(() => {
   const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
@@ -143,6 +143,7 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
+                    required
                     id="m-int-date-debut"
                     v-model="form.date_debut"
                     class="form-control form-control-sm"
@@ -164,6 +165,7 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
+                    required
                     id="m-int-heure_debut"
                     v-model="form.heure_debut"
                     type="time"
@@ -187,6 +189,7 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
+                    required
                     id="m-int-date-fin"
                     v-model="form.date_fin"
                     class="form-control form-control-sm"
@@ -208,6 +211,7 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
+                    required
                     id="m-int-heure_fin"
                     v-model="form.heure_fin"
                     type="time"
