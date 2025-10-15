@@ -1380,9 +1380,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-vue@npm:^10.5.0":
-  version: 10.5.0
-  resolution: "eslint-plugin-vue@npm:10.5.0"
+"eslint-plugin-vue@npm:^10.5.1":
+  version: 10.5.1
+  resolution: "eslint-plugin-vue@npm:10.5.1"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.4.0"
     natural-compare: "npm:^1.4.0"
@@ -1400,7 +1400,7 @@ __metadata:
       optional: true
     "@typescript-eslint/parser":
       optional: true
-  checksum: 10/51a6d3b02c184e783bb7f5d5e4cf2cfc6a837339076902dd238e6757485c0657bd72470cbc3f7644da52c560fd350f32091c1c37de43021bf5d25df33b0a5ef1
+  checksum: 10/39c77993c191eabcc7397021ff98e14583c9e171a13e6f4bb92bcad2bae6c928ac965836a8068bc768ed0a7209905bec0d3a9ee4797a627491297d30aa6e4901
   languageName: node
   linkType: hard
 
@@ -1729,7 +1729,7 @@ __metadata:
     bootstrap: "npm:^5.3.8"
     eslint: "npm:^9.37.0"
     eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-vue: "npm:^10.5.0"
+    eslint-plugin-vue: "npm:^10.5.1"
     floating-vue: "npm:^5.2.2"
     globals: "npm:^16.4.0"
     jwt-decode: "npm:^4.0.0"
@@ -1742,7 +1742,7 @@ __metadata:
     vue: "npm:^3.5.22"
     vue-advanced-cropper: "npm:^2.8.9"
     vue-eslint-parser: "npm:^10.2.0"
-    vue-router: "npm:^4.5.1"
+    vue-router: "npm:^4.6.2"
     vue3-select-component: "npm:^0.12.3"
     vuex: "npm:^4.1.0"
   languageName: unknown
@@ -3135,14 +3135,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-router@npm:^4.5.1":
-  version: 4.5.1
-  resolution: "vue-router@npm:4.5.1"
+"vue-router@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "vue-router@npm:4.6.2"
   dependencies:
     "@vue/devtools-api": "npm:^6.6.4"
   peerDependencies:
-    vue: ^3.2.0
-  checksum: 10/98a17fd0dd44c47e7010fca554bc9f63ddee5c1659409878ef624981570c4c3ea35a7e2f4d9a5084150ef671ca546219a9165de71878c8777f6b12ea2af94109
+    vue: ^3.5.0
+  checksum: 10/064a4c24355c7779cbc48674e3954a933a00b6b1ecf49cc5ca9673e06317ca74b4c74229fa125faf8104b7efd52a8e70c6755547f6e1d97a8061458b8a921234
   languageName: node
   linkType: hard
 
