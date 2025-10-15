@@ -39,12 +39,13 @@ const formatType = (type) => {
 
 const typesAnnuel = computed(() =>
   store.state.imputation.fraisIndemnites.annuels.map((f) => {
-    const compte = comptes.value.find((c) => c.id === f.id);
+    const compte = comptes.value.find((c) => c.id === f.compte_id);
     return {
       ...f,
       fonctions: f.frais_indemnite_annuels || [],
       ecriture_categorie: f.id
-        ? categories.value.find((c) => c.id === f.id)?.designation
+        ? categories.value.find((c) => c.id === f.ecriture_categorie_id)
+            ?.designation
         : '',
       compte: !f.id ? '' : `${compte?.numero} ${compte?.designation}`,
       formatted_type: formatType(f.type),
