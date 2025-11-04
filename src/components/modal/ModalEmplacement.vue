@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement.js';
 import SelectEmplacement from '../materiel/SelectEmplacement.vue';
@@ -33,7 +33,7 @@ const save = async () => {
       (errors) =>
         (errors = {
           ...errors,
-        }),
+        })
     );
 };
 </script>
