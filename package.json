@@ -23,11 +23,11 @@
     "jwt-decode": "^4.0.0",
     "luxon": "^3.7.2",
     "nprogress": "^0.2.0",
-    "pinia": "^3.0.3",
-    "vue": "^3.5.22",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.24",
     "vue-advanced-cropper": "^2.8.9",
     "vue-router": "^4.6.3",
-    "vue3-select-component": "0.12.3",
+    "vue3-select-component": "0.14.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
