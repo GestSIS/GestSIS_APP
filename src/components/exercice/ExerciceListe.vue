@@ -117,6 +117,12 @@ const removeExercice = (id) =>
     "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
   ).then(() => store.dispatch('removeExercice', id));
 
+const importExerciceComptable = () =>
+  showModal({
+    component: 'ModalImportExercice',
+    size: 2,
+  });
+
 const listePresences = ({ id }) => {
   showModal({ component: 'ModalChargement' });
   ExerciceService.downloadListPresence(id, 'liste-presence.pdf')
@@ -262,6 +268,12 @@ const fieldsBase = [
               @click="downloadIcs(filteredData)"
             >
               Fichier <em>Icalc</em>
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              @click="importExerciceComptable"
+            >
+              Importer depuis année précédente
             </button>
           </div>
         </div>

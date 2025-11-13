@@ -13,6 +13,9 @@ export default {
   getStatPermis(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/permis`);
   },
+  getStatLocalite(exercieComptableId) {
+    return Api.api().get(`/statistiques/${exercieComptableId}/localite`);
+  },
   getStatVehicule(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/vehicule`);
   },

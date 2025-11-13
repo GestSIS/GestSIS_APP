@@ -7,6 +7,7 @@ export default {
     fonctions: [],
     grades: [],
     permis: [],
+    localites: [],
     materiels: [],
     vehicules: [],
     statFederal: [],
@@ -24,6 +25,7 @@ export default {
       state.fonctions = [];
       state.grades = [];
       state.permis = [];
+      state.localites = [];
       state.materiels = [];
       state.vehicules = [];
       state.presencesExercice = [];
@@ -43,6 +45,9 @@ export default {
     },
     [types.UPDATE_STATISTIQUE_PERMIS](state, payload) {
       state.permis = payload;
+    },
+    [types.UPDATE_STATISTIQUE_LOCALITE](state, payload) {
+      state.localites = payload;
     },
     [types.UPDATE_STATISTIQUE_VEHICULE](state, payload) {
       state.vehicules = payload;
@@ -95,6 +100,11 @@ export default {
       return StatistiqueService.getStatPermis(
         exerciceComptableId
       ).then((data) => commit(types.UPDATE_STATISTIQUE_PERMIS, data));
+    },
+    fetchStatistiqueLocalite({ commit }, exerciceComptableId) {
+      return StatistiqueService.getStatLocalite(
+        exerciceComptableId
+      ).then((data) => commit(types.UPDATE_STATISTIQUE_LOCALITE, data));
     },
     fetchStatistiqueCategorieComptable({ commit }, exerciceComptableId) {
       return StatistiqueService.getStatCategorieComptable(

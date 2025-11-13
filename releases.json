@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "13.11.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Statistiques sapeurs par localités"
+      ]
+    },
+    {
       "date": "30.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",
