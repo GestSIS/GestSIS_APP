@@ -12,9 +12,6 @@ store.dispatch('fetchReferenceRta');
 
 const maxNbNumero = 3;
 const unselected = ref({});
-const username = ref('');
-const password = ref('');
-const communication = ref('');
 const errors = ref({});
 
 const reference = computed(() =>
@@ -230,20 +227,20 @@ const mutate = () => {
 
   const data = {
     sis,
-    username: username.value,
-    password: password.value,
-    communication: communication.value || '-',
-    ajoutes: muts.filter((m) => m.statut === 'ajoute'),
-    modifies: muts
-      .filter((m) => m.statut === 'modifie')
-      .map((s) => ({
-        ...s,
-        groupes: s.groupes.filter(
-          (g) => !s.changements.groupesSupprime.includes(g.no),
-        ),
-        numeros: s.numeros.slice(0, s.changements.numerosSupprime),
-      })),
-    supprimes: muts.filter((m) => m.statut === 'supprime'),
+    sapeurs: [],
+
+    // TODO:
+    // ajoutes: muts.filter((m) => m.statut === 'ajoute'),
+    // modifies: muts
+    //   .filter((m) => m.statut === 'modifie')
+    //   .map((s) => ({
+    //     ...s,
+    //     groupes: s.groupes.filter(
+    //       (g) => !s.changements.groupesSupprime.includes(g.no),
+    //     ),
+    //     numeros: s.numeros.slice(0, s.changements.numerosSupprime),
+    //   })),
+    // supprimes: muts.filter((m) => m.statut === 'supprime'),
   };
 
   store
@@ -265,37 +262,6 @@ const mutate = () => {
     </div>
     <div class="card-body pb-0">
       <div class="row g-3 align-items-center mb-3">
-        <div class="col-auto">
-          <input
-            id="m-user"
-            v-model="username"
-            required
-            type="text"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors.username }"
-            name="username"
-            placeholder="Utilisateur"
-          />
-        </div>
-        <div class="col-auto">
-          <input
-            id="m-password"
-            v-model="password"
-            required
-            type="password"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors.password }"
-            name="password"
-            placeholder="Mot de passe"
-          />
-        </div>
-        <font-awesome-icon
-          v-tooltip.bottom="
-            'Utilisez vos identifiants du site gestionrta-jura.ch'
-          "
-          class="col-auto"
-          :icon="['far', 'question-circle']"
-        />
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
         </button>
@@ -307,21 +273,6 @@ const mutate = () => {
         >
           gestionrta-jura.ch
         </a>
-      </div>
-      <div class="mb-3">
-        <div class="input-group input-group-sm">
-          <label for="m-communication"></label>
-          <textarea
-            id="m-communication"
-            v-model="communication"
-            type="text"
-            rows="2"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['communication'] }"
-            name="communication"
-            placeholder="Communication"
-          />
-        </div>
       </div>
     </div>
     <div class="card-body table-responsive p-0">
