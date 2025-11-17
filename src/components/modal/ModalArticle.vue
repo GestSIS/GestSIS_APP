@@ -91,6 +91,15 @@ const save = async () => {
           />
         </div>
         <div v-if="type && type.type === 3" class="mb-3">
+          <input
+            id="actif"
+            v-model="form.statut"
+            type="checkbox"
+            class="form-check-input"
+          />
+          <label class="form-check-label" for="actif">Actif</label>
+        </div>
+        <div v-if="type && type.type === 3" class="mb-3">
           <label for="immatriculation">Immatriculation</label>
           <input
             id="immatriculation"
