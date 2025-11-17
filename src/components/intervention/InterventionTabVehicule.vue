@@ -29,7 +29,7 @@ watchEffect(async () => {
 const vehicules = computed(() =>
   store.state.vehicule.liste.filter(
     (v) =>
-      v.statut === 1 ||
+      v.statut === true ||
       store.state.intervention.active.vehicules.find(
         (vi) => vi.vehicule_id === v.id,
       ),
