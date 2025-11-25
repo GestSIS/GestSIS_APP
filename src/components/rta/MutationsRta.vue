@@ -31,7 +31,6 @@ const actuel = computed(() =>
         '',
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => t.numero),
-      telephones: null,
       groupes: s.groupes
         .map((id) => store.state.groupe.liste.find((g) => g.id == id))
         .filter((g) => g?.type == 1)
@@ -201,46 +200,26 @@ const switchAll = (valeur) => {
     (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked),
   );
 };
-const mutate = () => {
-  if (!password.value) {
-    errors.value.password = 'Mot de passe invalide';
-  } else {
-    delete errors.value.password;
-  }
-  if (!username.value) {
-    errors.value.username = "Nom d'utilisateur invalide";
-  } else {
-    delete errors.value.username;
-  }
 
-  if (errors.value.username || errors.value.password) {
+const mutate = () => {
+  const sis = activeSisData.value.nom;
+
+  // TODO: Check au moins one clé de unselected === true
+  if (!Object.values(unselected.value).some((v) => v === true)) {
+    awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
     return;
   }
 
-  const unselectedItems = new Set(
-    Object.entries(unselected.value)
-      .filter((data) => data[1])
-      .map((data) => parseInt(data[0])),
-  );
-  const muts = mutations.value.filter((m) => !unselectedItems.has(m.sapeur_id));
-  const sis = activeSisData.value.nom;
-
   const data = {
     sis,
-    sapeurs: [],
-
-    // TODO:
-    // ajoutes: muts.filter((m) => m.statut === 'ajoute'),
-    // modifies: muts
-    //   .filter((m) => m.statut === 'modifie')
-    //   .map((s) => ({
-    //     ...s,
-    //     groupes: s.groupes.filter(
-    //       (g) => !s.changements.groupesSupprime.includes(g.no),
-    //     ),
-    //     numeros: s.numeros.slice(0, s.changements.numerosSupprime),
-    //   })),
-    // supprimes: muts.filter((m) => m.statut === 'supprime'),
+    sapeurs: [
+      ...reference.value.filter(
+        (s) => (unselected.value[s.sapeur_id] ?? false) === true,
+      ),
+      ...actuel.value.filter(
+        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
+      ),
+    ],
   };
 
   store

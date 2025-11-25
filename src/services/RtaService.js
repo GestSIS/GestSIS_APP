@@ -10,7 +10,4 @@ export default {
   updateReference(data) {
     return Api.api().post('/rta', data);
   },
-  resetReference() {
-    return Api.api().delete('/rta');
-  },
 };
