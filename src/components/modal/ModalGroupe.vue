@@ -34,7 +34,7 @@ const save = async () => {
 </script>
 
 <template>
-  <form @submit.prevent>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Ajouter un groupe</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
