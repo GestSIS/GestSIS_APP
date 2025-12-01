@@ -1,7 +1,5 @@
 <script setup>
 // TODO: à implémenter
-const model = defineModel();
-const activeSapeur = ref({ ...this.modelValue });
 const photo = ref(null); // https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128
 </script>
 

@@ -1,5 +1,12 @@
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import {
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  useTemplateRef,
+  watchEffect,
+} from 'vue';
 
 const search = defineModel({
   type: [Object, Number, String],
@@ -28,11 +35,10 @@ const isOpen = ref(false);
 const results = ref([]);
 const arrowCounter = ref(0);
 const uid = ref(Math.random());
+const root = useTemplateRef('root');
 
-onMounted(() => document.addEventListener('click', handleClickOutside.value));
-onUnmounted(() =>
-  document.removeEventListener('click', handleClickOutside.value),
-);
+onMounted(() => document.addEventListener('click', handleClickOutside));
+onUnmounted(() => document.removeEventListener('click', handleClickOutside));
 
 watchEffect(() => {
   results.value = items.filter((item) => {
@@ -40,6 +46,8 @@ watchEffect(() => {
   });
   isOpen.value = true;
 });
+
+isOpen.value = false;
 
 const setResult = (result) => {
   search.value = result;
@@ -64,7 +72,7 @@ const onEnter = () => {
   arrowCounter.value = -1;
 };
 const handleClickOutside = (evt) => {
-  if (!this.$el.contains(evt.target)) {
+  if (!root.value.contains(evt.target)) {
     isOpen.value = false;
     arrowCounter.value = -1;
   }
@@ -72,7 +80,7 @@ const handleClickOutside = (evt) => {
 </script>
 
 <template>
-  <div class="autocomplete">
+  <div class="autocomplete" ref="root">
     <label :for="'d1_' + uid">{{ title }}</label>
     <input
       :id="'d1_' + uid"

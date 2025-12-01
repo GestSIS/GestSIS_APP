@@ -20,7 +20,7 @@ const awn = inject('awn');
 const tokenForUser = (user) =>
   AdminService.getUserToken(user.id).then((data) => {
     navigator.clipboard.writeText(data.accessToken);
-    this.$awn.success('Token copié dans le press papier');
+    awn.success('Token copié dans le press papier');
   });
 const editUser = (user) => showModal({ component: 'ModalUser', data: user });
 const deleteUser = (user) =>
