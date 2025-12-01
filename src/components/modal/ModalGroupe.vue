@@ -27,7 +27,7 @@ const groupes = computed(() =>
 const { closeModal } = useModalStore();
 const save = async () => {
   store
-    .dispatch('createGroupe', groupe)
+    .dispatch('createGroupe', form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
