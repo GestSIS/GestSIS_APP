@@ -25,8 +25,8 @@ const { closeModal } = useModalStore();
 const save = () =>
   store
     .dispatch(
-      (this.form.id || 0) === 0 ? 'addExerciceHeure' : 'updateExerciceHeure',
-      this.form,
+      (form.id || 0) === 0 ? 'addExerciceHeure' : 'updateExerciceHeure',
+      form,
     )
     .then(closeModal)
     .catch((err) => (errors.value = err));

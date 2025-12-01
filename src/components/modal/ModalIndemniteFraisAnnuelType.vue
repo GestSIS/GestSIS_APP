@@ -23,7 +23,7 @@ const categories = computed(() => store.state.ecritureCategorie.liste);
 const { closeModal } = useModalStore();
 
 const save = () =>
-  this.$store
+  store
     .dispatch(
       form?.id
         ? 'updateFraisIndemniteAnnuelType'

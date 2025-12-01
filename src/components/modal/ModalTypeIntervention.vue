@@ -33,9 +33,7 @@ const awn = inject('awn');
 const save = () =>
   store
     .dispatch(
-      (this.form.id || 0) === 0
-        ? 'addTypeIntervention'
-        : 'updateTypeIntervention',
+      (form.id || 0) === 0 ? 'addTypeIntervention' : 'updateTypeIntervention',
       form,
     )
     .then(closeModal)
