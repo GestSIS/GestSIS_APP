@@ -50,6 +50,7 @@ watchEffect(() => {
 });
 
 const { closeModal } = useModalStore();
+const importer = () => {};
 
 const fieldsStep1 = [
   { title: 'Catégorie', key: 'categorie' },
@@ -67,7 +68,7 @@ const fieldsStep2 = [
 </script>
 
 <template>
-  <form @submit.prevent>
+  <form @submit.prevent="importer">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         Importer des exercices depuis un autre exercice comptable
