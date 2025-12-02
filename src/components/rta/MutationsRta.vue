@@ -244,7 +244,7 @@ const mutate = () => {
           Transfert RTA
         </button>
         <a
-          href="https://www.gestionrta-jura.ch/gestionRtaJura/"
+          href="https://gestionrta-jura.ch"
           target="_blank"
           class="col-auto btn btn-link"
           @click="mutate"
