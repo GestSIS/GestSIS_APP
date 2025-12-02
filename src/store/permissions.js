@@ -62,6 +62,11 @@ export default {
     MODIFICATION: 'materiel.modification',
     CONFIG: 'materiel.config',
   },
+  RTA: {
+    LECTURE: 'rta.lecture',
+    MODIFICATION: 'rta.modification',
+    CONFIG: 'rta.config',
+  },
   SIS: {
     CONFIG: 'sis.config',
   },

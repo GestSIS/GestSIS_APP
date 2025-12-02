@@ -8,6 +8,7 @@ import { TokenService } from '../services/StorageService.js';
 
 import NProgress from 'nprogress';
 import useHasPermission from '../hooks/usePermission';
+import PageTravaux from '../pages/PageTravaux.vue';
 
 
 const redirect = (to, from, next) => {
@@ -33,10 +34,24 @@ const adminGuard = () => {
     if (isAdmin) {
       next();
     } else {
-      redirect(to, from, next);
+      next({ name: 'accueil' });
     }
   };
 };
+
+
+const travauxGuard = () => {
+  return function (to, from, next) {
+    const store = useStore();
+    const isAdmin = store.state.auth.admin;
+    if (!isAdmin) {
+      next();
+    } else {
+      next({ name: 'en-travaux' });
+    }
+  };
+};
+
 
 const permissionGuard = (...perms) => {
   return function (to, from, next) {
@@ -98,6 +113,11 @@ const router = createRouter({
       name: 'public',
       meta: { layout: 'empty', public: true },
       component: Public,
+    },
+    {
+      path: '/en-travaux',
+      name: 'en-travaux',
+      component: () => import('/src/pages/PageEnTravaux.vue'),
     },
     {
       path: '/accueil',
@@ -812,27 +832,27 @@ const router = createRouter({
     {
       path: '/rta',
       name: 'rta',
-      beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
+      beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
       component: () => import('/src/pages/PageRta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
           path: 'mutations',
           name: 'rta-mutations',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
+          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
           component: () =>
             import('/src/components/rta/MutationsRta.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
+          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/ReferenceRta.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
-          beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
+          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/GestSisRta.vue'),
         },
       ],
