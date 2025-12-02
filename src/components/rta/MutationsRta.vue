@@ -204,10 +204,10 @@ const switchAll = (valeur) => {
 const mutate = () => {
   const sis = activeSisData.value.nom;
 
-  if (!Object.values(unselected.value).some((v) => v === false)) {
-    awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
-    return;
-  }
+  // if (!Object.values(unselected.value).some((v) => v === false)) {
+  //   awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
+  //   return;
+  // }
 
   const data = {
     sis,
