@@ -15,10 +15,10 @@ const unselected = ref({});
 const errors = ref({});
 
 const reference = computed(() =>
-  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' }))
 );
 const activeSisData = computed(() =>
-  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId),
+  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId)
 );
 const actuel = computed(() =>
   store.state.rta.actuel
@@ -41,14 +41,14 @@ const actuel = computed(() =>
       groupes.sort((a, b) => a.no - b.no);
       return { ...s, groupes };
     })
-    .filter((s) => s.groupes.length > 0),
+    .filter((s) => s.groupes.length > 0)
 );
 
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
   const potentielModifieIds = new Set(
-    [...referenceIds].filter((id) => actuelIds.has(id)),
+    [...referenceIds].filter((id) => actuelIds.has(id))
   );
 
   const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
@@ -75,7 +75,7 @@ const mutations = computed(() => {
       let modifie = false;
 
       const referenceModifie = reference.value.find(
-        (s2) => s2.sapeur_id == s.sapeur_id,
+        (s2) => s2.sapeur_id == s.sapeur_id
       );
       const fields = [
         'nom',
@@ -96,7 +96,7 @@ const mutations = computed(() => {
 
       // Groupes
       const referenceGroupes = new Set(
-        referenceModifie.groupes.map((g) => g.no),
+        referenceModifie.groupes.map((g) => g.no)
       );
       const actuelGroupes = new Set(s.groupes.map((g) => g.no));
 
@@ -108,12 +108,12 @@ const mutations = computed(() => {
         .filter((g) => !actuelGroupes.has(g));
 
       const groupesReference = new Map(
-        referenceModifie.groupes.map((g) => [g.no, g.description]),
+        referenceModifie.groupes.map((g) => [g.no, g.description])
       );
       const groupesModifie = s.groupes.filter(
         (g) =>
           groupesReference.has(g.no) &&
-          groupesReference.get(g.no) !== g.description,
+          groupesReference.get(g.no) !== g.description
       );
 
       if (
@@ -134,7 +134,7 @@ const mutations = computed(() => {
       const groupes = [
         ...s.groupes,
         ...referenceModifie.groupes.filter((g) =>
-          groupesSupprime.includes(g.no),
+          groupesSupprime.includes(g.no)
         ),
       ];
 
@@ -197,15 +197,14 @@ const awn = inject('awn');
 
 const switchAll = (valeur) => {
   mutations.value.forEach(
-    (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked),
+    (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked)
   );
 };
 
 const mutate = () => {
   const sis = activeSisData.value.nom;
 
-  // TODO: Check au moins one clé de unselected === true
-  if (!Object.values(unselected.value).some((v) => v === true)) {
+  if (!Object.values(unselected.value).some((v) => v === false)) {
     awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
     return;
   }
@@ -214,10 +213,10 @@ const mutate = () => {
     sis,
     sapeurs: [
       ...reference.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === true,
+        (s) => (unselected.value[s.sapeur_id] ?? false) === true
       ),
       ...actuel.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
+        (s) => (unselected.value[s.sapeur_id] ?? false) === false
       ),
     ],
   };
