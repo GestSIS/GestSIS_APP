@@ -44,7 +44,7 @@ const travauxGuard = () => {
   return function (to, from, next) {
     const store = useStore();
     const isAdmin = store.state.auth.admin;
-    if (!isAdmin) {
+    if (isAdmin) {
       next();
     } else {
       next({ name: 'en-travaux' });
