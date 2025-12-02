@@ -12,9 +12,6 @@ store.dispatch('fetchReferenceRta');
 
 const maxNbNumero = 3;
 const unselected = ref({});
-const username = ref('');
-const password = ref('');
-const communication = ref('');
 const errors = ref({});
 
 const reference = computed(() =>
@@ -34,7 +31,6 @@ const actuel = computed(() =>
         '',
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => t.numero),
-      telephones: null,
       groupes: s.groupes
         .map((id) => store.state.groupe.liste.find((g) => g.id == id))
         .filter((g) => g?.type == 1)
@@ -204,46 +200,26 @@ const switchAll = (valeur) => {
     (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked),
   );
 };
-const mutate = () => {
-  if (!password.value) {
-    errors.value.password = 'Mot de passe invalide';
-  } else {
-    delete errors.value.password;
-  }
-  if (!username.value) {
-    errors.value.username = "Nom d'utilisateur invalide";
-  } else {
-    delete errors.value.username;
-  }
 
-  if (errors.value.username || errors.value.password) {
+const mutate = () => {
+  const sis = activeSisData.value.nom;
+
+  // TODO: Check au moins one clé de unselected === true
+  if (!Object.values(unselected.value).some((v) => v === true)) {
+    awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
     return;
   }
 
-  const unselectedItems = new Set(
-    Object.entries(unselected.value)
-      .filter((data) => data[1])
-      .map((data) => parseInt(data[0])),
-  );
-  const muts = mutations.value.filter((m) => !unselectedItems.has(m.sapeur_id));
-  const sis = activeSisData.value.nom;
-
   const data = {
     sis,
-    username: username.value,
-    password: password.value,
-    communication: communication.value || '-',
-    ajoutes: muts.filter((m) => m.statut === 'ajoute'),
-    modifies: muts
-      .filter((m) => m.statut === 'modifie')
-      .map((s) => ({
-        ...s,
-        groupes: s.groupes.filter(
-          (g) => !s.changements.groupesSupprime.includes(g.no),
-        ),
-        numeros: s.numeros.slice(0, s.changements.numerosSupprime),
-      })),
-    supprimes: muts.filter((m) => m.statut === 'supprime'),
+    sapeurs: [
+      ...reference.value.filter(
+        (s) => (unselected.value[s.sapeur_id] ?? false) === true,
+      ),
+      ...actuel.value.filter(
+        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
+      ),
+    ],
   };
 
   store
@@ -265,37 +241,6 @@ const mutate = () => {
     </div>
     <div class="card-body pb-0">
       <div class="row g-3 align-items-center mb-3">
-        <div class="col-auto">
-          <input
-            id="m-user"
-            v-model="username"
-            required
-            type="text"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors.username }"
-            name="username"
-            placeholder="Utilisateur"
-          />
-        </div>
-        <div class="col-auto">
-          <input
-            id="m-password"
-            v-model="password"
-            required
-            type="password"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors.password }"
-            name="password"
-            placeholder="Mot de passe"
-          />
-        </div>
-        <font-awesome-icon
-          v-tooltip.bottom="
-            'Utilisez vos identifiants du site gestionrta-jura.ch'
-          "
-          class="col-auto"
-          :icon="['far', 'question-circle']"
-        />
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
         </button>
@@ -307,21 +252,6 @@ const mutate = () => {
         >
           gestionrta-jura.ch
         </a>
-      </div>
-      <div class="mb-3">
-        <div class="input-group input-group-sm">
-          <label for="m-communication"></label>
-          <textarea
-            id="m-communication"
-            v-model="communication"
-            type="text"
-            rows="2"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['communication'] }"
-            name="communication"
-            placeholder="Communication"
-          />
-        </div>
       </div>
     </div>
     <div class="card-body table-responsive p-0">

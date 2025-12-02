@@ -134,17 +134,12 @@ const nbGroupes = computed(() => {
   const numCount = mutations.value.map((s) => s.groupes.length);
   return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
-
-const reset = () => store.dispatch('resetReferenceRta');
 </script>
 
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Référence RTA</h3>
-      <button class="btn btn-outline-primary" @click="reset">
-        Réinitialiser
-      </button>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-sm" cellspacing="0">

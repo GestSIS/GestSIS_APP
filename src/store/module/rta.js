@@ -40,10 +40,5 @@ export default {
         commit(types.UPDATE_RTA_REFERENCE_RTA, data)
       );
     },
-    resetReferenceRta({ commit }) {
-      return RtaService.resetReference().then((data) =>
-        commit(types.UPDATE_RTA_REFERENCE_RTA, data)
-      );
-    },
   },
 };
