@@ -15,10 +15,10 @@ const unselected = ref({});
 const errors = ref({});
 
 const reference = computed(() =>
-  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' }))
+  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
 );
 const activeSisData = computed(() =>
-  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId)
+  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId),
 );
 const actuel = computed(() =>
   store.state.rta.actuel
@@ -30,25 +30,28 @@ const actuel = computed(() =>
         store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ??
         '',
       sapeur_id: s.id,
-      numeros: s.telephones.map((t) => t.numero),
+      numeros: s.telephones,
       groupes: s.groupes
         .map((id) => store.state.groupe.liste.find((g) => g.id == id))
         .filter((g) => g?.type == 1)
-        .map((g) => ({ no: g.no, designation: g.designation })),
+        .map((g) => ({ no: g.no.toString(), designation: g.designation })),
     }))
     .map((s) => {
       const groupes = s.groupes.slice(0);
       groupes.sort((a, b) => a.no - b.no);
-      return { ...s, groupes };
+      return {
+        ...s,
+        groupes: groupes.map((g) => ({ ...g, no: g.no.toString() })),
+      };
     })
-    .filter((s) => s.groupes.length > 0)
+    .filter((s) => s.groupes.length > 0),
 );
 
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
   const potentielModifieIds = new Set(
-    [...referenceIds].filter((id) => actuelIds.has(id))
+    [...referenceIds].filter((id) => actuelIds.has(id)),
   );
 
   const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
@@ -75,7 +78,7 @@ const mutations = computed(() => {
       let modifie = false;
 
       const referenceModifie = reference.value.find(
-        (s2) => s2.sapeur_id == s.sapeur_id
+        (s2) => s2.sapeur_id == s.sapeur_id,
       );
       const fields = [
         'nom',
@@ -96,7 +99,7 @@ const mutations = computed(() => {
 
       // Groupes
       const referenceGroupes = new Set(
-        referenceModifie.groupes.map((g) => g.no)
+        referenceModifie.groupes.map((g) => g.no),
       );
       const actuelGroupes = new Set(s.groupes.map((g) => g.no));
 
@@ -108,12 +111,12 @@ const mutations = computed(() => {
         .filter((g) => !actuelGroupes.has(g));
 
       const groupesReference = new Map(
-        referenceModifie.groupes.map((g) => [g.no, g.description])
+        referenceModifie.groupes.map((g) => [g.no, g.description]),
       );
       const groupesModifie = s.groupes.filter(
         (g) =>
           groupesReference.has(g.no) &&
-          groupesReference.get(g.no) !== g.description
+          groupesReference.get(g.no) !== g.description,
       );
 
       if (
@@ -134,40 +137,32 @@ const mutations = computed(() => {
       const groupes = [
         ...s.groupes,
         ...referenceModifie.groupes.filter((g) =>
-          groupesSupprime.includes(g.no)
+          groupesSupprime.includes(g.no),
         ),
       ];
 
-      // Numéros
-      const numerosAjoute = referenceModifie.numeros.length;
-      const numerosSupprime = s.numeros.length;
-      const numerosModifie = s.numeros
-        .slice(0, Math.min(numerosAjoute, numerosSupprime))
-        .map((n, index) => (referenceModifie.numeros[index] != n ? index : -1))
-        .filter((i) => i >= 0);
+      // RTA Numéros
+      const oldNumeros = new Set(referenceModifie.numeros.map((n) => n.numero));
+      const currentNumeros = new Set(s.numeros.map((n) => n.numero));
 
       const numeros = [
-        ...s.numeros,
-        ...referenceModifie.numeros.slice(s.numeros.length),
+        ...s.numeros.map((n) => ({ ...n, added: !oldNumeros.has(n.numero) })),
+        ...referenceModifie.numeros
+          .filter((n) => !currentNumeros.has(n.numero))
+          .map((n) => ({ ...n, removed: true })),
       ];
 
-      if (
-        numerosAjoute < numeros.length ||
-        numerosSupprime < numeros.length ||
-        numerosModifie.length > 0
-      ) {
+      if (numeros.some((n) => n.added || n.removed)) {
         modifie = true;
       }
 
       changements = {
         ...changements,
         modifie,
-        numerosAjoute,
-        numerosModifie,
-        numerosSupprime,
+        numeros,
       };
 
-      return { ...s, groupes, numeros, statut: 'modifie', changements };
+      return { ...s, groupes, statut: 'modifie', changements };
     })
     .filter((m) => m.changements.modifie)
     .sort(sapeurCompare);
@@ -197,7 +192,7 @@ const awn = inject('awn');
 
 const switchAll = (valeur) => {
   mutations.value.forEach(
-    (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked)
+    (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked),
   );
 };
 
@@ -213,10 +208,10 @@ const mutate = () => {
     sis,
     sapeurs: [
       ...reference.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === true
+        (s) => (unselected.value[s.sapeur_id] ?? false) === true,
       ),
       ...actuel.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === false
+        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
       ),
     ],
   };
@@ -347,16 +342,11 @@ const mutate = () => {
               v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
               :class="{
-                'text-success':
-                  e.statut == 'modifie' && i >= e.changements.numerosAjoute,
-                'text-warning':
-                  e.statut == 'modifie' &&
-                  e.changements.numerosModifie.includes(i),
-                'text-danger':
-                  e.statut == 'modifie' && i >= e.changements.numerosSupprime,
+                'text-success': e.statut == 'modifie' && n.added,
+                'text-danger': e.statut == 'modifie' && n.removed,
               }"
             >
-              {{ n }}
+              {{ n.numero }}
             </td>
             <td
               v-for="n in nbNumero - e.numeros.length"

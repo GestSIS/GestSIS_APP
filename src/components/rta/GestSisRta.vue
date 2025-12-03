@@ -24,7 +24,7 @@ const actuel = computed(() =>
         store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
         '',
       sapeur_id: s.id,
-      numeros: s.telephones.map((t) => t.numero),
+      numeros: s.telephones,
       telephones: null,
       groupes: s.groupes
         .map((id) => store.state.groupe.liste.find((g) => g.id == id))
@@ -34,7 +34,10 @@ const actuel = computed(() =>
     .map((s) => {
       const groupes = s.groupes.slice(0);
       groupes.sort((a, b) => a.no - b.no);
-      return { ...s, groupes };
+      return {
+        ...s,
+        groupes: groupes.map((g) => ({ ...g, no: g.no.toString() })),
+      };
     })
     .filter((s) => s.groupes.length > 0),
 );
@@ -97,19 +100,16 @@ const mutations = computed(() => {
         groupesSupprime: [],
       };
 
-      // Numéros
-      const numerosAjoute = referenceModifie.numeros.length;
-      const numerosSupprime = s.numeros.length;
-      const numerosModifie = s.numeros
-        .slice(0, Math.min(numerosAjoute, numerosSupprime))
-        .map((n, index) => (referenceModifie.numeros[index] != n ? index : -1))
-        .filter((i) => i >= 0);
+      // RTA Numéros
+      const oldNumeros = new Set(referenceModifie.numeros.map((n) => n.numero));
+      const currentNumeros = new Set(s.numeros.map((n) => n.numero));
 
       changements = {
         ...changements,
-        numerosAjoute,
-        numerosModifie,
-        numerosSupprime,
+        numerosAjoute: s.numeros.filter((n) => !oldNumeros.has(n.numero)),
+        numerosSupprime: referenceModifie.numeros.filter(
+          (n) => !currentNumeros.has(n.numero),
+        ),
       };
 
       return { ...s, statut: 'modifie', changements };
@@ -201,15 +201,14 @@ const nbGroupes = computed(() => {
               :key="'n-' + n + '-' + i"
               :class="{
                 'text-success':
-                  e.statut == 'modifie' && i >= e.changements.numerosAjoute,
-                'text-warning':
                   e.statut == 'modifie' &&
-                  e.changements.numerosModifie.includes(i),
+                  e.changements.numerosAjoute.includes(n.no),
                 'text-danger':
-                  e.statut == 'modifie' && i >= e.changements.numerosSupprime,
+                  e.statut == 'modifie' &&
+                  e.changements.numerosSupprime.includes(n.no),
               }"
             >
-              {{ n }}
+              {{ n.numero }}
             </td>
             <td
               v-for="n in nbNumero - e.numeros.length"
