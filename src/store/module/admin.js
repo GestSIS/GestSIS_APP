@@ -44,6 +44,12 @@ export default {
         commit(types.ADD_SIS, data.data),
       );
     },
+    addUserRole({ }, userRole) {
+      return AdminService.addUserRole(userRole);
+    },
+    removeUserRole({ }, userRoleId) {
+      return AdminService.removeUserRole(userRoleId);
+    },
     editSis({ commit }, sis) {
       return AdminService.editSis(sis).then((data) =>
         commit(types.EDIT_SIS, data.data),

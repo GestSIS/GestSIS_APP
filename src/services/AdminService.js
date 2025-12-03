@@ -12,6 +12,12 @@ export default {
       params: { user_id: userId },
     });
   },
+  addUserRole(userRole) {
+    return Api.auth().post('/admin/user-roles', userRole);
+  },
+  removeUserRole(userRoleId) {
+    return Api.auth().delete(`/admin/user-roles/${userRoleId}`);
+  },
   getAllUsers() {
     return Api.auth().get('/admin/users');
   },

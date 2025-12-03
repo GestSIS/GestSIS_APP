@@ -1,7 +1,7 @@
 <script setup>
+import { computed, ref, inject } from 'vue';
 import { useStore } from 'vuex';
 import AdminService from '../../services/AdminService';
-import { computed, ref, inject } from 'vue';
 import { useModalStore } from '../../stores/common/Modal';
 
 const { id } = defineProps({
@@ -15,11 +15,15 @@ const store = useStore();
 const user = ref({});
 const loadSis = store.dispatch('loadSisListe');
 const loadRoles = store.dispatch('loadAllRoles');
-const loadUser = AdminService.getUser({ id }).then(({ data }) => {
-  user.value = data;
-});
+store.dispatch('loadAllUsers');
 
-await Promise.all([loadSis, loadUser]);
+const loadUser = () => {
+  return AdminService.getUser({ id }).then(({ data }) => {
+    user.value = data;
+  });
+};
+
+await Promise.all([loadSis, loadRoles, loadUser()]);
 
 const sis = computed(() => store.state.admin.sis);
 const roles = computed(() => store.state.admin.roles);
@@ -33,16 +37,6 @@ const tokenForUser = (user) =>
     awn.success('Token copié dans le press papier');
   });
 const editUser = (user) => showModal({ component: 'ModalUser', data: user });
-// const deleteUserRole = (userRole) =>
-//   confirm(
-//     'Voulez-vous vraiment enlever ce rôle à cet utilisateur ?',
-//     "Attention, l'action est irréversible.",
-//   ).then(() =>
-//     store
-//       .dispatch('deleteUserRole', userRole?.id)
-//       .then((res) => awn.success(res?.message || 'Utilisateur supprimé'))
-//       .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression')),
-//   );
 
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
@@ -63,11 +57,30 @@ const computedDataSapeurs = computed(() =>
   }),
 );
 
+const ajouterRole = () =>
+  showModal({
+    component: 'ModalAdminUserRole',
+    data: { user_id: user.value.id },
+    callback: loadUser,
+  });
+const supprimerRole = (userRole) =>
+  confirm(
+    'Voulez-vous vraiment enlever ce rôle à cet utilisateur ?',
+    "Attention, l'action est irréversible.",
+  ).then(() => {
+    console.log(userRole?.id);
+    store
+      .dispatch('removeUserRole', userRole?.id)
+      .then((res) => awn.success(res?.message || 'Rôle supprimé'))
+      .then(loadUser)
+      .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression'));
+  });
+
 const fieldsRoles = [
   { title: 'id', key: 'id' },
   { title: 'organisation', key: 'organisation' },
   { title: 'role', key: 'role' },
-  // { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 const fieldsSapeurs = [
   { title: 'id', key: 'id' },
@@ -83,6 +96,9 @@ const fieldsSapeurs = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données</h3>
+          <button class="btn btn-primary" @click="editUser(user)">
+            Modifier
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -121,6 +137,17 @@ const fieldsSapeurs = [
               name="email"
             />
           </div>
+          <div class="mb-3">
+            <input
+              id="admin"
+              v-model="user.admin"
+              name="user-admin"
+              type="checkbox"
+              disabled
+              class="form-check-input"
+            />
+            <label for="admin" class="ms-1">Admin</label>
+          </div>
         </div>
       </div>
     </div>
@@ -128,6 +155,7 @@ const fieldsSapeurs = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h5 class="card-title">Roles</h5>
+          <button class="btn btn-primary" @click="ajouterRole">Ajouter</button>
         </div>
         <div class="card-body table-responsive p-0">
           <base-table
@@ -138,10 +166,19 @@ const fieldsSapeurs = [
             :hide-download="true"
             no-data="Aucun rôle attribué"
           >
+            <template #actions="{ rowData }">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerRole(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
             <template #foot>
               <tr>
                 <th :colspan="fieldsRoles.length">
-                  Nb rôles: {{ user.user_roles?.length }}
+                  Nb roles: {{ user.user_roles?.length }}
                 </th>
               </tr>
             </template>
