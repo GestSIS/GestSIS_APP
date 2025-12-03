@@ -37,7 +37,7 @@ const close = () => {
 
 const save = async () => {
   store
-    .dispatch(sis?.id ? 'editSis' : 'addSis', sis)
+    .dispatch(form?.id ? 'editSis' : 'addSis', form)
     .then(closeModal)
     .catch((err) => {
       errors.value = err;
