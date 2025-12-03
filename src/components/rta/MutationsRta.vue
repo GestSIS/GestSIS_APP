@@ -244,6 +244,13 @@ const mutate = () => {
     </div>
     <div class="card-body pb-0">
       <div class="row g-3 align-items-center mb-3">
+        <div class="alert alert-primary" role="alert">
+          La nouvelle intégration avec GestionRTA-Jura ne nécessite plus
+          d'identifiants. Vous pouvez désormais choisir qui est autorisé à
+          effectuer des mutations RTA dans
+          <em>configurations > droits et rôles</em>. Vous verrez ainsi un
+          nouveau groupe de permissions spécifique pour le RTA.
+        </div>
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
         </button>

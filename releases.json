@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "03.12.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Nouvelle intégration avec `GestionRTA-Jura`, plus besoin d'identifiants"
+      ]
+    },
+    {
       "date": "13.11.2025",
       "version": "1.0",
       "app": "GestSIS APP",

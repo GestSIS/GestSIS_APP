@@ -832,27 +832,27 @@ const router = createRouter({
     {
       path: '/rta',
       name: 'rta',
-      beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
+      beforeEnter: permissionGuard(permissions.RTA.LECTURE),
       component: () => import('/src/pages/PageRta.vue'),
       redirect: { name: 'rta-mutations' },
       children: [
         {
           path: 'mutations',
           name: 'rta-mutations',
-          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () =>
             import('/src/components/rta/MutationsRta.vue'),
         },
         {
           path: 'reference',
           name: 'rta-reference',
-          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/ReferenceRta.vue'),
         },
         {
           path: 'gestsis',
           name: 'rta-gestsis',
-          beforeEnter: travauxGuard(),// permissionGuard(permissions.RTA.LECTURE),
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/GestSisRta.vue'),
         },
       ],
