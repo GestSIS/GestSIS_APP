@@ -25,7 +25,16 @@ const actuel = computed(() =>
         store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ||
         '',
       sapeur_id: s.id,
-      numeros: s.telephones,
+      numeros: s.telephones.map((t) => ({
+        numero: t.numero,
+        type:
+          t.telephone_type_id === 1
+            ? 'Privé'
+            : t.telephone_type_id === 2
+              ? 'Prof'
+              : 'Mobile',
+        tri: t.priorite,
+      })),
       telephones: null,
       groupes: s.groupes
         .map((id) => store.state.groupe.liste.find((g) => g.id == id))
