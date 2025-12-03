@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
@@ -78,6 +78,7 @@ const colonnes = computed(() => [
 ]);
 
 const { showModal, confirm } = useModalStore();
+const awn = inject('awn');
 
 const infoMateriel = (materiel) =>
   showModal({
@@ -113,7 +114,8 @@ const supprimer = (article) =>
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(refresh);
+    .then(refresh)
+    .catch((e) => awn.alert(e.message || 'Une erreur est survenue'));
 </script>
 
 <template>
