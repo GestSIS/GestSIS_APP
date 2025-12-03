@@ -4,17 +4,17 @@ import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
 const avance = ref(false);
 const name = ref(null);
 const email = ref(null);
 const password = ref(null);
 const password_confirmation = ref(null);
-const token = ref('');
+const token = ref(route.query?.token ?? '');
 const error = ref({});
-
-const store = useStore();
-const route = useRoute();
-const router = useRouter();
 
 const register = async () =>
   store
