@@ -21,10 +21,6 @@ const { closeModal } = useModalStore();
 
 const awn = inject('awn');
 const save = async () => {
-  if (activeItem.value.parent_id == null) {
-    awn.alert('Veuillez sélectionnez un catégorie parente');
-    return;
-  }
   if (activeItem.value.couleur_id == null) {
     awn.alert('Veuillez sélectionnez une couleur');
     return;
