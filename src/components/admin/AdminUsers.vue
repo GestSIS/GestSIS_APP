@@ -66,6 +66,12 @@ const fields = [
           }}</span>
         </template>
         <template #actions="{ rowData }">
+          <router-link
+            class="btn btn-sm btn-outline-primary border-0"
+            :to="{ name: 'admin-user', params: { id: rowData.id } }"
+          >
+            <font-awesome-icon :icon="['far', 'eye']" />
+          </router-link>
           <button
             type="button"
             class="btn btn-outline-primary border-0"

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { inject, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 

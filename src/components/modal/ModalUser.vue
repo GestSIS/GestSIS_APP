@@ -90,7 +90,13 @@ const save = () => {
       <button type="submit" class="btn btn-primary">
         {{ form.id ? 'Modifier' : 'Ajouter' }}
       </button>
-      <button type="button" class="btn btn-outline-secondary">Annuler</button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        @click="closeModal"
+      >
+        Annuler
+      </button>
     </div>
   </form>
 </template>

@@ -4,6 +4,7 @@ import AdminService from '../../services/AdminService.js';
 export default {
   state: {
     sis: [],
+    roles: [],
     users: [],
     contacts: {},
     params: {},
@@ -17,6 +18,9 @@ export default {
     },
     [types.ADMIN_USER_LISTE](state, payload) {
       state.users = payload;
+    },
+    [types.ADMIN_ROLE_LISTE](state, payload) {
+      state.roles = payload;
     },
     [types.ADMIN_EDIT_USER](state, user) {
       state.users = state.users.map((u) => (u.id == user.id ? user : u));
@@ -48,6 +52,11 @@ export default {
     loadAllUsers({ commit }) {
       return AdminService.getAllUsers().then((data) =>
         commit(types.ADMIN_USER_LISTE, data.data),
+      );
+    },
+    loadAllRoles({ commit }) {
+      return AdminService.getAllRoles().then((data) =>
+        commit(types.ADMIN_ROLE_LISTE, data.data),
       );
     },
     loadAllSisContacts({ commit }) {

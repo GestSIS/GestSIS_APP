@@ -880,6 +880,13 @@ const router = createRouter({
           beforeEnter: adminGuard(),
           component: () => import('/src/components/admin/AdminUsers.vue'),
         },
+        {
+          path: 'users/:id',
+          name: 'admin-user',
+          props: true,
+          beforeEnter: adminGuard(),
+          component: () => import('/src/components/admin/AdminUser.vue'),
+        },
       ],
     },
   ],
