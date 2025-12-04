@@ -13,7 +13,11 @@ const { data } = defineProps({
 });
 
 const errors = ref({});
-const activeItem = ref({ ...data });
+const activeItem = ref({
+  couleur_id: null,
+  parent_id: null,
+  ...data,
+});
 
 const categorieStore = useMaterielCategorieStore();
 
