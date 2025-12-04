@@ -22,7 +22,6 @@ const { data, callback } = defineProps({
 
 const awn = inject('awn');
 
-const errors = ref({});
 const activeAttribution = ref({
   emplacement_id: data?.emplacementId ?? null,
   articles: [],
@@ -37,8 +36,6 @@ await Promise.all([
   emplacementStore.fetchEmplacements(),
   store.dispatch('fetchListeSapeur'),
 ]);
-
-const sapeurs = computed(() => store.state.sapeur.liste);
 
 const { closeModal } = useModalStore();
 const save = async () => {
@@ -72,14 +69,6 @@ const save = async () => {
     </div>
     <div class="modal-body">
       <div class="row">
-        <!-- <div class="col-6">
-          {{ activeAttribution.emplacement_id }}
-          <select-emplacement
-            label="Emplacement"
-            class="mb-3"
-            v-model="activeAttribution.emplacement_id"
-          />
-        </div> -->
         <div class="col-md-12">
           <article-creation v-model="activeAttribution.articles" />
         </div>

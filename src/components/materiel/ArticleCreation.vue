@@ -1,18 +1,10 @@
 <script setup>
-import { computed, nextTick, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, useTemplateRef } from 'vue';
 
 import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools';
-
-const { data, avecCompartiment } = defineProps({
-  avecCompartiment: Boolean,
-  data: {
-    type: Object,
-    default: () => {},
-  },
-});
 
 const articles = defineModel({ default: () => [] });
 if (articles.value.length === 0) {
@@ -34,7 +26,11 @@ await Promise.all([
   store.dispatch('fetchListeSapeur'),
 ]);
 
-const types = computed(() => materielTypeStore.liste);
+const types = computed(() =>
+  materielTypeStore.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
+);
 const indexedTypes = computed(() => indexedData(types.value));
 
 const afficherColoneTaille = computed(() =>
