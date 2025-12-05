@@ -30,12 +30,10 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const { showModal, confirm } = useModalStore();
 
 const newFonction = () => {
-  store.dispatch('resetActiveFonction');
   showModal('ModalSapeurFonction');
 };
 const editFonction = (fonction) => {
-  store.dispatch('updateActiveFonction', Object.assign({}, fonction));
-  showModal('ModalSapeurFonction');
+  showModal({ component: 'ModalSapeurFonction', data: fonction });
 };
 const supprimerFonction = (fonction) =>
   confirm(

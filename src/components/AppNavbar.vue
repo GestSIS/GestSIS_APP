@@ -43,7 +43,7 @@ const logout = () => {
 
 <template>
   <nav
-    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between"
+    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between d-print-none"
   >
     <ul class="navbar-nav">
       <li class="nav-item position-relative me-2 ms-4">
