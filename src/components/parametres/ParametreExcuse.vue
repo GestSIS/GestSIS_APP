@@ -13,12 +13,8 @@ const params = ref({
   delai_excuse: null,
   email_rappel: false,
   texte_email_rappel: '',
+  ...excuseParams.value,
 });
-
-params.value = {
-  ...params.value,
-  ...excuseParams,
-};
 
 const awn = inject('awn');
 
