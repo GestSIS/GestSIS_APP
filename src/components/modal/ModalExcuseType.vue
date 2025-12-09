@@ -21,7 +21,7 @@ const { closeModal } = useModalStore();
 
 const save = async () => {
   store
-    .dispatch((form.id || 0) === 0 ? 'addExcuseType' : updateExcuseType, form)
+    .dispatch((form.id || 0) === 0 ? 'addExcuseType' : 'updateExcuseType', form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
