@@ -12,6 +12,7 @@ const { data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
+  cumulable: false,
   actif: 1,
   ...data,
 });
@@ -91,7 +92,6 @@ const save = () =>
           <input
             id="fonction-actif-modal"
             v-model="form.cumulable"
-            required
             type="checkbox"
             class="form-check-input"
           />
