@@ -65,6 +65,7 @@ const { closeModal, showModal } = useModalStore();
 const awn = inject('awn');
 
 const creer = () => {
+  showModal({ component: 'ModalChargement' });
   store
     .dispatch(config.value.mode, params.value)
     .then(() => {
@@ -75,6 +76,7 @@ const creer = () => {
       });
     })
     .catch((err) => {
+      closeModal();
       config.value.errors = err;
       awn.alert(err?.message ?? 'Erreur lors de la création du décompte');
     });
