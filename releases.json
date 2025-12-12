@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "12.12.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité d'ajouter un suffixe dans les numéros de groupe",
+        "Affichage d'une fenêtre de chargement lors de la création des décomptes"
+      ]
+    },
+    {
       "date": "03.12.2025",
       "version": "1.0",
       "app": "GestSIS APP",
