@@ -45,7 +45,6 @@ const save = async () => {
         <input
           id="no"
           v-model="form.no"
-          type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['no'] }"
         />

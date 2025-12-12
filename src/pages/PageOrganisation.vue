@@ -313,7 +313,6 @@ const addSapeurs = (node) => {
               <input
                 id="no"
                 v-model="groupeEdit.no"
-                type="number"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no'] }"
               />
