@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { callback, data } = defineProps({
@@ -14,13 +14,13 @@ const { callback, data } = defineProps({
   },
 });
 
-const store = useStore();
-store.dispatch('fetchLocalites');
+const localiteStore = useLocaliteStore();
+localiteStore.fetchLocalites();
 
 const chosen = ref(data.ids.map((l) => l).slice(0));
 const selected = ref({});
 
-const localites = computed(() => store.state.localite.liste);
+const localites = computed(() => localiteStore.liste);
 
 const availableLocalites = computed(() => {
   const indexedChosen = chosen.value.reduce((acc, l) => {

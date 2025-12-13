@@ -1,6 +1,10 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '../base/MultiStep.vue';
 
@@ -15,14 +19,18 @@ const phase = ref(1);
 const detailsTypes = ref(false);
 const ecritures = ref([]);
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-const fonctions = computed(() => store.state.fonction.liste);
+const fonctions = computed(() => fonctionStore.liste);
 const fraisIndemniteAnnuel = computed(
-  () => store.state.imputation.fraisIndemnites.annuels,
+  () => imputationStore.fraisIndemnites.annuels,
 );
-const comptes = computed(() => store.state.compte.liste);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const comptes = computed(() => compteStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const typesAnnuel = computed(() => {
   return [
     ...fraisIndemniteAnnuel.value.map((f) => ({
@@ -56,8 +64,8 @@ const cancel = () => {
   closeModal();
 };
 const imputer = () => {
-  store
-    .dispatch('imputerAnnuel')
+  imputationStore
+    .imputerAnnuel(exerciceComptableStore.activeId)
     .then((data) => {
       phase.value = 2;
       ecritures.value = [...data].sort((e1, e2) => e2.sapeur_id - e1.sapeur_id);

@@ -1,14 +1,14 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import SisSelection from '/src/components/sis/SisSelection.vue';
 import links from '/src/router/menu.js';
+import { useAuthStore } from '../stores/auth/Auth.js';
 
-const store = useStore();
+const authStore = useAuthStore();
 
-const isAdmin = computed(() => store.state.auth.admin);
-const isSapeur = computed(() => store.state.auth.sapeurId);
-const perms = computed(() => store.state.auth.sis.permissions);
+const isAdmin = computed(() => authStore.admin);
+const isSapeur = computed(() => authStore.sapeurId);
+const perms = computed(() => authStore.sis.permissions);
 
 const filteredLinks = computed(() =>
   links.filter(

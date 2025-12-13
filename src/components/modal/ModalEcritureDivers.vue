@@ -1,7 +1,12 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 
 const { data } = defineProps({
   data: {
@@ -28,13 +33,18 @@ const types = [
   { id: 4, designation: 'Frais effectif' },
 ];
 
-const store = useStore();
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const activeUnite = computed(() =>
@@ -53,8 +63,9 @@ const save = async () => {
   }
   form.total = form?.tarif * form?.quantite;
 
-  store
-    .dispatch((form.id || 0) === 0 ? 'addEcriture' : 'updateEcriture', form)
+  ((form.id || 0) === 0
+    ? imputationStore.addEcriture
+    : imputationStore.updateEcriture)(form)
     .then(closeModal)
     .catch((err) => {
       errors.value = {

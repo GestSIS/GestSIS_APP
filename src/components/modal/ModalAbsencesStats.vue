@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -10,8 +10,8 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurStore = useSapeurStore();
+const sapeurs = computed(() => sapeurStore.liste);
 
 const { closeModal } = useModalStore();
 </script>

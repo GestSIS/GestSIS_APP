@@ -1,10 +1,12 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchMedecins');
+const localiteStore = useLocaliteStore();
+const medecinStore = useMedecinStore();
+await medecinStore.fetchMedecins();
 
 const fields = [
   { title: 'Désignation', key: 'designation' },
@@ -15,10 +17,10 @@ const fields = [
 ];
 
 const listeMedecin = computed(() =>
-  store.state.medecin.liste
+  medecinStore.liste
     .map((m) => ({
       ...m,
-      localite: store.state.localite.liste.find((l) => l.id == m.localite_id)
+      localite: localiteStore.liste.find((l) => l.id == m.localite_id)
         ?.designation,
     }))
     .sort((a, b) => a.designation?.localeCompare(b.designation)),
@@ -29,10 +31,13 @@ const awn = inject('awn');
 const ajoutMedecin = () => showModal({ component: 'ModalMedecin', data: {} });
 const updateMedecin = (medecin) =>
   showModal({ component: 'ModalMedecin', data: { ...medecin } });
-const deleteMedecin = (medecin) =>
-  store
-    .dispatch('removeMedecin', medecin.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+const deleteMedecin = async (medecin) => {
+  try {
+    await medecinStore.removeMedecin(medecin.id);
+  } catch (res) {
+    awn.alert(res.message || 'Erreur lors de la suppression');
+  }
+};
 </script>
 
 <template>

@@ -1,17 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
-store.dispatch('fetchCivilites');
-await store.dispatch('fetchExercicesComptables');
+const baseDataStore = useBaseDataStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
+
+baseDataStore.fetchCivilites();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueCivilite',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueCivilite(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -21,8 +25,8 @@ const fields = [
   { title: 'Nombre', key: 'quantite' },
 ];
 
-const civilites = computed(() => store.state.baseData.civilites);
-const sapeurCivilites = computed(() => store.state.statistique.civilites);
+const civilites = computed(() => baseDataStore.civilites);
+const sapeurCivilites = computed(() => statistiqueStore.civilites);
 const occurences = computed(() => {
   return sapeurCivilites.value.reduce(
     (prev, { civilite_id, nb }) => (

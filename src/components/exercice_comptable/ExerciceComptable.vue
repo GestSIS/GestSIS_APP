@@ -1,30 +1,30 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
 const listeExerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
+  exerciceComptableStore.liste.sort((a, b) => b.annee - a.annee),
 );
 const activeExerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.find(
-    (e) => e.id == store.state.exerciceComptable.activeId,
+  exerciceComptableStore.liste.find(
+    (e) => e.id == exerciceComptableStore.activeId,
   ),
 );
 const hasConfigPermission = useHasPermission(permissions.COMPTABILITE.CONFIG);
 
 if (listeExerciceComptable.value.length === 0) {
-  store.dispatch('fetchExercicesComptables');
+  exerciceComptableStore.fetchExercicesComptables();
 }
 
 const dropdownComponent = useTemplateRef('dropdown');
 const selectExercice = (id) => {
   dropdownComponent.value.close();
   dropdownComponent.value.value = false;
-  store.dispatch('selectExerciceComptable', id);
+  exerciceComptableStore.selectExerciceComptable(id);
 };
 </script>
 

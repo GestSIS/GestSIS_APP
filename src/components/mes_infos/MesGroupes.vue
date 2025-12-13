@@ -1,23 +1,21 @@
 <script setup>
 import { computed } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import store from '/src/store/index';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
 const infosStore = useMesInfosStore();
+const groupeStore = useGroupeStore();
 
-await Promise.all([
-  infosStore.fetchMesGroupes(),
-  store.dispatch('fetchGroupes'),
-]);
+await Promise.all([infosStore.fetchMesGroupes(), groupeStore.fetchGroupes()]);
 
 const groupes = computed(() =>
   infosStore.groupes
     .map((t) => ({
       ...t,
-      designation: store.state.groupe.liste.find((e) => e.id == t.groupe_id)
+      designation: groupeStore.liste.find((e) => e.id == t.groupe_id)
         ?.designation,
-      numero: store.state.groupe.liste.find((e) => e.id == t.groupe_id)?.no,
-      type: store.state.groupe.liste.find((e) => e.id == t.groupe_id)?.type,
+      numero: groupeStore.liste.find((e) => e.id == t.groupe_id)?.no,
+      type: groupeStore.liste.find((e) => e.id == t.groupe_id)?.type,
     }))
     .filter((g) => g.type),
 );

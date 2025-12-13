@@ -1,7 +1,10 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 
 const { data } = defineProps({
   data: {
@@ -10,26 +13,31 @@ const { data } = defineProps({
   },
 });
 
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const heureExerciceStore = useHeureExerciceStore();
+const uniteStore = useUniteStore();
+
 const errors = ref({});
 const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addExerciceHeure' : 'updateExerciceHeure',
-      form,
-    )
+const save = () => {
+  const action =
+    (form.id || 0) === 0
+      ? heureExerciceStore.addExerciceHeure
+      : heureExerciceStore.updateExerciceHeure;
+  return action(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
+};
 </script>
 
 <template>

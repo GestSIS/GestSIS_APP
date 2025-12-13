@@ -1,16 +1,18 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
+import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 import MesInfosService from '../../services/MesInfosService';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 
-const store = useStore();
 const infosStore = useMesInfosStore();
+const medecinStore = useMedecinStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
 
 Promise.all([
   infosStore.fetchMesControlesMedicaux(),
-  store.dispatch('fetchMedecins'),
-  store.dispatch('fetchControlesMedicauxTypes'),
+  medecinStore.fetchMedecins(),
+  controleMedicalTypeStore.fetchTypes(),
 ]);
 
 const controlesMedicaux = computed(() =>
@@ -18,10 +20,10 @@ const controlesMedicaux = computed(() =>
     .sort((a, b) => b.validite?.localeCompare(a.validite))
     .map((c) => ({
       ...c,
-      type: store.state.controlesMedicauxType.liste.find(
+      type: controleMedicalTypeStore.liste.find(
         (t) => t.id == c.controle_medical_type_id,
       )?.designation,
-      medecin: store.state.medecin.liste.find((m) => m.id == c.medecin_id)
+      medecin: medecinStore.liste.find((m) => m.id == c.medecin_id)
         ?.designation,
     })),
 );

@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -15,19 +15,21 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const traitementStore = useInterventionTraitementStore();
 const { closeModal } = useModalStore();
 
-const save = () =>
-  store
-    .dispatch(
-      (form.id || 0) === 0
-        ? 'addInterventionTraitement'
-        : 'updateInterventionTraitement',
-      form,
-    )
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+const save = async () => {
+  try {
+    if (form.id) {
+      await traitementStore.updateTraitement(form);
+    } else {
+      await traitementStore.addTraitement(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
+};
 </script>
 
 <template>

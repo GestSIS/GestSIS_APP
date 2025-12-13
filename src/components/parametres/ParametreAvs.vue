@@ -1,13 +1,19 @@
 <script setup>
-import { useStore } from 'vuex';
 import { computed, inject, ref } from 'vue';
+import { useAvsParamStore } from '../../stores/comptabilite/AvsParam.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
-const store = useStore();
-await store.dispatch('fetchFraisIndemnitesTypes');
+const avsParamStore = useAvsParamStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+await imputationStore.fetchFraisIndemnitesTypes();
 
-const listeCompte = computed(() => store.state.compte.liste);
-const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
-const avsParams = computed(() => store.state.avsParam.params);
+const listeCompte = computed(() => compteStore.liste);
+const listeCategorie = computed(() => ecritureCategorieStore.liste);
+const avsParams = computed(() => avsParamStore.params);
 
 const errors = ref({});
 const params = ref({
@@ -23,17 +29,16 @@ params.value = avsParams.value ? avsParams.value : params.value;
 
 const awn = inject('awn');
 
-const save = async () =>
-  store
-    .dispatch('updateAvsParams', params.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
-    })
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(e?.message || "Erreur lors de l'enregistrement");
-    });
+const save = async () => {
+  try {
+    const res = await avsParamStore.updateAvsParams(params.value);
+    errors.value = {};
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = err;
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
+};
 </script>
 
 <template>

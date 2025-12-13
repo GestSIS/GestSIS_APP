@@ -1,12 +1,15 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 import { computed, ref, watchEffect } from 'vue';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 
-const store = useStore();
-await store.dispatch('fetchListeSapeur');
+const sapeurStore = useSapeurStore();
+const interventionStore = useInterventionStore();
+
+await sapeurStore.fetchListeSapeur();
 
 const { id } = defineProps({
   id: {
@@ -19,24 +22,24 @@ const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch('fetchIntervention', id),
-    store.dispatch('fetchInterventionMissions', id),
-    store.dispatch('fetchInterventionAppels', id),
+    interventionStore.fetchIntervention(id),
+    interventionStore.fetchInterventionMissions(id),
+    interventionStore.fetchInterventionAppels(id),
   ]);
   loading.value = false;
 });
 
-const dataInter = computed(() => store.state.intervention.active.data);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const dataInter = computed(() => interventionStore.active.data);
+const sapeurs = computed(() => sapeurStore.liste);
 const missions = computed(() =>
-  store.state.intervention.active.missions.map((m) => ({
+  interventionStore.active.missions.map((m) => ({
     ...m,
     sapeur:
       m.sapeur ||
-      store.state.sapeur.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+      sapeurStore.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
   })),
 );
-const appels = computed(() => store.state.intervention.active.appels);
+const appels = computed(() => interventionStore.active.appels);
 // TODO: Check si intervention pas déjà imputé
 const hasEditPermission = useHasPermission(
   permissions.INTERVENTION.MODIFICATION,
@@ -136,7 +139,7 @@ const supprimerAppel = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cet appel ?',
     "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
-  ).then(() => store.dispatch('removeInterventionAppel', id));
+  ).then(() => interventionStore.removeInterventionAppel(id));
 
 const newAppel = () => {
   const newAppel = {
@@ -175,7 +178,7 @@ const supprimerMission = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cette mission ?',
     "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
-  ).then(() => store.dispatch('removeInterventionMission', id));
+  ).then(() => interventionStore.removeInterventionMission(id));
 
 const newMission = () => {
   const newMission = {

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { useExerciceStore } from '../stores/exercice/Exercice.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
 const { id } = defineProps({
@@ -11,14 +11,14 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
+const exerciceStore = useExerciceStore();
 const route = useRoute();
 
 const newMode = computed(() => id === 'new');
 watchEffect(() => {
   if (id !== 'new') {
-    store.dispatch('selectExercice', parseInt(id));
-    store.dispatch('fetchExercice', parseInt(id));
+    exerciceStore.selectExercice(parseInt(id));
+    exerciceStore.fetchExercice(parseInt(id));
   } else {
     if (route.name != 'exercice-details') {
       router.push({ name: 'exercice-details', id: 'new' });
@@ -26,8 +26,8 @@ watchEffect(() => {
   }
 });
 
-const activeExerciceId = computed(() => store.state.exercice.active.id);
-const activeExerciceData = computed(() => store.state.exercice.active.data);
+const activeExerciceId = computed(() => exerciceStore.active.id);
+const activeExerciceData = computed(() => exerciceStore.active.data);
 const breadcrumbFinal = computed(() =>
   newMode.value
     ? 'Nouveau'

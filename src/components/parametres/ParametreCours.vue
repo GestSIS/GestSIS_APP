@@ -1,12 +1,17 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-const loadFonction = store.dispatch('fetchFonctions');
-const loadCours = store.dispatch('fetchCours');
-const loadGrade = store.dispatch('fetchGrades');
+const coursStore = useCoursStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
+
+const loadFonction = fonctionStore.fetchFonctions();
+const loadCours = coursStore.fetchCours();
+const loadGrade = gradeStore.fetchGrades();
 
 await Promise.all([loadFonction, loadCours, loadGrade]);
 
@@ -23,16 +28,13 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeCours = computed(() =>
-  store.state.cours.liste
+  coursStore.liste
     .map((c) => ({
       ...c,
-      grade: store.state.grade.liste.find((g) => g.id == c.grade_id)
+      grade: gradeStore.liste.find((g) => g.id == c.grade_id)?.designation,
+      fonction: fonctionStore.liste.find((g) => g.id == c.fonction_id)?.nom,
+      cours_precedent: coursStore.liste.find((g) => g.id == c.precedent_id)
         ?.designation,
-      fonction: store.state.fonction.liste.find((g) => g.id == c.fonction_id)
-        ?.nom,
-      cours_precedent: store.state.cours.liste.find(
-        (g) => g.id == c.precedent_id,
-      )?.designation,
     }))
     .sort((a, b) => b.tri - a.tri),
 );
@@ -43,8 +45,8 @@ const ajoutCours = () => showModal({ component: 'ModalCours', data: {} });
 const updateCours = (cours) =>
   showModal({ component: 'ModalCours', data: { ...cours } });
 const deleteCours = (cours) =>
-  store
-    .dispatch('removeCours', cours.id)
+  coursStore
+    .removeCours(cours.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

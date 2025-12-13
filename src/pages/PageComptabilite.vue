@@ -1,8 +1,9 @@
 <script setup>
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import store from '/src/store/index';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
 
-await store.dispatch('fetchExercicesComptables');
+const exerciceComptableStore = useExerciceComptableStore();
+await exerciceComptableStore.fetchExercicesComptables();
 </script>
 
 <template>

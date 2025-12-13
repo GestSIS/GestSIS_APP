@@ -1,18 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchEcritureCategories');
-await store.dispatch('fetchExercicesComptables');
+ecritureCategorieStore.fetchEcritureCategories();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueCategorieComptable',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueCategorieComptable(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -36,9 +39,9 @@ const fields = [
 ];
 
 const categories = computed(() =>
-  store.state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
+  ecritureCategorieStore.liste.sort((a, b) => a.tri - b.tri),
 );
-const stats = computed(() => store.state.statistique.categoriesComptable);
+const stats = computed(() => statistiqueStore.categoriesComptable);
 const filteredData = computed(() => {
   const ids = new Set(stats.value.map((c) => c.ecriture_categorie_id));
   return categories.value

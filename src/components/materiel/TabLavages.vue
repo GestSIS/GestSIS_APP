@@ -4,14 +4,14 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import TagCouleur from './TagCouleur.vue';
-import { useStore } from 'vuex';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
@@ -31,7 +31,7 @@ await Promise.all([
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 loadLavages();
 
@@ -48,7 +48,7 @@ const piecesColonnes = [
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
-const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
+const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const linearEmplacements = (emplacement_id) => {

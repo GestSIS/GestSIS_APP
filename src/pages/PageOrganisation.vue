@@ -1,7 +1,8 @@
 <script setup>
 import { computed, inject, ref, useTemplateRef } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../stores/common/Modal';
+import { useGroupeStore } from '../stores/groupe/Groupe.js';
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
 import permissions from '../store/permissions';
@@ -13,16 +14,17 @@ const editMode = ref(false);
 const groupesTypes = ref(['groupe', 'groupeInter']);
 const errors = ref({});
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const groupeStore = useGroupeStore();
 const awn = inject('awn');
 
-await store.dispatch('fetchGroupes');
-await store.dispatch('fetchListeSapeur');
+await groupeStore.fetchGroupes();
+await sapeurStore.fetchListeSapeur();
 
 const groupeEdition = useTemplateRef('groupe-edition-component');
 
 const groupes = computed(() =>
-  store.state.groupe.liste.map((g) => ({
+  groupeStore.liste.map((g) => ({
     ...g,
     label: (g.no ? g.no + ' ' : '') + g.designation,
   })),
@@ -99,8 +101,8 @@ const selected = (elem) => {
   }
 };
 const save = async () => {
-  store
-    .dispatch('updateGroupe', {
+  groupeStore
+    .updateGroupe({
       groupeId: groupeEdit.value.id,
       data: {
         ...groupeEdit.value,
@@ -123,7 +125,7 @@ const deleteGroupe = () => {
     confirm(
       'Voulez-vous vraiment supprimer ce groupe ?',
       "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-    ).then(() => store.dispatch('deleteGroupe', active.value.data.id));
+    ).then(() => groupeStore.deleteGroupe(active.value.data.id));
   } else {
     awn.warning('Sélectionnez un groupe afin de pouvoir le supprimer.');
   }
@@ -148,7 +150,7 @@ const addSapeurs = (node) => {
       return;
     }
     const { tous } = res;
-    return store.dispatch('updateGroupeSapeurs', {
+    return groupeStore.updateGroupeSapeurs({
       groupeId: id,
       sapeurIds: tous,
     });

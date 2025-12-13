@@ -1,15 +1,20 @@
 <script setup>
 import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useHasPermission from '../../hooks/usePermission.js';
 import permissions from '/src/store/permissions.js';
 import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
 import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
 
-const store = useStore();
-store.dispatch('fetchPhaseTypes');
-store.dispatch('fetchListeSapeur');
+const sapeurStore = useSapeurStore();
+const interventionStore = useInterventionStore();
+const phaseTypeStore = usePhaseTypeStore();
+
+phaseTypeStore.fetchPhaseTypes();
+sapeurStore.fetchListeSapeur();
 
 const { id } = defineProps({
   id: {
@@ -22,9 +27,9 @@ const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch('fetchInterventionQuittances', id),
-    store.dispatch('fetchInterventionPhases', id),
-    store.dispatch('fetchInterventionSapeurs', id),
+    interventionStore.fetchInterventionQuittances(id),
+    interventionStore.fetchInterventionPhases(id),
+    interventionStore.fetchInterventionSapeurs(id),
   ]);
   loading.value = false;
 });
@@ -33,11 +38,11 @@ const columns = ref([]);
 const toggles = ref({});
 const dismissedWarning = ref(false);
 
-const dataInter = computed(() => store.state.intervention.active.data);
-const quittances = computed(() => store.state.intervention.active.quittances);
-const presences = computed(() => store.state.intervention.active.sapeurs);
-const phases = computed(() => store.state.intervention.active.phases);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const dataInter = computed(() => interventionStore.active.data);
+const quittances = computed(() => interventionStore.active.quittances);
+const presences = computed(() => interventionStore.active.sapeurs);
+const phases = computed(() => interventionStore.active.phases);
+const sapeurs = computed(() => sapeurStore.liste);
 
 // TODO: Check si intervention pas déjà imputé
 const hasEditPermission = useHasPermission(
@@ -180,16 +185,16 @@ const removePresence = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cette présence ?',
     "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
-  ).then(() => store.dispatch('removePresence', id));
+  ).then(() => interventionStore.removePresence(id));
 
 const editQuittance = (e, id) => {
   const filteredQuittances = quittances.value.filter(
     (q) => q.sapeur_id === parseInt(id),
   );
   if (filteredQuittances.length === 1) {
-    store.dispatch('removeQuittance', filteredQuittances[0].id);
+    interventionStore.removeQuittance(filteredQuittances[0].id);
   } else {
-    store.dispatch('addQuittance', id);
+    interventionStore.addQuittance(id);
   }
 };
 

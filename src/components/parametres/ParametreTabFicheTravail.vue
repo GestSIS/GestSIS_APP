@@ -1,13 +1,19 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { ref } from 'vue';
 import ParametreTravailType from './ParametreTravailType.vue';
-const store = useStore();
+const uniteStore = useUniteStore();
+const travailTypeStore = useTravailTypeStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
 
-const loadTravailTypes = store.dispatch('fetchTravailTypes');
-const loadUnites = store.dispatch('fetchUnites');
-const loadComptes = store.dispatch('fetchComptes');
-const loadEcritureCategories = store.dispatch('fetchEcritureCategories');
+const loadTravailTypes = travailTypeStore.fetchTravailTypes();
+const loadUnites = uniteStore.fetchUnites();
+const loadComptes = compteStore.fetchComptes();
+const loadEcritureCategories = ecritureCategorieStore.fetchEcritureCategories();
 
 await Promise.all([
   loadComptes,

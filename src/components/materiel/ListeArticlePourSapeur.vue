@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { groupedByData, indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
@@ -10,6 +9,7 @@ import useHasPermission from '../../hooks/usePermission';
 import permissions from '../../store/permissions';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
 const { id } = defineProps({
   id: {
@@ -18,7 +18,7 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 const materielCategorieStore = useMaterielCategorieStore();
 const materielTypeStore = useMaterielTypeStore();
 const couleurStore = useCouleurStore();
@@ -56,7 +56,7 @@ const indexedCategories = computed(() =>
   indexedData(materielCategorieStore.liste),
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
-const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
+const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 
 const computedData = computed(() =>
   Object.entries(

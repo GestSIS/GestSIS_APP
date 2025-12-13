@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../../stores/auth/Auth';
 
 const { routes } = defineProps({
   routes: {
@@ -9,9 +9,10 @@ const { routes } = defineProps({
   },
 });
 
-const store = useStore();
-const isAdmin = computed(() => store.state['auth'].admin);
-const permissions = computed(() => store.state['auth'].sis.permissions);
+const authStore = useAuthStore();
+
+const isAdmin = computed(() => authStore.admin);
+const permissions = computed(() => authStore.sis.permissions);
 
 const filteredRoutes = computed(() =>
   routes.filter(

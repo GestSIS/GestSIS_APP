@@ -1,10 +1,13 @@
 <script setup>
-import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
+import { useAuthStore } from '../../stores/auth/Auth.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
-const store = useStore();
-const loadUsers = store.dispatch('fetchUsers');
-const loadSapeurs = store.dispatch('fetchListeSapeur');
+const sapeurStore = useSapeurStore();
+const authStore = useAuthStore();
+
+const loadUsers = authStore.fetchUsers();
+const loadSapeurs = sapeurStore.fetchListeSapeur();
 
 const loading = ref(true);
 Promise.all([loadUsers, loadSapeurs]).then(() => (loading.value = false));
@@ -14,9 +17,9 @@ const filters = ref({
   email: '',
 });
 
-const sisId = computed(() => store.state.auth.sis.activeId);
-const users = computed(() => store.state.auth.users);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sisId = computed(() => authStore.sis.activeId);
+const users = computed(() => authStore.users);
+const sapeurs = computed(() => sapeurStore.liste);
 
 const computedData = computed(() => {
   const sapeurIds = new Set(

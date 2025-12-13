@@ -1,6 +1,14 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { useMissionStore } from '../../stores/intervention/Mission.js';
+import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
+import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
 import ParametreMission from './ParametreMission.vue';
 import ParametreTelephone from './ParametreTelephone.vue';
 import ParametreMateriel from './ParametreMateriel.vue';
@@ -9,16 +17,25 @@ import ParametreTraitement from './ParametreTraitement.vue';
 import ParametreTypeIntervention from './ParametreTypeIntervention.vue';
 import ParametreStatFederal from './ParametreStatFederal.vue';
 
-const store = useStore();
-const loadVehicule = store.dispatch('fetchVehicules');
-const loadMateriel = store.dispatch('fetchMateriels');
-const loadMission = store.dispatch('fetchMissions');
-const loadAppel = store.dispatch('fetchTelephones');
-const loadStatFederal = store.dispatch('fetchStatFederals');
-const loadStatIntervention = store.dispatch('fetchStatInterventions');
-const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
-const loadTraitement = store.dispatch('fetchInterventionTraitements');
-const loadUnite = store.dispatch('fetchUnites');
+const vehiculeStore = useVehiculeStore();
+const materielStore = useMaterielStore();
+const missionStore = useMissionStore();
+const statFederalStore = useStatFederalStore();
+const statInterventionStore = useStatInterventionStore();
+const typeInterventionStore = useTypeInterventionStore();
+const traitementStore = useInterventionTraitementStore();
+const uniteStore = useUniteStore();
+const telephoneStore = useTelephoneStore();
+
+const loadVehicule = vehiculeStore.fetchVehicules();
+const loadMateriel = materielStore.fetchMateriels();
+const loadMission = missionStore.fetchMissions();
+const loadAppel = telephoneStore.fetchTelephones();
+const loadStatFederal = statFederalStore.fetchStatFederals();
+const loadStatIntervention = statInterventionStore.fetchStatInterventions();
+const loadTypeIntervention = typeInterventionStore.fetchTypeInterventions();
+const loadTraitement = traitementStore.fetchTraitements();
+const loadUnite = uniteStore.fetchUnites();
 
 await Promise.all([
   loadVehicule,

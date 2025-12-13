@@ -1,7 +1,8 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useAbsenceStore } from '../../stores/absence/Absence.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { data } = defineProps({
   data: {
@@ -16,16 +17,16 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const sapeurStore = useSapeurStore();
+const absenceStore = useAbsenceStore();
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
 const awn = inject('awn');
 
 const save = async () => {
   const action = form?.id ? 'updateAbsence' : 'addAbsence';
-  store
-    .dispatch(action, form)
+  absenceStore[action](form)
     .then(closeModal)
     .catch((err) => {
       errors.value = err;

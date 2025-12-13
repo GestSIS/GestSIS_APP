@@ -1,9 +1,14 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
-const store = useStore();
-await store.dispatch('fetchMateriels');
+
+const materielStore = useMaterielStore();
+const uniteStore = useUniteStore();
+
+await materielStore.fetchMateriels();
+
 const fields = [
   { title: 'Tri', key: 'tri' },
   { title: 'Actif', key: 'statut', type: Boolean },
@@ -15,12 +20,11 @@ const fields = [
 ];
 
 const listeMateriel = computed(() =>
-  store.state.materiel.liste
+  materielStore.liste
     .map((m) => ({
       ...m,
       type_unite:
-        store.state.unite.liste.find((u) => u.id == m.type_unite_id)?.unite ??
-        '-',
+        uniteStore.liste.find((u) => u.id == m.type_unite_id)?.unite ?? '-',
     }))
     .sort((a, b) => a.tri - b.tri),
 );
@@ -35,8 +39,8 @@ const updateMateriel = (materiel) =>
     data: { ...materiel },
   });
 const deleteMateriel = (materiel) =>
-  store
-    .dispatch('removeMateriel', materiel.id)
+  materielStore
+    .removeMateriel(materiel.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

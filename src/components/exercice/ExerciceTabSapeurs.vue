@@ -1,19 +1,34 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchExerciceCategories');
-store.dispatch('fetchExercicesComptables');
-store.dispatch('fetchExcuseTypes');
-store.dispatch('fetchHeuresExercice');
-store.dispatch('fetchUnites');
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const uniteStore = useUniteStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const excuseTypeStore = useExcuseTypeStore();
+const heureExerciceStore = useHeureExerciceStore();
+const exerciceComptableStore = useExerciceComptableStore();
+
+sapeurStore.fetchListeSapeur();
+localiteStore.fetchLocalites();
+exerciceCategorieStore.fetchExerciceCategories();
+exerciceComptableStore.fetchExercicesComptables();
+excuseTypeStore.fetchExcuseTypes();
+heureExerciceStore.fetchHeuresExercice();
+uniteStore.fetchUnites();
 
 const { id } = defineProps({
   id: {
@@ -27,21 +42,19 @@ const dismissedWarning = ref(false);
 const allConvoque = ref(false);
 
 const loading = ref(false);
-const activeExerciceSapeurs = computed(
-  () => store.state.exercice.active.sapeurs,
-);
+const activeExerciceSapeurs = computed(() => exerciceStore.active.sapeurs);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch('fetchExercice', id),
-    store.dispatch('fetchExerciceSapeurs', id),
+    exerciceStore.fetchExercice(id),
+    exerciceStore.fetchExerciceSapeurs(id),
   ]);
   loading.value = false;
 });
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 watchEffect(() => {
-  presences.value = store.state.exercice.active.sapeurs
+  presences.value = exerciceStore.active.sapeurs
     .map((s) => {
       const sapeur = sapeurs.value.find((sap) => sap.id == s.sapeur_id);
       return {
@@ -60,15 +73,15 @@ watchEffect(() => {
     : false;
 });
 
-const excusesTypes = computed(() => store.state.excuseType.liste);
+const excusesTypes = computed(() => excuseTypeStore.liste);
 
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
 const hasValidationPermission = useHasPermission(
   permissions.EXERCICE.VALIDATION,
 );
-const activeExerciceData = computed(() => store.state.exercice.active.data);
-const heureTypes = computed(() => store.state.heureExercice.liste);
-const unites = computed(() => store.state.unite.liste);
+const activeExerciceData = computed(() => exerciceStore.active.data);
+const heureTypes = computed(() => heureExerciceStore.liste);
+const unites = computed(() => uniteStore.liste);
 
 const canEditAbsence = computed(() => {
   // Possible de l'éditer si permission de validation ou si pas encore validé
@@ -89,7 +102,7 @@ const canValidate = computed(() => {
   return activeExerciceData.value.statut == 2;
 });
 
-const { showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
 const awn = inject('awn');
 
 const selectAllConvoque = (status) => {
@@ -119,16 +132,16 @@ const updateHeureSapeur = (sap, h, quantite) => {
       sapeur_id: sap.sapeur_id,
     };
 
-    store
-      .dispatch('addHeure', newHeure)
+    exerciceStore
+      .addHeure(newHeure)
       .then(() => awn.success('Heure ajoutée'))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement"),
       );
   } else if (!(parseFloat(quantite) || null)) {
     // Suppression de l'heure
-    store
-      .dispatch('removeHeure', heure)
+    exerciceStore
+      .removeHeure(heure)
       .then(() => awn.success('Heure supprimée'))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement"),
@@ -136,8 +149,8 @@ const updateHeureSapeur = (sap, h, quantite) => {
   } else {
     heure.quantite = parseFloat(quantite) || null;
     // Modification de l'heure
-    store
-      .dispatch('editHeure', heure)
+    exerciceStore
+      .editHeure(heure)
       .then(() => awn.success('Modifications enregistrées'))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement"),
@@ -145,8 +158,8 @@ const updateHeureSapeur = (sap, h, quantite) => {
   }
 };
 const validate = () => {
-  store
-    .dispatch('validerExercice', id)
+  exerciceStore
+    .validerExercice(id)
     .then((res) => awn.success(res?.message || 'Exercice validé avec succès.'))
     .catch((err) =>
       awn.alert(err?.message || "Erreur lors de la validation de l'exercice."),
@@ -178,8 +191,8 @@ const manageSapeurs = () => {
 
       //Sapeurs ajoutés
       if (newSapeurs.length > 0) {
-        store
-          .dispatch('addSapeurs', newSapeurs)
+        exerciceStore
+          .addSapeurs(newSapeurs)
           .then(() => {
             if (supprime.length <= 0) {
               resolve();
@@ -191,8 +204,8 @@ const manageSapeurs = () => {
       }
 
       if (supprime.length > 0) {
-        store
-          .dispatch('removeSapeurs', supprime)
+        exerciceStore
+          .removeSapeurs(supprime)
           .then(resolve)
           .catch(() => {
             reject("Erreur lors de l'opération");
@@ -212,10 +225,7 @@ const manageSapeurs = () => {
   });
 };
 const savePresence = async (sapeur, hideNotification) => {
-  const promise = store.dispatch('editPresenceExercice', {
-    presenceId: sapeur.id,
-    presence: sapeur,
-  });
+  const promise = exerciceStore.editPresenceExercice(sapeur.id, sapeur);
   if (!hideNotification) {
     try {
       const res = await promise;
@@ -290,11 +300,14 @@ const addExcuse = (sapeur) =>
     },
   });
 
-const removeExcuse = (sapeur) =>
+const removeExcuse = (presence) =>
   confirm(
     'Voulez-vous vraiment supprimer cette excuse ?',
     "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => store.dispatch('removeExcuse', sapeur));
+  ).then(() => {
+    console.log(presence);
+    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id);
+  });
 
 const downloadJustificatif = (sapeur) => {
   if (!hasPresencePermission.value) {

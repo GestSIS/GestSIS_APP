@@ -80,7 +80,7 @@ const handleClickOutside = (evt) => {
 </script>
 
 <template>
-  <div class="autocomplete" ref="root">
+  <div ref="root" class="autocomplete">
     <label :for="'d1_' + uid">{{ title }}</label>
     <input
       :id="'d1_' + uid"

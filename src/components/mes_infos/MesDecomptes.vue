@@ -1,23 +1,21 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
 import MesInfosService from '../../services/MesInfosService';
-import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { computed, inject, ref, watchEffect } from 'vue';
 
-const store = useStore();
 const infosStore = useMesInfosStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-const exerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
-);
+const exerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await infosStore.fetchMesDecomptes(store.state.exerciceComptable.activeId);
+  await infosStore.fetchMesDecomptes(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -29,8 +27,8 @@ const paiements = computed(() =>
     .sort((e1, e2) => e1.date.localeCompare(e2.date)),
 );
 const exerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.find(
-    (e) => e.id == store.state.exerciceComptable.activeId,
+  exerciceComptableStore.liste.find(
+    (e) => e.id == exerciceComptableStore.activeId,
   ),
 );
 

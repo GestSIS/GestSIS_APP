@@ -1,8 +1,10 @@
 <script setup>
 import { computed, inject, onUnmounted, ref } from 'vue';
-import { useStore } from 'vuex';
 import Api from '/src/http/Request';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth/Auth.js';
+
+const authStore = useAuthStore();
 
 const loading = ref(false);
 const disableCounter = ref(0);
@@ -10,18 +12,17 @@ const disableInterval = ref(null);
 const resendCounter = ref(0);
 const resendInterval = ref(null);
 
-const store = useStore();
 const router = useRouter();
 
-const listeSis = computed(() => store.state.auth.sis.liste);
-const validated = computed(() => store.state.auth.validated);
-const availableSisListe = computed(() => store.getters.availableSisListe);
+const listeSis = computed(() => authStore.sis.liste);
+const validated = computed(() => authStore.validated);
+const availableSisListe = computed(() => authStore.availableSisListe);
 
 const awn = inject('awn');
 
 if (listeSis.value.length <= 0) {
   loading.value = true;
-  await store.dispatch('loadSisListe').then(() => {
+  await authStore.loadSisListe().then(() => {
     loading.value = false;
   });
 }
@@ -41,12 +42,12 @@ const getImageUrl = (sis) => {
   return Api.API_URL + `/sis-logo/${sis.api_key}`;
 };
 const connectToSis = (sis) => {
-  store.dispatch('selectSis', sis).then(() => {
+  authStore.selectSis(sis).then(() => {
     router.push({ name: 'dashboard' });
   });
 };
 const refresh = () => {
-  store.dispatch('refreshToken').then(() => {
+  authStore.refreshToken().then(() => {
     if (!validated.value) {
       awn.warning("Votre compte n'est toujours pas validé !");
       disableCounter.value = 5;
@@ -71,8 +72,8 @@ const resend = () => {
       }
     }, 1000);
   };
-  store
-    .dispatch('resendValidationEmail')
+  authStore
+    .resendValidationEmail()
     .then((res) => {
       awn.success(
         res?.message ??

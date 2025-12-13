@@ -6,26 +6,22 @@ export const useEmplacementStore = defineStore('emplacement', {
     liste: [],
   }),
   actions: {
-    fetchEmplacements() {
-      return EmplacementService.getEmplacements().then(
-        (data) => (this.liste = data)
-      );
+    async fetchEmplacements() {
+      this.liste = await EmplacementService.getEmplacements();
     },
-    addEmplacement(emplacement) {
-      return EmplacementService.addEmplacement(emplacement).then((data) =>
-        this.liste.push(data)
-      );
+    async addEmplacement(emplacement) {
+      const data = await EmplacementService.addEmplacement(emplacement);
+      this.liste.push(data);
+      return data;
     },
-    updateEmplacement(emplacement) {
-      return EmplacementService.updateEmplacement(emplacement).then(
-        (data) =>
-          (this.liste = this.liste.map((e) => (e.id === data.id ? data : e)))
-      );
+    async updateEmplacement(emplacement) {
+      const data = await EmplacementService.updateEmplacement(emplacement);
+      this.liste = this.liste.map((e) => (e.id === data.id ? data : e));
+      return data;
     },
-    removeEmplacement(emplacementId) {
-      return EmplacementService.removeEmplacement(emplacementId).then(() => {
-        this.liste = this.liste.filter((e) => e.id !== emplacementId);
-      });
+    async removeEmplacement(emplacementId) {
+      await EmplacementService.removeEmplacement(emplacementId);
+      this.liste = this.liste.filter((e) => e.id !== emplacementId);
     },
   },
 });

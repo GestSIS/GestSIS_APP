@@ -8,7 +8,7 @@ import {
   useTemplateRef,
 } from 'vue';
 
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
@@ -48,15 +48,15 @@ const articlesAttribuable = ref(await ArticleService.getAttribuable());
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
-const store = useStore();
+const sapeurStore = useSapeurStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 
 const { closeModal } = useModalStore();
 const save = async () => {

@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useMissionStore } from '../../stores/intervention/Mission.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchMissions');
+const missionStore = useMissionStore();
+await missionStore.fetchMissions();
 
 const fields = [
   { title: 'Titre', key: 'titre' },
@@ -12,7 +12,7 @@ const fields = [
 ];
 
 const listeMission = computed(() =>
-  store.state.mission.liste.sort((a, b) => a.tri - b.tri),
+  missionStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { confirm, showModal } = useModalStore();
@@ -23,7 +23,7 @@ const deleteMission = (mission) =>
   confirm(
     'Voulez-vous vraiment supprimer cette mission ?',
     "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
-  ).then(() => store.dispatch('removeMission', mission.id));
+  ).then(() => missionStore.removeMission(mission.id));
 </script>
 
 <template>

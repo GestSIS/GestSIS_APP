@@ -1,7 +1,9 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { callback } = defineProps({
   callback: {
@@ -27,15 +29,17 @@ const form = reactive({
   civilite_id: null,
 });
 
-const store = useStore();
-const localites = computed(() => store.state.localite.liste);
-const civilites = computed(() => store.state.baseData.civilites);
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
+const localites = computed(() => localiteStore.liste);
+const civilites = computed(() => baseDataStore.civilites);
 
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch('createSapeur', form)
+  sapeurStore
+    .createSapeur(form)
     .then((data) => {
       (callback(data.id) ?? Promise.resolve()).then((close) => {
         if (close ?? true) {

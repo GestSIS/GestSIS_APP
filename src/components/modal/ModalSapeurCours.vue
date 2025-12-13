@@ -1,7 +1,11 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
 
 const { data } = defineProps({
   data: {
@@ -16,13 +20,17 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const coursStore = useCoursStore();
+const sapeurStore = useSapeurStore();
+const gradeStore = useGradeStore();
+const fonctionStore = useFonctionStore();
+const localiteStore = useLocaliteStore();
 
-const cours = computed(() => store.state.cours.liste);
-const grades = computed(() => store.state.grade.liste);
-const fonctions = computed(() => store.state.fonction.liste);
-const localites = computed(() => store.state.localite.liste);
-const sapeurFonctions = computed(() => store.state.sapeur.active.fonctions);
+const cours = computed(() => coursStore.liste);
+const grades = computed(() => gradeStore.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const localites = computed(() => localiteStore.liste);
+const sapeurFonctions = computed(() => sapeurStore.active.fonctions);
 
 const addMode = computed(() => (form.id || 0) === 0);
 
@@ -40,7 +48,7 @@ const filteredCours = computed(() => {
 });
 
 if (data.id || 0 === 0) {
-  store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+  sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
   watch(
     () => form.cours_id,
     (cours_id) => {
@@ -79,8 +87,9 @@ const save = () => {
       saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
   });
 
-  store
-    .dispatch(addMode.value ? 'addSapeurCours' : 'editSapeurCours', saveData)
+  (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(
+    saveData,
+  )
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

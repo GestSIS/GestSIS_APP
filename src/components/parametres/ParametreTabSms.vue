@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useAspsmsParamStore } from '../../stores/common/AspsmsParam.js';
+import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 import ParametreAspsms from './ParametreAspsms.vue';
 
 const aspsmsParamStore = useAspsmsParamStore();

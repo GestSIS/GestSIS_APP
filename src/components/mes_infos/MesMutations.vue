@@ -1,20 +1,20 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { computed } from 'vue';
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
 const infosStore = useMesInfosStore();
 
 await Promise.all([
   infosStore.fetchMesMutations(),
-  store.dispatch('fetchLocalites'),
+  localiteStore.fetchLocalites(),
 ]);
 
 const fonctions = computed(() =>
   infosStore.mutations.map((t) => ({
     ...t,
-    localite: store.state.localite.liste.find((l) => l.id == t.localite_id)
+    localite: localiteStore.liste.find((l) => l.id == t.localite_id)
       ?.designation,
   })),
 );

@@ -1,50 +1,56 @@
 <script setup>
-import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
-
+import { computed, ref, watchEffect } from 'vue';
+import { useModalStore } from '../stores/common/Modal';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useTravailStore } from '../stores/travail/Travail.js';
+import { useTravailTypeStore } from '../stores/travail/TravailType.js';
+import { useUniteStore } from '../stores/common/Unite.js';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
+import { useAuthStore } from '../stores/auth/Auth.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import useHasPermission from '../hooks/usePermission';
 
-const store = useStore();
+const authStore = useAuthStore();
+const sapeurStore = useSapeurStore();
+const travailStore = useTravailStore();
+const travailTypeStore = useTravailTypeStore();
+const uniteStore = useUniteStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchUnites');
-store.dispatch('fetchTravailTypes');
+sapeurStore.fetchListeSapeur();
+uniteStore.fetchUnites();
+travailTypeStore.fetchTravailTypes();
 
 const loading = ref(false);
 const selectedId = ref(null);
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchTravaux', store.state.exerciceComptable.activeId);
+  await travailStore.fetchTravaux(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
-const activeSapeurId = computed(() => store.state.auth.sapeurId);
+const activeSapeurId = computed(() => authStore.sapeurId);
 const travaux = computed(() =>
-  store.state.travail.liste.map((t) => ({
+  travailStore.liste.map((t) => ({
     ...t,
-    travail_type: store.state.travailType.liste.find(
-      (e) => e.id == t.travail_type_id,
-    )?.designation,
-    sapeur: store.state.sapeur.liste.find((s) => s.id == t.sapeur_id)
-      ?.nom_prenom,
-    auteur: store.state.sapeur.liste.find((s) => s.id == t.auteur_id)
-      ?.nom_prenom,
-    unite: store.state.unite.liste.find(
+    travail_type: travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
+      ?.designation,
+    sapeur: sapeurStore.liste.find((s) => s.id == t.sapeur_id)?.nom_prenom,
+    auteur: sapeurStore.liste.find((s) => s.id == t.auteur_id)?.nom_prenom,
+    unite: uniteStore.liste.find(
       (u) =>
         u.id ==
-        store.state.travailType.liste.find((e) => e.id == t.travail_type_id)
+        travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
           ?.type_unite_id,
     )?.unite,
   })),
 );
-const sapeurs = computed(() => store.state.sapeur.liste);
-const travailTypes = computed(() => store.state.travailType.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const travailTypes = computed(() => travailTypeStore.liste);
 
 const hasEditPermission = useHasPermission([
   permissions.FICHE_TRAVAIL.SAISIE_PERSO,
@@ -80,13 +86,13 @@ const cancelReviewTravail = (travail) =>
   confirm(
     "Voulez-vous vraiment annuler l'examen de ce travail ?",
     "Attention, la justification fournie lors de l'examen sera perdue.",
-  ).then(() => store.dispatch('cancelReviewTravail', travail?.id));
+  ).then(() => travailStore.cancelReviewTravail(travail?.id));
 
 const supprimerTravail = (travail) =>
   confirm(
     'Voulez-vous vraiment supprimer ce travail ?',
     "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  ).then(() => store.dispatch('removeTravail', travail?.id));
+  ).then(() => travailStore.removeTravail(travail?.id));
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

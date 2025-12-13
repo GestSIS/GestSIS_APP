@@ -1,39 +1,43 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '../../store/permissions';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import useHasPermission from '../../hooks/usePermission';
 
-const store = useStore();
+const uniteStore = useUniteStore();
+const travailTypeStore = useTravailTypeStore();
+const sapeurStore = useSapeurStore();
 const infosStore = useMesInfosStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 await Promise.all([
-  store.dispatch('fetchTravailTypes'),
-  store.dispatch('fetchUnites'),
+  travailTypeStore.fetchTravailTypes(),
+  uniteStore.fetchUnites(),
 ]);
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await infosStore.fetchMesTravaux(store.state.exerciceComptable.activeId);
+  await infosStore.fetchMesTravaux(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const travaux = computed(() =>
   infosStore.travaux.map((t) => ({
     ...t,
-    travail_type: store.state.travailType.liste.find(
-      (e) => e.id == t.travail_type_id,
-    )?.designation,
-    auteur: store.state.sapeur.liste.find((s) => s.id == t.auteur_id)
-      ?.nom_prenom,
-    unite: store.state.unite.liste.find(
+    travail_type: travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
+      ?.designation,
+    auteur: sapeurStore.liste.find((s) => s.id == t.auteur_id)?.nom_prenom,
+    unite: uniteStore.liste.find(
       (u) =>
         u.id ==
-        store.state.travailType.liste.find((e) => e.id == t.travail_type_id)
+        travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
           ?.type_unite_id,
     )?.unite,
   })),
@@ -48,8 +52,7 @@ const { showModal } = useModalStore();
 const addTravail = () =>
   showModal({
     component: 'ModalTravail',
-    callback: () =>
-      infosStore.fetchMesTravaux(store.state.exerciceComptable.activeId),
+    callback: () => infosStore.fetchMesTravaux(exerciceComptableStore.activeId),
   });
 
 const fields = [

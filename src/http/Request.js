@@ -3,7 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 
 import { API_URL, AUTH_URL } from '../http/Env.js';
 
-import store from '/src/store';
+// FIXME: Est-ce que ça fonctionne avec pinia ?
+import { useAuthStore } from '../stores/auth/Auth.js';
 
 const request = {
   API_URL: API_URL,
@@ -127,7 +128,7 @@ const request = {
     //     response = await refreshTokenPromise.value;
     //   } catch (e) {
     //     if (e?.status === 401) {
-    //       await store.dispatch('logout')
+    //       await authStore.logout())
     //       // useRouter().push({ name: 'login' })
     //       return Promise.reject(e);
     //     }
@@ -138,7 +139,7 @@ const request = {
     //   }
 
     //   // TODO: Update tokens
-    //   // store.setTokens();
+    //   // authStore.setTokens();
     //   this.setAccessToken();
 
     //   // Update axios
@@ -161,7 +162,7 @@ const request = {
         if (error.config && error.response && error.response.status === 401) {
           // Refresh the access token
           try {
-            await store.dispatch('refreshToken');
+            await authStore.refreshToken();
 
             error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common['Authorization']}`;
             // Retry the original request

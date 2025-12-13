@@ -1,7 +1,9 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useDecompteStore } from '../../stores/comptabilite/Decompte.js';
 
 const { callback, data } = defineProps({
   callback: {
@@ -37,12 +39,11 @@ const params = ref({
   ecrituresIntervention: true,
 });
 
-const store = useStore();
-const listeExerciceComptable = computed(
-  () => store.state.exerciceComptable.liste,
-);
+const decompteStore = useDecompteStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const listeExerciceComptable = computed(() => exerciceComptableStore.liste);
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 if (data.remount) {
@@ -55,10 +56,10 @@ if (data.remount) {
   params.value.designation = `Décompte ${data?.designation ?? ''}`;
 
   config.value.mode = params.value.sapeur_id
-    ? 'genererDecompteSapeur'
+    ? 'sapeur'
     : params.value.exercice_id
-      ? 'genererDecompteExercice'
-      : 'genererDecompteAnnuel';
+      ? 'exercice'
+      : 'annuel';
 }
 
 const { closeModal, showModal } = useModalStore();
@@ -66,8 +67,13 @@ const awn = inject('awn');
 
 const creer = () => {
   showModal({ component: 'ModalChargement' });
-  store
-    .dispatch(config.value.mode, params.value)
+  const action =
+    config.value.mode === 'sapeur'
+      ? decompteStore.genererDecompteSapeur
+      : config.value.mode === 'exercice'
+        ? decompteStore.genererDecompteExercice
+        : decompteStore.genererDecompteAnnuel;
+  action(params.value)
     .then(() => {
       (callback() ?? Promise.resolve()).then((close) => {
         if (close ?? true) {
@@ -159,7 +165,7 @@ const resetSelection = () => {
           name="date"
         />
       </div>
-      <div v-if="config.mode === 'genererDecompteAnnuel'" class="mb-3">
+      <div v-if="config.mode === 'annuel'" class="mb-3">
         <label>Sélection des écritures</label>
         <div class="form-check form-switch">
           <input

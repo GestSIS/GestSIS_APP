@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
 const { data } = defineProps({
   data: {
@@ -10,24 +10,23 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
+const authStore = useAuthStore();
 
 const errors = ref({});
 const form = reactive({
   permissions: [],
-  sis_id: store.state.auth.sis.activeId,
+  sis_id: authStore.sis.activeId,
   ...data,
 });
 
 const permissions = computed(() =>
-  store.state.auth.permissions.sort((a, b) => a.tri - b.tri),
+  authStore.permissions.sort((a, b) => a.tri - b.tri),
 );
 
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch((form.id || 0) === 0 ? 'createRole' : 'updateRole', form)
+  authStore[form.id ? 'updateRole' : 'createRole'](form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

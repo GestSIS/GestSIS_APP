@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchInterventionTraitements');
+const traitementStore = useInterventionTraitementStore();
+await traitementStore.fetchTraitements();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -13,7 +13,7 @@ const fields = [
 ];
 
 const listeTraitement = computed(() =>
-  store.state.interventionTraitement.liste.sort((a, b) => a.tri - b.tri),
+  traitementStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -29,8 +29,8 @@ const updateTraitement = (traitement) =>
   });
 
 const deleteTraitement = (traitement) =>
-  store
-    .dispatch('removeInterventionTraitement', traitement.id)
+  traitementStore
+    .removeTraitement(traitement.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

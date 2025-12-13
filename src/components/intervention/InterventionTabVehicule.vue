@@ -1,11 +1,14 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
 
-const store = useStore();
-store.dispatch('fetchVehicules');
+const interventionStore = useInterventionStore();
+const vehiculeStore = useVehiculeStore();
+
+vehiculeStore.fetchVehicules();
 
 const { id } = defineProps({
   id: {
@@ -19,20 +22,18 @@ const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchInterventionVehicules', id);
+  await interventionStore.fetchInterventionVehicules(id);
   selected.value = Object.fromEntries(
-    store.state.intervention.active.vehicules.map((v) => [v.vehicule_id, true]),
+    interventionStore.active.vehicules.map((v) => [v.vehicule_id, true]),
   );
   loading.value = false;
 });
 
 const vehicules = computed(() =>
-  store.state.vehicule.liste.filter(
+  vehiculeStore.liste.filter(
     (v) =>
       v.statut === true ||
-      store.state.intervention.active.vehicules.find(
-        (vi) => vi.vehicule_id === v.id,
-      ),
+      interventionStore.active.vehicules.find((vi) => vi.vehicule_id === v.id),
   ),
 );
 const hasEditPermission = useHasPermission(
@@ -46,8 +47,7 @@ const editVehicule = async (vehiculeId) => {
     ? 'addInterventionVehicules'
     : 'removeInterventionVehicules';
 
-  store
-    .dispatch(event, [vehiculeId])
+  interventionStore[event]([vehiculeId])
     .then(() => awn.success('Modifications enregistrées'))
     .catch((err) =>
       awn.alert(err.message ?? "Erreur lors de l'enregistrement"),

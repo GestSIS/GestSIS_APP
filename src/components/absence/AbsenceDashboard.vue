@@ -1,21 +1,33 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '../../store/permissions.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, ref, watchEffect } from 'vue';
 import useHasPermission from '../../hooks/usePermission.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useAbsenceStore } from '../../stores/absence/Absence.js';
 
-const store = useStore();
+const fonctionStore = useFonctionStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
+const groupeStore = useGroupeStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const absenceStore = useAbsenceStore();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadSapeurs = sapeurStore.fetchListeSapeur();
 
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadPermis = store.dispatch('fetchPermisType');
-const loadGroupes = store.dispatch('fetchGroupes');
-const loadLocalites = store.dispatch('fetchLocalites');
-const loadLocalitesSis = store.dispatch('fetchLocalitesSis');
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadPermis = baseDataStore.fetchPermisType();
+const loadGroupes = groupeStore.fetchGroupes();
+const loadLocalites = localiteStore.fetchLocalites();
+const loadLocalitesSis = localiteStore.fetchLocalitesSis();
 
 const loading = ref(true);
 await Promise.all([
@@ -29,7 +41,7 @@ await Promise.all([
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchAbsences', store.state.exerciceComptable.activeId);
+  await absenceStore.fetchAbsences(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -51,32 +63,30 @@ const mois = [
 ];
 
 const sapeurs = computed(() =>
-  store.state.sapeur.liste.filter((s) => s.actif && s.type == 0)
+  sapeurStore.liste.filter((s) => s.actif && s.type == 0),
 );
 const absences = computed(() =>
-  store.state.absence.liste.sort((a, b) => a.debut?.localeCompare(b.debut))
+  absenceStore.liste.sort((a, b) => a.debut?.localeCompare(b.debut)),
 );
 const localitesSis = computed(() =>
-  store.state.localite.listeSis.map((l) => ({
+  localiteStore.listeSis.map((l) => ({
     id: l,
-    ...store.state.localite.liste.find((e) => e.id == l),
-  }))
+    ...localiteStore.liste.find((e) => e.id == l),
+  })),
 );
 const groupes = computed(() =>
-  store.state.groupe.liste
-    .filter((g) => g.type && g.no)
-    .sort((a, b) => a.no - b.no)
+  groupeStore.liste.filter((g) => g.type && g.no).sort((a, b) => a.no - b.no),
 );
 const fonctions = computed(() =>
-  store.state.fonction.liste
+  fonctionStore.liste
     .filter((f) => !f.cumulable && f.actif)
-    .sort((a, b) => b.tri - a.tri)
+    .sort((a, b) => b.tri - a.tri),
 );
-const permisTypes = computed(() => store.state.baseData.permisTypes);
+const permisTypes = computed(() => baseDataStore.permisTypes);
 const activeExerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.find(
-    (e) => store.state.exerciceComptable.activeId === e.id
-  )
+  exerciceComptableStore.liste.find(
+    (e) => exerciceComptableStore.activeId === e.id,
+  ),
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 
@@ -87,10 +97,10 @@ const computedSapeurs = computed(() =>
       ...s,
       mainFonctionId: fonctions.value.find((f) => fonctionsIds.has(f.id))?.id,
       groupeIds: groupes.value.map(
-        (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id
+        (g) => g.sapeur_ids.find((gs) => gs.sapeur_id == s.id)?.groupe_id,
       ),
     };
-  })
+  }),
 );
 const indexedSapeurs = computed(() => {
   const indexedSapeurs = {};
@@ -113,10 +123,11 @@ const referenceData = computed(() => {
       (data.fonctions[s.mainFonctionId] ?? 0) + 1;
 
     s.groupeIds?.forEach(
-      (groupeId) => (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1)
+      (groupeId) =>
+        (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1),
     );
     s.permis.forEach(
-      (permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1)
+      (permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1),
     );
   });
   return data;
@@ -160,13 +171,13 @@ const computedAbsences = computed(() => {
             (permisId) =>
               (record.permis[permisId] = (
                 record.permis[permisId] ?? new Set()
-              ).add(sapeur.id))
+              ).add(sapeur.id)),
           );
           sapeur.groupeIds?.forEach(
             (groupeId) =>
               (record.groupes[groupeId] = (
                 record.groupes[groupeId] ?? new Set()
-              ).add(sapeur.id))
+              ).add(sapeur.id)),
           );
           record.fonctions[sapeur.mainFonctionId] = (
             record.fonctions[sapeur.mainFonctionId] ?? new Set()
@@ -185,7 +196,7 @@ const computedAbsences = computed(() => {
 });
 const filteredPermis = computed(() => {
   const ids = new Set(
-    Object.keys(referenceData.value.permis).map((id) => parseInt(id))
+    Object.keys(referenceData.value.permis).map((id) => parseInt(id)),
   );
   return permisTypes.value.filter((p) => ids.has(p.id));
 });

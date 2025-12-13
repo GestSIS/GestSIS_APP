@@ -1,7 +1,8 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import MultiStep from '/src/components/base/MultiStep.vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
@@ -20,17 +21,20 @@ const phase = ref(1);
 const activeIndemnite = ref(null);
 const ecritures = ref([]);
 const successMessageVisibility = ref(true);
+import { useUniteStore } from '../../stores/common/Unite.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const uniteStore = useUniteStore();
 
-const indemnitesTypes = computed(
-  () => store.state.imputation.fraisIndemnites.cours,
-);
-const categories = computed(() => store.state.ecritureCategorie.liste);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const anneeComptableId = computed(() => store.state.exerciceComptable.activeId);
+const indemnitesTypes = computed(() => imputationStore.fraisIndemnites.cours);
+const categories = computed(() => ecritureCategorieStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const anneeComptableId = computed(() => exerciceComptableStore.activeId);
 
 const computedIndemnites = computed(() => {
   return indemnitesTypes.value.map((c) => ({
@@ -68,8 +72,8 @@ const imputer = () => {
     return;
   }
 
-  store
-    .dispatch('imputerCours', {
+  imputationStore
+    .imputerCours({
       id: data.id,
       indemnite_cours_type_id: activeIndemnite.value.id,
       exercice_comptable_id: anneeComptableId.value,

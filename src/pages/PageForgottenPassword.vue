@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../stores/auth/Auth';
 
 const email = ref(null);
 const error = ref({});
 const sent = ref(false);
 
-const store = useStore();
+const authStore = useAuthStore();
 
 const request = async () => {
   if (email.value?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
@@ -16,8 +16,8 @@ const request = async () => {
     return;
   }
 
-  store
-    .dispatch('forgottenPassword', email.value)
+  authStore
+    .forgottenPassword(email.value)
     .then(() => {
       error.value = {};
       sent.value = true;

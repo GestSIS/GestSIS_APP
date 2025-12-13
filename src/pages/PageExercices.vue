@@ -1,11 +1,20 @@
 <script setup>
-import store from '/src/store/index';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../stores/common/Localite.js';
+import { useExerciceCategorieStore } from '../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadLocalities = store.dispatch('fetchLocalites');
-const loadExerciceCategories = store.dispatch('fetchExerciceCategories');
-const loadExerciceComptables = store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadLocalities = localiteStore.fetchLocalites();
+const loadExerciceCategories = exerciceCategorieStore.fetchExerciceCategories();
+const loadExerciceComptables =
+  exerciceComptableStore.fetchExercicesComptables();
 
 await Promise.all([
   loadSapeurs,

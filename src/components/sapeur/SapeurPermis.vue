@@ -1,23 +1,25 @@
 <script setup>
 import { computed, inject, ref, watch, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const baseDataStore = useBaseDataStore();
 
 watchEffect(() => {
-  store.dispatch('fetchSapeurPermis', store.state.sapeur.active.id);
+  sapeurStore.fetchSapeurPermis(sapeurStore.active.id);
 });
 
-await store.dispatch('fetchPermisType');
+await baseDataStore.fetchPermisType();
 
 const publicPath = import.meta.env.BASE_URL;
 const permisData = ref({});
 const errors = ref({});
 
-const listPermisType = computed(() => store.state.baseData.permisTypes);
-const activeSapeurPermis = computed(() => store.state.sapeur.active.permis);
+const listPermisType = computed(() => baseDataStore.permisTypes);
+const activeSapeurPermis = computed(() => sapeurStore.active.permis);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 watch(
@@ -69,8 +71,8 @@ const savePermis = () => {
   Object.values(permisData.value).forEach((p) => {
     //New one
     if (p.id === null && p.date !== null) {
-      store
-        .dispatch('addPermis', {
+      sapeurStore
+        .addPermis({
           permis_type_id: p.permis_type_id,
           date: p.date,
         })
@@ -79,8 +81,8 @@ const savePermis = () => {
     }
     //Removed
     else if (p.id !== null && (p.date === null || p.date === '')) {
-      store
-        .dispatch('removePermis', p.id)
+      sapeurStore
+        .removePermis(p.id)
         .then(() => saveSuccessfull(p.permis_type_id))
         .catch((err) => saveError(p.permis_type_id, err));
     }
@@ -90,8 +92,8 @@ const savePermis = () => {
       p.date !==
         activeSapeurPermis.value.find((permis) => permis.id == p.id).date
     ) {
-      store
-        .dispatch('editPermis', { id: p.id, date: p.date })
+      sapeurStore
+        .editPermis({ id: p.id, date: p.date })
         .then(() => saveSuccessfull(p.permis_type_id))
         .catch((err) => saveError(p.permis_type_id, err));
     } else {

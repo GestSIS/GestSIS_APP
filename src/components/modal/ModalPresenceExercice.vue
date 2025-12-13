@@ -1,12 +1,20 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { computed, inject, ref } from 'vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
+const sapeurStore = useSapeurStore();
+const exerciceStore = useExerciceStore();
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
 
 const { callback, data } = defineProps({
   callback: {
@@ -19,15 +27,13 @@ const { callback, data } = defineProps({
   },
 });
 
-const excusesTypes = computed(() => store.state.excuseType.liste);
+const excusesTypes = computed(() => excuseTypeStore.liste);
 const sapeur = computed(() =>
-  store.state.sapeur.liste.find((s) => s.id == store.state.sapeur.active.id),
+  sapeurStore.liste.find((s) => s.id == sapeurStore.active.id),
 );
-const localites = computed(() => store.state.localite.liste);
-const categories = computed(() => store.state.exerciceCategorie.liste);
-const activeSapeurExercice = computed(
-  () => store.state.sapeur.active.exercices,
-);
+const localites = computed(() => localiteStore.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
+const activeSapeurExercice = computed(() => sapeurStore.active.exercices);
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
 const hasValidationPermission = useHasPermission(
   permissions.EXERCICE.VALIDATION,
@@ -75,10 +81,10 @@ const canEditPresence = (exercice) => {
 };
 const savePresence = async (sapeur) => {
   try {
-    const res = await store.dispatch('editPresenceExercice', {
-      presenceId: sapeur?.presence?.id,
-      presence: sapeur,
-    });
+    const res = await exerciceStore.editPresenceExercice(
+      sapeur?.presence?.id,
+      sapeur,
+    );
     awn.success(res?.message || 'Modifications enregistrées');
   } catch (err) {
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
@@ -153,7 +159,7 @@ const removeExcuse = async (sapeur) => {
       'Voulez-vous vraiment supprimer cette excuse ?',
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     );
-    await store.dispatch('removeExcuse', sapeur?.presence);
+    await exerciceStore.removeExcuse(sapeur?.presence);
   } catch {}
 
   showModal({

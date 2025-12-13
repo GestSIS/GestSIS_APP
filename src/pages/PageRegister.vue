@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
-import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth/Auth';
 
-const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -17,8 +16,8 @@ const token = ref(route.query?.token ?? '');
 const error = ref({});
 
 const register = async () =>
-  store
-    .dispatch('register', {
+  useAuthStore()
+    .register({
       name: name.value?.trim(),
       email: email.value?.trim(),
       password: password.value,

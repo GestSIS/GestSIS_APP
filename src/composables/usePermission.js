@@ -1,19 +1,19 @@
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useAuthStore } from "../stores/auth/Auth";
 
 const useHasPermission = function (permissions) {
-    const store = useStore();
+    const authStore = useAuthStore();
     if (typeof (permissions) === 'string') {
         return computed(
             () =>
-                store.state.auth.admin ||
-                store.state.auth.sis.permissions.includes(permissions),
+                authStore.admin ||
+                authStore.sis.permissions.includes(permissions),
         );
     } else {
         return computed(
             () =>
-                store.state.auth.admin ||
-                permissions.some((p) => store.state.auth.sis.permissions.includes(p))
+                authStore.admin ||
+                permissions.some((p) => authStore.sis.permissions.includes(p))
         );
 
     }

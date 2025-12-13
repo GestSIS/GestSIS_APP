@@ -1,12 +1,14 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
 
-const store = useStore();
-store.dispatch('fetchTelephones');
+const interventionStore = useInterventionStore();
+const telephoneStore = useTelephoneStore();
+telephoneStore.fetchTelephones();
 
 const { data } = defineProps({
   data: {
@@ -17,7 +19,7 @@ const { data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  intervention_id: store.state.intervention.active.id,
+  intervention_id: interventionStore.active.id,
   ...data.appel,
   date2: DateTime.fromSQL(data.appel.date)?.toISO()?.slice(0, 16),
 });
@@ -26,7 +28,7 @@ const format = 'yyyy-MM-dd HH:mm';
 const min = DateTime.fromSQL(data.min)?.toISO();
 const max = DateTime.fromSQL(data.max)?.toISO();
 
-const listTelephones = computed(() => store.state.telephone.liste);
+const listTelephones = computed(() => telephoneStore.liste);
 
 const { closeModal } = useModalStore();
 
@@ -42,26 +44,26 @@ watch(
   },
 );
 
-const save = () => {
+const save = async () => {
   // Format back dates to SQL Format
   form.date = DateTime.fromISO(form.date2).toFormat(format);
 
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addInterventionAppel' : 'editInterventionAppel',
-      form,
-    )
-    .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-          date: err['appels.0.date'],
-          nom: err['appels.0.nom'],
-          numero: err['appels.0.numero'],
-          commentaire: err['appels.0.commentaire'],
-        }),
-    );
+  try {
+    if (form.id) {
+      await interventionStore.editInterventionAppel(form);
+    } else {
+      await interventionStore.addInterventionAppel(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = {
+      ...err,
+      date: err['appels.0.date'],
+      nom: err['appels.0.nom'],
+      numero: err['appels.0.numero'],
+      commentaire: err['appels.0.commentaire'],
+    };
+  }
 };
 </script>
 

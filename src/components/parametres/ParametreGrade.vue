@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchGrades');
+const gradeStore = useGradeStore();
+await gradeStore.fetchGrades();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -15,7 +15,7 @@ const fields = [
 ];
 
 const listeGrade = computed(() =>
-  store.state.grade.liste
+  gradeStore.liste
     .map((g) => ({
       ...g,
       groupeDesignation: {
@@ -33,8 +33,8 @@ const ajoutGrade = () => showModal({ component: 'ModalGrade', data: {} });
 const updateGrade = (grade) =>
   showModal({ component: 'ModalGrade', data: { ...grade } });
 const deleteGrade = (grade) =>
-  store
-    .dispatch('removeGrade', grade.id)
+  gradeStore
+    .removeGrade(grade.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

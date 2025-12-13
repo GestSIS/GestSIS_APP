@@ -1,29 +1,34 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
+import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const traitementStore = useInterventionTraitementStore();
+const statFederalStore = useStatFederalStore();
+const typeInterventionStore = useTypeInterventionStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchTypeInterventions');
-store.dispatch('fetchStatFederals');
-store.dispatch('fetchInterventionTraitements');
-await store.dispatch('fetchExercicesComptables');
+typeInterventionStore.fetchTypeInterventions();
+statFederalStore.fetchStatFederals();
+traitementStore.fetchTraitements();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch(
-      'fetchStatistiqueTypeIntervention',
-      store.state.exerciceComptable.activeId,
+    statistiqueStore.fetchStatistiqueTypeIntervention(
+      exerciceComptableStore.activeId,
     ),
-    store.dispatch(
-      'fetchStatistiqueStatFederal',
-      store.state.exerciceComptable.activeId,
+    statistiqueStore.fetchStatistiqueStatFederal(
+      exerciceComptableStore.activeId,
     ),
-    store.dispatch(
-      'fetchStatistiqueTraitementIntervention',
-      store.state.exerciceComptable.activeId,
+    statistiqueStore.fetchStatistiqueTraitementIntervention(
+      exerciceComptableStore.activeId,
     ),
   ]);
   loading.value = false;
@@ -37,18 +42,16 @@ const grouping = {
   statistiquesInterventionTraitement: 'Traitements',
 };
 
-const types = computed(() => store.state.typeIntervention.liste);
-const traitements = computed(() => store.state.interventionTraitement.liste);
-const statsFederal = computed(() => store.state.statFederal.liste);
+const types = computed(() => typeInterventionStore.liste);
+const traitements = computed(() => traitementStore.liste);
+const statsFederal = computed(() => statFederalStore.liste);
 
-const statistiquesStatFederal = computed(
-  () => store.state.statistique.statFederal,
-);
+const statistiquesStatFederal = computed(() => statistiqueStore.statFederal);
 const statistiquesTypeIntervention = computed(
-  () => store.state.statistique.typeIntervention,
+  () => statistiqueStore.typeIntervention,
 );
 const statistiquesInterventionTraitement = computed(
-  () => store.state.statistique.interventionTraitement,
+  () => statistiqueStore.interventionTraitement,
 );
 
 const occurences = computed(() => {

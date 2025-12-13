@@ -1,14 +1,13 @@
 <script setup>
 import { onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../stores/auth/Auth';
 
 const error = ref(null);
 const success = ref(null);
 const sec = ref(10);
 const interval = ref(null);
 
-const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -16,8 +15,8 @@ const token = route.query.token;
 if (!token) {
   router.push({ name: 'accueil' });
 } else {
-  store
-    .dispatch('confirmation', token)
+  useAuthStore()
+    .confirmation(token)
     .then(() => {
       error.value = null;
       success.value = true;

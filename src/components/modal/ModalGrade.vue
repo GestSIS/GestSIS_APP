@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 
 const { data } = defineProps({
   data: {
@@ -16,12 +16,11 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const gradeStore = useGradeStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch((form.id || 0) === 0 ? 'addGrade' : 'updateGrade', form)
+  ((form.id || 0) === 0 ? gradeStore.addGrade : gradeStore.updateGrade)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

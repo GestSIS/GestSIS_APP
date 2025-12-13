@@ -1,29 +1,41 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const localiteStore = useLocaliteStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
 await Promise.all([
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchFonctions'),
-  store.dispatch('fetchListeSapeur'),
-  store.dispatch('fetchExcuseTypes'),
-  store.dispatch('fetchExerciceCategories'),
+  localiteStore.fetchLocalites(),
+  fonctionStore.fetchFonctions(),
+  sapeurStore.fetchListeSapeur(),
+  excuseTypeStore.fetchExcuseTypes(),
+  exerciceCategorieStore.fetchExerciceCategories(),
 ]);
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 const exercices = computed(() =>
-  store.state.exercice.liste.sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
-  ),
+  exerciceStore.liste.sort((a, b) => new Date(a.date) - new Date(b.date)),
 );
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
 );
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const localiteExercices = computed(() => {
   const loc = new Set(exercices.value.map((e) => e.localite_id));
   return localites.value.filter((l) => loc.has(l.id));
@@ -44,13 +56,9 @@ const selectedExerciceA = ref([]);
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchListeExercice',
-    store.state.exerciceComptable.activeId,
-  );
-  await store.dispatch(
-    'fetchStatistiquePresenceExercice',
-    store.state.exerciceComptable.activeId,
+  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
+  await statistiqueStore.fetchStatistiquePresenceExercice(
+    exerciceComptableStore.activeId,
   );
   selectedCategories.value = categorieExercices.value.map((c) => c.id);
   selectedSapeurDe.value = localiteSapeurs.value.map((l) => l.id);
@@ -62,21 +70,21 @@ watchEffect(async () => {
 const selectedSapeurId = ref(null);
 
 const indexedSapeursLocaliteId = computed(() =>
-  store.state.sapeur.liste.reduce((map, e) => {
+  sapeurStore.liste.reduce((map, e) => {
     map.set(e.id, e.localite_id);
     return map;
   }, new Map()),
 );
-const fonctions = computed(() => store.state.fonction.liste);
+const fonctions = computed(() => fonctionStore.liste);
 const indexedExercices = computed(() =>
-  store.state.exercice.liste.reduce((map, e) => {
+  exerciceStore.liste.reduce((map, e) => {
     map.set(e.id, e);
     return map;
   }, new Map()),
 );
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const presences = computed(() =>
-  store.state.statistique.presencesExercice.map((e) => ({
+  statistiqueStore.presencesExercice.map((e) => ({
     ...e,
     sapeur_id: parseInt(e.sapeur_id),
     exercice_id: parseInt(e.exercice_id),
@@ -88,7 +96,7 @@ const presences = computed(() =>
     excuse_statut: parseInt(e.excuse_statut),
   })),
 );
-const excuses = computed(() => store.state.excuseType.liste);
+const excuses = computed(() => excuseTypeStore.liste);
 const filteredSapeurs = computed(() => {
   const sapeurIds = new Set(presences.value.map((s) => s.sapeur_id));
   return sapeurs.value.filter((s) => sapeurIds.has(s.id));

@@ -1,14 +1,17 @@
 <script setup>
 import { computed } from 'vue';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import store from '/src/store/index';
 
+const localiteStore = useLocaliteStore();
+const coursStore = useCoursStore();
 const infosStore = useMesInfosStore();
 
 await Promise.all([
   infosStore.fetchMesCours(),
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchCours'),
+  localiteStore.fetchLocalites(),
+  coursStore.fetchCours(),
 ]);
 
 const fields = [
@@ -23,10 +26,9 @@ const cours = computed(() =>
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((c) => ({
       ...c,
-      designation: store.state.cours.liste.find(
-        (cours) => cours.id == c.cours_id,
-      )?.designation,
-      localite: store.state.localite.liste.find((l) => l.id == c.localite_id)
+      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)
+        ?.designation,
+      localite: localiteStore.liste.find((l) => l.id == c.localite_id)
         ?.designation,
     })),
 );

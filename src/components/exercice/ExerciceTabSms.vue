@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
@@ -12,21 +12,21 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
+const exerciceStore = useExerciceStore();
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch('fetchExercice', id),
-    store.dispatch('fetchExerciceSms', id),
+    exerciceStore.fetchExercice(id),
+    exerciceStore.fetchExerciceSms(id),
   ]);
   loading.value = false;
 });
 
-const activeExerciceData = computed(() => store.state.exercice.active.data);
+const activeExerciceData = computed(() => exerciceStore.active.data);
 const smsListe = computed(() =>
-  store.state.exercice.active.sms.map((sms) => ({
+  exerciceStore.active.sms.map((sms) => ({
     ...sms,
     date_programme: sms.date_programme.slice(0, 19),
     date_envoie: sms.date_envoie.slice(0, 19),

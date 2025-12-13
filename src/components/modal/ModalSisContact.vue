@@ -1,7 +1,7 @@
 <script setup>
 import { inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useSisParamStore } from '../../stores/params/SisParam.js';
 
 const { callback, data } = defineProps({
   data: {
@@ -20,9 +20,9 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
 const { closeModal } = useModalStore();
 const awn = inject('awn');
+const sisParamStore = useSisParamStore();
 
 const close = () => {
   (callback(null) ?? Promise.resolve()).then((close) => {
@@ -41,8 +41,8 @@ const save = async () => {
     return;
   }
 
-  store
-    .dispatch('addSisContact', { ...form, liste: data.id })
+  sisParamStore
+    .addSisContact({ ...form, liste: data.id })
     .then(closeModal)
     .catch((err) => {
       errors.value = err;

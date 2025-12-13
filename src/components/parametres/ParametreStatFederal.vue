@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -8,9 +8,9 @@ const fields = [
   { title: 'Actif', key: 'statut', type: Boolean },
 ];
 
-const store = useStore();
+const statFederalStore = useStatFederalStore();
 const statsFederales = computed(() =>
-  store.state.statFederal.liste.sort((a, b) => a.tri - b.tri),
+  statFederalStore.liste.sort((a, b) => a.tri - b.tri),
 );
 </script>
 

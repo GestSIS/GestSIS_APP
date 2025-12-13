@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchControlesMedicauxTypes');
+const controleMedicalTypeStore = useControleMedicalTypeStore();
+await controleMedicalTypeStore.fetchTypes();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -15,7 +15,7 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeType = computed(() =>
-  store.state.controlesMedicauxType.liste.sort((a, b) => a.tri - b.tri),
+  controleMedicalTypeStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -27,10 +27,13 @@ const updateType = (type) =>
     component: 'ModalControleMedicalType',
     data: { ...type },
   });
-const deleteType = (type) =>
-  store
-    .dispatch('removeControlesMedicauxTypes', type.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+const deleteType = async (type) => {
+  try {
+    await controleMedicalTypeStore.removeType(type.id);
+  } catch (res) {
+    awn.alert(res.message || 'Erreur lors de la suppression');
+  }
+};
 </script>
 
 <template>

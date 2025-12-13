@@ -1,7 +1,12 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useModalStore } from '../../stores/common/Modal';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
 // TODO:
 // - Date anniversaire
@@ -35,16 +40,21 @@ const selectedGeneric = ref({
 });
 const expanded = ref({});
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const gradeStore = useGradeStore();
+const fonctionStore = useFonctionStore();
+const baseDataStore = useBaseDataStore();
+const localiteStore = useLocaliteStore();
+const groupeStore = useGroupeStore();
 
-store.dispatch('fetchLocalites');
-store.dispatch('fetchGrades');
-store.dispatch('fetchFonctions');
-store.dispatch('fetchCivilites');
-store.dispatch('fetchPermisType');
+localiteStore.fetchLocalites();
+gradeStore.fetchGrades();
+fonctionStore.fetchFonctions();
+baseDataStore.fetchCivilites();
+baseDataStore.fetchPermisType();
 
-const treeGroupesSapeurs = computed(() => store.getters.treeGroupesSapeurs);
-store.dispatch('fetchGroupes').then(() => {
+const treeGroupesSapeurs = computed(() => groupeStore.treeGroupesSapeurs);
+groupeStore.fetchGroupes().then(() => {
   const recursive = (item) => {
     expanded.value[item.id] = false;
     item.groupes.forEach(recursive);
@@ -52,13 +62,13 @@ store.dispatch('fetchGroupes').then(() => {
   treeGroupesSapeurs.value.forEach(recursive);
 });
 
-const groupes = computed(() => store.state.groupe.liste);
-const localites = computed(() => store.state.localite.liste);
-const grades = computed(() => store.state.grade.liste);
-const fonctions = computed(() => store.state.fonction.liste);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const civilites = computed(() => store.state.baseData.civilites);
-const permis = computed(() => store.state.baseData.permisTypes);
+const groupes = computed(() => groupeStore.liste);
+const localites = computed(() => localiteStore.liste);
+const grades = computed(() => gradeStore.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const civilites = computed(() => baseDataStore.civilites);
+const permis = computed(() => baseDataStore.permisTypes);
 
 const filteredSapeurs = computed(() => {
   return sapeurs.value.filter(

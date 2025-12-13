@@ -1,6 +1,7 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { computed, inject, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal';
 
@@ -15,8 +16,9 @@ const { callback, data } = defineProps({
   },
 });
 
-const store = useStore();
 const infosStore = useMesInfosStore();
+const excuseParamStore = useExcuseParamStore();
+const excuseTypeStore = useExcuseTypeStore();
 const awn = inject('awn');
 
 const errors = ref({});
@@ -32,9 +34,9 @@ const activeExcuse = ref({
   excuse_type_id: excuse?.excuse_type_id ?? 0,
 });
 
-const excuseParams = computed(() => store.state.excuseParam.params);
+const excuseParams = computed(() => excuseParamStore.params);
 const excuseTypes = computed(() =>
-  store.state.excuseType.liste.filter((e) => e.statut == 1),
+  excuseTypeStore.liste.filter((e) => e.statut == 1),
 );
 
 const activeExercice = computed(() =>

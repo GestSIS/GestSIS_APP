@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -17,16 +18,24 @@ const form = reactive({
   type_unite_id: data?.type_unite_id ?? 0,
 });
 
-const store = useStore();
-const unites = computed(() => store.state.unite.liste);
+const materielStore = useMaterielStore();
+const uniteStore = useUniteStore();
+const unites = computed(() => uniteStore.liste);
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  store
-    .dispatch((form.id || 0) === 0 ? 'addMateriel' : 'updateMateriel', form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+const save = async () => {
+  try {
+    if (form.id) {
+      await materielStore.updateMateriel(form);
+    } else {
+      await materielStore.addMateriel(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
+};
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 <script setup>
-import { inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { inject, reactive, ref, computed } from 'vue';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { callback, data } = defineProps({
@@ -22,25 +23,26 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const listeStatIntervention = computed(
-  () => store.state.statIntervention.liste,
-);
+const typeInterventionStore = useTypeInterventionStore();
+const statInterventionStore = useStatInterventionStore();
+const listeStatIntervention = computed(() => statInterventionStore.liste);
 
 const { closeModal } = useModalStore();
 const awn = inject('awn');
 
-const save = () =>
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addTypeIntervention' : 'updateTypeIntervention',
-      form,
-    )
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
-    });
+const save = async () => {
+  try {
+    if (form.id) {
+      await typeInterventionStore.updateTypeIntervention(form);
+    } else {
+      await typeInterventionStore.addTypeIntervention(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+    awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
+  }
+};
 </script>
 
 <template>

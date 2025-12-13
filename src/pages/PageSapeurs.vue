@@ -1,6 +1,11 @@
 <script setup>
 import permissions from '../store/permissions.js';
 import { useModalStore } from '../stores/common/Modal';
+import { useBaseDataStore } from '../stores/common/BaseData.js';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../stores/sapeur/Fonction.js';
+import { useGradeStore } from '../stores/sapeur/Grade.js';
+import { useLocaliteStore } from '../stores/common/Localite.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import SapeurService from '/src/services/SapeurService';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
@@ -14,9 +19,12 @@ import {
   watch,
   watchEffect,
 } from 'vue';
-import { useStore } from 'vuex';
 
-const store = useStore();
+const baseDataStore = useBaseDataStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
+const localiteStore = useLocaliteStore();
 
 const routes = [
   { texte: 'General', to: { name: 'sapeur-details' }, civil: true },
@@ -36,17 +44,17 @@ const routes = [
   { texte: 'Exercice', to: { name: 'sapeur-exercices' }, civil: true },
 ];
 
-store.dispatch('fetchCivilites');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchGrades');
-store.dispatch('fetchFonctions');
+baseDataStore.fetchCivilites();
+localiteStore.fetchLocalites();
+gradeStore.fetchGrades();
+fonctionStore.fetchFonctions();
 
-await store.dispatch('fetchListeSapeur');
+await sapeurStore.fetchListeSapeur();
 
 const route = useRoute();
 const router = useRouter();
 
-const activeSapeurId = computed(() => store.state.sapeur.active.id);
+const activeSapeurId = computed(() => sapeurStore.active.id);
 if (route.params.id == 0 || !route.params.id) {
   if (activeSapeurId.value > 0) {
     // Sapeur précédemment sélectionné
@@ -54,12 +62,12 @@ if (route.params.id == 0 || !route.params.id) {
       name: 'sapeur-details',
       params: { id: activeSapeurId.value },
     });
-  } else if (store.state.sapeur.liste.filter((s) => s.actif).length > 0) {
+  } else if (sapeurStore.liste.filter((s) => s.actif).length > 0) {
     // Sapeurs disponible
     router.push({
       name: 'sapeur-details',
       params: {
-        id: store.state.sapeur.liste.filter((s) => s.actif)[0]?.id,
+        id: sapeurStore.liste.filter((s) => s.actif)[0]?.id,
       },
     });
   }
@@ -70,21 +78,21 @@ if (route.params.id == 0 || !route.params.id) {
 watch(
   () => route.params.id,
   () => {
-    store.dispatch('selectSapeur', route.params.id);
+    sapeurStore.selectSapeur(route.params.id);
   },
   { immediate: true },
 );
 
 // Fetch sapeur Data
 watchEffect(async () => {
-  if (store.state.sapeur.active.id) {
-    await store.dispatch('fetchSapeur', store.state.sapeur.active.id);
+  if (sapeurStore.active.id) {
+    await sapeurStore.fetchSapeur(sapeurStore.active.id);
   }
 });
 
 // Redirect civile vers route pertinentes
 watchEffect(() => {
-  const isCivil = store.state.sapeur.active.data?.type;
+  const isCivil = sapeurStore.active.data?.type;
   const routeName = route.name;
   if (
     isCivil &&
@@ -92,7 +100,7 @@ watchEffect(() => {
   ) {
     router.push({
       name: 'sapeur-details',
-      params: { id: store.state.sapeur.active.id },
+      params: { id: sapeurStore.active.id },
     });
   }
 });
@@ -105,8 +113,8 @@ const filters = ref({
 });
 const eventListener = ref(null);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const activeSapeur = computed(() => store.state.sapeur.active.data);
+const sapeurs = computed(() => sapeurStore.liste);
+const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const filteredSapeurs = computed(() =>
@@ -169,7 +177,7 @@ const addSapeur = () => {
     component: 'ModalSapeur',
     size: 2,
     callback: (sapeurId) => {
-      store.dispatch('selectSapeur', sapeurId).then(() => {
+      sapeurStore.selectSapeur(sapeurId).then(() => {
         router.push({
           name: 'sapeur-details',
           params: { id: sapeurId },
@@ -183,11 +191,11 @@ const deleteSapeur = () =>
     'Voulez-vous vraiment supprimer ce sapeur ?',
     "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
   ).then(() =>
-    store
-      .dispatch('deleteSapeur', activeSapeur.value.id)
+    sapeurStore
+      .deleteSapeur(activeSapeur.value.id)
       .then(() => {
         const newSelectedSapeurId = svm.sapeurs[0].id;
-        store.dispatch('selectSapeur', newSelectedSapeurId).then(() => {
+        sapeurStore.selectSapeur(newSelectedSapeurId).then(() => {
           router.push({
             name: 'sapeur-details',
             params: { id: newSelectedSapeurId },

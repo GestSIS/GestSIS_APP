@@ -1,24 +1,26 @@
 <script setup>
 import { computed, watchEffect } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useStore } from 'vuex';
 import { ref } from 'vue';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite';
 
-const store = useStore();
 const infosStore = useMesInfosStore();
+const localiteStore = useLocaliteStore();
+const typeInterventionStore = useTypeInterventionStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
 await Promise.all([
-  store.dispatch('fetchExercicesComptables'),
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchTypeInterventions'),
+  exerciceComptableStore.fetchExercicesComptables(),
+  localiteStore.fetchLocalites(),
+  typeInterventionStore.fetchTypeInterventions(),
 ]);
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await infosStore.fetchMesInterventions(
-    store.state.exerciceComptable.activeId,
-  );
+  await infosStore.fetchMesInterventions(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -29,9 +31,9 @@ const interventions = computed(() =>
       inter_debut: i.date_debut + ' ' + i.heure_debut,
       inter_fin: i.date_fin + ' ' + i.heure_fin,
       duree: Math.abs(new Date(i.debut) - new Date(i.fin)) / 36e5,
-      localite: store.state.localite.liste.find((l) => l.id == i.localite_id)
+      localite: localiteStore.liste.find((l) => l.id == i.localite_id)
         ?.designation,
-      type: store.state.typeIntervention.liste.find(
+      type: typeInterventionStore.liste.find(
         (c) => c.id == i.type_intervention_id,
       )?.designation,
     }))

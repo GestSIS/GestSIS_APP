@@ -1,18 +1,21 @@
 <script setup>
 import { computed, inject } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal';
+import { useAdminStore } from '../../stores/admin/Admin';
+import { useAuthStore } from '../../stores/auth/Auth';
 
-const store = useStore();
-const loadSis = store.dispatch('loadSisListe');
-const loadParams = store.dispatch('loadAllSisParams');
-const loadContacts = store.dispatch('loadAllSisContacts');
+const adminStore = useAdminStore();
+const authStore = useAuthStore();
+
+const loadSis = authStore.loadSisListe();
+const loadParams = adminStore.loadAllSisParams();
+const loadContacts = adminStore.loadAllSisContacts();
 
 await Promise.all([loadSis, loadContacts, loadParams]);
 
-const sis = computed(() => store.state.admin.sis);
-const contacts = computed(() => store.state.admin.contacts);
-const params = computed(() => store.state.admin.params);
+const sis = computed(() => adminStore.sis);
+const contacts = computed(() => adminStore.contacts);
+const params = computed(() => adminStore.params);
 const computedSis = computed(() =>
   sis.value?.map((s) => {
     const computedContacts = contacts.value[s.api_key] ?? [];

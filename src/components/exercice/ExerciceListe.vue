@@ -1,7 +1,12 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 import permissions from '../../store/permissions.js';
 
 import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
@@ -10,42 +15,42 @@ import ExerciceService from '/src/services/ExerciceService.js';
 import { exercicesToIcs } from '../../tools/exportExercices';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const authStore = useAuthStore();
+const sapeurStore = useSapeurStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const localiteStore = useLocaliteStore();
+
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchListeExercice',
-    store.state.exerciceComptable.activeId,
-  );
+  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const selectedId = ref(null);
 const selectExercice = (row) => (selectedId.value = row?.id);
 
-const sisKey = computed(() => store.state.auth.sis.activeKey);
+const sisKey = computed(() => authStore.sis.activeKey);
 const sisName = computed(
-  () =>
-    store.state.auth.sis.liste.find(
-      (s) => s.id == store.state.auth.sis.activeId,
-    )?.nom,
+  () => authStore.sis.liste.find((s) => s.id == authStore.sis.activeId)?.nom,
 );
 const annee = computed(
   () =>
-    store.state.exerciceComptable.liste.find(
-      (e) => e.id == store.state.exerciceComptable.activeId,
+    exerciceComptableStore.liste.find(
+      (e) => e.id == exerciceComptableStore.activeId,
     )?.annee,
 );
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const exercices = computed(() =>
-  store.state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
+  exerciceStore.liste.sort((a, b) => a.date?.localeCompare(b.date)),
 );
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
 );
@@ -76,10 +81,13 @@ const filteredLocalites = computed(() => {
 
 const { closeModal, confirm, showModal } = useModalStore();
 const awn = inject('awn');
-const convoquer = () => {
-  store
-    .dispatch('fetchConvocationParams')
-    .then(() => showModal({ component: 'ModalConvoquer', size: 1 }));
+const convoquer = async () => {
+  const { useConvocationParamStore } = await import(
+    '../../stores/exercice/ConvocationParam.js'
+  );
+  const convocationParamStore = useConvocationParamStore();
+  await convocationParamStore.fetchParams();
+  showModal({ component: 'ModalConvoquer', size: 1 });
 };
 const sms = ({ id }) => {
   if (!hasSmsEnvoiePermission.value) {
@@ -107,15 +115,15 @@ const email = ({ id }) =>
     link.click();
   });
 
-const validerExercice = (id) => store.dispatch('validerExercice', id);
-const annulerExercice = (id) => store.dispatch('annulerExercice', id);
-const reactiverExercice = (id) => store.dispatch('reactiverExercice', id);
+const validerExercice = (id) => exerciceStore.validerExercice(id);
+const annulerExercice = (id) => exerciceStore.annulerExercice(id);
+const reactiverExercice = (id) => exerciceStore.reactiverExercice(id);
 
 const removeExercice = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cet exercice ?',
     "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
-  ).then(() => store.dispatch('removeExercice', id));
+  ).then(() => exerciceStore.removeExercice(id));
 
 const importExerciceComptable = () =>
   showModal({

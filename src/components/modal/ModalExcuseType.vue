@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -16,12 +16,15 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const excuseTypeStore = useExcuseTypeStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch((form.id || 0) === 0 ? 'addExcuseType' : 'updateExcuseType', form)
+  const action =
+    (form.id || 0) === 0
+      ? excuseTypeStore.addExcuseType
+      : excuseTypeStore.updateExcuseType;
+  action(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

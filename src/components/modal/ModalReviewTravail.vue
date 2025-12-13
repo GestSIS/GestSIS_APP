@@ -1,7 +1,10 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useTravailStore } from '../../stores/travail/Travail.js';
 
 const { data } = defineProps({
   data: {
@@ -9,6 +12,10 @@ const { data } = defineProps({
     default: () => {},
   },
 });
+
+const uniteStore = useUniteStore();
+const travailTypeStore = useTravailTypeStore();
+const sapeurStore = useSapeurStore();
 
 const errors = ref({});
 const form = reactive({
@@ -20,17 +27,15 @@ const form = reactive({
 });
 const initialQuantite = ref(data.quantite);
 
-const store = useStore();
-
-const unites = computed(() => store.state.unite.liste);
-const travailTypes = computed(() => store.state.travailType.liste);
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const unites = computed(() => uniteStore.liste);
+const travailTypes = computed(() => travailTypeStore.liste);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
 
 const review = (accepte) => {
-  store
-    .dispatch('reviewTravail', { ...form, accepte })
+  useTravailStore()
+    .reviewTravail({ ...form, accepte })
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

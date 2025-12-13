@@ -1,9 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
-const store = useStore();
-await store.dispatch('fetchExcuseTypes');
+
+const excuseTypeStore = useExcuseTypeStore();
+await excuseTypeStore.fetchExcuseTypes();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -23,7 +24,7 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeExcuse = computed(() =>
-  store.state.excuseType.liste.sort((a, b) => a.tri - b.tri),
+  excuseTypeStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -32,8 +33,8 @@ const ajoutExcuse = () => showModal({ component: 'ModalExcuseType', data: {} });
 const updateExcuse = (excuse) =>
   showModal({ component: 'ModalExcuseType', data: { ...excuse } });
 const deleteExcuse = (excuse) =>
-  store
-    .dispatch('removeExcuseType', excuse.id)
+  excuseTypeStore
+    .removeExcuseType(excuse.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

@@ -1,21 +1,29 @@
 <script setup>
 import { useModalStore } from '../stores/common/Modal';
+import { useLocaliteStore } from '../stores/common/Localite.js';
+import { useBaseDataStore } from '../stores/common/BaseData.js';
+import { useGroupeStore } from '../stores/groupe/Groupe.js';
+import { useFonctionStore } from '../stores/sapeur/Fonction';
+import { useGradeStore } from '../stores/sapeur/Grade';
 import permissions from '../store/permissions.js';
 
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
 import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
-import { useStore } from 'vuex';
 import { computed, inject, ref } from 'vue';
 import useHasPermission from '../hooks/usePermission';
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
+const groupeStore = useGroupeStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
 
-const loadLocalites = store.dispatch('fetchLocalites');
-const loadCivilites = store.dispatch('fetchCivilites');
-const loadGrades = store.dispatch('fetchGrades');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadGroupes = store.dispatch('fetchGroupes');
+const loadLocalites = localiteStore.fetchLocalites();
+const loadCivilites = baseDataStore.fetchCivilites();
+const loadGrades = gradeStore.fetchGrades();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadGroupes = groupeStore.fetchGroupes();
 
 await Promise.all([
   loadLocalites,
@@ -30,16 +38,14 @@ const selectedId = ref(null);
 const sapeurs = ref([]);
 
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
 );
-const civilites = computed(() => store.state.baseData.civilites);
-const groupes = computed(() => store.state.groupe.liste);
-const fonctions = computed(() =>
-  store.state.fonction.liste.filter((f) => f.actif),
-);
-const grades = computed(() => store.state.grade.liste);
+const civilites = computed(() => baseDataStore.civilites);
+const groupes = computed(() => groupeStore.liste);
+const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
+const grades = computed(() => gradeStore.liste);
 const hasSapeurModificationPermission = useHasPermission(
   permissions.SAPEUR.MODIFICATION,
 );
@@ -408,7 +414,7 @@ const fieldsBase = [
                   <router-link
                     v-if="hasSapeurModificationPermission"
                     v-slot="{ navigate }"
-                    :to="'/sapeurs/' + rowData.id"
+                    :to="{ name: 'sapeur-details', params: { id: rowData.id } }"
                     custom
                   >
                     <button

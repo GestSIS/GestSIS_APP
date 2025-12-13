@@ -1,16 +1,18 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useAspsmsParamStore } from '../../stores/common/AspsmsParam.js';
+import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 import { DateTime } from 'luxon';
 
 import SapeurService from '../../services/SapeurService';
 import ExerciceService from '../../services/ExerciceService';
 import AspsmsParamService from '../../services/AspsmsParamService';
 
-const store = useStore();
-store.dispatch('fetchLocalites');
+const localiteStore = useLocaliteStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+localiteStore.fetchLocalites();
 const aspsmsParamStore = useAspsmsParamStore();
 
 const { data } = defineProps({
@@ -37,10 +39,8 @@ Promise.all([
   }),
 ]).then(() => (loadingSapeurs.value = false));
 
-const localite = store.state.localite.liste.find(
-  (l) => l.id == data.localite_id,
-);
-const categorie = store.state.exerciceCategorie.liste.find(
+const localite = localiteStore.liste.find((l) => l.id == data.localite_id);
+const categorie = exerciceCategorieStore.liste.find(
   (l) => l.id == data.exercice_categorie_id,
 );
 const params = ref({

@@ -1,7 +1,11 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
@@ -12,33 +16,40 @@ const { id } = defineProps({
   },
 });
 
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+
+sapeurStore.fetchListeSapeur();
+localiteStore.fetchLocalites();
+exerciceCategorieStore.fetchExerciceCategories();
+exerciceComptableStore.fetchExercicesComptables();
+
 const errors = ref({});
 const form = ref({
+  exercice_comptable_id: exerciceComptableStore.activeId,
   lieu: '',
   communications: '',
 });
 
-const store = useStore();
-
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchExerciceCategories');
-store.dispatch('fetchExercicesComptables');
-
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchExercice', id);
-  form.value = {
-    exercice_categorie_id: null,
-    ...store.state.exercice.active.data,
-    heure: store.state.exercice.active.data?.heure?.slice(0, 5),
-  };
+  if (id !== 'new') {
+    await exerciceStore.fetchExercice(id);
+    form.value = {
+      exercice_categorie_id: null,
+      ...exerciceStore.active.data,
+      heure: exerciceStore.active.data?.heure?.slice(0, 5),
+    };
+  }
   loading.value = false;
 });
 
-const categories = computed(() => store.state.exerciceCategorie.liste);
-const localites = computed(() => store.state.localite.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
+const localites = computed(() => localiteStore.liste);
 const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 
 watchEffect(() => {
@@ -52,12 +63,9 @@ watchEffect(() => {
 const router = useRouter();
 const awn = inject('awn');
 
-const save = () =>
-  store
-    .dispatch(
-      (form.value.id || 0) === 0 ? 'createExercice' : 'saveExercice',
-      form.value,
-    )
+const save = () => {
+  const action = (form.value.id || 0) === 0 ? 'createExercice' : 'saveExercice';
+  return exerciceStore[action](form.value)
     .then((data) => {
       if (id === 'new') {
         router.push('/exercices/' + data.id);
@@ -69,6 +77,7 @@ const save = () =>
       errors.value = err;
       awn.alert(err?.message || "Erreur lors de l'enregistrement");
     });
+};
 </script>
 
 <template>

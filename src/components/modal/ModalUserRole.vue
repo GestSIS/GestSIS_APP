@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref, computed } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
 const { data } = defineProps({
   data: {
@@ -10,6 +10,8 @@ const { data } = defineProps({
   },
 });
 
+const authStore = useAuthStore();
+
 const errors = ref({});
 const form = reactive({
   name: '',
@@ -17,14 +19,13 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const roles = computed(() => store.state.auth.roles);
+const roles = computed(() => authStore.roles);
 
 const { closeModal } = useModalStore();
 
 const save = () =>
-  store
-    .dispatch('updateUserRoles', form)
+  authStore
+    .updateUserRoles(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 </script>

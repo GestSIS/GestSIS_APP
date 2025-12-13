@@ -1,19 +1,19 @@
 <script setup>
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
-const store = useStore();
 const router = useRouter();
+const authStore = useAuthStore();
 
-const availableSisListe = computed(() => store.getters.availableSisListe);
-const activeSisId = computed(() => store.state.auth.sis.activeId);
-const listeSis = computed(() => store.state.auth.sis.liste);
+const availableSisListe = computed(() => authStore.availableSisListe);
+const activeSisId = computed(() => authStore.sis.activeId);
+const listeSis = computed(() => authStore.sis.liste);
 
 const selectSis = (sisId) => {
   if (sisId != activeSisId.value) {
     const sis = listeSis.value.find((s) => s.id == sisId);
-    store.dispatch('selectSis', sis).then(() => {
+    authStore.selectSis(sis).then(() => {
       router.push({ name: 'dashboard' });
     });
   }

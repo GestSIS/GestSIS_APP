@@ -1,19 +1,20 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 
-const store = useStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-store.dispatch('fetchExerciceCategories');
-await store.dispatch('fetchExercicesComptables');
+exerciceCategorieStore.fetchExerciceCategories();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchListeExercice',
-    store.state.exerciceComptable.activeId,
-  );
+  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -29,8 +30,8 @@ const fields = [
   },
 ];
 
-const exercices = computed(() => store.state.exercice.liste);
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const exercices = computed(() => exerciceStore.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 
 const categoriesOccurence = computed(() => {
   return exercices.value

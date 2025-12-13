@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
 import ParametreAbsence from './ParametreAbsence.vue';
 
-const store = useStore();
-await store.dispatch('fetchAbsenceParams');
+const absenceParamStore = useAbsenceParamStore();
+await absenceParamStore.fetchParams();
 
 const tab = ref('absence');
 </script>

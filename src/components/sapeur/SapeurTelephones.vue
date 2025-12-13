@@ -1,18 +1,20 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
 
-const store = useStore();
+const baseDataStore = useBaseDataStore();
+const sapeurStore = useSapeurStore();
 const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurTelephones', store.state.sapeur.active.id);
+  await sapeurStore.fetchSapeurTelephones(sapeurStore.active.id);
   loading.value = false;
 });
-await store.dispatch('fetchTelephoneTypes');
+await baseDataStore.fetchTelephoneTypes();
 
 const telephonesData = ref([]);
 const telephones = computed({
@@ -24,7 +26,7 @@ const telephones = computed({
 });
 
 const activeSapeurTelephones = computed(() =>
-  store.state.sapeur.active.telephones
+  sapeurStore.active.telephones
     .slice(0)
     .sort((t1, t2) => t1.priorite - t2.priorite),
 );
@@ -35,8 +37,8 @@ watchEffect(
     ]),
 );
 
-const sapeurType = computed(() => store.state.sapeur.active.data.type);
-const telephoneTypes = computed(() => store.state.baseData.telephoneTypes);
+const sapeurType = computed(() => sapeurStore.active.data.type);
+const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
@@ -45,18 +47,18 @@ const saveTelephones = () => {
   activeSapeurTelephones.value.forEach((t) => {
     //Suppression des numéros supprimé
     if (telephones.value.filter((t2) => t2.id === t.id).length === 0) {
-      store.dispatch('removeTelephoneSapeur', t.id);
+      sapeurStore.removeTelephoneSapeur(t.id);
     }
   });
 
   savedTelephones.forEach((t) => {
     //Numéros modifiés
     if (t.id !== null) {
-      store.dispatch('editTelephoneSapeur', t);
+      sapeurStore.editTelephoneSapeur(t);
     }
     //Nouveaux numéros
     else {
-      store.dispatch('addTelephoneSapeur', t);
+      sapeurStore.addTelephoneSapeur(t);
     }
   });
 };

@@ -1,32 +1,36 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
 
-store.dispatch('fetchListeSapeur');
+await exerciceComptableStore.fetchExercicesComptables();
+
+sapeurStore.fetchListeSapeur();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchAmendesExerciceComptable',
+  await imputationStore.fetchAmendesExerciceComptable(
     activeExerciceComptableId.value,
   );
   loading.value = false;
 });
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const amendes = computed(() => store.state.imputation.ecritures.amendes);
+const sapeurs = computed(() => sapeurStore.liste);
+const amendes = computed(() => imputationStore.ecritures.amendes);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -54,8 +58,8 @@ const filteredSapeurs = computed(() => {
 
 const awn = inject('awn');
 const generer = () => {
-  store
-    .dispatch('genererAmendesAnnuels', activeExerciceComptableId.value)
+  imputationStore
+    .genererAmendesAnnuels(activeExerciceComptableId.value)
     .then((amendes) => {
       if (amendes?.length == 0) {
         awn.success('Aucune amende requise pour cet exercice comptable');

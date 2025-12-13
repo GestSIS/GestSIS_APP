@@ -1,55 +1,64 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 import { computed, inject, ref, watchEffect } from 'vue';
 import { exercicesToIcs } from '../../tools/exportExercices';
 import ExerciceService from '../../services/ExerciceService';
-import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
+import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 
-const store = useStore();
+const authStore = useAuthStore();
+const uniteStore = useUniteStore();
+const localiteStore = useLocaliteStore();
 const infosStore = useMesInfosStore();
-await store.dispatch('fetchExercicesComptables');
+const excuseParamStore = useExcuseParamStore();
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+await exerciceComptableStore.fetchExercicesComptables();
 
 Promise.all([
-  store.dispatch('fetchUnites'),
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchExerciceCategories'),
-  store.dispatch('fetchExcuseTypes'),
-  store.dispatch('fetchExcuseParams'),
+  uniteStore.fetchUnites(),
+  localiteStore.fetchLocalites(),
+  exerciceCategorieStore.fetchExerciceCategories(),
+  excuseTypeStore.fetchExcuseTypes(),
+  excuseParamStore.fetchParams(),
 ]);
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await infosStore.fetchMesExercices(store.state.exerciceComptable.activeId);
+  await infosStore.fetchMesExercices(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
-const excuseParams = computed(() => store.state.excuseParam.params);
+const excuseParams = computed(() => excuseParamStore.params);
 const annee = computed(
   () =>
-    store.state.exerciceComptable.liste.find(
-      (e) => e.id == store.state.exerciceComptable.activeId,
+    exerciceComptableStore.liste.find(
+      (e) => e.id == exerciceComptableStore.activeId,
     )?.annee,
 );
-const sisKey = computed(() => store.state.auth.sis.activeKey);
+const sisKey = computed(() => authStore.sis.activeKey);
 const sisName = computed(
-  () =>
-    store.state.auth.sis.liste.find(
-      (s) => s.id == store.state.auth.sis.activeId,
-    )?.nom,
+  () => authStore.sis.liste.find((s) => s.id == authStore.sis.activeId)?.nom,
 );
 const exercices = computed(() =>
   infosStore.exercices
     .map((e) => ({
       ...e.presence,
       ...e,
-      excuse: store.state.excuseType.liste.find(
+      excuse: excuseTypeStore.liste.find(
         (t) => t.id == e.presence.excuse_type_id,
       )?.designation,
-      localite: store.state.localite.liste.find((l) => l.id == e.localite_id)
+      localite: localiteStore.liste.find((l) => l.id == e.localite_id)
         ?.designation,
-      categorie: store.state.exerciceCategorie.liste.find(
+      categorie: exerciceCategorieStore.liste.find(
         (c) => c.id == e.exercice_categorie_id,
       )?.designation,
     }))

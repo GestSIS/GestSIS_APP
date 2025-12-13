@@ -1,27 +1,33 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
 import permissions from '../../store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-store.dispatch('fetchExerciceAbsences');
-store.dispatch('fetchExcuseParams');
-store.dispatch('fetchExcuseTypes');
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const localiteStore = useLocaliteStore();
+const exerciceStore = useExerciceStore();
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const excuseParamStore = useExcuseParamStore();
+exerciceStore.fetchExerciceAbsences();
+excuseParamStore.fetchParams();
+excuseTypeStore.fetchExcuseTypes();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    store.dispatch(
-      'fetchListeExercice',
-      store.state.exerciceComptable.activeId,
-    ),
-    store.dispatch(
-      'fetchExerciceAbsences',
-      store.state.exerciceComptable.activeId,
-    ),
+    exerciceStore.fetchListeExercice(exerciceComptableStore.activeId),
+    exerciceStore.fetchExerciceAbsences(exerciceComptableStore.activeId),
   ]);
   loading.value = false;
 });
@@ -29,15 +35,15 @@ watchEffect(async () => {
 const selectedId = ref(null);
 const selectExercice = (row) => (selectedId.value = row?.id);
 
-const excuseParam = computed(() => store.state.excuseParam.params);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const absences = computed(() => store.state.exercice.absences);
+const excuseParam = computed(() => excuseParamStore.params);
+const sapeurs = computed(() => sapeurStore.liste);
+const absences = computed(() => exerciceStore.absences);
 const exercices = computed(() =>
-  store.state.exercice.liste.sort((a, b) => a.date?.localeCompare(b.date)),
+  exerciceStore.liste.sort((a, b) => a.date?.localeCompare(b.date)),
 );
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation?.localeCompare(b.designation),
   ),
 );

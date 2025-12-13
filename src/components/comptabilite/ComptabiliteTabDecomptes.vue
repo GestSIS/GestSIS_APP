@@ -1,6 +1,9 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useDecompteStore } from '../../stores/comptabilite/Decompte.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import DecompteService from '/src/services/DecompteService.js';
 
@@ -8,30 +11,34 @@ import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const uniteStore = useUniteStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const decompteStore = useDecompteStore();
 
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchUnites');
+await exerciceComptableStore.fetchExercicesComptables();
+
+sapeurStore.fetchListeSapeur();
+uniteStore.fetchUnites();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchDecomptes', activeExerciceComptableId.value);
+  await decompteStore.fetchDecomptes(activeExerciceComptableId.value);
   loading.value = false;
 });
 
 const selectedId = ref(null);
 const selected = (row) => (selectedId.value = row?.id ?? null);
 
-const exercicesComptables = computed(() => store.state.exerciceComptable.liste);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const decomptes = computed(() => store.state.decompte.liste);
-const unites = computed(() => store.state.unite.liste);
+const exercicesComptables = computed(() => exerciceComptableStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const decomptes = computed(() => decompteStore.liste);
+const unites = computed(() => uniteStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -50,8 +57,8 @@ const supprimer = (decompteId) => {
     'Voulez-vous vraiment supprimer ce décompte ?',
     "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
   ).then(() =>
-    store
-      .dispatch('removeDecompte', decompteId)
+    decompteStore
+      .removeDecompte(decompteId)
       .catch((err) =>
         awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
       ),

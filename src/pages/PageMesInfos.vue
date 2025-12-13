@@ -1,8 +1,9 @@
 <script setup>
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import store from '/src/store/index';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
 
-store.dispatch('fetchExercicesComptables');
+const exerciceComptableStore = useExerciceComptableStore();
+exerciceComptableStore.fetchExercicesComptables();
 
 const routes = [
   { to: { name: 'mes-infos' }, texte: 'Mes infos' },

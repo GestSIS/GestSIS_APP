@@ -1,11 +1,10 @@
 <script setup>
 import { ref, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../stores/auth/Auth';
 
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
 
 const password = ref(null);
 const password_confirmation = ref(null);
@@ -31,8 +30,8 @@ const reset = async () => {
     return;
   }
   error.value = {};
-  store
-    .dispatch('resetPassword', {
+  useAuthStore()
+    .resetPassword({
       password: password.value,
       password_confirmation: password_confirmation.value,
       token: token.value || null,

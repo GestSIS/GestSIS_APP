@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject, onMounted, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useAspsmsParamStore } from '../../stores/common/AspsmsParam.js';
+import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 
 import AspsmsParamService from '../../services/AspsmsParamService';
 

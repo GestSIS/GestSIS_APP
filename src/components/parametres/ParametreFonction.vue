@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchFonctions');
+const fonctionStore = useFonctionStore();
+await fonctionStore.fetchFonctions();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -16,7 +16,7 @@ const fields = [
 ];
 
 const listeFonction = computed(() =>
-  store.state.fonction.liste.sort((a, b) => b.tri - a.tri),
+  fonctionStore.liste.sort((a, b) => b.tri - a.tri),
 );
 
 const { showModal } = useModalStore();
@@ -25,8 +25,8 @@ const ajoutFonction = () => showModal({ component: 'ModalFonction', data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: 'ModalFonction', data: { ...fonction } });
 const deleteFonction = (fonction) =>
-  store
-    .dispatch('removeFonction', fonction.id)
+  fonctionStore
+    .removeFonction(fonction.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

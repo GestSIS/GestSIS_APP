@@ -1,7 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useConvocationParamStore } from '../../stores/exercice/ConvocationParam.js';
 import ConvocationService from '/src/services/ConvocationService.js';
 
 const { data } = defineProps({
@@ -11,7 +12,8 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const convocationParamStore = useConvocationParamStore();
 
 const errors = ref({});
 const form = ref({
@@ -20,16 +22,14 @@ const form = ref({
 const params = reactive({
   affichage_duree: true,
   affichage_pour_info: true,
-  ...store.state.convocationParam.params,
+  ...convocationParamStore.params,
 });
 
 if (data.remount) {
   form.value = data.save;
 }
 
-const exerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
-);
+const exerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const { showModal, closeModal } = useModalStore();
 
@@ -40,7 +40,7 @@ const convoquer = () => {
     .catch(closeModal);
 };
 const saveParam = () => {
-  store.dispatch('updateConvocationParams', params);
+  convocationParamStore.updateConvocationParams(params);
 };
 const select = () => {
   const save = {

@@ -2,11 +2,12 @@
 import { computed, ref, useTemplateRef } from 'vue';
 import * as releases from '../../releases.json';
 import { DOC_URL } from '../http/Env.js';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth/Auth.js';
 
-const store = useStore();
 const router = useRouter();
+const authStore = useAuthStore();
+
 const { hideSidebar, noSidebar } = defineProps({
   hideSidebar: {
     type: Boolean,
@@ -23,7 +24,7 @@ const showNotif = ref(
     localStorage.getItem('latestSeenVersion') != releases.releases[0].version,
 );
 
-const isAdmin = computed(() => store.state.auth.admin);
+const isAdmin = computed(() => authStore.admin);
 const dropdownComponent = useTemplateRef('dropdown');
 
 const clickInfo = (navigate) => {
@@ -35,7 +36,7 @@ const parametres = () => {
   router.push({ name: 'utilisateur' });
 };
 const logout = () => {
-  store.dispatch('logout').then(() => {
+  authStore.logout().then(() => {
     router.push({ name: 'login' });
   });
 };

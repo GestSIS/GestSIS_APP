@@ -1,27 +1,35 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import permissions from '/src/store/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
 import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
 const errors = ref({});
 const defaultPhoto = ref('');
 const photo = ref(null); //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
 
-store.dispatch('fetchCivilites');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchGrades');
-store.dispatch('fetchFonctions');
+baseDataStore.fetchCivilites();
+localiteStore.fetchLocalites();
+gradeStore.fetchGrades();
+fonctionStore.fetchFonctions();
 
 watchEffect(async () => {
-  const sapeurId = store.state.sapeur.active.id ?? 0;
+  const sapeurId = sapeurStore.active.id ?? 0;
   if (sapeurId > 0) {
-    if (store.state.sapeur.active.data.type === 0) {
+    if (sapeurStore.active.data.type === 0) {
       SapeurService.fetchPhoto(sapeurId).then((p) => {
         photo.value = p;
       });
@@ -29,18 +37,18 @@ watchEffect(async () => {
   }
 });
 
-const activeSapeur = computed(() => store.state.sapeur.active.data);
-const activeSapeurId = computed(() => store.state.sapeur.active.id ?? 0);
-const estSapeur = computed(() => store.state.sapeur.active.data.type === 0);
-const civilites = computed(() => store.state.baseData.civilites);
+const activeSapeur = computed(() => sapeurStore.active.data);
+const activeSapeurId = computed(() => sapeurStore.active.id ?? 0);
+const estSapeur = computed(() => sapeurStore.active.data.type === 0);
+const civilites = computed(() => baseDataStore.civilites);
 const localites = computed(() =>
-  store.state.localite.liste.map((l) => ({
+  localiteStore.liste.map((l) => ({
     ...l,
     npa_localite: `${l.npa} ${l.designation}`,
   })),
 );
-const fonctions = computed(() => store.state.fonction.liste);
-const grades = computed(() => store.state.grade.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const grades = computed(() => gradeStore.liste);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
@@ -66,8 +74,8 @@ const saveSapeur = async () => {
       delete saveSapeur[key];
     }
   }
-  store
-    .dispatch('saveActiveSapeur', saveSapeur)
+  sapeurStore
+    .saveActiveSapeur(saveSapeur)
     .then((res) => {
       errors.value = {};
       awn.success(res.message || 'Modifications sauvegardées');
@@ -82,8 +90,8 @@ const saveNonSapeurStatut = async () => {
     id: activeSapeur.value.id,
     actif: activeSapeur.value.actif,
   };
-  store
-    .dispatch('saveNonSapeurStatut', saveSapeur)
+  sapeurStore
+    .saveNonSapeurStatut(saveSapeur)
     .then((res) => {
       errors.value = {};
       awn.success(res.message || 'Modifications sauvegardées');
@@ -94,8 +102,8 @@ const saveNonSapeurStatut = async () => {
     });
 };
 const saveSapeurRefPro = () =>
-  store
-    .dispatch('saveActiveSapeur', {
+  sapeurStore
+    .saveActiveSapeur({
       profession: activeSapeur.value.profession,
       employeur: activeSapeur.value.employeur,
       lieu_de_travail: activeSapeur.value.lieu_de_travail,

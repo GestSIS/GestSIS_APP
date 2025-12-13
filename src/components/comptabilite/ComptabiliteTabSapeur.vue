@@ -1,6 +1,9 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
@@ -9,15 +12,19 @@ import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const compteStore = useCompteStore();
 
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchFonctions');
-store.dispatch('fetchComptes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+sapeurStore.fetchListeSapeur();
+fonctionStore.fetchFonctions();
+compteStore.fetchComptes();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
@@ -33,9 +40,9 @@ watchEffect(async () => {
 const selectedId = ref(null);
 const selected = (row) => (selectedId.value = row?.id ?? null);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const fonctions = computed(() => store.state.fonction.liste);
-const comptes = computed(() => store.state.compte.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const comptes = computed(() => compteStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );

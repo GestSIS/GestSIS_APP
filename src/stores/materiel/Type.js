@@ -6,35 +6,27 @@ export const useMaterielTypeStore = defineStore('materielType', {
     liste: [],
   }),
   actions: {
-    fetchMaterielTypes() {
+    async fetchMaterielTypes() {
       if (this.liste.length > 0) {
-        return Promise.resolve();
-      } else {
-        return MaterielTypeService.getTypes().then(
-          (data) =>
-          (this.liste = data
-            .slice(0)
-            .sort((t1, t2) => t1.designation > t2.designation))
-        );
+        return;
       }
+      const data = await MaterielTypeService.getTypes();
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
     },
-    addMaterielType(type) {
-      return MaterielTypeService.addType(type).then((data) => {
-        this.liste = [...this.liste, data];
-        return data;
-      });
+    async addMaterielType(type) {
+      const data = await MaterielTypeService.addType(type);
+      this.liste = [...this.liste, data];
+      return data;
     },
-    updateMaterielType(type) {
-      return MaterielTypeService.updateType(type).then((data) => {
-        this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
-        return data;
-      });
+    async updateMaterielType(type) {
+      const data = await MaterielTypeService.updateType(type);
+      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      return data;
     },
-    removeMaterielType(typeId) {
-      return MaterielTypeService.removeType(typeId).then((data) => {
-        this.liste = this.liste.filter((m) => m.id != typeId);
-        return data;
-      });
+    async removeMaterielType(typeId) {
+      const data = await MaterielTypeService.removeType(typeId);
+      this.liste = this.liste.filter((m) => m.id != typeId);
+      return data;
     },
   },
 });

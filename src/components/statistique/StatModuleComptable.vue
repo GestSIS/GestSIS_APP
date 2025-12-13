@@ -1,17 +1,18 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueModuleComptable',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueModuleComptable(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -45,7 +46,7 @@ const fields = [
   },
 ];
 
-const stats = computed(() => store.state.statistique.modulesComptable);
+const stats = computed(() => statistiqueStore.modulesComptable);
 const filteredData = computed(() => {
   const ids = new Set(stats.value.map((c) => c.module));
   return modules

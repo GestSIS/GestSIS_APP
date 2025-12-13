@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchExerciceCategories');
+const exerciceCategorieStore = useExerciceCategorieStore();
+await exerciceCategorieStore.fetchExerciceCategories();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -15,7 +15,7 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeCategorie = computed(() =>
-  store.state.exerciceCategorie.liste.sort((a, b) => a.tri - b.tri),
+  exerciceCategorieStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -28,8 +28,8 @@ const updateCategorie = (categorie) =>
     data: { ...categorie },
   });
 const deleteCategorie = (categorie) =>
-  store
-    .dispatch('removeExerciceCategorie', categorie.id)
+  exerciceCategorieStore
+    .removeExerciceCategorie(categorie.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

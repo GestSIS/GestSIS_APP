@@ -1,9 +1,17 @@
 <script setup>
 import { computed, inject, reactive, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 
-const store = useStore();
+const fonctionStore = useFonctionStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
 
 const { data } = defineProps({
   data: {
@@ -77,10 +85,10 @@ if (!base.value.length) {
   });
 }
 
-const fonctions = computed(() => store.state.fonction.liste);
-const unites = computed(() => store.state.unite.liste); //.filter(u => !(u.id in [3, 4, 5, 7])),
-const comptes = computed(() => store.state.compte.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const unites = computed(() => uniteStore.liste); //.filter(u => !(u.id in [3, 4, 5, 7])),
+const comptes = computed(() => compteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const compte = (compte) => {
   return `${compte?.numero} ${compte.designation}`;
@@ -183,12 +191,9 @@ const save = () => {
     fonctions: foncs,
   };
 
-  const action =
-    (indemnite.id || 0) === 0
-      ? 'addIndemniteExercice'
-      : 'updateIndemniteExercice';
-  store
-    .dispatch(action, indemnite)
+  ((indemnite.id || 0) === 0
+    ? imputationStore.addIndemniteExercice
+    : imputationStore.updateIndemniteExercice)(indemnite)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

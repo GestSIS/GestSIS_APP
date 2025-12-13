@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -10,34 +11,34 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
-const listeMateriels = computed(() => store.state.materiel.liste);
+const materielStore = useMaterielStore();
+const interventionStore = useInterventionStore();
+const listeMateriels = computed(() => materielStore.liste);
 
 const errors = ref({});
 const form = reactive({
-  intervention_id: store.state.intervention.active.id,
+  intervention_id: interventionStore.active.id,
   ...data,
 });
 
 const { closeModal } = useModalStore();
 
-const save = async () =>
-  store
-    .dispatch(
-      (form.id || 0) === 0
-        ? 'addInterventionMateriel'
-        : 'editInterventionMateriel',
-      form,
-    )
-    .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-          materiel_id: errors.value['materiels.0.materiel_id'],
-          quantite: errors.value['materiels.0.quantite'],
-        }),
-    );
+const save = async () => {
+  try {
+    if (form.id) {
+      await interventionStore.editInterventionMateriel(form);
+    } else {
+      await interventionStore.addInterventionMateriel(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = {
+      ...err,
+      materiel_id: err['materiels.0.materiel_id'],
+      quantite: err['materiels.0.quantite'],
+    };
+  }
+};
 </script>
 
 <template>

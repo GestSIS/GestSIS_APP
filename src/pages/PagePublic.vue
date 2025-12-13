@@ -1,15 +1,16 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../stores/auth/Auth.js';
+
+const authStore = useAuthStore();
 
 const decoded = atob('c3VwcG9ydEBnZXN0c2lzLmNo');
 const prefix = atob('bWFpbHRvOg==');
 
-const store = useStore();
 const router = useRouter();
 
 const login = () =>
-  router.push({ path: store.getters.isLoggedIn ? 'accueil' : 'login' });
+  router.push({ path: authStore.isLoggedIn ? 'accueil' : 'login' });
 </script>
 
 <template>

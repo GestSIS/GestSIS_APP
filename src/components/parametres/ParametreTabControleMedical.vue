@@ -1,13 +1,17 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
+import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 import ParametreMedecin from './ParametreMedecin.vue';
 import ParametreControleMedicalType from './ParametreControleMedicalType.vue';
 
-const store = useStore();
-const loadMedecin = store.dispatch('fetchMedecins');
-const loadType = store.dispatch('fetchControlesMedicauxTypes');
-const loadLocalite = store.dispatch('fetchLocalites');
+const localiteStore = useLocaliteStore();
+const medecinStore = useMedecinStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
+const loadMedecin = medecinStore.fetchMedecins();
+const loadType = controleMedicalTypeStore.fetchTypes();
+const loadLocalite = localiteStore.fetchLocalites();
 
 await Promise.all([loadMedecin, loadType, loadLocalite]);
 

@@ -1,13 +1,18 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useMissionStore } from '../../stores/intervention/Mission.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
 
-const store = useStore();
-store.dispatch('fetchMissions');
-store.dispatch('fetchListeSapeur');
+const sapeurStore = useSapeurStore();
+const missionStore = useMissionStore();
+const interventionStore = useInterventionStore();
+
+missionStore.fetchMissions();
+sapeurStore.fetchListeSapeur();
 
 const { data } = defineProps({
   data: {
@@ -18,7 +23,7 @@ const { data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  intervention_id: store.state.intervention.active.id,
+  intervention_id: interventionStore.active.id,
   ...data.mission,
   debut2: data.mission.debut?.replace(' ', 'T'),
   fin2: data.mission.fin?.replace(' ', 'T'),
@@ -29,14 +34,12 @@ const form = reactive({
 const responsableMode = ref(data?.mission?.sapeur_id ? 'sapeur_id' : 'sapeur');
 const format = 'yyyy-MM-dd HH:mm';
 
-const listMissions = computed(() => store.state.mission.liste);
-const listeSapeurs = computed(() =>
-  store.state.sapeur.liste.filter((s) => s.actif),
-);
+const listMissions = computed(() => missionStore.liste);
+const listeSapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
 
-const save = () => {
+const save = async () => {
   // Format back dates to SQL Format
   form.debut = DateTime.fromISO(form.debut2)?.toFormat(format);
   form.fin = DateTime.fromISO(form.fin2)?.toFormat(format);
@@ -55,25 +58,23 @@ const save = () => {
     }
   }
 
-  store
-    .dispatch(
-      (form.id || 0) === 0
-        ? 'addInterventionMission'
-        : 'editInterventionMission',
-      form,
-    )
-    .then(closeModal)
-    .catch(
-      (err) =>
-        (errors.value = {
-          ...err,
-          debut: err['missions.0.debut'],
-          fin: err['missions.0.fin'],
-          sapeur_id: err['missions.0.sapeur_id'],
-          sapeur: err['missions.0.sapeur'],
-          titre: err['missions.0.titre'],
-        }),
-    );
+  try {
+    if (form.id) {
+      await interventionStore.editInterventionMission(form);
+    } else {
+      await interventionStore.addInterventionMission(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = {
+      ...err,
+      debut: err['missions.0.debut'],
+      fin: err['missions.0.fin'],
+      sapeur_id: err['missions.0.sapeur_id'],
+      sapeur: err['missions.0.sapeur'],
+      titre: err['missions.0.titre'],
+    };
+  }
 };
 </script>
 

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, watch, onBeforeMount } from 'vue';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../../stores/auth/Auth';
+
+const authStore = useAuthStore();
 
 defineOptions({
   inheritAttrs: false,
@@ -17,8 +19,7 @@ const { id, data } = defineProps({
   },
 });
 
-const store = useStore();
-const sisKey = computed(() => store.state['auth'].sis.activeKey);
+const sisKey = computed(() => authStore.sis.activeKey);
 
 const filters = ref({});
 

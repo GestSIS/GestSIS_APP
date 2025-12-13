@@ -1,6 +1,9 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -26,13 +29,18 @@ const form = reactive({
 const imputationType = ref(
   form.taux_nuit || form.taux_weekend ? 'taux' : 'tarif-min',
 );
+import { useUniteStore } from '../../stores/common/Unite.js';
 
-const store = useStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
+const phaseTypeStore = usePhaseTypeStore();
 
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
-const phases = computed(() => store.state.phaseType.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
+const phases = computed(() => phaseTypeStore.liste);
 
 const { closeModal } = useModalStore();
 
@@ -64,13 +72,9 @@ const save = () => {
     form.fin = null;
   }
 
-  store
-    .dispatch(
-      (form.id || 0) === 0
-        ? 'addIndemniteIntervention'
-        : 'updateIndemniteIntervention',
-      form,
-    )
+  ((form.id || 0) === 0
+    ? imputationStore.addIndemniteIntervention
+    : imputationStore.updateIndemniteIntervention)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

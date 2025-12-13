@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 
 const model = defineModel({ type: Array });
 defineProps({
@@ -10,7 +10,7 @@ defineProps({
   },
 });
 
-const store = useStore();
+const baseDataStore = useBaseDataStore();
 
 const telephones = computed(() =>
   [...(model.value?.filter((t) => t)?.map((t) => ({ ...t })) ?? [])]?.sort(
@@ -24,7 +24,7 @@ const fields = [
   { title: 'Type', key: 'type' },
   { title: 'RTA', key: 'rta', type: Boolean },
 ];
-const telephoneTypes = computed(() => store.state.baseData.telephoneTypes);
+const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 </script>
 
 <template>
