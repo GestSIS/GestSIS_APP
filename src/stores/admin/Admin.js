@@ -9,6 +9,7 @@ export const useAdminStore = defineStore('admin', {
         contacts: {},
         params: {},
     }),
+
     actions: {
         async addSis(sis) {
             const { data } = await AdminService.addSis(sis);
