@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "13.12.2025",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration des décomptes afin d'afficher plus clairement les amendes et les déductions"
+      ]
+    },
+    {
       "date": "12.12.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.3",
