@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject, onMounted, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAspsmsParamStore } from '../../stores/common/AspsmsParam.js';
 
 import AspsmsParamService from '../../services/AspsmsParamService';
 
@@ -24,13 +24,13 @@ const params = ref({
   sapeurIds: [],
 });
 
-const store = useStore();
-store
-  .dispatch('fetchAspsmsCredit')
+const aspsmsParamStore = useAspsmsParamStore();
+aspsmsParamStore
+  .fetchCredit()
   .then(() => (loadingCredit.value = false))
   .catch(() => (loadingCredit.value = false));
 
-const credit = computed(() => store.state.aspsmsParam.credit);
+const credit = computed(() => aspsmsParamStore.credit);
 const computedSapeurs = computed(() =>
   sapeurs.value.map((s) => ({
     ...s,
@@ -68,7 +68,7 @@ const send = () => {
 
   AspsmsParamService.sendSms(clonedParams)
     .then(() => {
-      store.dispatch('fetchAspsmsCredit');
+      aspsmsParamStore.fetchCredit();
       awn.success('Message envoyé avec succès');
       closeModal();
     })

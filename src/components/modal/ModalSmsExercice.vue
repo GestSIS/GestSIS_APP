@@ -2,6 +2,7 @@
 import { computed, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAspsmsParamStore } from '../../stores/common/AspsmsParam.js';
 import { DateTime } from 'luxon';
 
 import SapeurService from '../../services/SapeurService';
@@ -10,6 +11,7 @@ import AspsmsParamService from '../../services/AspsmsParamService';
 
 const store = useStore();
 store.dispatch('fetchLocalites');
+const aspsmsParamStore = useAspsmsParamStore();
 
 const { data } = defineProps({
   data: {
@@ -58,12 +60,12 @@ const params = ref({
 });
 
 const loadingCredit = ref(true);
-store
-  .dispatch('fetchAspsmsCredit')
+aspsmsParamStore
+  .fetchCredit()
   .then(() => (loadingCredit.value = false))
   .catch(() => (loadingCredit.value = false));
 
-const credit = computed(() => store.state.aspsmsParam.credit);
+const credit = computed(() => aspsmsParamStore.credit);
 
 const computedSapeurs = computed(() => {
   const indexedSapeurs = {};
@@ -111,7 +113,7 @@ const send = () => {
   sending.value = true;
   AspsmsParamService.sendSms(clonedParams)
     .then(() => {
-      store.dispatch('fetchAspsmsCredit');
+      aspsmsParamStore.fetchCredit();
       awn.success('Message envoyé avec succès');
       closeModal();
     })
