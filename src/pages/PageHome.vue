@@ -41,10 +41,9 @@ onUnmounted(() => {
 const getImageUrl = (sis) => {
   return Api.API_URL + `/sis-logo/${sis.api_key}`;
 };
-const connectToSis = (sis) => {
-  authStore.selectSis(sis).then(() => {
-    router.push({ name: 'dashboard' });
-  });
+const connectToSis = async (sis) => {
+  await authStore.selectSis(sis);
+  router.push({ name: 'dashboard' });
 };
 const refresh = () => {
   authStore.refreshToken().then(() => {
