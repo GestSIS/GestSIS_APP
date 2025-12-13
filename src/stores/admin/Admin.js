@@ -9,7 +9,6 @@ export const useAdminStore = defineStore('admin', {
         contacts: {},
         params: {},
     }),
-
     actions: {
         async addSis(sis) {
             const { data } = await AdminService.addSis(sis);
@@ -25,22 +24,22 @@ export const useAdminStore = defineStore('admin', {
             return data;
         },
         async loadAllUsers() {
-            const { data } = await AdminService.loadAllUsers();
+            const { data } = await AdminService.getAllUsers();
             this.users = data;
             return data;
         },
         async loadAllRoles() {
-            const { data } = await AdminService.loadAllRoles();
+            const { data } = await AdminService.getAllRoles();
             this.roles = data;
             return data;
         },
         async loadAllSisContacts() {
-            const { data } = await AdminService.loadAllSisContacts();
+            const data = await AdminService.getAllSisContacts();
             this.contacts = data;
             return data;
         },
         async loadAllSisParams() {
-            const { data } = await AdminService.loadAllSisParams();
+            const data = await AdminService.getAllSisParams();
             this.params = data;
             return data;
         },
