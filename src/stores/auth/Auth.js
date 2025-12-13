@@ -153,72 +153,6 @@ export const useAuthStore = defineStore('auth', {
 
             await this.fetchLocalitesSis();
 
-            // Reset materiel stores
-            useArticleStore().$reset();
-            useMaterielCategorieStore().$reset();
-            useMaterielTypeStore().$reset();
-            useCouleurStore().$reset();
-            useBatterieTypeStore().$reset();
-            useEmplacementStore().$reset();
-            useTuyauDiametreStore().$reset();
-            useUniteStore().$reset();
-
-            // Reset param stores
-            useAspsmsParamStore().$reset();
-            useAvsParamStore().$reset();
-            useAbsenceParamStore().$reset();
-            useConvocationParamStore().$reset();
-            useSisParamStore().$reset();
-            useExcuseParamStore().$reset();
-
-            // Reset controle medical stores
-            useMedecinStore().$reset();
-            useControleMedicalTypeStore().$reset();
-            useControleMedicalStore().$reset();
-
-            // Reset intervention stores
-            useInterventionStore().$reset();
-            useInterventionTraitementStore().$reset();
-            useMaterielStore().$reset();
-            useMissionStore().$reset();
-            usePhaseTypeStore().$reset();
-            useStatFederalStore().$reset();
-            useStatInterventionStore().$reset();
-            useTypeInterventionStore().$reset();
-            useVehiculeStore().$reset();
-
-            // Reset exercice stores
-            useExerciceStore().$reset();
-            useExcuseTypeStore().$reset();
-            useExerciceCategorieStore().$reset();
-            useHeureExerciceStore().$reset();
-
-            // Reset comptabilite stores
-            useAmendeStore().$reset();
-            useCompteStore().$reset();
-            useEcritureCategorieStore().$reset();
-            useExerciceComptableStore().$reset();
-            useImputationStore().$reset();
-            useDecompteStore().$reset();
-
-            // Reset sapeur stores
-            useSapeurStore().$reset();
-            useCoursStore().$reset();
-            useFonctionStore().$reset();
-            useGradeStore().$reset();
-
-            // Reset other stores
-            useRtaStore().$reset();
-            useAbsenceStore().$reset();
-            useTelephoneStore().$reset();
-            useCoursSapeurStore().$reset();
-            useTravailStore().$reset();
-            useTravailTypeStore().$reset();
-            useGroupeStore().$reset();
-            useStatistiqueStore().$reset();
-            useLocaliteStore().$reset();
-            useBaseDataStore().$reset();
-
             this.clearCache();
         },
         async loadSisListe() {
@@ -366,8 +300,71 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         clearCache() {
-            // This method is called after store resets in selectSis
-            // No additional action needed as stores are already reset
+            // Reset materiel stores
+            useArticleStore().$reset();
+            useMaterielCategorieStore().$reset();
+            useMaterielTypeStore().$reset();
+            useCouleurStore().$reset();
+            useBatterieTypeStore().$reset();
+            useEmplacementStore().$reset();
+            useTuyauDiametreStore().$reset();
+            useUniteStore().$reset();
+
+            // Reset param stores
+            useAspsmsParamStore().$reset();
+            useAvsParamStore().$reset();
+            useAbsenceParamStore().$reset();
+            useConvocationParamStore().$reset();
+            useSisParamStore().$reset();
+            useExcuseParamStore().$reset();
+
+            // Reset controle medical stores
+            useMedecinStore().$reset();
+            useControleMedicalTypeStore().$reset();
+            useControleMedicalStore().$reset();
+
+            // Reset intervention stores
+            useInterventionStore().$reset();
+            useInterventionTraitementStore().$reset();
+            useMaterielStore().$reset();
+            useMissionStore().$reset();
+            usePhaseTypeStore().$reset();
+            useStatFederalStore().$reset();
+            useStatInterventionStore().$reset();
+            useTypeInterventionStore().$reset();
+            useVehiculeStore().$reset();
+
+            // Reset exercice stores
+            useExerciceStore().$reset();
+            useExcuseTypeStore().$reset();
+            useExerciceCategorieStore().$reset();
+            useHeureExerciceStore().$reset();
+
+            // Reset comptabilite stores
+            useAmendeStore().$reset();
+            useCompteStore().$reset();
+            useEcritureCategorieStore().$reset();
+            useExerciceComptableStore().$reset();
+            useImputationStore().$reset();
+            useDecompteStore().$reset();
+
+            // Reset sapeur stores
+            useSapeurStore().$reset();
+            useCoursStore().$reset();
+            useFonctionStore().$reset();
+            useGradeStore().$reset();
+
+            // Reset other stores
+            useRtaStore().$reset();
+            useAbsenceStore().$reset();
+            useTelephoneStore().$reset();
+            useCoursSapeurStore().$reset();
+            useTravailStore().$reset();
+            useTravailTypeStore().$reset();
+            useGroupeStore().$reset();
+            useStatistiqueStore().$reset();
+            useLocaliteStore().$reset();
+            useBaseDataStore().$reset();
         },
     },
 });
