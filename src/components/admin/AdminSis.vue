@@ -8,10 +8,11 @@ const adminStore = useAdminStore();
 const authStore = useAuthStore();
 
 const loadSis = authStore.loadSisListe();
+const loadSisAdmin = adminStore.loadAllSis();
 const loadParams = adminStore.loadAllSisParams();
 const loadContacts = adminStore.loadAllSisContacts();
 
-await Promise.all([loadSis, loadContacts, loadParams]);
+await Promise.all([loadSis, loadSisAdmin, loadContacts, loadParams]);
 
 const sis = computed(() => adminStore.sis);
 const contacts = computed(() => adminStore.contacts);

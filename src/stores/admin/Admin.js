@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import AdminService from '../../services/AdminService';
+import AuthService from '../../services/AuthService';
 
 export const useAdminStore = defineStore('admin', {
     state: () => ({
@@ -10,6 +11,11 @@ export const useAdminStore = defineStore('admin', {
         params: {},
     }),
     actions: {
+        async loadAllSis() {
+            const { data } = await AuthService.sisListe();
+            this.sis = data;
+            return data;
+        },
         async addSis(sis) {
             const { data } = await AdminService.addSis(sis);
             this.sis.push(data);
