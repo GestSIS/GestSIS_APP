@@ -1,8 +1,8 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 
-const store = useStore();
+const aspsmsParamStore = useAspsmsParamStore();
 
 const errors = ref({});
 const params = ref({
@@ -10,8 +10,8 @@ const params = ref({
   password: null,
 });
 
-const aspsmsParams = computed(() => store.state.aspsmsParam.params);
-const credit = computed(() => store.state.aspsmsParam.credit);
+const aspsmsParams = computed(() => aspsmsParamStore.params);
+const credit = computed(() => aspsmsParamStore.credit);
 
 watch(aspsmsParams, (value) => {
   if (value && value?.username && value?.password) {
@@ -27,16 +27,14 @@ const save = async () => {
     awn.success('Modifications enregistrées');
     return;
   }
-  store
-    .dispatch('updateAspsmsParams', { ...params.value })
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
-    })
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
-    });
+  try {
+    const res = await aspsmsParamStore.updateAspsmsParams({ ...params.value });
+    errors.value = {};
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = err;
+    awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
+  }
 };
 </script>
 

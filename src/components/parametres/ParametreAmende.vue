@@ -1,13 +1,21 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useAmendeStore } from '../../stores/comptabilite/Amende.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 
-const store = useStore();
+const uniteStore = useUniteStore();
+const fonctionStore = useFonctionStore();
+const amendeStore = useAmendeStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
 
-const loadAmendes = store.dispatch('fetchAmendes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
+const loadAmendes = amendeStore.fetchAmendes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
 
 await Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]);
 
@@ -19,10 +27,10 @@ const params = ref({
 });
 
 const listeAmende = computed(() =>
-  store.state.amende.liste.sort((a, b) => a.order - b.order),
+  amendeStore.liste.sort((a, b) => a.order - b.order),
 );
-const listeCompte = computed(() => store.state.compte.liste);
-const listeCategorie = computed(() => store.state.ecritureCategorie.liste);
+const listeCompte = computed(() => compteStore.liste);
+const listeCategorie = computed(() => ecritureCategorieStore.liste);
 
 if (listeAmende.value.length > 0) {
   params.value.compte_id = listeAmende.value[0]?.compte_id;
@@ -45,8 +53,8 @@ const addAmende = () => {
 
 const awn = inject('awn');
 const save = async () => {
-  store
-    .dispatch('updateAmendes', params.value)
+  amendeStore
+    .updateAmendes(params.value)
     .then((res) => {
       errors.value = {};
       awn.success(res?.message || 'Modifications enregistrées');

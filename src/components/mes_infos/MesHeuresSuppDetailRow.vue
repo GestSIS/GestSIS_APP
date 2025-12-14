@@ -1,4 +1,9 @@
 <script setup>
+import { computed } from 'vue';
+import { useUniteStore } from '../../stores/common/Unite.js';
+
+const uniteStore = useUniteStore();
+
 const { rowData, options } = defineProps({
   rowData: {
     type: Object,
@@ -14,7 +19,7 @@ const computedData = computed(() => [
   rowData.heures.reduce(
     (acc, h) => {
       acc['k' + h.id] = `${h.quantite} ${
-        store.state.unite.liste.find((u) => u.id == h.type_unite_id)?.unite
+        uniteStore.liste.find((u) => u.id == h.type_unite_id)?.unite
       }`;
       return acc;
     },

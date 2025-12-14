@@ -1,14 +1,20 @@
 <script setup>
 import { computed, inject } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
-const store = useStore();
-const loadTravailTypes = store.dispatch('fetchTravailTypes');
-const loadUnites = store.dispatch('fetchUnites');
-const loadComptes = store.dispatch('fetchComptes');
-const loadEcritureCategories = store.dispatch('fetchEcritureCategories');
+const uniteStore = useUniteStore();
+const travailTypeStore = useTravailTypeStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const loadTravailTypes = travailTypeStore.fetchTravailTypes();
+const loadUnites = uniteStore.fetchUnites();
+const loadComptes = compteStore.fetchComptes();
+const loadEcritureCategories = ecritureCategorieStore.fetchEcritureCategories();
 
 await Promise.all([
   loadComptes,
@@ -49,19 +55,18 @@ const detailRowOptions = {
 };
 
 const computedData = computed(() => {
-  return store.state.travailType.liste.map((c) => ({
+  return travailTypeStore.liste.map((c) => ({
     ...c,
     getData: () =>
       Promise.resolve(
         c.fonctions.map((e) => ({
           ...e,
-          unite: store.state.unite.liste.find((u) => u.id == c.type_unite_id)
-            ?.unite,
-          compte: store.state.compte.liste.find((c) => c.id == e.compte_id)
+          unite: uniteStore.liste.find((u) => u.id == c.type_unite_id)?.unite,
+          compte: compteStore.liste.find((c) => c.id == e.compte_id)
             ?.designation,
         })),
       ),
-    categorie: store.state.ecritureCategorie.liste.find(
+    categorie: ecritureCategorieStore.liste.find(
       (e) => e.id == c.ecriture_categorie_id,
     )?.designation,
   }));
@@ -85,8 +90,8 @@ const updateTravailType = (travailType) =>
   });
 
 const deleteTravailType = (travailType) =>
-  store
-    .dispatch('removeTravailType', travailType.id)
+  travailTypeStore
+    .removeTravailType(travailType.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

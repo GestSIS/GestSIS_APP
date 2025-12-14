@@ -1,37 +1,48 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const uniteStore = useUniteStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
 
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchUnites');
-store.dispatch('fetchComptes');
-store.dispatch('fetchEcritureCategories');
+await exerciceComptableStore.fetchExercicesComptables();
+
+sapeurStore.fetchListeSapeur();
+uniteStore.fetchUnites();
+compteStore.fetchComptes();
+ecritureCategorieStore.fetchEcritureCategories();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchEcrituresDivers', activeExerciceComptableId.value);
+  await imputationStore.fetchEcrituresDivers(activeExerciceComptableId.value);
   loading.value = false;
 });
 
 const selectedItem = ref(null);
 const selected = (item) => (selectedItem.value = item);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
-const ecritures = computed(() => store.state.imputation.ecritures.divers);
+const sapeurs = computed(() => sapeurStore.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
+const ecritures = computed(() => imputationStore.ecritures.divers);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -94,8 +105,8 @@ const deleteEcriture = (ecritureId) => {
     'Voulez-vous vraiment supprimer cette écriture ?',
     "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
   ).then(() =>
-    store
-      .dispatch('removeEcriture', ecritureId)
+    imputationStore
+      .removeEcriture(ecritureId)
       .catch((err) =>
         awn.alert(
           err?.message ?? 'Erreur, impossible de supprimer cette écriture',

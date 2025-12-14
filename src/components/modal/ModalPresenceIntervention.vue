@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 
 const { callback, data } = defineProps({
   callback: {
@@ -13,6 +14,8 @@ const { callback, data } = defineProps({
     default: () => {},
   },
 });
+
+const interventionStore = useInterventionStore();
 
 const dateDebutMin = data.min.slice(0, 10);
 const dateDebutMax = data.max.slice(0, 10);
@@ -37,9 +40,9 @@ const selectedSapeurs = ref(
 );
 const piquet = ref(data.presence?.piquet ?? false);
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 const sapeurs = computed(() =>
-  store.state.sapeur.liste.filter((s) => s.actif && s.type == 0),
+  sapeurStore.liste.filter((s) => s.actif && s.type == 0),
 );
 
 const nbSelectedSapeurs = () => {
@@ -84,8 +87,8 @@ const save = () => {
       fin,
       piquet: piquet.value,
     };
-    store
-      .dispatch('editPresence', presence)
+    interventionStore
+      .editPresence(presence)
       .then(() => {
         (callback() ?? Promise.resolve()).then((close) => {
           if (close ?? true) {
@@ -112,8 +115,8 @@ const save = () => {
           { sapeur_id: s, debut, fin, piquet: piquet.value },
         ];
       });
-    store
-      .dispatch('addPresences', presences)
+    interventionStore
+      .addPresences(presences)
       .then(() => {
         (callback() ?? Promise.resolve()).then((close) => {
           if (close ?? true) {

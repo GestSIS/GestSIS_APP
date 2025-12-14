@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const exerciceComptableStore = useExerciceComptableStore();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const fields = [
   { title: 'Année', key: 'annee' },
@@ -16,7 +16,7 @@ const fields = [
 ];
 
 const listeExerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.sort((a, b) => b.annee - a.annee),
+  exerciceComptableStore.liste.sort((a, b) => b.annee - a.annee),
 );
 
 const { showModal } = useModalStore();

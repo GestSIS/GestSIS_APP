@@ -1,9 +1,9 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
-import { useStore } from 'vuex';
 
 const { callback, data } = defineProps({
   callback: {
@@ -25,8 +25,8 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const listeExcuseTypes = computed(() => store.state.excuseType.liste);
+const excuseTypeStore = useExcuseTypeStore();
+const listeExcuseTypes = computed(() => excuseTypeStore.liste);
 const hasValidationPermission = useHasPermission(
   permissions.EXERCICE.VALIDATION,
 );

@@ -1,29 +1,32 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-const store = useStore();
-const loadFrais = store.dispatch('fetchFraisTypes');
-const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
 
-await Promise.all([
-  loadFrais,
-  loadIndemnites,
-  loadFonctions,
-  loadComptes,
-  loadUnites,
-]);
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const fonctionStore = useFonctionStore();
+const uniteStore = useUniteStore();
+
+const loadIndemnites = imputationStore.fetchFraisIndemnitesTypes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
+
+await Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]);
 
 const detailsTypes = ref(false);
 const fonctions = computed(() =>
-  store.state.fonction.liste.slice(0).sort((a, b) => b.tri - a.tri),
+  fonctionStore.liste.slice(0).sort((a, b) => b.tri - a.tri),
 );
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const formatType = (type) => {
   const mapping = {
@@ -38,7 +41,7 @@ const formatType = (type) => {
 };
 
 const typesAnnuel = computed(() =>
-  store.state.imputation.fraisIndemnites.annuels.map((f) => {
+  imputationStore.fraisIndemnites.annuels.map((f) => {
     const compte = comptes.value.find((c) => c.id === f.compte_id);
     return {
       ...f,
@@ -89,7 +92,7 @@ const deleteType = (type) => {
   confirm(
     `Voulez-vous vraiment supprimer ${description} ?`,
     'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
-  ).then(() => store.dispatch('removeFraisIndemniteAnnuelType', type.id));
+  ).then(() => imputationStore.removeFraisIndemniteAnnuelType(type.id));
 };
 
 const addFonction = (type, fonction) => {
@@ -126,7 +129,7 @@ const deleteFonction = (type, fonction) => {
   confirm(
     `Voulez-vous vraiment supprimer ${description} ?`,
     'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
-  ).then(() => store.dispatch('removeFraisIndemniteAnnuel', elem.id));
+  ).then(() => imputationStore.removeFraisIndemniteAnnuel(elem.id));
 };
 </script>
 

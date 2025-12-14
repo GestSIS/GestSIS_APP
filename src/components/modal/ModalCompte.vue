@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 
 const { data } = defineProps({
   data: {
@@ -15,12 +15,12 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const compteStore = useCompteStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch(form?.id ? 'updateCompte' : 'addCompte', form)
+  const action = form?.id ? 'updateCompte' : 'addCompte';
+  compteStore[action](form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

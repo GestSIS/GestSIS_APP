@@ -6,25 +6,31 @@ import MesTelephones from './MesTelephones.vue';
 
 import { computed, ref } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useStore } from 'vuex';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 
-const store = useStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
 const infosStore = useMesInfosStore();
 
 await Promise.all([
   infosStore.fetchMesInfos(),
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchCivilites'),
-  store.dispatch('fetchTelephoneTypes'),
-  store.dispatch('fetchFonctions'),
-  store.dispatch('fetchGrades'),
+  localiteStore.fetchLocalites(),
+  baseDataStore.fetchCivilites(),
+  baseDataStore.fetchTelephoneTypes(),
+  fonctionStore.fetchFonctions(),
+  gradeStore.fetchGrades(),
 ]);
 
 const hasEditPermission = ref(false);
 
 const sapeur = computed(() => infosStore.infos);
-const fonctions = computed(() => store.state.fonction.liste);
-const grades = computed(() => store.state.grade.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const grades = computed(() => gradeStore.liste);
 const estSapeur = computed(() => {
   return sapeur.value.type == 0;
 });

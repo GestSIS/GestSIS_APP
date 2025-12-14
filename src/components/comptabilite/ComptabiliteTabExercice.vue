@@ -1,20 +1,31 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const localiteStore = useLocaliteStore();
+const sapeurStore = useSapeurStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
 
-store.dispatch('fetchExerciceCategories');
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchFraisIndemnitesTypes');
-store.dispatch('fetchComptes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+exerciceCategorieStore.fetchExerciceCategories();
+sapeurStore.fetchListeSapeur();
+localiteStore.fetchLocalites();
+imputationStore.fetchFraisIndemnitesTypes();
+compteStore.fetchComptes();
 
 const loading = ref(false);
 const exercices = ref([]);
@@ -22,7 +33,7 @@ const init = async () => {
   loading.value = true;
   const ecritures =
     await ImputationService.getExerciceEcriturePourExerciceComptable(
-      store.state.exerciceComptable.activeId,
+      exerciceComptableStore.activeId,
     );
   exercices.value = [...ecritures].sort((a, b) => a.date.localeCompare(b.date));
   loading.value = false;
@@ -35,9 +46,9 @@ const selectedItem = computed(() =>
   exercices.value.find((e) => e.id === selectedItemId.value),
 );
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const localites = computed(() => store.state.localite.liste);
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const localites = computed(() => localiteStore.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -91,8 +102,8 @@ const annulerImputer = (exerciceId) =>
     'Voulez-vous vraiment supprimer cette imputation ?',
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
   ).then(() =>
-    store
-      .dispatch('annulerImputationExercice', exerciceId)
+    imputationStore
+      .annulerImputationExercice(exerciceId)
       .then(({ statut }) => {
         exercices.value = [
           ...exercices.value.filter((e) => e.id != exerciceId),

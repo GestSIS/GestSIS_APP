@@ -1,18 +1,19 @@
 <script setup>
 import { computed } from 'vue';
 import links from '/src/router/menu.js';
-import { useStore } from 'vuex';
 import useHasPermission from '../hooks/usePermission';
+import { useAuthStore } from '../stores/auth/Auth.js';
 
-const store = useStore();
-store.dispatch('loadSisListe');
+const authStore = useAuthStore();
+
+authStore.loadSisListe();
 
 const sis = computed(() =>
-  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId),
+  authStore.sis.liste.find((s) => s.id == authStore.sis.activeId),
 );
-const isAdmin = computed(() => store.state.auth.admin);
-const isSapeur = computed(() => store.state.auth.sapeurId);
-const perms = computed(() => store.state.auth.sis.permissions);
+const isAdmin = computed(() => authStore.admin);
+const isSapeur = computed(() => authStore.sapeurId);
+const perms = computed(() => authStore.sis.permissions);
 
 const filteredLinks = computed(() => {
   return links.filter(

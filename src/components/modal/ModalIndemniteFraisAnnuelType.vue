@@ -1,6 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -17,20 +19,18 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const comptes = computed(() => store.state.compte.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+const comptes = computed(() => compteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const { closeModal } = useModalStore();
 
 const save = () =>
-  store
-    .dispatch(
-      form?.id
-        ? 'updateFraisIndemniteAnnuelType'
-        : 'addFraisIndemniteAnnuelType',
-      form,
-    )
+  (form?.id
+    ? imputationStore.updateFraisIndemniteAnnuelType
+    : imputationStore.addFraisIndemniteAnnuelType)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 </script>

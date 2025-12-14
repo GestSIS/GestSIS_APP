@@ -1,21 +1,21 @@
 <script setup>
 import { computed } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import store from '/src/store/index';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 
 const infosStore = useMesInfosStore();
+const fonctionStore = useFonctionStore();
 
 await Promise.all([
   infosStore.fetchMesFonctions(),
-  store.dispatch('fetchFonctions'),
+  fonctionStore.fetchFonctions(),
 ]);
 
 const fonctions = computed(() =>
   infosStore.fonctions
     .map((t) => ({
       ...t,
-      fonction: store.state.fonction.liste.find((e) => e.id == t.fonction_id)
-        ?.nom,
+      fonction: fonctionStore.liste.find((e) => e.id == t.fonction_id)?.nom,
     }))
     .sort((a, b) => b.debut.localeCompare(a.debut)),
 );

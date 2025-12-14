@@ -1,14 +1,19 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 import ParametreCours from './ParametreCours.vue';
 import ParametreFonction from './ParametreFonction.vue';
 import ParametreGrade from './ParametreGrade.vue';
 import { ref } from 'vue';
 
-const store = useStore();
-const loadFonction = store.dispatch('fetchFonctions');
-const loadCours = store.dispatch('fetchCours');
-const loadGrade = store.dispatch('fetchGrades');
+const coursStore = useCoursStore();
+const fonctionStore = useFonctionStore();
+const gradeStore = useGradeStore();
+
+const loadFonction = fonctionStore.fetchFonctions();
+const loadCours = coursStore.fetchCours();
+const loadGrade = gradeStore.fetchGrades();
 
 await Promise.all([loadFonction, loadCours, loadGrade]);
 const tab = ref('cours');

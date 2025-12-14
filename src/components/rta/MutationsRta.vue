@@ -1,34 +1,41 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useRtaStore } from '../../stores/rta/Rta.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
-const store = useStore();
+const authStore = useAuthStore();
+const rtaStore = useRtaStore();
+const localiteStore = useLocaliteStore();
+const groupeStore = useGroupeStore();
+const fonctionStore = useFonctionStore();
 
-store.dispatch('fetchLocalites');
-store.dispatch('fetchFonctions');
-store.dispatch('fetchGroupes');
-store.dispatch('fetchReferenceGestSis');
-store.dispatch('fetchReferenceRta');
+localiteStore.fetchLocalites();
+fonctionStore.fetchFonctions();
+groupeStore.fetchGroupes();
+rtaStore.fetchReferenceGestSis();
+rtaStore.fetchReferenceRta();
 
 const maxNbNumero = 3;
 const unselected = ref({});
 const errors = ref({});
 
 const reference = computed(() =>
-  store.state.rta.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+  rtaStore.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
 );
 const activeSisData = computed(() =>
-  store.state.auth.sis.liste.find((s) => s.id == store.state.auth.sis.activeId),
+  authStore.sis.liste.find((s) => s.id == authStore.sis.activeId),
 );
 const actuel = computed(() =>
-  store.state.rta.actuel
+  rtaStore.actuel
     .map((s) => ({
       ...s,
-      localite: store.state.localite.liste.find((l) => l.id == s.localite_id)
+      localite: localiteStore.liste.find((l) => l.id == s.localite_id)
         ?.designation,
       fonction:
-        store.state.fonction.liste.find((f) => f.id == s.fonction_id)?.nom ??
-        '',
+        fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom ?? '',
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => ({
         numero: t.numero,
@@ -41,7 +48,7 @@ const actuel = computed(() =>
         tri: t.priorite,
       })),
       groupes: s.groupes
-        .map((id) => store.state.groupe.liste.find((g) => g.id == id))
+        .map((id) => groupeStore.liste.find((g) => g.id == id))
         .filter((g) => g?.type == 1)
         .map((g) => ({ no: g.no.toString(), designation: g.designation })),
     }))
@@ -225,8 +232,8 @@ const mutate = () => {
     ],
   };
 
-  store
-    .dispatch('updateReferenceRta', data)
+  rtaStore
+    .updateReferenceRta(data)
     .then(() => {
       awn.success('Mutation transmise avec succès');
     })

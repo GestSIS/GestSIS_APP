@@ -1,28 +1,26 @@
 <script setup>
 import { inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
 
-const store = useStore();
-await store.dispatch('fetchAbsenceParams');
+const absenceParamStore = useAbsenceParamStore();
+await absenceParamStore.fetchParams();
 
 const errors = ref({});
 const params = ref({
   actif: false,
-  ...store.state.absenceParam.params,
+  ...absenceParamStore.params,
 });
 
 const awn = inject('awn');
 const save = async () => {
-  store
-    .dispatch('updateAbsenceParams', params.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
-    })
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(e?.message || "Erreur lors de l'enregistrement");
-    });
+  try {
+    const res = await absenceParamStore.updateAbsenceParams(params.value);
+    errors.value = {};
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = err;
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
 };
 </script>
 

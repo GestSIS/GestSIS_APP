@@ -1,12 +1,12 @@
 <script setup>
-import { useStore } from 'vuex';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { watchEffect } from 'vue';
 import { computed } from 'vue';
 import router from '../router';
 import { useRoute } from 'vue-router';
+import { useInterventionStore } from '../stores/intervention/Intervention.js';
 
-const store = useStore();
+const interventionStore = useInterventionStore();
 const route = useRoute();
 
 const { id } = defineProps({
@@ -19,7 +19,7 @@ const { id } = defineProps({
 const newMode = computed(() => id === 'new');
 watchEffect(() => {
   if (id !== 'new') {
-    store.dispatch('selectIntervention', id);
+    interventionStore.selectIntervention(id);
   } else {
     if (route.name != 'intervention-details') {
       router.push({ name: 'intervention-details', id: 'new' });
@@ -27,9 +27,7 @@ watchEffect(() => {
   }
 });
 
-const activeInterventionData = computed(
-  () => store.state.intervention.active.data,
-);
+const activeInterventionData = computed(() => interventionStore.active.data);
 
 const breadcrumbFinal = computed(() =>
   newMode.value

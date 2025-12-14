@@ -1,6 +1,5 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { inject, ref } from 'vue';
 
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -29,12 +28,11 @@ const activeAttribution = ref({
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
-const store = useStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 
 const { closeModal } = useModalStore();

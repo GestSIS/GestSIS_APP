@@ -1,12 +1,14 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
 
 const model = defineModel();
 
-const store = useStore();
-const localites = computed(() => store.state.localite.liste);
-const civilites = computed(() => store.state.baseData.civilites);
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
+const localites = computed(() => localiteStore.liste);
+const civilites = computed(() => baseDataStore.civilites);
 </script>
 
 <template>

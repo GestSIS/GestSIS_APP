@@ -1,33 +1,33 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
+import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 import { computed, ref, watchEffect } from 'vue';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const medecinStore = useMedecinStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
 const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchSapeurControlesMedicaux',
-    store.state.sapeur.active.id,
-  );
+  await sapeurStore.fetchSapeurControlesMedicaux(sapeurStore.active.id);
   loading.value = false;
 });
 
 await Promise.all([
-  store.dispatch('fetchMedecins'),
-  store.dispatch('fetchControlesMedicauxTypes'),
+  medecinStore.fetchMedecins(),
+  controleMedicalTypeStore.fetchTypes(),
 ]);
 
 const controles = computed(() =>
-  store.state.sapeur.active.controles.map((c) => ({
+  sapeurStore.active.controles.map((c) => ({
     ...c,
-    controle_medical_type: store.state.controlesMedicauxType.liste.find(
+    controle_medical_type: controleMedicalTypeStore.liste.find(
       (l) => l.id == c.controle_medical_type_id,
     )?.designation,
-    medecin: store.state.medecin.liste.find((l) => l.id == c.medecin_id)
-      ?.designation,
+    medecin: medecinStore.liste.find((l) => l.id == c.medecin_id)?.designation,
   })),
 );
 

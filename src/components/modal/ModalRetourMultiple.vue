@@ -1,6 +1,5 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -18,7 +17,6 @@ const form = reactive({
 });
 const selected = ref(Object.fromEntries(data.map((m) => [m.id, true])));
 
-const store = useStore();
 // FIXME: a réimplémenter
 const types = computed(() => store.state.matPersoType.liste);
 

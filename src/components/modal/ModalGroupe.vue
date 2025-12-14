@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
 const { data } = defineProps({
   data: {
@@ -16,9 +16,9 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const groupeStore = useGroupeStore();
 const groupes = computed(() =>
-  store.state.groupe.liste.map((g) => ({
+  groupeStore.liste.map((g) => ({
     ...g,
     label: (g.no ? g.no + ' ' : '') + g.designation,
   })),
@@ -26,8 +26,8 @@ const groupes = computed(() =>
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  store
-    .dispatch('createGroupe', form)
+  groupeStore
+    .createGroupe(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

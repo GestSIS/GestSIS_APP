@@ -1,21 +1,26 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useSisParamStore } from '../../stores/params/SisParam.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 import SisParamService from '../../services/SisParamService';
 import permissions from '../../store/permissions';
 
 import Api from '/src/http/Request';
 import useHasPermission from '../../composables/usePermission.js';
 
-const store = useStore();
-const loadLocalites = store.dispatch('fetchLocalites');
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadParams = store.dispatch('fetchSisParams');
-const loadContacts = store.dispatch('fetchSisContacts');
+const localiteStore = useLocaliteStore();
+const sisParamStore = useSisParamStore();
+const sapeurStore = useSapeurStore();
+const loadLocalites = localiteStore.fetchLocalites();
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadParams = sisParamStore.fetchParams();
+const loadContacts = sisParamStore.fetchContacts();
 
 await Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]);
-await store.dispatch('fetchLocalitesSis');
+await localiteStore.fetchLocalitesSis();
 
 const logo = ref(null);
 const logoUrl = ref('');
@@ -31,19 +36,20 @@ const listes = [
 ];
 
 const hasConfigGeneralPermission = useHasPermission(permissions.SIS.CONFIG);
-const activeSisKey = computed(() => store.state.auth.sis.activeKey);
-const params = computed(() => store.state.sisParam.params);
-const contacts = computed(() => store.state.sisParam.contacts);
-const localites = computed(() => store.state.localite.liste);
+const authStore = useAuthStore();
+const activeSisKey = computed(() => authStore.sis.activeKey);
+const params = computed(() => sisParamStore.params);
+const contacts = computed(() => sisParamStore.contacts);
+const localites = computed(() => localiteStore.liste);
 const localitesSis = computed(() =>
-  store.state.localite.listeSis.map((l) => ({
+  localiteStore.listeSis.map((l) => ({
     id: l,
-    npa: store.state.localite.liste.find((e) => e.id == l)?.npa,
-    localite: store.state.localite.liste.find((e) => e.id == l)?.designation,
+    npa: localiteStore.liste.find((e) => e.id == l)?.npa,
+    localite: localiteStore.liste.find((e) => e.id == l)?.designation,
   })),
 );
 const sapeurs = computed(() =>
-  store.state.sapeur.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
+  sapeurStore.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
 );
 
 const sisParam = ref({});
@@ -60,7 +66,7 @@ const removeContact = (contact) =>
   confirm(
     'Voulez-vous vraiment supprimer cet email ?',
     'Attention, cet email ne recevra plus les emails de cette liste de diffusion !',
-  ).then(() => store.dispatch('removeSisContact', contact.id));
+  ).then(() => sisParamStore.removeSisContact(contact.id));
 
 const updateLocalitesSis = () => {
   const callback = (res) => {
@@ -69,10 +75,10 @@ const updateLocalitesSis = () => {
     }
     const { ajoute, supprime } = res;
     if (ajoute.length) {
-      store.dispatch('addLocalitesSis', ajoute);
+      localiteStore.addLocalitesSis(ajoute);
     }
     if (supprime.length) {
-      store.dispatch('removeLocalitesSis', supprime);
+      localiteStore.removeLocalitesSis(supprime);
     }
 
     return Promise.resolve();
@@ -86,18 +92,16 @@ const updateLocalitesSis = () => {
   });
 };
 const save = async () => {
-  store
-    .dispatch('updateSisParams', sisParam.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
-    })
-    .catch((errors) => {
-      errors.value = {
-        ...errors,
-      };
-      awn.alert(errors?.message || "Erreur lors de l'enregistrement");
-    });
+  try {
+    const res = await sisParamStore.updateSisParams(sisParam.value);
+    errors.value = {};
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = {
+      ...err,
+    };
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
 };
 const loadSisLogo = () => {
   const timestamp = new Date().getTime();

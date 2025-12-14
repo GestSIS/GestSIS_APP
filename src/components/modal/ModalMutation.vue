@@ -1,6 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -15,17 +17,19 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
 //Chargement de données en prévision de la fin de service
-store.dispatch('fetchSapeurExercices', {
-  sapeurId: store.state.sapeur.active.id,
-  exerciceComptableId: store.state.exerciceComptable.activeId,
+sapeurStore.fetchSapeurExercices({
+  sapeurId: sapeurStore.active.id,
+  exerciceComptableId: exerciceComptableStore.activeId,
 });
-store.dispatch('fetchSapeurGroupes', store.state.sapeur.active.id);
-store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+sapeurStore.fetchSapeurGroupes(sapeurStore.active.id);
+sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
 
-const localites = computed(() => store.state.localite.liste);
+const localites = computed(() => localiteStore.liste);
 
 const finDeService = computed(() => form.action == 'finService');
 
@@ -33,21 +37,21 @@ const { closeModal, showModal } = useModalStore();
 
 const save = () => {
   if ((form.id || 0) === 0) {
-    store
-      .dispatch('addMutation', form)
+    sapeurStore
+      .addMutation(form)
       .then(closeModal)
       .catch((err) => (errors.value = err));
   } else {
-    store
-      .dispatch('editMutation', form)
+    sapeurStore
+      .editMutation(form)
       .then(() => {
         errors.value = {};
 
         if (
           (finDeService.value || (!form.sortie && !!form.sortie)) &&
-          store.state.sapeur.active.groupes.length +
-            store.state.sapeur.active.exercices.length +
-            store.state.sapeur.active.fonctions.length >
+          sapeurStore.active.groupes.length +
+            sapeurStore.active.exercices.length +
+            sapeurStore.active.fonctions.length >
             0
         ) {
           showModal('ModalMutationDesactivation');

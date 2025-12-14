@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { useStore } from 'vuex';
 import Public from '../pages/PagePublic.vue';
 import Home from '../pages/PageHome.vue';
 import permissions from '../store/permissions.js';
+import { useAuthStore } from '../stores/auth/Auth.js';
 
 import { TokenService } from '../services/StorageService.js';
 
@@ -12,8 +12,8 @@ import PageTravaux from '../pages/PageTravaux.vue';
 
 
 const redirect = (to, from, next) => {
-  const store = useStore();
-  const isLoggedIn = !!store.state.auth.user;
+  const authStore = useAuthStore();
+  const isLoggedIn = !!authStore.user;
   if (isLoggedIn) {
     next({
       name: 'dashboard', // back to safety route //
@@ -29,8 +29,8 @@ const redirect = (to, from, next) => {
 
 const adminGuard = () => {
   return function (to, from, next) {
-    const store = useStore();
-    const isAdmin = store.state.auth.admin;
+    const authStore = useAuthStore();
+    const isAdmin = authStore.admin;
     if (isAdmin) {
       next();
     } else {
@@ -42,8 +42,8 @@ const adminGuard = () => {
 
 const travauxGuard = () => {
   return function (to, from, next) {
-    const store = useStore();
-    const isAdmin = store.state.auth.admin;
+    const authStore = useAuthStore();
+    const isAdmin = authStore.admin;
     if (isAdmin) {
       next();
     } else {
@@ -65,8 +65,8 @@ const permissionGuard = (...perms) => {
 
 const sapeurGuard = () => {
   return function (to, from, next) {
-    const store = useStore();
-    const isSapeur = store.state.auth.sapeurId != null;
+    const authStore = useAuthStore();
+    const isSapeur = authStore.sapeurId != null;
     if (isSapeur) {
       next();
     } else {

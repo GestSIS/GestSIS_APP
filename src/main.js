@@ -1,10 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import types from './store/mutationTypes';
-import store from './store/index';
 import { TokenService } from './services/StorageService.js';
 import { createPinia } from 'pinia';
+import { useAuthStore } from './stores/auth/Auth.js';
 
 // Page layouts
 import Default from './layouts/DefaultLayout.vue';
@@ -30,14 +29,21 @@ import BaseTable from '/src/components/table/BaseTable.vue';
 import BaseNavigationTab from '/src/components/base/BaseNavigationTab.vue';
 import BaseCard from '/src/components/base/BaseCard.vue';
 
+const pinia = createPinia();
+const app = createApp(App);
+app.use(pinia).use(router);
+
+// Initialize auth store after pinia is set up
+const authStore = useAuthStore();
+
 router.beforeEach((to, from, next) => {
-  if (store.state.auth.sis.liste.length <= 0) {
-    store.dispatch('loadSisListe').then(() => {
+  if (authStore.sis.liste.length <= 0) {
+    authStore.loadSisListe().then(() => {
       const user = TokenService.getUser();
       const accessToken = TokenService.getAccessToken();
       const refreshToken = TokenService.getRefreshToken();
       if (accessToken !== null && refreshToken !== null) {
-        store.commit(types.AUTH_SUCCESSFULL, {
+        authStore.setAuthSuccessful({
           user,
           accessToken,
           refreshToken,
@@ -50,12 +56,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-const pinia = createPinia();
-const app = createApp(App);
 app
-  .use(router)
-  .use(store)
-  .use(pinia)
   .use(VueAWN, {
     labels: {
       success: 'Succès',

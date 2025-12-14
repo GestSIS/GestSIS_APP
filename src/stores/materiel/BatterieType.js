@@ -6,35 +6,27 @@ export const useBatterieTypeStore = defineStore('batterie-type', {
     liste: [],
   }),
   actions: {
-    fetchBatterieTypes() {
+    async fetchBatterieTypes() {
       if (this.liste.length > 0) {
-        return Promise.resolve();
-      } else {
-        return BatterieTypeService.getBatterieTypes().then(
-          (data) =>
-          (this.liste = data
-            .slice(0)
-            .sort((t1, t2) => t1.designation > t2.designation))
-        );
+        return;
       }
+      const data = await BatterieTypeService.getBatterieTypes();
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
     },
-    addBatterieType(BatterieType) {
-      return BatterieTypeService.addBatterieType(BatterieType).then((data) => {
-        this.liste = [...this.liste, data];
-        return data;
-      });
+    async addBatterieType(BatterieType) {
+      const data = await BatterieTypeService.addBatterieType(BatterieType);
+      this.liste = [...this.liste, data];
+      return data;
     },
-    updateBatterieType(BatterieType) {
-      return BatterieTypeService.updateBatterieType(BatterieType).then((data) => {
-        this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
-        return data;
-      });
+    async updateBatterieType(BatterieType) {
+      const data = await BatterieTypeService.updateBatterieType(BatterieType);
+      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      return data;
     },
-    removeBatterieType(BatterieTypeId) {
-      return BatterieTypeService.removeBatterieType(BatterieTypeId).then((data) => {
-        this.liste = this.liste.filter((m) => m.id != BatterieTypeId);
-        return data;
-      });
+    async removeBatterieType(BatterieTypeId) {
+      const data = await BatterieTypeService.removeBatterieType(BatterieTypeId);
+      this.liste = this.liste.filter((m) => m.id != BatterieTypeId);
+      return data;
     },
   },
 });

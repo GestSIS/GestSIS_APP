@@ -1,8 +1,10 @@
 <script setup>
 import { TokenService } from '../services/StorageService.js';
-import { useStore } from 'vuex';
 import * as data from '../../releases.json';
 import { computed, ref } from 'vue';
+import { useAuthStore } from '../stores/auth/Auth.js';
+
+const authStore = useAuthStore();
 
 const releases = ref(data.releases);
 const all = ref(false);
@@ -10,13 +12,12 @@ const nbNew = ref(0);
 const accessToken = ref(TokenService.getAccessToken());
 const refreshToken = ref(TokenService.getRefreshToken());
 
-const store = useStore();
-const isAdmin = computed(() => store.state.auth.admin);
+const isAdmin = computed(() => authStore.admin);
 
 const date = localStorage.getItem('latestReleaseDate', releases.value[0].date);
 const version = localStorage.getItem(
   'latestSeenVersion',
-  releases.value[0].version
+  releases.value[0].version,
 );
 localStorage.setItem('latestReleaseDate', releases.value[0].date);
 localStorage.setItem('latestSeenVersion', releases.value[0].version);
@@ -32,7 +33,7 @@ if (latestReadIndex < 0) {
 }
 
 const refreshTokens = () =>
-  store.dispatch('refreshToken').then(() => {
+  authStore.refreshToken().then(() => {
     accessToken.value = TokenService.getAccessToken();
     refreshToken.value = TokenService.getRefreshToken();
   });

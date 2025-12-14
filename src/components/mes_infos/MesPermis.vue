@@ -1,17 +1,16 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { computed } from 'vue';
 
-const store = useStore();
+const baseDataStore = useBaseDataStore();
 const infosStore = useMesInfosStore();
 
 await Promise.all([
-  store.dispatch('fetchPermisType'),
+  baseDataStore.fetchPermisType(),
   infosStore.fetchMesPermis(),
 ]);
 
-const listPermisType = computed(() => store.state.baseData.permisTypes);
+const listPermisType = computed(() => baseDataStore.permisTypes);
 const activeSapeurPermis = computed(() => infosStore.permis);
 const permisData = computed(() => {
   let permisData = Object.fromEntries(

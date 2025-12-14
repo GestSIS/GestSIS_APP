@@ -1,9 +1,10 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
 
 const { id } = defineProps({
   id: {
@@ -12,26 +13,28 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
-store.dispatch('fetchPhaseTypes');
+const interventionStore = useInterventionStore();
+const phaseTypeStore = usePhaseTypeStore();
+
+phaseTypeStore.fetchPhaseTypes();
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  store.dispatch('fetchIntervention', id);
-  store.dispatch('fetchInterventionPhases', id);
+  interventionStore.fetchIntervention(id);
+  interventionStore.fetchInterventionPhases(id);
   loading.value = false;
 });
 
-const interData = computed(() => store.state.intervention.active.data);
+const interData = computed(() => interventionStore.active.data);
 const phases = computed(() =>
-  store.state.intervention.active.phases.map((p) => ({
+  interventionStore.active.phases.map((p) => ({
     ...p,
     date_heure:
       p?.debut === null
-        ? `${store.state.intervention.active.data?.date_debut} ${store.state.intervention.active.data?.heure_debut}`
+        ? `${interventionStore.active.data?.date_debut} ${interventionStore.active.data?.heure_debut}`
         : p?.debut.slice(0, 16),
-    designation: store.state.phaseType.liste.find(
+    designation: phaseTypeStore.liste.find(
       (phase) => phase.id == p.phase_type_id,
     )?.designation,
   })),
@@ -65,7 +68,7 @@ const removePhase = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cette phase ?',
     "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
-  ).then(() => store.dispatch('removePhase', id));
+  ).then(() => interventionStore.removePhase(id));
 
 const fields = [
   { title: 'Début', key: 'date_heure', type: 'datetime' },

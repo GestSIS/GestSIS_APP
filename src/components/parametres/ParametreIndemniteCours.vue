@@ -1,13 +1,22 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
-await store.dispatch('fetchHeuresExercice');
+const uniteStore = useUniteStore();
+const heureExerciceStore = useHeureExerciceStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
+await heureExerciceStore.fetchHeuresExercice();
 
 const fields = [
   {
@@ -42,19 +51,18 @@ const detailRowOptions = {
 };
 
 const computedData = computed(() => {
-  return store.state.imputation.fraisIndemnites.cours.map((c) => ({
+  return imputationStore.fraisIndemnites.cours.map((c) => ({
     ...c,
     getData: () =>
       Promise.resolve(
         c.fonctions.map((e) => ({
           ...e,
-          unite: store.state.unite.liste.find((u) => u.id == e.type_unite_id)
-            ?.unite,
-          compte: store.state.compte.liste.find((c) => c.id == e.compte_id)
+          unite: uniteStore.liste.find((u) => u.id == e.type_unite_id)?.unite,
+          compte: compteStore.liste.find((c) => c.id == e.compte_id)
             ?.designation,
         })),
       ),
-    categorie: store.state.ecritureCategorie.liste.find(
+    categorie: ecritureCategorieStore.liste.find(
       (e) => e.id == c.ecriture_categorie_id,
     )?.designation,
   }));
@@ -76,8 +84,8 @@ const updateIndemnite = (indemnite) =>
     data: { ...indemnite },
   });
 const deleteIndemnite = (indemnite) =>
-  store
-    .dispatch('removeIndemniteCours', indemnite.id)
+  imputationStore
+    .removeIndemniteCours(indemnite.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 
@@ -97,7 +105,10 @@ const deleteIndemnite = (indemnite) =>
         :detail-row-column="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+          <generic-details-row
+            :options="detailRowOptions"
+            :row-data="rowData"
+          />
         </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">

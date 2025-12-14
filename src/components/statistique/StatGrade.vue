@@ -1,18 +1,20 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
-store.dispatch('fetchGrades');
-await store.dispatch('fetchExercicesComptables');
+const gradeStore = useGradeStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
+
+gradeStore.fetchGrades();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueGrade',
-    store.state.exerciceComptable.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueGrade(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -22,8 +24,8 @@ const fields = [
   { title: 'Nombre', key: 'quantite' },
 ];
 
-const grades = computed(() => store.state.grade.liste);
-const sapeurGrades = computed(() => store.state.statistique.grades);
+const grades = computed(() => gradeStore.liste);
+const sapeurGrades = computed(() => statistiqueStore.grades);
 const occurences = computed(() => {
   return sapeurGrades.value.reduce(
     (prev, { grade_id, nb }) => (

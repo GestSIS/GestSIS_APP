@@ -2,28 +2,37 @@
 import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { useStore } from 'vuex';
 import { computed, ref, watch, watchEffect } from 'vue';
 import useHasPermission from '../hooks/usePermission';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../stores/common/Localite.js';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
+import { useInterventionStore } from '../stores/intervention/Intervention.js';
+import { useInterventionTraitementStore } from '../stores/intervention/InterventionTraitement.js';
+import { useStatFederalStore } from '../stores/intervention/StatFederal.js';
+import { useTypeInterventionStore } from '../stores/intervention/TypeIntervention.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const interventionStore = useInterventionStore();
+const traitementStore = useInterventionTraitementStore();
+const statFederalStore = useStatFederalStore();
+const typeInterventionStore = useTypeInterventionStore();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadLocalities = store.dispatch('fetchLocalites');
-const loadStatFederal = store.dispatch('fetchStatFederals');
-const loadTypeInterventions = store.dispatch('fetchTypeInterventions');
-const loadInterventionTraitement = store.dispatch(
-  'fetchInterventionTraitements',
-);
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadLocalities = localiteStore.fetchLocalites();
+const loadStatFederal = statFederalStore.fetchStatFederals();
+const loadTypeInterventions = typeInterventionStore.fetchTypeInterventions();
+const loadInterventionTraitement = traitementStore.fetchTraitements();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchListeIntervention',
-    store.state.exerciceComptable.activeId,
+  await interventionStore.fetchListeIntervention(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -39,15 +48,15 @@ await Promise.all([
 const selectedId = ref(null);
 
 const interventions = computed(() =>
-  store.state.intervention.liste.sort((a, b) =>
+  interventionStore.liste.sort((a, b) =>
     b.date_debut.localeCompare(a.date_debut),
   ),
 );
-const types = computed(() => store.state.typeIntervention.liste);
-const stats = computed(() => store.state.statFederal.liste);
-const traitements = computed(() => store.state.interventionTraitement.liste);
+const types = computed(() => typeInterventionStore.liste);
+const stats = computed(() => statFederalStore.liste);
+const traitements = computed(() => traitementStore.liste);
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
 );
@@ -102,8 +111,8 @@ const supprimerIntervention = (id) =>
   confirm(
     "Voulez-vous vraiment supprimer l'intervention ?",
     "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => store.dispatch('removeIntervention', id));
-const validerIntervention = (id) => store.dispatch('validerIntervention', id);
+  ).then(() => interventionStore.removeIntervention(id));
+const validerIntervention = (id) => interventionStore.validerIntervention(id);
 
 const rapportIntervention = () => {
   const intervention = interventions.value.find(

@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, inject } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchEcritureCategories');
+const ecritureCategorieStore = useEcritureCategorieStore();
+await ecritureCategorieStore.fetchEcritureCategories();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -12,7 +12,7 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeCategorie = computed(() =>
-  store.state.ecritureCategorie.liste.sort((a, b) => a.tri - b.tri),
+  ecritureCategorieStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -28,8 +28,8 @@ const updateCategorie = (categorie) =>
   });
 
 const deleteCategorie = (compteId) =>
-  store
-    .dispatch('removeEcritureCategorie', compteId)
+  ecritureCategorieStore
+    .removeEcritureCategorie(compteId)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

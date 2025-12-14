@@ -1,13 +1,16 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, ref } from 'vue';
+import { useAuthStore } from '../../stores/auth/Auth.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
-const store = useStore();
-const loadPermissions = store.dispatch('fetchPermissions');
-const loadRoles = store.dispatch('fetchRoles');
-const loadUsers = store.dispatch('fetchUsers');
-const loadSapeurs = store.dispatch('fetchListeSapeur');
+const sapeurStore = useSapeurStore();
+const authStore = useAuthStore();
+
+const loadPermissions = authStore.fetchPermissions();
+const loadRoles = authStore.fetchRoles();
+const loadUsers = authStore.fetchUsers();
+const loadSapeurs = sapeurStore.fetchListeSapeur();
 
 const loading = ref(true);
 Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(
@@ -21,11 +24,11 @@ const filters = ref({
   sapeur: '',
 });
 
-const sisId = computed(() => store.state.auth.sis.activeId);
-const users = computed(() => store.state.auth.users);
-const roles = computed(() => store.state.auth.roles);
-const permissions = computed(() => store.state.auth.permissions);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sisId = computed(() => authStore.sis.activeId);
+const users = computed(() => authStore.users);
+const roles = computed(() => authStore.roles);
+const permissions = computed(() => authStore.permissions);
+const sapeurs = computed(() => sapeurStore.liste);
 
 const computedData = computed(() =>
   users.value

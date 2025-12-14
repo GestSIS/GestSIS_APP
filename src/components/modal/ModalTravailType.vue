@@ -1,7 +1,15 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+
+const uniteStore = useUniteStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const travailTypeStore = useTravailTypeStore();
 
 const { data } = defineProps({
   data: {
@@ -31,11 +39,9 @@ if (!base.value.length) {
   });
 }
 
-const store = useStore();
-
-const unites = computed(() => store.state.unite.liste); //.filter(u => !(u.id in [3, 4, 5, 7])))
-const comptes = computed(() => store.state.compte.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const unites = computed(() => uniteStore.liste); //.filter(u => !(u.id in [3, 4, 5, 7])))
+const comptes = computed(() => compteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const { closeModal } = useModalStore();
 const awn = inject('awn');
@@ -87,11 +93,9 @@ const save = async () => {
     fonctions: [...base.value],
   };
 
-  store
-    .dispatch(
-      (indemnite.id || 0) === 0 ? 'addTravailType' : 'updateTravailType',
-      indemnite,
-    )
+  ((indemnite.id || 0) === 0
+    ? travailTypeStore.addTravailType
+    : travailTypeStore.updateTravailType)(indemnite)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

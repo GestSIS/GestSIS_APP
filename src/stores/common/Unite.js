@@ -6,30 +6,26 @@ export const useUniteStore = defineStore('Unite', {
     liste: [],
   }),
   actions: {
-    fetchUnites() {
+    async fetchUnites() {
       if (this.liste.length > 0) {
-        return Promise.resolve();
-      } else {
-        return UniteService.getUnites().then((data) => this.liste = data)
+        return;
       }
+      this.liste = await UniteService.getUnites();
     },
-    addUnite(Unite) {
-      return UniteService.addUnite(Unite).then((data) => {
-        this.liste = [...this.liste, data];
-        return data;
-      });
+    async addUnite(Unite) {
+      const data = await UniteService.addUnite(Unite);
+      this.liste = [...this.liste, data];
+      return data;
     },
-    updateUnite(Unite) {
-      return UniteService.updateUnite(Unite).then((data) => {
-        this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
-        return data;
-      });
+    async updateUnite(Unite) {
+      const data = await UniteService.updateUnite(Unite);
+      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      return data;
     },
-    removeUnite(UniteId) {
-      return UniteService.removeUnite(UniteId).then((data) => {
-        this.liste = this.liste.filter((m) => m.id != UniteId);
-        return data;
-      });
+    async removeUnite(UniteId) {
+      const data = await UniteService.removeUnite(UniteId);
+      this.liste = this.liste.filter((m) => m.id != UniteId);
+      return data;
     },
   },
 });

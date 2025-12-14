@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
 import { inject, reactive, ref, watchEffect } from 'vue';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 
-const store = useStore();
+const interventionStore = useInterventionStore();
 
 const { id } = defineProps({
   id: {
@@ -20,8 +20,8 @@ const form = reactive({
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchIntervention', id);
-  form.description = store.state.intervention.active.data.description;
+  await interventionStore.fetchIntervention(id);
+  form.description = interventionStore.active.data.description;
   loading.value = false;
 });
 
@@ -30,17 +30,18 @@ const hasEditPermission = useHasPermission(
 );
 
 const awn = inject('awn');
-const save = () => {
-  store
-    .dispatch('saveActiveIntervention', {
+const errors = ref({});
+const save = async () => {
+  try {
+    const res = await interventionStore.saveActiveIntervention({
       id,
       ...form,
-    })
-    .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(err?.message || "Erreur lors de l'enregistrement");
     });
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = err;
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
 };
 </script>
 

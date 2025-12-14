@@ -1,21 +1,28 @@
 <script setup>
 import { computed, inject, ref, useTemplateRef, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import CompteService from '/src/services/CompteService.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
 
-store.dispatch('fetchExercicesComptables');
-store.dispatch('fetchListeSapeur');
-await store.dispatch('fetchComptes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+exerciceComptableStore.fetchExercicesComptables();
+sapeurStore.fetchListeSapeur();
+await compteStore.fetchComptes();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
-const activeCompteId = ref(store.state.compte.liste[0]?.id ?? null);
+const activeCompteId = ref(compteStore.liste[0]?.id ?? null);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -23,7 +30,7 @@ watchEffect(async () => {
     return;
   }
   loading.value = true;
-  await store.dispatch('fetchEcritureComptes', {
+  await imputationStore.fetchEcritureComptes({
     exerciceComptableId: activeExerciceComptableId.value,
     compteId: activeCompteId.value,
   });
@@ -32,9 +39,9 @@ watchEffect(async () => {
 
 const dropdown = useTemplateRef('dropdown');
 
-const ecritures = computed(() => store.state.imputation.active.ecritures);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const comptes = computed(() => store.state.compte.liste);
+const ecritures = computed(() => imputationStore.active.ecritures);
+const sapeurs = computed(() => sapeurStore.liste);
+const comptes = computed(() => compteStore.liste);
 
 const computedData = computed(() => {
   return ecritures.value.map((e) => ({

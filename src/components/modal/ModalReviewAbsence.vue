@@ -1,6 +1,11 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
 import SapeurService from '../../services/SapeurService';
@@ -23,17 +28,22 @@ const form = ref({
 });
 const activeSapeurExercices = ref([]);
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const exerciceStore = useExerciceStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const excuseTypeStore = useExcuseTypeStore();
 
-const absences = computed(() => store.state.exercice.absences);
-const exercices = computed(() => store.state.exercice.liste);
-const categories = computed(() => store.state.exerciceCategorie.liste);
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const absences = computed(() => exerciceStore.absences);
+const exercices = computed(() => exerciceStore.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
-const excuseTypes = computed(() => store.state.excuseType.liste);
-const localites = computed(() => store.state.localite.liste);
+const excuseTypes = computed(() => excuseTypeStore.liste);
+const localites = computed(() => localiteStore.liste);
 
 const awn = inject('awn');
 
@@ -100,10 +110,10 @@ watchEffect(async () => {
 const review = async (state) => {
   form.value.excuse_statut = state;
   try {
-    const res = await store.dispatch('editPresenceExercice', {
-      presenceId: form.value?.id,
-      presence: form.value,
-    });
+    const res = await exerciceStore.editPresenceExercice(
+      form.value?.id,
+      form.value,
+    );
     activeSapeurExercices.value = activeSapeurExercices.value.map((e) =>
       e.presence.id === res.id ? { ...e, presence: res } : e,
     );

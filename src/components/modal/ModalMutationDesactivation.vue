@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -16,10 +18,13 @@ const selectedGroupes = ref({});
 const selectedFonctions = ref({});
 const mutationDate = ref(null);
 
-const store = useStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const groupeStore = useGroupeStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
 
-store.dispatch('fetchExerciceCategories', store.state.sapeur.active.id);
-store.dispatch('fetchGroupes', store.state.sapeur.active.id);
+exerciceCategorieStore.fetchExerciceCategories();
+groupeStore.fetchGroupes(sapeurStore.active.id);
 
 const formatDate = (date) => {
   var monthNames = [
@@ -44,15 +49,13 @@ const formatDate = (date) => {
   return day + ' ' + monthNames[monthIndex] + ' ' + year;
 };
 
-const categories = computed(() => store.state.exerciceCategorie.liste);
-const groupes = computed(() => store.state.groupe.liste);
-const fonctions = computed(() => store.state.fonction.liste);
-const activeSapeurExercice = computed(
-  () => store.state.sapeur.active.exercices,
-);
-const activeSapeurGroupe = computed(() => store.state.sapeur.active.groupes);
+const categories = computed(() => exerciceCategorieStore.liste);
+const groupes = computed(() => groupeStore.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const activeSapeurExercice = computed(() => sapeurStore.active.exercices);
+const activeSapeurGroupe = computed(() => sapeurStore.active.groupes);
 const activeSapeurFonction = computed(() =>
-  store.state.sapeur.active.fonctions.filter((f) => !f.fin),
+  sapeurStore.active.fonctions.filter((f) => !f.fin),
 );
 const exercicesSelectedState = computed(() => {
   return Object.values(selectedExercices.value).every((e) => e);
@@ -108,7 +111,7 @@ const save = () => {
   let mapToId = (e) => e.id;
 
   if (sapFonctions.value.filter((e) => selectedFonctions.value[e.id]).length) {
-    store.dispatch('finFonctions', {
+    fonctionStore.finFonctions({
       fin: mutationDate.value,
       ids: sapFonctions.value
         .filter((e) => selectedFonctions.value[e.id])
@@ -116,14 +119,12 @@ const save = () => {
     });
   }
   if (exercices.value.filter((e) => selectedExercices.value[e.id]).length) {
-    store.dispatch(
-      'supprimerConvocation',
+    fonctionStore.supprimerConvocation(
       exercices.value.filter((e) => selectedExercices.value[e.id]).map(mapToId),
     );
   }
   if (sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).length) {
-    store.dispatch(
-      'quitterGroupes',
+    fonctionStore.quitterGroupes(
       sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).map(mapToId),
     );
   }

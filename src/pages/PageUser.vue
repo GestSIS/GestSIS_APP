@@ -1,8 +1,6 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { useAuthStore } from '../stores/auth/Auth';
 
 const jeton = ref('');
 const oldPassword = ref('');
@@ -10,14 +8,16 @@ const newPassword = ref('');
 const newPasswordRepeated = ref('');
 const errors = ref({});
 
+const authStore = useAuthStore();
+
 const isPasswordIdentical = computed(
   () => newPassword.value === newPasswordRepeated.value,
 );
 const awn = inject('awn');
 
 const refreshTokens = async () => {
-  store
-    .dispatch('refreshToken')
+  authStore
+    .refreshToken()
     .then(() => awn.success('Permissions rechargées'))
     .catch(() =>
       awn.alert('Vous avez été déconnecté, veuillez-vous reconnecter'),
@@ -27,8 +27,8 @@ const utiliserJeton = async () => {
   if (!jeton.value) {
     awn.alert('Jeton invalide');
   } else {
-    store
-      .dispatch('useToken', jeton.value)
+    authStore
+      .useToken(jeton.value)
       .then((message) => {
         awn.success(message || 'Jeton enregistré avec succès');
         token.value = '';
@@ -43,8 +43,8 @@ const changerMotDePasse = async () => {
     return;
   }
 
-  store
-    .dispatch('changePassword', {
+  authStore
+    .changePassword({
       password: oldPassword.value,
       newPassword: newPassword.value,
     })

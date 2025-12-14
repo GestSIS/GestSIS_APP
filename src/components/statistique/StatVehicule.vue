@@ -1,18 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const vehiculeStore = useVehiculeStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchVehicules');
-await store.dispatch('fetchExercicesComptables');
+vehiculeStore.fetchVehicules();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueVehicule',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueVehicule(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -22,8 +25,8 @@ const fields = [
   { title: "Nombre d'interventions", key: 'nb' },
 ];
 
-const vehicules = computed(() => store.state.vehicule.liste);
-const vehiculesIntervention = computed(() => store.state.statistique.vehicules);
+const vehicules = computed(() => vehiculeStore.liste);
+const vehiculesIntervention = computed(() => statistiqueStore.vehicules);
 const occurences = computed(() =>
   vehiculesIntervention.value.reduce(
     (prev, vehicule) => (

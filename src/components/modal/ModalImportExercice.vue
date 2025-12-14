@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService.js';
 import MultiStep from '../base/MultiStep.vue';
@@ -14,12 +15,13 @@ const form = reactive({
   decallage: 364,
 });
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
 
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const exercicesComptables = computed(() =>
-  store.state.exerciceComptable.liste.filter(
-    (e) => e.id !== store.state.exerciceComptable.activeId,
+  exerciceComptableStore.liste.filter(
+    (e) => e.id !== exerciceComptableStore.activeId,
   ),
 );
 

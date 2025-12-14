@@ -1,29 +1,32 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const coursStore = useCoursStore();
+const localiteStore = useLocaliteStore();
 const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurCours', store.state.sapeur.active.id);
+  await sapeurStore.fetchSapeurCours(sapeurStore.active.id);
   loading.value = false;
 });
-await store.dispatch('fetchCours');
+await coursStore.fetchCours();
 
 const activeSapeurCours = computed(() =>
-  store.state.sapeur.active.cours
+  sapeurStore.active.cours
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((c) => ({
       ...c,
-      designation: store.state.cours.liste.find(
-        (cours) => cours.id == c.cours_id,
-      )?.designation,
-      localite: store.state.localite.liste.find((l) => l.id == c.localite_id)
+      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)
+        ?.designation,
+      localite: localiteStore.liste.find((l) => l.id == c.localite_id)
         ?.designation,
     })),
 );
@@ -39,7 +42,7 @@ const supprimerCours = (cours) =>
   confirm(
     'Voulez-vous vraiment supprimer ce cours ?',
     "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
-  ).then(() => store.dispatch('removeSapeurCours', cours?.id));
+  ).then(() => sapeurStore.removeSapeurCours(cours?.id));
 
 const fields = [
   { title: 'Date', key: 'date', type: Date },

@@ -1,6 +1,14 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useAvsParamStore } from '../../stores/comptabilite/AvsParam.js';
+import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
+import { useAmendeStore } from '../../stores/comptabilite/Amende.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 
 import ParametreCompte from './ParametreCompte.vue';
 import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
@@ -12,16 +20,25 @@ import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue
 import ParametreAvs from './ParametreAvs.vue';
 import ParametreAmende from './ParametreAmende.vue';
 
-const store = useStore();
-const loadAmendes = store.dispatch('fetchAmendes');
-const loadFraisIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
-const loadCategories = store.dispatch('fetchEcritureCategories');
-const loadAvsParams = store.dispatch('fetchAvsParams');
-const loadPhases = store.dispatch('fetchPhaseTypes');
-const loadHeures = store.dispatch('fetchHeuresExercice');
+const uniteStore = useUniteStore();
+const fonctionStore = useFonctionStore();
+const avsParamStore = useAvsParamStore();
+const heureExerciceStore = useHeureExerciceStore();
+const phaseTypeStore = usePhaseTypeStore();
+const amendeStore = useAmendeStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+
+const loadAmendes = amendeStore.fetchAmendes();
+const loadFraisIndemnites = imputationStore.fetchFraisIndemnitesTypes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
+const loadCategories = ecritureCategorieStore.fetchEcritureCategories();
+const loadAvsParams = avsParamStore.fetchParams();
+const loadPhases = phaseTypeStore.fetchPhaseTypes();
+const loadHeures = heureExerciceStore.fetchHeuresExercice();
 
 await Promise.all([
   loadAmendes,

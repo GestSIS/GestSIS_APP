@@ -1,21 +1,22 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
-const store = useStore();
-const loadPermissions = store.dispatch('fetchPermissions');
-const loadRoles = store.dispatch('fetchRoles');
+const authStore = useAuthStore();
+
+const loadPermissions = authStore.fetchPermissions();
+const loadRoles = authStore.fetchRoles();
 
 await Promise.all([loadPermissions, loadRoles]);
 
 const selectedId = ref(null);
 const permissions = computed(() =>
-  store.state.auth.permissions.sort((a, b) => a.tri - b.tri),
+  authStore.permissions.sort((a, b) => a.tri - b.tri),
 );
 
 const formattedRoles = computed(() => {
-  return store.state.auth.roles.map((r) => ({
+  return authStore.roles.map((r) => ({
     ...r,
     permissions: r.permission_roles.map((p) => parseInt(p.permission_id)),
   }));
@@ -44,7 +45,7 @@ const remove = (role) =>
   confirm(
     'Voulez-vous vraiment supprimer ce rôle ?',
     "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
-  ).then(() => store.dispatch('deleteRole', role.id));
+  ).then(() => authStore.deleteRole(role.id));
 
 const moduleMapping = (key) => {
   // Permet d'améliorer certains textes à afficher

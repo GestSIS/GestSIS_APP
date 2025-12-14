@@ -1,7 +1,7 @@
 <script setup>
 import { inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAdminStore } from '../../stores/admin/Admin.js';
 
 const { callback, data } = defineProps({
   data: {
@@ -23,7 +23,7 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const adminStore = useAdminStore();
 const { closeModal } = useModalStore();
 const awn = inject('awn');
 
@@ -36,8 +36,7 @@ const close = () => {
 };
 
 const save = async () => {
-  store
-    .dispatch(form?.id ? 'editSis' : 'addSis', form)
+  (form?.id ? adminStore.editSis : adminStore.addSis)(form)
     .then(closeModal)
     .catch((err) => {
       errors.value = err;

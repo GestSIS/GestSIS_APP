@@ -1,18 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const baseDataStore = useBaseDataStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchPermisType');
-await store.dispatch('fetchExercicesComptables');
+baseDataStore.fetchPermisType();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiquePermis',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiquePermis(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -23,8 +26,8 @@ const fields = [
   { title: 'Nombre', key: 'quantite' },
 ];
 
-const permis = computed(() => store.state.baseData.permisTypes);
-const sapeurPermis = computed(() => store.state.statistique.permis);
+const permis = computed(() => baseDataStore.permisTypes);
+const sapeurPermis = computed(() => statistiqueStore.permis);
 const occurences = computed(() => {
   return sapeurPermis.value.reduce(
     (prev, { permis_type_id, nb }) => (

@@ -1,7 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { data } = defineProps({
   data: {
@@ -16,14 +17,16 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const grades = computed(() => store.state.grade.liste);
+const gradeStore = useGradeStore();
+const sapeurStore = useSapeurStore();
+const grades = computed(() => gradeStore.liste);
 
 const { closeModal } = useModalStore();
 
 const save = () => {
-  store
-    .dispatch((form.id || 0) === 0 ? 'addSapeurGrade' : 'editSapeurGrade', form)
+  ((form.id || 0) === 0
+    ? sapeurStore.addSapeurGrade
+    : sapeurStore.editSapeurGrade)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

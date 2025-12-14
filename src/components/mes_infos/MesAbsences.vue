@@ -1,25 +1,28 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { computed, inject, ref, watchEffect } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 
-const store = useStore();
 const infosStore = useMesInfosStore();
-await store.dispatch('fetchExercicesComptables');
+const absenceParamStore = useAbsenceParamStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-store.dispatch('fetchAbsenceParams');
+await exerciceComptableStore.fetchExercicesComptables();
+
+absenceParamStore.fetchParams();
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await infosStore.fetchMesAbsences(store.state.exerciceComptable.activeId);
+  await infosStore.fetchMesAbsences(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const activeItemId = ref(null);
 
-const absenceParams = computed(() => store.state.absenceParam.params);
+const absenceParams = computed(() => absenceParamStore.params);
 const absences = computed(() =>
   infosStore.absences.sort((e1, e2) => e1.debut?.localeCompare(e2.debut)),
 );

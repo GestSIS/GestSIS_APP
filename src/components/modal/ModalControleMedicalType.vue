@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 
 const { data } = defineProps({
   data: {
@@ -12,21 +12,25 @@ const { data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
+  expirable: false,
   actif: 1,
   ...data,
 });
 
-const store = useStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch(
-      form?.id ? 'updateControlesMedicauxTypes' : 'addControlesMedicauxTypes',
-      form,
-    )
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+  try {
+    if (form?.id) {
+      await controleMedicalTypeStore.updateType(form);
+    } else {
+      await controleMedicalTypeStore.addType(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
 };
 </script>
 

@@ -1,18 +1,20 @@
 <script setup>
-import { useStore } from 'vuex';
 import AdminService from '../../services/AdminService';
 import { computed, inject } from 'vue';
 import { useModalStore } from '../../stores/common/Modal';
+import { useAdminStore } from '../../stores/admin/Admin';
+import { useAuthStore } from '../../stores/auth/Auth';
 
-const store = useStore();
+const adminStore = useAdminStore();
+const authStore = useAuthStore();
 
-const loadSis = store.dispatch('loadSisListe');
-const loadUsers = store.dispatch('loadAllUsers');
+const loadSis = authStore.loadSisListe();
+const loadUsers = adminStore.loadAllUsers();
 
 await Promise.all([loadSis, loadUsers]);
 
-const users = computed(() => store.state.admin.users);
-const sis = computed(() => store.state.admin.sis);
+const users = computed(() => adminStore.users);
+const sis = computed(() => adminStore.sis);
 
 const { showModal, confirm } = useModalStore();
 const awn = inject('awn');
@@ -28,8 +30,8 @@ const deleteUser = (user) =>
     'Voulez-vous vraiment supprimer cet utilisateur ?',
     "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
   ).then(() =>
-    store
-      .dispatch('deleteUser', user?.id)
+    adminStore
+      .deleteUser(user?.id)
       .then((res) => awn.success(res?.message || 'Utilisateur supprimé'))
       .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression')),
   );

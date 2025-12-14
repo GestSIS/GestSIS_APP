@@ -1,26 +1,28 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { computed, ref, watchEffect } from 'vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
 const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurFonctions', store.state.sapeur.active.id);
+  await sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
   loading.value = false;
 });
-await store.dispatch('fetchFonctions');
+await fonctionStore.fetchFonctions();
 
 const activeSapeurFonctions = computed(() =>
-  store.state.sapeur.active.fonctions
+  sapeurStore.active.fonctions
     .sort((a, b) => b.debut.localeCompare(a.debut))
     .map((f) => ({
       ...f,
-      fonction: store.state.fonction.liste.find(
+      fonction: fonctionStore.liste.find(
         (fonction) => fonction.id == f.fonction_id,
       )?.nom,
     })),
@@ -38,9 +40,8 @@ const editFonction = (fonction) => {
 const supprimerFonction = (fonction) =>
   confirm(
     'Voulez-vous vraiment supprimer cette fonction ?',
-
     "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
-  ).then(() => store.dispatch('removeSapeurFonction', fonction?.id));
+  ).then(() => sapeurStore.removeSapeurFonction(fonction?.id));
 
 const fields = [
   { title: 'Début', key: 'debut', type: Date },

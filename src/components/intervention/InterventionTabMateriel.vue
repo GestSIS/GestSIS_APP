@@ -1,12 +1,15 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useHasPermission from '../../hooks/usePermission.js';
 import permissions from '/src/store/permissions.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
 
-const store = useStore();
-await store.dispatch('fetchMateriels');
+const interventionStore = useInterventionStore();
+const materielStore = useMaterielStore();
+
+await materielStore.fetchMateriels();
 
 const { id } = defineProps({
   id: {
@@ -18,16 +21,15 @@ const { id } = defineProps({
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchInterventionMateriels', id);
+  await interventionStore.fetchInterventionMateriels(id);
   loading.value = false;
 });
 
 const activeMateriels = computed(() =>
-  store.state.intervention.active.materiels.map((m) => ({
+  interventionStore.active.materiels.map((m) => ({
     ...m,
-    designation: store.state.materiel.liste?.find(
-      (mat) => mat.id == m.materiel_id,
-    )?.designation,
+    designation: materielStore.liste?.find((mat) => mat.id == m.materiel_id)
+      ?.designation,
   })),
 );
 
@@ -48,7 +50,7 @@ const supprimerMateriel = (materielId) =>
   confirm(
     'Voulez-vous vraiment supprimer cette absence ?',
     "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-  ).then(() => store.dispatch('removeInterventionMateriel', materielId));
+  ).then(() => interventionStore.removeInterventionMateriel(materielId));
 
 const fields = [
   { title: 'Matériel', key: 'designation' },

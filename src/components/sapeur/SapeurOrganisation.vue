@@ -1,18 +1,20 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const groupeStore = useGroupeStore();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurGroupes', store.state.sapeur.active.id);
+  await sapeurStore.fetchSapeurGroupes(sapeurStore.active.id);
   loading.value = false;
 });
-await store.dispatch('fetchGroupes');
+await groupeStore.fetchGroupes();
 
-const groupes = computed(() => store.state.groupe.liste);
-const activeSapeurGroupes = computed(() => store.state.sapeur.active.groupes);
+const groupes = computed(() => groupeStore.liste);
+const activeSapeurGroupes = computed(() => sapeurStore.active.groupes);
 
 const computedGroupes = computed(() => {
   return activeSapeurGroupes.value.map((groupe) => {

@@ -1,14 +1,25 @@
 <script setup>
-import { useStore } from 'vuex';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed } from 'vue';
 
-const store = useStore();
-const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
-const loadPhases = store.dispatch('fetchPhaseTypes');
+const phaseTypeStore = usePhaseTypeStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const fonctionStore = useFonctionStore();
+const uniteStore = useUniteStore();
+
+const loadIndemnites = imputationStore.fetchFraisIndemnitesTypes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
+const loadPhases = phaseTypeStore.fetchPhaseTypes();
 
 await Promise.all([
   loadIndemnites,
@@ -40,17 +51,15 @@ const fields = [
 ];
 
 const indemnitesIntervention = computed(() =>
-  store.state.imputation.fraisIndemnites.interventions
+  imputationStore.fraisIndemnites.interventions
     .map((e) => ({
       ...e,
-      unite: store.state.unite.liste.find((u) => u.id == e.type_unite_id)
-        ?.unite,
-      compte: store.state.compte.liste.find((c) => c.id == e.compte_id)?.label,
-      categorie: store.state.ecritureCategorie.liste.find(
+      unite: uniteStore.liste.find((u) => u.id == e.type_unite_id)?.unite,
+      compte: compteStore.liste.find((c) => c.id == e.compte_id)?.label,
+      categorie: ecritureCategorieStore.liste.find(
         (c) => c.id == e.ecriture_categorie_id,
       )?.designation,
-      phase: store.state.phaseType.liste.find((p) => p.id == e.phase_id)
-        ?.designation,
+      phase: phaseTypeStore.liste.find((p) => p.id == e.phase_id)?.designation,
       type_display: {
         0: 'Autre',
         1: 'Solde',
@@ -78,7 +87,7 @@ const removeIndemnite = (indemnite) =>
   confirm(
     'Voulez-vous vraiment supprimer cette indemnité ?',
     "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-  ).then(() => store.dispatch('removeIndemniteIntervention', indemnite.id));
+  ).then(() => imputationStore.removeIndemniteIntervention(indemnite.id));
 </script>
 
 <template>

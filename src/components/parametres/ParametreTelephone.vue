@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
 import { computed } from 'vue';
 
-const store = useStore();
-await store.dispatch('fetchTelephones');
+const telephoneStore = useTelephoneStore();
+await telephoneStore.fetchTelephones();
 
 const fields = [
   { title: 'Tri', key: 'tri' },
@@ -13,7 +13,7 @@ const fields = [
   { title: 'Actions', slot: 'actions' },
 ];
 const listeTelephone = computed(() =>
-  store.state.telephone.liste.sort((a, b) => a.tri - b.tri),
+  telephoneStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { confirm, showModal } = useModalStore();
@@ -27,7 +27,7 @@ const deleteTelephone = (telephone) =>
   confirm(
     'Voulez-vous vraiment supprimer ce contact ?',
     "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
-  ).then(() => store.dispatch('removeTelephone', telephone.id));
+  ).then(() => telephoneStore.removeTelephone(telephone.id));
 </script>
 
 <template>

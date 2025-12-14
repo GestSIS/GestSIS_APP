@@ -1,22 +1,24 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurMutations', store.state.sapeur.active.id);
+  await sapeurStore.fetchSapeurMutations(sapeurStore.active.id);
   loading.value = false;
 });
 
 const mutations = computed(() =>
-  store.state.sapeur.active.mutations.map((m) => ({
+  sapeurStore.active.mutations.map((m) => ({
     ...m,
-    localite: store.state.localite.liste.find((l) => l.id == m.localite_id)
+    localite: localiteStore.liste.find((l) => l.id == m.localite_id)
       ?.designation,
   })),
 );
@@ -31,7 +33,7 @@ const removeMutation = (mutation) =>
   confirm(
     'Voulez-vous vraiment supprimer cette mutation ?',
     "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
-  ).then(() => store.dispatch('removeMutation', mutation?.id));
+  ).then(() => sapeurStore.removeMutation(mutation?.id));
 
 const editMutation = (mutation) =>
   showModal({ component: 'ModalMutation', data: mutation });

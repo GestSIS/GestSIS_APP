@@ -1,5 +1,6 @@
 <script setup>
-import { useStore } from 'vuex';
+import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { DateTime } from 'luxon';
 import { computed, reactive, ref } from 'vue';
@@ -11,7 +12,8 @@ const { data } = defineProps({
   },
 });
 
-const store = useStore();
+const phaseTypeStore = usePhaseTypeStore();
+const interventionStore = useInterventionStore();
 
 const errors = ref({});
 const form = reactive({
@@ -20,7 +22,7 @@ const form = reactive({
   ...data,
 });
 
-const listePhaseType = computed(() => store.state.phaseType.liste);
+const listePhaseType = computed(() => phaseTypeStore.liste);
 
 const min = DateTime.fromSQL(data.min).toISO();
 
@@ -51,19 +53,28 @@ const roundTime = (time, minutesToRound) => {
 const roundHour = () => {
   form.heure = roundTime(form.heure, 15);
 };
-const save = () => {
+const save = async () => {
   if (!form.heure || !form.date) {
     errors.value = { ...errors.value, debut: 'Données invalide' };
   }
   form.debut = form.date + ' ' + form.heure.slice(0, 5);
 
-  store
-    .dispatch((form.id || 0) === 0 ? 'addPhase' : 'editPhase', {
-      ...form,
-      debut2: undefined,
-    })
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+  try {
+    if (form.id) {
+      await interventionStore.editPhase({
+        ...form,
+        debut2: undefined,
+      });
+    } else {
+      await interventionStore.addPhase({
+        ...form,
+        debut2: undefined,
+      });
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
 };
 </script>
 

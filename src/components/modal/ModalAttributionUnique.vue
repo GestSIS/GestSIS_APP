@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import ArticleService from '../../services/materiel/ArticleService';
 import { useModalStore } from '../../stores/common/Modal.js';
 
@@ -16,9 +16,9 @@ const { data, callback } = defineProps({
   },
 });
 
-const store = useStore();
-await store.dispatch('fetchListeSapeur');
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const sapeurStore = useSapeurStore();
+await sapeurStore.fetchListeSapeur();
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const errors = ref({});
 const form = ref({

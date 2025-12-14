@@ -1,7 +1,9 @@
 <script setup>
 import { reactive, ref, computed } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAdminStore } from '../../stores/admin/Admin.js';
+
+const adminStore = useAdminStore();
 
 const { callback, data } = defineProps({
   data: {
@@ -21,11 +23,10 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const users = computed(() => store.state.admin.users);
-const sis = computed(() => store.state.admin.sis);
+const users = computed(() => adminStore.users);
+const sis = computed(() => adminStore.sis);
 const roles = computed(() =>
-  store.state.admin.roles.map((r) => ({
+  adminStore.roles.map((r) => ({
     id: r.id,
     designation:
       sis.value.find((s) => s.id === r.sis_id)?.api_key + ' - ' + r.nom,
@@ -35,8 +36,8 @@ const roles = computed(() =>
 const { closeModal } = useModalStore();
 
 const save = () =>
-  store
-    .dispatch('addUserRole', form)
+  adminStore
+    .addUserRole(form.user_id, form.role_id)
     .then(closeModal())
     .then(() => callback(true))
     .catch((err) => (errors.value = err));

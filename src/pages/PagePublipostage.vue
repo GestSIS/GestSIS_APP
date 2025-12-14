@@ -1,12 +1,11 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../stores/sapeur/Sapeur';
 import { useModalStore } from '../stores/common/Modal';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import PublipostageService from '/src/services/PublipostageService.js';
 
-const store = useStore();
-store.dispatch('fetchListeSapeur');
+useSapeurStore().fetchListeSapeur();
 
 const sapeurIds = ref([]);
 

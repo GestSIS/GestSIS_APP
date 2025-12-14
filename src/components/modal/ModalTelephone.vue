@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
 
 const { data } = defineProps({
   data: {
@@ -15,13 +15,13 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-
 const { closeModal } = useModalStore();
+const telephoneStore = useTelephoneStore();
 
 const save = async () => {
-  store
-    .dispatch((form.id || 0) === 0 ? 'addTelephone' : 'updateTelephone', form)
+  ((form.id || 0) === 0
+    ? telephoneStore.addTelephone
+    : telephoneStore.updateTelephone)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

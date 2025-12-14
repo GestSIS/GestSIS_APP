@@ -1,14 +1,23 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
-const store = useStore();
-const loadIndemnites = store.dispatch('fetchFraisIndemnitesTypes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const fonctionStore = useFonctionStore();
+const uniteStore = useUniteStore();
+
+const loadIndemnites = imputationStore.fetchFraisIndemnitesTypes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
 
 await Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]);
 
@@ -44,7 +53,7 @@ const detailRowOptions = {
 };
 
 const computedIndemnites = computed(() =>
-  store.state.imputation.fraisIndemnites.exercices
+  imputationStore.fraisIndemnites.exercices
     .sort((a, b) => a.tri - b.tri)
     .map((e) => ({
       ...e,
@@ -53,22 +62,21 @@ const computedIndemnites = computed(() =>
           e.fonctions
             .map((e) => ({
               ...e,
-              compte: store.state.compte.liste.find((c) => c.id == e.compte_id)
+              compte: compteStore.liste.find((c) => c.id == e.compte_id)
                 ?.designation,
               fonction:
-                store.state.fonction.liste.find((c) => c.id == e.fonction_id)
-                  ?.nom ?? '-',
+                fonctionStore.liste.find((c) => c.id == e.fonction_id)?.nom ??
+                '-',
               fonction_tri:
-                store.state.fonction.liste.find((c) => c.id == e.fonction_id)
-                  ?.tri ?? -10,
+                fonctionStore.liste.find((c) => c.id == e.fonction_id)?.tri ??
+                -10,
             }))
             .sort((e1, e2) => e1.fonction_tri < e2.fonction_tri),
         ),
-      categorie: store.state.ecritureCategorie.liste.find(
+      categorie: ecritureCategorieStore.liste.find(
         (c) => c.id == e.ecriture_categorie_id,
       )?.designation,
-      unite: store.state.unite.liste.find((u) => u.id == e.type_unite_id)
-        ?.unite,
+      unite: uniteStore.liste.find((u) => u.id == e.type_unite_id)?.unite,
     })),
 );
 
@@ -89,7 +97,7 @@ const removeIndemnite = (indemnite) =>
   confirm(
     'Voulez-vous vraiment supprimer cette indemnité ?',
     "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-  ).then(() => store.dispatch('removeIndemniteExercice', indemnite.id));
+  ).then(() => imputationStore.removeIndemniteExercice(indemnite.id));
 </script>
 
 <template>
@@ -108,7 +116,10 @@ const removeIndemnite = (indemnite) =>
         :detail-row-column="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+          <generic-details-row
+            :options="detailRowOptions"
+            :row-data="rowData"
+          />
         </template>
         <template #actions="{ rowData }">
           <button

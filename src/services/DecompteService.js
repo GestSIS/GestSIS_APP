@@ -1,4 +1,3 @@
-import sapeur from '../store/module/sapeur';
 import Api from '/src/http/Request';
 
 export default {

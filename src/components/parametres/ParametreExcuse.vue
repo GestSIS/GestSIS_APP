@@ -1,11 +1,11 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
 
-const store = useStore();
-await store.dispatch('fetchExcuseParams');
+const excuseParamStore = useExcuseParamStore();
+await excuseParamStore.fetchParams();
 
-const excuseParams = computed(() => store.state.excuseParam.params);
+const excuseParams = computed(() => excuseParamStore.params);
 
 const errors = ref({});
 const params = ref({
@@ -18,17 +18,16 @@ const params = ref({
 
 const awn = inject('awn');
 
-const save = async () =>
-  store
-    .dispatch('updateExcuseParams', params.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
-    })
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(e?.message || "Erreur lors de l'enregistrement");
-    });
+const save = async () => {
+  try {
+    const res = await excuseParamStore.updateExcuseParams(params.value);
+    errors.value = {};
+    awn.success(res?.message || 'Modifications enregistrées');
+  } catch (err) {
+    errors.value = err;
+    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  }
+};
 </script>
 
 <template>

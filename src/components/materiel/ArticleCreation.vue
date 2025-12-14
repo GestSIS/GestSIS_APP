@@ -1,7 +1,6 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue';
 
-import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools';
@@ -18,12 +17,11 @@ if (articles.value.length === 0) {
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
-const store = useStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 
 const types = computed(() =>

@@ -1,12 +1,20 @@
 <script setup>
 import { computed, inject, ref, useTemplateRef, watch } from 'vue';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
+import { useMedecinStore } from '../stores/controleMedical/Medecin.js';
+import { useControleMedicalTypeStore } from '../stores/controleMedical/ControleMedicalType.js';
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 import PdfViewer from '/src/components/pdf/PdfViewer.vue';
 import { useModalStore } from '../stores/common/Modal';
+import { useControleMedicalStore } from '../stores/controleMedical/ControleMedical.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const controleMedicalStore = useControleMedicalStore();
+const medecinStore = useMedecinStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
 const router = useRouter();
 const awn = inject('awn');
 
@@ -17,16 +25,14 @@ const { id } = defineProps({
   },
 });
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadMedecins = store.dispatch('fetchMedecins');
-const loadControlesMedicauxTypes = store.dispatch(
-  'fetchControlesMedicauxTypes',
-);
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadMedecins = medecinStore.fetchMedecins();
+const loadControlesMedicauxTypes = controleMedicalTypeStore.fetchTypes();
 
 const loadControleMedicale =
   id > 0
-    ? store.dispatch('fetchControleMedical', id)
-    : store.dispatch('resetControleMedical');
+    ? controleMedicalStore.fetchControleMedical(id)
+    : controleMedicalStore.resetControleMedical();
 
 await Promise.all([
   loadSapeurs,
@@ -39,10 +45,10 @@ const errors = ref({});
 const pdfData = ref(null);
 const file = ref(null);
 
-const controleMedical = computed(() => store.state.controleMedical.active.data);
-const medecins = computed(() => store.state.medecin.liste);
+const controleMedical = computed(() => controleMedicalStore.active.data);
+const medecins = computed(() => medecinStore.liste);
 const sapeurs = computed(() =>
-  store.state.sapeur.liste
+  sapeurStore.liste
     .filter((s) => s.type === 0 && parseInt(s.actif))
     .map((s) => {
       const age = Math.floor(
@@ -54,9 +60,9 @@ const sapeurs = computed(() =>
       return { ...s, age };
     }),
 );
-const controleTypes = computed(() => store.state.controlesMedicauxType.liste);
+const controleTypes = computed(() => controleMedicalTypeStore.liste);
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const breadcrumbFinal = computed(() => controleMedical.value.designation);
@@ -124,8 +130,8 @@ const downloadJustificatif = () => {
 const save = async () => {
   if (modeAjout.value) {
     // Ajout d'un nouveau controle-médical
-    store
-      .dispatch('createControleMedical')
+    controleMedicalStore
+      .createControleMedical()
       .then((res) => {
         router.push({ name: 'controle-medical', params: { id: res.id } });
       })
@@ -135,8 +141,8 @@ const save = async () => {
       );
   } else {
     // Sauvegarder les changements
-    store
-      .dispatch('updateControleMedical')
+    controleMedicalStore
+      .updateControleMedical()
       .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement"),
@@ -147,7 +153,7 @@ const fileComponent = useTemplateRef('file-justificatif');
 const ajoutJustificatif = () => {
   if (fileComponent.value.files.length > 0) {
     const file = fileComponent.value.files[0];
-    store.dispatch('addJustificatif', file);
+    controleMedicalStore.addJustificatif(file);
   }
 };
 const { confirm } = useModalStore();
@@ -155,7 +161,7 @@ const removeJustificatif = () =>
   confirm(
     'Voulez-vous vraiment supprimer ce justificatif ?',
     "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
-  ).then(() => store.dispatch('removeJustificatif'));
+  ).then(() => controleMedicalStore.removeJustificatif());
 
 const validite = (duree) => {
   var d = new Date(controleMedical.value.consultation || Date.now());

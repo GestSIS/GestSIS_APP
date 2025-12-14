@@ -1,20 +1,20 @@
 <script setup>
 import { computed, inject, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 const awn = inject('awn');
 
-const activeSapeur = computed(() => store.state.sapeur.active.data);
+const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
-watchEffect(() => store.dispatch('fetchSapeur', store.state.sapeur.active.id));
+watchEffect(() => sapeurStore.fetchSapeur(sapeurStore.active.id));
 
 const save = async () => {
-  store
-    .dispatch('saveActiveSapeur', {
+  sapeurStore
+    .saveActiveSapeur({
       iban: activeSapeur.value.iban,
     })
     .then(() => awn.success('Modification enregistrée'))

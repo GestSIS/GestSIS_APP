@@ -1,18 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const materielStore = useMaterielStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchMateriels');
-await store.dispatch('fetchExercicesComptables');
+materielStore.fetchMateriels();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueMateriel',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueMateriel(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -29,8 +32,8 @@ const fields = [
   },
 ];
 
-const materiels = computed(() => store.state.materiel.liste);
-const materielsIntervention = computed(() => store.state.statistique.materiels);
+const materiels = computed(() => materielStore.liste);
+const materielsIntervention = computed(() => statistiqueStore.materiels);
 const occurences = computed(() => {
   return materielsIntervention.value.reduce(
     (prev, { materiel_id, nb }) => (

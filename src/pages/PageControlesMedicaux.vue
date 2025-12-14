@@ -1,21 +1,25 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useMedecinStore } from '../stores/controleMedical/Medecin.js';
+import { useControleMedicalTypeStore } from '../stores/controleMedical/ControleMedicalType.js';
 import { useModalStore } from '../stores/common/Modal';
 import permissions from '../store/permissions.js';
 
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 import SapeurService from '/src/services/SapeurService.js';
 import useHasPermission from '../hooks/usePermission';
+import { useControleMedicalStore } from '../stores/controleMedical/ControleMedical.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const medecinStore = useMedecinStore();
+const controleMedicalStore = useControleMedicalStore();
+const controleMedicalTypeStore = useControleMedicalTypeStore();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadMedecins = store.dispatch('fetchMedecins');
-const loadControlesMedicauxTypes = store.dispatch(
-  'fetchControlesMedicauxTypes',
-);
-const loadControlesMedicaux = store.dispatch('fetchControlesMedicaux');
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadMedecins = medecinStore.fetchMedecins();
+const loadControlesMedicauxTypes = controleMedicalTypeStore.fetchTypes();
+const loadControlesMedicaux = controleMedicalStore.fetchControlesMedicaux();
 
 await Promise.all([
   loadSapeurs,
@@ -28,10 +32,10 @@ const latest = ref(true);
 const loading = ref(false);
 const selectedItem = ref(null);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const types = computed(() => store.state.controlesMedicauxType.liste);
-const medecins = computed(() => store.state.medecin.liste);
-const controlesMedicaux = computed(() => store.state.controleMedical.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const types = computed(() => controleMedicalTypeStore.liste);
+const medecins = computed(() => medecinStore.liste);
+const controlesMedicaux = computed(() => controleMedicalStore.liste);
 
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
 
@@ -154,7 +158,7 @@ const supprimer = async (controle) =>
   confirm(
     'Voulez-vous vraiment supprimer ce contrôle médical ?',
     "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
-  ).then(() => store.dispatch('removeControleMedical', controle.id));
+  ).then(() => controleMedicalStore.removeControleMedical(controle.id));
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 
 const { data } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
 const { closeModal } = useModalStore();
 
 const presetDebutFin = () => {
@@ -30,11 +30,11 @@ const presetDebutFin = () => {
 };
 
 const save = async () => {
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addExerciceComptable' : 'updateExerciceComptable',
-      form,
-    )
+  const action =
+    (form.id || 0) === 0
+      ? exerciceComptableStore.addExerciceComptable
+      : exerciceComptableStore.updateExerciceComptable;
+  action(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

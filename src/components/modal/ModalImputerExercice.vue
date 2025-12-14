@@ -1,11 +1,19 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import MultiStep from '../base/MultiStep.vue';
+import { useUniteStore } from '../../stores/common/Unite.js';
 
-const store = useStore();
-store.dispatch('fetchFonctions');
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const compteStore = useCompteStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
+fonctionStore.fetchFonctions();
 
 const { callback, data } = defineProps({
   data: {
@@ -25,12 +33,12 @@ const ecritures = ref([]);
 const successMessageVisibility = ref(true);
 
 const indemnitesTypes = computed(
-  () => store.state.imputation.fraisIndemnites.exercices,
+  () => imputationStore.fraisIndemnites.exercices,
 );
-const fonctions = computed(() => store.state.fonction.liste);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
 
 const activeIndemniteHasFonction = computed(() => {
   return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
@@ -123,8 +131,8 @@ const imputer = () => {
     return;
   }
 
-  store
-    .dispatch('imputerExercice', {
+  imputationStore
+    .imputerExercice({
       exercice_id: data.id,
       indemnite_exercice_type_id: activeIndemnite.value.id,
     })

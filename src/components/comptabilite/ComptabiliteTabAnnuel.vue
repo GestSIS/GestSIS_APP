@@ -2,36 +2,42 @@
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { computed, inject, ref, watchEffect } from 'vue';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
 
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchComptes');
-store.dispatch('fetchFonctions');
-store.dispatch('fetchFraisIndemnitesTypes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+sapeurStore.fetchListeSapeur();
+compteStore.fetchComptes();
+fonctionStore.fetchFonctions();
+imputationStore.fetchFraisIndemnitesTypes();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchEcrituresAnnuels',
-    activeExerciceComptableId.value,
-  );
+  await imputationStore.fetchEcrituresAnnuels(activeExerciceComptableId.value);
   loading.value = false;
 });
 
-const sapeurs = computed(() => store.state.sapeur.liste);
-const comptes = computed(() => store.state.compte.liste);
-const ecritures = computed(() => store.state.imputation.ecritures.annuels);
-const fonctions = computed(() => store.state.fonction.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const comptes = computed(() => compteStore.liste);
+const ecritures = computed(() => imputationStore.ecritures.annuels);
+const fonctions = computed(() => fonctionStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -90,8 +96,8 @@ const annulerImputation = async () =>
     "Voulez-vous annuler l'imputation annuel des frais ?",
     'Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.',
   ).then(() =>
-    store
-      .dispatch('annulerImputationAnnuel', activeExerciceComptableId.value)
+    imputationStore
+      .annulerImputationAnnuel(activeExerciceComptableId.value)
       .catch((err) =>
         awn.alert(
           err?.message ??

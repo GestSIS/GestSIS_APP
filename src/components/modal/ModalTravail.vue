@@ -1,10 +1,15 @@
 <script setup>
 import { computed, inject, nextTick, reactive, ref, useTemplateRef } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useAuthStore } from '../../stores/auth/Auth.js';
 
 import permissions from '../../store/permissions.js';
 import useHasPermission from '../../hooks/usePermission.js';
+import { useTravailStore } from '../../stores/travail/Travail.js';
 
 const { callback, data } = defineProps({
   callback: {
@@ -17,23 +22,28 @@ const { callback, data } = defineProps({
   },
 });
 
-const store = useStore();
+const authStore = useAuthStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const uniteStore = useUniteStore();
+const travailStore = useTravailStore();
+const travailTypeStore = useTravailTypeStore();
 
 const errors = ref({});
 const form = reactive({
-  exercice_comptable_id: store.state.exerciceComptable.activeId,
+  exercice_comptable_id: exerciceComptableStore.activeId,
   sapeurs: [
     {
-      sapeur_id: data.sapeur_id ?? store.state.auth.sapeurId,
+      sapeur_id: data.sapeur_id ?? authStore.sapeurId,
       quantite: data.quantite,
     },
   ],
   ...data,
 });
 
-const unites = computed(() => store.state.unite.liste);
-const travailTypes = computed(() => store.state.travailType.liste);
-const sapeurs = computed(() => store.state.sapeur.liste.filter((s) => s.actif));
+const unites = computed(() => uniteStore.liste);
+const travailTypes = computed(() => travailTypeStore.liste);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 const hasSaisieCommunePermission = useHasPermission(
   permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
 );
@@ -93,14 +103,14 @@ const save = async () => {
       sapeurs: undefined,
       ...s,
     }));
-    promise = store.dispatch('addTravaux', travaux);
+    promise = travailStore.addTravaux(travaux);
   } else {
     const travail = {
       ...form,
       sapeur_id: form.sapeurs[0].sapeur_id,
       quantite: form.sapeurs[0].quantite,
     };
-    promise = store.dispatch('updateTravail', travail);
+    promise = travailStore.updateTravail(travail);
   }
   promise
     .then(() => {

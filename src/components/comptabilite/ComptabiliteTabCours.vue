@@ -1,30 +1,49 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { useCoursSapeurStore } from '../../stores/sapeur/CoursSapeur.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useHasPermission from '../../hooks/usePermission.js';
 import permissions from '../../store/permissions';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const coursStore = useCoursStore();
+const coursSapeurStore = useCoursSapeurStore();
+const localiteStore = useLocaliteStore();
+const uniteStore = useUniteStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
 
-store.dispatch('fetchEcritureCategories');
-store.dispatch('fetchUnites');
-store.dispatch('fetchCours');
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchFraisIndemnitesTypes');
-store.dispatch('fetchComptes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+ecritureCategorieStore.fetchEcritureCategories();
+uniteStore.fetchUnites();
+coursStore.fetchCours();
+sapeurStore.fetchListeSapeur();
+localiteStore.fetchLocalites();
+imputationStore.fetchFraisIndemnitesTypes();
+compteStore.fetchComptes();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchCoursSapeurs', activeExerciceComptableId.value);
+  await coursSapeurStore.fetchCoursSapeurs(activeExerciceComptableId.value);
   loading.value = false;
 });
 
@@ -34,14 +53,14 @@ const selectedItem = computed(() =>
   coursSapeurs.value.find((c) => c.id === selectedItemId.value),
 );
 
-const cours = computed(() => store.state.cours.liste);
-const unites = computed(() => store.state.unite.liste);
+const cours = computed(() => coursStore.liste);
+const unites = computed(() => uniteStore.liste);
 const coursSapeurs = computed(() =>
-  store.state.coursSapeur.liste.map((e) => ({ ...e.cours, ...e })),
+  coursSapeurStore.liste.map((e) => ({ ...e.cours, ...e })),
 );
-const sapeurs = computed(() => store.state.sapeur.liste);
-const localites = computed(() => store.state.localite.liste);
-const categories = computed(() => store.state.exerciceCategorie.liste);
+const sapeurs = computed(() => sapeurStore.liste);
+const localites = computed(() => localiteStore.liste);
+const categories = computed(() => exerciceCategorieStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -84,8 +103,8 @@ const annulerImputer = (courSapeur) =>
     'Voulez-vous vraiment supprimer cette imputation ?',
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
   ).then(() =>
-    store
-      .dispatch('annulerImputationCours', courSapeur?.id)
+    imputationStore
+      .annulerImputationCours(courSapeur?.id)
       .then(({ statut }) => {
         coursSapeurs.value = [
           ...coursSapeurs.value.filter((e) => e.id != courSapeur?.id),

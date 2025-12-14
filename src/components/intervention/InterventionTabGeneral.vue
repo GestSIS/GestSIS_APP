@@ -1,19 +1,31 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
 import permissions from '/src/store/permissions.js';
 import useHasPermission from '../../hooks/usePermission';
 import { useRouter } from 'vue-router';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
+import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
 
-const store = useStore();
 const router = useRouter();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const localiteStore = useLocaliteStore();
+const interventionStore = useInterventionStore();
+const traitementStore = useInterventionTraitementStore();
+const statFederalStore = useStatFederalStore();
+const typeInterventionStore = useTypeInterventionStore();
 
 await Promise.all([
-  store.dispatch('fetchListeSapeur'),
-  store.dispatch('fetchLocalites'),
-  store.dispatch('fetchStatFederals'),
-  store.dispatch('fetchTypeInterventions'),
-  store.dispatch('fetchInterventionTraitements'),
+  sapeurStore.fetchListeSapeur(),
+  localiteStore.fetchLocalites(),
+  statFederalStore.fetchStatFederals(),
+  typeInterventionStore.fetchTypeInterventions(),
+  traitementStore.fetchTraitements(),
 ]);
 
 const { id } = defineProps({
@@ -30,35 +42,33 @@ const form = ref({});
 watchEffect(async () => {
   newMode.value = id === 'new';
   if (!newMode.value) {
-    await store.dispatch('fetchIntervention', id);
-    form.value = { ...store.state.intervention.active.data };
+    await interventionStore.fetchIntervention(id);
+    form.value = { ...interventionStore.active.data };
     form.value.heure_debut = form.value.heure_debut.slice(0, 5);
     form.value.heure_fin = form.value.heure_fin.slice(0, 5);
   } else {
     form.value = {
       stat_nb: 1,
-      exercice_comptable_id: store.state.exerciceComptable.activeId,
+      exercice_comptable_id: exerciceComptableStore.activeId,
       sauve_animaux: 0,
       sauve_personne: 0,
     };
   }
 });
 
-const localites = computed(() => store.state.localite.liste);
-const typesIntervention = computed(() => store.state.typeIntervention.liste);
-const statsFederales = computed(() => store.state.statFederal.liste);
-const interventionTraitements = computed(
-  () => store.state.interventionTraitement.liste
-);
-const sapeurs = computed(() => store.state.sapeur.liste);
+const localites = computed(() => localiteStore.liste);
+const typesIntervention = computed(() => typeInterventionStore.liste);
+const statsFederales = computed(() => statFederalStore.liste);
+const interventionTraitements = computed(() => traitementStore.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 
 const activeExerciceComptable = computed(() =>
-  store.state.exerciceComptable.liste.find(
-    (e) => e.id === store.state.exerciceComptable.activeId
-  )
+  exerciceComptableStore.liste.find(
+    (e) => e.id === exerciceComptableStore.activeId,
+  ),
 );
 const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION
+  permissions.INTERVENTION.MODIFICATION,
 );
 const isValidWgs84 = computed(() => {
   const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
@@ -80,8 +90,8 @@ const dateFinMax = computed(() => {
 const awn = inject('awn');
 const save = () => {
   if (newMode.value) {
-    store
-      .dispatch('createIntervention', form.value)
+    interventionStore
+      .createIntervention(form.value)
       .then((data) => {
         router.push('/interventions/' + data.id);
         errors.value = {};
@@ -91,8 +101,8 @@ const save = () => {
         awn.alert(err?.message || "Erreur lors de l'enregistrement");
       });
   } else {
-    store
-      .dispatch('saveActiveIntervention', form.value)
+    interventionStore
+      .saveActiveIntervention(form.value)
       .then((res) => {
         errors.value = {};
         awn.success(res?.message || 'Modifications enregistrées');
@@ -143,9 +153,9 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
-                    required
                     id="m-int-date-debut"
                     v-model="form.date_debut"
+                    required
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_debut'] }"
                     type="date"
@@ -165,9 +175,9 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
-                    required
                     id="m-int-heure_debut"
                     v-model="form.heure_debut"
+                    required
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"
@@ -189,9 +199,9 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   </div>
                   <input
-                    required
                     id="m-int-date-fin"
                     v-model="form.date_fin"
+                    required
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['date_fin'] }"
                     :min="dateFinMin"
@@ -211,9 +221,9 @@ const degre = [
                     <font-awesome-icon :icon="['far', 'clock']" />
                   </div>
                   <input
-                    required
                     id="m-int-heure_fin"
                     v-model="form.heure_fin"
+                    required
                     type="time"
                     :readonly="!hasEditPermission"
                     class="form-control form-control-sm"

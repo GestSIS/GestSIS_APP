@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import ListeArticlePourSapeur from '../materiel/ListeArticlePourSapeur.vue';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 
-const activeSapeurId = computed(() => store.state.sapeur.active.id);
+const activeSapeurId = computed(() => sapeurStore.active.id);
 </script>
 
 <template>

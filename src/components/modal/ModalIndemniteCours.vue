@@ -1,9 +1,15 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 
-const store = useStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
 
 const { data } = defineProps({
   data: {
@@ -63,10 +69,10 @@ const { closeModal } = useModalStore();
 const awn = inject('awn');
 
 const unites = computed(() =>
-  store.state.unite.liste.filter((u) => new Set([1, 5, 6]).has(parseInt(u.id))),
+  uniteStore.liste.filter((u) => new Set([1, 5, 6]).has(parseInt(u.id))),
 );
-const comptes = computed(() => store.state.compte.liste);
-const categories = computed(() => store.state.ecritureCategorie.liste);
+const comptes = computed(() => compteStore.liste);
+const categories = computed(() => ecritureCategorieStore.liste);
 
 const ajoutType = () => {
   base.value.push({
@@ -114,11 +120,9 @@ const save = () => {
     fonctions,
   };
 
-  const action =
-    (indemnite.id || 0) === 0 ? 'addIndemniteCours' : 'updateIndemniteCours';
-
-  store
-    .dispatch(action, indemnite)
+  ((indemnite.id || 0) === 0
+    ? imputationStore.addIndemniteCours
+    : imputationStore.updateIndemniteCours)(indemnite)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

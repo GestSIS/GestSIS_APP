@@ -1,42 +1,50 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import permissions from '/src/store/permissions.js';
 import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
 import ExerciceService from '../../services/ExerciceService';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const localiteStore = useLocaliteStore();
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
 const loading = ref(true);
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchSapeurExercices', {
-    sapeurId: store.state.sapeur.active.id,
-    exerciceComptableId: store.state.exerciceComptable.activeId,
+  await sapeurStore.fetchSapeurExercices({
+    sapeurId: sapeurStore.active.id,
+    exerciceComptableId: exerciceComptableStore.activeId,
   });
   loading.value = false;
 });
 
 await Promise.all([
-  store.dispatch('fetchExcuseTypes'),
-  store.dispatch('fetchExerciceCategories'),
+  excuseTypeStore.fetchExcuseTypes(),
+  exerciceCategorieStore.fetchExerciceCategories(),
 ]);
 
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
 const exercices = computed(() =>
-  store.state.sapeur.active.exercices
+  sapeurStore.active.exercices
     .map((e) => ({
       ...e.presence,
       ...e,
-      excuse: store.state.excuseType.liste.find(
+      excuse: excuseTypeStore.liste.find(
         (t) => t.id == e.presence?.excuse_type_id,
       )?.designation,
-      localite: store.state.localite.liste.find((l) => l.id == e.localite_id)
+      localite: localiteStore.liste.find((l) => l.id == e.localite_id)
         ?.designation,
-      categorie: store.state.exerciceCategorie.liste.find(
+      categorie: exerciceCategorieStore.liste.find(
         (c) => c.id == e.exercice_categorie_id,
       )?.designation,
     }))

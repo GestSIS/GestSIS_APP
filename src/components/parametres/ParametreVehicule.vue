@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
 
-const store = useStore();
-await store.dispatch('fetchVehicules');
+const vehiculeStore = useVehiculeStore();
+await vehiculeStore.fetchVehicules();
 
 const fields = [
   { columnClass: 'col-2', title: 'Actif', key: 'statut', type: Boolean },
@@ -11,7 +11,7 @@ const fields = [
 ];
 
 const vehicules = computed(() =>
-  store.state.vehicule.liste.sort((a, b) => a.tri - b.tri),
+  vehiculeStore.liste.sort((a, b) => a.tri - b.tri),
 );
 </script>
 

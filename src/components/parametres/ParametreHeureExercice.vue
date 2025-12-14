@@ -1,13 +1,19 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { computed, inject } from 'vue';
-const store = useStore();
 
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadComptes = store.dispatch('fetchComptes');
-const loadUnites = store.dispatch('fetchUnites');
-await store.dispatch('fetchHeuresExercice');
+const uniteStore = useUniteStore();
+const heureExerciceStore = useHeureExerciceStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+
+const loadComptes = compteStore.fetchComptes();
+const loadUnites = uniteStore.fetchUnites();
+await heureExerciceStore.fetchHeuresExercice();
 
 const fields = [
   { title: 'Désignation', key: 'designation' },
@@ -20,13 +26,12 @@ const fields = [
 ];
 
 const heureTypes = computed(() =>
-  store.state.heureExercice.liste
+  heureExerciceStore.liste
     .map((h) => ({
       ...h,
-      unite: store.state.unite.liste.find((e) => e.id == h.type_unite_id)
-        ?.unite,
-      compte: store.state.compte.liste.find((e) => e.id == h.compte_id)?.label,
-      categorie: store.state.ecritureCategorie.liste.find(
+      unite: uniteStore.liste.find((e) => e.id == h.type_unite_id)?.unite,
+      compte: compteStore.liste.find((e) => e.id == h.compte_id)?.label,
+      categorie: ecritureCategorieStore.liste.find(
         (e) => e.id == h.ecriture_categorie_id,
       )?.designation,
       typeLabel: {
@@ -54,8 +59,8 @@ const updateHeureType = (heure) =>
     data: { ...heure },
   });
 const deleteHeureType = (heure) =>
-  store
-    .dispatch('removeExerciceHeure', heure.id)
+  heureExerciceStore
+    .removeExerciceHeure(heure.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

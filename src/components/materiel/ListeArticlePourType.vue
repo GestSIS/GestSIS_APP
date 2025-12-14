@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -11,6 +10,7 @@ import permissions from '../../store/permissions';
 import ArticleService from '../../services/materiel/ArticleService';
 import TableArticlePourType from './TableArticlePourType.vue';
 import TagCouleur from './TagCouleur.vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { id } = defineProps({
   id: {
@@ -19,7 +19,7 @@ const { id } = defineProps({
   },
 });
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
@@ -41,7 +41,7 @@ await Promise.all([
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 
 const materielType = computed(() =>
@@ -50,7 +50,7 @@ const materielType = computed(() =>
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
-const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
+const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 
 const linearEmplacements = (emplacement_id) => {
   if (emplacement_id === null) {

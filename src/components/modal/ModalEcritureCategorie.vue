@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -15,15 +15,12 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch(
-      form?.id ? 'updateEcritureCategorie' : 'addEcritureCategorie',
-      form,
-    )
+  const action = form?.id ? 'updateEcritureCategorie' : 'addEcritureCategorie';
+  ecritureCategorieStore[action](form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

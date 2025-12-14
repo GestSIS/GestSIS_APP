@@ -1,14 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../stores/auth/Auth';
 
 const email = ref(null);
 const password = ref(null);
 const error = ref(null);
 
 const router = useRouter();
-const store = useStore();
 const route = useRoute();
 
 const login = async () => {
@@ -22,8 +21,8 @@ const login = async () => {
     return;
   }
 
-  store
-    .dispatch('login', {
+  useAuthStore()
+    .login({
       email: email.value?.trim(),
       password: password.value,
     })

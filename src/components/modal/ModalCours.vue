@@ -1,7 +1,9 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useCoursStore } from '../../stores/sapeur/Cours.js';
 
 const { data } = defineProps({
   data: {
@@ -17,18 +19,17 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const grades = computed(() => store.state.grade.liste);
-const fonctions = computed(() =>
-  store.state.fonction.liste.filter((f) => f.actif),
-);
-const cours = computed(() => store.state.cours.liste);
+const coursStore = useCoursStore();
+const gradeStore = useGradeStore();
+const fonctionStore = useFonctionStore();
+const grades = computed(() => gradeStore.liste);
+const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
+const cours = computed(() => coursStore.liste);
 
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch(form?.id ? 'updateCours' : 'addCours', form)
+  (form?.id ? coursStore.updateCours : coursStore.addCours)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

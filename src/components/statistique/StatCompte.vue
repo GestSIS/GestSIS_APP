@@ -1,18 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const compteStore = useCompteStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchComptes');
-await store.dispatch('fetchExercicesComptables');
+compteStore.fetchComptes();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueCompte',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueCompte(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -35,10 +38,8 @@ const fields = [
   },
 ];
 
-const comptes = computed(() =>
-  store.state.compte.liste.sort((a, b) => a.tri - b.tri),
-);
-const stats = computed(() => store.state.statistique.comptes);
+const comptes = computed(() => compteStore.liste.sort((a, b) => a.tri - b.tri));
+const stats = computed(() => statistiqueStore.comptes);
 const filteredData = computed(() => {
   const ids = new Set(stats.value.map((c) => c.compte_id));
   return comptes.value

@@ -1,7 +1,7 @@
 <script setup>
 import { inject, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useAdminStore } from '../../stores/admin/Admin.js';
 
 const { callback, data } = defineProps({
   callback: {
@@ -22,17 +22,16 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-
 const { closeModal } = useModalStore();
 const awn = inject('awn');
+const adminStore = useAdminStore();
 
 const save = () => {
   if (!form?.id) {
     return awn.alert("Impossible d'ajouter un utilisateur pour le moment");
   }
-  store
-    .dispatch(form?.id ? 'editUser' : 'addUser', form)
+  adminStore
+    .editUser(form)
     .then(closeModal)
     .catch((err) => {
       errors.value = err;

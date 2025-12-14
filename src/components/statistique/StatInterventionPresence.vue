@@ -1,18 +1,23 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
 
-store.dispatch('fetchLocalites');
-store.dispatch('fetchListeSapeur');
-await store.dispatch('fetchExercicesComptables');
+localiteStore.fetchLocalites();
+sapeurStore.fetchListeSapeur();
+await exerciceComptableStore.fetchExercicesComptables();
 
 watchEffect(() =>
-  store.dispatch(
-    'fetchStatistiquePresenceIntervention',
-    store.state.exerciceComptable.activeId,
+  statistiqueStore.fetchStatistiquePresenceIntervention(
+    exerciceComptableStore.activeId,
   ),
 );
 const allSapeurs = ref(false);
@@ -22,9 +27,9 @@ const fields = [
   { title: 'Durée [h]', key: 'duree' },
 ];
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const presences = computed(() =>
-  store.state.statistique.presencesIntervention.map((p) => ({
+  statistiqueStore.presencesIntervention.map((p) => ({
     ...p,
     duree:
       (new Date(p.fin).getTime() - new Date(p.debut).getTime()) /

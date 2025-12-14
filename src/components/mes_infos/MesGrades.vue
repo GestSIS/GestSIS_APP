@@ -1,18 +1,18 @@
 <script setup>
 import { computed } from 'vue';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import store from '/src/store/index';
+import { useGradeStore } from '../../stores/sapeur/Grade.js';
 
 const infosStore = useMesInfosStore();
+const gradeStore = useGradeStore();
 
-await Promise.all([infosStore.fetchMesGrades(), store.dispatch('fetchGrades')]);
+await Promise.all([infosStore.fetchMesGrades(), gradeStore.fetchGrades()]);
 
 const grades = computed(() =>
   infosStore.grades
     .map((t) => ({
       ...t,
-      grade: store.state.grade.liste.find((e) => e.id == t.grade_id)
-        ?.designation,
+      grade: gradeStore.liste.find((e) => e.id == t.grade_id)?.designation,
     }))
     .sort((a, b) => b.date.localeCompare(a.date)),
 );

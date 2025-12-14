@@ -1,27 +1,33 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '../../store/permissions.js';
 import { computed, ref, watchEffect } from 'vue';
 import useHasPermission from '../../hooks/usePermission.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useAbsenceStore } from '../../stores/absence/Absence.js';
 
-const store = useStore();
+const localiteStore = useLocaliteStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const absenceStore = useAbsenceStore();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadLocalites = store.dispatch('fetchLocalites');
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadLocalites = localiteStore.fetchLocalites();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchAbsences', store.state.exerciceComptable.activeId);
+  await absenceStore.fetchAbsences(exerciceComptableStore.activeId);
   loading.value = false;
 });
 await Promise.all([loadSapeurs, loadLocalites]);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const absences = computed(() =>
-  store.state.absence.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
+  absenceStore.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 
@@ -42,7 +48,7 @@ const removeAbsence = (id) =>
   confirm(
     'Voulez-vous vraiment supprimer cette absence ?',
     "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-  ).then(() => store.dispatch('removeAbsence', id));
+  ).then(() => absenceStore.removeAbsence(id));
 
 const onRowClass = (dataItem, isSelected) => {
   if (dataItem.statut == 0) {

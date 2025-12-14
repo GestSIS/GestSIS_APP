@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 
 const { data } = defineProps({
   data: {
@@ -17,16 +17,16 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
   form.statut = form.statut ? 1 : 0;
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addExerciceCategorie' : 'updateExerciceCategorie',
-      form,
-    )
+  const action =
+    (form.id || 0) === 0
+      ? exerciceCategorieStore.addExerciceCategorie
+      : exerciceCategorieStore.updateExerciceCategorie;
+  action(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };

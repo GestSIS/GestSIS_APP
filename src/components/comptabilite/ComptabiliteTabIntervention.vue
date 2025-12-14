@@ -1,43 +1,58 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
+import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const sapeurStore = useSapeurStore();
+const uniteStore = useUniteStore();
+const localiteStore = useLocaliteStore();
+const interventionStore = useInterventionStore();
+const typeInterventionStore = useTypeInterventionStore();
+const statFederalStore = useStatFederalStore();
+const interventionTraitementStore = useInterventionTraitementStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const imputationStore = useImputationStore();
+await exerciceComptableStore.fetchExercicesComptables();
 
-store.dispatch('fetchTypeInterventions');
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchLocalites');
-store.dispatch('fetchStatFederals');
-store.dispatch('fetchInterventionTraitements');
-store.dispatch('fetchFraisIndemnitesTypes');
+typeInterventionStore.fetchTypeInterventions();
+sapeurStore.fetchListeSapeur();
+localiteStore.fetchLocalites();
+statFederalStore.fetchStatFederals();
+interventionTraitementStore.fetchTraitements();
+imputationStore.fetchFraisIndemnitesTypes();
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchListeIntervention',
-    store.state.exerciceComptable.activeId,
+  await interventionStore.fetchListeIntervention(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const interventions = computed(() =>
-  store.state.intervention.liste
+  interventionStore.liste
     .filter((e) => e.statut > 1)
     .sort((a, b) => a.date_debut.localeCompare(b.date_debut)),
 );
-const typesIntervention = computed(() => store.state.typeIntervention.liste);
-const statsFederal = computed(() => store.state.statFederal.liste);
-const traitements = computed(() => store.state.interventionTraitement.liste);
-const localites = computed(() => store.state.localite.liste);
-const unites = computed(() => store.state.unite.liste);
+const typesIntervention = computed(() => typeInterventionStore.liste);
+const statsFederal = computed(() => statFederalStore.liste);
+const traitements = computed(() => interventionTraitementStore.liste);
+const localites = computed(() => localiteStore.liste);
+const unites = computed(() => uniteStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -85,8 +100,8 @@ const annulerImputer = (interventionId) =>
     'Voulez-vous vraiment supprimer cette imputation ?',
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
   ).then(() =>
-    store
-      .dispatch('annulerImputationIntervention', interventionId)
+    imputationStore
+      .annulerImputationIntervention(interventionId)
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
       }),

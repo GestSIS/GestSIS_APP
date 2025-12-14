@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -16,20 +16,17 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const fonctions = computed(() =>
-  store.state.fonction.liste.filter((f) => f.actif),
-);
+const fonctionStore = useFonctionStore();
+const sapeurStore = useSapeurStore();
+const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
 
 const { closeModal } = useModalStore();
 
 const save = async () =>
   // TODO: Empêcher fonctions à double
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addSapeurFonction' : 'editSapeurFonction',
-      form,
-    )
+  ((form.id || 0) === 0
+    ? sapeurStore.addSapeurFonction
+    : sapeurStore.editSapeurFonction)(form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 </script>

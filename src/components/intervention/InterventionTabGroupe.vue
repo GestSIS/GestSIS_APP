@@ -1,11 +1,13 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 import useHasPermission from '../../hooks/usePermission';
 import permissions from '/src/store/permissions.js';
 
-const store = useStore();
-store.dispatch('fetchGroupes');
+const interventionStore = useInterventionStore();
+const groupeStore = useGroupeStore();
+groupeStore.fetchGroupes();
 
 const { id } = defineProps({
   id: {
@@ -19,9 +21,9 @@ const loading = ref(true);
 
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchInterventionGroupes', id);
+  await interventionStore.fetchInterventionGroupes(id);
   selected.value = Object.fromEntries(
-    store.state.intervention.active.groupes.map((g) => [
+    interventionStore.active.groupes.map((g) => [
       g.no + '_' + g.designation,
       true,
     ]),
@@ -30,10 +32,10 @@ watchEffect(async () => {
 });
 
 const groupes = computed(() => {
-  const selectedGroupes = store.state.intervention.active.groupes;
+  const selectedGroupes = interventionStore.active.groupes;
   const selectedNumeros = new Set(selectedGroupes.map((g) => g.no));
 
-  const availableGroupes = store.state.groupe.liste
+  const availableGroupes = groupeStore.liste
     .filter((g) => g.type === 1)
     .filter((g) => !selectedNumeros.has(g.no));
 
@@ -59,8 +61,8 @@ const editGroupe = async (groupeId) => {
   const groupe = groupes.value.find((g) => g.pseudo_id === groupeId);
 
   (event
-    ? store.dispatch('addInterventionGroupes', [groupe])
-    : store.dispatch('removeInterventionGroupes', [groupe.id])
+    ? interventionStore.addInterventionGroupes([groupe])
+    : interventionStore.removeInterventionGroupes([groupe.id])
   )
     .then(() => awn.success('Modifications enregistrées'))
     .catch((err) =>

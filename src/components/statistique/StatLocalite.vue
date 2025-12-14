@@ -1,17 +1,21 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
 
-const store = useStore();
-store.dispatch('fetchLocalites');
-await store.dispatch('fetchExercicesComptables');
+const localiteStore = useLocaliteStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const statistiqueStore = useStatistiqueStore();
+
+localiteStore.fetchLocalites();
+await exerciceComptableStore.fetchExercicesComptables();
 
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch(
-    'fetchStatistiqueLocalite',
-    store.state.exerciceComptable.activeId,
+  await statistiqueStore.fetchStatistiqueLocalite(
+    exerciceComptableStore.activeId,
   );
   loading.value = false;
 });
@@ -21,8 +25,8 @@ const fields = [
   { title: 'Nombre', key: 'quantite' },
 ];
 
-const localites = computed(() => store.state.localite.liste);
-const sapeurLocalites = computed(() => store.state.statistique.localites);
+const localites = computed(() => localiteStore.liste);
+const sapeurLocalites = computed(() => statistiqueStore.localites);
 const occurences = computed(() => {
   return sapeurLocalites.value.reduce(
     (prev, { localite_id, nb }) => (

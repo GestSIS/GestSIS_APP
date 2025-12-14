@@ -1,11 +1,19 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
 import MultiStep from '../base/MultiStep.vue';
 
-const store = useStore();
-store.dispatch('fetchFonctions');
+const sapeurStore = useSapeurStore();
+const fonctionStore = useFonctionStore();
+const compteStore = useCompteStore();
+const imputationStore = useImputationStore();
+const uniteStore = useUniteStore();
+fonctionStore.fetchFonctions();
 
 const { data } = defineProps({
   data: {
@@ -20,13 +28,13 @@ const activeIndemnite = ref(null);
 const ecritures = ref([]);
 const successMessageVisibility = ref(true);
 
-const sapeurs = computed(() => store.state.sapeur.liste);
+const sapeurs = computed(() => sapeurStore.liste);
 const indemnitesTypes = computed(
-  () => store.state.imputation.fraisIndemnites.interventions,
+  () => imputationStore.fraisIndemnites.interventions,
 );
-const fonctions = computed(() => store.state.fonction.liste);
-const comptes = computed(() => store.state.compte.liste);
-const unites = computed(() => store.state.unite.liste);
+const fonctions = computed(() => fonctionStore.liste);
+const comptes = computed(() => compteStore.liste);
+const unites = computed(() => uniteStore.liste);
 const activeIndemniteHasFonction = computed(() => {
   return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
 });
@@ -42,8 +50,8 @@ const imputer = () => {
     return;
   }
 
-  store
-    .dispatch('imputerIntervention', {
+  imputationStore
+    .imputerIntervention({
       intervention_id: data.id,
       indemnite_intervention_type_id: activeIndemnite.value.id,
     })

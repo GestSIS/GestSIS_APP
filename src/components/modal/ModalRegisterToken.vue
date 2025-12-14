@@ -1,7 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { useStore } from 'vuex';
+import { useAuthStore } from '../../stores/auth/Auth.js';
+
+const authStore = useAuthStore();
 
 const d = new Date();
 d.setMonth(d.getMonth() + 1);
@@ -16,8 +18,7 @@ const token = ref({
   token: '',
 });
 
-const store = useStore();
-const roles = computed(() => store.state.auth.roles);
+const roles = computed(() => authStore.roles);
 
 const { closeModal } = useModalStore();
 
@@ -44,8 +45,8 @@ const save = () => {
     return;
   }
 
-  store
-    .dispatch('newRegisterToken', token.value)
+  authStore
+    .newRegisterToken(token.value)
     .then((res) => {
       errors.value = {};
       step.value = 2;

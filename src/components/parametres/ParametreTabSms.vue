@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 import ParametreAspsms from './ParametreAspsms.vue';
 
-const store = useStore();
-await store.dispatch('fetchAspsmsParams');
+const aspsmsParamStore = useAspsmsParamStore();
+await aspsmsParamStore.fetchParams();
 
 const tab = ref('aspsms');
 </script>

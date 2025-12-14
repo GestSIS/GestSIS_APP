@@ -1,8 +1,9 @@
 <script setup>
 import { computed, ref, inject } from 'vue';
-import { useStore } from 'vuex';
 import AdminService from '../../services/AdminService';
 import { useModalStore } from '../../stores/common/Modal';
+import { useAdminStore } from '../../stores/admin/Admin';
+import { useAuthStore } from '../../stores/auth/Auth';
 
 const { id } = defineProps({
   id: {
@@ -10,12 +11,14 @@ const { id } = defineProps({
     required: true,
   },
 });
-const store = useStore();
+
+const adminStore = useAdminStore();
+const authStore = useAuthStore();
 
 const user = ref({});
-const loadSis = store.dispatch('loadSisListe');
-const loadRoles = store.dispatch('loadAllRoles');
-store.dispatch('loadAllUsers');
+const loadSis = authStore.loadSisListe();
+const loadRoles = adminStore.loadAllRoles();
+adminStore.loadAllUsers();
 
 const loadUser = () => {
   return AdminService.getUser({ id }).then(({ data }) => {
@@ -25,8 +28,8 @@ const loadUser = () => {
 
 await Promise.all([loadSis, loadRoles, loadUser()]);
 
-const sis = computed(() => store.state.admin.sis);
-const roles = computed(() => store.state.admin.roles);
+const sis = computed(() => adminStore.sis);
+const roles = computed(() => adminStore.roles);
 
 const { showModal, confirm } = useModalStore();
 const awn = inject('awn');
@@ -68,9 +71,8 @@ const supprimerRole = (userRole) =>
     'Voulez-vous vraiment enlever ce rôle à cet utilisateur ?',
     "Attention, l'action est irréversible.",
   ).then(() => {
-    console.log(userRole?.id);
-    store
-      .dispatch('removeUserRole', userRole?.id)
+    adminStore
+      .removeUserRole(userRole?.id)
       .then((res) => awn.success(res?.message || 'Rôle supprimé'))
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression'));

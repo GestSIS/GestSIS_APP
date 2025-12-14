@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { useLocaliteStore } from '../../stores/common/Localite.js';
+import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -16,16 +17,24 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
-const localites = computed(() => store.state.localite.liste);
+const localiteStore = useLocaliteStore();
+const medecinStore = useMedecinStore();
+const localites = computed(() => localiteStore.liste);
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  store
-    .dispatch((form.id || 0) === 0 ? 'addMedecin' : 'updateMedecin', form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+const save = async () => {
+  try {
+    if (form.id) {
+      await medecinStore.updateMedecin(form);
+    } else {
+      await medecinStore.addMedecin(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
+};
 </script>
 
 <template>

@@ -1,15 +1,19 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
+import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
 
 import ParametreExerciceCategorie from './ParametreExerciceCategorie.vue';
 import ParametreExcuseType from './ParametreExcuseType.vue';
 import ParametreExcuse from './ParametreExcuse.vue';
 import { ref } from 'vue';
 
-const store = useStore();
-const loadExcuses = store.dispatch('fetchExcuseTypes');
-const loadCategories = store.dispatch('fetchExerciceCategories');
-await store.dispatch('fetchExcuseParams');
+const excuseTypeStore = useExcuseTypeStore();
+const exerciceCategorieStore = useExerciceCategorieStore();
+const excuseParamStore = useExcuseParamStore();
+const loadExcuses = excuseTypeStore.fetchExcuseTypes();
+const loadCategories = exerciceCategorieStore.fetchExerciceCategories();
+await excuseParamStore.fetchParams();
 
 const tab = ref('categorie');
 </script>

@@ -1,11 +1,14 @@
 <script setup>
 import { computed, inject } from 'vue';
-import { useStore } from 'vuex';
+import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
+import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
 import { useModalStore } from '../../stores/common/Modal';
-const store = useStore();
 
-const loadStatIntervention = store.dispatch('fetchStatInterventions');
-const loadTypeIntervention = store.dispatch('fetchTypeInterventions');
+const statInterventionStore = useStatInterventionStore();
+const typeInterventionStore = useTypeInterventionStore();
+
+const loadStatIntervention = statInterventionStore.fetchStatInterventions();
+const loadTypeIntervention = typeInterventionStore.fetchTypeInterventions();
 
 await Promise.all([loadStatIntervention, loadTypeIntervention]);
 
@@ -22,17 +25,17 @@ const fieldsStat = [
 ];
 
 const listeType = computed(() =>
-  store.state.typeIntervention.liste
+  typeInterventionStore.liste
     .map((t) => ({
       ...t,
-      statistique: store.state.statIntervention.liste.find(
+      statistique: statInterventionStore.liste.find(
         (s) => s.id == t.stat_intervention_id,
       )?.designation,
     }))
     .sort((a, b) => a.tri - b.tri),
 );
 const listeStat = computed(() =>
-  store.state.statIntervention.liste.sort((a, b) => a.tri - b.tri),
+  statInterventionStore.liste.sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
@@ -48,8 +51,8 @@ const updateType = (type) =>
 
 const awn = inject('awn');
 const deleteType = (type) =>
-  store
-    .dispatch('removeTypeIntervention', type.id)
+  typeInterventionStore
+    .removeTypeIntervention(type.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 
 const ajoutStat = () =>
@@ -62,8 +65,8 @@ const updateStat = (stat) =>
   });
 
 const deleteStat = (stat) =>
-  store
-    .dispatch('removeStatIntervention', stat.id)
+  statInterventionStore
+    .removeStatIntervention(stat.id)
     .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
 </script>
 

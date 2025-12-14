@@ -1,14 +1,22 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useLocaliteStore } from '../stores/common/Localite.js';
+import { useBaseDataStore } from '../stores/common/BaseData.js';
+import { useGroupeStore } from '../stores/groupe/Groupe.js';
+import { useFonctionStore } from '../stores/sapeur/Fonction.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const localiteStore = useLocaliteStore();
+const baseDataStore = useBaseDataStore();
+const groupeStore = useGroupeStore();
+const fonctionStore = useFonctionStore();
 
-const loadSapeurs = store.dispatch('fetchListeSapeur');
-const loadLocalities = store.dispatch('fetchLocalites');
-const loadGroupes = store.dispatch('fetchGroupes');
-const loadFonctions = store.dispatch('fetchFonctions');
-const loadPermisType = store.dispatch('fetchPermisType');
+const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadLocalities = localiteStore.fetchLocalites();
+const loadGroupes = groupeStore.fetchGroupes();
+const loadFonctions = fonctionStore.fetchFonctions();
+const loadPermisType = baseDataStore.fetchPermisType();
 
 await Promise.all([
   loadSapeurs,

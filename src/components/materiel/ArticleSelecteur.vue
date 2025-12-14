@@ -1,13 +1,13 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue';
 
-import { useStore } from 'vuex';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools';
 import VueSelect from 'vue3-select-component';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
 const props = defineProps({
   articles: {
@@ -31,13 +31,13 @@ if (selectedArticles.value.length === 0) {
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
-const store = useStore();
+const sapeurStore = useSapeurStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
-  store.dispatch('fetchListeSapeur'),
+  sapeurStore.fetchListeSapeur(),
 ]);
 
 const types = computed(() => materielTypeStore.liste);
@@ -45,7 +45,7 @@ const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
-const indexedSapeurs = computed(() => indexedData(store.state.sapeur.liste));
+const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 const emplacements = computed(() => {
   const recursive = (id) => {
     return [

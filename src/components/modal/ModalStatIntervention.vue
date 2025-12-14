@@ -1,6 +1,6 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useStore } from 'vuex';
+import { reactive, ref } from 'vue';
+import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 const { data } = defineProps({
@@ -15,17 +15,20 @@ const form = reactive({
   ...data,
 });
 
-const store = useStore();
+const statInterventionStore = useStatInterventionStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  store
-    .dispatch(
-      (form.id || 0) === 0 ? 'addStatIntervention' : 'updateStatIntervention',
-      form,
-    )
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+  try {
+    if (form.id) {
+      await statInterventionStore.updateStatIntervention(form);
+    } else {
+      await statInterventionStore.addStatIntervention(form);
+    }
+    closeModal();
+  } catch (err) {
+    errors.value = err;
+  }
 };
 </script>
 

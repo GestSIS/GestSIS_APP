@@ -1,44 +1,48 @@
 <script setup>
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
+import { useCoursStore } from '../stores/sapeur/Cours.js';
+import { useCoursSapeurStore } from '../stores/sapeur/CoursSapeur.js';
+import { useLocaliteStore } from '../stores/common/Localite.js';
+import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import { computed, ref, watchEffect } from 'vue';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const coursStore = useCoursStore();
+const coursSapeurStore = useCoursSapeurStore();
+const localiteStore = useLocaliteStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
-const loadLocalities = store.dispatch('fetchLocalites');
-const loadCours = store.dispatch('fetchCours');
-const loadSapeurs = store.dispatch('fetchListeSapeur');
+const loadLocalities = localiteStore.fetchLocalites();
+const loadCours = coursStore.fetchCours();
+const loadSapeurs = sapeurStore.fetchListeSapeur();
 
-await store.dispatch('fetchExercicesComptables');
+await exerciceComptableStore.fetchExercicesComptables();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await store.dispatch('fetchCoursSapeurs', activeExerciceComptableId.value);
+  await coursSapeurStore.fetchCoursSapeurs(activeExerciceComptableId.value);
   loading.value = false;
 });
 
 await Promise.all([loadLocalities, loadCours, loadSapeurs]);
 
 const sapeurs = computed(() =>
-  store.state.sapeur.liste.sort((a, b) =>
-    a.nom_prenom.localeCompare(b.nom_prenom),
-  ),
+  sapeurStore.liste.sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
 );
 const coursTypes = computed(() =>
-  store.state.cours.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  coursStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const coursSapeurs = computed(() =>
-  store.state.coursSapeur.liste.sort((a, b) => a.date.localeCompare(b.date)),
+  coursSapeurStore.liste.sort((a, b) => a.date.localeCompare(b.date)),
 );
 const localites = computed(() =>
-  store.state.localite.liste.sort((a, b) =>
+  localiteStore.liste.sort((a, b) =>
     a.designation.localeCompare(b.designation),
   ),
 );

@@ -1,29 +1,44 @@
 <script setup>
 import { computed, inject, ref, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useTravailStore } from '../../stores/travail/Travail.js';
+import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import permissions from '../../store/permissions';
 import useHasPermission from '../../hooks/usePermission.js';
 
-const store = useStore();
-await store.dispatch('fetchExercicesComptables');
+const uniteStore = useUniteStore();
+const travailStore = useTravailStore();
+const travailTypeStore = useTravailTypeStore();
+const sapeurStore = useSapeurStore();
+const exerciceComptableStore = useExerciceComptableStore();
+const compteStore = useCompteStore();
+const ecritureCategorieStore = useEcritureCategorieStore();
+const imputationStore = useImputationStore();
 
-store.dispatch('fetchEcritureCategories');
-store.dispatch('fetchUnites');
-store.dispatch('fetchListeSapeur');
-store.dispatch('fetchTravailTypes');
-store.dispatch('fetchComptes');
+await exerciceComptableStore.fetchExercicesComptables();
+
+ecritureCategorieStore.fetchEcritureCategories();
+uniteStore.fetchUnites();
+sapeurStore.fetchListeSapeur();
+travailTypeStore.fetchTravailTypes();
+compteStore.fetchComptes();
 
 const activeExerciceComptableId = computed(
-  () => store.state.exerciceComptable.activeId,
+  () => exerciceComptableStore.activeId,
 );
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  store.dispatch('fetchTravaux', activeExerciceComptableId.value);
+  await travailStore.fetchTravaux(activeExerciceComptableId.value);
   loading.value = false;
 });
 
@@ -33,12 +48,10 @@ const selectedItem = computed(() => {
   return travaux.value.find((c) => c.id == selectedId.value);
 });
 
-const travaux = computed(() =>
-  store.state.travail.liste.filter((t) => t.statut >= 1),
-);
-const sapeurs = computed(() => store.state.sapeur.liste);
-const travailTypes = computed(() => store.state.travailType.liste);
-const unites = computed(() => store.state.unite.liste);
+const travaux = computed(() => travailStore.liste.filter((t) => t.statut >= 1));
+const sapeurs = computed(() => sapeurStore.liste);
+const travailTypes = computed(() => travailTypeStore.liste);
+const unites = computed(() => uniteStore.liste);
 const hasEditPermission = useHasPermission(
   permissions.COMPTABILITE.MODIFICATION,
 );
@@ -81,10 +94,10 @@ const imputer = (travailId) => {
     return;
   }
 
-  store
-    .dispatch('imputerTravail', ids)
+  imputationStore
+    .imputerTravail(ids)
     .then((res) => {
-      store.dispatch('fetchTravaux', activeExerciceComptableId.value);
+      travailStore.fetchTravaux(activeExerciceComptableId.value);
       awn.success(res?.message ?? 'Travaux imputé avec succès');
     })
     .catch((err) => {
@@ -96,8 +109,8 @@ const annulerImputer = (travailId) =>
     'Voulez-vous vraiment supprimer cette imputation ?',
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
   ).then(() =>
-    store
-      .dispatch('annulerImputationTravail', travailId)
+    imputationStore
+      .annulerImputationTravail(travailId)
       .then((res) => {
         awn.success(res?.message ?? 'Travaux imputé avec succès');
       })

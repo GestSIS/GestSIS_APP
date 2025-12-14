@@ -1,9 +1,11 @@
 <script setup>
 import { computed, ref, useTemplateRef } from 'vue';
 import EditableTree from '/src/components/editable_tree/EditableTree.vue';
-import { useStore } from 'vuex';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
-const store = useStore();
+const sapeurStore = useSapeurStore();
+const groupeStore = useGroupeStore();
 
 const { editMode } = defineProps({
   editMode: {
@@ -37,13 +39,11 @@ const tree = ref([
   },
 ]);
 
-const groupes = computed(() => store.state.groupe.liste);
+const groupes = computed(() => groupeStore.liste);
 const groupeTree = computed(() => {
   const groupFilter = (parentId) => (g) => g.parent_id == parentId;
   const sapeurMapping = (s) => {
-    const sapeur = store.state.sapeur.liste.find(
-      (sap) => sap.id == s.sapeur_id,
-    ) || {
+    const sapeur = sapeurStore.liste.find((sap) => sap.id == s.sapeur_id) || {
       nom: 'Ancien',
       prenom: 'Sapeur',
       civilite: 1,
@@ -65,14 +65,14 @@ const groupeTree = computed(() => {
     key: `g-${g.id}`,
     tri: g.tri,
     children: [
-      ...store.state.groupe.liste.filter(groupFilter(g.id)).map(groupeMapping),
+      ...groupeStore.liste.filter(groupFilter(g.id)).map(groupeMapping),
       ...g.sapeur_ids
         .map(sapeurMapping)
         .sort((a, b) => a.label.localeCompare(b.label)),
     ],
   });
 
-  return store.state.groupe.liste.filter(groupFilter(null)).map(groupeMapping);
+  return groupeStore.liste.filter(groupFilter(null)).map(groupeMapping);
 });
 
 tree.value.children = groupeTree.value;
@@ -87,7 +87,7 @@ const left = (node) => {
 
   // On ne change que parent_id
   const parent = groupes.value.find((g) => g.id == groupe.parent_id);
-  store.dispatch('updateGroupe', {
+  groupeStore.updateGroupe({
     groupeId: groupe.id,
     data: {
       ...groupe,
@@ -103,7 +103,7 @@ const right = (node) => {
     .filter((g) => g.parent_id == groupe.parent_id)
     .filter((g) => g.tri < groupe.tri);
   const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
-  store.dispatch('updateGroupe', {
+  groupeStore.updateGroupe({
     groupeId: groupe.id,
     data: {
       ...groupe,
@@ -122,7 +122,7 @@ const up = (node) => {
       .filter((g) => g.tri < parent.tri);
     const previousParentGroupe =
       groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
@@ -136,14 +136,14 @@ const up = (node) => {
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri < groupe.tri);
     const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
         tri: previousGroupe.tri,
       },
     });
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: previousGroupe.id,
       data: {
         ...previousGroupe,
@@ -169,7 +169,7 @@ const down = (node) => {
       groupeId = parent.parent_id;
     }
 
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
@@ -183,14 +183,14 @@ const down = (node) => {
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri > groupe.tri);
     const nextGroupe = groupesOfSameLevel[0];
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
         tri: nextGroupe.tri,
       },
     });
-    store.dispatch('updateGroupe', {
+    groupeStore.updateGroupe({
       groupeId: nextGroupe.id,
       data: {
         ...nextGroupe,
