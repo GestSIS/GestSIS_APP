@@ -239,7 +239,7 @@ const mutate = () => {
     })
     .catch((err) => {
       errors.value = err;
-      awn.alert(err.message);
+      awn.alert(err.message ?? "Une erreur s'est produite lors du transfert");
     });
 };
 </script>
