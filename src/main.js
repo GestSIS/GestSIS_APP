@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router/index';
+import router from './router/index.js';
 import { TokenService } from './services/StorageService.js';
 import { createPinia } from 'pinia';
 import { useAuthStore } from './stores/auth/Auth.js';
