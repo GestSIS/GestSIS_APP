@@ -5,6 +5,7 @@ import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools';
 import VueSelect from 'vue3-select-component';
+import 'vue3-select-component/styles';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur';

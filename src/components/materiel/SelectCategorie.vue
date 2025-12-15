@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import VueSelect from 'vue3-select-component';
+import 'vue3-select-component/styles';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
@@ -62,7 +63,7 @@ const categories = computed(() => {
 <template>
   <div>
     <label v-if="label">{{ label }}</label>
-    <VueSelect
+    <vue-select
       v-model="model"
       :options="categories"
       placeholder="Sélectionnez un categorie"
@@ -85,7 +86,7 @@ const categories = computed(() => {
           {{ indexedCategories[id].designation }}
         </tag-couleur>
       </template>
-    </VueSelect>
+    </vue-select>
   </div>
 </template>
 

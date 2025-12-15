@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import VueSelect from 'vue3-select-component';
+import 'vue3-select-component/styles';
 import TagCouleur from './TagCouleur.vue';
 
 const { label } = defineProps({
@@ -26,7 +27,7 @@ const couleurs = computed(() =>
 <template>
   <div>
     <label v-if="label">{{ label }}</label>
-    <VueSelect
+    <vue-select
       v-model="model"
       :options="couleurs"
       placeholder="Sélectionnez une couleur"
@@ -41,7 +42,7 @@ const couleurs = computed(() =>
           {{ option.nom }}
         </tag-couleur>
       </template>
-    </VueSelect>
+    </vue-select>
   </div>
 </template>
 

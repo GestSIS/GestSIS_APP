@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import VueSelect from 'vue3-select-component';
+import 'vue3-select-component/styles';
 import { indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
 
@@ -83,7 +84,7 @@ const emplacements = computed(() => {
 <template>
   <div>
     <label v-if="label">{{ label }}</label>
-    <VueSelect
+    <vue-select
       v-model="model"
       :required="required"
       :is-disabled="disabled"
@@ -108,7 +109,7 @@ const emplacements = computed(() => {
           {{ indexedEmplacements[id].designation }}
         </tag-couleur>
       </template>
-    </VueSelect>
+    </vue-select>
   </div>
 </template>
 
