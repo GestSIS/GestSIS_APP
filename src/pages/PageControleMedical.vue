@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watch } from 'vue';
-import useNotification from '../composables/useNotification';
+import useNotification from '../composables/useNotification.js';
 import { useRouter } from 'vue-router';
 import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
