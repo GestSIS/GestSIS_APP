@@ -162,7 +162,7 @@ const request = {
         if (error.config && error.response && error.response.status === 401) {
           // Refresh the access token
           try {
-            await authStore.refreshToken();
+            await useAuthStore().refreshToken();
 
             error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common['Authorization']}`;
             // Retry the original request
