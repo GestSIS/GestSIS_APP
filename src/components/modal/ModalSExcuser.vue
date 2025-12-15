@@ -2,7 +2,8 @@
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
 import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal';
 
 const { callback, data } = defineProps({
@@ -19,7 +20,7 @@ const { callback, data } = defineProps({
 const infosStore = useMesInfosStore();
 const excuseParamStore = useExcuseParamStore();
 const excuseTypeStore = useExcuseTypeStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const errors = ref({});
 const excuses = ref(data.exercices);

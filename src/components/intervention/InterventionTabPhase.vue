@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
 

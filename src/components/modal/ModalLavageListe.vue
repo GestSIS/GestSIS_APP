@@ -1,5 +1,6 @@
 <script setup>
-import { inject } from 'vue';
+import { ,  } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
 
@@ -14,7 +15,7 @@ const { data, callback } = defineProps({
   },
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { closeModal } = useModalStore();
 const save = async () => {
   const lavages = activeAttribution.value.articles.map((a) => ({

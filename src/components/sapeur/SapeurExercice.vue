@@ -1,15 +1,16 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
+import permissions from '/src/composables/permissions.js';
 import MesHeuresSuppDetailRow from '../mes_infos/MesHeuresSuppDetailRow.vue';
 import ExerciceService from '../../services/ExerciceService';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -59,7 +60,7 @@ const edit = () =>
     size: 2,
   });
 
-const awn = inject('awn');
+const awn = useNotification();
 const downloadJustificatif = (exercice) =>
   ExerciceService.downloadExcuseJustificatif(
     exercice.exercice_id,

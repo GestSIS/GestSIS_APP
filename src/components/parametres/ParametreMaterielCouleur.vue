@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -11,7 +12,7 @@ const couleurs = computed(() =>
   couleurStore.liste.sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const ajout = () => {

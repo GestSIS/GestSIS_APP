@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useAmendeStore } from '../../stores/comptabilite/Amende.js';
@@ -51,7 +52,7 @@ const addAmende = () => {
   params.value.amendes = [...params.value.amendes, { montant: 0 }];
 };
 
-const awn = inject('awn');
+const awn = useNotification();
 const save = async () => {
   amendeStore
     .updateAmendes(params.value)

@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
 
 const absenceParamStore = useAbsenceParamStore();
@@ -11,7 +12,7 @@ const params = ref({
   ...absenceParamStore.params,
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const save = async () => {
   try {
     const res = await absenceParamStore.updateAbsenceParams(params.value);

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import links from '/src/router/menu.js';
-import useHasPermission from '../hooks/usePermission';
+import useHasPermission from '../composables/usePermission.js';
 import { useAuthStore } from '../stores/auth/Auth.js';
 
 const authStore = useAuthStore();

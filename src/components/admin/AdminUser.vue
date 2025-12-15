@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, inject } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import AdminService from '../../services/AdminService';
 import { useModalStore } from '../../stores/common/Modal';
 import { useAdminStore } from '../../stores/admin/Admin';
@@ -32,7 +33,7 @@ const sis = computed(() => adminStore.sis);
 const roles = computed(() => adminStore.roles);
 
 const { showModal, confirm } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const tokenForUser = (user) =>
   AdminService.getUserToken(user.id).then((data) => {

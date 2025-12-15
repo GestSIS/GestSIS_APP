@@ -1,7 +1,8 @@
 <script setup>
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
@@ -67,7 +68,7 @@ const computedData = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutCategorie = () =>
   showModal({ component: 'ModalMaterielCategorie', data: {} });

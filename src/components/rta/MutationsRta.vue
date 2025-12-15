@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useRtaStore } from '../../stores/rta/Rta.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useGroupeStore } from '../../stores/groupe/Groupe.js';
@@ -204,7 +205,7 @@ watchEffect(() => {
   };
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const switchAll = (valeur) => {
   mutations.value.forEach(

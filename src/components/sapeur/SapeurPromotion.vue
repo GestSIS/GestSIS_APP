@@ -2,9 +2,9 @@
 import { computed, ref, watchEffect } from 'vue';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
+import permissions from '/src/composables/permissions.js';
 
 const sapeurStore = useSapeurStore();
 const gradeStore = useGradeStore();

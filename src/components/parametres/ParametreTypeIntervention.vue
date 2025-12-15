@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
 import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
 import { useModalStore } from '../../stores/common/Modal';
@@ -49,7 +50,7 @@ const updateType = (type) =>
     data: { ...type },
   });
 
-const awn = inject('awn');
+const awn = useNotification();
 const deleteType = (type) =>
   typeInterventionStore
     .removeTypeIntervention(type.id)

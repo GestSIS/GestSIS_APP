@@ -1,12 +1,13 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useHasPermission from '../../hooks/usePermission';
-import permissions from '../../store/permissions';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '../../composables/permissions.js';
 
 const {
   loading,
@@ -78,7 +79,7 @@ const colonnes = computed(() => [
 ]);
 
 const { showModal, confirm } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const infoMateriel = (materiel) =>
   showModal({

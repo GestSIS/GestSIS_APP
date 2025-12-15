@@ -1,14 +1,15 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
+import permissions from '../../composables/permissions.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -86,7 +87,7 @@ const filteredSapeurs = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const regenererSapeur = () =>
   showModal({ component: 'ModalImputerAnnuel', size: 2 });

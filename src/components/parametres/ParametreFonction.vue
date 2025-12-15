@@ -1,7 +1,8 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const fonctionStore = useFonctionStore();
 await fonctionStore.fetchFonctions();
@@ -20,7 +21,7 @@ const listeFonction = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutFonction = () => showModal({ component: 'ModalFonction', data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: 'ModalFonction', data: { ...fonction } });

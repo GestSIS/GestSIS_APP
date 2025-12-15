@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { groupedByData, indexedData } from '../../tools';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
@@ -32,7 +33,7 @@ const computedData = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajout = () => showModal({ component: 'ModalEmplacement', data: {} });
 const update = (elem) =>

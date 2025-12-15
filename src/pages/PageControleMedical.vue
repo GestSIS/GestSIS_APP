@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
+import useNotification from '../composables/useNotification';
 import { useRouter } from 'vue-router';
 import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
@@ -16,7 +17,7 @@ const controleMedicalStore = useControleMedicalStore();
 const medecinStore = useMedecinStore();
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 const router = useRouter();
-const awn = inject('awn');
+const awn = useNotification();
 
 const { id } = defineProps({
   id: {

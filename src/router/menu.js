@@ -1,4 +1,4 @@
-import permissions from '../store/permissions.js';
+import permissions from '../composables/permissions.js';
 
 const links = [
   {

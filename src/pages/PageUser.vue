@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../composables/useNotification.js';
 import { useAuthStore } from '../stores/auth/Auth';
 
 const jeton = ref('');
@@ -13,7 +14,7 @@ const authStore = useAuthStore();
 const isPasswordIdentical = computed(
   () => newPassword.value === newPasswordRepeated.value,
 );
-const awn = inject('awn');
+const awn = useNotification();
 
 const refreshTokens = async () => {
   authStore

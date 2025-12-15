@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
@@ -44,7 +45,7 @@ const comptes = computed(() => compteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutType = () => {
   base.value.push({

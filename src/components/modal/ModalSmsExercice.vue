@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -87,7 +88,7 @@ const computedSapeurs = computed(() => {
 });
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const send = () => {
   if (params.value.differe && new Date(params.value.date) < new Date()) {

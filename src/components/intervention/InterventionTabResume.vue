@@ -1,7 +1,8 @@
 <script setup>
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
-import { inject, reactive, ref, watchEffect } from 'vue';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
+import { reactive, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 
 const interventionStore = useInterventionStore();
@@ -29,7 +30,7 @@ const hasEditPermission = useHasPermission(
   permissions.INTERVENTION.MODIFICATION,
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 const errors = ref({});
 const save = async () => {
   try {

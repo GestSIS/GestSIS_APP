@@ -2,8 +2,8 @@
 import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useHasPermission from '../../hooks/usePermission.js';
-import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '/src/composables/permissions.js';
 import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
 import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';

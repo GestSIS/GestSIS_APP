@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import SapeurService from '../../services/SapeurService';
 
 const { id } = defineProps({

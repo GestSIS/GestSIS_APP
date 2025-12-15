@@ -5,13 +5,14 @@ import { useBaseDataStore } from '../stores/common/BaseData.js';
 import { useGroupeStore } from '../stores/groupe/Groupe.js';
 import { useFonctionStore } from '../stores/sapeur/Fonction';
 import { useGradeStore } from '../stores/sapeur/Grade';
-import permissions from '../store/permissions.js';
+import permissions from '../composables/permissions.js';
 
 import SapeurService from '../services/SapeurService.js';
 import { DateTime } from 'luxon';
 import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
-import { computed, inject, ref } from 'vue';
-import useHasPermission from '../hooks/usePermission';
+import { computed, ref } from 'vue';
+import useNotification from '../composables/useNotification.js';
+import useHasPermission from '../composables/usePermission.js';
 
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
@@ -148,7 +149,7 @@ SapeurService.getEffectif().then((effectif) => {
 });
 
 const { showModal, closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const selectSapeur = (id) => (selectedId.value = id);
 

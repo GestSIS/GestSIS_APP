@@ -1,16 +1,17 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useGradeStore } from '../../stores/sapeur/Grade.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import permissions from '/src/store/permissions.js';
+import permissions from '/src/composables/permissions.js';
 
 import SapeurService from '../../services/SapeurService.js';
 import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -52,7 +53,7 @@ const grades = computed(() => gradeStore.liste);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const saveSapeur = async () => {
   let fields = [

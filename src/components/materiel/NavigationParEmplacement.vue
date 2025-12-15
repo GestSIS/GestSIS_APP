@@ -4,8 +4,8 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useModalStore } from '../../stores/common/Modal';
 
 const emplacementStore = useEmplacementStore();

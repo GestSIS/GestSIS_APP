@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -73,7 +74,7 @@ const computedData = computed(() => {
 });
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutTravailType = () =>
   showModal({

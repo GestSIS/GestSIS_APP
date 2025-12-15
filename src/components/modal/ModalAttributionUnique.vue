@@ -1,10 +1,11 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import ArticleService from '../../services/materiel/ArticleService';
 import { useModalStore } from '../../stores/common/Modal.js';
 
-const awn = inject('awn');
+const awn = useNotification();
 const { data, callback } = defineProps({
   data: {
     type: Object,

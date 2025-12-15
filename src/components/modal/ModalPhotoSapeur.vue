@@ -1,5 +1,6 @@
 <script setup>
-import { ref, inject, useTemplateRef } from 'vue';
+import { ref, useTemplateRef } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 
 import { Cropper } from 'vue-advanced-cropper';
@@ -24,7 +25,7 @@ fileReader.value.onload = function () {
 };
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const cropperComponent = useTemplateRef('cropper');
 const loadFile = (event) => {

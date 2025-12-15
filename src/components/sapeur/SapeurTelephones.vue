@@ -2,8 +2,8 @@
 import { computed, ref, watchEffect } from 'vue';
 import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();

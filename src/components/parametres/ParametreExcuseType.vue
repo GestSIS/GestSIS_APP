@@ -1,7 +1,8 @@
 <script setup>
 import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const excuseTypeStore = useExcuseTypeStore();
 await excuseTypeStore.fetchExcuseTypes();
@@ -28,7 +29,7 @@ const listeExcuse = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutExcuse = () => showModal({ component: 'ModalExcuseType', data: {} });
 const updateExcuse = (excuse) =>
   showModal({ component: 'ModalExcuseType', data: { ...excuse } });

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAbsenceStore } from '../../stores/absence/Absence.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
@@ -22,7 +23,7 @@ const absenceStore = useAbsenceStore();
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   const action = form?.id ? 'updateAbsence' : 'addAbsence';

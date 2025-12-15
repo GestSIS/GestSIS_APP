@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
@@ -66,7 +67,7 @@ if (!base.value.length) {
 }
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const unites = computed(() =>
   uniteStore.liste.filter((u) => new Set([1, 5, 6]).has(parseInt(u.id))),

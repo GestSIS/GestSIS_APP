@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, reactive, ref, watchEffect } from 'vue';
+import { computed, reactive, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
@@ -32,7 +33,7 @@ const columns = ref([]);
 const base = ref([]);
 
 const { closeModal, resize } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 watchEffect(() => resize(form.par_fonction ? 2 : 1));
 

@@ -1,7 +1,8 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
 
@@ -40,7 +41,7 @@ const hasEditPermission = useHasPermission(
   permissions.INTERVENTION.MODIFICATION,
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const editVehicule = async (vehiculeId) => {
   const event = selected.value[vehiculeId]

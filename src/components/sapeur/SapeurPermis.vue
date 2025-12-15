@@ -1,9 +1,10 @@
 <script setup>
-import { computed, inject, ref, watch, watchEffect } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const baseDataStore = useBaseDataStore();
@@ -44,7 +45,7 @@ watch(
   { immediate: true },
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const saveSuccessfull = (permis_type_id) => {
   errors.value = {

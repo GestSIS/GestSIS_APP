@@ -1,8 +1,8 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const exerciceComptableStore = useExerciceComptableStore();
 

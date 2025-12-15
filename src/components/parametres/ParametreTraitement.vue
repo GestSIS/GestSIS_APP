@@ -1,7 +1,8 @@
 <script setup>
 import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const traitementStore = useInterventionTraitementStore();
 await traitementStore.fetchTraitements();
@@ -17,7 +18,7 @@ const listeTraitement = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutTraitement = () =>
   showModal({ component: 'ModalInterventionTraitement', data: {} });

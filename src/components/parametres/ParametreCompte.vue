@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
@@ -31,7 +32,7 @@ const listeCompte = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutCompte = () => showModal({ component: 'ModalCompte', data: {} });
 const updateCompte = (compte) =>
   showModal({ component: 'ModalCompte', data: { ...compte } });

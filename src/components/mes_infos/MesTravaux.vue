@@ -3,11 +3,11 @@ import { computed, ref, watchEffect } from 'vue';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '../../store/permissions';
+import permissions from '../../composables/permissions.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import useHasPermission from '../../hooks/usePermission';
+import useHasPermission from '../../composables/usePermission.js';
 
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();

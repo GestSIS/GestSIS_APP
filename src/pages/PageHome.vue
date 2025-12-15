@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, onUnmounted, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
+import useNotification from '../composables/useNotification.js';
 import Api from '/src/http/Request';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth/Auth.js';
@@ -18,7 +19,7 @@ const listeSis = computed(() => authStore.sis.liste);
 const validated = computed(() => authStore.validated);
 const availableSisListe = computed(() => authStore.availableSisListe);
 
-const awn = inject('awn');
+const awn = useNotification();
 
 if (listeSis.value.length <= 0) {
   loading.value = true;

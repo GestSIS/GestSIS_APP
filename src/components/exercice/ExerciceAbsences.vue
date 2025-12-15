@@ -8,8 +8,8 @@ import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
-import permissions from '../../store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();

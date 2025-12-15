@@ -1,12 +1,5 @@
 <script setup>
-import {
-  computed,
-  inject,
-  onMounted,
-  reactive,
-  ref,
-  useTemplateRef,
-} from 'vue';
+import { computed, onMounted, reactive, ref, useTemplateRef } from 'vue';
 
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -16,6 +9,7 @@ import ArticleService from '../../services/materiel/ArticleService';
 import ArticleCreation from '../materiel/ArticleCreation.vue';
 import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
+import useNotification from '../../composables/useNotification.js';
 
 const { data, callback } = defineProps({
   data: {
@@ -28,7 +22,7 @@ const { data, callback } = defineProps({
   },
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const sapeur = useTemplateRef('sapeur');
 onMounted(() => {
   sapeur.value.focus();

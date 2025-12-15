@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, useTemplateRef, watchEffect } from 'vue';
+import { computed, ref, useTemplateRef, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
@@ -54,7 +55,7 @@ const filteredSapeurs = computed(() => {
   return sapeurs.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { showModal, closeModal } = useModalStore();
 
 const formatCompte = (compte) => {

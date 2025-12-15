@@ -1,12 +1,13 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import SapeurService from '../../services/SapeurService';
 
 const date = ref(new Date().toISOString().slice(0, 10));
 
 const { showModal, closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const confirmer = () => {
   showModal({ component: 'ModalChargement' });

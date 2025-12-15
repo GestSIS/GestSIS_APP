@@ -1,14 +1,15 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../composables/useNotification.js';
 import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
 import { useMedecinStore } from '../stores/controleMedical/Medecin.js';
 import { useControleMedicalTypeStore } from '../stores/controleMedical/ControleMedicalType.js';
 import { useModalStore } from '../stores/common/Modal';
-import permissions from '../store/permissions.js';
+import permissions from '../composables/permissions.js';
 
 import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
 import SapeurService from '/src/services/SapeurService.js';
-import useHasPermission from '../hooks/usePermission';
+import useHasPermission from '../composables/usePermission.js';
 import { useControleMedicalStore } from '../stores/controleMedical/ControleMedical.js';
 
 const sapeurStore = useSapeurStore();
@@ -117,7 +118,7 @@ const selected = (item) => (selectedItem.value = item);
 const downloadJustificatif = ({ id, filename }) =>
   ControlesMedicauxService.downloadJustificatif(id, filename);
 
-const awn = inject('awn');
+const awn = useNotification();
 const sms = (controleMedicaux) => {
   if (!hasSmsEnvoiePermission.value) {
     awn.value.alert(

@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 
@@ -15,7 +16,7 @@ const errors = ref({});
 const activeAbsence = ref({ ...data });
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   const action = activeAbsence.value?.id

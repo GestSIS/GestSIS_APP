@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useMaterielTypeStore } from '../../stores/materiel/Type.js';
 import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre.js';
 import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
@@ -37,7 +38,7 @@ await Promise.all([
 ]);
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const save = async () => {
   if (activeItem.value.materiel_categorie_id == null) {
     awn.alert('Veuillez sélectionnez une catégorie');

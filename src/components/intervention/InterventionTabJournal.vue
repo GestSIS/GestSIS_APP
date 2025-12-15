@@ -1,8 +1,8 @@
 <script setup>
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { computed, ref, watchEffect } from 'vue';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 

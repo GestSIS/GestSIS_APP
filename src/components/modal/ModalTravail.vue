@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, nextTick, reactive, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, reactive, ref, useTemplateRef } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -7,8 +8,8 @@ import { useUniteStore } from '../../stores/common/Unite.js';
 import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
 import { useAuthStore } from '../../stores/auth/Auth.js';
 
-import permissions from '../../store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useTravailStore } from '../../stores/travail/Travail.js';
 
 const { callback, data } = defineProps({
@@ -58,7 +59,7 @@ const activeUnite = computed(() =>
 );
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const sapeurSelecteurInputs = useTemplateRef(`sapeur-selecteur`);
 const ajoutType = () => {

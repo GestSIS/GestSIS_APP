@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
 
 const excuseParamStore = useExcuseParamStore();
@@ -16,7 +17,7 @@ const params = ref({
   ...excuseParams.value,
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   try {

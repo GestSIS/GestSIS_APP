@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, onMounted, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 
@@ -43,7 +44,7 @@ const computedSapeurs = computed(() =>
 );
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const send = () => {
   if (params.value.differe && new Date(params.value.date) < new Date()) {

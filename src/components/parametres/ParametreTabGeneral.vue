@@ -1,12 +1,13 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useSisParamStore } from '../../stores/params/SisParam.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useAuthStore } from '../../stores/auth/Auth.js';
 import SisParamService from '../../services/SisParamService';
-import permissions from '../../store/permissions';
+import permissions from '../../composables/permissions.js';
 
 import Api from '/src/http/Request';
 import useHasPermission from '../../composables/usePermission.js';
@@ -116,7 +117,7 @@ const onFileChange = (event) => {
   if (!files.length) return;
   logo.value = files[0];
 };
-const awn = inject('awn');
+const awn = useNotification();
 const saveLogo = async () => {
   if (!logo.value) {
     awn.warning('Veuillez sélectionner un logo');

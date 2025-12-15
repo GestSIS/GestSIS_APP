@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
@@ -47,7 +48,7 @@ const filteredFonctions = computed(() => {
 });
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const montantAnnuelTypePourFonction = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);

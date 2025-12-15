@@ -1,7 +1,8 @@
 <script setup>
 import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 await controleMedicalTypeStore.fetchTypes();
@@ -19,7 +20,7 @@ const listeType = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutType = () =>
   showModal({ component: 'ModalControleMedicalType', data: {} });
 const updateType = (type) =>

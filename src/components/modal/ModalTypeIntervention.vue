@@ -1,5 +1,6 @@
 <script setup>
-import { inject, reactive, ref, computed } from 'vue';
+import { reactive, ref, computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
 import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -28,7 +29,7 @@ const statInterventionStore = useStatInterventionStore();
 const listeStatIntervention = computed(() => statInterventionStore.liste);
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   try {

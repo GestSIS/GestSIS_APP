@@ -4,10 +4,10 @@ import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '../../store/permissions.js';
+import permissions from '../../composables/permissions.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { computed, ref, watchEffect } from 'vue';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useAbsenceStore } from '../../stores/absence/Absence.js';
 

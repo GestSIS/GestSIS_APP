@@ -3,7 +3,8 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import MesInfosService from '../../services/MesInfosService';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const infosStore = useMesInfosStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -33,7 +34,7 @@ const exerciceComptable = computed(() =>
 );
 
 const { showModal, closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const downloadDecompte = (paiement) => {
   const filename = `${paiement.date}_decompte.pdf`;

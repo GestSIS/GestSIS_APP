@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
@@ -63,7 +64,7 @@ if (data.remount) {
 }
 
 const { closeModal, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const creer = () => {
   showModal({ component: 'ModalChargement' });

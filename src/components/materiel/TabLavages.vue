@@ -7,8 +7,8 @@ import TagCouleur from './TagCouleur.vue';
 import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
-import useHasPermission from '../../hooks/usePermission';
-import permissions from '../../store/permissions';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '../../composables/permissions.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
 const sapeurStore = useSapeurStore();

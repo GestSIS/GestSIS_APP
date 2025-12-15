@@ -1,11 +1,12 @@
 <script setup>
-import { computed, inject, watchEffect } from 'vue';
+import { computed, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification';
 import { useModalStore } from '../../stores/common/Modal';
 import { useAdminStore } from '../../stores/admin/Admin';
 import { useAuthStore } from '../../stores/auth/Auth';
@@ -29,7 +30,7 @@ const computedSis = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const jsonExport = () => {
   const data = JSON.stringify(
     sis.value.map((sis) => ({

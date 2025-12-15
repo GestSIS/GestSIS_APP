@@ -1,13 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Public from '../pages/PagePublic.vue';
 import Home from '../pages/PageHome.vue';
-import permissions from '../store/permissions.js';
+import permissions from '../composables/permissions.js';
 import { useAuthStore } from '../stores/auth/Auth.js';
 
 import { TokenService } from '../services/StorageService.js';
 
 import NProgress from 'nprogress';
-import useHasPermission from '../hooks/usePermission';
+import useHasPermission from '../composables/usePermission.js';
 import PageTravaux from '../pages/PageTravaux.vue';
 
 

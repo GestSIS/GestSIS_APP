@@ -1,9 +1,9 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
+import permissions from '/src/composables/permissions.js';
 import InterventionService from '/src/services/InterventionService.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const { data } = defineProps({
   data: {

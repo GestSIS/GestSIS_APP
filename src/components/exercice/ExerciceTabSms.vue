@@ -1,9 +1,10 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useExerciceStore } from '../../stores/exercice/Exercice.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const { id } = defineProps({
   id: {
@@ -36,7 +37,7 @@ const smsListe = computed(() =>
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const sendSms = () => {
   if (!hasSmsEnvoiePermission.value) {

@@ -6,7 +6,8 @@ import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const uniteStore = useUniteStore();
 const heureExerciceStore = useHeureExerciceStore();
@@ -69,7 +70,7 @@ const computedData = computed(() => {
 });
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutIndemnite = () =>
   showModal({

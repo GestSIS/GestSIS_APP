@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
@@ -55,7 +56,7 @@ form.exercice_comptable_id =
   form.exercice_comptable_id ?? activeExerciceComptableId.value;
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   if (!activeUnite.value?.comptable) {

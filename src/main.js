@@ -13,7 +13,6 @@ import NoSidebar from './layouts/NoSidebarLayout.vue';
 // External dependencies
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatingVue from 'floating-vue';
-import VueAWN from './plugins/vue-awesome-notifications';
 
 // Css assets
 import './icons';
@@ -57,13 +56,6 @@ router.beforeEach((to, from, next) => {
 });
 
 app
-  .use(VueAWN, {
-    labels: {
-      success: 'Succès',
-      warning: 'Attention',
-      alert: 'Erreur',
-    },
-  })
   .use(FloatingVue);
 
 app

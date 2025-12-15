@@ -1,7 +1,8 @@
 <script setup>
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const exerciceCategorieStore = useExerciceCategorieStore();
 await exerciceCategorieStore.fetchExerciceCategories();
@@ -19,7 +20,7 @@ const listeCategorie = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutCategorie = () =>
   showModal({ component: 'ModalExerciceCategorie', data: {} });
 const updateCategorie = (categorie) =>

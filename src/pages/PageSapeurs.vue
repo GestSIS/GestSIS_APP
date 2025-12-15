@@ -1,5 +1,5 @@
 <script setup>
-import permissions from '../store/permissions.js';
+import permissions from '../composables/permissions.js';
 import { useModalStore } from '../stores/common/Modal';
 import { useBaseDataStore } from '../stores/common/BaseData.js';
 import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
@@ -8,17 +8,17 @@ import { useGradeStore } from '../stores/sapeur/Grade.js';
 import { useLocaliteStore } from '../stores/common/Localite.js';
 import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
 import SapeurService from '/src/services/SapeurService';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import useHasPermission from '../hooks/usePermission.js';
+import { useRoute, useRouter } from 'vue-router';
+import useHasPermission from '../composables/usePermission.js';
 import {
   computed,
-  inject,
   onMounted,
   ref,
   useTemplateRef,
   watch,
   watchEffect,
 } from 'vue';
+import useNotification from '../composables/useNotification.js';
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -139,7 +139,7 @@ onMounted(() => {
 });
 
 const { confirm, showModal, closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ficheSapeur = () => {
   showModal({ component: 'ModalChargement' });

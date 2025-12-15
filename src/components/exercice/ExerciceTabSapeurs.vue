@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
@@ -10,8 +11,8 @@ import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -103,7 +104,7 @@ const canValidate = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const selectAllConvoque = (status) => {
   presences.value = presences.value.map((p) => ({

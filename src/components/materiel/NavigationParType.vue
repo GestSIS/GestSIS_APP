@@ -5,8 +5,8 @@ import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { groupedByData, indexedData } from '../../tools';
 import TagCouleur from './TagCouleur.vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();

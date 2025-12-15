@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
@@ -9,8 +10,8 @@ import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 import ImputationService from '/src/services/ImputationService.js';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -78,7 +79,7 @@ const filteredCategories = computed(() => {
   return categories.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const genererDecompteExercice = (exerciceId, designation) =>

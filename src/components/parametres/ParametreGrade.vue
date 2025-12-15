@@ -1,7 +1,8 @@
 <script setup>
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const gradeStore = useGradeStore();
 await gradeStore.fetchGrades();
@@ -28,7 +29,7 @@ const listeGrade = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutGrade = () => showModal({ component: 'ModalGrade', data: {} });
 const updateGrade = (grade) =>
   showModal({ component: 'ModalGrade', data: { ...grade } });

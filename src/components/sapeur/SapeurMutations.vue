@@ -3,8 +3,8 @@ import { ref, computed, watchEffect } from 'vue';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();

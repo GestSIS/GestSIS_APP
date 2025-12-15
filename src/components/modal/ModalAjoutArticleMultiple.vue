@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
@@ -19,7 +20,7 @@ const { data, callback } = defineProps({
   },
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const activeAttribution = ref({
   emplacement_id: data?.emplacementId ?? null,

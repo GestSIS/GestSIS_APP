@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useAvsParamStore } from '../../stores/comptabilite/AvsParam.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
@@ -27,7 +28,7 @@ const params = ref({
 
 params.value = avsParams.value ? avsParams.value : params.value;
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const save = async () => {
   try {

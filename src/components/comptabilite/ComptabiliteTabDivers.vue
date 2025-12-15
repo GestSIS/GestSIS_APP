@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
@@ -7,8 +8,8 @@ import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const uniteStore = useUniteStore();
 const sapeurStore = useSapeurStore();
@@ -85,7 +86,7 @@ const filteredCategories = computed(() => {
   return categories.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const newEcriture = () => {

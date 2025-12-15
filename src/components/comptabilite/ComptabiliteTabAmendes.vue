@@ -1,12 +1,13 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -56,7 +57,7 @@ const filteredSapeurs = computed(() => {
   return sapeurs.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const generer = () => {
   imputationStore
     .genererAmendesAnnuels(activeExerciceComptableId.value)

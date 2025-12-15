@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre';
 
@@ -9,7 +10,7 @@ await diametreStore.fetchTuyauDiametres();
 
 const diametres = computed(() => diametreStore.liste);
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const ajout = () => {

@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceStore } from '../../stores/exercice/Exercice.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
@@ -7,13 +8,13 @@ import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceCom
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAuthStore } from '../../stores/auth/Auth.js';
-import permissions from '../../store/permissions.js';
+import permissions from '../../composables/permissions.js';
 
 import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
 import ExerciceService from '/src/services/ExerciceService.js';
 
 import { exercicesToIcs } from '../../tools/exportExercices';
-import useHasPermission from '../../hooks/usePermission.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -80,7 +81,7 @@ const filteredLocalites = computed(() => {
 });
 
 const { closeModal, confirm, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const convoquer = async () => {
   const { useConvocationParamStore } = await import(
     '../../stores/exercice/ConvocationParam.js'

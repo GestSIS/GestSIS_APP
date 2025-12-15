@@ -1,7 +1,8 @@
 <script setup>
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const ecritureCategorieStore = useEcritureCategorieStore();
 await ecritureCategorieStore.fetchEcritureCategories();
@@ -16,7 +17,7 @@ const listeCategorie = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const ajoutCategorie = () =>
   showModal({ component: 'ModalEcritureCategorie', data: {} });

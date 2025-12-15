@@ -1,5 +1,6 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { useModalStore } from '../../stores/common/Modal.js';
 import SelectCategorie from '../materiel/SelectCategorie.vue';
@@ -23,7 +24,7 @@ const categorieStore = useMaterielCategorieStore();
 
 const { closeModal } = useModalStore();
 
-const awn = inject('awn');
+const awn = useNotification();
 const save = async () => {
   if (activeItem.value.couleur_id == null) {
     awn.alert('Veuillez sélectionnez une couleur');

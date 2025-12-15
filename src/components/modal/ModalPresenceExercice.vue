@@ -1,13 +1,14 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useExerciceStore } from '../../stores/exercice/Exercice.js';
 
 const localiteStore = useLocaliteStore();
@@ -62,7 +63,7 @@ const presences = ref([
 ]);
 
 const { closeModal, confirm, showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const canEditAbsence = (exercice) => {
   // Possible de l'éditer si permission de validation ou si pas encore validé

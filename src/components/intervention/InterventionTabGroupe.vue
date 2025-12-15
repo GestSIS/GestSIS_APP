@@ -1,9 +1,10 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import useHasPermission from '../../hooks/usePermission';
-import permissions from '/src/store/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '/src/composables/permissions.js';
 
 const interventionStore = useInterventionStore();
 const groupeStore = useGroupeStore();
@@ -53,7 +54,7 @@ const hasEditPermission = useHasPermission(
   permissions.INTERVENTION.MODIFICATION,
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const editGroupe = async (groupeId) => {
   // FIXME: Edit and add groupe again

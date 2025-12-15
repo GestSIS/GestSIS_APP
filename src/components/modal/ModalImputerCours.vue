@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
@@ -53,7 +54,7 @@ const computedIndemnites = computed(() => {
 });
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 const selectIndemnite = (indemnite) => {
   activeIndemnite.value = indemnite;

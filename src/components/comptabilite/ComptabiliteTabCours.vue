@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useCoursStore } from '../../stores/sapeur/Cours.js';
 import { useCoursSapeurStore } from '../../stores/sapeur/CoursSapeur.js';
@@ -11,8 +12,8 @@ import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import useHasPermission from '../../hooks/usePermission.js';
-import permissions from '../../store/permissions';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '../../composables/permissions.js';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
 const sapeurStore = useSapeurStore();
@@ -88,7 +89,7 @@ const filteredDataTypes = computed(() => {
   return cours.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const imputer = (courSapeur) => {

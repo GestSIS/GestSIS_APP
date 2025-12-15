@@ -2,7 +2,8 @@
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
 
 const infosStore = useMesInfosStore();
@@ -28,7 +29,7 @@ const absences = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const addAbsence = () =>
   showModal({
     component: 'ModalSAbsenter',

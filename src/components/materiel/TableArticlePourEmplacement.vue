@@ -6,8 +6,8 @@ import { indexedData } from '../../tools';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import useHasPermission from '../../hooks/usePermission';
-import permissions from '../../store/permissions';
+import useHasPermission from '../../composables/usePermission.js';
+import permissions from '../../composables/permissions.js';
 
 const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   loading: {

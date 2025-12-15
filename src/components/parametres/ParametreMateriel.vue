@@ -2,7 +2,8 @@
 import { useMaterielStore } from '../../stores/intervention/Materiel.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const materielStore = useMaterielStore();
 const uniteStore = useUniteStore();
@@ -30,7 +31,7 @@ const listeMateriel = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutMateriel = () =>
   showModal({ component: 'ModalMaterielIntervention', data: {} });
 const updateMateriel = (materiel) =>

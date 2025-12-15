@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
@@ -45,7 +46,7 @@ const activeExerciceComptableId = computed(
 const excuseTypes = computed(() => excuseTypeStore.liste);
 const localites = computed(() => localiteStore.liste);
 
-const awn = inject('awn');
+const awn = useNotification();
 
 const computedData = computed(() => {
   return activeSapeurExercices.value

@@ -3,7 +3,8 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import { useCoursStore } from '../../stores/sapeur/Cours.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 
 const coursStore = useCoursStore();
 const fonctionStore = useFonctionStore();
@@ -40,7 +41,7 @@ const listeCours = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const ajoutCours = () => showModal({ component: 'ModalCours', data: {} });
 const updateCours = (cours) =>
   showModal({ component: 'ModalCours', data: { ...cours } });

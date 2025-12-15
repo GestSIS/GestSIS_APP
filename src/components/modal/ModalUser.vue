@@ -1,5 +1,6 @@
 <script setup>
-import { inject, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAdminStore } from '../../stores/admin/Admin.js';
 
@@ -23,7 +24,7 @@ const form = reactive({
 });
 
 const { closeModal } = useModalStore();
-const awn = inject('awn');
+const awn = useNotification();
 const adminStore = useAdminStore();
 
 const save = () => {

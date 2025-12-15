@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
@@ -8,8 +9,8 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import DecompteService from '/src/services/DecompteService.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -49,7 +50,7 @@ const computedData = computed(() =>
   })),
 );
 
-const awn = inject('awn');
+const awn = useNotification();
 const { closeModal, confirm, showModal } = useModalStore();
 
 const supprimer = (decompteId) => {

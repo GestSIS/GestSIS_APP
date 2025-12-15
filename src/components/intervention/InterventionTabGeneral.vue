@@ -1,10 +1,11 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import { useLocaliteStore } from '../../stores/common/Localite.js';
-import permissions from '/src/store/permissions.js';
-import useHasPermission from '../../hooks/usePermission';
+import permissions from '/src/composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 import { useRouter } from 'vue-router';
 import { useInterventionStore } from '../../stores/intervention/Intervention.js';
 import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
@@ -87,7 +88,7 @@ const dateFinMax = computed(() => {
   return activeExerciceComptable.value?.fin;
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const save = () => {
   if (newMode.value) {
     interventionStore

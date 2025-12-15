@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useTravailStore } from '../../stores/travail/Travail.js';
 import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
@@ -11,8 +12,8 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../store/permissions';
-import useHasPermission from '../../hooks/usePermission.js';
+import permissions from '../../composables/permissions.js';
+import useHasPermission from '../../composables/usePermission.js';
 
 const uniteStore = useUniteStore();
 const travailStore = useTravailStore();
@@ -81,7 +82,7 @@ const filteredTravailTypes = computed(() => {
   return travailTypes.value.filter((t) => ids.has(t.id));
 });
 
-const awn = inject('awn');
+const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const imputer = (travailId) => {

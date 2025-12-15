@@ -1,12 +1,13 @@
 <script setup>
-import { computed, inject, ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
+import useNotification from '../composables/useNotification.js';
 import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../stores/common/Modal';
 import { useGroupeStore } from '../stores/groupe/Groupe.js';
 import GroupeEdition from '../components/groupe/GroupeEdition.vue';
 import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
-import permissions from '../store/permissions';
-import useHasPermission from '../hooks/usePermission';
+import permissions from '../composables/permissions.js';
+import useHasPermission from '../composables/usePermission.js';
 
 const active = ref(null);
 const groupeEdit = ref({});
@@ -16,7 +17,7 @@ const errors = ref({});
 
 const sapeurStore = useSapeurStore();
 const groupeStore = useGroupeStore();
-const awn = inject('awn');
+const awn = useNotification();
 
 await groupeStore.fetchGroupes();
 await sapeurStore.fetchListeSapeur();

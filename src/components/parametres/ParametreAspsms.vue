@@ -1,5 +1,6 @@
 <script setup>
-import { computed, inject, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import useNotification from '../../composables/useNotification.js';
 import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
 
 const aspsmsParamStore = useAspsmsParamStore();
@@ -21,7 +22,7 @@ watch(aspsmsParams, (value) => {
 
 params.value = aspsmsParams.value ? aspsmsParams.value : params.value;
 
-const awn = inject('awn');
+const awn = useNotification();
 const save = async () => {
   if (params.value.password === '********') {
     awn.success('Modifications enregistrées');
