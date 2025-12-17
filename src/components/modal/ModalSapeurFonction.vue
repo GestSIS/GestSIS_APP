@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
 import { useModalStore } from '../../stores/common/Modal.js';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { data } = defineProps({
   data: {
