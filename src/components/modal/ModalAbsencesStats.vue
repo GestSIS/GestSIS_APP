@@ -11,6 +11,8 @@ const { data } = defineProps({
 });
 
 const sapeurStore = useSapeurStore();
+sapeurStore.fetchListeSapeur();
+
 const sapeurs = computed(() => sapeurStore.liste);
 
 const { closeModal } = useModalStore();
@@ -25,7 +27,7 @@ const { closeModal } = useModalStore();
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
-      <ul v-if="data.absences.length">
+      <ul v-if="data.absences.size">
         <li v-for="sapeurId in data.absences ?? []" :key="sapeurId">
           {{ sapeurs.find((s) => s.id == sapeurId)?.nom_prenom }}
         </li>
