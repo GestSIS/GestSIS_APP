@@ -21,7 +21,6 @@ const excuseParamStore = useExcuseParamStore();
 const excuseTypeStore = useExcuseTypeStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
 const exerciceComptableStore = useExerciceComptableStore();
-await exerciceComptableStore.fetchExercicesComptables();
 
 Promise.all([
   uniteStore.fetchUnites(),
@@ -34,6 +33,9 @@ Promise.all([
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
+  if (exerciceComptableStore.activeId === null) {
+    await exerciceComptableStore.fetchExercicesComptables();
+  }
   await infosStore.fetchMesExercices(exerciceComptableStore.activeId);
   loading.value = false;
 });
