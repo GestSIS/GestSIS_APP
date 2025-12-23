@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "23.12.2025",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.4",
+      "changes": [
+        "Correction d'un bug pour la saisie du chef d'intervention et de la localité"
+      ]
+    },
+    {
       "date": "13.12.2025",
       "version": "1.0",
       "app": "GestSIS APP",
