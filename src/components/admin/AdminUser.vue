@@ -4,7 +4,6 @@ import useNotification from '../../composables/useNotification.js';
 import AdminService from '../../services/AdminService';
 import { useModalStore } from '../../stores/common/Modal';
 import { useAdminStore } from '../../stores/admin/Admin';
-import { useAuthStore } from '../../stores/auth/Auth';
 
 const { id } = defineProps({
   id: {
@@ -14,10 +13,9 @@ const { id } = defineProps({
 });
 
 const adminStore = useAdminStore();
-const authStore = useAuthStore();
 
 const user = ref({});
-const loadSis = authStore.loadSisListe();
+const loadSis = adminStore.loadAllSis();
 const loadRoles = adminStore.loadAllRoles();
 adminStore.loadAllUsers();
 
@@ -50,7 +48,7 @@ const computedDataRoles = computed(() =>
       organisation: sis.value.find((s) => s.id === role.sis_id)?.nom || 'N/A',
       role: role.nom,
     };
-  }),
+  })
 );
 const computedDataSapeurs = computed(() =>
   (user.value.sapeur || []).map((e) => {
@@ -58,7 +56,7 @@ const computedDataSapeurs = computed(() =>
       ...e,
       organisation: sis.value.find((s) => s.id === e.sis_id)?.nom || 'N/A',
     };
-  }),
+  })
 );
 
 const ajouterRole = () =>
@@ -70,7 +68,7 @@ const ajouterRole = () =>
 const supprimerRole = (userRole) =>
   confirm(
     'Voulez-vous vraiment enlever ce rôle à cet utilisateur ?',
-    "Attention, l'action est irréversible.",
+    "Attention, l'action est irréversible."
   ).then(() => {
     adminStore
       .removeUserRole(userRole?.id)
