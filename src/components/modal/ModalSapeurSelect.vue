@@ -11,7 +11,6 @@ import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 
 // TODO:
 // - Date anniversaire
-// - Permis de conduire
 
 const { callback, data } = defineProps({
   data: {
@@ -94,6 +93,7 @@ const availableSapeur = computed(() => {
 });
 const listeSapeurSelect = computed(() => {
   const option = selectOptions[groupBy.value];
+  console.log(option, groupBy.value);
   if (option.generic) {
     return flattenedSapeurGeneric(
       option.collection(),
@@ -352,7 +352,8 @@ const selectOptions = {
   fonction_id: {
     generic: true,
     label: 'Fonction',
-    comparison: (sapeur, value) => sapeur.fonctions.includes(value),
+    comparison: (sapeur, value) =>
+      sapeur.fonctions.map((f) => f.fonction_id).includes(value),
     collection: () => fonctions.value,
     displayKey: 'nom',
   },
