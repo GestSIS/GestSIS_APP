@@ -305,10 +305,9 @@ const removeExcuse = (presence) =>
   confirm(
     'Voulez-vous vraiment supprimer cette excuse ?',
     "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => {
-    console.log(presence);
-    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id);
-  });
+  ).then(() =>
+    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
+  );
 
 const downloadJustificatif = (sapeur) => {
   if (!hasPresencePermission.value) {

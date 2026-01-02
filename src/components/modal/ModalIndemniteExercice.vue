@@ -168,7 +168,6 @@ const save = () => {
   }
 
   // Generate data
-  console.log(base.value);
   const foncs = [...base.value];
 
   // TODO: Set tarif_min to null if unite == forfait

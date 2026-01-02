@@ -93,7 +93,6 @@ const availableSapeur = computed(() => {
 });
 const listeSapeurSelect = computed(() => {
   const option = selectOptions[groupBy.value];
-  console.log(option, groupBy.value);
   if (option.generic) {
     return flattenedSapeurGeneric(
       option.collection(),
