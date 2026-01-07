@@ -18,6 +18,7 @@ const form = reactive({
   description: true,
   groupes: true,
   presences: true,
+  presencesResume: true,
   vehicules: true,
   materiel: true,
   absents: true,
@@ -94,6 +95,18 @@ const generer = () => {
         />
         <label class="form-check-label" for="presences"
           >Détails des présences des sapeurs</label
+        >
+      </div>
+      <div class="form-check">
+        <input
+          :disabled="form.presences"
+          id="presencesResume"
+          v-model="form.presencesResume"
+          type="checkbox"
+          class="form-check-input"
+        />
+        <label class="form-check-label" for="presencesResume"
+          >Résumé simplifié des présences des sapeurs</label
         >
       </div>
       <div class="form-check">
