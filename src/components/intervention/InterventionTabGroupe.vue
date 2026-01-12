@@ -34,8 +34,7 @@ watchEffect(async () => {
 
 const groupes = computed(() => {
   const selectedGroupes = interventionStore.active.groupes;
-  const selectedNumeros = new Set(selectedGroupes.map((g) => g.no));
-
+  const selectedNumeros = new Set(selectedGroupes.map((g) => g.no.toString()));
   const availableGroupes = groupeStore.liste
     .filter((g) => g.type === 1)
     .filter((g) => !selectedNumeros.has(g.no));
