@@ -6,55 +6,60 @@ Application web pour GestSIS
 
 ## Installation
 
-Effectuer les 3 commandes ci-dessous pour lancer le serveur de production.
+Effectuer les commandes ci-dessous pour lancer le serveur de développement.
 Il est possible de configurer l'URL de l'api et du serveur d'authentification dans le fichier `.env.local`!
 
 ### Installation des dépendances
-```
-npm install
+```bash
+yarn install
 ```
 
 ### Configuration du fichier .env.local
-```
+```bash
 cp .env.example .env.local
 ```
 
 ### Serveur de développement (compilation et hot-reload)
-```
-npm run serve
+```bash
+yarn dev
 ```
 
 ### Lancer les tests
-```
-npm run test
+```bash
+yarn test
 ```
 
 ### Linter et résolution des problèmes liés
-```
-npm run lint
+```bash
+yarn lint
 ```
 
 ### Compilation et minification pour mise en production
+```bash
+yarn build
 ```
-npm run build
+
+### Aperçu de la version de production
+```bash
+yarn preview
 ```
 
 ### Développement dans une machine virtuelle
-Si le serveur de développement est lancé dans une machine virtuelle, mais que l'accès se fait depuis l'hôte, il est nécessaire de suivre les étapes suivantes.
+Si le serveur de développement est lancé dans une machine virtuelle, mais que l'accès se fait depuis l'hôte, il est nécessaire de suivre les étapes suivantes :
 - dans `.env.local`, remplacer `127.0.0.1` par l'adresse réelle de la machine virtuelle
-- créer un fichier `vue.config.js` à la racine, contenant le code suivant
+- dans `vite.config.js`, ajouter la configuration du serveur :
 ```js
-module.exports = {
-  devServer: {
-    host: 'YOUR-HOST-HERE',
-    hot: true,
-    disableHostCheck: true,
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    host: '0.0.0.0', // ou l'adresse spécifique de votre VM
+    port: 5173,
   }
-};
+});
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Configuration
+Voir [Configuration Vite](https://vitejs.dev/config/).
 
 ## Deploy
 
