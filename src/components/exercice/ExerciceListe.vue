@@ -8,6 +8,7 @@ import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceCom
 import { useLocaliteStore } from '../../stores/common/Localite.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useAuthStore } from '../../stores/auth/Auth.js';
+import { useConvocationParamStore } from '../../stores/exercice/ConvocationParam.js';
 import permissions from '../../composables/permissions.js';
 
 import ExerciceDetails from '/src/components/exercice/ExerciceDetails.vue';
@@ -83,9 +84,6 @@ const filteredLocalites = computed(() => {
 const { closeModal, confirm, showModal } = useModalStore();
 const awn = useNotification();
 const convoquer = async () => {
-  const { useConvocationParamStore } = await import(
-    '../../stores/exercice/ConvocationParam.js'
-  );
   const convocationParamStore = useConvocationParamStore();
   await convocationParamStore.fetchParams();
   showModal({ component: 'ModalConvoquer', size: 1 });
