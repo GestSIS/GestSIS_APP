@@ -48,6 +48,7 @@ yarn preview
 Si le serveur de développement est lancé dans une machine virtuelle, mais que l'accès se fait depuis l'hôte, il est nécessaire de suivre les étapes suivantes :
 - dans `.env.local`, remplacer `127.0.0.1` par l'adresse réelle de la machine virtuelle
 - dans `vite.config.js`, ajouter la configuration du serveur :
+
 ```js
 export default defineConfig({
   plugins: [vue()],
@@ -60,11 +61,3 @@ export default defineConfig({
 
 ### Configuration
 Voir [Configuration Vite](https://vitejs.dev/config/).
-
-## Deploy
-
-```
-yarn build
-scp -r dist user@example.com:folder
-```
-
