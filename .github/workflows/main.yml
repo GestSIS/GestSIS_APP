@@ -43,12 +43,17 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
+
+          # Ajouter le host key pour éviter StrictHostKeyChecking no
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+
           cat >>~/.ssh/config <<END
           Host staging
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/staging.key
-            StrictHostKeyChecking no
+            StrictHostKeyChecking yes
+            UserKnownHostsFile ~/.ssh/known_hosts
           END
         env:
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
@@ -56,4 +61,4 @@ jobs:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
       - name: Deploy build
-        run: rsync -rtz -essh dist/ staging:app.gestsis.ch
+        run: rsync -az --delete --timeout 30 -e ssh dist/ staging:app.gestsis.ch
