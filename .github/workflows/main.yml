@@ -61,4 +61,4 @@ jobs:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
       - name: Deploy build
-        run: rsync -az --delete --timeout 30 -e ssh dist/ staging:app.gestsis.ch
+        run: rsync -rtz --delete --timeout 30 -e ssh dist/ staging:app.gestsis.ch
