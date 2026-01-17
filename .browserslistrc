@@ -1,3 +1,11 @@
-> 1%
+# Navigateurs modernes avec plus de 0.2% d'utilisation mondiale
+> 0.2%
 last 2 versions
-not ie <= 8
+not dead
+not ie 11
+not op_mini all
+# Support ES6+
+not safari < 13
+not ios_saf < 13
+not chrome < 90
+not firefox < 88
