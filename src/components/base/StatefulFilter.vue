@@ -70,6 +70,7 @@ const setFilter = (key, value) => {
 
 const reset = () => {
   filters.value = {};
+  localStorage.removeItem(`${sisKey.value}-${id}`);
 };
 
 onBeforeMount(init);
