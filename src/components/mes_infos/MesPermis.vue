@@ -1,4 +1,5 @@
 <script setup>
+import { useBaseDataStore } from '../../stores/common/BaseData';
 import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
 import { computed } from 'vue';
 
