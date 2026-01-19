@@ -8,6 +8,7 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 
 import ArticleService from '../../services/materiel/ArticleService';
 import ArticleCreation from '../materiel/ArticleCreation.vue';
+import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 
 const { data, callback } = defineProps({
   data: {
@@ -29,6 +30,7 @@ const activeAttribution = ref({
 
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
+const sapeurStore = useSapeurStore();
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
