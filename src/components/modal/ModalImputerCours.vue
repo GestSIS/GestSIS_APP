@@ -4,6 +4,9 @@ import useNotification from '../../composables/useNotification.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { useUniteStore } from '../../stores/common/Unite.js';
+import { useCompteStore } from '../../stores/comptabilite/Compte.js';
+import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
 import MultiStep from '/src/components/base/MultiStep.vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
@@ -22,7 +25,6 @@ const phase = ref(1);
 const activeIndemnite = ref(null);
 const ecritures = ref([]);
 const successMessageVisibility = ref(true);
-import { useUniteStore } from '../../stores/common/Unite.js';
 
 const sapeurStore = useSapeurStore();
 const imputationStore = useImputationStore();
