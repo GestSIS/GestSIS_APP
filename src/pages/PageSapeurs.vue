@@ -85,7 +85,7 @@ watch(
 
 // Fetch sapeur Data
 watchEffect(async () => {
-  if (sapeurStore.active.id) {
+  if (parseInt(sapeurStore.active.id) > 0) {
     await sapeurStore.fetchSapeur(sapeurStore.active.id);
   }
 });
