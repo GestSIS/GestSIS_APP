@@ -88,8 +88,8 @@ const genererDecompteExercice = (exerciceId, designation) =>
     data: {
       exerciceId,
       designation,
-      callback: init,
     },
+    callback: init,
   });
 const imputer = (exerciceId) =>
   showModal({

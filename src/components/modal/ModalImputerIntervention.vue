@@ -7,6 +7,7 @@ import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import MultiStep from '../base/MultiStep.vue';
+import useNotification from '../../composables/useNotification.js';
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -15,9 +16,13 @@ const imputationStore = useImputationStore();
 const uniteStore = useUniteStore();
 fonctionStore.fetchFonctions();
 
-const { data } = defineProps({
+const { data, callback } = defineProps({
   data: {
     type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
     default: () => {},
   },
 });
@@ -39,8 +44,11 @@ const activeIndemniteHasFonction = computed(() => {
   return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
 });
 
-const { closeModal } = useModalStore();
-
+const awn = useNotification();
+const { closeModal: close } = useModalStore();
+const closeModal = () => {
+  callback().then(() => close());
+};
 const selectIndemnite = (index) => {
   activeIndemniteIndex.value = index;
   activeIndemnite.value = indemnitesTypes.value[index];

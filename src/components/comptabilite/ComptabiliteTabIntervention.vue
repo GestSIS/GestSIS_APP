@@ -35,13 +35,14 @@ interventionTraitementStore.fetchTraitements();
 imputationStore.fetchFraisIndemnitesTypes();
 
 const loading = ref(false);
-watchEffect(async () => {
+const init = async () => {
   loading.value = true;
   await interventionStore.fetchListeIntervention(
     exerciceComptableStore.activeId,
   );
   loading.value = false;
-});
+};
+watchEffect(init);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const interventions = computed(() =>
@@ -93,6 +94,7 @@ const imputer = (interventionId) =>
   showModal({
     component: 'ModalImputerIntervention',
     data: { id: interventionId },
+    callback: init,
     size: 2,
   });
 
@@ -103,6 +105,7 @@ const annulerImputer = (interventionId) =>
   ).then(() =>
     imputationStore
       .annulerImputationIntervention(interventionId)
+      .then(init)
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
       }),
