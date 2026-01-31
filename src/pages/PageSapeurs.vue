@@ -183,6 +183,7 @@ const addSapeur = () => {
           params: { id: sapeurId },
         });
       });
+      return true;
     },
   });
 };
