@@ -62,7 +62,7 @@ export const useAdminStore = defineStore('admin', {
             this.users = this.users.filter((u) => u.id !== userId);
         },
         async addUserRole(userId, roleId) {
-            const { data } = await AdminService.addUserRole(userId, roleId);
+            const { data } = await AdminService.addUserRole({ user_id: userId, role_id: roleId });
             const user = this.users.find((u) => u.id === userId);
             if (user) {
                 user.roles.push(data);
