@@ -106,7 +106,7 @@ const links = [
     to: { name: 'utilisateurs' },
     icon: 'user',
     nom: 'Utilisateurs',
-    permission: permissions.ADMIN.TOUT,
+    permission: permissions.UTILISATEUR.TOUT,
   },
   {
     to: { name: 'param-general' },
