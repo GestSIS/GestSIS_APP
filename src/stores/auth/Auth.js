@@ -300,6 +300,9 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         clearCache() {
+            this.roles = [];
+            this.users = [];
+
             // Reset materiel stores
             useArticleStore().$reset();
             useMaterielCategorieStore().$reset();

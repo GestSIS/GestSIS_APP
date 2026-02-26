@@ -56,9 +56,7 @@ router.beforeEach((to, from, next) => {
 });
 
 app
-  .use(FloatingVue);
-
-app
+  .use(FloatingVue)
   .component('BaseDropdown', BaseDropdown)
   .component('BaseSelect', BaseSelect)
   .component('BaseCheckbox', BaseCheckbox)
