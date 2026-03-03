@@ -1,6 +1,38 @@
 {
   "releases": [
     {
+      "date": "03.03.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Imputation indemnité et frais annuel calculé au pro-rata pour les tarifs au mois",
+      ]
+    },
+    {
+      "date": "29.01.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout support des suffixes pour les numéros de groupes"
+      ]
+    },
+    {
+      "date": "18.01.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Fichiers ISO20022, support des caractères spéciaux dans les champs de texte"
+      ]
+    },
+    {
+      "date": "07.01.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Rapport d'intervention, possibilité de résumé le nombre de sapeurs et d'heures sans liste nominative"
+      ]
+    },
+    {
       "date": "23.12.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.4",
