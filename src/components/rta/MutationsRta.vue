@@ -190,7 +190,9 @@ const mutations = computed(() => {
 });
 
 const nbNumero = computed(() => {
-  const numCount = mutations.value.map((s) => s.changements.numeros.length);
+  const numCount = mutations.value.map(
+    (s) => s.changements?.numeros?.length ?? s.numeros.length,
+  );
   return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
 const nbGroupes = computed(() => {
