@@ -386,7 +386,8 @@ const mutate = () => {
               {{ n.numero }}
             </td>
             <td
-              v-for="n in nbNumero - e.numeros.length"
+              v-for="n in nbNumero -
+              (e.changements?.numeros ?? e.numeros).length"
               :key="'n-comp-' + n"
             ></td>
             <td
