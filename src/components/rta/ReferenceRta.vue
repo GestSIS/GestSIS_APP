@@ -18,8 +18,22 @@ groupeStore.fetchGroupes();
 rtaStore.fetchReferenceGestSis();
 rtaStore.fetchReferenceRta();
 
+const formatNumero = (numero) => {
+  const num = numero.replaceAll(' ', '');
+  if (num.length === 10) {
+    return `+41 ${num.slice(1, 3)} ${num.slice(3, 6)} ${num.slice(6, 8)} ${num.slice(8)}`;
+  }
+  if (num.length === 12) {
+    return `${num.slice(0, 3)} ${num.slice(3, 5)} ${num.slice(5, 8)} ${num.slice(8, 10)} ${num.slice(10)}`;
+  }
+  return numero;
+};
 const reference = computed(() =>
-  rtaStore.reference.map((f) => ({ ...f, fonction: f?.fonction || '' })),
+  rtaStore.reference.map((f) => ({
+    ...f,
+    numeros: f.numeros.map((n) => ({ ...n, numero: formatNumero(n.numero) })),
+    fonction: f?.fonction || '',
+  })),
 );
 const actuel = computed(() =>
   rtaStore.actuel
@@ -31,7 +45,7 @@ const actuel = computed(() =>
         fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom || '',
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => ({
-        numero: t.numero,
+        numero: formatNumero(t.numero),
         type:
           t.telephone_type_id === 1
             ? 'Privé'
