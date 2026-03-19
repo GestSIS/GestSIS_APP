@@ -236,25 +236,21 @@ const nbGroupes = computed(() => {
               {{ e.fonction }}
             </td>
             <td
-              v-for="(n, i) in (e.changements?.numeros ?? e.numeros).slice(
-                0,
-                maxNbNumero,
-              )"
+              v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
               :class="{
                 'text-success':
                   e.statut == 'modifie' &&
-                  e.changements.numerosAjoute.includes(n.no),
+                  e.changements.numerosAjoute.includes(n.numero),
                 'text-danger':
                   e.statut == 'modifie' &&
-                  e.changements.numerosSupprime.includes(n.no),
+                  e.changements.numerosSupprime.includes(n.numero),
               }"
             >
               {{ n.numero }}
             </td>
             <td
-              v-for="n in nbNumero -
-              (e.changements?.numeros ?? e.numeros).length"
+              v-for="n in nbNumero - e.numeros.length"
               :key="'n-comp-' + n"
             ></td>
             <td
