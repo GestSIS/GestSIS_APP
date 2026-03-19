@@ -39,6 +39,9 @@ const formatNumero = (numero) => {
   if (num.length === 10) {
     return `+41 ${num.slice(1, 3)} ${num.slice(3, 6)} ${num.slice(6, 8)} ${num.slice(8)}`;
   }
+  if (num.length === 12) {
+    return `${num.slice(0, 3)} ${num.slice(3, 6)} ${num.slice(6, 8)} ${num.slice(8)}`;
+  }
   return numero;
 };
 const actuel = computed(() =>
