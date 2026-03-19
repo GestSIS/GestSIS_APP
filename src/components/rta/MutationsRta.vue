@@ -163,7 +163,9 @@ const mutations = computed(() => {
       const currentNumeros = new Set(s.numeros.map((n) => n.numero));
 
       const numeros = [
-        ...s.numeros.map((n) => ({ ...n, added: !oldNumeros.has(n.numero) })),
+        ...s.numeros.map((n) =>
+          oldNumeros.has(n.numero) ? n : { ...n, added: true },
+        ),
         ...referenceModifie.numeros
           .filter((n) => !currentNumeros.has(n.numero))
           .map((n) => ({ ...n, removed: true })),
