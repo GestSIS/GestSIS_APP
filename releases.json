@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "19.03.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration affichage des numéros de téléphones dans module RTA"
+      ]
+    },
+    {
       "date": "03.03.2026",
       "version": "1.0",
       "app": "GestSIS APP",
