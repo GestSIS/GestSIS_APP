@@ -373,7 +373,10 @@ const mutate = () => {
               {{ e.fonction }}
             </td>
             <td
-              v-for="(n, i) in e.numeros.slice(0, maxNbNumero)"
+              v-for="(n, i) in (e.changements?.numeros ?? e.numeros).slice(
+                0,
+                maxNbNumero,
+              )"
               :key="'n-' + n + '-' + i"
               :class="{
                 'text-success': e.statut == 'modifie' && n.added,
