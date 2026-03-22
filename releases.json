@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "22.03.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration de l'export au format vcard",
+        "Correction d'un problème pour la modification des grades"
+      ]
+    },
+    {
       "date": "19.03.2026",
       "version": "1.0",
       "app": "GestSIS APP",
