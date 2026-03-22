@@ -23,21 +23,29 @@ export const downloadVcard = (sapeurs, localites) => {
   };
   const indexedLocalite = localites.reduce(idReducer, new Map());
 
+  const formatNumero = (numero) => {
+    const num = numero.replaceAll(' ', '').replaceAll('-', '');
+    if (num.length == 10 && num.startsWith('0')) {
+      return '+41' + num.substring(1);
+    }
+    return num;
+  }
+
   const contacts = sapeurs
     .map(
       (s) => `BEGIN:VCARD
 VERSION:4.0
 N:${s.nom};${s.prenom};;${civiliteMapping[s.civilite_id]};
 FN:${s.prenom} ${s.nom}
-LANG:'fr-CH'
+LANG:fr-CH
 GENDER:${genderMapping[s.civilite_id]}
 ${s.telephones
           .map(
             (t) =>
               'TEL;TYPE=' +
               telephoneTypeMapping[t.telephone_type_id] +
-              ';VALUE=uri:' +
-              t.numero
+              ';VALUE=uri:tel:' +
+              formatNumero(t.numero)
           )
           .join('\n')}
 ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${indexedLocalite.get(s.localite_id)?.designation
