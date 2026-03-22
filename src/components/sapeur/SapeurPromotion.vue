@@ -41,7 +41,7 @@ const supprimerGrade = (grade) =>
 const fields = [
   { title: 'Date', key: 'date', type: Date },
   { title: 'Désignation', key: 'designation' },
-  { title: 'Remarques', key: 'remarques' },
+  { title: 'Remarques', key: 'remarque' },
   { title: 'Actions', slot: 'actions' },
 ];
 </script>
