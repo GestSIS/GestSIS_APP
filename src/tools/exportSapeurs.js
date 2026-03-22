@@ -56,7 +56,7 @@ CATEGORIES:SIS
 SOURCE:GestSIS2.0
 END:VCARD`
     )
-    .join('\n');
+    .join('\n').replaceAll('\n', '\r\n');
 
   // V-Card for all
   const file = new Blob([contacts], { type: 'text/plain' });
