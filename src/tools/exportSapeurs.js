@@ -49,7 +49,7 @@ ${s.telephones
           )
           .join('\n')}
 ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${indexedLocalite.get(s.localite_id)?.designation
-        };${indexedLocalite.get(s.localite_id)?.npa};Suisse` + (e.email ? `
+        };${indexedLocalite.get(s.localite_id)?.npa};Suisse` + (s.email ? `
 EMAIL:${s.email}` : '') + `
 BDAY:${s.date_naissance?.replaceAll('-', '')}
 CATEGORIES:SIS
