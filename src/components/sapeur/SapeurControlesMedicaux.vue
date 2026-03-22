@@ -41,8 +41,9 @@ const fields = [
   { title: 'Consultation', key: 'consultation', type: Date },
   { title: 'Validité', key: 'validite', type: Date },
   { title: 'Désignation', key: 'designation' },
-  { title: 'Accepté', key: 'accepte', type: Boolean },
-  { title: 'En cours', key: 'en_cours', type: Boolean },
+  { title: 'Accepté', key: 'accepter', type: Boolean },
+  // { title: 'En cours', key: 'en_cours', type: Boolean },
+  // TODO: mise en place du système en_cours pour les contrôles médicaux
   { title: 'Doc', slot: 'doc' },
 ];
 </script>
