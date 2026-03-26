@@ -35,23 +35,20 @@ app.use(pinia).use(router);
 // Initialize auth store after pinia is set up
 const authStore = useAuthStore();
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   if (authStore.sis.liste.length <= 0) {
-    authStore.loadSisListe().then(() => {
+    await authStore.loadSisListe().then(async () => {
       const user = TokenService.getUser();
       const accessToken = TokenService.getAccessToken();
       const refreshToken = TokenService.getRefreshToken();
       if (accessToken !== null && refreshToken !== null) {
-        authStore.setAuthSuccessful({
+        await authStore.setAuthSuccessful({
           user,
           accessToken,
           refreshToken,
         });
       }
-      next();
     });
-  } else {
-    next();
   }
 });
 

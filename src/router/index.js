@@ -8,71 +8,45 @@ import { TokenService } from '../services/StorageService.js';
 
 import NProgress from 'nprogress';
 import useHasPermission from '../composables/usePermission.js';
-import PageTravaux from '../pages/PageTravaux.vue';
 
-
-const redirect = (to, from, next) => {
+const redirect = async (to, from) => {
   const authStore = useAuthStore();
   const isLoggedIn = !!authStore.user;
-  if (isLoggedIn) {
-    next({
-      name: 'dashboard', // back to safety route //
-      query: { redirectFrom: to.fullPath },
-    });
-  } else {
-    next({
-      name: 'login', // back to safety route //
-      query: { redirectFrom: to.fullPath },
-    });
+  return {
+    name: isLoggedIn ? 'dashboard' : 'login', // back to safety route //
+    query: { redirectFrom: to.fullPath },
+  };
+};
+
+const adminGuard = () => async (to, from) => {
+  const authStore = useAuthStore();
+  const isAdmin = authStore.admin;
+  if (!isAdmin) {
+    return { name: 'accueil' };
   }
 };
 
-const adminGuard = () => {
-  return function (to, from, next) {
-    const authStore = useAuthStore();
-    const isAdmin = authStore.admin;
-    if (isAdmin) {
-      next();
-    } else {
-      next({ name: 'accueil' });
-    }
-  };
+const permissionGuard = (...perms) => async (to, from) => {
+  if (!useHasPermission(perms).value) {
+    return await redirect(to, from);
+  }
 };
 
-
-const travauxGuard = () => {
-  return function (to, from, next) {
-    const authStore = useAuthStore();
-    const isAdmin = authStore.admin;
-    if (isAdmin) {
-      next();
-    } else {
-      next({ name: 'en-travaux' });
-    }
-  };
+const sapeurGuard = () => async (to, from) => {
+  const authStore = useAuthStore();
+  const isSapeur = authStore.sapeurId != null;
+  if (!isSapeur) {
+    return await redirect(to, from);
+  }
 };
 
-
-const permissionGuard = (...perms) => {
-  return function (to, from, next) {
-    if (useHasPermission(perms).value) {
-      next();
-    } else {
-      redirect(to, from, next);
-    }
-  };
-};
-
-const sapeurGuard = () => {
-  return function (to, from, next) {
-    const authStore = useAuthStore();
-    const isSapeur = authStore.sapeurId != null;
-    if (isSapeur) {
-      next();
-    } else {
-      redirect(to, from, next);
-    }
-  };
+// Use when you want only admin to see te page and otherwise display a `en-travaux` page
+const travauxGuard = () => async (to, from) => {
+  const authStore = useAuthStore();
+  const isAdmin = authStore.admin;
+  if (!isAdmin) {
+    return { name: 'en-travaux' };
+  }
 };
 
 const router = createRouter({
@@ -892,7 +866,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
   NProgress.start();
 
   const isPublic = to.matched.some((record) => record.meta.public);
@@ -902,24 +876,22 @@ router.beforeEach((to, from, next) => {
   const loggedIn = !!TokenService.getAccessToken();
 
   if (!isPublic && !loggedIn) {
-    return next({
+    return {
       name: 'login',
       query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
-    });
+    };
   }
 
   // Do not allow user to visit login page or register page if they are logged in
   if (loggedIn && onlyWhenLoggedOut) {
-    return next({
+    return {
       name: 'accueil',
       query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
-    });
+    };
   }
-
-  next();
 });
 
-router.afterEach(() => {
+router.afterEach(async () => {
   NProgress.done();
 });
 
