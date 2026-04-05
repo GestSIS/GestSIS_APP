@@ -3,7 +3,6 @@ import { jwtDecode } from 'jwt-decode';
 
 import { API_URL, AUTH_URL } from '../http/Env.js';
 
-// FIXME: Est-ce que ça fonctionne avec pinia ?
 import { useAuthStore } from '../stores/auth/Auth.js';
 
 const request = {
@@ -42,7 +41,6 @@ const request = {
       headers: {
         Accept: 'application/pdf',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
     });
 
@@ -50,10 +48,7 @@ const request = {
       function (response) {
         let error = null;
         try {
-          error =
-            JSON.parse(
-              String.fromCharCode.apply(null, new Uint8Array(response.data))
-            ) ?? null;
+          error = JSON.parse(new TextDecoder().decode(response.data)) ?? null;
         } catch (e) {
           error = null;
         }
@@ -63,7 +58,7 @@ const request = {
         return response;
       },
       function (error) {
-        const decoder = new TextDecoder('utf-8');
+        const decoder = new TextDecoder();
         const res = decoder.decode(error.response.data);
         throw JSON.parse(res)?.data;
       }
@@ -92,7 +87,6 @@ const request = {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
     });
 
@@ -190,7 +184,6 @@ const request = {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
     });
 

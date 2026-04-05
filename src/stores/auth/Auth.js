@@ -131,6 +131,7 @@ export const useAuthStore = defineStore('auth', {
             this.sis.permissions = [];
             this.sis.available = [];
             this.sis.allPermissions = {};
+            this.sis.sapeurs = {};
 
             return Promise.resolve();
         },
@@ -223,7 +224,7 @@ export const useAuthStore = defineStore('auth', {
                     this.sis.liste = sis.data;
                     return await callback();
                 }
-                return callback();
+                return await callback();
             }
             return this.refreshTokenPromise;
         },
