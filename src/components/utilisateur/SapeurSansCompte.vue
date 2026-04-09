@@ -44,7 +44,7 @@ const computedData = computed(() => {
         ),
     )
     .filter((s) =>
-      s.email
+      (s.email ?? '')
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase()
