@@ -21,9 +21,17 @@ const loadUnites = uniteStore.fetchUnites();
 await Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]);
 
 const detailsTypes = ref(false);
-const fonctions = computed(() =>
-  fonctionStore.liste.slice(0).sort((a, b) => b.tri - a.tri),
-);
+const fonctions = computed(() => {
+  const fonctionIds = new Set(
+    imputationStore.fraisIndemnites.annuels.flatMap((t) =>
+      t.frais_indemnite_annuels.map((f) => f.fonction_id),
+    ),
+  );
+  return fonctionStore.liste
+    .filter((f) => f.actif || fonctionIds.has(f.id))
+    .slice(0)
+    .sort((a, b) => b.tri - a.tri);
+});
 const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);
@@ -217,7 +225,15 @@ const deleteFonction = (type, fonction) => {
         </thead>
         <tbody>
           <tr v-for="fonction in fonctions" :key="fonction.id">
-            <td>{{ fonction.nom }}</td>
+            <td :class="{ 'text-danger': !fonction.actif }">
+              <font-awesome-icon
+                v-if="!fonction.actif"
+                v-tooltip.bottom="
+                  'Fonction inactive, vous devriez supprimer les frais et indemnités pour cette fonction.'
+                "
+                :icon="['fas', 'info-circle']"
+              />&nbsp;{{ fonction.nom }}
+            </td>
             <td
               v-for="type in typesAnnuel"
               :key="type.id + '-' + type.type"

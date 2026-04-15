@@ -147,7 +147,15 @@ const imputer = () => {
             </thead>
             <tbody>
               <tr v-for="fonction in filteredFonctions" :key="fonction.id">
-                <td>{{ fonction.nom }}</td>
+                <td :class="{ 'text-danger': !fonction.actif }">
+                  <font-awesome-icon
+                    v-if="!fonction.actif"
+                    v-tooltip.bottom="
+                      'Fonction inactive, mettez à jour vos frais et indemnités annuels.'
+                    "
+                    :icon="['fas', 'info-circle']"
+                  />&nbsp;{{ fonction.nom }}
+                </td>
                 <td
                   v-for="type in typesAnnuel"
                   :key="type.id + '-' + type.type"
