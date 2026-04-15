@@ -139,6 +139,7 @@ const flattenedSapeurGroupe = computed(() => {
                 leaf: true,
                 level: level + 1,
                 parent_id: groupe.id,
+                type: s.type,
                 id: s.id,
               },
             ]),
@@ -203,6 +204,7 @@ const flattenedSapeurGeneric = (relation, comparison, displayKey) => {
             designation: sapeur.nom_prenom,
             level: 1,
             leaf: true,
+            type: sapeur.type,
             id: sapeur.id,
             parent_id: elem.id,
           })),
@@ -513,7 +515,13 @@ const selectOptions = {
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
-                <td>{{ item.nom_prenom }}</td>
+                <td>
+                  {{ item.nom_prenom }}
+                  <font-awesome-icon
+                    v-if="item.type !== 0"
+                    :icon="['far', 'handshake']"
+                  />
+                </td>
                 <td>
                   <button
                     type="button"
@@ -577,6 +585,10 @@ const selectOptions = {
                     ></label>
                   </div>
                   {{ item.designation }}
+                  <font-awesome-icon
+                    v-if="item.leaf && item.type !== 0"
+                    :icon="['far', 'handshake']"
+                  />
                 </td>
                 <td>
                   <button
@@ -625,7 +637,13 @@ const selectOptions = {
                     <label class="form-check-label" :for="item.id"></label>
                   </div>
                 </td>
-                <td>{{ item.nom_prenom }}</td>
+                <td>
+                  {{ item.nom_prenom }}
+                  <font-awesome-icon
+                    v-if="item.type !== 0"
+                    :icon="['far', 'handshake']"
+                  />
+                </td>
                 <td>
                   <button
                     type="button"
