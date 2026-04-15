@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import SapeurService from '../../services/SapeurService.js';
+import { DraggableArea } from 'vue-advanced-cropper';
 
 export const useSapeurStore = defineStore('sapeur', {
     state: () => ({
@@ -98,8 +99,9 @@ export const useSapeurStore = defineStore('sapeur', {
             const data = await SapeurService.createSapeur(payload);
             this.liste = [
                 ...this.liste,
-                data,
+                { ...data, nom_prenom: `${data.nom} ${data.prenom}` },
             ].sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom));
+            console.log("data", data);
             return data;
         },
         async deleteSapeur(sapeurId) {

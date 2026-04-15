@@ -177,11 +177,10 @@ const addSapeur = () => {
     component: 'ModalSapeur',
     size: 2,
     callback: (sapeurId) => {
-      sapeurStore.selectSapeur(sapeurId).then(() => {
-        router.push({
-          name: 'sapeur-details',
-          params: { id: sapeurId },
-        });
+      sapeurStore.selectSapeur(sapeurId);
+      router.push({
+        name: 'sapeur-details',
+        params: { id: sapeurId },
       });
       return true;
     },

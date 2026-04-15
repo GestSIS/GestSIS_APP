@@ -38,18 +38,19 @@ const civilites = computed(() => baseDataStore.civilites);
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  sapeurStore
-    .createSapeur(form)
-    .then((data) => {
-      (callback(data.id) ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          closeModal();
-        }
-      });
-    })
-    .catch((err) => {
-      errors.value = err;
-    });
+  console.log('Test');
+  try {
+    const data = await sapeurStore.createSapeur(form);
+
+    const close = await (callback(data.id) ?? Promise.resolve());
+    console.log('close', close);
+    if (close ?? true) {
+      closeModal();
+    }
+  } catch (err) {
+    console.log(err);
+    errors.value = err;
+  }
 };
 </script>
 
