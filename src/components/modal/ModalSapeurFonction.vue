@@ -19,7 +19,9 @@ const form = reactive({
 
 const fonctionStore = useFonctionStore();
 const sapeurStore = useSapeurStore();
-const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
+const fonctions = computed(() =>
+  fonctionStore.liste.filter((f) => f.actif || f.id === form.fonction_id),
+);
 
 const { closeModal } = useModalStore();
 

@@ -23,7 +23,9 @@ const coursStore = useCoursStore();
 const gradeStore = useGradeStore();
 const fonctionStore = useFonctionStore();
 const grades = computed(() => gradeStore.liste);
-const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
+const fonctions = computed(() =>
+  fonctionStore.liste.filter((f) => f.actif || f.id === form.fonction_id),
+);
 const cours = computed(() => coursStore.liste);
 
 const { closeModal } = useModalStore();

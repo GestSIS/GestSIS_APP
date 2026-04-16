@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Mise en évidence des civils dans la fenêtre de sélection des sapeurs",
-        "Mise en évidence des fonctions inactives pour les indemnités et frais annuels"
+        "Mise en évidence des fonctions inactives pour les indemnités et frais annuels",
+        "Mise en évidence des fonctions inactives dans les fiches sapeurs"
       ]
     },
     {

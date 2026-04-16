@@ -25,6 +25,9 @@ const activeSapeurFonctions = computed(() =>
       fonction: fonctionStore.liste.find(
         (fonction) => fonction.id == f.fonction_id,
       )?.nom,
+      actif: fonctionStore.liste.find(
+        (fonction) => fonction.id == f.fonction_id,
+      )?.actif,
     })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
@@ -45,7 +48,7 @@ const supprimerFonction = (fonction) =>
 
 const fields = [
   { title: 'Début', key: 'debut', type: Date },
-  { title: 'Fin', key: 'fin', type: Date },
+  { title: 'Fin', key: 'fin', slot: 'fin' },
   { title: 'Fonction', key: 'fonction' },
   { title: 'Remarques', key: 'remarque' },
   { title: 'Actions', slot: 'actions' },
@@ -72,6 +75,19 @@ const fields = [
         :data="activeSapeurFonctions"
         no-data="Aucune fonction"
       >
+        <template #fin="{ rowData }">
+          {{
+            rowData.fin ? new Date(rowData.fin).toLocaleDateString('fr-CH') : ''
+          }}
+          <font-awesome-icon
+            class="text-danger"
+            v-if="rowData.fin === null && !rowData.actif"
+            v-tooltip.bottom="
+              'Fonction inactive, vous devriez mettre une date de fin à cette fonction !'
+            "
+            :icon="['fas', 'info-circle']"
+          />
+        </template>
         <template #actions="{ rowData }">
           <button
             v-if="hasEditPermission"
