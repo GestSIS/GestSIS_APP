@@ -32,7 +32,7 @@ const utiliserJeton = async () => {
       .useToken(jeton.value)
       .then((message) => {
         awn.success(message || 'Jeton enregistré avec succès');
-        token.value = '';
+        jeton.value = '';
       })
       .catch((e) => awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.'));
   }

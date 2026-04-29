@@ -74,7 +74,7 @@ const sapeurName = computed(() => {
   return `${sapeur?.nom_prenom} (${sapeur?.age} ans)`;
 });
 const modeAjout = computed(() => {
-  return !parseInt(id) > 0;
+  return !(parseInt(id) > 0);
 });
 const expirable = computed(() => {
   const types = controleTypes.value.filter(
@@ -135,8 +135,8 @@ const save = async () => {
       .createControleMedical()
       .then((res) => {
         router.push({ name: 'controle-medical', params: { id: res.id } });
+        awn.success(res?.message || 'Modifications enregistrées');
       })
-      .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement"),
       );

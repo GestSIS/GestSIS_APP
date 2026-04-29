@@ -106,6 +106,7 @@ const save = async () => {
     }));
     promise = travailStore.addTravaux(travaux);
   } else {
+    if (!form.sapeurs[0]) return;
     const travail = {
       ...form,
       sapeur_id: form.sapeurs[0].sapeur_id,

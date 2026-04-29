@@ -51,7 +51,7 @@ if (data.remount) {
   config.value = data.state.config;
   params.value = data.state.params;
 } else {
-  params.value.exercice_comptable_id = activeExerciceComptableId;
+  params.value.exercice_comptable_id = activeExerciceComptableId.value;
   params.value.sapeur_id = data?.sapeurId;
   params.value.exercice_id = data?.exerciceId;
   params.value.designation = `Décompte ${data?.designation ?? ''}`;

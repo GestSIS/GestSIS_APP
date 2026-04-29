@@ -47,12 +47,13 @@ const filteredCours = computed(() => {
   }
 });
 
-if (data.id || 0 === 0) {
+if ((data.id || 0) === 0) {
   sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
   watch(
     () => form.cours_id,
     (cours_id) => {
       let c = cours.value.find((c) => c.id == cours_id);
+      if (!c) return;
       form.fonction_id = c.fonction_id || 0;
       form.grade_id = c.grade_id || 0;
       form.precedent_id = c.precedent_id || 0;
@@ -61,12 +62,12 @@ if (data.id || 0 === 0) {
 
       if (form.fonction_id !== 0) {
         let fonction = fonctions.value.find((f) => f.id == form.fonction_id);
-        if (fonction.cumulable === 0) {
+        if (fonction?.cumulable === 0) {
           let funcs = sapeurFonctions.value
             .filter((f) => f.fin === null)
             .filter(
               (f) =>
-                fonctions.value.find((e) => e.id == f.fonction_id).cumulable ===
+                fonctions.value.find((e) => e.id == f.fonction_id)?.cumulable ===
                 0,
             );
           if (funcs.length > 0) {

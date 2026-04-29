@@ -11,7 +11,7 @@ export const useMaterielTypeStore = defineStore('materielType', {
         return;
       }
       const data = await MaterielTypeService.getTypes();
-      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
     },
     async addMaterielType(type) {
       const data = await MaterielTypeService.addType(type);

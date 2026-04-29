@@ -11,7 +11,7 @@ export const useBatterieTypeStore = defineStore('batterie-type', {
         return;
       }
       const data = await BatterieTypeService.getBatterieTypes();
-      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
     },
     async addBatterieType(BatterieType) {
       const data = await BatterieTypeService.addBatterieType(BatterieType);

@@ -7,6 +7,7 @@ import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
 import { useUniteStore } from '../../stores/common/Unite.js';
 import { useCompteStore } from '../../stores/comptabilite/Compte.js';
 import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
 import MultiStep from '/src/components/base/MultiStep.vue';
 import GenericDetailsRow from '../table/GenericDetailsRow.vue';
 
@@ -31,6 +32,7 @@ const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
 const uniteStore = useUniteStore();
+const exerciceComptableStore = useExerciceComptableStore();
 
 const indemnitesTypes = computed(() => imputationStore.fraisIndemnites.cours);
 const categories = computed(() => ecritureCategorieStore.liste);

@@ -32,7 +32,7 @@ export const useSapeurStore = defineStore('sapeur', {
         async fetchSapeur(sapeurId) {
             const data = await SapeurService.getData(sapeurId);
             this.active.data = data;
-            this.liste.map((s) =>
+            this.liste = this.liste.map((s) =>
                 s.id == data.id
                     ? {
                         ...s,
@@ -115,7 +115,7 @@ export const useSapeurStore = defineStore('sapeur', {
                 payload || this.active.data
             );
             this.active.data = data;
-            this.liste.map((s) =>
+            this.liste = this.liste.map((s) =>
                 s.id == data.id
                     ? {
                         ...s,
@@ -136,7 +136,7 @@ export const useSapeurStore = defineStore('sapeur', {
                 payload || this.active.data
             );
             this.active.data = data;
-            this.liste.map((s) =>
+            this.liste = this.liste.map((s) =>
                 s.id == data.id
                     ? {
                         ...s,

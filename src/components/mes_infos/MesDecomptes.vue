@@ -57,7 +57,7 @@ const resumeAnnuel = () => {
     );
     return;
   }
-  if (Date.now() < new Date(exerciceComptable.value.fin)) {
+  if (exerciceComptable.value && Date.now() < new Date(exerciceComptable.value.fin)) {
     awn.warning(
       "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
     );
@@ -83,7 +83,7 @@ const certificatSalaire = () => {
     );
     return;
   }
-  if (Date.now() < new Date(exerciceComptable.value.fin)) {
+  if (exerciceComptable.value && Date.now() < new Date(exerciceComptable.value.fin)) {
     awn.warning(
       "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
     );

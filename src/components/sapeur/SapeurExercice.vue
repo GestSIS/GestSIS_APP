@@ -65,7 +65,7 @@ const downloadJustificatif = (exercice) =>
   ExerciceService.downloadExcuseJustificatif(
     exercice.exercice_id,
     exercice.sapeur_id,
-    'justificatif_' + sapeur.justificatif_filename,
+    'justificatif_' + exercice.justificatif_filename,
   ).catch((err) =>
     awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
   );

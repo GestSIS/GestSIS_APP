@@ -43,6 +43,7 @@ const editUser = (user) => showModal({ component: 'ModalUser', data: user });
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
     const role = roles.value.find((r) => r.id === ur.role_id);
+    if (!role) return { ...ur, organisation: 'N/A', role: 'N/A' };
     return {
       ...ur,
       organisation: sis.value.find((s) => s.id === role.sis_id)?.nom || 'N/A',

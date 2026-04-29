@@ -134,7 +134,7 @@ onMounted(() => {
   listeSapeurComponent.value.addEventListener('keydown', eventListener.value);
   listeSapeurComponent.value.addEventListener(
     'keyup',
-    navigationEventListener.value,
+    navigationEventListener,
   );
 });
 
@@ -194,7 +194,7 @@ const deleteSapeur = () =>
     sapeurStore
       .deleteSapeur(activeSapeur.value.id)
       .then(() => {
-        const newSelectedSapeurId = svm.sapeurs[0].id;
+        const newSelectedSapeurId = filteredSapeurs.value[0]?.id;
         sapeurStore.selectSapeur(newSelectedSapeurId).then(() => {
           router.push({
             name: 'sapeur-details',

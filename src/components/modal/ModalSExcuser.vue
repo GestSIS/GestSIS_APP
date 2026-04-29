@@ -27,11 +27,10 @@ const excuses = ref(data.exercices);
 const excuse = data.exercices.find((e) => e.exercice_id === data.exerciceId);
 const activeExcuse = ref({
   excuse_statut: 0,
-  justification: '',
   justificatif_file: null,
   remarque: excuse?.remarque ?? '',
   exercice_id: excuse?.exercice_id ?? 0,
-  justification: excuse?.justification ?? 0,
+  justification: excuse?.justification ?? '',
   excuse_type_id: excuse?.excuse_type_id ?? 0,
 });
 
@@ -66,6 +65,7 @@ const onFileChange = (event) => {
 const validate = () => {
   if (
     !activeExcuse.value.exercice_id ||
+    !activeExercice.value ||
     estAnnule(activeExercice.value) ||
     estDejaExcuse(activeExercice.value) ||
     !estDansLeDelai(activeExercice.value?.date)

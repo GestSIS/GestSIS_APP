@@ -1,4 +1,5 @@
 <script setup>
+import { reactive } from 'vue';
 import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
@@ -14,11 +15,14 @@ const { data, callback } = defineProps({
   },
 });
 
+const activeAttribution = reactive({ articles: [], ...data });
+const errors = reactive({});
+
 const awn = useNotification();
 const { closeModal } = useModalStore();
 const save = async () => {
-  const lavages = activeAttribution.value.articles.map((a) => ({
-    date: activeAttribution.value.date,
+  const lavages = activeAttribution.articles.map((a) => ({
+    date: activeAttribution.date,
     article_id: a.id,
   }));
   LavageService.creerLavages(lavages)

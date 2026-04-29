@@ -15,7 +15,6 @@ const compteStore = useCompteStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-exerciceComptableStore.fetchExercicesComptables();
 sapeurStore.fetchListeSapeur();
 await compteStore.fetchComptes();
 
@@ -70,7 +69,7 @@ const formatedDate = () => {
 };
 const justificatifIndividuel = (compteId) => {
   const compte = comptes.value.find((f) => f.id == activeCompteId.value);
-  const filename = `${formatedDate()}_justificatif-compte-${compte.numero}.pdf`;
+  const filename = `${formatedDate()}_justificatif-compte-${compte?.numero}.pdf`;
 
   showModal({ component: 'ModalChargement' });
 

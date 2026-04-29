@@ -11,7 +11,7 @@ export const useCouleurStore = defineStore('couleur', {
         return;
       }
       const data = await CouleurService.getCouleurs();
-      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
     },
     async addCouleur(Couleur) {
       const data = await CouleurService.addCouleur(Couleur);

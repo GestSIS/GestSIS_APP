@@ -65,7 +65,7 @@ const computedData = computed(() => {
         return {
           ...e,
           ...sapeur,
-          fonction: fonctions.value.find((f) => f.id == sapeur.fonction_id)
+          fonction: fonctions.value.find((f) => f.id == sapeur?.fonction_id)
             ?.nom,
         };
       })

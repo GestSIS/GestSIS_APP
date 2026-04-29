@@ -292,6 +292,7 @@ export const useAuthStore = defineStore('auth', {
                 }
 
                 const sis = this.sis.liste.find((s) => s.api_key === sisKey);
+                if (!sis) return; // TODO: Better error handling
                 this.sis.activeId = sis.id;
                 this.sis.activeKey = sis.api_key;
                 this.sis.permissions = permissionsParSis[sis.api_key] ?? [];

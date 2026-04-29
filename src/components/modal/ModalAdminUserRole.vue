@@ -38,7 +38,7 @@ const { closeModal } = useModalStore();
 const save = () =>
   adminStore
     .addUserRole(form.user_id, form.role_id)
-    .then(closeModal())
+    .then(closeModal)
     .then(() => callback(true))
     .catch((err) => (errors.value = err));
 </script>

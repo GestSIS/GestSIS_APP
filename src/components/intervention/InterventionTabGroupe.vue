@@ -59,6 +59,7 @@ const editGroupe = async (groupeId) => {
   // FIXME: Edit and add groupe again
   const event = selected.value[groupeId];
   const groupe = groupes.value.find((g) => g.pseudo_id === groupeId);
+  if (!groupe) return;
 
   (event
     ? interventionStore.addInterventionGroupes([groupe])

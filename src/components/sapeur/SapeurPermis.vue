@@ -91,7 +91,7 @@ const savePermis = () => {
     else if (
       p.id !== null &&
       p.date !==
-        activeSapeurPermis.value.find((permis) => permis.id == p.id).date
+        activeSapeurPermis.value.find((permis) => permis.id == p.id)?.date
     ) {
       sapeurStore
         .editPermis({ id: p.id, date: p.date })

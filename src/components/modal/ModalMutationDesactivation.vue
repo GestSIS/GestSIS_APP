@@ -76,7 +76,7 @@ const exercices = computed(() => {
       ...e,
       info: `${
         categories.value.find((c) => c.id == e.exercice_categorie_id)
-          .designation
+          ?.designation
       } : ${e.communications}`,
     }));
 });

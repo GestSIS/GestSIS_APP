@@ -19,12 +19,12 @@ await Promise.all([
 ]);
 
 const categories = computed(() =>
-  categorieStore.liste.sort((a, b) => a.designation - b.designation),
+  categorieStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedTypes = computed(() =>
   groupedByData(
-    typeStore.liste.sort((a, b) => a.designation - b.designation),
+    typeStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
     'materiel_categorie_id',
   ),
 );

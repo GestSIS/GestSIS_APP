@@ -192,7 +192,7 @@ const formatCompte = (compte) => {
                 v-for="fonction in activeIndemnite.fonctions"
                 :key="fonction.id"
               >
-                <td>{{ fonctions.find((f) => f.id == fonction.id).nom }}</td>
+                <td>{{ fonctions.find((f) => f.id == fonction.id)?.nom }}</td>
                 <td>{{ fonction.tarif }}</td>
               </tr>
             </tbody>

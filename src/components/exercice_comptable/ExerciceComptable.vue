@@ -23,7 +23,6 @@ if (listeExerciceComptable.value.length === 0) {
 const dropdownComponent = useTemplateRef('dropdown');
 const selectExercice = (id) => {
   dropdownComponent.value.close();
-  dropdownComponent.value.value = false;
   exerciceComptableStore.selectExerciceComptable(id);
 };
 </script>

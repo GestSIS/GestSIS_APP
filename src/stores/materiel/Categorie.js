@@ -11,7 +11,7 @@ export const useMaterielCategorieStore = defineStore('materielCategorie', {
         return;
       }
       const data = await MaterielCategorieService.getCategories();
-      this.liste = data.slice(0).sort((t1, t2) => t1.designation > t2.designation);
+      this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
     },
     async addMaterielCategorie(categorie) {
       const data = await MaterielCategorieService.addCategorie(categorie);

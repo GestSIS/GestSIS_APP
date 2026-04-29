@@ -58,6 +58,7 @@ const request = {
         return response;
       },
       function (error) {
+        if (!error.response) throw error;
         const decoder = new TextDecoder();
         const res = decoder.decode(error.response.data);
         throw JSON.parse(res)?.data;
@@ -195,8 +196,7 @@ const request = {
         return response.data;
       },
       function (error) {
-        // Do something with response error
-        return Promise.reject(error.response.data);
+        return Promise.reject(error.response?.data ?? error);
       }
     );
     return auth;

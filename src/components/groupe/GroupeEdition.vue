@@ -84,9 +84,11 @@ const selected = (elem) => {
 
 const left = (node) => {
   const groupe = groupes.value.find((g) => g.id == node.data.id);
+  if (!groupe) return;
 
   // On ne change que parent_id
   const parent = groupes.value.find((g) => g.id == groupe.parent_id);
+  if (!parent) return;
   groupeStore.updateGroupe({
     groupeId: groupe.id,
     data: {
@@ -97,12 +99,14 @@ const left = (node) => {
 };
 const right = (node) => {
   const groupe = groupes.value.find((g) => g.id == node.data.id);
+  if (!groupe) return;
 
   // On ne change que parent_id
   const groupesOfSameLevel = groupes.value
     .filter((g) => g.parent_id == groupe.parent_id)
     .filter((g) => g.tri < groupe.tri);
   const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
+  if (!previousGroupe) return;
   groupeStore.updateGroupe({
     groupeId: groupe.id,
     data: {
@@ -113,15 +117,18 @@ const right = (node) => {
 };
 const up = (node) => {
   const groupe = groupes.value.find((g) => g.id == node.data.id);
+  if (!groupe) return;
 
   if (node.isFirstOfLevel) {
     // On change parent_id uniquement
     const parent = groupes.value.find((g) => g.id == groupe.parent_id);
+    if (!parent) return;
     const groupesOfSameLevelAsParent = groupes.value
       .filter((g) => g.parent_id == parent.parent_id)
       .filter((g) => g.tri < parent.tri);
     const previousParentGroupe =
       groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
+    if (!previousParentGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
@@ -136,6 +143,7 @@ const up = (node) => {
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri < groupe.tri);
     const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
+    if (!previousGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {
@@ -154,6 +162,7 @@ const up = (node) => {
 };
 const down = (node) => {
   const groupe = groupes.value.find((g) => g.id == node.data.id);
+  if (!groupe) return;
 
   if (node.isLastOfLevel) {
     // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
@@ -162,6 +171,7 @@ const down = (node) => {
     let groupeId = groupe.parent_id;
     while (!nextParentGroupe) {
       const parent = groupes.value.find((g) => g.id == groupeId);
+      if (!parent) return;
       const groupesOfSameLevelAsParent = groupes.value
         .filter((g) => g.parent_id == parent.parent_id)
         .filter((g) => g.tri > parent.tri);
@@ -183,6 +193,7 @@ const down = (node) => {
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri > groupe.tri);
     const nextGroupe = groupesOfSameLevel[0];
+    if (!nextGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,
       data: {

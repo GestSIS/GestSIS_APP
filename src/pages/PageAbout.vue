@@ -14,11 +14,8 @@ const refreshToken = ref(TokenService.getRefreshToken());
 
 const isAdmin = computed(() => authStore.admin);
 
-const date = localStorage.getItem('latestReleaseDate', releases.value[0].date);
-const version = localStorage.getItem(
-  'latestSeenVersion',
-  releases.value[0].version,
-);
+const date = localStorage.getItem('latestReleaseDate') ?? releases.value[0].date;
+const version = localStorage.getItem('latestSeenVersion') ?? releases.value[0].version;
 localStorage.setItem('latestReleaseDate', releases.value[0].date);
 localStorage.setItem('latestSeenVersion', releases.value[0].version);
 

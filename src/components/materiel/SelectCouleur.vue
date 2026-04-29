@@ -20,7 +20,7 @@ const couleurs = computed(() =>
   couleurStore.liste
     .slice(0)
     .map((c) => ({ ...c, label: c.nom, value: c.id }))
-    .sort((c1, c2) => c1.nom.localeCompare(c2.designation)),
+    .sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );
 </script>
 

@@ -174,7 +174,7 @@ const fields = [
               <button
                 v-if="hasValidationPermission && selectedItem?.statut < 1"
                 class="btn btn-outline-success"
-                :disabled="!selectedItem?.statut < 1"
+                :disabled="!(selectedItem?.statut < 1)"
                 @click="reviewTravail(selectedItem)"
               >
                 Traiter
@@ -193,7 +193,7 @@ const fields = [
                 v-if="
                   hasEditPermission && selectedItem?.auteur_id == activeSapeurId
                 "
-                :disabled="!selectedItem?.statut == 0"
+                :disabled="selectedItem?.statut !== 0"
                 class="btn btn-outline-danger"
                 @click="supprimerTravail(selectedItem)"
               >

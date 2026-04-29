@@ -85,7 +85,7 @@ const impressionStandard = (decompteId) => {
 
   showModal({ component: 'ModalChargement' });
 
-  DecompteService.downloadDecompte(decompteId, `decompte_${decompte.date}.pdf`)
+  DecompteService.downloadDecompte(decompteId, `decompte_${decompte?.date}.pdf`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -102,7 +102,7 @@ const impressionParSapeur = (decompteId) => {
 
   DecompteService.downloadDecompteParSapeur(
     decompteId,
-    `decompte_${decompte.date}.pdf`,
+    `decompte_${decompte?.date}.pdf`,
   )
     .then(closeModal)
     .catch((err) => {
@@ -120,7 +120,7 @@ const impressionParCompte = (decompteId) => {
 
   DecompteService.downloadDecompteParCompte(
     decompteId,
-    `decompte_${decompte.date}.pdf`,
+    `decompte_${decompte?.date}.pdf`,
   )
     .then(closeModal)
     .catch((err) => {
@@ -138,7 +138,7 @@ const iso20022Decompte = (decompteId) => {
 
   DecompteService.downloadIso20022PourDecompte(
     decompteId,
-    `decompte_${decompte.date}.xml`,
+    `decompte_${decompte?.date}.xml`,
   )
     .then(closeModal)
     .catch((err) => {
@@ -156,7 +156,7 @@ const excelAFacturer = (decompteId) => {
 
   DecompteService.downloadExcelAFacturer(
     decompteId,
-    `decompte_${decompte.date}_a_facturer.xlsx`,
+    `decompte_${decompte?.date}_a_facturer.xlsx`,
   )
     .then(closeModal)
     .catch((err) => {
@@ -174,7 +174,7 @@ const exportEcritures = (decompteId) => {
 
   DecompteService.downloadExcelEcritures(
     decompteId,
-    `decompte_${decompte.date}_ecritures.xlsx`,
+    `decompte_${decompte?.date}_ecritures.xlsx`,
   )
     .then(closeModal)
     .catch((err) => {

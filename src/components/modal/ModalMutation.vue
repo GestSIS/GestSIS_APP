@@ -48,7 +48,7 @@ const save = () => {
         errors.value = {};
 
         if (
-          (finDeService.value || (!form.sortie && !!form.sortie)) &&
+          finDeService.value &&
           sapeurStore.active.groupes.length +
             sapeurStore.active.exercices.length +
             sapeurStore.active.fonctions.length >

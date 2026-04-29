@@ -17,7 +17,6 @@ const { data } = defineProps({
 });
 
 const phase = ref(1);
-const detailsTypes = ref(false);
 const ecritures = ref([]);
 
 const sapeurStore = useSapeurStore();
@@ -161,12 +160,7 @@ const imputer = () => {
                   :key="type.id + '-' + type.type"
                   class="text-end"
                 >
-                  <template v-if="!detailsTypes">{{
-                    montantAnnuelTypePourFonction(type, fonction)
-                  }}</template>
-                  <template v-if="detailsTypes">{{
-                    montantAnnuelTypePourFonctionDetails(type, fonction)
-                  }}</template>
+                  {{ montantAnnuelTypePourFonction(type, fonction) }}
                 </td>
               </tr>
             </tbody>

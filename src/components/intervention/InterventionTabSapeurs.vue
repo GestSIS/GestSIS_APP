@@ -61,6 +61,7 @@ const sortedSapeurs = computed(() => {
   return [
     ...Object.keys(computedPresences.value)
       .map((s) => sapeurs.value.find((sapeur) => sapeur.id == parseInt(s)))
+      .filter((s) => s != null)
       .sort((s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom)),
   ];
 });
