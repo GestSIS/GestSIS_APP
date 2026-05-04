@@ -39,7 +39,7 @@ export const useSapeurStore = defineStore('sapeur', {
                         fonction_id: data.fonction_id,
                         nom: data.nom,
                         prenom: data.prenom,
-                        nom_prenom: data.nom_prenom,
+                        nom_prenom: `${data.nom} ${data.prenom}`,
                         actif: data.actif,
                         date_naissance: data.date_naissance,
                     }
