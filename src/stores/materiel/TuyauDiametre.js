@@ -11,7 +11,7 @@ export const useTuyauDiametreStore = defineStore('tuyau-diametre', {
         return;
       }
       const data = await TuyauDiametreService.getTuyauDiametres();
-      this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
+      this.liste = data.slice(0).sort((t1, t2) => t1.diametre - t2.diametre);
     },
     async addTuyauDiametre(tuyauDiametre) {
       const data = await TuyauDiametreService.addTuyauDiametre(tuyauDiametre);
