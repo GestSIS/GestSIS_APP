@@ -77,26 +77,27 @@ const changerMotDePasse = async () => {
     </div>
     <div class="row">
       <div class="col-12 col-sm-6">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Utiliser un jeton</h3>
-          </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <label for="jeton">Jeton</label>
-              <input
-                id="jeton"
-                v-model="jeton"
-                type="text"
-                class="form-control form-control-sm"
-                placeholder="jeton"
-              />
+        <form @submit="utiliserJeton">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h3>Utiliser un jeton</h3>
             </div>
-            <button class="btn btn-primary" @click="utiliserJeton">
-              Utiliser
-            </button>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="jeton">Jeton</label>
+                <input
+                  id="jeton"
+                  v-model="jeton"
+                  type="text"
+                  required
+                  class="form-control form-control-sm"
+                  placeholder="jeton"
+                />
+              </div>
+              <button class="btn btn-primary" submit>Utiliser</button>
+            </div>
           </div>
-        </div>
+        </form>
         <div class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Recharger mes permission</h3>
@@ -109,63 +110,65 @@ const changerMotDePasse = async () => {
         </div>
       </div>
       <div class="col-12 col-sm-6">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Changer mon mot de passe</h3>
-          </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <label for="old-password">Ancien mot de passe</label>
-              <input
-                id="old-password"
-                v-model="oldPassword"
-                type="password"
-                placeholder="mot de passe"
-                required
-                autocomplete="off"
-                class="form-control form-control-sm"
-              />
+        <form @submit="changerMotDePasse">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h3>Changer mon mot de passe</h3>
             </div>
-            <div class="mb-3">
-              <label for="new-password">Nouveau mot de passe</label>
-              <input
-                id="newPassword"
-                v-model="newPassword"
-                type="password"
-                placeholder="mot de passe"
-                required
-                autocomplete="off"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors.password }"
-              />
-              <div v-if="errors.password" class="invalid-feedback">
-                Taille minimum: 8
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="old-password">Ancien mot de passe</label>
+                <input
+                  id="old-password"
+                  v-model="oldPassword"
+                  type="password"
+                  placeholder="mot de passe"
+                  required
+                  autocomplete="off"
+                  class="form-control form-control-sm"
+                />
               </div>
-            </div>
+              <div class="mb-3">
+                <label for="new-password">Nouveau mot de passe</label>
+                <input
+                  id="newPassword"
+                  v-model="newPassword"
+                  type="password"
+                  placeholder="mot de passe"
+                  minlength="12"
+                  required
+                  autocomplete="off"
+                  class="form-control form-control-sm"
+                  :class="{ 'is-invalid': errors.password }"
+                />
+                <div v-if="errors.password" class="invalid-feedback">
+                  Taille minimum: 12
+                </div>
+              </div>
 
-            <div class="mb-3">
-              <label for="new-password-repeated"
-                >Répéter le nouveau mot de passe</label
-              >
-              <input
-                id="newPasswordRepeated"
-                v-model="newPasswordRepeated"
-                type="password"
-                placeholder="répéter mot de passe"
-                required
-                autocomplete="off"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': !isPasswordIdentical }"
-              />
-              <div v-if="!isPasswordIdentical" class="invalid-feedback">
-                Mot de passe différent
+              <div class="mb-3">
+                <label for="new-password-repeated"
+                  >Répéter le nouveau mot de passe</label
+                >
+                <input
+                  id="newPasswordRepeated"
+                  v-model="newPasswordRepeated"
+                  type="password"
+                  minlength="12"
+                  placeholder="répéter mot de passe"
+                  required
+                  autocomplete="off"
+                  class="form-control form-control-sm"
+                  :class="{ 'is-invalid': !isPasswordIdentical }"
+                />
+                <div v-if="!isPasswordIdentical" class="invalid-feedback">
+                  Mot de passe différent
+                </div>
               </div>
+              <button class="btn btn-primary" @click="submit">Changer</button>
             </div>
-            <button class="btn btn-primary" @click="changerMotDePasse">
-              Changer
-            </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
