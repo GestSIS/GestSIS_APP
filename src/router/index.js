@@ -196,7 +196,6 @@ const router = createRouter({
     {
       path: '/utilisateur',
       name: 'utilisateur',
-      meta: { layout: 'no-sidebar' },
       component: () => import('/src/pages/PageUser.vue'),
     },
     {
