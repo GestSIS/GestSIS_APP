@@ -1,6 +1,6 @@
 <script setup>
 import AdminService from '../../services/AdminService';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import useNotification from '../../composables/useNotification.js';
 import { useModalStore } from '../../stores/common/Modal';
 import { useAdminStore } from '../../stores/admin/Admin';
@@ -9,10 +9,13 @@ import { useAuthStore } from '../../stores/auth/Auth';
 const adminStore = useAdminStore();
 const authStore = useAuthStore();
 
+const loading = ref(true);
 const loadSis = authStore.loadSisListe();
 const loadUsers = adminStore.loadAllUsers();
 
-await Promise.all([loadSis, loadUsers]);
+Promise.all([loadSis, loadUsers])
+  .then(() => (loading.value = false))
+  .catch(() => (loading.value = false));
 
 const users = computed(() => adminStore.users);
 const sis = computed(() => adminStore.sis);
@@ -58,6 +61,7 @@ const fields = [
       <base-table
         ref="table"
         :fields="fields"
+        :loading="loading"
         :data="users"
         :selectable="true"
         :hide-download="true"

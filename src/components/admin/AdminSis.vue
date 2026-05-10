@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import useNotification from '../../composables/useNotification';
 import { useModalStore } from '../../stores/common/Modal';
 import { useAdminStore } from '../../stores/admin/Admin';
@@ -8,12 +8,15 @@ import { useAuthStore } from '../../stores/auth/Auth';
 const adminStore = useAdminStore();
 const authStore = useAuthStore();
 
+const loading = ref(true);
 const loadSis = authStore.loadSisListe();
 const loadSisAdmin = adminStore.loadAllSis();
 const loadParams = adminStore.loadAllSisParams();
 const loadContacts = adminStore.loadAllSisContacts();
 
-await Promise.all([loadSis, loadSisAdmin, loadContacts, loadParams]);
+Promise.all([loadSis, loadSisAdmin, loadContacts, loadParams])
+  .then(() => (loading.value = false))
+  .catch(() => (loading.value = false));
 
 const sis = computed(() => adminStore.sis);
 const contacts = computed(() => adminStore.contacts);
@@ -134,6 +137,7 @@ const fields = [
         ref="table"
         :fields="fields"
         :data="computedSis"
+        :loading="loading"
         :selectable="true"
         :hide-download="true"
         no-data="Aucun SIS"
