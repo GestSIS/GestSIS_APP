@@ -67,6 +67,7 @@ export const useAuthStore = defineStore('auth', {
         refreshTokenPromise: null,
         permissions: [],
         roles: [],
+        apiTokens: [],
         users: [],
         sis: {
             activeId: null,
@@ -132,6 +133,7 @@ export const useAuthStore = defineStore('auth', {
             this.sis.available = [];
             this.sis.allPermissions = {};
             this.sis.sapeurs = {};
+            this.apiTokens = [];
 
             return Promise.resolve();
         },
@@ -199,6 +201,21 @@ export const useAuthStore = defineStore('auth', {
         async deleteRole(roleId) {
             await AuthService.deleteRole(roleId);
             this.roles = this.roles.filter((r) => r.id !== roleId);
+        },
+        async loadApiToken() {
+            const result = await AuthService.getApiTokens();
+            this.apiTokens = result.data;
+            return result.data;
+        },
+        async createApiToken(apiToken) {
+            const result = await AuthService.createApiToken(apiToken);
+            this.apiTokens.push(result.data);
+            return result.data;
+        },
+        async deleteApiToken(apiTokenId) {
+            const result = await AuthService.deleteApiToken(apiTokenId);
+            this.apiTokens = this.apiTokens.filter(t => t.id !== apiTokenId);
+            return result.data;
         },
         async refreshToken() {
             const callback = async () => {
@@ -304,6 +321,7 @@ export const useAuthStore = defineStore('auth', {
         clearCache() {
             this.roles = [];
             this.users = [];
+            this.apiTokens = [];
 
             // Reset materiel stores
             useArticleStore().$reset();

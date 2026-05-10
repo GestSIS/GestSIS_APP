@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "10.05.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de créer des jetons d'API pour accéder à l'API de GestSIS",
+        "Refonte de l'interface `paramètres utilisateurs`"
+      ]
+    },
+    {
       "date": "15.04.2026",
       "version": "1.0",
       "app": "GestSIS APP",

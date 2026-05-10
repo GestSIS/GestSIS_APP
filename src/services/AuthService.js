@@ -51,6 +51,15 @@ export default {
   getPermissions() {
     return Api.auth().get('permissions');
   },
+  getApiTokens() {
+    return Api.auth().get('api-tokens');
+  },
+  createApiToken(apiToken) {
+    return Api.auth().post('api-tokens', apiToken);
+  },
+  deleteApiToken(apiTokenId) {
+    return Api.auth().delete('api-tokens/' + apiTokenId);
+  },
   getRoles() {
     return Api.auth().get('roles');
   },
