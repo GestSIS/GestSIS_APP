@@ -836,6 +836,12 @@ const router = createRouter({
       component: () => import('/src/pages/PageAbout.vue'),
     },
     {
+      path: '/alarmes',
+      name: 'alarmes',
+      beforeEnter: adminGuard(),
+      component: () => import('/src/pages/PageAlarmes.vue'),
+    },
+    {
       path: '/admin',
       name: 'admin',
       beforeEnter: adminGuard(),
