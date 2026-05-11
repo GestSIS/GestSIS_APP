@@ -72,44 +72,23 @@ const computedData = computed(() => {
 });
 
 const fields = [
-  { title: 'Date', key: 'date_debut', type: Date },
-  {
-    title: 'Heure',
-    key: 'heure_debut',
-    formatter: (value) => value.slice(0, 5),
-  },
-  { title: "Type d'intervention", key: 'type_intervention' },
-  { title: 'Localité', key: 'localite' },
-  { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
-  { title: 'Stat fédérale', key: 'stat_federal' },
-  { title: 'Traitement', key: 'traitement' },
-  {
-    title: 'Étendue',
-    key: 'degre',
-    formatter: (value) => {
-      const degre = {
-        1: 'Fausse-alarme',
-        2: 'Petite',
-        3: 'Moyenne',
-        4: 'Grande',
-      };
-      return degre[value];
-    },
-  },
-  {
-    title: 'Statut',
-    key: 'statut',
-    formatter: (value) => {
-      const statuts = {
-        0: 'A saisir',
-        1: 'A valider',
-        2: 'Validée',
-        3: 'Imputée',
-      };
-      return statuts[value];
-    },
-  },
-  { title: 'Actions', slot: 'actions' },
+  { title: 'id', key: 'id' },
+  { title: 'address', key: 'address' },
+  { title: 'complement', key: 'complement' },
+  { title: 'location_wgs84', key: 'location_wgs84' },
+  { title: 'location_lv95', key: 'location_lv95' },
+  { title: 'type', key: 'type' },
+  { title: 'sis', key: 'sis' },
+  { title: 'firefighters', key: 'firefighters' },
+  { title: 'groupes', key: 'groupes' },
+  { title: 'description', key: 'description' },
+  { title: 'couleur', key: 'couleur' },
+  { title: 'code', key: 'code' },
+  { title: 'date_creation', key: 'date_creation', type: 'datetime' },
+  { title: 'debut_alarme', key: 'debut_alarme', type: 'datetime' },
+  { title: 'fin_alarme', key: 'fin_alarme', type: 'datetime' },
+  { title: 'has_been_read', key: 'has_been_read', type: Boolean },
+  { title: 'unresolved', key: 'unresolved' },
 ];
 </script>
 
