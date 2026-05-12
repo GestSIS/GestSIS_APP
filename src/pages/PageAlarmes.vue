@@ -81,7 +81,7 @@ const fields = [
   { title: 'location_wgs84', key: 'location_wgs84' },
   { title: 'location_lv95', key: 'location_lv95' },
   { title: 'type', key: 'type' },
-  { title: 'sis', key: 'sis' },
+  { title: 'sis', key: 'sis', slot: 'sis' },
   { title: 'firefighters', key: 'firefighters', slot: 'firefighters' },
   { title: 'groupes', key: 'groupes', slot: 'groupes' },
   { title: 'description', key: 'description' },
@@ -132,12 +132,15 @@ const fields = [
                 @selected="select"
               >
                 <template #firefighters="{ rowData }">
+                  <div v-for="sis in rowData.sis" :key="sis">
+                    {{ sis }}
+                  </div>
                   <div v-for="sapeur in rowData.firefighters" :key="sapeur.id">
                     {{ sapeur.fullname }} {{ sapeur.sis }}
                   </div>
                 </template>
                 <template #groupes="{ rowData }">
-                  <div v-for="groupe in rowData.groupes" :key="sapeur.id">
+                  <div v-for="groupe in rowData.groupes" :key="groupe">
                     {{ groupe }}
                   </div>
                 </template>
