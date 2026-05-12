@@ -57,7 +57,10 @@ const localites = computed(() =>
 );
 
 const computedData = computed(() => {
-  return alarmes.value;
+  return alarmes.value.map((a) => ({
+    ...a,
+    groupes: [...new Set(a.firefighters.map((s) => s.group_number))],
+  }));
   // return interventions.value.map((e) => ({
   //   ...e,
   //   type_intervention: types.value.find((c) => c.id == e.type_intervention_id)
@@ -79,8 +82,8 @@ const fields = [
   { title: 'location_lv95', key: 'location_lv95' },
   { title: 'type', key: 'type' },
   { title: 'sis', key: 'sis' },
-  { title: 'firefighters', key: 'firefighters' },
-  { title: 'groupes', key: 'groupes' },
+  { title: 'firefighters', key: 'firefighters', slot: 'firefighters' },
+  { title: 'groupes', key: 'groupes', slot: 'groupes' },
   { title: 'description', key: 'description' },
   { title: 'couleur', key: 'couleur' },
   { title: 'code', key: 'code' },
@@ -127,7 +130,18 @@ const fields = [
                 :data="filteredData ?? []"
                 :selectable="true"
                 @selected="select"
-              />
+              >
+                <template #firefighters="{ rowData }">
+                  <div v-for="sapeur in rowData.firefighters" :key="sapeur.id">
+                    {{ sapeur.fullname }} {{ sapeur.sis }}
+                  </div>
+                </template>
+                <template #groupes="{ rowData }">
+                  <div v-for="groupe in rowData.groupes" :key="sapeur.id">
+                    {{ groupe }}
+                  </div>
+                </template>
+              </base-table>
             </div>
           </div>
         </div>
