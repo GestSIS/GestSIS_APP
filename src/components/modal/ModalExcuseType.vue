@@ -13,6 +13,7 @@ const { data } = defineProps({
 const errors = ref({});
 const form = reactive({
   statut: 1,
+  amende: false,
   ...data,
 });
 
