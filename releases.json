@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "31.05.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "RTA, ajout section `fichiers`, afin de télécharger les fichiers mis à dispostion sur la plateforme RTA"
+      ]
+    },
+    {
       "date": "10.05.2026",
       "version": "1.0",
       "app": "GestSIS APP",

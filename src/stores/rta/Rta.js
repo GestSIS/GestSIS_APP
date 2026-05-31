@@ -5,8 +5,18 @@ export const useRtaStore = defineStore('rta', {
     state: () => ({
         reference: [],
         actuel: [],
+        fichiers: [],
+        demandes: [],
     }),
     actions: {
+        async fetchFichiers() {
+            this.fichiers = (await RtaService.getFichiers())?.data ?? [];
+            return this.fichiers;
+        },
+        async fetchDemandes() {
+            this.demandes = (await RtaService.getDemandes())?.data ?? [];
+            return this.demandes;
+        },
         async fetchReferenceRta() {
             const data = await RtaService.getReferenceRta();
             this.reference = data.map((s) => ({

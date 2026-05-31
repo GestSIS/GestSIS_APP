@@ -67,6 +67,9 @@ import {
   faQuestionCircle,
   faClock,
   faFilePdf,
+  faFileExcel,
+  faFileWord,
+  faFile,
   faChartBar,
   faPlusSquare,
   faMinusSquare,
@@ -78,6 +81,9 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faFileExcel,
+  faFileWord,
+  faFile,
   faKey,
   faMagnifyingGlass,
   faBuildingColumns,

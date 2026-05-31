@@ -828,6 +828,18 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/GestSisRta.vue'),
         },
+        {
+          path: 'fichiers',
+          name: 'rta-fichiers',
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
+          component: () => import('/src/components/rta/Fichiers.vue'),
+        },
+        {
+          path: 'demandes',
+          name: 'ra-demandes',
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
+          component: () => import('/src/components/rta/Demandes.vue'),
+        },
       ],
     },
     {
