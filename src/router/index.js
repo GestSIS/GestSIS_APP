@@ -836,7 +836,7 @@ const router = createRouter({
         },
         {
           path: 'demandes',
-          name: 'ra-demandes',
+          name: 'rta-demandes',
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/Demandes.vue'),
         },

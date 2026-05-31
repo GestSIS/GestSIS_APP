@@ -5,7 +5,8 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "RTA, ajout section `fichiers`, afin de télécharger les fichiers mis à dispostion sur la plateforme RTA"
+        "RTA, ajout section `fichiers`, afin de télécharger les fichiers mis à dispostion sur la plateforme RTA",
+        "RTA, ajout section `demandes`, afin de consulter les demandes soumises à la plateforme RTA"
       ]
     },
     {
