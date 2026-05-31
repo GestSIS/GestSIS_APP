@@ -43,7 +43,6 @@ const fields = [
               :icon="['far', 'file-excel']"
             />
             <font-awesome-icon v-else :icon="['far', 'file']" />
-            TODO: Switch file icon
           </button>
         </template>
       </base-table>
