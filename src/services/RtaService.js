@@ -13,12 +13,12 @@ export default {
     return Api.api().get('/rta/demandes');
   },
   getReferenceRta() {
-    return Api.api().get('/rta');
+    return Api.api().get('/rta/reference');
   },
   getReferenceGestSis() {
-    return Api.api().get('/rta-gestsis');
+    return Api.api().get('/rta/gestsis');
   },
   updateReference(data) {
-    return Api.api().post('/rta', data);
+    return Api.api().post('/rta/reference', data);
   },
 };
