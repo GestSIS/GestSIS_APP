@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Ph0tonic/GestSIS_APP.svg?token=CpCE2t9dSFqCXfyBr7VR&branch=master)](https://travis-ci.com/Ph0tonic/GestSIS_APP)
+[![CI](https://github.com/GestSIS/GestSIS_APP/actions/workflows/main.yml/badge.svg)](https://github.com/GestSIS/GestSIS_APP/actions/workflows/main.yml)
 
 # GestSIS_APP
 
