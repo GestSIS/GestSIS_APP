@@ -67,6 +67,15 @@ const logout = () => {
     <ul class="navbar-nav me-2">
       <li class="position-relative me-2">
         <a
+          href="https://github.com/GestSIS/GestSIS_dev_docker"
+          target="_blank"
+          class="btn btn-sm btn-link nav-link pt-0 pb-0"
+        >
+          <font-awesome-icon :icon="['brands', 'github']" />
+        </a>
+      </li>
+      <li class="position-relative me-2">
+        <a
           :href="DOC_URL"
           target="_blank"
           class="btn btn-sm btn-link nav-link pt-0 pb-0"

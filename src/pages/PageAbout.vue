@@ -14,8 +14,10 @@ const refreshToken = ref(TokenService.getRefreshToken());
 
 const isAdmin = computed(() => authStore.admin);
 
-const date = localStorage.getItem('latestReleaseDate') ?? releases.value[0].date;
-const version = localStorage.getItem('latestSeenVersion') ?? releases.value[0].version;
+const date =
+  localStorage.getItem('latestReleaseDate') ?? releases.value[0].date;
+const version =
+  localStorage.getItem('latestSeenVersion') ?? releases.value[0].version;
 localStorage.setItem('latestReleaseDate', releases.value[0].date);
 localStorage.setItem('latestSeenVersion', releases.value[0].version);
 
@@ -96,7 +98,32 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             </p>
             <p>Auteur : Bastien Wermeille</p>
             <p>
+              Code source :
+              <a
+                href="https://github.com/GestSIS/GestSIS_dev_docker"
+                target="_blank"
+              >
+                <font-awesome-icon :icon="['fab', 'github']" /> GitHub
+              </a>
+            </p>
+            <p>
               GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
+            </p>
+          </div>
+        </div>
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3>Contribuer</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              Tu souhaites contribuer au projet ? Consulte le
+              <a
+                href="https://github.com/GestSIS/GestSIS_dev_docker/blob/main/CONTRIBUTING.md"
+                target="_blank"
+                >guide de contribution</a
+              >
+              sur GitHub.
             </p>
           </div>
         </div>

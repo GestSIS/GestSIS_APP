@@ -59,7 +59,7 @@ import {
   faMagnifyingGlass
 } from '@fortawesome/free-solid-svg-icons';
 
-import { faGripfire } from '@fortawesome/free-brands-svg-icons';
+import { faGripfire, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   faEdit,
   faCalendarAlt,
@@ -81,6 +81,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faGithub,
   faFileExcel,
   faFileWord,
   faFile,

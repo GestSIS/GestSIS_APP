@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "03.06.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "GestSIS est maintenance open-source et disponible sur Github"
+      ]
+    },
+    {
       "date": "31.05.2026",
       "version": "1.0",
       "app": "GestSIS APP",
