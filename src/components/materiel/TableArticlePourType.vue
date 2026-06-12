@@ -4,7 +4,7 @@ import useNotification from '../../composables/useNotification.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import useHasPermission from '../../composables/usePermission.js';
 import permissions from '../../composables/permissions.js';

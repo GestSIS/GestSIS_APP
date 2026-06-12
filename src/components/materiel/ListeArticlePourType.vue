@@ -4,7 +4,7 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { groupedByData, indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools/index.js';
 import useHasPermission from '../../composables/usePermission.js';
 import permissions from '../../composables/permissions.js';
 import ArticleService from '../../services/materiel/ArticleService';

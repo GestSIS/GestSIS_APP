@@ -1,6 +1,24 @@
 import Api from '/src/http/Request';
 
 export default {
+  getAgriculteurs() {
+    return Api.api().get('/rta/agriculteurs');
+  },
+  getAgriculteur(agriculteurId) {
+    return Api.apiFileDownload().get(`/rta/agriculteurs/${agriculteurId}`);
+  },
+  createAgriculteur(agriculteur) {
+    return Api.api().post('/rta/agriculteurs', agriculteur);
+  },
+  updateAgriculteur(agriculteur) {
+    return Api.api().put('/rta/agriculteurs/' + agriculteur.id, agriculteur);
+  },
+  reorderAgriculteur(agriculteur) {
+    return Api.api().put('/rta/agriculteurs/' + agriculteur.id + '/tri', agriculteur);
+  },
+  deleteAgriculteur(agriculteurId) {
+    return Api.api().delete(`/rta/agriculteurs/${agriculteurId}`);
+  },
   getFichiers() {
     return Api.api().get('/rta/fichiers');
   },

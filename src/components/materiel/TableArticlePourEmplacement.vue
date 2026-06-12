@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import ArticleService from '../../services/materiel/ArticleService';
 import TagCouleur from './TagCouleur.vue';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';

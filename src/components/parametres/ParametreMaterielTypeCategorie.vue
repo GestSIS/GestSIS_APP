@@ -3,7 +3,7 @@ import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
 import { computed } from 'vue';
 import useNotification from '../../composables/useNotification.js';
-import { groupedByData, indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools/index.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';
@@ -19,7 +19,9 @@ await Promise.all([
 ]);
 
 const categories = computed(() =>
-  categorieStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
+  categorieStore.liste.sort((a, b) =>
+    a.designation.localeCompare(b.designation),
+  ),
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedTypes = computed(() =>

@@ -840,6 +840,12 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import('/src/components/rta/Demandes.vue'),
         },
+        {
+          path: 'agriculteurs',
+          name: 'rta-agriculteurs',
+          beforeEnter: permissionGuard(permissions.RTA.LECTURE),
+          component: () => import('/src/components/rta/Agriculteurs.vue'),
+        },
       ],
     },
     {

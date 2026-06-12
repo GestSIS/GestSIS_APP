@@ -4,7 +4,7 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import VueSelect from 'vue3-select-component';
 import 'vue3-select-component/styles';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import TagCouleur from './TagCouleur.vue';
 
 const { label, emplacementIdToIgnore, emplacementRacine, disabled, required } =

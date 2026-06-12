@@ -22,6 +22,7 @@
             { to: { name: 'rta-reference' }, texte: 'Référence' },
             { to: { name: 'rta-fichiers' }, texte: 'Fichiers' },
             { to: { name: 'rta-demandes' }, texte: 'Demandes' },
+            { to: { name: 'rta-agriculteurs' }, texte: 'Agriculteurs' },
           ]"
         />
         <div id="nav-tabContent" class="tab-content">

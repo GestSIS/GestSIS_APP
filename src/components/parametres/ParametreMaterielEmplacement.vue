@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import useNotification from '../../composables/useNotification.js';
-import { groupedByData, indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools/index.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from '../materiel/TagCouleur.vue';
 import { useModalStore } from '../../stores/common/Modal.js';

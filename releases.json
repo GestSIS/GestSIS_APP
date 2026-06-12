@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "12.06.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "RTA, ajout section `agriculteurs`, afin de gérer les agriculteurs et leurs moyens de contact pour la plateforme RTA"
+      ]
+    },
+    {
       "date": "03.06.2026",
       "version": "1.0",
       "app": "GestSIS APP",

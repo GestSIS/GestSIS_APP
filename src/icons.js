@@ -56,7 +56,11 @@ import {
   faCommentSms,
   faIdCardClip,
   faKey,
-  faMagnifyingGlass
+  faMagnifyingGlass,
+  faMobileScreen,
+  faIndustry,
+  faArrowUp,
+  faArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { faGripfire, faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -78,9 +82,15 @@ import {
   faAddressBook,
   faClipboard,
   faHandshake,
+  faHouse,
 } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
+  faArrowUp,
+  faArrowDown,
+  faMobileScreen,
+  faIndustry,
+  faHouse,
   faGithub,
   faFileExcel,
   faFileWord,

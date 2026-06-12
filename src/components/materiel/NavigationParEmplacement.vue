@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { groupedByData, indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools/index.js';
 import TagCouleur from './TagCouleur.vue';
 import permissions from '../../composables/permissions.js';
 import useHasPermission from '../../composables/usePermission.js';

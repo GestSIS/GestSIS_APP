@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { groupedByData, indexedData } from '../../tools';
-import ArticleService from '../../services/materiel/ArticleService';
+import { groupedByData, indexedData } from '../../tools/index.js';
+import ArticleService from '../../services/materiel/ArticleService.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';

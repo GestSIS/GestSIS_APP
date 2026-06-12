@@ -4,7 +4,7 @@ import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import TagCouleur from './TagCouleur.vue';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import LavageService from '../../services/materiel/LavageService';
 import useHasPermission from '../../composables/usePermission.js';

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';

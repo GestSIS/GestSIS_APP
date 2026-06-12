@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import { groupedByData, indexedData } from '../../tools';
+import { groupedByData, indexedData } from '../../tools/index.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';

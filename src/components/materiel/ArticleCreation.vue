@@ -3,7 +3,7 @@ import { computed, nextTick, useTemplateRef } from 'vue';
 
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { indexedData } from '../../tools';
+import { indexedData } from '../../tools/index.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
 const articles = defineModel({ default: () => [] });
