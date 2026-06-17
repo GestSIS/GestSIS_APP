@@ -99,10 +99,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             <p>Auteur : Bastien Wermeille</p>
             <p>
               Code source :
-              <a
-                href="https://github.com/GestSIS/GestSIS_dev_docker"
-                target="_blank"
-              >
+              <a href="https://github.com/GestSIS" target="_blank">
                 <font-awesome-icon :icon="['fab', 'github']" /> GitHub
               </a>
             </p>
