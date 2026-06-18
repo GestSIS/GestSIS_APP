@@ -20,8 +20,12 @@ const date = ref(new Date().toISOString().slice(0, 10));
 const emplacement_id = ref(null);
 
 const { closeModal } = useModalStore();
-const save = async () =>
-  ArticleService.retourArticles(emplacement_id.value, {
+const save = async () => {
+  if (!emplacement_id.value) {
+    errors.value = { emplacement: ['Veuillez sélectionner un emplacement'] };
+    return;
+  }
+  return ArticleService.retourArticles(emplacement_id.value, {
     date: date.value,
     articleIds: [data.id],
   })
@@ -30,6 +34,7 @@ const save = async () =>
       closeModal();
     })
     .catch((err) => (errors.value = err));
+};
 </script>
 
 <template>
@@ -53,7 +58,11 @@ const save = async () =>
         v-model="emplacement_id"
         label="Emplacement"
         class="mb-3"
+        :class="{ 'is-invalid': errors['emplacement'] }"
       />
+      <div v-if="errors['emplacement']" class="invalid-feedback d-block">
+        {{ errors['emplacement'][0] }}
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">
