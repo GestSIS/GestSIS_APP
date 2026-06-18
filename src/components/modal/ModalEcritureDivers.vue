@@ -62,7 +62,7 @@ const save = async () => {
   if (!activeUnite.value?.comptable) {
     form.quantite = 1;
   }
-  form.total = form?.tarif * form?.quantite;
+  form.total = Math.round(form?.tarif * form?.quantite * 20) / 20;
 
   ((form.id || 0) === 0
     ? imputationStore.addEcriture
