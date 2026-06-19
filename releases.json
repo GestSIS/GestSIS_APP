@@ -1,6 +1,23 @@
 {
   "releases": [
     {
+      "date": "19.06.2026",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.5",
+      "changes": [
+        "Les interventions validées ne sont plus dupliquées côté serveur lorsqu'une synchronisation échoue en cours de route (ex. coupure réseau) : seules celles réellement envoyées sont retirées de la tablette",
+        "Vos saisies en cours (interventions et exercices) ne sont plus écrasées ni perdues lors d'une synchronisation déclenchée juste après l'ouverture de l'app",
+        "L'application ne reste plus bloquée sur « Synchronisation en cours » en cas d'erreur",
+        "Si un ou plusieurs éléments échouent, l'app vous le signale désormais (avant, l'échec passait inaperçu) — les autres éléments continuent quand même de se synchroniser",
+        "Si votre session expire pendant une synchronisation, l'app vous propose de vous reconnecter",
+        "Une confirmation est demandée avant de supprimer une présence",
+        "Modifier le champ « Objet » d'une intervention ne décale plus par erreur les heures d'arrivée des sapeurs",
+        "Les excuses / absences saisies sont désormais bien enregistrées",
+        "Les recherches (matériel, missions, sapeurs) ignorent désormais les accents et la casse",
+        "Le thème clair/sombre suit la préférence du système"
+      ]
+    },
+    {
       "date": "12.06.2026",
       "version": "1.0",
       "app": "GestSIS APP",
