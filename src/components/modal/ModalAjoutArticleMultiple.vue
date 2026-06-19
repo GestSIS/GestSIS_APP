@@ -41,18 +41,18 @@ await Promise.all([
 const { closeModal } = useModalStore();
 const save = async () => {
   if (!activeAttribution.value.emplacement_id) {
-    awn.warning('Veuillez sélectionner un sapeur');
+    awn.warning('Veuillez sélectionner un emplacement');
     return;
   }
 
   // Création du matériel
   const articles = activeAttribution.value.articles.map((a) => ({
+    ...a,
     emplacement_id: activeAttribution.value.emplacement_id,
     sapeur_id: null,
-    ...a,
   }));
   ArticleService.creerArticles(articles)
-    .then((data) => {
+    .then(() => {
       callback();
       closeModal();
     })

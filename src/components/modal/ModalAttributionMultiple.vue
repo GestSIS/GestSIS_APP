@@ -66,7 +66,7 @@ const save = async () => {
       articleIds: form.articlesDepuisInventaire.map((a) => a.id),
     };
     ArticleService.attribuerArticles(form.sapeur_id, attribution)
-      .then((data) => {
+      .then(() => {
         callback();
         closeModal();
       })
@@ -76,13 +76,13 @@ const save = async () => {
   } else {
     // Création du matériel
     const articles = form.articlesHorsInventaire.map((a) => ({
-      sapeur_id: form.sapeur_id,
-      emplacement_id: null,
       attribution: form.date,
       ...a,
+      sapeur_id: form.sapeur_id,
+      emplacement_id: null,
     }));
     ArticleService.creerArticles(articles)
-      .then((data) => {
+      .then(() => {
         callback();
         closeModal();
       })
