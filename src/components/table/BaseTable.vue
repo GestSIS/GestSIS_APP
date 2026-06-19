@@ -213,13 +213,10 @@ const toggleDetailRow = (id) => {
   };
 };
 const toggleAllDetailRow = () => {
-  detailsRowVisibility.value = Object.fromEntries([
-    ...data.map((d) => [d[selectKey], true]),
-    ...Object.entries(detailsRowVisibility.value).map(([key, value]) => [
-      key,
-      !value,
-    ]),
-  ]);
+  const allVisible = data.every((d) => detailsRowVisibility.value[d[selectKey]]);
+  detailsRowVisibility.value = Object.fromEntries(
+    data.map((d) => [d[selectKey], !allVisible]),
+  );
 };
 
 defineExpose({
@@ -248,7 +245,7 @@ defineExpose({
         <tr>
           <th v-if="detailRowColumn && (data.length || groupedData.length)">
             <button
-              v-if="Object.values(detailsRowVisibility).find((e) => e)"
+              v-if="data.every((d) => detailsRowVisibility[d[selectKey]])"
               class="btn btn-link border-0"
               @click="hideAllDetailRow"
             >
@@ -258,7 +255,7 @@ defineExpose({
               />
             </button>
             <button
-              v-if="!Object.values(detailsRowVisibility).find((e) => e)"
+              v-else
               class="btn btn-link border-0"
               @click="showAllDetailRow"
             >
