@@ -142,7 +142,7 @@ const imputer = () => {
     });
 };
 const formatUnite = (uniteId) => {
-  return unites.value.find((f) => (f.id = uniteId))?.unite || '';
+  return unites.value.find((f) => f.id === uniteId)?.unite || '';
 };
 const formatCompte = (compteId) => {
   const compte = comptes.value.find(

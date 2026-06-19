@@ -70,7 +70,7 @@ const saveSapeur = async () => {
     'remarque',
   ];
   let saveSapeur = Object.assign({}, activeSapeur.value);
-  for (let key in Object.keys(saveSapeur)) {
+  for (const key of Object.keys(saveSapeur)) {
     if (!fields.includes(key)) {
       delete saveSapeur[key];
     }

@@ -88,7 +88,6 @@ const handleClickOutside = (evt) => {
       class="form-control form-control-sm"
       :class="{ 'is-invalid': error }"
       type="text"
-      @input="onChange"
       @keydown.down="onArrowDown"
       @keydown.up="onArrowUp"
       @keydown.enter="onEnter"

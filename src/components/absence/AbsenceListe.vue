@@ -27,7 +27,7 @@ await Promise.all([loadSapeurs, loadLocalites]);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const absences = computed(() =>
-  absenceStore.liste.sort((a, b) => a.debut.localeCompare(b.debut)),
+  absenceStore.liste.sort((a, b) => (a.debut ?? '').localeCompare(b.debut ?? '')),
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 

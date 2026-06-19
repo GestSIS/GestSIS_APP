@@ -45,11 +45,9 @@ const sapeurs = computed(() =>
   sapeurStore.liste.filter((s) => s.actif && s.type == 0),
 );
 
-const nbSelectedSapeurs = () => {
-  return Object.keys(selectedSapeurs.value).filter(
-    (s) => selectedSapeurs.value[s],
-  ).length;
-};
+const nbSelectedSapeurs = computed(() =>
+  Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s]).length,
+);
 
 const { closeModal } = useModalStore();
 

@@ -123,7 +123,7 @@ const computeStats = (presences) => {
     ])
     .reduce(
       (accumulator, p) => accumulator.map((v, i) => v + p[i]),
-      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
     );
   return {
     convoque: stats[0],

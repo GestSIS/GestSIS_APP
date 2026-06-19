@@ -231,7 +231,7 @@ const formatTime = (time) => {
 };
 
 const fieldsMissions = [
-  { title: 'Date', type: 'time', key: 'fin' },
+  { title: 'Date', type: 'time', key: 'debut' },
   { title: 'Titre', key: 'titre' },
   { title: 'Sapeur', key: 'sapeur' },
   { title: 'Quittance', type: 'time', key: 'fin' },

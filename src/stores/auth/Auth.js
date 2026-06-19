@@ -92,12 +92,12 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async login(payload) {
             const data = await AuthService.login(payload);
-            this.setAuthSuccessful(data);
+            await this.setAuthSuccessful(data);
             return data;
         },
         async register(credentials) {
             const data = await AuthService.register(credentials);
-            this.setAuthSuccessful(data);
+            await this.setAuthSuccessful(data);
             return data;
         },
         async forgottenPassword(email) {
@@ -139,7 +139,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async useToken(token) {
             const { message, accessToken } = await AuthService.useToken(token);
-            this.setAuthSuccessful({
+            await this.setAuthSuccessful({
                 accessToken,
                 refreshToken: TokenService.getRefreshToken(),
                 user: TokenService.getUser(),
@@ -224,7 +224,7 @@ export const useAuthStore = defineStore('auth', {
 
                 try {
                     const data = await p;
-                    this.setAuthSuccessful(data);
+                    await this.setAuthSuccessful(data);
                     this.refreshTokenPromise = null;
                     return data;
                 } catch (e) {
@@ -274,7 +274,7 @@ export const useAuthStore = defineStore('auth', {
             return localiteStore.fetchLocalites();
         },
         // Internal methods
-        setAuthSuccessful(data) {
+        async setAuthSuccessful(data) {
             this.user = data.user;
 
             TokenService.saveAccessToken(data.accessToken);
@@ -308,8 +308,9 @@ export const useAuthStore = defineStore('auth', {
                     sisKey = Object.keys(sapeurParSis)[0];
                 }
 
+                await this.loadSisListe();
                 const sis = this.sis.liste.find((s) => s.api_key === sisKey);
-                if (!sis) return; // TODO: Better error handling
+                if (!sis) return;
                 this.sis.activeId = sis.id;
                 this.sis.activeKey = sis.api_key;
                 this.sis.permissions = permissionsParSis[sis.api_key] ?? [];

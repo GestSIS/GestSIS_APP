@@ -41,7 +41,7 @@ const filteredData = computed(() => {
   );
 });
 const canReset = computed(() => {
-  return !!Object.entries(filters.value).find(([, value]) => value) ?? false;
+  return !!Object.entries(filters.value).find(([, value]) => value != null && value !== '');
 });
 
 const init = () => {
